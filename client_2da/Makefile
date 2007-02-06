@@ -12,10 +12,6 @@ ifeq  "$(NWNHOME)" ""
 	@echo "env var NWNHOME not set."
 	exit 1
 endif
-ifeq  "$(LISTHOME)" ""
-	@echo "env var LISTHOME not set."
-	exit 1
-endif
 
 
 clean-backup:
