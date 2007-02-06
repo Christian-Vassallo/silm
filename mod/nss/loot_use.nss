@@ -1,0 +1,10 @@
+#include "inc_selectlist"
+
+void main() {
+	object oPC = GetLastUsedBy();
+
+	if ( GetLocked(OBJECT_SELF) ) return;
+
+	PrepareLoot(oPC);
+	ActionStartConversation(oPC, "corpse_dlg", TRUE, FALSE);
+}

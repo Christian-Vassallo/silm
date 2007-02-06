@@ -1,0 +1,768 @@
+// lean mean crafting system
+// copyleft 2006 Bernhard 'elven' Stoeckner
+//
+// Ideas by Torsten Sens.
+
+#include "inc_craft_hlp"
+#include "inc_craft_data"
+#include "inc_mysql"
+#include "inc_cdb"
+#include "inc_2dacache"
+#include "inc_draw"
+
+const string
+
+MSG_CRAFT_CANT_UNTIL_CLEANED = "",
+
+MSG_CRAFT_TOOL_WENT_BROKE = "Werkzeug ging bei diesem Herstellungsvorgang kaputt oder wurden aufgebraucht.",
+
+MSG_CRAFT_NEED_BOOK_TO_SCRIBE = "Ihr benoetigt Euer Handwerksbuch, um dieses Rezept zu uebertragen.",
+MSG_CRAFT_BOOK_HAS_RECIPE = "Dieses Rezept befindet sich bereits in Eurem Buch.",
+
+MSG_CRAFT_BOOK_RECIPE_ADDED = "Rezept hinzugefuegt.",
+
+
+MSG_CRAFT_PROCESS_START = "Der Herstellungsprozess beginnt ..",
+MSG_CRAFT_PROCESS_START2 = "Ein neuer Herstellungsprozess beginnt ..",
+
+MSG_CRAFT_TIMELIMIT_EXCEEDED =
+	"Ihr koennt in diesem Moment keine weiteren Gegenstaende dieses Typuses mehr herstellen.",
+MSG_CRAFT_TIMELIMIT_WAITFOR = "Bitte wartet noch ",
+MSG_CRAFT_TIMELIMIT_UNIT = " Sekunden.",
+
+MSG_CRAFT_CANT_LEARN_ANYMORE = "Ihr koennt an diesem Rezept Eure Faehigkeiten nicht weiter verbessern.",
+
+MSG_CRAFT_NEED_SPELL = "Dieses Rezept benoetigt eine Magieladung.",
+MSG_CRAFT_NEED_NOSPELL =
+	"Dieses Rezept benoetigt KEINE Magieladung.  Die ungerichtete Arkane fliegt Euch um die Ohren.",
+MSG_CRAFT_WRONG_SPELL = "Dieses Rezept benoetigt eine ANDERE Magieladung!",
+
+
+MSG_CRAFT_SPELL_CAST = "Eure gerufene Magie laedt den Arbeitsplatz auf.",
+MSG_CRAFT_SPELL_ADD = "Eure gerufene Magie wird der bestehenden Arkane hinzugefuegt.",
+MSG_CRAFT_SPELL_REPLACE = "Eure Magie ersetzt den bereits geladenen Zauber.",
+MSG_CRAFT_SPELL_INVALID = "Dieser Arkane scheint nicht an dem Arbeitsplatz haften zu bleiben.",
+MSG_CRAFT_SPELL_DISPEL = "Die geladene Arkane wird entfernt.",
+
+
+MSG_CRAFT_SAVE_COMPONENTS =
+	"Ihr konntet dank eurer Konzentration und eurer Geschicklichkeit Komponenten retten.",
+
+MSG_CRAFT_SUCCESS = "Gegenstand erfolgreich hergestellt.",
+
+MSG_CRAFT_WRONG_WORKPLACE = "Falscher Arbeitsplatz!",
+
+MSG_CRAFT_SKILL_GAINED = "Ihr habt eure Faehigkeiten in diesem Handwerk verbessert.",
+
+// Crafting skill
+MSG_CRAFT_CSKILL_NOT_ENOUGH = "Eure Faehigkeiten in diesem Handwerk reichen nicht aus.",
+// Player skill
+MSG_CRAFT_SKILLCHECK_FAILED = "Ohje!  Das ging daneben.",
+
+MSG_CRAFT_RECIPE_WRONGORDER = "Irgendetwas an der Reihenfolge oder der Menge der Zutaten .. ging schief.",
+
+MSG_CRAFT_NEED_FEAT = "Ihr habt nicht das noetige Talent fuer dieses Rezept.",
+MSG_CRAFT_RECIPE_NOTFOUND = "Ohje!  Das ging daneben.",    // "Rezept nicht gefunden.  Bitte vor dem Crafting ueber den Plan festlegen.",
+MSG_CRAFT_PLAN_NOTFOUND = "Plan nicht gefunden.  Bitte vorher den den Arbeitsplan festlegen.",
+MSG_CRAFT_PLAN_USED = "Geplantes Rezept: ",
+MSG_CRAFT_INUSE = "Dieser Arbeitsplatz ist in Benutzung.  Bitte wartet ab, bis er frei wird.",
+MSG_CRAFT_START = "Alle Komponenten gestellt und gewirkt beginnt Ihr den Herstellungsvorgang.",
+MSG_CRAFT_FAIL = "Woah!  Das hat nicht geklappt.  Leider gingen alle Komponenten verloren.",
+MSG_CRAFT_ABORTED = "Der Herstellungsvorgang wurde abgebrochen.  Eventuelle Magieladungen bleiben bestehen.",
+
+MSG_CRAFT_PLAN_SET = "Plan gesetzt: ",
+TMP = "";
+
+const int
+CRAFT_SAVE_COMPONENTS_DC = 14,
+
+// Make sure this is always bigger than your max spell id
+SPELL_BORDER = 2048;
+
+
+// When someone opens up a WorkPlace.
+int OnOpen(object oPC, object oWorkPlace);
+
+// When someone casts a spell at a workplace.
+int OnSpellCastAt(object oPC, object oWorkPlace, int nSpell, int nMetaMagic);
+
+// When someone puts something into the workplaces
+// inventory.
+int OnDisturb(object oPC, object oWorkPlace, object oItem, int nDisturbType);
+
+// Starts the crafting process.
+// Wrapper for DoCraft
+int OnClose(object oPC, object oWorkPlace);
+
+// The final step in the crafting process.
+// Do the crafting when the workplace
+// inventory is being closed.
+// Do not call directly.  Use the OnClose()-Wrapper instead.
+void DoCraft(object oPC, object oWorkPlace);
+
+
+// Do not call, internal use only.
+void FinishDoCraft(object oPC, object oWorkPlace, struct Recipe r, int nStackMin, int nStackMax);
+
+// impl
+
+
+
+void DoSpellEffects(object oWorkPlace) {
+	if ( !GetLocalInt(oWorkPlace, "spell") )
+		return;
+
+	// DrawStar(DURATION_TYPE_INSTANT, VFX_IMP_DAZED_S, GetLocation(oWorkPlace), 4.5, 1.2, 5, 0.0, 90, 5.0f, 5.0f, IntToFloat(Random(200)));
+
+	int fx = Random(6);
+	fx = fx ==
+		 0 ? VFX_IMP_PULSE_COLD : fx ==
+		 1 ? VFX_IMP_PULSE_FIRE : fx ==
+		 2 ? VFX_IMP_PULSE_NATURE : fx ==
+		 3 ? VFX_IMP_PULSE_WATER : fx == 4 ? VFX_IMP_PULSE_WIND : VFX_IMP_PULSE_NEGATIVE;
+
+	//DrawCircle(DURATION_TYPE_INSTANT, fx, GetLocation(oWorkPlace), 1.5, 0.0, 2 + GetLocalInt(oWorkPlace, "spell_count"), 1.0f, 2.4, IntToFloat(Random(360)));
+
+	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(fx), GetLocation(oWorkPlace));
+
+	DelayCommand(5.5 / IntToFloat(GetLocalInt(oWorkPlace, "spell_count")), DoSpellEffects(oWorkPlace));
+}
+
+
+int OnSpellCastAt(object oPC, object oWorkPlace, int nSpell, int nMetaMagic) {
+	// Changed for spellhook:
+	//   Allow any old sucker to cast spells at workplaces
+	if ( !GetIsPC(oPC) )
+		return 0;
+
+	if ( SPELL_GREATER_DISPELLING == nSpell
+		|| SPELL_LESSER_DISPEL == nSpell
+		|| nSpell == SPELL_DISPEL_MAGIC
+		|| nSpell == SPELL_MORDENKAINENS_DISJUNCTION
+	) {
+		if ( GetLocalInt(oWorkPlace, "spell") )
+			Notify(MSG_CRAFT_SPELL_DISPEL, oPC);
+
+		CleanupSpell(oWorkPlace);
+		return 1;
+	}
+
+	if ( GetLocalInt(oWorkPlace, "spell") ) {
+		Notify(MSG_CRAFT_SPELL_ADD, oPC);
+	} else {
+		Notify(MSG_CRAFT_SPELL_CAST, oPC);
+	}
+
+	int
+	nCSpellCount = GetLocalInt(oWorkPlace, "spell_count"),
+	nCSpell = GetLocalInt(oWorkPlace, "spell"),
+	nCMetaSpell = GetLocalInt(oWorkPlace, "spell_metamagic");
+
+	nCSpell += nSpell + ( SPELL_BORDER * nCSpellCount );
+
+	if ( GetIsDM(oPC) )
+		SendMessageToPC(oPC, "Spell charge is now: " + IntToString(nCSpell));
+
+	nCSpellCount++;
+
+	SetLocalInt(oWorkPlace, "spell_count", nCSpellCount);
+	SetLocalInt(oWorkPlace, "spell", nCSpell);
+	SetLocalInt(oWorkPlace, "spell_metamagic", nMetaMagic);
+	SetLocalObject(oWorkPlace, "spell_by", oPC);
+
+	int nFX = VFX_DUR_AURA_GREEN;
+	switch ( nCSpell % 6 ) {
+		case 0: nFX = VFX_DUR_AURA_MAGENTA; break;
+		case 1: nFX = VFX_DUR_AURA_CYAN; break;
+		case 2: nFX = VFX_DUR_AURA_BROWN; break;
+		case 3: nFX = VFX_DUR_AURA_BLUE_LIGHT; break;
+		case 4: nFX = VFX_DUR_AURA_GREEN; break;
+		case 5: nFX = VFX_DUR_AURA_ORANGE; break;
+	}
+
+	effect eVFX = GetFirstEffect(oWorkPlace);
+	while ( GetIsEffectValid(eVFX) ) {
+		RemoveEffect(oWorkPlace, eVFX);
+		eVFX = GetNextEffect(oWorkPlace);
+	}
+
+	eVFX = EffectVisualEffect(nFX);
+
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT, eVFX, oWorkPlace);
+
+
+
+
+	if ( nCSpellCount > 1 ) {
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectVisualEffect(VFX_DUR_MAGIC_RESISTANCE), oWorkPlace);
+		DoSpellEffects(oWorkPlace);
+	}
+
+	if ( nCSpellCount > 2 )
+		DrawSpiral(DURATION_TYPE_INSTANT, VFX_FNF_PWSTUN, GetLocation(oWorkPlace), 1.4, 0.0, 1.2, 30, 3.0);
+
+	if ( nCSpellCount > 3 ) {
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectVisualEffect(VFX_DUR_SMOKE), oWorkPlace);
+
+	}
+	if ( nCSpellCount > 4 ) {}
+
+	// Make some throw
+	if ( nCSpellCount > 2
+		&& !ThrowCraftCheck(oPC, oWorkPlace, GetAbilityModifier(ABILITY_INTELLIGENCE, oPC), 3 *
+			nCSpellCount, "Arkanen-Eskalation") ) {
+		// WOOOOAAHM.
+		if ( nCSpellCount > 3 ) {
+			// DelayCommand(0.3, AssignCommand(oWorkPlace, ActionCastSpellAtObject(SPELL_FIREBRAND, oWorkPlace, METAMAGIC_ANY, 1, 0, PROJECTILE_PATH_TYPE_DEFAULT, 1)));
+			DelayCommand(1.0, AssignCommand(oWorkPlace, ActionCastSpellAtObject(SPELL_FIREBALL, oWorkPlace,
+						METAMAGIC_ANY, 1, 0, PROJECTILE_PATH_TYPE_DEFAULT, 1)));
+			DelayCommand(1.5, AssignCommand(oWorkPlace, ActionCastSpellAtObject(SPELL_FIREBALL, oWorkPlace,
+						METAMAGIC_ANY, 1, 0, PROJECTILE_PATH_TYPE_DEFAULT, 1)));
+			DelayCommand(1.9, AssignCommand(oWorkPlace, ActionCastSpellAtObject(SPELL_FIREBALL, oWorkPlace,
+						METAMAGIC_ANY, 1, 0, PROJECTILE_PATH_TYPE_DEFAULT, 1)));
+			// AssignCommand(oWorkPlace, ActionCastSpellAtObject(SPELL_ACID_FOG, oWorkPlace, METAMAGIC_ANY, TRUE, 0, PROJECTILE_PATH_TYPE_DEFAULT, 1));
+		}
+
+		CleanupSpell(oWorkPlace);
+		return 1;
+	}
+	return 1;
+}
+
+
+int OnOpen(object oPC, object oWorkPlace) {
+	if ( !GetIsPC(oPC) )
+		return 0;
+
+	if ( GetLocalInt(oWorkPlace, "dontcraft") ) {
+
+		// Dont start a new craft process if there is stale stuff on the table.
+		if ( GetIsObjectValid(GetFirstItemInInventory(oWorkPlace)) )
+			return 0;
+
+		// Otherwise do start anew.
+		SetLocalInt(oWorkPlace, "dontcraft", 0);
+
+		// CLLLLEEEEAAAANNSSSE. (Not the spell though!)
+		VirginiseWorkplace(oWorkPlace);
+	}
+
+
+	object oCrafter = GetCurrentCrafter(oWorkPlace);
+
+	if ( GetIsObjectValid(oCrafter) && oCrafter != oPC ) {
+		AssignCommand(oPC, ClearAllActions());
+		AssignCommand(oPC, ActionMoveAwayFromObject(oWorkPlace, 1, 5.0));
+		Notify(MSG_CRAFT_INUSE, oPC);
+		return 0;
+
+	} else {
+		if ( !GetIsDM(oPC) && !GetCharacterID(oPC) ) {
+			AssignCommand(oPC, ClearAllActions());
+			AssignCommand(oPC, ActionMoveAwayFromObject(oWorkPlace, 1, 5.0));
+			Notify("Bug! Keine Char-ID gefunden!", oPC);
+			return 0;
+		}
+
+		struct Recipe r = GetSelectedCraftRecipe(oPC);
+
+		if ( !GetIsRecipeValid(r) ) {
+			AssignCommand(oPC, ClearAllActions());
+			AssignCommand(oPC, ActionMoveAwayFromObject(oWorkPlace, 1, 5.0));
+			Notify(MSG_CRAFT_PLAN_NOTFOUND, oPC);
+			return 0;
+		}
+
+		// Check if we are at the right workplace.
+		if ( r.workplace != GetTag(oWorkPlace) ) {
+			AssignCommand(oPC, ClearAllActions());
+			AssignCommand(oPC, ActionMoveAwayFromObject(oWorkPlace, 1, 5.0));
+			Notify(MSG_CRAFT_WRONG_WORKPLACE, oPC);
+			return 0;
+		}
+
+		if ( !RunCraftScript(r.s_craft, oWorkPlace, oPC, CRAFT_EVENT_OPEN) )
+			return 0;
+
+
+		Notify(MSG_CRAFT_PROCESS_START, oPC);
+		Notify(MSG_CRAFT_PLAN_USED + r.name, oPC);
+		SetLocalObject(oWorkPlace, "crafter", oPC);
+		return 1;
+	}
+}
+
+
+int OnDisturb(object oPC, object oWorkPlace, object oItem, int nDisturbType) {
+	if ( !GetIsPC(oPC) )
+		return 0;
+
+	// Something was finished crafting, now we allow him to reap the rewards.
+	if ( GetLocalInt(oWorkPlace, "dontcraft") ) {
+
+		// He emptied it just now
+		if ( !GetIsObjectValid(GetFirstItemInInventory(oWorkPlace)) ) {
+			SetLocalInt(oWorkPlace, "dontcraft", 0);
+			VirginiseWorkplace(oWorkPlace);
+
+			// Start something shiny-new
+			Notify(MSG_CRAFT_PROCESS_START2, oPC);
+			SetLocalObject(oWorkPlace, "crafter", oPC);
+		} else {
+			// Let him clean up first.
+			return 0;
+		}
+	}
+
+	struct Recipe r = GetSelectedCraftRecipe(oPC);
+
+	if ( GetIsRecipeValid(r) && !RunCraftScript(r.s_craft, oWorkPlace, oPC, CRAFT_EVENT_DISTURB) )
+		return 0;
+
+	switch ( nDisturbType ) {
+		case INVENTORY_DISTURB_TYPE_ADDED:
+			// split up and return the rest
+			if ( GetItemStackSize(oItem) > 1 ) {
+				string sResRef = GetResRef(oItem);
+				object oNew = CreateItemOnObject(sResRef, oPC, GetItemStackSize(oItem) - 1);
+				SetStolenFlag(oNew, GetStolenFlag(oItem));
+
+				SetItemStackSize(oItem, 1);
+			}
+
+			AddCraftComponent(oWorkPlace, oItem);
+
+			if ( GetLocalInt(oWorkPlace, "consume") && !GetIsCraftTool(oItem) ) {
+				ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_SMOKE_PUFF), oWorkPlace);
+				DestroyObject(oItem);
+			}
+			break;
+
+		case INVENTORY_DISTURB_TYPE_STOLEN:
+		case INVENTORY_DISTURB_TYPE_REMOVED:
+			// Abort crafting process.
+			if ( GetCurrentCraftComponents(oWorkPlace) != "" ) {
+				Notify(MSG_CRAFT_ABORTED, oPC);
+			}
+
+			// Copy the remaining stuff over.
+			TransferAllItems(oWorkPlace, oPC);
+
+			// And cleanse the workplace.
+			VirginiseWorkplace(oWorkPlace);
+			break;
+	}
+
+	return 1;
+}
+
+
+int OnClose(object oPC, object oWorkPlace) {
+	if ( !GetIsPC(oPC) )
+		return 0;
+
+	// Dont start if we're already done
+	if ( GetLocalInt(oWorkPlace, "dontcraft") ) {
+		return 0;
+	}
+
+	// Dont run for people that buggered of before even starting.
+	if ( !GetIsObjectValid(GetCurrentCrafter(oWorkPlace)) )
+		return 0;
+
+	// Means the crafter went away and did nothing much of value.
+	if ( GetCurrentCraftComponents(oWorkPlace) == "" ) {
+		VirginiseWorkplace(oWorkPlace);
+		return 0;
+	}
+
+	// Dont start crafting if for some reason not the crafter closed the stuff
+	if ( GetCurrentCrafter(oWorkPlace) != oPC )
+		return 0;
+
+	struct Recipe r = GetSelectedCraftRecipe(oPC);
+
+	if ( GetIsRecipeValid(r) && !RunCraftScript(r.s_craft, oWorkPlace, oPC, CRAFT_EVENT_CLOSE) )
+		return 0;
+
+	DoCraft(oPC, oWorkPlace);
+	return 1;
+}
+
+
+void DoCraft(object oPC, object oWorkPlace) {
+	if ( !GetIsPC(oPC) )
+		return;
+
+	object oCrafter = GetCurrentCrafter(oWorkPlace);
+	int nCID = GetCharacterID(oCrafter);
+
+	int nFailed = 0;
+	int nFailedMiserably = 0;
+
+
+	int nReturnStuff = 0;
+
+	string sComponents = GetCurrentCraftComponents(oWorkPlace);
+
+	struct Recipe r = GetSelectedCraftRecipe(oPC);
+
+	// Did we find the bleedin recipe?
+	if ( !nFailed && !GetIsRecipeValid(r) ) {
+		Notify(MSG_CRAFT_RECIPE_NOTFOUND, oPC);
+		nReturnStuff = 0;
+		nFailed = 1;
+	}
+
+	if ( !TestComponents(r, sComponents) ) {
+		Notify(MSG_CRAFT_RECIPE_WRONGORDER, oPC);
+		nReturnStuff = 0;
+		nFailed = 1;
+	}
+
+	// Check if we are at the right craft category workplace
+	/*if (!nFailed && r.cskill != GetCraftSkillFromWorkplace(oWorkPlace)) {
+	 * 	Notify(MSG_CRAFT_WRONG_WORKPLACE, oPC);
+	 * 	nReturnStuff = 1;
+	 * 	nFailed = 1;
+	 * }*/
+
+	// Check if we are at the right workplace.
+	if ( !nFailed && r.workplace != GetTag(oWorkPlace) ) {
+		//SendMessageToPC(oPC, "Rec requires '" + r.workplace + ", wp is " + GetTag(oWorkPlace));
+		Notify(MSG_CRAFT_WRONG_WORKPLACE, oPC);
+		nReturnStuff = 1;
+		nFailed = 1;
+	}
+
+
+	// Check time-based craft limitations on this recipe
+	int nCraftTimeDiff = GetMayCraftDiff(oPC, r);
+	if ( !nFailed && nCraftTimeDiff > 0 ) {
+		Notify(MSG_CRAFT_TIMELIMIT_EXCEEDED, oPC);
+		string sSec = IntToString(nCraftTimeDiff);
+		Notify(MSG_CRAFT_TIMELIMIT_WAITFOR + sSec + MSG_CRAFT_TIMELIMIT_UNIT, oPC);
+		nReturnStuff = 1;
+		nFailed = 1;
+	}
+
+
+	// Now begins the actual crafting.
+	// load data
+	struct PlayerSkill s = GetPlayerSkill(oCrafter, r.cskill);
+
+
+	// Check if we loaded the proper spell!
+
+	if ( !nFailed && GetLocalInt(oWorkPlace, "spell") == 0 && - 1 != r.spell0 ) {
+		Notify(MSG_CRAFT_NEED_SPELL, oPC);
+		nReturnStuff = 0;
+		nFailed = 1;
+	}
+
+	if ( !nFailed && GetLocalInt(oWorkPlace, "spell") != 0 && - 1 == r.spell0 ) {
+		Notify(MSG_CRAFT_NEED_NOSPELL, oPC);
+		//SetImmortal(oPC, 1);
+		//AssignCommand(oWorkPlace, ActionCastSpellAtObject(SPELL_FIREBALL, oPC, METAMAGIC_ANY, TRUE, 0, PROJECTILE_PATH_TYPE_HOMING, 1));
+		AssignCommand(oWorkPlace, ActionCastSpellAtObject(SPELL_FIREBRAND, oWorkPlace, METAMAGIC_ANY, TRUE, 0,
+				PROJECTILE_PATH_TYPE_DEFAULT, 1));
+		//DelayCommand(4.0, SetImmortal(oPC, 0));
+		nReturnStuff = 0;
+		nFailed = 1;
+	}
+
+
+	if ( !nFailed
+		&& ( r.spell0 > -1 && GetLocalInt(oWorkPlace, "spell") != r.spell0 )
+		&& ( r.spell1 > -1 && GetLocalInt(oWorkPlace, "spell") != r.spell1 )
+		&& ( r.spell2 > -1 && GetLocalInt(oWorkPlace, "spell") != r.spell2 )
+		&& ( r.spell3 > -1 && GetLocalInt(oWorkPlace, "spell") != r.spell3 )
+		&& ( r.spell4 > -1 && GetLocalInt(oWorkPlace, "spell") != r.spell4 )
+	) {
+		Notify(MSG_CRAFT_WRONG_SPELL, oPC);
+		nReturnStuff = 0;
+		nFailed = 1;
+	}
+
+	// Check if the player has the necessary FEAT chosen.
+	if ( !nFailed && r.feat > -1 && !GetHasFeat(r.feat, oPC) ) {
+		Notify(MSG_CRAFT_NEED_FEAT, oPC);
+		nReturnStuff = 0;
+		nFailed = 1;
+	}
+
+	// Check if the player has enough cskill for this recipe.
+	if ( !nFailed && !GetHasNecessarySkill(oPC, r) ) {
+		Notify(MSG_CRAFT_CSKILL_NOT_ENOUGH, oPC);
+		nReturnStuff = 0;
+		nFailed = 1;
+	}
+
+
+	int nAddBonus = 0;
+	if ( GetCraftMetaMagic(oWorkPlace) == METAMAGIC_EMPOWER )
+		nAddBonus += 4;
+
+	// Throw a die for the player skill.
+	if ( !nFailed
+		&& r.skill > -1
+		&& !ThrowCraftCheck(oPC, oWorkPlace, GetSkillRank(r.skill, oPC) + nAddBonus, r.skill_dc) ) {
+		if ( GetThrowCraftWasNaturalFail(oWorkPlace) )
+			nFailedMiserably = 1;
+
+		Notify(MSG_CRAFT_SKILLCHECK_FAILED, oPC);
+		nReturnStuff = 0;
+		nFailed = 1;
+	}
+
+	// Check ability roll
+	if ( !nFailed
+		&& r.ability > -1
+		&& !ThrowCraftCheck(oPC, oWorkPlace, GetAbilityModifier(r.ability, oPC) +
+			( s.practical / 20 ) + nAddBonus, r.ability_dc) ) {
+		if ( GetThrowCraftWasNaturalFail(oWorkPlace) )
+			nFailedMiserably = 1;
+
+		Notify(MSG_CRAFT_SKILLCHECK_FAILED, oPC);
+		nReturnStuff = 0;
+		nFailed = 1;
+	}
+
+	// Make the player advance skill if he can still learn stuff. Do not advance DMs, posing as some player.
+	// and hasnt failed.
+	if ( !GetIsDM(oPC) && !nFailed ) {
+		if ( !GetCanLearnInCraftSkill(oPC, r) )
+			Notify(MSG_CRAFT_CANT_LEARN_ANYMORE, oPC);
+		else if ( AdvanceCraftSkill(oPC, r, CRAFT_LEARN_ACTIVE) )
+			Notify(MSG_CRAFT_SKILL_GAINED, oPC);
+	}
+
+
+	/* now the rest */
+
+
+
+	// Return all stuff thats there if we didnt fail miserably.
+	if ( !nFailedMiserably && nFailed && nReturnStuff ) {
+		TransferAllItems(oWorkPlace, oPC);
+	}
+
+
+	// IF FAIL, FAIL HARD AND FAIL EARLY!
+
+	// do the visuals that we failed
+	if ( nFailed ) {
+		effect eV = EffectVisualEffect(VFX_IMP_NEGATIVE_ENERGY);
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, eV, oWorkPlace);
+	}
+
+	if ( nFailedMiserably && r.spell_fail != -1 ) {
+		// Kaboom.
+		effect eV = EffectVisualEffect(VFX_IMP_NEGATIVE_ENERGY);
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, eV, oWorkPlace);
+		DelayCommand(1.0, ApplyEffectToObject(DURATION_TYPE_INSTANT, eV, oWorkPlace));
+		DelayCommand(2.0, ApplyEffectToObject(DURATION_TYPE_INSTANT, eV, oWorkPlace));
+		DelayCommand(3.0, ApplyEffectToObject(DURATION_TYPE_INSTANT, eV, oWorkPlace));
+		DelayCommand(4.0, AssignCommand(oWorkPlace, ActionCastSpellAtObject(r.spell_fail, oWorkPlace,
+					METAMAGIC_ANY, TRUE, 0, PROJECTILE_PATH_TYPE_DEFAULT, 1)));
+	}
+
+
+	// Now allow for some stuff to be saved (if it wasnt returned up above
+	if ( nFailed && !nFailedMiserably && !nReturnStuff ) {
+
+		// allow the player to save SOME stuff by throwing concentration and dexterity checks.
+		object oItem = GetFirstItemInInventory(oWorkPlace);
+		int nSaveComp = 0;
+
+		int nSaveDC = CRAFT_SAVE_COMPONENTS_DC;
+		if ( r.components_save_dc > 0 )
+			nSaveDC = r.components_save_dc;
+
+		while ( GetIsObjectValid(oItem) ) {
+			if ( ThrowCraftCheck(oPC, oWorkPlace, GetSkillRank(SKILL_CONCENTRATION, oPC), nSaveDC,
+					"(Konzentration): " + GetName(oItem))
+				|| ThrowCraftCheck(oPC, oWorkPlace, GetAbilityModifier(ABILITY_DEXTERITY, oPC), nSaveDC,
+					"(Geschicklichkeit) " + GetName(oItem))
+			) {
+				SetLocalInt(oItem, "craft_return", 1);
+				nSaveComp += 1;
+			}
+
+			oItem = GetNextItemInInventory(oItem);
+		}
+
+		if ( nSaveComp > 0 ) {
+			Notify(MSG_CRAFT_SAVE_COMPONENTS, oPC);
+		}
+	}
+
+	// Remove the spell now.
+	CleanupSpell(oWorkPlace);
+
+	// Cleanup all that should vanish, leave the items the crafter did save.
+	CleanupWorkplace(oWorkPlace);
+
+
+	// Decrement tool usage and kill those that fail.
+	int nUses;
+	int nDestroyedTools = 0;
+	object oItem = GetFirstItemInInventory(oWorkPlace);
+	while ( GetIsObjectValid(oItem) ) {
+		if ( GetIsCraftTool(oItem) && GetLocalInt(oItem, "use_uses") ) {
+			nUses = GetLocalInt(oItem, "uses") - 1;
+			if ( nUses < 1 ) {
+				nDestroyedTools++;
+				DestroyObject(oItem);
+			} else {
+				SetLocalInt(oItem, "uses", nUses);
+			}
+
+		}
+		oItem = GetNextItemInInventory(oWorkPlace);
+	}
+
+	if ( nDestroyedTools > 0 )
+		Notify(MSG_CRAFT_TOOL_WENT_BROKE, oPC);
+
+
+
+
+	int nStackMin = r.count_min,
+		nStackMax = r.count_max;
+
+	int nMeta = GetCraftMetaMagic(oWorkPlace);
+
+	if ( METAMAGIC_MAXIMIZE == nMeta )
+		nStackMin = r.count_max;
+
+	if ( METAMAGIC_EXTEND == nMeta && r.count_max > 1 ) {
+		r.count_min += 1;
+		r.count_max += 1;
+	}
+
+	// Now create the fail items.
+	if ( nFailed && !nFailedMiserably ) {
+
+		// int nCount = CreateItemOnObjectByResRefString(r.resref_fail, oWorkPlace, 1, 1, "#", "creator_cid", nCID);
+		int nCount = 0;
+
+		int nXP = FloatToInt(r.xp_cost * IntToFloat(nCount));
+
+		// Dont bother DMs with that.
+		if ( GetIsDM(oPC) )
+			nXP = 0;
+
+		if ( nXP != 0 ) {
+			// Spellcaster takes 1/3rd of the XP cost
+			object oSpellCaster = GetCraftSpellCaster(oWorkPlace);
+			int nSpellCasterXP = nXP / 3;
+			nXP = nSpellCasterXP * 2;
+
+			SetXP(oSpellCaster, GetXP(oSpellCaster) + ( nSpellCasterXP / 2 ));
+			SetXP(oPC, GetXP(oPC) + ( nXP / 2 ));
+		}
+		UpdateCraftStat(oPC, r, 0, 0, 1);
+	}
+
+	if ( nFailed )
+		audit("craftfail", oPC, audit_fields("recipe", IntToString(r.id), "meta", IntToString(nMeta),
+				"miserably", IntToString(nFailedMiserably)), "craft", oWorkPlace);
+
+
+	// Hey, we came through. Un-bloody-believable.  Lets create the rewards.
+	if ( !nFailed ) {
+		audit("craftsuccess", oPC, audit_fields("recipe", IntToString(r.id), "meta", IntToString(nMeta),
+				"min", IntToString(nStackMin), "max", IntToString(nStackMax)), "craft", oWorkPlace);
+
+		if ( r.lock_duration > 2 ) {
+
+			// Lock up until we say otherwise.
+			SetLocked(oWorkPlace, 1);
+
+			Notify(MSG_CRAFT_PROCESS_START, oPC);
+
+			int nWorkTextSpan = GetLocalInt(oWorkPlace, "worktextspan");
+			string sWorkText = "";
+
+			string sWorkTextStart = GetLocalString(oWorkPlace, "worktextstart");
+			string sWorkTextEnd = GetLocalString(oWorkPlace, "worktextend");
+
+			int nTextIteration = 0;
+
+			if ( nWorkTextSpan > 0 ) {
+				int nHowMany = ( sWorkTextStart != "" ) +
+							   ( sWorkTextEnd != "" ) + ( r.lock_duration / nWorkTextSpan ) - 2;
+				int i;
+
+				if ( nHowMany > 0 ) {
+					if ( sWorkTextStart != "" )
+						Notify(sWorkTextStart, oWorkPlace);
+					if ( sWorkTextEnd != "" )
+						DelayCommand(IntToFloat(r.lock_duration), Notify(sWorkTextEnd, oWorkPlace));
+
+					for ( i = 0; i < nHowMany; i++ ) {
+						nTextIteration += 1;
+						sWorkText = GetLocalString(oWorkPlace, "worktext" + IntToString(nTextIteration));
+						if ( sWorkText == "" ) {
+							nTextIteration = 1;
+							sWorkText = GetLocalString(oWorkPlace, "worktext" +
+											IntToString(nTextIteration + 1));
+						}
+
+						if ( sWorkText != "" )
+							DelayCommand(IntToFloat(( i + 1 ) * nWorkTextSpan), Notify(sWorkText, oWorkPlace));
+
+						else
+							break;
+					}
+				}
+			}
+
+			DelayCommand(IntToFloat(r.lock_duration),  FinishDoCraft(oPC, oWorkPlace, r, nStackMin, nStackMax));
+		} else {
+			FinishDoCraft(oPC, oWorkPlace, r, nStackMin, nStackMax);
+		}
+	}
+
+	// Dont do another crafting run until the place has been cleansed again
+	SetLocalInt(oWorkPlace, "dontcraft", 1);
+}
+
+
+
+
+void FinishDoCraft(object oPC, object oWorkPlace, struct Recipe r, int nStackMin, int nStackMax) {
+	object oCrafter = GetCurrentCrafter(oWorkPlace);
+	int nCrafterID = GetCharacterID(oCrafter);
+
+
+	SetLocked(oWorkPlace, 0);
+
+	int i;
+	int nCount = 0;
+
+	nCount = CreateItemOnObjectByResRefString(r.resref, oWorkPlace, nStackMin, nStackMax, "#", "creator_cid",
+				 nCrafterID);
+
+
+	int nXP = FloatToInt(r.xp_cost * IntToFloat(nCount));
+
+	// Dont bother DMs with that.
+	if ( GetIsDM(oPC) )
+		nXP = 0;
+
+	if ( nXP != 0 ) {
+		object oSpellCaster = GetCraftSpellCaster(oWorkPlace);
+		int nSpellCasterXP = nXP / 3;
+		nXP = nSpellCasterXP * 2;
+
+		SetXP(oSpellCaster, GetXP(oSpellCaster) - nSpellCasterXP);
+		SetXP(oPC, GetXP(oPC) - nXP);
+	}
+
+	if ( nCrafterID )
+		UpdateCraftStat(oPC, r, 1, 1, 0);
+
+	Notify(MSG_CRAFT_SUCCESS, oPC);
+}

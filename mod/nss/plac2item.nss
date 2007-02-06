@@ -1,0 +1,43 @@
+#include "inc_dbplac"
+
+
+void main() {
+	object oO = OBJECT_SELF;
+	object oA = GetLastAttacker();
+
+	if ( !GetIsPC(oA) )
+		return;
+
+	string sResRef = GetResRef(oO);
+	string sTag = GetTag(oO);
+
+	if ( GetLocalInt(oO, "nonmobile") || GetIsTrapped(oO) ) {
+		FloatingTextStringOnCreature("So sehr ihr auch zerrt und zieht; dieser Gegenstand bewegt sich nicht.",
+			oA, 1);
+		return;
+	}
+
+
+	object oSitter = GetSittingCreature(oO);
+	if ( GetIsObjectValid(oSitter) ) {
+		// Throw him off.
+		AssignCommand(oSitter, ClearAllActions(1));
+		AssignCommand(oSitter, ActionPlayAnimation(ANIMATION_LOOPING_DEAD_FRONT, 1.0, 100000.0));
+	}
+
+	object oInv = CreateItemOnObject(sTag, oA);
+	SetName(oInv, GetName(oO));
+
+
+	if ( 0 < GetLocalInt(oO, "placie_id") ) {
+
+		SetLocalInt(oInv, "placie_id", GetLocalInt(oO, "placie_id"));
+
+		// prevent this placeable from being respawned
+		SQLQuery("update `" +
+			PLAC_TABLE +
+			"` set `area`='' where `id` = '" + IntToString(GetLocalInt(oO, "placie_id")) + "' limit 1;");
+	}
+
+	DestroyObject(oO);
+}

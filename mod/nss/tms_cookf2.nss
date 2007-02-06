@@ -1,0 +1,19 @@
+#include "inc_decay"
+
+void main() {
+	object oPC = GetLastUsedBy();
+
+	if ( GetLocalDecay(OBJECT_SELF, "TMS_FireTime") ) {
+		FloatingTextStringOnCreature(
+			"Der Braten sieht noch nicht gar aus.", oPC, FALSE);
+		return;
+	}
+
+	FloatingTextStringOnCreature(
+		"Der Braten ist fertig, Du nimmst ihn vom Feuer.", oPC, FALSE);
+	CreateItemOnObject("food_cok_" + GetLocalString(OBJECT_SELF, "TMS_FoodType"), oPC, 1);
+	DestroyObject(OBJECT_SELF);
+	CreateObject(OBJECT_TYPE_PLACEABLE, "tms_pl_fire1", GetLocation(OBJECT_SELF));
+	object oArea = GetArea(oPC);
+	AssignCommand(oArea, DelayCommand(1.0f, RecomputeStaticLighting(oArea)));
+}

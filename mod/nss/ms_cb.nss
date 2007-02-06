@@ -1,0 +1,199 @@
+// callback for the mentor item
+
+#include "inc_ms"
+#include "inc_lists"
+
+
+
+void main() {
+	object
+	oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC"),
+	oTarget = GetLocalObject(oPC, "mentor_target");
+
+	int
+	iSelection = GetLocalInt(oPC, "ConvList_Select");
+	iSelection = GetListInt(oPC, "ms", iSelection);
+
+	struct Mentor sM = GetMentor(oPC);
+
+	int
+	nCharge = sM.charge,
+	nCapacity = sM.capacity,
+	nXPA = sM.amount_per_pc;
+
+
+
+	object oIterate;
+
+	string sPlayers = "";
+
+	int nTotalGiven = 0;
+
+	int nChargeNeeded = 0;
+
+	switch ( iSelection ) {
+		// 30 xp to the selected player
+		case 2:
+			nChargeNeeded = nXPA;
+
+			if ( nCharge < nChargeNeeded ) {
+				FloatingTextStringOnCreature(
+					"Der Mentorenstab hat nicht genug Ladung, um diese Aktion auszufuehren.", oPC, 0);
+				break;
+			}
+
+
+			nTotalGiven += nXPA;
+			audit("give_pc", oPC, audit_fields("xp", IntToString(nXPA), "players", IntToString(GetCharacterID(
+							oTarget))), "mentor");
+			MentorDoXPTransaction(oPC, oTarget, nXPA);
+
+			break;
+
+
+
+
+			// 30 xp to all players in my group
+		case 3:
+			oIterate = GetFirstFactionMember(oPC, 1);
+
+			while ( GetIsObjectValid(oIterate) ) {
+
+				if ( !GetIsDM(oIterate) && oPC != oIterate ) {
+					nChargeNeeded += nXPA;
+				}
+
+				oIterate = GetNextFactionMember(oPC, 1);
+			}
+
+			nChargeNeeded += GetMentorSelfValue(sM);
+
+			if ( nCharge < nChargeNeeded ) {
+				FloatingTextStringOnCreature(
+					"Der Mentorenstab hat nicht genug Ladung, um diese Aktion auszufuehren.", oPC, 0);
+				break;
+			}
+
+			oIterate = GetFirstFactionMember(oPC, 1);
+			while ( GetIsObjectValid(oIterate) ) {
+
+				if ( !GetIsDM(oIterate) ) {
+					if ( oIterate == oPC ) {
+						sPlayers += ( IntToString(GetCharacterID(oIterate)) + " " );
+						nTotalGiven += GetMentorSelfValue(sM);
+						MentorDoXPTransaction(oPC, oIterate, GetMentorSelfValue(sM));
+					} else {
+						sPlayers += ( IntToString(GetCharacterID(oIterate)) + " " );
+						nTotalGiven += nXPA;
+						MentorDoXPTransaction(oPC, oIterate, nXPA);
+					}
+
+
+				}
+
+				oIterate = GetNextFactionMember(oPC, 1);
+			}
+			sPlayers = GetStringLeft(sPlayers, GetStringLength(sPlayers) - 1);
+			audit("give_party", oPC, audit_fields("xp", IntToString(nXPA), "players", sPlayers), "mentor");
+			break;
+
+
+
+
+			// 30 xp to all players in the area that oPC is
+		case 4:
+			oIterate = GetFirstPC();
+			while ( GetIsObjectValid(oIterate) ) {
+
+				if ( !GetIsDM(oIterate) && GetArea(oPC) == GetArea(oIterate) && oIterate != oPC ) {
+					nChargeNeeded += nXPA;
+				}
+
+				oIterate = GetNextPC();
+			}
+
+			nChargeNeeded += GetMentorSelfValue(sM);
+
+			if ( nCharge < nChargeNeeded ) {
+				FloatingTextStringOnCreature(
+					"Der Mentorenstab hat nicht genug Ladung, um diese Aktion auszufuehren.", oPC, 0);
+				break;
+			}
+
+			oIterate = GetFirstPC();
+			while ( GetIsObjectValid(oIterate) ) {
+				if ( !GetIsDM(oIterate) && GetArea(oPC) == GetArea(oIterate) ) {
+
+					if ( oIterate == oPC ) {
+						sPlayers += ( IntToString(GetCharacterID(oIterate)) + " " );
+						nTotalGiven += GetMentorSelfValue(sM);
+						MentorDoXPTransaction(oPC, oIterate, GetMentorSelfValue(sM));
+					} else {
+
+						sPlayers += ( IntToString(GetCharacterID(oIterate)) + " " );
+						nTotalGiven += nXPA;
+						MentorDoXPTransaction(oPC, oIterate, nXPA);
+					}
+				}
+
+				oIterate = GetNextPC();
+			}
+			sPlayers = GetStringLeft(sPlayers, GetStringLength(sPlayers) - 1);
+			audit("give_area", oPC, audit_fields("xp", IntToString(nXPA), "players", sPlayers), "mentor");
+			break;
+
+
+
+
+			// 30 xp to all players on the server
+		case 5:
+			oIterate = GetFirstPC();
+			while ( GetIsObjectValid(oIterate) ) {
+
+				if ( !GetIsDM(oIterate) && oPC != oIterate ) {
+					nChargeNeeded += nXPA;
+				}
+
+				oIterate = GetNextPC();
+			}
+
+			nChargeNeeded += GetMentorSelfValue(sM);
+
+			if ( nCharge < nChargeNeeded ) {
+				FloatingTextStringOnCreature(
+					"Der Mentorenstab hat nicht genug Ladung, um diese Aktion auszufuehren.", oPC, 0);
+				break;
+			}
+
+			oIterate = GetFirstPC();
+			while ( GetIsObjectValid(oIterate) ) {
+
+				if ( !GetIsDM(oIterate) ) {
+					if ( oIterate == oPC ) {
+						sPlayers += ( IntToString(GetCharacterID(oIterate)) + " " );
+						nTotalGiven += GetMentorSelfValue(sM);
+						MentorDoXPTransaction(oPC, oIterate, GetMentorSelfValue(sM));
+					} else {
+						sPlayers += ( IntToString(GetCharacterID(oIterate)) + " " );
+						nTotalGiven += nXPA;
+						MentorDoXPTransaction(oPC, oIterate, nXPA);
+					}
+				}
+
+				oIterate = GetNextPC();
+			}
+
+			sPlayers = GetStringLeft(sPlayers, GetStringLength(sPlayers) - 1);
+			audit("give_server", oPC, audit_fields("xp", IntToString(nXPA), "players", sPlayers), "mentor");
+			break;
+	}
+
+	if ( nTotalGiven > 0 ) {
+		SendMessageToPC(oPC, "Du hast gerade " + IntToString(nTotalGiven) + " XP vergeben.");
+
+		SetMentorCharge(sM, sM.charge - nTotalGiven);
+	}
+
+	// End the conversation to prevent accidental doubleclicks
+	AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
+}

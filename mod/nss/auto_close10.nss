@@ -1,0 +1,8 @@
+void CloseLock() {
+	ActionCloseDoor(OBJECT_SELF);
+	//SetLocked(OBJECT_SELF,TRUE);
+}
+
+void main() {
+	DelayCommand(10.0f, CloseLock());
+}

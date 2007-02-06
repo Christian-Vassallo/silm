@@ -1,0 +1,63 @@
+#include "inc_misc"
+
+// Number of hearbeats before first spawn
+int FIRE_SPAWN_TIME = 5;
+
+// Maximum number of flames to spawn
+int FIRE_SPAWN_MAX  = 3;
+
+// Probability to spawn each heartbeat
+int FIRE_SPAWN_PROB = 10;
+
+// Maximum number of generations before fire dies down
+int FIRE_SPAWN_GEN  = 4;
+
+// Maximum number of turns before an individual flame dies down
+int FIRE_TURNS      = 40;
+
+void SpawnNewFlame(int iGen) {
+	location lNewLoc = GetRandomLocation(GetLocation(OBJECT_SELF), 5);
+
+	object oOb = CreateObject(OBJECT_TYPE_PLACEABLE, GetResRef(OBJECT_SELF), lNewLoc);
+	SetLocalInt(oOb, "_GENERATION", iGen);
+}
+
+void MakeFireEffects() {
+	location lLoc = GetLocation(OBJECT_SELF);
+	object oSelf = OBJECT_SELF;
+
+	object oOb = GetFirstObjectInShape(SHAPE_SPHERE, 10.0f, lLoc, FALSE,
+					 OBJECT_TYPE_CREATURE);
+
+	while ( GetIsObjectValid(oOb) ) {
+		if ( GetDistanceToObject(oOb) < 1.5f )
+			ApplyEffectToObject(DURATION_TYPE_INSTANT,
+				EffectDamage(d6(), DAMAGE_TYPE_FIRE), oOb);
+		if ( !GetIsPC(oOb) && ( GetCurrentAction(oOb) == ACTION_INVALID ) )
+			AssignCommand(oOb, ActionMoveAwayFromObject(oSelf, TRUE));
+
+		oOb = GetNextObjectInShape(SHAPE_SPHERE, 10.0f, lLoc, FALSE,
+				  OBJECT_TYPE_CREATURE);
+	}
+}
+
+void main() {
+	int iSpawnCnt    = GetLocalInt(OBJECT_SELF, "_SPAWN_CNT");
+	int iTurnCounter = GetLocalInt(OBJECT_SELF, "_TURNS");
+	int iGeneration  = GetLocalInt(OBJECT_SELF, "_GENERATION");
+
+	if ( iTurnCounter > FIRE_TURNS ) {
+		DestroyObject(OBJECT_SELF);
+		return;
+	}
+
+	SetLocalInt(OBJECT_SELF, "_TURNS", iTurnCounter + 1);
+
+	if ( d6() == 1 ) MakeFireEffects();
+
+	if ( iSpawnCnt > FIRE_SPAWN_MAX || d100() > FIRE_SPAWN_PROB
+		|| iGeneration > FIRE_SPAWN_GEN || iTurnCounter < FIRE_SPAWN_TIME ) return;
+
+	SetLocalInt(OBJECT_SELF, "_SPAWN_CNT", iSpawnCnt + 1);
+	SpawnNewFlame(iGeneration + 1);
+}

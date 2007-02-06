@@ -1,0 +1,99 @@
+/*
+ * Decay functions. These sets of functions add a SetLocalDecay()/
+ * GetLocalDecay() function to manage int variables which drop down to
+ * zero over time.
+ *
+ * As a side effect, these functions provide a neat time stamp functionality.
+ *
+ * NB: Second and minute are real time, hour and up is game time.
+ * So there are jumps in the passage of time.
+ *
+ */
+
+#include "inc_config"
+
+int DEC_TIME_ACCEL = 60 / C_MINUTES_PER_HOUR;
+
+void SetTimeStamp(object oWho, string sPref) {
+	SetLocalInt(oWho, sPref + "_s", GetTimeSecond());
+	SetLocalInt(oWho, sPref + "_m", GetTimeMinute());
+	SetLocalInt(oWho, sPref + "_h", GetTimeHour());
+	SetLocalInt(oWho, sPref + "_d", GetCalendarDay());
+	SetLocalInt(oWho, sPref + "_mm", GetCalendarMonth());
+	SetLocalInt(oWho, sPref + "_y", GetCalendarYear());
+}
+
+int SecondsPassed(object oWho, string sPref) {
+	int iPassed;
+	int iAS, iAM, iAH, iAD, iAMM, iAY;
+	int iBS, iBM, iBH, iBD, iBMM, iBY;
+
+
+/*
+ * SendMessageToAllDMs(
+ * 	"Second = "+IntToString(GetTimeSecond())+
+ * 	" Minute = "+IntToString(GetTimeMinute())+
+ * 	" Hour = "+IntToString(GetTimeHour()));
+ */
+
+	iPassed  = ( ( iAS = GetTimeSecond() )    - ( iBS = GetLocalInt(oWho, sPref + "_s") ) ) * DEC_TIME_ACCEL;
+	iPassed += ( ( iAM = GetTimeMinute() )    - ( iBM = GetLocalInt(oWho, sPref + "_m") ) ) *
+			   DEC_TIME_ACCEL * 60;
+	iPassed += ( ( iAH = GetTimeHour() )      - ( iBH = GetLocalInt(oWho, sPref + "_h") ) ) * 3600;
+	iPassed += ( ( iAD = GetCalendarDay() )   - ( iBD = GetLocalInt(oWho, sPref + "_d") ) ) * 86400;
+	iPassed += ( ( iAMM = GetCalendarMonth() ) - ( iBMM = GetLocalInt(oWho, sPref + "_mm") ) ) * 2678400;
+	iPassed += ( ( iAY = GetCalendarYear() )  - ( iBY = GetLocalInt(oWho, sPref + "_y") ) ) * 32140800;
+
+	if ( iPassed < 0 ) {
+		string sADate = IntToString(iAY) + "-" + IntToString(iAMM) + "-" + IntToString(iAD) + " " +
+						IntToString(iAH) + ":" + IntToString(iAM) + ":" + IntToString(iAS);
+		string sBDate = IntToString(iBY) + "-" + IntToString(iBMM) + "-" + IntToString(iBD) + " " +
+						IntToString(iBH) + ":" + IntToString(iBM) + ":" + IntToString(iBS);
+		WriteTimestampedLogEntry("BUG: Clock skew. " + sADate + " versus current " + sBDate);
+		SendMessageToAllDMs("BUG: Clock skew. " + sADate + " versus current " + sBDate);
+		iPassed = 0;
+	}
+
+	return iPassed;
+}
+
+void SetLocalDecay(object oWho, string sVarname, int iValue, int iDecPerHour) {
+	SetTimeStamp(oWho, sVarname);
+	SetLocalInt(oWho, sVarname + "_val", iValue);
+	if ( iDecPerHour >= 0 ) SetLocalInt(oWho, sVarname + "_dec", iDecPerHour);
+}
+
+int GetLocalDecay(object oWho, string sVarname) {
+	int iSet, iDec, iActual, iPassed;
+	float fSubtract;
+
+	if ( !GetLocalInt(oWho, sVarname + "_y") ) return 0;
+
+	iPassed = SecondsPassed(oWho, sVarname);
+
+	iSet = GetLocalInt(oWho, sVarname + "_val");
+	iDec = GetLocalInt(oWho, sVarname + "_dec");
+
+	/* Avoid possible signed int32 overflows */
+	fSubtract = ( IntToFloat(iPassed) * IntToFloat(iDec) ) / 3600.0;
+
+	if ( fSubtract > 2147483600.0 ) return 0;
+
+	iActual = iSet - FloatToInt(fSubtract);
+
+/*
+ * SendMessageToAllDMs("Set = "+IntToString(iSet)+
+ * " Dec = "+IntToString(iDec)+
+ * " Passed = "+IntToString(iPassed)+
+ * " Actual = "+IntToString(iActual));
+ */
+
+	if ( iActual < 0 ) iActual = 0;
+	return iActual;
+}
+
+int GetLocalDecrate(object oWho, string sVarname) {
+	return GetLocalInt(oWho, sVarname + "_dec");
+}
+
+// void main() { }

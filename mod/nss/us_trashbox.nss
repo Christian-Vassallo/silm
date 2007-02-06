@@ -1,0 +1,31 @@
+void main() {
+
+	int c = 0;
+	object oItem = GetFirstItemInInventory();
+	while ( GetIsObjectValid(oItem) ) {
+		DestroyObject(oItem);
+		c += 1;
+		oItem = GetNextItemInInventory();
+	}
+
+	if ( c > 0 ) {
+		switch ( Random(3) ) {
+			case 1:
+			case 0:
+				AssignCommand(OBJECT_SELF, ActionSpeakString(
+						"*Als ihr die Kiste schliesst leuchten die Runen am Schloss kurz auf, " +
+						"und ihr vernehmt ein kurzes, aber heftiges Poltern und Rumpeln in der Kiste.*",
+						TALKVOLUME_TALK)
+				);
+				break;
+			case 2:
+				AssignCommand(OBJECT_SELF, ActionSpeakString(
+						"*Die Kiste gibt ein rumpelndes Geräusch von sich. Wenn ihr es nicht " +
+						"besser wüsstet, würdet ihr denken, sie hätte gerülpst.*", TALKVOLUME_TALK)
+				);
+				break;
+		}
+	} else {
+		AssignCommand(OBJECT_SELF, ActionSpeakString("*Die Kiste seufzt enttäuscht.*", TALKVOLUME_TALK));
+	}
+}

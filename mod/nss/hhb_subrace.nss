@@ -1,0 +1,5 @@
+#include "inc_subr_area"
+
+void main() {
+	SR_Hourly_Update();
+}

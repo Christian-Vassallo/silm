@@ -1,0 +1,33 @@
+#include "inc_rock"
+
+void main() {
+	object oPC = GetLastDamager();
+	object oArea = GetArea(oPC);
+	object oGuard;
+	location lGuard = GetLocation(OBJECT_SELF);
+	int nMaxHP = GetMaxHitPoints();
+	int nCurHP = GetCurrentHitPoints();
+	int nExist = FALSE;
+	object oCheck = GetFirstObjectInArea(oArea);
+	while ( GetIsObjectValid(oCheck) ) {
+		if ( GetResRef(oCheck) == "ele_e_hherer" ) {
+			nExist = TRUE;
+		}
+		oCheck = GetNextObjectInArea(oArea);
+	}
+
+	if ( nMaxHP - nCurHP > 50 && nExist == FALSE ) {
+		// more than 50 DamagePoints and no aktive Guard
+		SetLocalInt(oPC, "Eindringling", TRUE);
+		AssignCommand(OBJECT_SELF, ActionSpeakString("*Die Steine erheben sich zu einer grollenden Masse*",
+				TALKVOLUME_TALK));
+		oGuard = CreateObject(OBJECT_TYPE_CREATURE, "ele_e_hherer", lGuard);
+		SetImmortal(oGuard, TRUE);
+		effect eSpeed = EffectMovementSpeedDecrease(50);
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, eSpeed, oGuard);
+		DelayCommand(6.0, PlayVoiceChat(ANIMATION_FIREFORGET_VICTORY1, oGuard));
+		DelayCommand(12.0, SetPCDislike(oGuard, oPC));
+		DelayCommand(12.5, AssignCommand(oGuard, ActionAttack(oPC)));
+		DelayCommand(180.0, DestroyObject(oGuard));
+	}
+}

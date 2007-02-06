@@ -1,0 +1,31 @@
+// kill horse and set stable.
+
+#include "inc_horse"
+
+void main() {
+
+	object oPC = GetPCSpeaker();
+	object oHorse = GetHenchman(oPC);
+	string sStall = GetTag(OBJECT_SELF);
+
+	if ( GetIsObjectValid(oHorse) ) {
+		string sType = GetStringLeft(GetTag(oHorse), 9);
+		if ( sType == "reitpferd" || sType == "reitpony0" ) {
+
+			struct Rideable r = GetRideable(oPC);
+
+			if ( GetIsValidRideable(r) ) {
+				r.stable = sStall;
+
+				r = SetRideableDeliveredIn(r);
+
+				SetRideable(r);
+			} else {
+				SendMessageToPC(oPC, "Datenbankfehler, durnit.");
+			}
+
+			AssignCommand(oHorse, SetIsDestroyable(TRUE, FALSE, FALSE));
+			DestroyObject(oHorse);
+		}
+	}
+}

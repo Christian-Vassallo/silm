@@ -1,0 +1,6 @@
+#include "inc_buildingsite"
+
+void main() {
+	Load_BuildingSite();
+	Output_Needed(GetLastOpenedBy());
+}

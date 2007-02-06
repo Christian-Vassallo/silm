@@ -1,0 +1,19 @@
+#include "inc_selectlist"
+#include "inc_corpse"
+void main() {
+	int iResult;
+	object oBody = GetLocalObject(OBJECT_SELF, "Body");
+
+	iResult = RobItems(GetPCSpeaker());
+
+	if ( !iResult && ( !GetPlotFlag(OBJECT_SELF) || GetLocalInt(oBody, "WAS_PC_CORPSE") ) ) {
+		AssignCommand(GetPCSpeaker(), ClearAllActions());
+		SetPlotFlag(OBJECT_SELF, FALSE);
+		DestroyInventory(oBody);
+		DelayCommand(0.2f, DestroyObject(OBJECT_SELF));
+		AssignCommand(oBody, SetIsDestroyable(TRUE));
+		if ( GetLocalInt(oBody, "WAS_PC_CORPSE") )
+			Eff_RotAway(OBJECT_SELF);
+	}
+	SetLocalInt(OBJECT_SELF, "Item_Robbed", iResult);
+}

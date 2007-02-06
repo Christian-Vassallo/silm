@@ -1,0 +1,4 @@
+void main() {
+	object oArea = GetArea(OBJECT_SELF);
+	AssignCommand(oArea, DelayCommand(1.0f, RecomputeStaticLighting(oArea)));
+}

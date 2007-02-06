@@ -1,0 +1,11 @@
+#include "inc_decay"
+#include "inc_horse"
+
+void main() {
+	object oPC = GetEnteringObject();
+
+	//Stop the digestion on entering the OOC area
+	SetLocalDecay(oPC, "Resting_Food",
+		GetLocalDecay(oPC, "Resting_Food"), 0);
+	OnClientEnter(oPC);
+}

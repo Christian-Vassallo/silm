@@ -1,0 +1,4 @@
+void main() {
+	object oPC = GetPCSpeaker();
+	SetLocalInt(oPC, "CUST_PART", ITEM_APPR_ARMOR_MODEL_LHAND);
+}

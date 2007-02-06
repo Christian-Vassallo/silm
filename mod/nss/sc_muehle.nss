@@ -1,0 +1,17 @@
+#include "x0_i0_secret"
+
+void main() {
+	object oUser = GetLastUsedBy();
+	if ( GetLocked(OBJECT_SELF) == FALSE ) {
+		if ( GetLocalInt(OBJECT_SELF, "done") == 0 ) {
+			ActionPlayAnimation(ANIMATION_PLACEABLE_OPEN);
+			SetLocalInt(OBJECT_SELF, "done", 1);
+		} else {
+			location lLoc = GetLocation(GetWaypointByTag("Fischteiche_Muehle_Innen"));
+			object player = GetLastUsedBy();
+			AssignCommand(player, JumpToLocation(lLoc));
+			ActionPlayAnimation(ANIMATION_PLACEABLE_CLOSE);
+			SetLocalInt(OBJECT_SELF, "done", 0);
+		}
+	}
+}

@@ -1,0 +1,920 @@
+// lean mean crafting system
+// copyleft 2006 Bernhard 'elven' Stoeckner
+// ideas by Torsten Sens.
+
+#include "inc_mysql"
+#include "inc_cdb"
+#include "_gen"
+#include "_colours"
+#include "inc_craft_data"
+
+/* configuration */
+
+const string
+TABLE_PROD = "craft_prod",
+TABLE_SKILL = "craft_skill",
+TABLE_STAT = "craft_stat",
+TABLE_CRAFTS = "craft_crafts",
+TABLE_RCPBOOK = "craft_rcpbook";
+
+
+
+// Copies all permanent item-properties on all items on oWorkPlace over to oTargetItem.
+int ApplyAllRelevantItemProperties(object oWorkPlace, object oTargetItem);
+
+// Checks if all works out.
+int TestComponents(struct Recipe r, string sRecipeString);
+
+string GetCraftTagByCraftSkill(int nCSkill);
+string GetCraftNameByCraftSkill(int nCSkill);
+
+int GetCraftSkillByTag(string sCraftTag);
+
+
+int ThrowCraftCheck(object oPC, object oWorkSpace, int nMod, int nDC, string sMessage = "");
+
+int GetThrowCraftWasNaturalFail(object oWorkPlace);
+int GetThrowCraftWasNaturalSuccess(object oWorkPlace);
+
+
+int GetIsRecipeValid(struct Recipe r);
+
+int GetIsPlayerSkillValid(struct PlayerSkill s);
+
+// Prints some notification text.
+void Notify(string sMessage, object oPC);
+
+// Add a crafting component to the set.
+void AddCraftComponent(object oWorkPlace, object oItem);
+
+
+// Removes all stateful info from oWorkPlace.
+// to allow for a new crafting process.
+// Removes all items except those flagged to keep
+// and those that are tools (Plot-Items).
+void CleanupWorkplace(object oWorkPlace);
+
+// Removes the spell charge from oWorkPlace
+void CleanupSpell(object oWorkPlace);
+
+int GetIsCraftTool(object oItem);
+
+// Transfers all Items, including tools (Plot)
+void TransferAllItems(object oSource, object oTarget);
+
+// Transfers all Items that are tools (Plot).
+// Destroys the tools that broke.
+// Decrements tool usage.
+// Returns how many tools have been destroyed.
+//int ReturnAllTools(object oSource, object oTarget, int nDoToolWear = FALSE);
+
+// Returns the current crafter, or OBJECT_INVALID if
+// oWorkPlace is not in use currently.
+object GetCurrentCrafter(object oWorkPlace);
+
+
+// Returns the currently added components to oWorkPlace
+string GetCurrentCraftComponents(object oWorkPlace);
+
+// Returns the recipe oPC has currently set as active.
+struct Recipe GetSelectedCraftRecipe(object oPC);
+
+// Sweep it shiny-new clean.
+// As with the rest, does not remove the spell.
+void VirginiseWorkplace(object oWorkPlace);
+
+
+// Returns at what CAP nPractical Level is.
+int GetNextCraftLevelXPCAP(int nPracticalLevel);
+
+
+// Checks if oPC has enough PRACTICAL skill to produce r.
+int GetHasNecessarySkill(object oPC, struct Recipe r);
+
+// Tries to find a unique recipe.
+// bails out if not unique.
+// Alternatively get by ID directly.
+struct Recipe FindRecipeByPlanOrComponents(string sPlan, string sComponents, int nID = 0);
+
+// Returns the skill struct for oPC in a certain craft.
+struct PlayerSkill GetPlayerSkill(object oPC, int nCSKill);
+
+// Updates the skill struct for oPC in a certain craft.
+// Bails out if no initial record exists yet.
+void SetPlayerSkill(object oPC, struct PlayerSkill s);
+
+
+struct PlayerRecipeStat GetPlayerRecipeStat(object oPC, struct Recipe r);
+
+void SetPlayerRecipeStat(object oPC, struct PlayerRecipeStat t);
+
+// Advances oPCs crafting skill after a successfull craft.
+// Returns if the player advanced one skill point.
+int AdvanceCraftSkill(object oPC, struct Recipe r, int nLearnMode);
+
+// Returns true if oPC can still learn something
+// when creating r.
+int GetCanLearnInCraftSkill(object oPC, struct Recipe r);
+
+// Creates a basic record for OPC in CSKill.
+// Theory = 10.
+// Used for books or teachers to learn the basics.
+int DoCraftLearnBasicStuff(object oPC, int nCSKill);
+
+// Returns true if nSpell is a valid craft-component.
+// Checks the database if any recipe allows for this.
+int GetIsCraftValidSpell(int nCSkill, int nSpell, int nMetaMagic = METAMAGIC_NONE);
+
+// Returns the char which cast the spell on that workplace.
+object GetCraftSpellCaster(object oWorkPlace);
+
+// Returns the workplaces metamagic, if any
+int GetCraftMetaMagic(object oWorkPlace);
+
+// May this player craft this today according to the
+// limits specified?
+int GetMayCraftDiff(object oPC, struct Recipe r);
+
+// Update crafting statistics.  Sets `last`.
+void UpdateCraftStat(object oPC, struct Recipe r, int bSetLast = 0, int bIncrementCount = 0,
+					 int bIncrementFail = 0);
+
+// magic
+int CreateItemOnObjectByResRefString(string sResRefStr, object oCreateOn, int nStackSizeMin, int nStackSizeMax, string sDelimiter = "#", string sLocal = "",
+									 int sLocalVal = 0);
+
+
+// Returns the number of crafts oPC has skill points in.
+int GetCraftCount(object oPC);
+
+
+int RunCraftScript(string sScriptName, object oWorkPlace, object oPC, int nType);
+
+// impl
+
+
+int GetIsCraftTool(object oItem) {
+	return GetStringLeft(GetTag(oItem), 5) == "tool_";
+}
+
+
+int ApplyAllRelevantItemProperties(object oWorkPlace, object oTargetItem) {
+	int nC = 0;
+
+	object oItem = GetFirstItemInInventory(oWorkPlace);
+	itemproperty p;
+	while ( GetIsObjectValid(oItem) ) {
+		if ( oItem != oTargetItem && GetItemPropertyDurationType(p) == DURATION_TYPE_PERMANENT ) {
+			p = GetFirstItemProperty(oItem);
+			if ( !GetItemHasItemProperty(oTargetItem, GetItemPropertyType(p)) ) {
+				AddItemProperty(DURATION_TYPE_INSTANT, p, oTargetItem);
+				nC += 1;
+			}
+			p = GetNextItemProperty(oItem);
+		}
+
+		oItem = GetNextItemInInventory(oWorkPlace);
+	}
+
+	return nC;
+}
+
+
+int TestComponents(struct Recipe r, string sRecipeString) {
+	// TODO: components order needs fixink
+	if ( r.components_order == COMPONENTS_ORDER_FIXED )
+		return GetStringLowerCase(r.components) == GetStringLowerCase(sRecipeString);
+	else {
+		// Split by "#", and check if each component is present.
+		int iW = FindSubString(r.components, "#");
+		while ( -1 != iW ) {
+
+			iW = FindSubString(r.components, "#");
+		}
+
+		return GetStringLowerCase(r.components) == GetStringLowerCase(sRecipeString);
+	}
+}
+
+
+object GetCraftSpellCaster(object oWorkPlace) {
+	return GetLocalObject(oWorkPlace, "spell_by");
+}
+
+
+int GetNextCraftLevelXPCAP(int nPracticalLevel) {
+	int nLearnBorder = CRAFT_LEARN_BORDER;
+	if ( GetLocalInt(GetModule(), "CRAFT_LEARN_BORDER") )
+		nLearnBorder = GetLocalInt(GetModule(), "CRAFT_LEARN_BORDER");
+
+	// Increase for each level.
+	if ( nPracticalLevel > 10 )
+		nLearnBorder += CRAFT_BORDER_MULTIPLICATOR * ( nPracticalLevel - 10 );
+
+	return nLearnBorder;
+}
+
+
+string GetCraftTagByCraftSkill(int nCSkill) {
+	SQLQuery("select `tag` from `" +
+		TABLE_CRAFTS + "` where `cskill` = " + IntToString(nCSkill) + " limit 1;");
+	if ( !SQLFetch() )
+		return "";
+
+	return SQLGetData(1);
+}
+
+string GetCraftNameByCraftSkill(int nCSkill) {
+	SQLQuery("select `name` from `" +
+		TABLE_CRAFTS + "` where `cskill` = " + IntToString(nCSkill) + " limit 1;");
+	if ( !SQLFetch() )
+		return "";
+
+	return SQLGetData(1);
+}
+
+int GetCraftSkillByTag(string sCraftTag) {
+	SQLQuery("select `cskill` from `" +
+		TABLE_CRAFTS + "` where `tag` = " + SQLEscape(sCraftTag) + " limit 1;");
+	if ( !SQLFetch() )
+		return 0;
+
+	return StringToInt(SQLGetData(1));
+}
+
+
+int GetCraftMetaMagic(object oWorkPlace) {
+	if ( !GetLocalInt(oWorkPlace, "spell") )
+		return METAMAGIC_NONE;
+
+	return GetLocalInt(oWorkPlace, "spell_metamagic");
+}
+
+
+int ThrowCraftCheck(object oPC, object oWorkSpace, int nMod, int nDC, string sMessage = "") {
+	int nd = d20();
+	SetLocalInt(oWorkSpace, "last_d20", nd);
+	int nc = nd + nMod;
+
+	int nRet = nc >= nDC;
+
+
+	SendMessageToPC(oPC, ( sMessage == "" ? "" : ( sMessage + ": " ) ) +
+		"d20 = " +
+		IntToString(nd) +
+		" + " + IntToString(nMod) + " vs " + IntToString(nDC) + " = " + ( nRet ? "Yeah!" : "Buggrit." ));
+
+	if ( nd == 1 )
+		return 0;
+
+	if ( nd == 20 )
+		return 1;
+
+	return nc >= nDC;
+}
+
+
+int GetThrowCraftWasNaturalFail(object oWorkPlace) {
+	return GetLocalInt(oWorkPlace, "last_d20") == 1;
+}
+int GetThrowCraftWasNaturalSuccess(object oWorkPlace) {
+	return GetLocalInt(oWorkPlace, "last_d20") == 20;
+}
+
+
+int GetMayCraftDiff(object oPC, struct Recipe r) {
+//    if (r.max_per_day == 0.0)
+//        return 1;
+
+	struct PlayerRecipeStat t = GetPlayerRecipeStat(oPC, r);
+	int nNow = GetUnixTimestamp();
+	if ( r.min_timespan == 0 )
+		return 0;
+
+	int nDiff = nNow - ( t.last + r.min_timespan );
+	if ( nDiff < 0 )
+		nDiff = 0;
+
+	return nDiff;
+}
+
+void UpdateCraftStat(object oPC, struct Recipe r, int bSetLast = 0, int bIncrementCount = 0,
+					 int bIncrementFail = 0) {
+	if ( GetIsDM(oPC) )
+		return;
+
+	string sID = IntToString(GetCharacterID(oPC));
+
+	if ( bIncrementCount ) {
+		SQLQuery("update `" +
+			TABLE_STAT +
+			"` set `count`=`count`+1 where `character` = " +
+			sID + " and `recipe` = " + IntToString(r.id) + " limit 1;");
+	}
+
+	if ( bIncrementFail ) {
+		SQLQuery("update `" +
+			TABLE_STAT +
+			"` set `fail`=`fail`+1 where `character` = " +
+			sID + " and `recipe` = " + IntToString(r.id) + " limit 1;");
+	}
+
+	if ( bSetLast ) {
+		SQLQuery("update `" +
+			TABLE_STAT +
+			"` set `last`=unix_timestamp() where `character` = " +
+			sID + " and `recipe` = " + IntToString(r.id) + " limit 1;");
+	}
+}
+
+
+int GetIsCraftValidSpell(int nCSkill, int nSpell, int nMetaMagic = METAMAGIC_NONE) {
+	SQLQuery("select count(`resref`) from `" +
+		TABLE_PROD +
+		"` where `cskill` = " + IntToString(nCSkill) + " and `spell` = " + IntToString(nSpell) + ";");
+	SQLFetch();
+	int nCount = StringToInt(SQLGetData(1));
+	return nCount > 0;
+}
+
+
+int AdvanceCraftSkill(object oPC, struct Recipe r, int nLearnMode) {
+	if ( GetIsDM(oPC) )
+		return 0;
+
+	struct PlayerSkill s = GetPlayerSkill(oPC, r.cskill);
+
+	int nLearnBorder = CRAFT_LEARN_BORDER;
+	if ( GetLocalInt(GetModule(), "CRAFT_LEARN_BORDER") )
+		nLearnBorder = GetLocalInt(GetModule(), "CRAFT_LEARN_BORDER");
+
+	// Increase for each level.
+	if ( s.practical > 10 )
+		nLearnBorder += CRAFT_BORDER_MULTIPLICATOR * ( s.practical - 10 );
+
+	int nLearn = 0;
+	int nGotSkill = 0;
+
+	// First, check if theory > practical; and add a bonus if it is.
+	if ( s.theory > s.practical )
+		nLearn += ( s.theory - s.practical > 100 ? 100 : s.theory - s.practical );
+
+
+	// Now add some Intelligence points.
+	nLearn += d20() + GetAbilityModifier(ABILITY_INTELLIGENCE, oPC);
+
+	// Apply factor
+	if ( r.practical_xp_factor > 0.0f && r.practical_xp_factor != 1.0f )
+		nLearn = FloatToInt(IntToFloat(nLearn) * r.practical_xp_factor);
+
+	// Now we check if the player gets some skill!
+
+	nGotSkill = s.practical_xp + nLearn > nLearnBorder;
+
+	if ( nGotSkill ) {
+		s.practical += 1; // WOOHOO!
+		s.practical_xp -= nLearnBorder;
+
+		// Plus he gets to put all that theoretical knowledge to good use!
+		if ( s.theory < s.practical ) {
+			s.theory = s.practical;
+			s.theory_xp = s.practical_xp;
+		}
+
+
+	} else {
+		// No skill today, dude.
+		// But you still get to experience the real deal.
+		if ( s.theory_xp < s.practical_xp )
+			s.theory_xp = s.practical_xp;
+
+		// Plus you collect some experience, too!
+		s.practical_xp += nLearn;
+	}
+
+	if ( s.practical_xp < 0 )
+		s.practical_xp = 0;
+	if ( s.theory_xp < 0 )
+		s.theory_xp = 0;
+
+	// Write data back to DB.
+	SetPlayerSkill(oPC, s);
+	return nGotSkill;
+}
+
+
+int GetCanLearnInCraftSkill(object oPC, struct Recipe r) {
+	struct PlayerSkill s = GetPlayerSkill(oPC, r.cskill);
+	return s.practical < r.cskill_max;
+}
+
+int GetHasNecessarySkill(object oPC, struct Recipe r) {
+	// GetPlayerSkillData
+	struct PlayerSkill s = GetPlayerSkill(oPC, r.cskill);
+
+	// (s.theory / 2) +
+	return s.practical >= r.cskill_min;
+}
+
+void Notify(string sMessage, object oPC) {
+	if ( sMessage == "" )
+		return;
+
+	if ( GetIsPC(oPC) )
+		FloatingTextStringOnCreature(sMessage, oPC, TRUE);
+	else
+		AssignCommand(oPC, SpeakString(ColourTag(cTeal) + sMessage + ColourTagClose()));
+}
+
+void AddCraftComponent(object oWorkPlace, object oItem) {
+	string sSet = GetLocalString(oWorkPlace, "comp");
+
+	if ( sSet == "" )
+		sSet += GetTag(oItem);
+	else
+		sSet += ( "#" + GetTag(oItem) );
+
+	SetLocalString(oWorkPlace, "comp", sSet);
+}
+
+
+void CleanupWorkplace(object oWorkPlace) {
+	object oItem = GetFirstItemInInventory(oWorkPlace);
+	while ( GetIsObjectValid(oItem) ) {
+		// Do not kill items flagged for returning
+		// or our working tools!
+		if ( !GetLocalInt(oItem, "craft_return") && !GetIsCraftTool(oItem) ) {
+			DestroyObject(oItem);
+		} else {
+			DeleteLocalInt(oItem, "craft_return");
+		}
+
+		oItem = GetNextItemInInventory(oWorkPlace);
+	}
+
+/*    DeleteLocalObject(oWorkPlace, "crafter");
+ *
+ * 	DeleteLocalString(oWorkPlace, "comp");
+ * 	DeleteLocalString(oWorkPlace, "plan");*/
+
+}
+
+
+void VirginiseWorkplace(object oWorkPlace) {
+	SetPlotFlag(oWorkPlace, 1);
+	CleanupWorkplace(oWorkPlace);
+	CleanupWorkplace(oWorkPlace);
+	// CleanupSpell(oWorkPlace);
+	DeleteLocalObject(oWorkPlace, "crafter");
+	DeleteLocalString(oWorkPlace, "comp");
+	DeleteLocalString(oWorkPlace, "plan");
+	SetLocked(oWorkPlace, 0);
+}
+
+
+void CleanupSpell(object oWorkPlace) {
+	effect eE = GetFirstEffect(oWorkPlace);
+	while ( GetIsEffectValid(eE) ) {
+		RemoveEffect(oWorkPlace, eE);
+		eE = GetNextEffect(oWorkPlace);
+	}
+
+	DeleteLocalObject(oWorkPlace, "spell_by");
+	DeleteLocalInt(oWorkPlace, "spell");
+	DeleteLocalInt(oWorkPlace, "spell_count");
+	DeleteLocalInt(oWorkPlace, "spell_metamagic");
+}
+
+
+void TransferAllItems(object oSource, object oTarget) {
+	object oItem = GetFirstItemInInventory(oSource);
+	while ( GetIsObjectValid(oItem) ) {
+		CreateItemOnObject(GetResRef(oItem), oTarget, GetItemStackSize(oItem));
+		oItem = GetNextItemInInventory(oSource);
+	}
+}
+
+object GetCurrentCrafter(object oWorkPlace) {
+	return GetLocalObject(oWorkPlace, "crafter");
+}
+
+string GetCurrentCraftComponents(object oWorkPlace) {
+	return GetLocalString(oWorkPlace, "comp");
+}
+
+
+struct Recipe GetSelectedCraftRecipe(object oPC) {
+	return FindRecipeByPlanOrComponents("", "", GetLocalInt(oPC, "craft_plan"));
+}
+
+
+
+int GetIsRecipeValid(struct Recipe r) {
+	return r.id > 0;
+}
+
+int GetIsPlayerSkillValid(struct PlayerSkill s) {
+	return s.id > 0;
+}
+
+struct Recipe FindRecipeByPlanOrComponents(string sPlan, string sComponents, int nID = 0) {
+	sComponents = SQLEscape(sComponents);
+	sPlan = SQLEscape(sPlan);
+
+	string sqlq = " `resref`, 0, `components`, `workplace`, `spell`, `cskill`, `cskill_min`, `cskill_max`, "
+				  +
+				  "`skill`, `skill_dc`, `ability`, `ability_dc`, `feat`, `count_min`, `count_max`, `xp_cost`, `practical_xp_factor`, "
+				  +
+				  "`max_per_day`, `lock_duration`, `name`, `desc`, `spell_fail`, `id`, `components_save_dc`, "
+				  +
+				  "`s_craft`";
+
+	int nFound = 0;
+
+	if ( nID > 0 ) {
+
+		SQLQuery("select " + sqlq + " from `" +
+			TABLE_PROD + "` where `id` = " + IntToString(nID) + " limit 1;");
+		nFound = ( SQLFetch() == SQL_SUCCESS );
+
+	} else {
+
+		if ( sPlan != "" ) {
+			SQLQuery("select " + sqlq + " from `" +
+				TABLE_PROD + "` where `components` = " + sComponents + " limit 1;");
+			nFound = ( SQLFetch() == SQL_SUCCESS );
+
+		} else {
+			// Try to find by components.
+
+			// 1) find total count.  if > 1 throw error at user, needs to give a plan.
+			SQLQuery("select count(`resref`) from `" +
+				TABLE_PROD + "` where `components` = " + sComponents + ";");
+			SQLFetch();
+			int nCount = StringToInt(SQLGetData(1));
+
+			if ( nCount > 1 ) {
+				nFound = 0;
+
+			} else {
+				SQLQuery("select " +
+					sqlq + " from `" + TABLE_PROD + "` where `components` = " + sComponents + ";");
+				nFound = ( SQLFetch() == SQL_SUCCESS );
+			}
+		}
+
+	}
+
+	struct Recipe r;
+
+	if ( nFound ) {
+		r.resref = SQLGetData(1);
+		// r.resref_fail = SQLGetData(2); // 0!
+		r.components = SQLGetData(3);
+		r.workplace = SQLGetData(4);
+
+		string sSpell = SQLGetData(5);
+		int nSpell = -1, nCount = 0;
+		int nOffset;
+		r.spell0 = StringToInt(sSpell);
+		r.spell1 = -1; r.spell2 = -1;
+		r.spell3 = -1; r.spell4 = -1;
+		while ( ( nOffset = FindSubString(sSpell, "|") ) != -1 ) {
+			nSpell = StringToInt(GetSubString(sSpell, 0, nOffset));
+			switch ( nCount ) {
+				case 0:
+					r.spell0 = nSpell;
+					break;
+				case 1:
+					r.spell1 = nSpell;
+					break;
+				case 2:
+					r.spell2 = nSpell;
+					break;
+				case 3:
+					r.spell3 = nSpell;
+					break;
+				case 4:
+					r.spell4 = nSpell;
+					break;
+			}
+
+			sSpell = GetSubString(sSpell, nOffset + 1, 1024);
+			nCount++;
+		}
+
+
+		r.cskill = StringToInt(SQLGetData(6));
+		r.cskill_min = StringToInt(SQLGetData(7));
+		r.cskill_max = StringToInt(SQLGetData(8));
+		r.skill = StringToInt(SQLGetData(9));
+		r.skill_dc = StringToInt(SQLGetData(10));
+		r.ability = StringToInt(SQLGetData(11));
+		r.ability_dc = StringToInt(SQLGetData(12));
+		r.feat = StringToInt(SQLGetData(13));
+		r.count_min = StringToInt(SQLGetData(14));
+		r.count_max = StringToInt(SQLGetData(15));
+		r.xp_cost = StringToFloat(SQLGetData(16));
+		r.practical_xp_factor = StringToFloat(SQLGetData(17));
+		r.max_per_day = StringToFloat(SQLGetData(18));
+		r.lock_duration = StringToInt(SQLGetData(19));
+		r.name = SQLGetData(20);
+		r.desc = SQLGetData(21);
+		r.spell_fail = StringToInt(SQLGetData(22));
+		r.id = StringToInt(SQLGetData(23));
+		r.components_save_dc = StringToInt(SQLGetData(24));
+		r.s_craft = SQLGetData(25);
+
+		if ( r.count_min > r.count_max )
+			r.count_max = r.count_min;
+
+	}
+
+	return r;
+}
+
+
+struct PlayerSkill GetPlayerSkill(object oPC, int nCSkill) {
+	struct PlayerSkill s;
+
+	if ( GetIsDM(oPC) ) {
+		s.cid = 0;
+		s.cskill = nCSkill;
+		s.theory = 0xffff;
+		s.practical = 0xffff;
+		s.theory_xp = 0;
+		s.practical_xp = 0;
+	} else {
+		int nID = GetCharacterID(oPC);
+		string sID = IntToString(nID);
+		SQLQuery(
+			"select `skill_theory`, `skill_theory_xp`, `skill_practical`, `skill_practical_xp`, `id` from `"
+			+
+			TABLE_SKILL +
+			"` where `character` = " + sID + " and `cskill` = " + IntToString(nCSkill) + " limit 1;");
+		if ( SQLFetch() ) {
+			s.cid = nID;
+			s.cskill = nCSkill;
+			s.theory = StringToInt(SQLGetData(1));
+			s.theory_xp = StringToInt(SQLGetData(2));
+			s.practical = StringToInt(SQLGetData(3));
+			s.practical_xp = StringToInt(SQLGetData(4));
+			s.id = StringToInt(SQLGetData(5));
+
+			// Upper limit!
+
+			SQLQuery("select cskill_max from " +
+				TABLE_PROD +
+				" where cskill = " +
+				IntToString(nCSkill) + " and active > 0 order by cskill_max desc limit 1;");
+			if ( SQLFetch() ) {
+				int nMax = StringToInt(SQLGetData(1));
+				if ( nMax < s.practical )
+					s.practical = nMax;
+				if ( nMax < s.theory )
+					s.theory = nMax;
+			}
+
+		} else {
+			SQLQuery("insert into `" +
+				TABLE_SKILL + "` (`character`, `cskill`) values(" + sID + ", " + IntToString(nCSkill) + ");");
+			s.cid = nID;
+			s.cskill = nCSkill;
+			SQLQuery("select `id` from `" + TABLE_SKILL + "` order by id desc limit 1;");
+			SQLFetch();
+			s.id = StringToInt(SQLGetData(1));
+
+		}
+	}
+
+	return s;
+}
+
+void SetPlayerSkill(object oPC, struct PlayerSkill s) {
+
+	if ( GetIsDM(oPC) )
+		return;
+
+	int nID = GetCharacterID(oPC);
+	string sID = IntToString(nID);
+
+	SQLQuery("update `" + TABLE_SKILL + "` set " +
+		"`skill_theory`=" + IntToString(s.theory) + ", " +
+		"`skill_practical`=" + IntToString(s.practical) + ", " +
+		"`skill_theory_xp`=" + IntToString(s.theory_xp) + ", " +
+		"`skill_practical_xp`=" + IntToString(s.practical_xp) +
+		" where `character` = " + sID + " and `cskill`=" + IntToString(s.cskill) + " limit 1;");
+
+}
+
+
+struct PlayerRecipeStat GetPlayerRecipeStat(object oPC, struct Recipe r) {
+
+	struct PlayerRecipeStat t;
+
+	if ( GetIsDM(oPC) ) {} else {
+
+		int nID = GetCharacterID(oPC);
+		string sID = IntToString(nID);
+
+
+		SQLQuery("select `count`, `fail`, `last`, `id` from `" +
+			TABLE_STAT +
+			"` where `character` = " + sID + " and `recipe` = " + IntToString(r.id) + " limit 1;");
+
+		if ( SQLFetch() ) {
+			t.id = StringToInt(SQLGetData(4));
+			t.cid = nID;
+			t.recipe = r.id;
+			t.count = StringToInt(SQLGetData(1));
+			t.fail = StringToInt(SQLGetData(2));
+			t.last = StringToInt(SQLGetData(3));
+
+		} else {
+			SQLQuery("insert into `" +
+				TABLE_STAT +
+				"` (`character`, `recipe`, `last`) values(" +
+				sID + ", " + IntToString(r.id) + ", unix_timestamp());");
+			t.cid = nID;
+			t.recipe = r.id;
+			t.last = GetUnixTimestamp();
+			SQLQuery("select `id` from `" + TABLE_STAT + "` order by id desc limit 1;");
+			SQLFetch();
+			t.id = StringToInt(SQLGetData(1));
+		}
+
+	}
+
+	return t;
+}
+
+
+
+void SetPlayerRecipeStat(object oPC, struct PlayerRecipeStat t) {
+	if ( GetIsDM(oPC) )
+		return;
+
+	int nID = GetCharacterID(oPC);
+	string sID = IntToString(nID);
+
+	SQLQuery("update `" + TABLE_STAT + "` set " +
+		"`count`=" + IntToString(t.count) + ", " +
+		"`fail`=" + IntToString(t.fail) + ", " +
+		"`last`=" + IntToString(t.last) +
+		" where `character` = " + sID + " and `recipe`=" + IntToString(t.id) + " limit 1;");
+
+}
+
+
+int GetCraftCount(object oPC) {
+	if ( GetIsDM(oPC) )
+		return 0;
+
+	int nID = GetCharacterID(oPC);
+	string sID = IntToString(nID);
+	SQLQuery("select count(`id`) from `" + TABLE_SKILL + "` where `character`=" + sID + ";");
+	SQLFetch();
+	int nCount = StringToInt(SQLGetData(1));
+	return nCount;
+}
+
+
+// Learn basic data stuff.
+int DoCraftLearnBasicStuff(object oPC, int nCSKill) {
+	if ( GetIsDM(oPC) )
+		return 0;
+
+	struct PlayerSkill s = GetPlayerSkill(oPC, nCSKill);
+	if ( s.practical == 0 && s.theory == 0 ) {
+		s.practical = CRAFT_LEARN_BASICS;
+		s.theory = CRAFT_LEARN_BASICS;
+		SetPlayerSkill(oPC, s);
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+
+
+
+
+float GetFactorFromComponentString(string sR) {
+	float f = 1.0;
+	int iW = FindSubString(sR, ":");
+	if ( iW != -1 ) {
+		string sub = GetSubString(sR, iW + 1, 1024);
+		// SendMessageToPC(GetFirstPC(), "sub = " + sub);
+
+		f = StringToFloat(sub);
+		if ( f < 0.0 )
+			f = 1.0;
+	}
+	return f;
+}
+
+string GetResRefFromComponentString(string sR) {
+	string r = sR;
+
+	int iW = FindSubString(sR, ":");
+	if ( iW != -1 ) {
+		sR = GetSubString(sR, 0, iW);
+	}
+	return sR;
+}
+
+
+
+void CreateStackedItemsOnObject(string sResRef, object oCreateOn, int nCount) {
+	int i = 0;
+	if ( nCount < 1 )
+		return;
+
+	for ( i = 0; i < nCount; i++ )
+		CreateItemOnObject(sResRef, oCreateOn, 1);
+}
+
+
+int CreateItemOnObjectByResRefString(string sResRefStr, object oCreateOn, int nStackSizeMin, int nStackSizeMax, string sDelimiter = "#", string sLocal = "",
+									 int sLocalVal = 0) {
+	int nCreated = 0;
+	string sResRef = sResRefStr;
+	object oNew;
+
+	int iSplit = FindSubString(sResRefStr, sDelimiter);
+	int iW = -1, nStackSize;
+	float fFactor = 1.0;
+	int nStack = 0;
+
+	while ( iSplit != -1 ) {
+		nStack = 0;
+		sResRef = GetSubString(sResRefStr, 0, iSplit);
+		sResRefStr = GetSubString(sResRefStr, iSplit + GetStringLength(sDelimiter), 1024);
+
+
+		fFactor = GetFactorFromComponentString(sResRef);
+		sResRef = GetResRefFromComponentString(sResRef);
+		nStackSize = FloatToInt(IntToFloat(nStackSizeMin + Random(nStackSizeMax - nStackSizeMin + 1)) *
+						 fFactor);
+
+		// while (nStack < nStackSize) {
+		oNew = CreateItemOnObject(sResRef, oCreateOn, nStackSize);
+		//    nStack = GetItemStackSize(oNew);
+		//}
+
+		if ( GetIsObjectValid(oNew) ) {
+			SetStolenFlag(oNew, 1);
+
+			if ( sLocal != "" )
+				SetLocalInt(oNew, sLocal, sLocalVal);
+
+			nCreated += nStackSize;
+		}
+
+		iSplit = FindSubString(sResRefStr, sDelimiter);
+	}
+
+	sResRef = sResRefStr;
+	nStack = 0;
+
+	fFactor = GetFactorFromComponentString(sResRef);
+	sResRef = GetResRefFromComponentString(sResRef);
+	nStackSize = FloatToInt(IntToFloat(nStackSizeMin + Random(nStackSizeMax - nStackSizeMin + 1)) * fFactor);
+
+	//while (nStack < nStackSize) {
+	oNew = CreateItemOnObject(sResRef, oCreateOn, nStackSize);
+	//    nStack = GetItemStackSize(oNew);
+	//}
+
+	if ( GetIsObjectValid(oNew) ) {
+		SetStolenFlag(oNew, 1);
+
+		if ( sLocal != "" )
+			SetLocalInt(oNew, sLocal, sLocalVal);
+
+		nCreated += nStackSize;
+	}
+
+	return nCreated;
+}
+
+
+
+int RunCraftScript(string sScriptName, object oWorkPlace, object oPC, int nType) {
+	if ( "" == sScriptName )
+		return CRAFT_SCRIPT_RESULT_OK;
+
+	SetLocalInt(oWorkPlace, "craft_script_event", nType);
+	SetLocalObject(oWorkPlace, "craft_script_pc", oPC);
+
+	ExecuteScript(sScriptName, oWorkPlace);
+
+	int nResult = GetLocalInt(oWorkPlace, "craft_script_result");
+
+
+	DeleteLocalInt(oWorkPlace, "craft_script_result");
+	DeleteLocalInt(oWorkPlace, "craft_script_event");
+	DeleteLocalObject(oWorkPlace, "craft_script_pc");
+
+	return nResult == CRAFT_SCRIPT_RESULT_OK;
+}

@@ -1,0 +1,32 @@
+#include "inc_horse"
+
+int StartingConditional() {
+	string sStall = GetTag(OBJECT_SELF);
+	object oPC = GetPCSpeaker();
+	int iResult = FALSE;
+
+	if ( GetIsRidingHorse(oPC) )
+		return iResult;
+
+	object oHorse = GetHenchman(oPC);
+
+	if ( GetIsObjectValid(oHorse) ) {
+		string sType = GetStringLeft(GetTag(oHorse), 9);
+		if ( sType == "reitpferd" || sType == "reitpony0" ) {
+			return iResult;
+		}
+	}
+
+	struct Rideable r = GetRideable(oPC);
+
+
+	if ( GetIsValidRideable(r) ) {
+		if ( r.stable == sStall ) {
+			iResult = TRUE;
+		} else
+			SendMessageToPC(oPC, "Falscher Stall!");
+	} else
+		SendMessageToPC(oPC, "Ihr besitzt kein Pferd oder Pony!");
+
+	return iResult;
+}

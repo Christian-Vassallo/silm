@@ -1,0 +1,17 @@
+void StartCutscene(object oPC);
+
+void StopCutscene(object oPC);
+
+void StartCutscene(object oPC) {
+	SetCutsceneMode(oPC, TRUE, TRUE);
+	effect eCSGhost = EffectCutsceneGhost();
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT, eCSGhost, oPC);
+}
+
+void StopCutscene(object oPC) {
+	location locCSStart = GetLocalLocation(oPC, "CS_Start");
+	SetCutsceneMode(oPC, FALSE);
+	effect eCSGhost = EffectCutsceneGhost();
+	RemoveEffect(oPC, eCSGhost);
+
+}

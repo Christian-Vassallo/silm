@@ -1,0 +1,13 @@
+//
+// Script welches über einen Trigger einen Effekt auf eine Wegmarke(gruppe) projeziert
+//
+// Hierfür muß der Trigger folgende Variablen enthalten :
+// int EffectNo     - Integer-Wert entnommen der visualeffects.2da
+// string EffectWP - Kennzeichnung der Wegpunkte (linker Teil der WP muß gleich sein)
+//
+
+#include "inc_kjeffects"
+
+void main() {
+	kjTriggerEffectAtWP();
+}

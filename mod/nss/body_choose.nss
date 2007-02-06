@@ -1,0 +1,17 @@
+#include "inc_bodyparts"
+
+void main() {
+	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
+	int iSelPart = GetLocalInt(oPC, "BODY_SEL_PART");
+	int iSelection = GetLocalInt(oPC, "ConvList_Select");
+
+	iSelection = GetListInt(oPC, "body_sel_list", iSelection);
+
+	if ( iSelPart > 0 )
+		SwitchSlot(oPC, iSelPart, iSelection);
+	else {
+		SetLocalInt(oPC, "BODY_SEL_PART", iSelection);
+		SetLocalInt(oPC, "BODY_BP_OLD", GetCreatureBodyPart(iSelection, oPC));
+	}
+	MakeDialog(oPC);
+}

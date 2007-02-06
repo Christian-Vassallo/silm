@@ -1,0 +1,8 @@
+void main() {
+	int iEvent = GetUserDefinedEventNumber();
+
+	if ( iEvent == 111 ) {
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectDisappear(), OBJECT_SELF);
+		DelayCommand(2.0f, DestroyObject(OBJECT_SELF));
+	}
+}

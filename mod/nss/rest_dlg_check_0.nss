@@ -1,0 +1,16 @@
+#include "inc_decay"
+
+int StartingConditional() {
+	object oPC = GetPCSpeaker();
+
+	DeleteLocalInt(oPC, "Resting_Fail");
+
+	int iMinutes = GetLocalDecay(oPC, "Resting_Counter");
+
+	//Allow resting if last rest has been long enough in the past
+	if ( !iMinutes ) return 0;
+
+	SetLocalInt(oPC, "Resting_Fail", 1);
+	SetCustomToken(19999, IntToString(iMinutes));
+	return 1;
+}

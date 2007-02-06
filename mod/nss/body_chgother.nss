@@ -1,0 +1,8 @@
+#include "inc_bodyparts"
+
+void main() {
+	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
+
+	DeleteLocalInt(oPC, "BODY_SEL_PART");
+	MakeDialog(oPC);
+}

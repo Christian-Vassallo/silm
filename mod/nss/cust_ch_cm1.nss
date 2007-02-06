@@ -1,0 +1,5 @@
+void main() {
+	object oPC = GetPCSpeaker();
+
+	SetLocalInt(oPC, "CUST_COLOR", ITEM_APPR_ARMOR_COLOR_METAL1);
+}

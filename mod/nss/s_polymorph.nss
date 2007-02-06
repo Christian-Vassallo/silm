@@ -1,0 +1,390 @@
+#include "_gen"
+#include "inc_lists"
+#include "inc_2dacache"
+#include "_const"
+/*
+ * 	Polymorph
+ * 	Transmutation
+ * 	Level: Sor/Wiz 4
+ * 	Components: V, S, M
+ * 	Casting Time: 1 standard action
+ * 	Range: Touch
+ * 	Target: Willing living creature touched
+ * 	Duration: 1 min./level (D)
+ * 	Saving Throw: None
+ * 	Spell Resistance: No
+ *
+ * 	This spell functions like alter self, except that you change the willing subject into another form of living creature.
+ * 	The new form may be of the same type as the subject or any of the following types: aberration, animal, dragon, fey, giant,
+ * 	humanoid, magical beast, monstrous humanoid, ooze, plant, or vermin. The assumed form can’t have more Hit Dice than your
+ * 	caster level (or the subject’s HD, whichever is lower), to a maximum of 15 HD at 15th level. You can’t cause a subject to
+ * 	ssume a form smaller than Fine, nor can you cause a subject to assume an incorporeal or gaseous form. The subject’s creature
+ * 	type and subtype (if any) change to match the new form.
+ *
+ * 	Upon changing, the subject regains lost hit points as if it had rested for a night (though this healing does not restore
+ * 	temporary ability damage and provide other benefits of resting; and changing back does not heal the subject further).
+ * 	If slain, the subject reverts to its original form, though it remains dead.
+ * 	The subject gains the Strength, Dexterity, and Constitution scores of the new form but retains its own Intelligence, Wisdom,
+ * 	and Charisma scores. It also gains all extraordinary special attacks possessed by the form but does not gain the extraordinary
+ * 	special qualities possessed by the new form or any supernatural or spell-like abilities.
+ * 	Incorporeal or gaseous creatures are immune to being polymorphed, and a creature with the shapechanger subtype can revert to
+ * 	its natural form as a standard action.
+ *
+ * 	Material Component: An empty cocoon.
+ */
+
+const string
+CT = "polymorph",
+HEAD = "Bitte Polymorph-Typ waehlen:";
+
+// Returns the HitDice for nPolymorphForm
+int GetHD(int nPoly);
+
+// Returns if oTarget can morph into nPoly
+int GetCanMorph(object oTarget, int nPoly);
+
+void main() {
+	object oPC = OBJECT_SELF;
+
+	object oTarget = GetSpellTargetObject();
+
+	int nDC = GetSpellSaveDC(); // gets the DC required to save against the effects of the spell
+	int nLevel = GetCasterLevel(oPC); // gets the level the PC cast the spell as
+	int nMeta = GetMetaMagicFeat();
+
+
+
+	// dont allow this spell on incorporals or gaseous forms
+	if ( FALSE ) {
+		Floaty("Koerperlose Kreaturen oder Gas-Formen koennen nicht polymorphen.");
+		return;
+	}
+
+	if ( !GetIsPC(oPC) ) {
+		Floaty("Nicht-Spieler-Charaktaere koennen nicht polymorphen.");
+		return;
+	}
+
+	SetLocalObject(oPC, "polymorph_target", oTarget);
+
+
+	int nFemale = GENDER_MALE != GetGender(oTarget);
+	int nFP = 0;
+
+	ClearList(oPC, CT);
+
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_UMBER_HULK) ) {
+		AddListItem(oPC, CT, "Umberhulk");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_UMBER_HULK);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_ZOMBIE) ) {
+		AddListItem(oPC, CT, "Zombie");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_ZOMBIE);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_GIANT_SPIDER) ) {
+		AddListItem(oPC, CT, "Riesenspinne");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_GIANT_SPIDER);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_PIXIE) ) {
+		AddListItem(oPC, CT, "Pixie");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_PIXIE);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_TROLL) ) {
+		AddListItem(oPC, CT, "Troll");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_TROLL);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BADGER) ) {
+		AddListItem(oPC, CT, "Dachs");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_BADGER);
+	}
+
+	/*if (GetCanMorph(oTarget, POLYMORPH_TYPE_BASILISK)) {
+	 * 	AddListItem(oPC, CT, "Basilisk");
+	 * 	SetListInt(oPC, CT, POLYMORPH_TYPE_BASILISK);
+	 * }*/
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BOAR) ) {
+		AddListItem(oPC, CT, "Eber");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_BOAR);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BROWN_BEAR) ) {
+		AddListItem(oPC, CT, "Braunbaer");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_BROWN_BEAR);
+	}
+
+	// POLYMORPH_TYPE_CELESTIAL_AVENGER
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BAT) ) {
+		AddListItem(oPC, CT, "Fledermaus");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_BAT);
+		SetLocalString(oPC, "polymorph_type", "fly");
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_CHICKEN) ) {
+		AddListItem(oPC, CT, "Huhn");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_CHICKEN);
+	}
+
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_GOBLINSHAMAN) ) {
+		AddListItem(oPC, CT, "Goblin-Schamane");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_GOBLINSHAMAN);
+	}
+
+	/*POLYMORPH_TYPE_DEATH_SLAAD
+	 *  POLYMORPH_TYPE_DIRE_BADGER
+	 *  POLYMORPH_TYPE_DIRE_BOAR
+	 *  POLYMORPH_TYPE_DIRE_BROWN_BEAR
+	 *  POLYMORPH_TYPE_DIRE_PANTHER
+	 *  POLYMORPH_TYPE_DIRE_WOLF
+	 *
+	 *  POLYMORPH_TYPE_DOOM_KNIGHT*/
+
+	/*if (GetCanMorph(oTarget, POLYMORPH_TYPE_DIRETIGER)) {
+	 * 	AddListItem(oPC, CT, "Schreckenstiger");
+	 * 	SetListInt(oPC, CT, POLYMORPH_TYPE_DIRETIGER);
+	 * }*/
+
+	/*POLYMORPH_TYPE_DRIDER
+	 * POLYMORPH_TYPE_ELDER_AIR_ELEMENTAL
+	 * POLYMORPH_TYPE_ELDER_EARTH_ELEMENTAL
+	 * POLYMORPH_TYPE_ELDER_FIRE_ELEMENTAL
+	 * POLYMORPH_TYPE_ELDER_WATER_ELEMENTAL*/
+
+	/*nFP = nFemale ? POLYMORPH_TYPE_FEMALE_DROW : POLYMORPH_TYPE_MALE_DROW;
+	 * if (GetCanMorph(oTarget, nFP)) {
+	 * 	AddListItem(oPC, CT, "Drow (m/w)");
+	 * 	SetListInt(oPC, CT, nFP);
+	 * }*/
+
+	/*POLYMORPH_TYPE_FIRE_GIANT
+	 * POLYMORPH_TYPE_FROST_GIANT_FEMALE
+	 * POLYMORPH_TYPE_FROST_GIANT_MALE */
+
+
+
+	/*
+	 * POLYMORPH_TYPE_GOLEM_AUTOMATON
+	 * POLYMORPH_TYPE_HARPY
+	 * POLYMORPH_TYPE_HUGE_AIR_ELEMENTAL
+	 * POLYMORPH_TYPE_HUGE_EARTH_ELEMENTAL
+	 * POLYMORPH_TYPE_HUGE_FIRE_ELEMENTAL
+	 * POLYMORPH_TYPE_HUGE_WATER_ELEMENTAL
+	 *
+	 * POLYMORPH_TYPE_IRON_GOLEM
+	 * POLYMORPH_TYPE_JNAH_GIANT_FEMAL
+	 * POLYMORPH_TYPE_JNAH_GIANT_MALE*/
+
+	/*POLYMORPH_TYPE_MANTICORE
+	 * POLYMORPH_TYPE_MEDUSA
+	 * POLYMORPH_TYPE_MINDFLAYER
+	 * POLYMORPH_TYPE_MINOTAUR*/
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_GARGOYLE) ) {
+		AddListItem(oPC, CT, "Gargoyle");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_GARGOYLE);
+	}
+
+
+
+	//POLYMORPH_TYPE_PENGUIN
+
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_IMP) ) {
+		AddListItem(oPC, CT, "Imp");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_IMP);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_QUASIT) ) {
+		AddListItem(oPC, CT, "Quasit");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_QUASIT);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_RAVEN) ) {
+		AddListItem(oPC, CT, "Rabe");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_RAVEN);
+		SetLocalString(oPC, "polymorph_type", "fly");
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_FALCON) ) {
+		AddListItem(oPC, CT, "Falke");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_FALCON);
+		SetLocalString(oPC, "polymorph_type", "fly");
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_PANTHER) ) {
+		AddListItem(oPC, CT, "Panther");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_PANTHER);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_FOX) ) {
+		AddListItem(oPC, CT, "Fuchs");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_FOX);
+	}
+
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_WOLF) ) {
+		AddListItem(oPC, CT, "Wolf");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_WOLF);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_WINTERWOLF) ) {
+		AddListItem(oPC, CT, "Winterwolf");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_WINTERWOLF);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_COW) ) {
+		AddListItem(oPC, CT, "Kuh");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_COW);
+	}
+
+	/*POLYMORPH_TYPE_RED_DRAGON
+	 * POLYMORPH_TYPE_RISEN_LORD
+	 * POLYMORPH_TYPE_SPECTRE
+	 *
+	 *
+	 * POLYMORPH_TYPE_VROCK
+	 * POLYMORPH_TYPE_WERECAT
+	 * POLYMORPH_TYPE_WERERAT
+	 * POLYMORPH_TYPE_WEREWOLF
+	 * POLYMORPH_TYPE_YUANTI
+	 */
+
+	/*nFP = nFemale ? POLYMORPH_TYPE_VAMPIRE_FEMALE : POLYMORPH_TYPE_VAMPIRE_MALE;
+	 * if (GetCanMorph(oTarget, nFP)) {
+	 * 	AddListItem(oPC, CT, "Vampir (m/w)");
+	 * 	SetListInt(oPC, CT, nFP);
+	 * }
+	 */
+
+
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_NYMPH) ) {
+		AddListItem(oPC, CT, "Nymphe (w)");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_NYMPH);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_RAKSHASA_FEMALE) ) {
+		AddListItem(oPC, CT, "Rakshasa (w)");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_RAKSHASA_FEMALE);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_RAKSHASA_MALE) ) {
+		AddListItem(oPC, CT, "Rakshasa (m)");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_RAKSHASA_MALE);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_SUCCUBUS) ) {
+		AddListItem(oPC, CT, "Sukkubus");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_SUCCUBUS);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_HALFLING_FEMALE) ) {
+		AddListItem(oPC, CT, "Halbling (w)");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_HALFLING_FEMALE);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_HALFLING_MALE) ) {
+		AddListItem(oPC, CT, "Halbling (m)");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_HALFLING_MALE);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_GIRL) ) {
+		AddListItem(oPC, CT, "Maedchen");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_GIRL);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BOY) ) {
+		AddListItem(oPC, CT, "Junge");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_BOY);
+	}
+
+
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_HUMAN_FEMALE_04) ) {
+		AddListItem(oPC, CT, "Frau");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_HUMAN_FEMALE_04);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_PROSTITUTE_1) ) {
+		AddListItem(oPC, CT, "Prostituierte (1)");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_PROSTITUTE_1);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_PROSTITUTE_2) ) {
+		AddListItem(oPC, CT, "Prostituierte (2)");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_PROSTITUTE_2);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_HUMAN_MALE_15) ) {
+		AddListItem(oPC, CT, "Mann");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_HUMAN_MALE_15);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_TINY_FOREST) ) {
+		AddListItem(oPC, CT, "kleine Waldviper");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_TINY_FOREST);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_TINY_SWAMP) ) {
+		AddListItem(oPC, CT, "kleine Sumpfviper");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_TINY_SWAMP);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_TINY_JUNGLE) ) {
+		AddListItem(oPC, CT, "kleine Jungelviper");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_TINY_JUNGLE);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_TINY_DESERT) ) {
+		AddListItem(oPC, CT, "kleine Wuestenviper");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_TINY_DESERT);
+	}
+
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_MED_FOREST) ) {
+		AddListItem(oPC, CT, "mittlere Waldviper");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_MED_FOREST);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_MED_SWAMP) ) {
+		AddListItem(oPC, CT, "mittlere Sumpfviper");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_MED_SWAMP);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_MED_JUNGLE) ) {
+		AddListItem(oPC, CT, "mittlere Jungelviper");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_MED_JUNGLE);
+	}
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_MED_DESERT) ) {
+		AddListItem(oPC, CT, "mittlere Wuestenviper");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_MED_DESERT);
+	}
+
+
+	ResetConvList(oPC, oPC, CT, 50000, "s_polymorph_cb", HEAD);
+
+	ClearAllActions(1);
+	AssignCommand(oPC, ActionStartConversation(oPC, "list_select", 1, 0));
+}
+
+
+
+int GetCanMorph(object oTarget, int nPoly) {
+	int nLevel = GetCasterLevel(OBJECT_SELF);
+	return 1;
+
+}
+
+int GetHD(int nPoly) {
+
+	//int nBonus = StringToInt(Get2DACached("polymorph", "HPBONUS", nPoly));
+
+	switch ( nPoly ) {
+		case POLYMORPH_TYPE_BADGER:
+		case POLYMORPH_TYPE_BOAR:
+		case POLYMORPH_TYPE_RAVEN:
+			return 4;
+
+		case POLYMORPH_TYPE_PIXIE:
+			return 5;
+
+		case POLYMORPH_TYPE_PANTHER:
+			return 6;
+	}
+
+	return 4; // + (nBonus / 6);
+}

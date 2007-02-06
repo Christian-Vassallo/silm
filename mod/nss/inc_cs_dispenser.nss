@@ -1,0 +1,138 @@
+#include "inc_misc"
+#include "inc_decay"
+#include "inc_cs_sk_manage"
+
+int Dispenser_UseCharge(string sPref, object oDisp, int iUses = 1) {
+	object oWhat = GetModule();
+
+	int iNUM  = GetLocalInt(oWhat, sPref + "NUM");
+	int iCurr = GetLocalDecay(oDisp, "Disp_Current");
+	int iTot  = GetLocalInt(oDisp, "Disp_Total");
+	int iMAX  = GetLocalInt(oWhat, sPref + "MAX");
+
+	if ( iCurr / 24 > iNUM ) return 0;
+
+	//Solve race condition of parsing more clicks before the scheduled destruct
+	if ( ( iMAX > 0 ) && ( iTot >= iMAX ) ) return 0;
+
+	// One charge per 24 game hours
+	SetLocalDecay(oDisp, "Disp_Current", iCurr + iUses * 24, 1);
+
+	iTot += iUses;
+	SetLocalInt(oDisp, "Disp_Total", iTot);
+
+	//Destroy dispenser if all charges have been used up
+	if ( ( iMAX > 0 ) && ( iTot >= iMAX ) ) {
+		//And have the spawn system informed that one instance ceases to exist.
+		ExecuteScript("tms_death_spawn", oDisp);
+		DestroyObject(oDisp);
+	}
+
+	return 1;
+}
+
+void Action_UseDispenser(object oPC, object oDisp, int iRaiseProb = 10) {
+	object oWhat = GetModule();
+	string sTag = GetTag(oDisp);
+	string sPref = StrTok(sTag, "_");
+
+	sPref = StrTok("", "_");
+
+	int iDIF = GetLocalInt(oWhat, sPref + "DIF");
+	string sTSK = GetLocalString(oWhat, sPref + "TSK");
+	int iSKL = GetLocalInt(oWhat, sPref + "SKL");
+
+	int iLOS = GetLocalInt(oWhat, sPref + "LOS");
+	string sRES = GetLocalString(oWhat, sPref + "RES");
+	string sSCR = GetLocalString(oWhat, sPref + "SCR");
+
+	string sOB1 = GetLocalString(oWhat, sPref + "OB1");
+	int iUS1 = GetLocalInt(oWhat, sPref + "US1");
+
+	string sOB2 = GetLocalString(oWhat, sPref + "OB2");
+	int iLO2 = GetLocalInt(oWhat, sPref + "LO2");
+	object oTool;
+
+	string sTO1 = GetLocalString(oWhat, sPref + "TO1");
+	string sTO2 = GetLocalString(oWhat, sPref + "TO2");
+	string sMIS = GetLocalString(oWhat, sPref + "MIS");
+	string sEXH = GetLocalString(oWhat, sPref + "EXH");
+
+	int iPRE = GetLocalInt(oWhat, sPref + "PRE");
+
+	int iResult;
+
+	if ( sRES == "" && sSCR == "" ) {
+		string sBUG = "BUG: Dispenser descriptor " + sPref +
+					  " (dispenser " + GetResRef(oDisp) + "," + GetTag(oDisp) + ") unknown.";
+		SendMessageToPC(oPC, sBUG);
+		SendMessageToAllDMs(sBUG);
+		WriteTimestampedLogEntry(sBUG);
+		return;
+	}
+
+	if ( sOB1 != "" ) {
+		oTool = GetItemPossessedBy(oPC, sOB1);
+		if ( !GetIsObjectValid(oTool) ) {
+			if ( sTO1 == "" )
+				sTO1 = "Ohne das richtige Werkzeug wird es nichts.";
+			SendMessageToPC(oPC, sTO1);
+			return;
+		}
+
+		if ( iUS1 ) {
+			if ( ( GetItemInSlot(INVENTORY_SLOT_LEFTHAND, oPC) != oTool )
+				&& ( GetItemInSlot(INVENTORY_SLOT_RIGHTHAND, oPC) != oTool ) ) {
+				if ( sTO2 == "" )
+					sTO2 = "Man sollte das Werkzeug auch BENUTZEN!";
+				SendMessageToPC(oPC, sTO2);
+				return;
+			}
+		}
+	}
+
+	if ( iPRE ) {
+		SetLocalInt(oWhat, sPref + "PRE", iPRE - 1);
+		return;
+	}
+
+	if ( !Dispenser_UseCharge(sPref, oDisp, 0) ) {
+		if ( sEXH == "" )
+			sEXH = "Die Stelle sieht schon ziemlich gepluendert aus...";
+		SendMessageToPC(oPC, sEXH);
+		return;
+	}
+
+	if ( iDIF > 0 ) {
+		if ( sTSK != "" )
+			iResult = CheckImproveSkill(oPC, sTSK, iDIF, iRaiseProb);
+		else
+			iResult = GetIsSkillSuccessful(oPC, iSKL, iDIF);
+	} else iResult = 1;
+
+	if ( !iResult ) {
+		if ( Random(100) < iLOS )
+			Dispenser_UseCharge(sPref, oDisp);
+		if ( sMIS == "" )
+			sMIS = "Schade...";
+		SendMessageToPC(oPC, sMIS);
+		return;
+	}
+
+	if ( !Dispenser_UseCharge(sPref, oDisp) ) {
+		if ( sEXH == "" )
+			sEXH = "Die Stelle sieht schon ziemlich gepluendert aus...";
+		SendMessageToPC(oPC, sEXH);
+		return;
+	}
+
+	if ( sRES != "" ) {
+		CreateItemOnObject(sRES, oPC);
+		return;
+	}
+
+	ExecuteScript(sSCR, oPC);
+	return;
+}
+
+

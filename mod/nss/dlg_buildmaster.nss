@@ -1,0 +1,30 @@
+#include "inc_currency"
+
+void main() {
+	object oPC = GetLastClosedBy();
+	object oItem = GetFirstItemInInventory();
+	int nValueWood = GetCampaignInt("Legion_Building", "Eichenholz");
+	int nValueStone = GetCampaignInt("Legion_Building", "Steine");
+	int nMaxWood = GetLocalInt(OBJECT_SELF, "Eichenholz");
+	int nMaxStone = GetLocalInt(OBJECT_SELF, "Steine");
+	int nGold = 0;
+	while ( GetIsObjectValid(oItem) ) {
+		if ( GetTag(oItem) == "CS_MA20" && nValueWood < nMaxWood ) {
+			nGold = nGold + 30;
+			DestroyObject(oItem);
+			nValueWood++;
+		} else if ( GetTag(oItem) == "BM_Felsbrocken" && nValueStone < nMaxStone ) {
+			nGold = nGold + 50;
+			DestroyObject(oItem);
+			nValueStone++;
+		} else {
+			SendMessageToPC(oPC, "Diese Ressourcen werden hier nicht benoetigt.");
+		}
+		oItem = GetNextItemInInventory();
+	}
+	SendMessageToPC(oPC, "Eichenholz: " + IntToString(nValueWood) + " von " + IntToString(nMaxWood));
+	SendMessageToPC(oPC, "Steine: " + IntToString(nValueStone) + " von " + IntToString(nMaxStone));
+	SetCampaignInt("Legion_Building", "Eichenholz", nValueWood);
+	SetCampaignInt("Legion_Building", "Steine", nValueStone);
+	GiveValueToCreature(oPC, nGold);
+}

@@ -1,0 +1,56 @@
+//::///////////////////////////////////////////////
+//:: Name x2_def_heartbeat
+//:: Copyright (c) 2001 Bioware Corp.
+//:://////////////////////////////////////////////
+/*
+ * 	Default Heartbeat script
+ */
+//:://////////////////////////////////////////////
+//:: Created By: Keith Warner
+//:: Created On: June 11/03
+//:://////////////////////////////////////////////
+
+void main() {
+	ExecuteScript("nw_c2_default1", OBJECT_SELF);
+
+
+	/* Ascore-Geister */
+
+	if ( GetTag(OBJECT_SELF) == "ascore_ghost"
+		&& ( !GetIsNight()
+			|| GetStringLowerCase(GetStringLeft(GetResRef(GetArea(OBJECT_SELF)), 6)) != "ascore" ) ) {
+		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(SPELL_LESSER_DISPEL), GetLocation(
+				OBJECT_SELF));
+		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH), GetLocation(
+				OBJECT_SELF));
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDisappear(1), OBJECT_SELF);
+		DelayCommand(3.0, DestroyObject(OBJECT_SELF));
+		return;
+	}
+
+	if ( GetTag(OBJECT_SELF) == "ascore_ghost" ) {
+		int r = 0;
+		switch ( Random(40) ) {
+			case 0:
+				r = VOICE_CHAT_BATTLECRY1;
+				break;
+			case 1:
+				r = VOICE_CHAT_BATTLECRY2;
+				break;
+			case 2:
+				r = VOICE_CHAT_BATTLECRY3;
+				break;
+			case 3:
+				r = VOICE_CHAT_GATTACK1;
+				break;
+			case 4:
+				r = VOICE_CHAT_GATTACK2;
+				break;
+			case 5:
+				r = VOICE_CHAT_GATTACK3;
+				break;
+		}
+
+		PlayVoiceChat(r);
+	}
+}

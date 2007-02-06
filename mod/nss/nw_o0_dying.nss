@@ -1,0 +1,93 @@
+//::///////////////////////////////////////////////
+//:: Dying Script
+//:: s_dying.NSS
+//:://////////////////////////////////////////////
+/*
+ * 	This script handles the default behavior
+ * 	that occurs when a character is dying. Dying
+ * 	is when the character is between 0 and -9 hit
+ * 	points; -10 and below is death. To use, redirect
+ * 	the OnDying event script of the module to this script.
+ */
+//:://////////////////////////////////////////////
+//:: Author : Scott Thorne
+//:: E-mail : Thornex2@wans.net
+//:: Updated: July 25, 2002
+//:://////////////////////////////////////////////
+void bleed(float fTimer) {
+	effect eBleedEff;
+
+	/* Someone kicked him as he has been already lying on the floor */
+	if ( GetCurrentHitPoints() <= -10 ) return;
+
+	eBleedEff = EffectDamage(1, DAMAGE_TYPE_MAGICAL, DAMAGE_POWER_PLUS_FIVE);
+
+	/* keep executing recursively until character is dead or at +1 hit points */
+	if ( GetCurrentHitPoints() <= 0 ) {
+		/* Got healed, but not yet out of danger */
+		if ( GetCurrentHitPoints(OBJECT_SELF) > GetLocalInt(OBJECT_SELF, "Current_LP") ) {
+			SendMessageToPC(OBJECT_SELF, "Ihr wurdet stabilisiert.");
+			fTimer = 1800.0f;
+		} else
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, eBleedEff, OBJECT_SELF);
+
+		/* -10 hit points is the death threshold, at or beyond it the character dies */
+		if ( GetCurrentHitPoints() <= -10 ) {
+			PlayVoiceChat(VOICE_CHAT_DEATH); /* scream one last time */
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH), OBJECT_SELF); /* make death dramatic */
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDeath(), OBJECT_SELF); /* now kill them */
+			return;
+		}
+
+		if ( fTimer < 10.0f ) {
+			/* only check if character has not stablized */
+			if ( d10(1) == 1 ) {
+				/* 10% chance to stablize */
+				SendMessageToPC(OBJECT_SELF,
+					"Ihre Blutung hat sich verlangsamt. Dennoch beduerfen Sie dringend einen Heiler!");
+				fTimer = 60.0f;
+			}
+			/* Groan in pain */
+			switch ( d6() ) {
+				case 1: PlayVoiceChat(VOICE_CHAT_PAIN1); break;
+				case 2: PlayVoiceChat(VOICE_CHAT_PAIN2); break;
+				case 3: PlayVoiceChat(VOICE_CHAT_PAIN3); break;
+				case 4: PlayVoiceChat(VOICE_CHAT_HEALME); break;
+				case 5: PlayVoiceChat(VOICE_CHAT_NEARDEATH); break;
+				case 6: PlayVoiceChat(VOICE_CHAT_HELP);
+			}
+		}
+		SetLocalInt(OBJECT_SELF, "Current_LP", GetCurrentHitPoints(OBJECT_SELF));
+		DelayCommand(fTimer, bleed(fTimer)); /* do this again next round */
+	}
+}
+
+
+void main() {
+	object oDying = GetLastPlayerDying();
+	object oKiller;
+
+	if ( !GetIsObjectValid(oKiller = GetLastKiller()) )
+		if ( !GetIsObjectValid(oKiller = GetLastHostileActor(oDying)) )
+			oKiller = GetLastAttacker(oDying);
+
+	//Traverse trough any associates up to the one who is really responsible.
+	if ( GetIsObjectValid(oKiller) )
+		while ( GetIsObjectValid(GetMaster(oKiller)) )
+			oKiller = GetMaster(oKiller);
+
+	SetLocalObject(oDying, "KILLER_WAS", oKiller);
+
+	AssignCommand(oDying, ClearAllActions());
+
+	/* Current Hit points < -9 means instant death */
+	if ( GetCurrentHitPoints(oDying) <= -10 ) {
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH), OBJECT_SELF);/* make death dramatic */
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDeath(), OBJECT_SELF);/* now kill them */
+		return;
+	}
+
+	SetLocalInt(oDying, "Current_LP", GetCurrentHitPoints(oDying));
+	AssignCommand(oDying, bleed(6.0f));
+}
+

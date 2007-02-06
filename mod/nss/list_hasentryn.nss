@@ -1,0 +1,21 @@
+#include "inc_lists"
+
+int StartingConditional() {
+	object oPC = GetPCSpeaker();
+
+	int iCurrent = GetLocalInt(oPC, "ConvList_Current");
+	SetLocalInt(oPC, "ConvList_Current", iCurrent + 1);
+	int iCurrent2 = GetLocalInt(oPC, "ConvList_Current2");
+	SetLocalInt(oPC, "ConvList_Current2", iCurrent2 + 1);
+	object oHolder = GetLocalObject(oPC, "ConvList_Holder");
+	string sListTag = GetLocalString(oPC, "ConvList_Tag");
+
+	if ( ( iCurrent < GetListCount(oHolder, sListTag) )
+		&& !( GetListDisplayMode(oHolder, sListTag, iCurrent) ) ) {
+		int iStT = GetLocalInt(oPC, "ConvList_StT");
+		SetCustomToken(iStT + iCurrent2,
+			GetLocalString(oHolder, sListTag + "_title_" + IntToString(iCurrent)));
+		return 1;
+	}
+	return 0;
+}

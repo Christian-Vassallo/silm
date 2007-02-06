@@ -1,0 +1,120 @@
+//:://////////////////////////////////////////////
+//
+// Anzeigen von Spureninformationen bei Klick auf Spur
+//
+// Name: track_used
+//
+// Erstellt:     Christian Teister am 13.08.2006
+// Aktualisiert: Christian Teister am 13.08.2006
+//
+//:://////////////////////////////////////////////
+
+#include "inc_soundfont"
+#include "inc_cdb"
+
+void showAllTrackInfos(object oPC, object oTrack) {
+	//Textnachricht zusammensetzen
+	string info = "Die Spur ist ";
+
+	//Alter
+	int age = GetLocalInt(oTrack, "age");
+	if ( age == 0 ) info += "ganz frisch";
+	else if ( age == 1 ) info += "knapp eine Stunde alt";
+	else info += "etwa " + IntToString(age) + " Stunden alt";
+	info += ", ";
+
+	//Spurentiefe
+	switch ( GetLocalInt(oTrack, "deep") ) {
+		case 5: info += "sehr tief"; break;
+		case 4: info += "tief"; break;
+		case 3: info += "normal"; break;
+		case 2: info += "schwach"; break;
+		case 1: info += "sehr schwach"; break;
+	}
+
+	info += ", und sieht so aus, als wäre sie von einem ";
+	//Geschlecht
+	info += ( GetLocalInt(oTrack, "gender") == GENDER_MALE ) ? "männlichen" : "weiblichen";
+	//Groesse
+	info += ", ";
+	switch ( GetLocalInt(oTrack, "size") ) {
+		case CREATURE_SIZE_HUGE: info += " riesigen"; break;
+		case CREATURE_SIZE_LARGE: info += " grossen"; break;
+		case CREATURE_SIZE_MEDIUM: info += " normalgrossen"; break;
+		case CREATURE_SIZE_SMALL: info += " kleinen"; break;
+		case CREATURE_SIZE_TINY: info += " winzigen"; break;
+	}
+
+	info += " Wesen gemacht worden. Dieses Wesen ";
+	//Barfuss?
+	info += ( GetLocalInt(oTrack, "bareFoot") ) ? "war barfuss unterwegs" : "trug Schuhwerk";
+	//Bewegungsart
+	switch ( GetLocalInt(oTrack, "speed") ) {
+		case 1:
+			info += " und ist geschlichen.";
+			break;
+		case 2:
+			info += " und ist geschlichen.";
+			break;
+		case 3:
+			info += " und ging mit mittlerer Geschwindigkeit.";
+			break;
+		case 4:
+			info += " und ging mit mittlerer Geschwindigkeit.";
+			break;
+	}
+
+	info += "";
+
+	vector v = GetPosition(oTrack);
+	string sHex = GetStringRight(IntToHexString(
+						  ( GetModStartup() * GetLocalInt(oTrack, "cid") ) % 0xfff
+					  ), 3);
+	string sSF = HexToSF(sHex);
+
+	info += " (" + sSF + ")";
+
+	FloatingTextStringOnCreature(info, oPC, FALSE);
+}
+
+//Tiefe, Groesse
+void showSomeTrackInfos(object oPC, object oTrack) {
+	//Textnachricht zusammensetzen
+	string info = "Die Spur ist ";
+
+	//Spurentiefe
+	switch ( GetLocalInt(oTrack, "deep") ) {
+		case 5: info += "sehr tief"; break;
+		case 4: info += "tief"; break;
+		case 3: info += "normal"; break;
+		case 2: info += "schwach"; break;
+		case 1: info += "sehr schwach"; break;
+	}
+
+	info += " und sieht so aus, als wäre sie von einem ";
+	//Groesse
+	switch ( GetLocalInt(oTrack, "size") ) {
+		case CREATURE_SIZE_HUGE: info += " riesigen"; break;
+		case CREATURE_SIZE_LARGE: info += " grossen"; break;
+		case CREATURE_SIZE_MEDIUM: info += " normalgrossen"; break;
+		case CREATURE_SIZE_SMALL: info += " kleinen"; break;
+		case CREATURE_SIZE_TINY: info += " winzigen"; break;
+	}
+
+	info += " Wesen.";
+	FloatingTextStringOnCreature(info, oPC, FALSE);
+}
+
+//Spureninfos zeigen nach Klick
+void main() {
+	object oPC = GetLastUsedBy();
+	int trackSkill = GetSkillRank(SKILL_SPOT, oPC) / 2;
+	trackSkill += GetLevelByClass(CLASS_TYPE_RANGER, oPC) + GetLevelByClass(CLASS_TYPE_DRUID, oPC);
+	if ( trackSkill < 6 )  //Keine Infos
+		FloatingTextStringOnCreature("Ihr koennt die Spur nicht genauer deuten.", oPC, FALSE);
+	else if ( trackSkill < 12 )  //Tiefe, Groesse
+		showSomeTrackInfos(oPC, OBJECT_SELF);
+	else  //Alle Infos
+		showAllTrackInfos(oPC, OBJECT_SELF);
+}
+

@@ -1,0 +1,41 @@
+const float ALARM_DISTANCE = 8.0f; // sphere!
+
+void main() {
+	object oTrigger = OBJECT_SELF;
+	location lTrigger = GetLocation(oTrigger);
+
+	int bDisabled = GetLocalInt(oTrigger, "disabled");
+
+	if ( bDisabled )
+		return;
+
+	int bDoAlarm = FALSE;
+
+	// Iterate all creatues
+	object oCritter = GetFirstObjectInShape(SHAPE_SPHERE, ALARM_DISTANCE, lTrigger, FALSE,
+						  OBJECT_TYPE_CREATURE);
+
+	while ( GetIsObjectValid(oCritter) ) {
+		if ( !GetIsDM(oCritter) ) {
+			bDoAlarm = TRUE;
+			break;
+		}
+		oCritter = GetNextObjectInShape(SHAPE_SPHERE, ALARM_DISTANCE, lTrigger, FALSE, OBJECT_TYPE_CREATURE);
+	}
+
+	if ( !bDoAlarm )
+		return;
+
+
+	string sLoc = GetName(GetArea(OBJECT_SELF));
+
+	int nCID = GetLocalInt(OBJECT_SELF, "alarm_caster_cid");
+	object oCaster = GetLocalObject(OBJECT_SELF, "alarm_caster");
+	int nDC = GetLocalInt(OBJECT_SELF, "alarm_caster_dc");
+
+
+	SetLocalInt(oTrigger, "disabled", 1);
+	DelayCommand(60.0 * 1, SetLocalInt(oTrigger, "disabled", 0));
+
+	SendMessageToPC(oCaster, "Alarm ausgeloest: " + sLoc + ".");
+}

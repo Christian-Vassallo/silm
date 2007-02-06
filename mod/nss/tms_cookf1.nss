@@ -1,0 +1,33 @@
+#include "inc_decay"
+
+void main() {
+	object oPC = GetLastUsedBy();
+
+	object oObj = GetFirstItemInInventory(oPC);
+	object oNew;
+	string sTag;
+	location lLoc = GetLocation(OBJECT_SELF);
+
+	while ( GetIsObjectValid(oObj) ) {
+		sTag = GetTag(oObj);
+		if ( GetStringLeft(sTag, 9) == "FOOD_RAW_" ) break;
+		oObj = GetNextItemInInventory(oPC);
+	}
+	if ( !GetIsObjectValid(oObj) ) {
+		FloatingTextStringOnCreature(
+			"Du hast nichts zu braten.", oPC, FALSE);
+		return;
+	}
+
+	DestroyObject(OBJECT_SELF);
+	oNew = CreateObject(OBJECT_TYPE_PLACEABLE, "tms_pl_fire2", lLoc);
+
+	/* Dinner is ready after 2 game mins (6 real time seconds) */
+	SetLocalDecay(oNew, "TMS_FireTime", 2, 60);
+	SetLocalString(oNew, "TMS_FoodType", GetSubString(sTag, 9, 3));
+	FloatingTextStringOnCreature(
+		"Du steckst den Braten auf den Spiess und hängst ihn übers Feuer.", oPC, FALSE);
+	DestroyObject(oObj);
+	object oArea = GetArea(oPC);
+	AssignCommand(oArea, DelayCommand(1.0f, RecomputeStaticLighting(oArea)));
+}

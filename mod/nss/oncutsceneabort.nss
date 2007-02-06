@@ -1,0 +1,6 @@
+#include "inc_cutscene"
+
+void main() {
+	object oPC = GetLastPCToCancelCutscene();
+	StopCutscene(oPC);
+}

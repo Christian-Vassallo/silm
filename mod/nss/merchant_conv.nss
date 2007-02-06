@@ -1,0 +1,14 @@
+#include "inc_merchant"
+
+void main() {
+	object oPC = GetLastSpeaker();
+	object oMerc = OBJECT_SELF;
+
+	// Make sure we are not in any submenue
+	ClearMenuLevel(oPC, TTT, 1);
+	ClearMenuLevel(oPC, TTT, 0);
+
+	MakeMerchantDialog(oPC, oMerc);
+	ClearAllActions();
+	ActionStartConversation(oPC, "list_select", FALSE, TRUE);
+}

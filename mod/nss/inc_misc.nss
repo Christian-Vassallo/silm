@@ -1,0 +1,151 @@
+// Collection of various useful functions from various sources
+
+string StrTok(string sString, string sDelim) {
+	string sStr;
+	int iPos;
+
+	sStr = ( sString == "" ) ? GetLocalString(GetModule(), "__lib_strtok") : sString;
+
+	iPos = FindSubString(sStr, sDelim);
+	if ( iPos < 0 || sDelim == "" ) {
+		DeleteLocalString(GetModule(), "__lib_strtok");
+		return sStr;
+	} else {
+		int iLen = GetStringLength(sStr);
+		int iDLen = GetStringLength(sDelim);
+		SetLocalString(GetModule(), "__lib_strtok",
+			GetStringRight(sStr, iLen - iPos - iDLen));
+		return GetStringLeft(sStr, iPos);
+	}
+}
+
+location GetRandomLocation(location lWhere, int iMaxDistance) {
+	vector vNewPos = GetPositionFromLocation(lWhere);
+	object oArea = GetAreaFromLocation(lWhere);
+	float fX, fY;
+	float fMaxY;
+	float fRadius = IntToFloat(iMaxDistance);
+	fX = ( Random(200) / 100.0 - 1.0 ) * fRadius;
+	fMaxY = sqrt(fRadius * fRadius - fX * fX);
+	fY = ( Random(200) / 100.0 - 1.0 ) * fMaxY;
+	vNewPos += Vector(fX, fY, 0.0);
+	//Why a third parameter? Is this the "facing" value? --Rikan
+	location lNewLoc = Location(oArea, vNewPos, VectorToAngle(-1.0 * vNewPos));
+	return lNewLoc;
+}
+
+location GetRandomLocationAt(object oObj, int iMaxDistance) {
+	return GetRandomLocation(GetLocation(oObj), iMaxDistance);
+}
+
+//Returns a general type of the object.
+// 0: Melee Weapon
+// 1: Body Armour
+// 2: Shield
+// 3: Garment (Helmet, Belt, Cloak, Gloves)
+// 4: Ring
+// 5: Ranged Weapon
+// 6: Ammunition
+// 7: Other
+
+int GetObjectClass(object oWhat) {
+	int iBI = GetBaseItemType(oWhat);
+
+	if ( iBI > 100 ) return 0;
+
+	switch ( iBI ) {
+		case BASE_ITEM_BASTARDSWORD:
+		case BASE_ITEM_BATTLEAXE:
+		case BASE_ITEM_CLUB:
+		case BASE_ITEM_DAGGER:
+		case BASE_ITEM_DIREMACE:
+		case BASE_ITEM_DOUBLEAXE:
+		case BASE_ITEM_GREATAXE:
+		case BASE_ITEM_GREATSWORD:
+		case BASE_ITEM_HEALERSKIT:
+		case BASE_ITEM_HEAVYFLAIL:
+		case BASE_ITEM_KAMA:
+		case BASE_ITEM_KATANA:
+		case BASE_ITEM_KUKRI:
+		case BASE_ITEM_LIGHTFLAIL:
+		case BASE_ITEM_LIGHTHAMMER:
+		case BASE_ITEM_LIGHTMACE:
+		case BASE_ITEM_LONGSWORD:
+		case BASE_ITEM_MORNINGSTAR:
+		case BASE_ITEM_QUARTERSTAFF:
+		case BASE_ITEM_RAPIER:
+		case BASE_ITEM_SCIMITAR:
+		case BASE_ITEM_SHORTBOW:
+		case BASE_ITEM_SHORTSPEAR:
+		case BASE_ITEM_SHORTSWORD:
+		case BASE_ITEM_SICKLE:
+		case BASE_ITEM_TWOBLADEDSWORD:
+		case BASE_ITEM_WARHAMMER:
+			return 0;
+
+		case BASE_ITEM_ARMOR:
+			return 1;
+
+		case BASE_ITEM_LARGESHIELD:
+		case BASE_ITEM_SMALLSHIELD:
+		case BASE_ITEM_TOWERSHIELD:
+			return 2;
+
+		case BASE_ITEM_AMULET:
+		case BASE_ITEM_BELT:
+		case BASE_ITEM_BOOTS:
+		case BASE_ITEM_BRACER:
+		case BASE_ITEM_CLOAK:
+		case BASE_ITEM_HELMET:
+			return 3;
+
+		case BASE_ITEM_RING:
+			return 4;
+
+		case BASE_ITEM_HEAVYCROSSBOW:
+		case BASE_ITEM_LIGHTCROSSBOW:
+		case BASE_ITEM_LONGBOW:
+			return 5;
+
+		case BASE_ITEM_ARROW:
+		case BASE_ITEM_BOLT:
+		case BASE_ITEM_BULLET:
+		case BASE_ITEM_DART:
+		case BASE_ITEM_SHURIKEN:
+		case BASE_ITEM_SLING:
+		case BASE_ITEM_THROWINGAXE:
+			return 6;
+
+		default:
+			return 7;
+	}
+
+	/* NOTREACHED */
+	return -1;
+}
+
+int HexToInt(string sHex) {
+	int h = 0;
+	int i;
+	string sDigit;
+
+	sHex = GetStringLowerCase(sHex);
+
+	for ( i = 0; i < GetStringLength(sHex); i++ ) {
+		h *= 16;
+		sDigit = GetSubString(sHex, i, 1);
+		if      ( sDigit == "a" ) h += 10;
+		else if ( sDigit == "b" ) h += 11;
+		else if ( sDigit == "c" ) h += 12;
+		else if ( sDigit == "d" ) h += 13;
+		else if ( sDigit == "e" ) h += 14;
+		else if ( sDigit == "f" ) h += 15;
+		else h += StringToInt(sDigit);
+	}
+	return h;
+}
+
+string IntToHex(int iNum, int iDigits = 2) {
+	return GetStringRight(IntToHexString(iNum), iDigits);
+}
+

@@ -1,0 +1,27 @@
+void main() {
+	object oPC = GetPCSpeaker();
+	object oComp = GetLocalObject(oPC, "animalstaff_comp");
+	location lTarget = GetLocalLocation(oPC, "animalstaff_targetl");
+	object oTarget = GetLocalObject(oPC, "animalstaff_target");
+
+	if ( !GetIsObjectValid(oComp) ) {
+		FloatingTextStringOnCreature(
+			"Ihr benötigt einen anwesenden Tiergefährten oder Vertrauten, um diesen Stab benutzen zu können.",
+			oPC,
+			FALSE);
+		return;
+	}
+
+	if ( !GetIsObjectValid(oTarget) ) {
+		FloatingTextStringOnCreature("Für diesen Befehl müsst Ihr eine gültige Kreatur anzielen.", oPC, FALSE);
+		return;
+	}
+
+	if ( oTarget == oComp || oTarget == oPC /*|| !GetIsEnemy(oComp, oTarget)*/ ) {
+		FloatingTextStringOnCreature("Euer Tier blickt Euch aus verwirrten Augen an.", oPC, FALSE);
+		return;
+	}
+
+	AssignCommand(oComp, ClearAllActions(1));
+	AssignCommand(oComp, ActionAttack(oTarget, FALSE));
+}

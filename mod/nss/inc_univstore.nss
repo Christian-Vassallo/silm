@@ -1,0 +1,202 @@
+#include "_gen"
+#include "x2_inc_itemprop"
+#include "inc_itemsize"
+
+const int
+STORE_RESULT_OK = 0,
+STORE_RESULT_NORESREF = 1,
+STORE_RESULT_NOCOPY = 2,
+STORE_RESULT_WRONGBASETYPE = 3,
+STORE_RESULT_WRONGNAME = 4,
+STORE_RESULT_WRONGAPP = 5,
+STORE_RESULT_WRONGPROP = 6,
+STORE_RESULT_NOSTORE = 7,
+
+STORE_OK = 1,
+STORE_FAIL = 0,
+
+STORE_MAX_ITEMS = 85;
+
+
+const float
+STORE_MAX_WEIGHT = 30.0f;
+
+const string
+STORE_TABLE = "container";
+
+
+object UnivStore_GetFirst(object oContainer);
+
+object UnivStore_GetNext(object oContainer);
+
+int UnivStore_GetCapacity(object oContainer);
+
+int UnivStore_GetUsedCapacity(object oContainer);
+
+// Empties a container in the database
+// Returns the items killed.
+int UnivStore_ClearStore(object oContainer);
+
+float UnivStore_GetMaxWeight(object oContainer);
+
+
+// Stores some item in the database.
+// Does NOT destroy it.
+// oContainer - a valid container to store the object in
+// oPC - the PC that put it in.
+// oItem - the Item itself
+int UnivStore_StoreItem(object oContainer, object oPC,  object oItem);
+
+int UnivStore_IsContainer(object oContainer);
+
+int GetIsCustomItem(object oItem);
+
+/* implementation */
+
+
+int UnivStore_IsContainer(object oContainer) {
+	string sTag = GetLocalString(oContainer, "store_tag");
+	return sTag != "";
+}
+
+
+int UnivStore_GetCapacity(object oContainer) {
+	if ( GetLocalInt(oContainer, "store_capacity") > 0 )
+		return GetLocalInt(oContainer, "store_capacity");
+
+	return STORE_MAX_ITEMS;
+}
+
+float UnivStore_GetMaxWeight(object oContainer) {
+	if ( GetLocalFloat(oContainer, "store_maxweight") > 0.0 )
+		return GetLocalFloat(oContainer, "store_maxweight");
+
+	return STORE_MAX_WEIGHT;
+}
+
+int UnivStore_StoreItem(object oContainer, object oPC, object oItem) {
+
+	if ( !UnivStore_IsContainer(oContainer) )
+		return STORE_FAIL;
+
+	string sCID = IntToString(GetLocalInt(oPC, "cid"));
+
+
+	string sChestId = GetLocalString(oContainer, "store_tag");
+
+	//if (sChestId == "")
+	//    sChestId = GetTag(oContainer);
+
+	string s = "insert into `" +
+			   STORE_TABLE +
+			   "` (`container`, `resref`, `stack`, `charges`, `identified`, `character`) values(";
+	s += "'" + SQLEscape(sChestId) + "', ";
+	s += "'" + SQLEscape(GetResRef(oItem)) + "', ";
+	s += IntToString(GetItemStackSize(oItem)) + ", ";
+	s += IntToString(GetItemCharges(oItem)) + ", ";
+	s += IntToString(GetIdentified(oItem)) + ", ";
+
+	s += "" + sCID + ", ";
+
+	s += ");";
+
+	SQLExecDirect(s);
+
+
+	// StoreCampaignObject("c_" + GetStringLowerCase(sChestID), oItem);
+
+	return STORE_OK;
+}
+
+
+int UnivStore_ClearStore(object oContainer) {
+	string sTag = GetLocalString(oContainer, "store_tag");
+	//if (sTag == "")
+	//    sTag = GetTag(oContainer);
+
+	if ( sTag == "" )
+		return 0;
+
+	SQLExecDirect("delete from `" + STORE_TABLE + "` where `container` = '" + SQLEscape(sTag) + "';");
+
+	return 1;
+}
+
+
+/*
+ * object UnivStore_GetFirst(object oContainer) {
+ * 	string sTag = GetLocalString(oContainer, "store_tag");
+ * 	if (sTag == "")
+ * 		return OBJECT_INVALID;
+ *
+ * 	sTag = SQLEscape(sTag);
+ *
+ *
+ *
+ * 	SQLExecDirect("select * from `" + STORE_TABLE + "` where `container` = " + sTag + " order by `id` desc limit 1;");
+ * 	SQLFetch();
+ * }
+ *
+ * object UnivStore_GetNext(object oContainer) {
+ * 	string sTag = GetLocalString(oContainer, "store_tag");
+ * 	if (sTag == "")
+ * 		return OBJECT_INVALID;
+ * }
+ *
+ */
+
+
+
+int GetIsCustomItem(object oItem) {
+	string sResRef = GetResRef(oItem);
+
+	//Wenn Gegenstand keine ResRef hat
+	if ( sResRef == "" )
+		return STORE_RESULT_NORESREF;
+
+	if ( GetLocalInt(oItem, "no_persistent_storage") )
+		return STORE_RESULT_NOSTORE;
+
+	//Mit ResRef
+	else {
+		object oTestItem = CreateObject(OBJECT_TYPE_ITEM, sResRef, GetLocation(OBJECT_SELF), FALSE);
+		int nCustomItem = STORE_RESULT_OK;
+
+		//Wenn Gegenstand nicht von ResRef erstellt werden kann
+		if ( oTestItem == OBJECT_INVALID )
+			nCustomItem = STORE_RESULT_NOCOPY;
+
+		if ( STORE_RESULT_OK == nCustomItem ) {
+			//Wenn Grundgegenstandstyp unterschiedlich ist
+			if ( GetBaseItemType(oItem) != GetBaseItemType(oTestItem) )
+				nCustomItem = STORE_RESULT_WRONGBASETYPE;
+		}
+
+		// We do have SetName now, you know
+		/*if(nCustomItem==STORE_RESULT_OK) {
+		 * 	//Wenn Namen nicht identisch sind
+		 * 	if(GetName(oItem)!=GetName(oTestItem))
+		 * 		nCustomItem = STORE_RESULT_WRONGNAME;
+		 * }*/
+
+		if ( STORE_RESULT_OK == nCustomItem ) {
+			//Wenn Grundaussehen anders ist
+			if ( GetItemAppearance(oItem, ITEM_APPR_TYPE_SIMPLE_MODEL, 0)
+				!= GetItemAppearance(oTestItem, ITEM_APPR_TYPE_SIMPLE_MODEL, 0) )
+				nCustomItem = STORE_RESULT_WRONGAPP;
+		}
+
+		//Feststellen ob veraenderte Eigenschaften
+		if ( STORE_RESULT_OK == nCustomItem ) {
+			int nIPCount1 = IPGetNumberOfItemProperties(oItem);
+			int nIPCount2 = IPGetNumberOfItemProperties(oTestItem);
+			if ( nIPCount1 != nIPCount2 )  //Gegenstand hat unterschiedliche Zahl an Eigenschaften
+				nCustomItem = STORE_RESULT_WRONGPROP;
+		}
+
+		DestroyObject(oTestItem);
+
+
+		return nCustomItem;
+	}
+}

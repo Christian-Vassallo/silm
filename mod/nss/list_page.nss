@@ -1,0 +1,6 @@
+#include "inc_lists"
+
+int StartingConditional() {
+	BuildConvListPage(GetPCSpeaker());
+	return 1;
+}

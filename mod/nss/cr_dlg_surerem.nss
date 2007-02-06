@@ -1,0 +1,5 @@
+#include "inc_corpse_def"
+
+int StartingConditional() {
+	return GetLocalInt(OBJECT_SELF, "Item_Robbed") & ( CRP_LIST_TRUNCATED | CRP_LIST_OMITTED );
+}

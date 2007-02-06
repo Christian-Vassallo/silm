@@ -1,0 +1,29 @@
+void changePuppetClothes() {
+	string sPuppet = GetLocalString(OBJECT_SELF, "sPuppet");
+
+	object oExchanger = OBJECT_SELF;
+	object oPuppet = GetNearestObjectByTag(sPuppet);
+	object oPC = GetLastUsedBy();
+	object oNewClothes = GetFirstItemInInventory();
+	object oOldClothes = GetItemInSlot(INVENTORY_SLOT_CHEST, oPuppet);
+
+	if ( GetIsObjectValid(oNewClothes) ) {
+		ActionGiveItem(oNewClothes, oPuppet);
+		DelayCommand(1.0f, AssignCommand(oPuppet, ActionUnequipItem(oOldClothes)));
+		DelayCommand(1.0f,
+			AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_GET_MID, 1.0f, 5.0f))
+		);
+		DelayCommand(2.0f, ActionTakeItem(oOldClothes, oPuppet));
+		DelayCommand(4.0f, AssignCommand(oPuppet, ActionEquipItem(oNewClothes, INVENTORY_SLOT_CHEST)));
+
+		//DelayCommand(6.0f,ActionGiveItem(GetFirstItemInInventory(oPuppet), oPC ));
+	}
+}
+
+
+
+
+void main() {
+	ClearAllActions();
+	changePuppetClothes();
+}

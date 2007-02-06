@@ -1,0 +1,7 @@
+#include "inc_decay"
+
+int StartingConditional() {
+	object oPC = GetPCSpeaker();
+
+	return !GetLocalInt(oPC, "Resting_Fail");
+}

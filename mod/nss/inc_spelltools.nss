@@ -1,0 +1,295 @@
+#include "_gen"
+#include "inc_cdb"
+#include "inc_spellstaff"
+
+const int PAPER_MAX_LENGTH = 2500;
+
+int GetTotalTextLength(object oPaper);
+
+string GetAllText(object oPaper);
+
+// Returns true if oActivator triggered the runes, false if not.
+// Doesnt do anything if no runes were inscribed on that object.
+int DoExplosiveRunes(object oItem, object oActivator);
+
+
+// Returns true if oActivator triggered the runes, false if not.
+// Doesnt do anything if no runes were inscribed on that object.
+int DoSepiaSnakeSigil(object oItem, object oActivator);
+
+int DoSpellStaff(object oCaster, int nSpell);
+
+int HasExplosiveRunes(object oItem);
+
+
+int HasSepiaSnakeSigil(object oItem);
+
+void RemoveExplosiveRunes(object oItem);
+
+void RemoveSepiaSnakeSigil(object oItem);
+
+
+void FixPergamentName(object oTarget);
+
+
+
+int GetTotalTextLength(object oPaper) {
+	int nLength = 0;
+	int i;
+	int nWriteCycle = GetLocalInt(oPaper, "paper_writecycles");
+	string sText;
+	for ( i = 0; i < nWriteCycle; i++ ) {
+		sText = GetLocalString(oPaper, "paper_text_" + IntToString(i));
+		nLength += GetStringLength(sText);
+	}
+	return nLength;
+}
+
+
+string GetAllText(object oPaper) {
+	string sText;
+	int i;
+	int nWriteCycle = GetLocalInt(oPaper, "paper_writecycles");
+	for ( i = 0; i < nWriteCycle; i++ ) {
+		sText += GetLocalString(oPaper, "paper_text_" + IntToString(i));
+		sText += "  ";
+	}
+	return sText;
+}
+
+
+void FixPergamentName(object oTarget) {
+	int
+	nSigil = GetLocalInt(oTarget, "paper_sigil"),
+	nSigilBroken = GetLocalInt(oTarget, "paper_sigil_broken"),
+	nSigilCID = GetLocalInt(oTarget, "paper_sigil_cid");
+
+	string
+	sSigilName = GetLocalString(oTarget, "paper_sigil_name"),
+	sSigilLabel = GetLocalString(oTarget, "paper_sigil_label");
+
+	string sFront = "Pergament";
+	if ( nSigil && sSigilLabel != "" )
+		sFront += ": " + sSigilLabel;
+
+	if ( nSigil && nSigilBroken )
+		SetName(oTarget, sFront + " (gebrochenes Siegel: " + sSigilName + ")");
+	else if ( nSigil && !nSigilBroken )
+		SetName(oTarget, sFront + " (versiegelt: " + sSigilName + ")");
+	else if ( !nSigil )
+		SetName(oTarget, sFront + " (unversiegelt)");
+
+}
+
+int HasSepiaSnakeSigil(object oItem) {
+	return GetLocalInt(oItem, "sepia_snake_sigil") > 0;
+}
+
+int HasExplosiveRunes(object oItem) {
+	return GetLocalInt(oItem, "explosive_runes") > 0;
+}
+
+void RemoveExplosiveRunes(object oItem) {
+	DeleteLocalInt(oItem, "explosive_runes");
+	DeleteLocalInt(oItem, "explosive_runes_dc");
+	DeleteLocalInt(oItem, "explosive_runes_level");
+	int i = 0;
+	while ( GetLocalInt(oItem, "explosive_runes_cid_" + IntToString(i)) > 0 ) {
+		DeleteLocalInt(oItem, "explosive_runes_cid_" + IntToString(i));
+		i++;
+	}
+
+}
+
+void RemoveSepiaSnakeSigil(object oItem) {
+	DeleteLocalInt(oItem, "sepia_snake_sigil");
+	DeleteLocalInt(oItem, "sepia_snake_sigil_dc");
+	DeleteLocalInt(oItem, "sepia_snake_sigil_level");
+	int i = 0;
+	while ( GetLocalInt(oItem, "sepia_snake_sigil_cid_" + IntToString(i)) > 0 ) {
+		DeleteLocalInt(oItem, "sepia_snake_sigil_cid_" + IntToString(i));
+		i++;
+	}
+
+}
+
+
+int DoSepiaSnakeSigil(object oItem, object oActivator) {
+
+	if ( GetPlotFlag(oItem) )
+		return 0;
+
+	if ( !HasSepiaSnakeSigil(oItem) )
+		return 0;
+
+	if ( GetIsDM(oActivator) ) {
+		Floaty("(DM Override) Ein Sepia-Schlangensiegel befindet sich auf diesem Dokument.", oActivator, 0);
+		return 0;
+	}
+
+	int
+	nDC = GetLocalInt(oItem, "sepia_snake_sigil_dc"),
+	nLevel = GetLocalInt(oItem, "sepia_snake_sigil_level");
+
+	float fDuration = HoursToSeconds(d4() * 24 + 24 * nLevel);
+
+	// Allow the activator a reflex save
+	int nSave = ReflexSave(oActivator, nDC + nLevel / 2, SAVING_THROW_TYPE_SPELL);
+
+	if ( 0 == nSave ) {
+		Floaty(
+			"Eine Arkane Ladung trifft Euch, und Ihr vermoegt nicht Ihr auszuweichen.  Ploetzlich koennt Ihr Euch nicht mehr bewegen.",
+			oActivator, 0);
+		// Immobilize the user
+		ApplyEffectToObject(DTT, EffectVisualEffect(VFX_DUR_GLOW_ORANGE), oActivator, fDuration);
+		ApplyEffectToObject(DTI, EffectVisualEffect(VFX_IMP_SUPER_HEROISM), oActivator);
+
+		SetCommandable(0, oActivator);
+		DelayCommand(fDuration, SetCommandable(1, oActivator));
+
+	} else {
+		// notify about the magic outburst
+		Floaty("Ihr bemerkt einen starken Arkanen Energieschwall, doch Ihr vermoegt Ihm auszuweichen.",
+			oActivator, 0);
+	}
+
+	RemoveSepiaSnakeSigil(oItem);
+	return 0;
+}
+
+int DoExplosiveRunes(object oItem, object oActivator) {
+	// 6d6 of force damage to the reader and anyone next to the runes. No saving throw.
+	// object takes damage.
+	// 10ft takes reflex for half damage
+	// anyone saved on the document takes no damage.
+
+	if ( GetPlotFlag(oItem) )
+		return 0;
+
+
+	if ( !HasExplosiveRunes(oItem) )
+		return 0;
+
+
+	if ( GetIsDM(oActivator) ) {
+		Floaty("(DM Override) Explosive Runen befinden sich auf diesem Dokument.", oActivator, 0);
+		return 0;
+	}
+
+	int nReaderID = GetCharacterID(oActivator);
+	int bAllowed = 0;
+
+	int nAllowedID = 0;
+	int i = 0;
+	while ( nAllowedID = GetLocalInt(oItem, "explosive_runes_cid_" + IntToString(i)) > 0 ) {
+		if ( nReaderID == nAllowedID ) {
+			FloatingTextStringOnCreature(
+				"Die Explosiven Runen auf diesem Dokument wissen ob Euch und loesen daher nicht aus.",
+				oActivator,
+				0);
+			bAllowed = 1;
+			break;
+		}
+		i++;
+	}
+
+	location lL = GetLocation(oItem);
+
+	if ( !GetIsObjectValid(GetAreaFromLocation(lL)) )
+		lL = GetLocation(oActivator);
+
+	if ( !bAllowed ) {
+
+		FloatingTextStringOnCreature(
+			"Ihr loest die Explosiven Runen aus, die auf diesem Dokument geschrieben wurden.", oActivator, 1);
+
+		int nDamage;
+
+		object oIteratePC = GetFirstObjectInShape(SHAPE_SPHERE,  10.0f, lL, TRUE, OBJECT_TYPE_CREATURE |
+								OBJECT_TYPE_DOOR | OBJECT_TYPE_PLACEABLE);
+
+		while ( GetIsObjectValid(oIteratePC) ) {
+
+			nDamage = d6(3);
+
+			if ( GetDistanceBetween(oActivator, oIteratePC) > 1.5f ) {
+
+				switch ( ReflexSave(oIteratePC, GetReflexSavingThrow(oIteratePC), SAVING_THROW_TYPE_FIRE) ) {
+					case 0:
+						break;
+					case 1:
+						nDamage /= 2;
+						break;
+				}
+			}
+
+			ApplyEffectToObject(DTT, EffectKnockdown(), oIteratePC, 15.0);
+			ApplyEffectToObject(DTI, EffectDamage(nDamage, DAMAGE_TYPE_FIRE), oIteratePC);
+
+			oIteratePC = GetNextObjectInShape(SHAPE_SPHERE,  10.0f, lL, TRUE, OBJECT_TYPE_CREATURE |
+							 OBJECT_TYPE_DOOR | OBJECT_TYPE_PLACEABLE);
+		}
+
+		// Visuals
+		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_FIREBALL), lL);
+		DelayCommand(0.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_FIREBALL),
+				lL));
+		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_PWSTUN), lL);
+		DelayCommand(0.1, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_SCREEN_BUMP),
+				lL));
+		DelayCommand(0.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_SCREEN_BUMP),
+				lL));
+		DelayCommand(0.3, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_SCREEN_BUMP),
+				lL));
+		DestroyObject(oItem);
+	}
+
+	return !bAllowed;
+}
+
+
+
+
+
+
+
+
+int DoSpellStaff(object oCaster, int nSpell) {
+	if ( !GetIsPC(oCaster) )
+		return 0;
+
+	object oTarget = GetLocalObject(oCaster, "spellstaff");
+	if ( !GetIsObjectValid(oTarget) )
+		return 0;
+
+
+
+	object oBStaff = GetItemInSlot(INVENTORY_SLOT_RIGHTHAND, oCaster);
+	if ( oTarget != oBStaff ) {
+		FloatingTextStringOnCreature("Zauber fehlgeschlagen: Du musst den Stab in den Haenden halten.",
+			oCaster, FALSE);
+		return 1;
+	}
+
+	int nSpell = GetSpellId();
+	int nCasterLevel = GetCasterLevel(oCaster);
+
+	int nIP = MapSpellToIPSpell(nSpell, nCasterLevel);
+
+	if ( nIP == -1 ) {
+		FloatingTextStringOnCreature(
+			"Zauber fehlgeschlagen: Dieser Zauber eignet sich nicht fuer Spellstaff.", oCaster, FALSE);
+		return 1;
+	}
+
+
+	SetLocalObject(oCaster, "spellstaff", OBJECT_INVALID);
+
+	FloatingTextStringOnCreature("Zauber erfolgreich: Der Stab wird mit dem Zauber aufgeladen.", oCaster,
+		FALSE);
+
+	itemproperty ip = ItemPropertyCastSpell(nIP, 1);
+
+	AddItemProperty(DURATION_TYPE_PERMANENT, ip, oTarget);
+	return 1;
+}

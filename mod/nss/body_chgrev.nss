@@ -1,0 +1,11 @@
+#include "inc_bodyparts"
+
+void main() {
+	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
+
+	SetCreatureBodyPart(GetLocalInt(oPC, "BODY_SEL_PART"),
+		GetLocalInt(oPC, "BODY_BP_OLD"), oPC);
+
+	DeleteLocalInt(oPC, "BODY_SEL_PART");
+	MakeDialog(oPC);
+}

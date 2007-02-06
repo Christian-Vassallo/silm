@@ -1,0 +1,102 @@
+#include "_gen"
+#include "inc_chat_lib"
+
+
+// Returns a random plane.
+string GetRandomPlane();
+
+// Makes oPC walk the given plane for fDuration seconds.
+// Only in his mind!
+void PlaneWalk(object oPC, string sPlane = "", float fDuration = 120.0);
+
+// Called internally.
+void PlaneWalkTextHook(object oPC, int iMode, string sText);
+
+
+
+string GetRandomPlane() {
+	int nRet = Random(7);
+	return nRet == 0 ? "fire" : nRet == 1 ? "ice" : nRet == 2 ? "water" : "shadow";
+}
+
+
+void PlaneWalkEnd(object oPC) {
+	object oCopy = GetLocalObject(oPC, "planewalk_copy");
+	location lReal = GetLocalLocation(oPC, "planewalk_location");
+
+	if ( !GetIsObjectValid(oCopy) )
+		return;
+
+	SetImmortal(oCopy, 0);
+
+	int nDamage = GetCurrentHitPoints(oPC) - GetCurrentHitPoints(oCopy);
+
+	if ( GetCurrentHitPoints(oPC) - nDamage < 1 )
+		nDamage = GetCurrentHitPoints(oPC) - 1;
+
+	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDamage(nDamage), oPC);
+
+	DestroyObject(oCopy);
+
+	DeleteLocalObject(oPC, "planewalk_copy");
+
+	AssignCommand(oPC, ClearAllActions(1));
+	AssignCommand(oPC, JumpToLocation(lReal));
+}
+
+
+
+void PlaneWalk(object oPC, string sPlane = "", float fDuration = 120.0) {
+	if ( sPlane == "" )
+		sPlane = GetRandomPlane();
+
+	object oWP = GetObjectByTag("wp_plane_" + GetStringLowerCase(sPlane));
+
+	if ( !GetIsObjectValid(oWP) ) {
+		SendMessageToAllDMs("Waypoint '" +
+			"wp_plane_" +
+			GetStringLowerCase(sPlane) + "' not found, cannot planewalk " + PCToString(oPC, TRUE) + ".");
+		return;
+	}
+
+	object oCopy = CopyObject(oPC, GetLocation(oPC));
+	ChangeToStandardFaction(oCopy, STANDARD_FACTION_COMMONER);
+	RemoveAllEffects(oCopy);
+
+	// ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_DUR_GHOSTLY_VISAGE_NO_SOUND)), oCopy);
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectConcealment(50)), oCopy);
+
+	AssignCommand(oCopy, ClearAllActions(1));
+	AssignCommand(oCopy, ActionRandomWalk());
+	DelayCommand(1.0, SetCommandable(0, oCopy));
+	SetImmortal(oCopy, 1);
+
+	SetCommandable(1, oPC);
+
+	location oldLocation = GetLocation(oPC);
+
+	SetLocalLocation(oPC, "planewalk_location", oldLocation);
+
+	AssignCommand(oPC, ClearAllActions(1));
+	AssignCommand(oPC, JumpToObject(oWP));
+
+	SetLocalObject(oPC, "planewalk_copy", oCopy);
+
+	// Now return the pc
+
+	DelayCommand(fDuration, PlaneWalkEnd(oPC));
+}
+
+
+void PlaneWalkTextHook(object oPC, int iMode, string sText) {
+
+	if ( !GetIsPC(oPC) )
+		return;
+
+	object oCopy = GetLocalObject(oPC, "planewalk_copy");
+
+	if ( !GetIsObjectValid(oCopy) )
+		return;
+
+	SpeakToMode(oCopy, sText, iMode);
+}

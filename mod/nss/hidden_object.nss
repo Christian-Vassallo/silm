@@ -1,0 +1,185 @@
+//::///////////////////////////////////////////////
+//:: Hidden Object Spawn System
+//:: hidden_object.nss
+//:: Copyright (c) 2001 Bioware Corp.
+//:://////////////////////////////////////////////
+/*
+ * 	This System spawns certain hidden Objects by
+ * 	Search and Lore Skill for detecting and
+ * 	identify as Useful.
+ */
+//:://////////////////////////////////////////////
+//:: Created By: Torsten Sens
+//:: Created On: 07-03-2005
+//:://////////////////////////////////////////////
+
+#include "inc_mysql"
+
+// Define ResRef from Master Object
+string GetHiddenObjectResRef(object oMaster);
+
+// Gets how diffaculty it's to find Hidden Object
+int GetSG(string sResRef);
+
+// Returns The Bonus vor Skillchecks
+int GetBonus(string sResRef, object oPC);
+
+// Returns The Valuemodifier for Ressources
+int GetValue(string sResRef);
+
+// Destrois the Hidden Object after a little Time Delay if there ist no Visitor in Sight
+void HideSpawn(object oSpawn, object oSpawnPoint);
+
+void main() {
+	// static lokal Vars
+	float fSearchDist = GetLocalFloat(OBJECT_SELF, "fSearchDist");  // Searchradius
+	int nDiffaculty = GetLocalInt(OBJECT_SELF, "nDiffaculty");   // DC
+
+	// dynamic lokal Vars
+	string sResRef = GetLocalString(OBJECT_SELF, "sResRef"); // Hidden Object defined?
+	int nDone = GetLocalInt(OBJECT_SELF, "done");   // has it been found?
+
+	float fRespawnDelay = IntToFloat(600 + ( d6() * 600 )); // TimeDelay to Respawn 30min + (1d6 * 10min)
+
+	// Check Searcher
+	object oPC = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC);
+	if ( nDone == 0 && oPC != OBJECT_INVALID ) {
+		float fDist = GetDistanceBetween(OBJECT_SELF, oPC);
+		if ( fDist <= fSearchDist ) {
+			if ( sResRef == "" ) {
+				sResRef = GetHiddenObjectResRef(OBJECT_SELF);
+				SetLocalString(OBJECT_SELF, "sResRef", sResRef);
+				DelayCommand(fRespawnDelay, DeleteLocalString(OBJECT_SELF, "sResRef"));
+			}
+			int nBonus = GetBonus(sResRef, oPC);
+			int nSG = nDiffaculty;
+			int nSearchMod = GetSkillRank(SKILL_SEARCH, oPC) + nBonus;
+			int nDetectMode = GetDetectMode(oPC);
+			if ( nDetectMode = DETECT_MODE_PASSIVE ) {
+				nSG = nSG * 2;
+			}
+
+			if ( GetWeather(GetArea(OBJECT_SELF)) == WEATHER_RAIN )
+				nSG += 2;
+			if ( GetWeather(GetArea(OBJECT_SELF)) == WEATHER_SNOW )
+				nSG += 4;
+
+			int nHit = d20();
+			/*string sMessage = "Suchen Check: "+ IntToString(nHit) +" + "+ IntToString(nSearchMod) +" = "+ IntToString(nHit + nSearchMod) +" gg SG:"+ IntToString(nSG);
+			 * FloatingTextStringOnCreature(sMessage, oPC);  */
+			if ( nHit + nSearchMod >= nSG ) {
+				int nLoreMod = GetSkillRank(SKILL_LORE, oPC) + nBonus;
+				nHit = d20();
+				int nSG = GetSG(sResRef);
+/*                sMessage = "Sagenkunde Check: "+ IntToString(nHit) +" + "+ IntToString(nLoreMod) +" = "+ IntToString(nHit + nLoreMod) +" gg SG:"+ IntToString(nSG) +" ("+ sResRef +")";
+ * 				FloatingTextStringOnCreature(sMessage, oPC); */
+				if ( nHit + nLoreMod >= nSG ) {
+					object oRes;
+					int nLadung = GetValue(sResRef);
+					int nRate = GetMaxHitPoints(oRes) / nLadung;
+					oRes = CreateObject(OBJECT_TYPE_PLACEABLE, sResRef, GetLocation(OBJECT_SELF));
+					SetLocalInt(OBJECT_SELF, "done", 1);
+					DelayCommand(fRespawnDelay, DeleteLocalInt(OBJECT_SELF, "done"));
+					DelayCommand(180.0, HideSpawn(oRes, OBJECT_SELF));
+				}
+			}
+		}
+	}
+}
+
+string GetHiddenObjectResRef(object oMaster) {
+	string sTyp = GetLocalString(OBJECT_SELF, "sTyp"); //AreaTyp
+	int nCount;
+	string sResRef;
+	string sAllResRef;
+	int nNumRows = 0;
+	int nPosition;
+	string sSQL = "SELECT ResRef from tab_ressourcen WHERE Typ='" + sTyp + "';";
+	SQLExecDirect(sSQL);
+	while ( SQLFetch() == SQL_SUCCESS ) {
+		if ( sAllResRef == "" ) {
+			sAllResRef = SQLGetData(1);
+		} else {
+			sAllResRef = sAllResRef + "#" + SQLGetData(1);
+		}
+		nNumRows++;
+	}
+	//WriteTimestampedLogEntry("AllResRef ="+ sAllResRef);
+	nPosition = Random(nNumRows + 1);
+	if ( nPosition == 0 ) nPosition = 1;
+	//WriteTimestampedLogEntry("Rows / Position ="+ IntToString(nNumRows) +" / "+ IntToString(nPosition));
+	nNumRows = 0;
+	// nur eine Ressource
+	if ( nPosition == -1 && nNumRows == 1 ) {
+		sResRef = sAllResRef;
+	} else if ( nPosition == -1 ) {
+		sResRef = "Error";
+	} else {
+		int nStop;
+		nStop = FindSubString(sAllResRef, "#");
+		while ( nNumRows != nPosition ) {
+			nNumRows++;
+
+			if ( nPosition == nNumRows ) {
+				sResRef = GetStringLeft(sAllResRef, nStop);
+			} else {
+				sAllResRef = GetStringRight(sAllResRef, GetStringLength(sAllResRef) - nStop - 1);
+				nStop = FindSubString(sAllResRef, "#");
+			}
+			if ( nStop == -1 ) {
+				nStop = GetStringLength(sAllResRef);
+			}
+			//WriteTimestampedLogEntry("ResRefString:"+ sResRef +"/" +sAllResRef);
+		}
+	}
+
+	return sResRef;
+}
+
+int GetSG(string sResRef) {
+	string nSG;
+	string sSQL = "SELECT SG from tab_ressourcen WHERE ResRef='" + sResRef + "';";
+	SQLExecDirect(sSQL);
+	if ( SQLFetch() == SQL_SUCCESS ) {
+		nSG = SQLGetData(1);
+	}
+	return StringToInt(nSG);
+}
+
+
+int GetBonus(string sResRef, object oPC) {
+	string sBonus;
+	int nBonus;
+	string sSQL = "SELECT Bonus from tab_ressourcen WHERE ResRef='" + sResRef + "';";
+	SQLExecDirect(sSQL);
+	if ( SQLFetch() == SQL_SUCCESS ) {
+		sBonus = SQLGetData(1);
+	}
+	if ( sBonus == "natur" ) {
+		int nBonus = GetLevelByClass(CLASS_TYPE_DRUID, oPC) / 2;
+		nBonus = nBonus + ( GetLevelByClass(CLASS_TYPE_RANGER, oPC) / 4 );
+	}
+	return nBonus;
+}
+
+int GetValue(string sResRef) {
+	string nValue;
+	string sSQL = "SELECT Value from tab_ressourcen WHERE ResRef='" + sResRef + "';";
+	SQLExecDirect(sSQL);
+	if ( SQLFetch() == SQL_SUCCESS ) {
+		nValue = SQLGetData(1);
+	}
+	return d20() + StringToInt(nValue);
+}
+
+void HideSpawn(object oSpawn, object oSpawnPoint) {
+	if ( GetIsObjectValid(oSpawn) == TRUE ) {
+		object oPC = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC);
+		if ( GetIsObjectValid(oPC) == FALSE || GetDistanceBetween(oPC, oSpawn) > 30.0 ) {
+			DestroyObject(oSpawn);
+			DeleteLocalInt(oSpawnPoint, "done");
+		} else {
+			DelayCommand(180.0, HideSpawn(oSpawn, oSpawnPoint));
+		}
+	}
+}

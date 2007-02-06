@@ -1,0 +1,109 @@
+#include "inc_lists"
+#include "inc_cdb"
+#include "_gen"
+
+const string
+TAG = "xpwand";
+
+
+void XPDoXPTransaction(object oGiver, object oReceiver, int nXP);
+
+int XP_MakeDialog(object oPC);
+
+void XP_Start(object oPC, object oMentorItem);
+
+
+// impl
+
+void XPDoXPTransaction(object oGiver, object oReceiver, int nXP) {
+	if ( !GetIsPC(oGiver) || !GetIsDM(oGiver) )
+		return;
+
+	if ( !GetIsPC(oReceiver) || GetIsDM(oReceiver) )
+		return;
+
+	if ( nXP < 1 )
+		return;
+
+	int nAID = GetAccountID(oGiver),
+		nTCID = GetCharacterID(oReceiver);
+
+
+	if ( nAID == 0 || nTCID == 0 ) {
+		SendMessageToAllDMs(PCToString(oMentor) +
+			" tried to give XP to " +
+			PCToString(oReceiver) +
+			", but failed because no character IDs were present (Live data: " +
+			IntToString(nAID) + " " + IntToString(nCID) + " " + IntToString(nTCID) + ").");
+		return;
+	}
+
+
+	SQLQuery("select id from xpdata where aid=" +
+		IntToString(nAID) + " and tcid=" + IntToString(nTCID) + " limit 1;");
+	if ( SQLFetch() ) {
+		string id = SQLGetData(1);
+
+		SQLQuery("update xpdata set `xp`=`xp`+" + IntToString(nXP) + " where id = " + id + " limit 1;");
+	} else {
+		SQLQuery("insert into xpdata (aid, tcid, xp) values(" +
+			IntToString(nAID) + ", " + IntToString(nTCID) + ", " + IntToString(nXP) + ");");
+	}
+
+	GiveXPToCreature(oReceiver, nXP);
+
+	SendMessageToAllDMs(GetName(OGiver) + ": " + IntToString(nXP) + " XP -> " + GetName(oReceiver));
+}
+
+
+
+
+void XP_Start(object oPC, object oMentorItem) {
+	DeleteLocalInt(oPC, "xp_sel");
+
+	if ( !XP_MakeDialog(oPC) )
+		return;
+
+	AssignCommand(oPC, ActionStartConversation(oPC, "list_select", TRUE, TRUE));
+
+}
+
+int XP_MakeDialog(object oPC) {
+	ClearList(oPC, TAG);
+
+	int nL0 = GetMenuLevel(oPC, TAG, 0);
+
+	object oTargetPC = GetLocalObject(oPC, TAG + "_target");
+
+
+	string sHeader;
+
+	int nPCArea = GetPCCount(GetArea(oPC)),
+		nPC = GetPCCount();
+
+	sHeader = "Blubb";
+
+	AddListItem(oPC, TAG, "15 XP an alle Spieler auf dem Server");
+	AddListItem(oPC, TAG, "15 XP an alle Spieler im Gebiet");
+	AddListItem(oPC, TAG, "15 XP an diesen Spieler");
+
+	AddListItem(oPC, TAG, "30 XP an alle Spieler auf dem Server");
+	AddListItem(oPC, TAG, "30 XP an alle Spieler im Gebiet");
+	AddListItem(oPC, TAG, "30 XP an diesen Spieler");
+
+	AddListItem(oPC, TAG, "60 XP an alle Spieler auf dem Server");
+	AddListItem(oPC, TAG, "60 XP an alle Spieler im Gebiet");
+	AddListItem(oPC, TAG, "60 XP an diesen Spieler");
+
+	AddListItem(oPC, TAG, "custom XP an alle Spieler auf dem Server");
+	AddListItem(oPC, TAG, "custom XP an alle Spieler im Gebiet");
+	AddListItem(oPC, TAG, "15 XP an diesen Spieler");
+
+
+
+
+	ResetConvList(oPC, oPC, TAG, 50000, TAG + "_cb", sHeader);
+	return 1;
+}
+
+

@@ -1,0 +1,214 @@
+//::///////////////////////////////////////////////
+//:: Name:inc_wether.nss
+//:: Copyright (c) Wolfgang Siebert
+//:://////////////////////////////////////////////
+/*
+ * 	Placed in the OnModuleLoad Event of a module
+ */
+//:://////////////////////////////////////////////
+//:: Created By: Wolfgang Siebert
+//:: Modified By: Torsten Sens
+//:: Created On:  08-Jan-2005
+//:://////////////////////////////////////////////
+
+//::///////////////////////////////////////////////////////
+//::
+//::  Declarations
+//::
+//::///////////////////////////////////////////////////////
+
+// Used once to set the parameters for the weather to Change
+void weather_setup();
+
+// Runs every now and then change the weather setting
+// -nWeather: -WEATHER_CLEAR,WEATHER_RAIN,WEATHER_SNOW
+// if nWeather=0 Random Wether update
+void weather_update(int nWeather = 0);
+
+// Returns Weather vor this Areatype
+// -nClimate: 2 = Arctic, 1 = Desert, 0 = Normal
+int GetAreaWeather(int nClimate = 0);
+
+//::///////////////////////////////////////////////////////
+//::
+//::  Functions
+//::
+//::///////////////////////////////////////////////////////
+
+void weather_setup() {
+	return;
+
+
+	object oMod;
+	oMod = GetModule();
+	// First Month of a season. Seasons start on the first of a month and end on
+	// the last.
+	SetLocalInt(oMod, "weather_first_spring_month", 2);
+	SetLocalInt(oMod, "weather_first_summer_month", 4);
+	SetLocalInt(oMod, "weather_first_autumn_month", 9);
+	SetLocalInt(oMod, "weather_first_winter_month", 11);
+
+	// Chance for precipitation for a season in %. 100 - Chance = Chance for sunshine
+	SetLocalInt(oMod, "weather_spring_presi", 40);
+	SetLocalInt(oMod, "weather_summer_presi", 10);
+	SetLocalInt(oMod, "weather_autumn_presi", 60);
+	SetLocalInt(oMod, "weather_winter_presi", 40);
+
+	// Chance that precipitation is snow in %. 100 - Chance = Chance for rain
+	SetLocalInt(oMod, "weather_spring_snow", 40);
+	SetLocalInt(oMod, "weather_summer_snow", 0);
+	SetLocalInt(oMod, "weather_autumn_snow", 40);
+	SetLocalInt(oMod, "weather_winter_snow", 100);
+
+	// Time between checks for weather in IG-hours.
+	SetLocalInt(oMod, "weather_RoC", 60); // Mod x for 100-600 * x Seconds
+}
+
+// *********************************************************************************************
+
+void weather_update(int nWeather = 0) {
+	return;
+
+
+	// Declaration of variables
+	object oPC;             // The Player
+	object oMod;            // The Module
+	object oArea;           // The Area
+	int iWeather;           // What the Weather will be
+	int iAreaTyp;           // Areatyp (Arctic,Desert)?
+	int iFirst_Spr;         // First month of Spring
+	int iFirst_Sum;         // First month of Summer
+	int iFirst_Aut;         // First month of Autumn
+	int iFirst_Win;         // First month of Winter
+	int iPerc_Chance;       // Chance of precipitation this month
+	int iSnow_Chance;       // Chance of snow this month
+	int iMonth;             // Current month
+	int iRoC;               // Rate of Change of the weather
+	int iRnd_Prec;          // Random variable for precipitation check
+	int iRnd_Snow;          // Random variable for snow check
+
+
+	oMod = GetModule();
+	oPC = GetFirstPC();
+	iFirst_Spr = GetLocalInt(oMod, "weather_first_spring_month");
+	iFirst_Sum = GetLocalInt(oMod, "weather_first_summer_month");
+	iFirst_Aut = GetLocalInt(oMod, "weather_first_autumn_month");
+	iFirst_Win = GetLocalInt(oMod, "weather_first_winter_month");
+	iMonth = GetCalendarMonth();
+	iRoC = GetLocalInt(oMod, "weather_RoC");
+	iRnd_Prec = Random(100) + 1;
+	iRnd_Snow = Random(100) + 1;
+
+	// Check for time of the year and assigning the appropriate precipitation chance
+	// and snow chance for the current season
+
+	if ( iMonth < iFirst_Spr ) {
+		// winter
+		iPerc_Chance = GetLocalInt(oMod, "weather_winter_presi");
+		iSnow_Chance = GetLocalInt(oMod, "weather_winter_snow");
+	} else if ( iMonth < iFirst_Sum ) {
+		// Spring
+		iPerc_Chance = GetLocalInt(oMod, "weather_spring_presi");
+		iSnow_Chance = GetLocalInt(oMod, "weather_spring_snow");
+	} else if ( iMonth < iFirst_Aut ) {
+		// Summer
+		iPerc_Chance = GetLocalInt(oMod, "weather_summer_presi");
+		iSnow_Chance = GetLocalInt(oMod, "weather_summer_snow");
+	} else if ( iMonth < iFirst_Win ) {
+		// Autumn
+		iPerc_Chance = GetLocalInt(oMod, "weather_autumn_presi");
+		iSnow_Chance = GetLocalInt(oMod, "weather_autumn_snow");
+	} else {
+		// only winter left this year
+		iPerc_Chance = GetLocalInt(oMod, "weather_winter_presi");
+		iSnow_Chance = GetLocalInt(oMod, "weather_winter_snow");
+	}
+
+	// Now that we know what season we got we check for precipitation and snow
+	if ( nWeather == 0 ) {
+		if ( ( iRnd_Prec <= iPerc_Chance )
+			&& ( iRnd_Snow <= iSnow_Chance ) )  // something is coming down and it's snow
+			iWeather = WEATHER_SNOW;
+		else if ( ( iRnd_Prec <= iPerc_Chance )
+				 && !( iRnd_Snow <= iSnow_Chance ) )  // something is coming down but it's not snow. Must be rain
+			iWeather = WEATHER_RAIN;
+		else  // guess nothing is coming down, huh?
+			iWeather = WEATHER_CLEAR;
+	} else {
+		iWeather = nWeather;
+	}
+	// Weather gets adjusted. Guess what: If you assign a weather to the entire
+	// module it applies to all the outdoor areas. Thanks for that tidbit of info
+	// to Markus (aka Niveau0)
+	// SetWeather(oMod, iWeather);
+	SetLocalInt(oMod, "weather", iWeather);
+
+	// Update All activ Areas instantly
+	while ( GetIsObjectValid(oPC) ) {
+		oArea = GetArea(oPC);
+		int nClimate = GetLocalInt(oArea, "weather");
+		int nInitDone = GetLocalInt(oArea, "WeatherDone"); // no multiple use
+
+		//SendMessageToPC(oPC,IntToString(nClimate));
+		//Only runs one time in Area
+		if ( nInitDone == 0 ) {
+			// only updates normal Climate Weatherchanges
+			if ( GetWeather(oArea) != iWeather && nClimate == 0 ) {
+				SetWeather(oArea, iWeather);
+				SetLocalInt(oArea, "WeatherDone", 1);
+				DelayCommand(1.0, DeleteLocalInt(oArea, "WeatherDone"));
+			}
+			// update Arctic weather changes (no rain, but Snow)
+			else if ( GetWeather(oArea) != iWeather && iWeather == WEATHER_RAIN && nClimate == 2 ) {
+				iWeather = WEATHER_SNOW;
+				SetWeather(oArea, iWeather);
+				SetLocalInt(oArea, "WeatherDone", 1);
+				DelayCommand(1.0, DeleteLocalInt(oArea, "WeatherDone"));
+			}
+		}
+		oPC = GetNextPC();
+	}
+
+	iRoC = d6(10) * 10 * iRoC; // 100-600 * x Seconds
+	int iRoCh = abs(iRoC / 3600);
+	int iRoCm = abs(iRoC / 60 - iRoCh * 60);
+	string sWeatherType;
+	// Was that fun? Let's do it again... Later!
+	DelayCommand(IntToFloat(iRoC), weather_update()); //comment out for debugging
+
+	// DEBUGGING USE ONLY!!!! Comment out for regular use
+	if ( iWeather == WEATHER_SNOW ) {
+		sWeatherType = "Schnee";
+	} else if ( iWeather == WEATHER_RAIN ) {
+		sWeatherType = "Regen";
+	} else {
+		sWeatherType = "Sonnenschein";
+	}
+	SendMessageToAllDMs("Wetterbericht: " + sWeatherType + " ("
+		+ IntToString(iRoCh) + " Stunden, " + IntToString(iRoCm) + " Minuten)");
+
+	/*
+	 * SpeakString("Weather is: "+IntToString(iWeather), TALKVOLUME_SHOUT);
+	 * SpeakString("Precipitation Chance is: "+IntToString(iPerc_Chance), TALKVOLUME_SHOUT);
+	 * SpeakString("Precipitation Random is: "+IntToString(iRnd_Prec), TALKVOLUME_SHOUT);
+	 * SpeakString("Snow Chance is: "+IntToString(iSnow_Chance), TALKVOLUME_SHOUT);
+	 * SpeakString("Snow Random is: "+IntToString(iRnd_Snow), TALKVOLUME_SHOUT);
+	 * DelayCommand(60.0, weather_update());
+	 */
+	// END OF DEBUGGING INSERT
+}
+
+int GetAreaWeather(int nClimate = 0) {
+	object oMod = GetModule();
+	int iWeather = GetLocalInt(oMod, "weather");
+
+	// If Arctic Climate than no Rain only Snow
+	if ( ( nClimate == 2 ) && ( iWeather != WEATHER_CLEAR ) ) {
+		iWeather = WEATHER_SNOW;
+	}
+	// If Desert Climate no Rain no Snow
+	else if ( nClimate == 1 ) {
+		iWeather = WEATHER_CLEAR;
+	}
+	return iWeather;
+}

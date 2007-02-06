@@ -1,0 +1,365 @@
+void transformGender(object oPC) {
+	if ( ( GetGender(oPC) == GENDER_MALE ) ) {
+		effect eEffect = EffectVisualEffect(VFX_FNF_WAIL_O_BANSHEES);
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, eEffect, oPC);
+		AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_DEAD_FRONT));
+
+		if ( GetRacialType(oPC) == RACIAL_TYPE_DWARF ) {
+			int iRandApp = Random(1) + 1;
+			switch ( iRandApp ) {
+				case 1:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_DWARF_NPC_FEMALE); break;
+			}
+		}
+
+		if ( GetRacialType(oPC) == RACIAL_TYPE_ELF ) {
+			int iRandApp = Random(3) + 1;
+			switch ( iRandApp ) {
+				case 1:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_ELF_NPC_FEMALE); break;
+				case 2:  SetCreatureAppearanceType(oPC, 189); break;
+				case 3:  SetCreatureAppearanceType(oPC, 410); break;
+			}
+		}
+
+		if ( GetRacialType(oPC) == RACIAL_TYPE_GNOME ) {
+			int iRandApp = Random(2) + 1;
+			switch ( iRandApp ) {
+				case 1:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_GNOME_NPC_FEMALE); break;
+				case 2:  SetCreatureAppearanceType(oPC, 424); break;
+			}
+		}
+
+		if ( GetRacialType(oPC) == RACIAL_TYPE_HALFORC ) {
+			int iRandApp = Random(1) + 1;
+			switch ( iRandApp ) {
+				case 1:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HALF_ORC_NPC_FEMALE); break;
+			}
+		}
+
+		if ( GetRacialType(oPC) == RACIAL_TYPE_HALFLING ) {
+			int iRandApp = Random(2) + 1;
+			switch ( iRandApp ) {
+				case 1:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HALFLING_NPC_FEMALE); break;
+				case 2:  SetCreatureAppearanceType(oPC, 242); break;
+			}
+		}
+
+		if ( GetRacialType(oPC) == RACIAL_TYPE_HUMAN
+			|| GetRacialType(oPC) == RACIAL_TYPE_HALFELF ) {
+			int iRandApp = Random(14) + 1;
+			switch ( iRandApp ) {
+				case 1:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_FEMALE_01); break;
+				case 2:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_FEMALE_02); break;
+				case 3:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_FEMALE_03); break;
+				case 4:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_FEMALE_04); break;
+				case 5:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_FEMALE_01); break;
+				case 6:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_FEMALE_02); break;
+				case 7:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_FEMALE_03); break;
+				case 8:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_FEMALE_04); break;
+				case 9:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_FEMALE_06); break;
+				case 10: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_FEMALE_07); break;
+				case 11: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_FEMALE_09); break;
+				case 12: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_FEMALE_10); break;
+				case 13: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_FEMALE_11); break;
+				case 14: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_FEMALE_12); break;
+			}
+		}
+
+	} else {
+		effect eEffect = EffectVisualEffect(VFX_FNF_IMPLOSION);
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, eEffect, oPC);
+
+		if ( GetRacialType(oPC) == RACIAL_TYPE_DWARF ) {
+			int iRandApp = Random(1) + 1;
+			switch ( iRandApp ) {
+				case 1:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_DWARF_NPC_MALE); break;
+			}
+		}
+
+		if ( GetRacialType(oPC) == RACIAL_TYPE_ELF ) {
+			int iRandApp = Random(2) + 1;
+			switch ( iRandApp ) {
+				case 1:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_ELF_NPC_MALE_01); break;
+				case 2:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_ELF_NPC_MALE_02); break;
+			}
+		}
+
+		if ( GetRacialType(oPC) == RACIAL_TYPE_GNOME ) {
+			int iRandApp = Random(2) + 1;
+			switch ( iRandApp ) {
+				case 1:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_GNOME_NPC_MALE); break;
+				case 2:  SetCreatureAppearanceType(oPC, 423); break;
+			}
+		}
+
+		if ( GetRacialType(oPC) == RACIAL_TYPE_HALFORC ) {
+			int iRandApp = Random(2) + 1;
+			switch ( iRandApp ) {
+				case 1:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HALF_ORC_NPC_MALE_01); break;
+				case 2:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HALF_ORC_NPC_MALE_02); break;
+			}
+		}
+
+		if ( GetRacialType(oPC) == RACIAL_TYPE_HALFLING ) {
+			int iRandApp = Random(2) + 1;
+			switch ( iRandApp ) {
+				case 1:  SetCreatureAppearanceType(oPC, 241); break;
+				case 2:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HALFLING_NPC_MALE); break;
+			}
+		}
+
+		if ( GetRacialType(oPC) == RACIAL_TYPE_HUMAN
+			|| GetRacialType(oPC) == RACIAL_TYPE_HALFELF ) {
+			int iRandApp = Random(18) + 1;
+			switch ( iRandApp ) {
+				case 1:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_MALE_01); break;
+				case 2:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_MALE_02); break;
+				case 3:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_MALE_03); break;
+				case 4:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_MALE_04); break;
+				case 5:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_MALE_01); break;
+				case 6:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_MALE_02); break;
+				case 7:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_MALE_03); break;
+				case 8:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_MALE_04); break;
+				case 9:  SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_MALE_05); break;
+				case 10: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_MALE_06); break;
+				case 11: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_MALE_07); break;
+				case 12: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_MALE_12); break;
+				case 13: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_MALE_13); break;
+				case 14: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_MALE_15); break;
+				case 15: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_MALE_16); break;
+				case 16: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_MALE_17); break;
+				case 17: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_HUMAN_NPC_MALE_18); break;
+				case 18: SetCreatureAppearanceType(oPC, APPEARANCE_TYPE_MALE_05); break;
+			}
+		}
+	}
+}
+
+
+
+void restoreGender(object oPC) {
+	SetCreatureAppearanceType(oPC, GetRacialType(oPC));
+	ApplyEffectToObject(DURATION_TYPE_INSTANT,
+		EffectVisualEffect(VFX_FNF_GAS_EXPLOSION_MIND), oPC);
+	AssignCommand(oPC, SpeakString(
+			"*Eine schmerzvolle Rückverwandlung erwartend, scheint es jedoch nur ein Wimpernschlag zu dauern und es zeigt sich die wahre Gestalt... wäre nicht die Kleidung, könnte man meinen es wäre nie anders gewesen*",
+			TALKVOLUME_TALK)
+	);
+	AssignCommand(oPC, PlaySound("as_mg_frstmagic3"));
+}
+
+
+void changeGender(object oPC) {
+	if ( ( GetGender(oPC) == GENDER_MALE ) ) {
+		DelayCommand(60.0,
+			AssignCommand(oPC,
+				SpeakString(
+					"*ein wohlig warmer Schauer im Hals ist zu verspühren, und ein leichtes Schwindelgefühl macht sich in dir breit*",
+					TALKVOLUME_WHISPER)
+			)
+		);
+		DelayCommand(90.0,
+			AssignCommand(oPC,
+				SpeakString(
+					"*deine Hände fahren sacht vom Kinn zur Halswurzel und du versuchst das nun unwohl erscheinende Wärmegefühl herunterzuschlucken. Du merkst dabei leicht wie deine Kleidung an den Schultern lockerer scheint.*",
+					TALKVOLUME_WHISPER)
+			)
+		);
+		DelayCommand(120.0,
+			AssignCommand(oPC,
+				SpeakString(
+					"*das beklemmende Wärme-Gefühl wandert vom Hals in die Brust, schwerer hebt und senkt sich dein Brustkorb und die Atmung bereitet leicht mehr Mühe. Die Arme vor dir zusammenpressend suchst du nach Erleichterung, doch irgendwie scheinen deine Bemühungen kraftlos*",
+					TALKVOLUME_WHISPER)
+			)
+		);
+		DelayCommand(140.0,
+			AssignCommand(oPC,
+				SpeakString(
+					"*die Wärme ergreift nun deinen ganzen Körper, die vermehrt auftretenden Falten in deiner nun schlackernden Kleidung erscheinen dir drückend. Die Wärme verlässt nun deine Brust, die dir schwer als zugleich auch weich erscheint, und wandert gen Unterleib dort einen sengenden Stich ausübend der dich zusammenfahren lässt*",
+					TALKVOLUME_WHISPER)
+			)
+		);
+		DelayCommand(160.0,
+			AssignCommand(oPC,
+				SpeakString(
+					"*was ein Stöhnen hätte sein können wandelt sich in deinem Hals zu einem Aufschrei, als die Wirkung des Einflußes sich voll entfaltet und deinen ganzen Körper durchströhmt*",
+					TALKVOLUME_WHISPER)
+			)
+		);
+		DelayCommand(170.0,
+			AssignCommand(oPC,
+				SpeakString(
+					"*geschwächt bricht er vornüber zusammen, die Lippen aufreissend vernimmt man nur noch den Aufschrei einer Frau... ganz nah... und langsam dämmert es, das er in Wirklichkeit diesen Schrei ausstieß als _sie_ zusammenbrach*",
+					TALKVOLUME_TALK)
+			)
+		);
+	} else {
+		DelayCommand(60.0,
+			AssignCommand(oPC,
+				SpeakString("*du verspührst ein leichtes Kratzen im Hals*", TALKVOLUME_WHISPER)
+			)
+		);
+		DelayCommand(90.0,
+			AssignCommand(oPC,
+				SpeakString(
+					"*das Schlucken bereitet dir ein unbehagliches Gefühl. Als du mit den Fingern am Hals entlangfährst, kommt dir die Hand ein wenig geschwollen vor, genauso wie dein Kehlkopf*",
+					TALKVOLUME_WHISPER)
+			)
+		);
+		DelayCommand(120.0,
+			AssignCommand(oPC,
+				SpeakString(
+					"*deine Hände scheinen dir irgendwie rau und fremd, doch befremdlicher ist eine plötzlich aufwallende Hitze im Unterleib. Du kannst nicht anders als dich magendrückend vornüberzubeugen, während kurz darauf ein stemmender Schmerz in deinen Schultern und Armen sich ausbreitet*",
+					TALKVOLUME_WHISPER)
+			)
+		);
+		DelayCommand(140.0,
+			AssignCommand(oPC,
+				SpeakString(
+					"*dein Körper scheint innerlich zu zerreißen, während von außen die Kleidung immer enger gegen Burstkorb und Oberarme drückt und einschnürrend fast dir die Luft wegbleibt. Leicht torkelnd kannst du dich noch auf den Beinen halten, den Blick auf den ferner scheinenden Boden fixiert*",
+					TALKVOLUME_WHISPER)
+			)
+		);
+		DelayCommand(160.0,
+			AssignCommand(oPC,
+				SpeakString(
+					"*kurz wähnst du dich stärker, doch kannst du nicht anders und kippst leicht vornüber, vor Schmerz fast aufschreiend, als die Vorgänge in dir ihre volle hitzige Kraft entfesseln*",
+					TALKVOLUME_WHISPER)
+			)
+		);
+		DelayCommand(170.0,
+			AssignCommand(oPC,
+				SpeakString(
+					"*sie sackt nach einigen Torkeln nach vorne ein, ein Schrei eines Mannes ist zu vernehmen und als der ewig scheinende Schrei sich mit ihren Schmerzen zu decken scheint, geht Ihr auf, das sie diesen Schrei selbst von sich gab, bevor _er_ erschöpft zusammen bricht.*",
+					TALKVOLUME_TALK)
+			)
+		);
+	}
+	DelayCommand(165.0,
+		AssignCommand(oPC,
+			ActionPlayAnimation(ANIMATION_LOOPING_DEAD_FRONT, 1.0f, 5.0f)
+		)
+	);
+	DelayCommand(175.0,
+		AssignCommand(oPC,
+			ActionPlayAnimation(ANIMATION_LOOPING_DEAD_FRONT, 1.0f, 30.0f)
+		)
+	);
+	DelayCommand(175.0,
+		transformGender(oPC)
+	);
+}
+
+
+
+void giggleCurse(object oPC) {
+	int iRandApp = Random(25) + 1;
+	switch ( iRandApp ) {
+		case  1: AssignCommand(oPC, SpeakString(
+					"Ghnihihihi *verkrampft den Mund und versucht ein ernstes Gesicht zu ziehen*",
+					TALKVOLUME_TALK));
+			break;
+		case  2: AssignCommand(oPC, SpeakString(
+					"*stösst einen Schwall Luft aus* Hrhpf.... *steht dann sich zusammenreißend da, die Schultern hebend und senkend, einen Lacher unterdrückend*",
+					TALKVOLUME_TALK)); break;
+		case  3: AssignCommand(oPC, SpeakString(
+					"*Hält sich die Hand vor dem Mund. Leise Belustigung ist zu vernehmen und der Oberkörper zittert leicht dazu*",
+					TALKVOLUME_TALK)); break;
+		case  4: AssignCommand(oPC, SpeakString(
+					"*grinst breit vor sich her und bebt leicht mit dem ganzen Oberkörper*", TALKVOLUME_TALK));
+			break;
+		case  5: AssignCommand(oPC, SpeakString("*kichert*", TALKVOLUME_TALK)); break;
+		case  6: AssignCommand(oPC, SpeakString("*lacht leis und nicht nachvollziehbar*", TALKVOLUME_TALK));
+			break;
+		case  7: AssignCommand(oPC, SpeakString(
+					"*ungeniert direkt wird etwas fixiert und ein belustigtes Lächeln schleicht sich über das Gesicht*",
+					TALKVOLUME_TALK)); break;
+		case  8: AssignCommand(oPC, SpeakString(
+					"Hihmphh *die Schultern heben sich einmal, und der unschuldige Blick und verkrampften Lippen zeugen davon das hier jemand gerade ein Lachen unterdrückt*",
+					TALKVOLUME_TALK)); break;
+		case  9: AssignCommand(oPC, SpeakString("Hihihi... hihi.... hihihi ", TALKVOLUME_TALK)); break;
+		case 10: AssignCommand(oPC, SpeakString("*kichert ungeniert* ghnihihi.. ", TALKVOLUME_TALK)); break;
+		case 11: AssignCommand(oPC, SpeakString("*gibt ein belustigtes Glucksen von sich*", TALKVOLUME_TALK));
+			break;
+		case 12: AssignCommand(oPC, SpeakString(
+					"*lacht dumpf aus dem Zwerchfell heraus, den Mund geschlossen und versuchend das Lachen wieder einzudämmen*",
+					TALKVOLUME_TALK)); break;
+		case 13: AssignCommand(oPC, SpeakString(
+					"Hihi... *verbissen wird versucht dagegen anzugehen, doch nach kurzer Zeit wieder ein Kichern* Ghnihihihihi",
+					TALKVOLUME_TALK)); break;
+		case 14: AssignCommand(oPC, SpeakString(
+					"*klopft sich einmal auf den Oberschenkel* HA! *rufend, danach nur noch gedämpftes Lachen*",
+					TALKVOLUME_TALK)); break;
+		case 15: AssignCommand(oPC, SpeakString(
+					"Hihihi... *wischt sich über die Augen, während die Schultern sich vor Kichern auf und ab heben*... hihi",
+					TALKVOLUME_TALK)); break;
+		case 16: AssignCommand(oPC, SpeakString(
+					"Hoho... *blinzelt, in den Augen ein schelmisches Funkeln* sohohu-was auch... hohahaha.... hohohuh...",
+					TALKVOLUME_TALK)); break;
+		case 17: AssignCommand(oPC, SpeakString(
+					"Hihihihi... zu.. hihi... komhihihisch einfach...hihihihihi...", TALKVOLUME_TALK)); break;
+		case 18: AssignCommand(oPC, SpeakString(
+					"Hahaha *hält sich den Bauch vor Lachen* huahahahahhhhhaaaaahahahaha.....",
+					TALKVOLUME_TALK));
+			AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_TALK_LAUGHING));
+			break;
+		case 19: AssignCommand(oPC, SpeakString(
+					"Hihihi.. *beugt sich kichernd nach vorne, schüttelt den Kopf und leicht funkelt eine Lachträne im Augenwinkel* Ghnihihihi...",
+					TALKVOLUME_TALK));
+			AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_TALK_LAUGHING, 1.0f, 2.0f));
+			break;
+		case 20: AssignCommand(oPC, SpeakString(
+					"Hahaharmpf... *versucht das Lachen zu unterdrücken, doch nach kurzer Zeit übermannt es einfach* ...mpfHarhaha...Hahahaha...",
+					TALKVOLUME_TALK));
+			AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_TALK_LAUGHING, 1.0f, 3.0f));
+			break;
+		case 21:
+		case 22:
+		case 23:
+		case 24:
+			AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_TALK_LAUGHING, 1.0f, 5.0f));
+			break;
+
+		case 25: AssignCommand(oPC, SpeakString(
+					"*Langsam scheint wieder die Kontrolle zurückgewonnen und nur noch ein kurzes Kichern und Bauchschmerzen bleiben zurück*",
+					TALKVOLUME_TALK)); return;
+	}
+
+	float fDelay = Random(6) * 5 + 10.0;
+	DelayCommand(fDelay, giggleCurse(oPC));
+}
+
+
+void hiccupCurse(object oPC) {
+	int iRandApp = Random(10) + 1;
+	switch ( iRandApp ) {
+		case  1:
+		case  2:
+		case  3:
+		case  4:
+		case  5:
+			AssignCommand(oPC, SpeakString("*hicks*", TALKVOLUME_TALK)); break;
+		case  6:
+			AssignCommand(oPC, SpeakString("*hick* *hält sich die Hand vor den Mund*", TALKVOLUME_TALK));
+			break;
+		case  7:
+			AssignCommand(oPC, SpeakString(
+					"*hickst ein/zweimal und fährt sich mit der Hand an den Halsansatz*", TALKVOLUME_TALK));
+			break;
+		case  8:
+			AssignCommand(oPC, SpeakString(
+					"*börps* *ein sachter Rülpser, wohl die Folge von zu hastigem Trinken*", TALKVOLUME_TALK));
+			return;
+
+		case  9:
+			AssignCommand(oPC, SpeakString("*rülps*", TALKVOLUME_TALK)); return;
+
+		case 10:
+			return;
+	}
+
+	float fDelay = Random(6) * 3 + 3.0;
+	DelayCommand(fDelay, hiccupCurse(oPC));
+
+}
+
+

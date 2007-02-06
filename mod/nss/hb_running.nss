@@ -1,0 +1,94 @@
+#include "inc_debug"
+#include "inc_nwnx"
+#include "inc_subr_fly"
+#include "inc_horse"
+
+void main() {
+	object oPC = OBJECT_SELF;
+
+	if ( !GetIsObjectValid(oPC) ) return;
+
+	if ( !GetIsRidingHorse(oPC) ) {
+		int iAct = GetCurrentAction(oPC);
+		location lLoc = GetLocation(oPC);
+		location lOldLoc = GetLocalLocation(oPC, "OLD_LOC");
+		int iOldTS = GetLocalInt(oPC, "OLD_TS");
+		int iTS = GetTimeSecond() * 1000 + GetTimeMillisecond();
+		object oArea = GetArea(oPC);
+		object oOldArea = GetAreaFromLocation(lOldLoc);
+		float fDist = GetDistanceBetweenLocations(lLoc, lOldLoc);
+		int iDiff;
+		int iMalus = GetLocalInt(oPC, "RUN_MALUS");
+		string sText;
+		int iDec;
+		float fMaxDist;
+		object oArmor = GetItemInSlot(INVENTORY_SLOT_CHEST, oPC);
+
+		int iPassedTime = iTS - iOldTS;
+		int iAC;
+		if ( GetIsObjectValid(oArmor) )
+			iAC = GetArmorAC(GetItemInSlot(INVENTORY_SLOT_CHEST, oPC));
+
+		//Minute rollover
+		if ( iPassedTime <= 0 )
+			iPassedTime += 60000;
+
+		SetLocalLocation(oPC, "OLD_LOC", lLoc);
+		SetLocalInt(oPC, "OLD_TS", iTS);
+
+
+		if ( !GetIsObjectValid(oArea) || !GetIsObjectValid(oOldArea)
+			|| oArea != oOldArea ) return;
+
+		//Normal pace in six seconds is at around 10,
+		//full scale running is at around 21, so this is a good means
+		fMaxDist = ( GetIsPC(oPC) && Fly_IsAirborne(oPC) ) ? 24.0f : 16.0f;
+
+		//Distance per round (six seconds) covered
+		fDist = fDist * 6000.0f / IntToFloat(iPassedTime);
+
+		if ( fDist < fMaxDist ) {
+			iMalus--;
+			if ( iMalus < 0 )
+				iMalus = 0;
+
+			SetLocalInt(oPC, "RUN_MALUS", iMalus);
+			return;
+		}
+		SetLocalInt(oPC, "RUN_MALUS", iMalus + 1);
+
+		//When carrying no substantial armour, allow four rounds of unimpeded
+		//running, then start out with the accumulating.
+		if ( iAC < 2 ) iMalus -= 4;
+		else if ( iAC < 3 ) iMalus -= 2;
+		else if ( iAC < 4 ) iMalus -= 1;
+
+		if ( iMalus < 0 ) return;
+
+		iDiff = 12 + iAC + iMalus;
+
+		if ( GetIsPC(oPC) && Fly_IsAirborne(oPC) ) {
+			iDiff -= 5;
+			sText = "Du musst Deine Fluegel ein wenig ausruhen und gleitest eine Strecke.";
+			iDec = 30;
+		} else {
+			sText = "Du bist vom Rennen erschoepft!";
+			iDec = 70;
+		}
+
+		if ( !FortitudeSave(oPC, iDiff) ) {
+			effect eEff1;
+			eEff1 = EffectMovementSpeedDecrease(iDec);
+			eEff1 = EffectLinkEffects(EffectAttackDecrease(2), eEff1);
+			eEff1 = EffectLinkEffects(EffectACDecrease(2), eEff1);
+
+			//When heartbeats slow down, checks are made more seldom, allowing
+			//for more leverage while running. Balance it with lengthening the
+			//effects of running as needed.
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eEff1, oPC,
+				IntToFloat(3 * ( iMalus + 1 ) * iPassedTime) / 6000.0f);
+			if ( GetIsPC(oPC) ) FloatingTextStringOnCreature(
+					sText, oPC, FALSE);
+		}
+	}
+}

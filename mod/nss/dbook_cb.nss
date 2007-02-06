@@ -1,0 +1,46 @@
+// callback for the dynamic book system
+
+#include "inc_dbook"
+#include "inc_lists"
+#include "inc_craft"
+
+
+void main() {
+	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
+	int iSelPart = GetLocalInt(oPC, "rcp_sel");
+	int iSelection = GetLocalInt(oPC, "ConvList_Select");
+	iSelection = GetListInt(oPC, "rcp", iSelection);
+
+	// SendMessageToPC(oPC, "dbook_cb, iSelPart = " + IntToString(iSelPart) + ", iSelection = " + IntToString(iSelection));
+
+	string sPlan, sName;
+
+	// in recipe?
+	if ( iSelPart > 0 ) {
+		// listen for sub-options
+		switch ( iSelection ) {
+			case 1:
+
+				// SQLQuery("select `name` from `" + TABLE_PROD + "` where `id` = " + IntToString(iSelPart));
+				// SQLFetch();
+				// sName = SQLGetData(1);
+
+				SetLocalInt(oPC, "craft_plan", iSelPart);
+				//SetLocalString(oPC, "craft_plan", sPlan);
+				//SetLocalString(oPC, "craft_plan_name", sName);
+
+				// Notify(MSG_CRAFT_PLAN_SET + sName, oPC);
+				break;
+
+			default:
+				SendMessageToPC(oPC, "Unbekannte Option.");
+				break;
+		}
+
+	} else {
+		// Woah. Back to menue.
+		SetLocalInt(oPC, "rcp_sel", iSelection);
+	}
+
+	DBook_MakeDialog(oPC);
+}

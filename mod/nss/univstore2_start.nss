@@ -1,0 +1,353 @@
+#include "_gen"
+
+// ****************************************************************************
+// ** CONFIGURATION (modify)
+// ****************************************************************************
+
+// Use this function to create conditions to prevent a PC from accessing a
+// storage location. ie: don't let level 1 players have storage, make sure they have
+// purchased a specific item first, etc.
+// Return TRUE if the player should be given access.
+// Return FALSE if the player should not be given access.
+/*int PPISUserDefinedAllowAccess(object oPC) {
+ * 	// You could set something up where the player has to buy the storage space,
+ * 	// or have to pay a fee every time they access the storage vault, etc.
+ * 	return(TRUE);
+ * }*/
+
+// This is the name of the campaign database where the player items will be
+// stored.
+const string PPIS_DB_NAME = "univ";
+// This string will be preappended to the tag for each record. Try to keep
+// the size of this string very small. You should only set a value if you are
+// using the same database to store other records.
+const string PPIS_DB_UNIQUE = "";
+
+// This is how often the individual storage chests will check the distance between
+// themselves and the player. The inventory is cached until the player is far
+// enough away from the storage object that we know they won't want to use it again.
+const float PPIS_STORAGE_HEARTBEAT = 6.0;
+
+// ****************************************************************************
+// ** CONSTANTS (do not modify)
+// ****************************************************************************
+
+// How should the items be stored in the database?
+// 0 - store the items on a creature and have one creature per player.
+// 1 - store the items as individual records.
+const int PPIS_STORAGE_TYPE = 0;
+
+// Used with the PPIS_STORAGE_TYPE constant.
+const int PPIS_STORAGE_TYPE_CREATURE = 0;
+const int PPIS_STORAGE_TYPE_ITEMS = 1;
+
+// Used during development.
+const int PPIS_STATE_UNKNOWN = 0;
+const int PPIS_STATE_RETRIEVED = 1;
+const int PPIS_STATE_STORED = 2;
+
+// Used for keeping track of the state and prevent TMIs.
+const string PPIS_STATE = "PPISState";
+// Used for storing the storage chest object on the player.
+const string PPIS_CHEST = "PPISChest";
+// Used for keeping track of the number of items stored. This needs to match the
+// constant in omw_ppis_disturb.
+const string PPIS_COUNT = "PPISCount";
+// Used for keeping track if the chest heartbeat is already running.
+const string PPIS_HB_MUTEX = "PPISMutex";
+// Used for keeping track of the access point.
+const string PPIS_ACCESS_POINT = "PPISAxs";
+
+// ResRef for the storage locker object to create.
+const string PPIS_OBJECT_CREATURE = "ppis_individual";
+const string PPIS_OBJECT_LOCKER = "univstore2";
+const string PPIS_OBJECT_START = "ppis_start_store";
+
+// ****************************************************************************
+// ** FUNCTION DECLARATIONS
+// ****************************************************************************
+
+// Converts an integer to a string with up to four characters of 0 padding.
+//  iNum - the number to convert.
+string PPISIntToString(int iNum);
+
+// This function runs on the storage creature every PPIS_STORAGE_HEARTBEAT seconds.
+// If oPC is more than 5m away from oChest it will store OBJECT_SELF's inventory in the database.
+//  oPC - the player who is accessing their storage.
+//  oChest - the placeable they are using as an access point to their storage.
+void PPISStorageHeartbeat(object oPC, object chest);
+
+// Retrieve the entire stored inventory as one object and move it to oStorage.
+//  oStorage - the placeable to copy the inventory to.
+// Returns TRUE if there was a stored inventory to retrieve.
+// Returns FALSE if there was not a stored inventory.
+int PPISRetrieve(object oStorage);
+
+// Store oStorage's inventory as a single object.
+//  oStorage - the placeable to copy the inventory from.
+// Returns TRUE if inventory was stored.
+// Returns FALSE if the inventory was not stored.
+int PPISStore(object oStorage);
+
+// Make the player wait until their inventory has been fully retrieved before
+// trying to open it.
+//  oStorage - the placeable storing their items.
+//  iTry - the number of times this function has been run.
+void PPISWaitUntilRetrieved(object oStorage, int iTry);
+
+// ****************************************************************************
+// ** FUNCTION DEFINITIONS
+// ****************************************************************************
+
+string PPISIntToString(int iNum) {
+	if ( iNum < 10 ) return "000" + IntToString(iNum);
+
+	if ( iNum < 100 ) return "00" + IntToString(iNum);
+
+	if ( iNum < 1000 ) return "0" + IntToString(iNum);
+
+	return IntToString(iNum);
+}
+
+// ****************************************************************************
+
+void PPISStorageHeartbeat(object oPC, object oChest) {
+	// Check if the player is still close to the chest.
+	float fDist = GetDistanceBetween(oChest, oPC);
+	if ( ( fDist > 0.0 ) && ( fDist < 4.0 ) ) {
+		// Player is still nearby, so do not write to the database yet.
+		DelayCommand(PPIS_STORAGE_HEARTBEAT, PPISStorageHeartbeat(oPC, oChest));
+		return;
+	}
+	object oStorage = OBJECT_SELF;
+	// Store your inventory.
+	DeleteLocalInt(oStorage, PPIS_HB_MUTEX); // Release the mutex.
+	if ( PPISStore(oStorage) ) {
+		SendMessageToPC(oPC, IntToString(GetLocalInt(oStorage, PPIS_COUNT)) + " Gegenstaende eingelagert.");
+	} else {
+		SpeakString("PPIS Error: unable to store " +
+			GetName(oPC) +
+			"'s items to the database in area:" + GetName(GetArea(OBJECT_SELF)) + ".", TALKVOLUME_SHOUT);
+	}
+
+	// Do some visuals on the placeable to indicate something is inside
+	if ( GetLocalInt(oStorage, PPIS_COUNT) > 0 ) {
+		//int nVFX = GetLocalInt(oChest, "vfx");
+		//if (nVFX > 0)
+		// ApplyEffectToObject(DTP, EffectVisualEffect(555), oChest);
+
+	} else {
+		RemoveAllEffects(oChest);
+	}
+
+	// And unlock the bleedin access point.
+	SetLocked(oChest, 0);
+	return;
+}
+
+// ****************************************************************************
+
+int PPISRetrieve(object oStorage) {
+	string sID = GetTag(oStorage);
+	if ( PPIS_STORAGE_TYPE == PPIS_STORAGE_TYPE_CREATURE ) {
+		// Items are stored as a single object in the database.
+		// Get the storage creature from the database, create it behind the current object.
+		location lLoc = Location(GetArea(OBJECT_SELF), GetPosition(OBJECT_SELF) -
+							1.0 * AngleToVector(GetFacing(OBJECT_SELF)), GetFacing(OBJECT_SELF));
+		object oCreature = RetrieveCampaignObject(PPIS_DB_NAME, sID, lLoc);
+		if ( GetIsObjectValid(oCreature) ) {
+			// Prevent anyone from being able to see the storage creature.
+			ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectVisualEffect(VFX_DUR_CUTSCENE_INVISIBILITY),
+				oCreature);
+			// Copy the gold over, have to handle it separately since there isn't a gold item on the creature.
+			int iGold = GetGold(oCreature);
+			int i = 0;
+			while ( iGold > 50000 ) {
+				// Break gold into 50k chunks to avoid max stack size errors.
+				CreateItemOnObject("NW_IT_GOLD001", oStorage, 50000);
+				i++;
+				iGold = iGold - 50000;
+			}
+			if ( iGold > 0 ) {
+				// Give out the remainder of the gold.
+				CreateItemOnObject("NW_IT_GOLD001", oStorage, iGold);
+				i++;
+			}
+			object oItem = GetFirstItemInInventory(oCreature);
+			while ( GetIsObjectValid(oItem) ) {
+				// Use CopyItem instead of ActionGiveItem to reduce TMIs.
+				CopyItem(oItem, oStorage, 1);
+				i++;
+				oItem = GetNextItemInInventory(oCreature);
+			}
+			SetLocalInt(oStorage, PPIS_STATE, PPIS_STATE_RETRIEVED);
+			DestroyObject(oCreature, 0.3);
+			SetLocalInt(oStorage, PPIS_COUNT, i);
+			return TRUE;
+		}
+		// Creature did not exist in database. Nothing to do.
+		SetLocalInt(oStorage, PPIS_STATE, PPIS_STATE_RETRIEVED);
+		return FALSE;
+	}
+	if ( PPIS_STORAGE_TYPE == PPIS_STORAGE_TYPE_ITEMS ) {
+		// Items are stored individually in the database.
+		location lLoc = GetLocation(oStorage);
+		int i = 0;
+		int iMax = GetCampaignInt(PPIS_DB_NAME, sID + "0000");
+		for ( i = 1; i <= iMax; i++ ) {
+			RetrieveCampaignObject(PPIS_DB_NAME, sID + PPISIntToString(i), lLoc, oStorage);
+		}
+		SetLocalInt(oStorage, PPIS_STATE, PPIS_STATE_RETRIEVED);
+		SetLocalInt(oStorage, PPIS_COUNT, iMax);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+// ****************************************************************************
+
+int PPISStore(object oStorage) {
+	string sID = GetTag(oStorage);
+	if ( PPIS_STORAGE_TYPE == PPIS_STORAGE_TYPE_CREATURE ) {
+		// Items are stored as a single object in the database.
+		// Create the storage creature and move the items to it, create it behind the current object.
+		location lLoc = Location(GetArea(OBJECT_SELF), GetPosition(OBJECT_SELF) -
+							1.0 * AngleToVector(GetFacing(OBJECT_SELF)), GetFacing(OBJECT_SELF));
+		object oCreature = CreateObject(OBJECT_TYPE_CREATURE, PPIS_OBJECT_CREATURE, lLoc, FALSE, sID);
+		if ( GetIsObjectValid(oCreature) ) {
+			// Prevent anyone from being able to see the storage creature.
+			ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectVisualEffect(VFX_DUR_CUTSCENE_INVISIBILITY),
+				oCreature);
+			object oCopy;
+			object oItem = GetFirstItemInInventory(oStorage);
+			int i = 0;
+			while ( GetIsObjectValid(oItem) ) {
+				// Don't have to handle gold separately since it will be copied over.
+				oCopy = CopyItem(oItem, oCreature, 1);
+				oItem = GetNextItemInInventory(oStorage);
+				i++;
+			}
+			// Store the creature.
+			int iRet = StoreCampaignObject(PPIS_DB_NAME, sID, oCreature);
+			SetLocalInt(oStorage, PPIS_STATE, PPIS_STATE_STORED);
+			SetLocalInt(oStorage, PPIS_COUNT, i);
+			DestroyObject(oCreature, 0.3);
+			return iRet;
+		}
+		// Creature did not exist in database. Nothing to do.
+		return FALSE;
+	}
+	if ( PPIS_STORAGE_TYPE == PPIS_STORAGE_TYPE_ITEMS ) {
+		// Items are stored individually in the database.
+		int i = 0;
+		object oItem = GetFirstItemInInventory(oStorage);
+		while ( GetIsObjectValid(oItem) ) {
+			i++;
+			if ( !StoreCampaignObject(PPIS_DB_NAME, sID + PPISIntToString(i), oItem) ) {
+				// Was not able to store oItem! This is bad.
+				SetCampaignInt(PPIS_DB_NAME, sID + "0000", i);
+				return FALSE;
+			}
+			oItem = GetNextItemInInventory(oStorage);
+		}
+		// Store the number of items.
+		SetCampaignInt(PPIS_DB_NAME, sID + "0000", i);
+		SetLocalInt(oStorage, PPIS_STATE, PPIS_STATE_STORED);
+		SetLocalInt(oStorage, PPIS_COUNT, i);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+// ****************************************************************************
+
+void PPISWaitUntilRetrieved(object oStorage, int iTry) {
+	// This function fills up the action queue of the player until the stored
+	// items have been retrieved. This should happen near instantly in most
+	// cases.
+	if ( GetLocalInt(oStorage, PPIS_STATE) == PPIS_STATE_UNKNOWN ) {
+		if ( iTry < 60 ) {
+			AssignCommand(OBJECT_SELF, ActionWait(1.5));
+			SendMessageToPC(OBJECT_SELF, "Hole eingelagerte Gegenstaende....");
+			AssignCommand(OBJECT_SELF, PPISWaitUntilRetrieved(oStorage, iTry + 1));
+		} else {
+			SpeakString("PPIS ERROR: Unable to load inventory! Too much lag.", TALKVOLUME_SHOUT);
+		}
+	} else {
+		// Inform the PC of how much stuff they have stored.
+		SendMessageToPC(OBJECT_SELF, "Zur Zeit sind " +
+			IntToString(GetLocalInt(oStorage, PPIS_COUNT)) + " Gegenstaende eingelagert.");
+		AssignCommand(OBJECT_SELF, ActionInteractObject(oStorage));
+	}
+}
+
+// ****************************************************************************
+// ** MAIN
+// ****************************************************************************
+
+void main() {
+	object oPlayer = GetLastUsedBy();
+
+	object oContainer = OBJECT_SELF;
+
+	string sChestID = GetLocalString(oContainer, "store_tag");
+	if ( "" == sChestID ) {
+		SendMessageToPC(oPlayer, "Wwaaarh.  Ich habe keine ID.");
+		return;
+	}
+
+	if ( GetLocked(OBJECT_SELF) )
+		return;
+
+	SendMessageToPC(oPlayer,
+		"Dies ist ein persistenter Container.  Gegenstaende darin werden ueber Server-Neustarts aufbewahrt.   Achtung - jeder, der zum Container kommt, hat Zugriff darauf.");
+
+	// Lock the bleedin access point.
+	SetLockKeyRequired(OBJECT_SELF);
+	SetLockKeyTag(OBJECT_SELF, "invalid");
+	SetLockLockable(OBJECT_SELF);
+	SetLocked(OBJECT_SELF, 1);
+
+	// See if the player already has an opened storage location.
+	object oStorage = GetLocalObject(oContainer, PPIS_CHEST);
+	if ( GetIsObjectValid(oStorage) ) {
+		// If unique storage placeable was accessed from somewhere else, destroy
+		// it and open it from the DB. This is the only way to do this because
+		// we cannot move placeables dynamically.
+		if ( GetLocalObject(oContainer, PPIS_ACCESS_POINT) != OBJECT_SELF ) {
+			DestroyObject(oStorage);
+			oStorage = OBJECT_INVALID;
+			// oStorage is now invalid, so it will be recreated.
+		}
+	}
+
+
+	if ( !GetIsObjectValid(oStorage) ) {
+		// Player does not have an ID so create one.
+		// Database keys are limited to 32 characters. So do some magic to try
+		// to prevent overlaps.
+		// int iLength = (32 - GetStringLength(PPIS_DB_UNIQUE)) / 2;
+		// if (PPIS_STORAGE_TYPE == PPIS_STORAGE_TYPE_ITEMS)
+		//    iLength = iLength - 2; // Need to reserve 4 characters for the number of items.
+		string sID = PPIS_DB_UNIQUE + sChestID; //GetStringLeft(GetPCPlayerName(oPC), iLength) + GetStringRight(GetName(oPC), iLength);
+		// This is the first time, create the storage object.
+		// Create the storage object underground so that it cannot accidently be clicked on by malicious players. (thanks Talmud)
+		vector vChest = GetPosition(OBJECT_SELF);
+		location lStorage = Location(GetArea(OBJECT_SELF), Vector(vChest.x, vChest.y, vChest.z -
+									10.0), GetFacing(OBJECT_SELF));
+		oStorage = CreateObject(OBJECT_TYPE_PLACEABLE, PPIS_OBJECT_LOCKER, lStorage, FALSE, sID);
+		SetLocalObject(oContainer, PPIS_CHEST, oStorage);
+		SetLocalObject(oContainer, PPIS_ACCESS_POINT, OBJECT_SELF);
+		// Try to retrieve the inventory from the database.
+		PPISRetrieve(oStorage);
+	}
+	// Set up a heartbeat to check the distance between the player and the storage object.
+	if ( GetLocalInt(oStorage, PPIS_HB_MUTEX) == 0 ) {
+		// Mutex prevents setting up multiple HBs.
+		AssignCommand(oStorage, DelayCommand(PPIS_STORAGE_HEARTBEAT, PPISStorageHeartbeat(oPlayer, oContainer)));
+		SetLocalInt(oStorage, PPIS_HB_MUTEX, 1);
+	}
+
+	// Now make the player open the inventory of the storage invisible object.
+	AssignCommand(oPlayer, PPISWaitUntilRetrieved(oStorage, 1));
+}

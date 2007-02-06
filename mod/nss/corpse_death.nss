@@ -1,0 +1,30 @@
+///////////////////////////////////////////////////////////////////////
+//: FILE NAME: gb_loot_corpse
+//: EVENT HANDLE: NA Called from OnDeath
+//: FUNCTION: To make a corpse lootable
+///////////////////////////////////////////////////////////////////////
+//: CREATED BY: Glenn J. Berden (a.k.a. Jassper)
+//: CREATED ON: 01/21/03
+//: MODIFIED BY:
+//: MODIFIED ON:
+///////////////////////////////////////////////////////////////////////
+//: Place the following 2 lines in the OnDeath of the creature.
+//: SetIsDestroyable(FALSE,TRUE);
+//: ExecuteScript("gb_loot_corpse",OBJECT_SELF);
+///////////////////////////////////////////////////////////////////////
+
+#include "inc_corpse"
+
+void main() {
+	object oCorpse;
+
+	/* Drop Corpses he may have in his possession */
+	DropCorpses(OBJECT_SELF);
+
+	if ( !GetLocalInt(OBJECT_SELF, "CUSTOM_CORPSE") ) return;
+
+	if ( GetIsObjectValid(oCorpse = SpawnCorpse(OBJECT_SELF)) )
+		SetIsDestroyable(FALSE, TRUE);
+	if ( GetDamageDealtByType(DAMAGE_TYPE_FIRE) > 5 )
+		Eff_Afterburn(OBJECT_SELF);
+}

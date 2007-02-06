@@ -1,0 +1,128 @@
+#include "inc_subr_fly"
+
+int SR_GetLightFlag(int iAreaFlags) {
+	return ( ( iAreaFlags & SR_AREA_DAYLIGHT ) && GetIsDay() )
+		   ? iAreaFlags | SR_AREA_SUN
+		   : iAreaFlags;
+}
+
+void SR_DoBlinding(object oPC, int iDelta, int iHard) {
+	effect eEff1, eEff2;
+
+	if ( iDelta > 0 ) {
+		eEff1 = EffectSkillDecrease(SKILL_SEARCH, 1);
+		eEff2 = EffectSkillDecrease(SKILL_SPOT, 1);
+		eEff1 = EffectLinkEffects(eEff2, eEff1);
+		eEff2 = EffectAttackDecrease(1);
+		eEff1 = EffectLinkEffects(eEff2, eEff1);
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(eEff1), oPC);
+		if ( iHard ) {
+			eEff1 = EffectBlindness();
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, SupernaturalEffect(eEff1), oPC, 30.0);
+		}
+		return;
+	}
+
+	if ( iDelta < 0 )
+		SR_RemoveTempEffect(oPC, EFFECT_TYPE_SKILL_DECREASE);
+}
+
+
+void SR_DoClaustro(object oPC, int iDelta) {
+	effect eEff1, eEff2;
+
+	if ( iDelta > 0 ) {
+		eEff1 = EffectSkillDecrease(SKILL_SEARCH, 2);
+		eEff2 = EffectSkillDecrease(SKILL_SPOT, 2);
+		eEff1 = EffectLinkEffects(eEff2, eEff1);
+		eEff2 = EffectAttackDecrease(2);
+		eEff1 = EffectLinkEffects(eEff2, eEff1);
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(eEff1), oPC);
+		return;
+	}
+
+	if ( iDelta < 0 )
+		SR_RemoveTempEffect(oPC, EFFECT_TYPE_SKILL_DECREASE);
+}
+
+
+void SR_DoHideBonus(object oPC, int iDelta) {
+	effect eEff1, eEff2;
+
+	if ( iDelta > 0 ) {
+		eEff1 = EffectSkillIncrease(SKILL_HIDE, 2);
+		eEff2 = EffectSkillIncrease(SKILL_MOVE_SILENTLY, 2);
+		eEff1 = EffectLinkEffects(eEff2, eEff1);
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(eEff1), oPC);
+		return;
+	}
+
+	if ( iDelta < 0 )
+		SR_RemoveTempEffect(oPC, EFFECT_TYPE_SKILL_INCREASE);
+}
+
+
+int SR_CheckTransition(int iOld, int iNew, int iWhat) {
+	return ( ( iNew & iWhat ) ? 1 : 0 ) + ( ( iOld & iWhat ) ? -1 : 0 );
+}
+
+void SR_Update_Flags(object oPC, int iHard = FALSE) {
+	string sSubrace = GetLocalString(oPC, "SR_Subrace");
+	int iSRFlags = GetLocalInt(GetModule(), "SR_Flags_" + sSubrace);
+	int iOldFlags = GetLocalInt(oPC, "SR_In_Area");
+	int iNewFlags = SR_GetLightFlag(GetLocalInt(oPC, "SR_AreaFlags"));
+
+	SetLocalInt(oPC, "SR_In_Area", iNewFlags);
+
+	if ( !iSRFlags ) return; // No area dependent flags. Exit prematurely
+
+	if ( iOldFlags == iNewFlags ) return; // No changes
+
+	if ( iSRFlags & 0x00020000 )
+		SR_DoBlinding(oPC, SR_CheckTransition(iOldFlags, iNewFlags, SR_AREA_SUN), iHard);
+
+	if ( iSRFlags & 0x00010000 )
+		SR_DoClaustro(oPC, SR_CheckTransition(iOldFlags, iNewFlags, SR_AREA_UNDERGROUND));
+
+	if ( iSRFlags & 0x00000001 )
+		SR_DoHideBonus(oPC, SR_CheckTransition(iOldFlags, iNewFlags, SR_AREA_UNDERGROUND));
+
+	if ( !( iNewFlags & SR_AREA_DAYLIGHT ) )
+		Fly_Land(oPC);
+}
+
+void SR_Enter_Area(object oPC, int iAreaFlags = 0) {
+	object oArea = GetArea(oPC);
+
+	// Do some assumptions when the area flags aren't given
+	if ( !iAreaFlags )
+		iAreaFlags = GetIsAreaAboveGround(oArea)
+					 ? SR_AREA_DAYLIGHT | SR_AREA_OPENSPACE
+					 : SR_AREA_UNDERGROUND +
+					 GetIsAreaNatural(oArea)
+					 ? SR_AREA_NATURAL
+					 : 0;
+
+	SetLocalInt(oPC, "SR_AreaFlags", iAreaFlags);
+	SR_Update_Flags(oPC, TRUE);
+}
+
+//Called once per game hour to do the effects of day/night transition
+void SR_Hourly_Update() {
+	object oMod = GetModule();
+	object oPC;
+
+	int iLit = ( GetIsDay() ? 1 : 0 );
+	int iDelta = iLit - GetLocalInt(oMod, "SR_Daylight");
+	SetLocalInt(oMod, "SR_Daylight", iLit);
+
+	if ( !iDelta ) return;
+
+	oPC = GetFirstPC();
+
+	while ( GetIsObjectValid(oPC) ) {
+		SR_Update_Flags(oPC);
+		oPC = GetNextPC();
+	}
+}
+

@@ -1,0 +1,6 @@
+int StartingConditional() {
+	int iResult;
+
+	iResult = ( GetLocalInt(GetNearestObjectByTag("c_gamemaster"), "GameState") == 2 );
+	return iResult;
+}

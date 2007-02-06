@@ -1,0 +1,19 @@
+#include "c_chessinc"
+
+void main() {
+	int x;
+	object oPiece, oTarget;
+	for ( x = 0; x < 64; x++ ) {
+		oPiece = GetObjectArray(OBJECT_SELF, "oSquare", x);
+		oTarget = GetLocalObject(oPiece, "target");
+		if ( GetIsObjectValid(oTarget) ) DestroyObject(oTarget);
+		if ( oPiece != OBJECT_SELF && GetIsObjectValid(oPiece) ) DestroyObject(oPiece);
+	}
+	SetLocalInt(OBJECT_SELF, "GameState", 0);
+	SetLocalInt(OBJECT_SELF, "nWhiteAssigned", 0);
+	SetLocalObject(OBJECT_SELF, "oWhitePlayer", OBJECT_INVALID);
+	SetLocalInt(OBJECT_SELF, "nBlackAssigned", 0);
+	SetLocalObject(OBJECT_SELF, "oBlackPlayer", OBJECT_INVALID);
+
+	// in theory I should delete all the locals, but I'm lazy
+}

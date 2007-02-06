@@ -1,0 +1,5 @@
+#include "c_chessinc"
+
+void main() {
+	PromotePawn("bishop", 4);
+}

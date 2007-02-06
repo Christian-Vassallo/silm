@@ -1,0 +1,25 @@
+// Gets a value from a 2DA file on the server and returns it as a string
+// avoid using this function in loops
+// - s2DA: the name of the 2da file, 16 chars max
+// - sColumn: the name of the column in the 2da
+// - nRow: the row in the 2da
+// * returns an empty string if file, row, or column not found
+string Get2DACached(string s2DA, string sCol, int nRow);
+
+
+
+/* impl*/
+
+string Get2DACached(string s2DA, string sCol, int nRow) {
+	object oMod = GetModule();
+
+	string s = "2da" + s2DA + sCol +  IntToString(nRow);
+	string s2;
+
+	if ( ( s2 = GetLocalString(oMod, s) ) != "" )
+		return s2;
+
+	s2 = Get2DAString(s2DA, sCol, nRow);
+	SetLocalString(oMod, s, s2);
+	return s2;
+}

@@ -1,0 +1,27 @@
+#include "inc_corpse"
+
+void main() {
+	int i;
+
+	// Check what is left in inventory
+	object oBody = GetLocalObject(OBJECT_SELF, "Body");
+	object oItem;
+
+	for ( i = 0; i < NUM_INVENTORY_SLOTS; i++ ) {
+		if ( GetIsObjectValid(oItem = GetItemInSlot(i, oBody)) )
+			if ( !GetPlotFlag(oItem) ) DestroyObject(oItem);
+	}
+	oItem  = GetFirstItemInInventory(oBody);
+	//Have the corpse bag and the corpse itself clean up, leave the
+	//plot items in the original corpse's body bag
+	while ( GetIsObjectValid(oItem) ) {
+		if ( !GetPlotFlag(oItem) )  //Let Items it the plot flag lie
+			DestroyObject(oItem);
+		oItem = GetNextItemInInventory(oBody);
+	}
+	TakeGoldFromCreature(GetGold(oBody), oBody, TRUE);
+	//Geist bei Toten entfernt by Poly
+	//Eff_Ghost(oBody);
+	AssignCommand(oBody, SetIsDestroyable(TRUE));
+//    JumpToLocation(GetLocation(oBody));
+}

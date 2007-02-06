@@ -1,0 +1,59 @@
+//::///////////////////////////////////////////////
+//:: Summon Creature Series
+//:: NW_S0_Summon
+//:: Copyright (c) 2001 Bioware Corp.
+//:://////////////////////////////////////////////
+/*
+ * 	Carries out the summoning of the appropriate
+ * 	creature for the Summon Monster Series of spells
+ * 	1 to 9
+ */
+//:://////////////////////////////////////////////
+//:: Created By: Preston Watamaniuk
+//:: Created On: Jan 8, 2002
+//:://////////////////////////////////////////////
+
+effect SetSummonEffect(int nSpellID);
+
+#include "x2_inc_spellhook"
+#include "inc_summon"
+
+void main() {
+
+/*
+ * Spellcast Hook Code
+ * Added 2003-06-23 by GeorgZ
+ * If you want to make changes to all spells,
+ * check x2_inc_spellhook.nss to find out more
+ *
+ */
+
+	if ( !X2PreSpellCastCode() ) {
+		// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
+		return;
+	}
+
+// End of Spell Cast Hook
+
+
+	//Declare major variables
+	int nSpellID = GetSpellId();
+	float fDuration = GetCasterLevel(OBJECT_SELF) * 600.0;
+
+	//Make metamagic check for extend
+	int nMetaMagic = GetMetaMagicFeat();
+	if ( nMetaMagic == METAMAGIC_EXTEND ) {
+		fDuration = fDuration * 2.0;   //Duration is +100%
+	}
+	//Apply the VFX impact and summon effect
+	string sSummon = GetSummoningCreature(OBJECT_SELF, nSpellID);
+	if ( sSummon != "" ) {
+		DoSummonCreature(
+			OBJECT_SELF, GetSpellTargetLocation(), fDuration,
+			GetSummonEffect(OBJECT_SELF, nSpellID), sSummon);
+	} else {
+		FloatingTextStringOnCreature(
+			"Ihr benoetigt magische Runen oder Artefakte zum beschwoeren von Kreaturen!", OBJECT_SELF);
+	}
+}
+

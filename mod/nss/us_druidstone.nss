@@ -1,0 +1,19 @@
+void main() {
+	object oPC = GetLastUsedBy();
+
+	if ( !GetLevelByClass(CLASS_TYPE_DRUID, oPC) ) {
+		SendMessageToPC(oPC,
+			"Selbst unter Zuhilfenahme Eurer Waffe schafft Ihr es nicht auch nur einen Kruemel abzubrechen.");
+		return;
+	}
+
+	if ( GetIsObjectValid(GetItemPossessedBy(oPC, "SteinderDruiden")) ) {
+		SendMessageToPC(oPC, "Der Stein in Eurem Besitz glueht kurz auf. Sonst passiert nichts.");
+		return;
+	}
+	CreateItemOnObject("steinderdruiden", oPC);
+	SendMessageToPC(oPC, "Ein Stueck vom Felsen abzubrechen ist ueberraschend einfach.");
+	SendMessageToPC(oPC,
+		"Seltsamer ist, dass der Felsen nachwaechst und nach einer Weile die Bruchstelle verheilt ist.");
+	return;
+}

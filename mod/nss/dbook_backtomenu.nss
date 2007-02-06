@@ -1,0 +1,11 @@
+#include "inc_dbook"
+#include "inc_lists"
+
+void main() {
+	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
+	DeleteLocalInt(oPC, "rcp_sel");
+
+	// SendMessageToPC(oPC, "Back to menue.");
+
+	DBook_MakeDialog(oPC);
+}

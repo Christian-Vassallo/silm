@@ -1,0 +1,32 @@
+///////////////////////////////////////////////////
+//: FILE NAME: gb_loot_corps_od
+//: EVENT HANDLE: OnDisturbed of a Corps Placeable
+//: FUNCTION: To remove the Items that drop in inventory
+///////////////////////////////////////////////////
+//: CREATED BY: Glenn J. Berden aka Jassper
+//: CREATED ON: 01/22/03
+//: MODIFIED BY:
+//: MODIFIED ON:
+///////////////////////////////////////////////////
+
+void main() {
+	object oLooter = GetLastDisturbed();
+	object oItem = GetInventoryDisturbItem();
+
+	if ( GetInventoryDisturbType() == INVENTORY_DISTURB_TYPE_REMOVED ) {
+		object oBody = GetLocalObject(OBJECT_SELF, "Body");
+		object oOrigItm = GetLocalObject(oItem, "OriginalItem");
+
+		AssignCommand(oLooter, ActionPlayAnimation(ANIMATION_LOOPING_GET_LOW, 1.0, 1.0));
+
+		if ( GetIsObjectValid(oOrigItm) ) {
+			DestroyObject(oOrigItm);
+			DeleteLocalObject(oItem, "OriginalItem");
+		}
+	}
+
+	if ( GetInventoryDisturbType() == INVENTORY_DISTURB_TYPE_ADDED ) {
+		AssignCommand(oLooter, ActionPlayAnimation(ANIMATION_LOOPING_GET_LOW, 1.0, 1.0));
+		ActionGiveItem(oItem, oLooter);
+	}
+}

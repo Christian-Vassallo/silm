@@ -1,0 +1,272 @@
+/*
+ * 	Really Simple(tm) crypto stuff.
+ *
+ * 	Licenced under the GNU GPLv2.
+ *
+ * 	Copyleft 2006
+ * 		Bernhard 'elven' Stoeckner.
+ *
+ * 	See http://www.gnu.org/licenses/gpl.txt
+ * 	for more information.
+ */
+
+
+/*
+ * 	O.o Too many instructions.  Curse you, nwscript
+ * 	stack limitations.
+ *
+ * 	No workaround available.
+ */
+
+const int
+/* Use a default set of flags as determined
+ * 	fit by the called crypto method. */
+CRYPTO_BEHAVIOUR_DEFAULTFLAG = 0,
+
+/* Keep chars not in lex tables instead
+ * 	of dropping them. */
+CRYPTO_BEHAVIOUR_EXTRACHAR_KEEP = 1,
+
+/* not used */
+CRYPTO_BEHAVIOUR_RESERVED_RESERVED = 2,
+
+/* Wrap in- or output lex around if not enough
+ * 	chars were given. */
+CRYPTO_BEHAVIOUR_WRAP = 4,
+
+/* Map the case of the input character
+ * 	to the output character - where applicable.
+ */
+CRYPTO_BEHAVIOUR_CASEMAP = 8,
+
+/* Ignore case whenn looking up chars
+ * 	== do a lowercase conversion on input lexes. */
+CRYPTO_BEHAVIOUR_CASEIGNORE = 16,
+
+
+CRYPTO_MAX_STRING_LENGTH = 2048;     // 2 << 10
+
+
+const string
+/* Use this table for determining if a char
+ * 	is upcase or not. */
+CRYPTO_UPCASE_DEF = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+/* Use this table for determining if a char
+ * 	is lowercase or not. */
+CRYPTO_LOCASE_DEF = "abcdefghijklmnopqrstuvwxyz",
+
+/* unused as of yet */
+CRYPTO_DEFAULT_DELIM = "|";
+
+
+
+
+
+// Implement a general monoalphabetic substitution cipther.
+// The default is set to do ROT13.
+string CryptoMonoalphabeticSubstitution(string sInStr, string sLexIn = "abcdefghijklmnopqrstuvwxyz", string sLexOut = "nopqrstuvwxyzabcdefghijklm",
+										int nBehaviour = CRYPTO_BEHAVIOUR_DEFAULTFLAG);
+
+
+// Implement a general polyalphabetic substitution cipther.
+// The default is set to do ROT13.
+// Syntax for the output lex is: field1|field2|field3|field4
+// where "|" is the delimiter string specified in sFieldDelimiter
+// Input lex as with monoalphabetic cipher.
+//
+// Note that this is a unpimped version of the homophonic cipher class.  It does NOT do
+// two-way decryption.  Used for racial languages initially.
+string CryptoHomophonicSubstitution(string sInStr, string sLexIn = "abcdefghijklmnopqrstuvwxyz", string sLexOut = "n|o|p|q|r|s|t|u|v|w|x|y|z|a|b|c|d|e|f|g|h|i|j|k|l|m", string sFieldDelimiter = "|",
+									int nBehaviour = CRYPTO_BEHAVIOUR_DEFAULTFLAG);
+
+
+// Ugh. You try implementing Vigenere-style tables with only one string to parse.
+// string CryptoPolyAlphabeticSubstitution(string sInStr, string sLexTableIn = "", int nBehaviour = 0);
+
+
+/* Helper methods */
+
+int GetIsUpcase(string sChar);
+
+string GetCaseConv(string sChar, int bCase = TRUE);
+
+
+/* Magic methods */
+
+int c_GetFieldCount(string sFieldA, string sFDelim = "|");
+string c_GetField(string sFieldA, int nField, string sFDelim = "|");
+
+/* Implementation below */
+
+
+string CryptoMonoalphabeticSubstitution(string sInStr, string sLexIn = "abcdefghijklmnopqrstuvwxyz", string sLexOut = "nopqrstuvwxyzabcdefghijklm",
+										int nBehaviour = CRYPTO_BEHAVIOUR_DEFAULTFLAG) {
+
+	if ( CRYPTO_BEHAVIOUR_DEFAULTFLAG == nBehaviour )
+		nBehaviour = CRYPTO_BEHAVIOUR_EXTRACHAR_KEEP | CRYPTO_BEHAVIOUR_CASEMAP | CRYPTO_BEHAVIOUR_CASEIGNORE;
+
+	if ( GetStringLength(sLexIn) != GetStringLength(sLexOut) && !( nBehaviour & CRYPTO_BEHAVIOUR_WRAP ) )
+		return "";
+
+	string sRes = "";
+	string sIn = sInStr;
+
+	if ( nBehaviour & CRYPTO_BEHAVIOUR_CASEIGNORE ) {
+		sIn = GetStringLowerCase(sInStr);
+		sLexIn = GetStringLowerCase(sLexIn);
+		sLexOut = GetStringLowerCase(sLexOut);
+	}
+
+
+	int i = 0;
+	int ipA = -1;
+	string cC = "";
+	for ( i = 0; i < GetStringLength(sInStr); i++ ) {
+		cC = GetSubString(sIn, i, 1);
+		ipA = FindSubString(sLexIn, cC);
+
+		if ( -1 == ipA ) {
+			if ( nBehaviour & CRYPTO_BEHAVIOUR_EXTRACHAR_KEEP )
+				sRes += cC;
+			else
+				continue;
+		}
+
+		if ( nBehaviour & CRYPTO_BEHAVIOUR_CASEMAP ) {
+			cC = GetSubString(sInStr, i, 1);
+			sRes += GetCaseConv(GetSubString(sLexOut, ipA, 1), GetIsUpcase(cC));
+		} else {
+			sRes += GetSubString(sLexOut, ipA, 1);
+		}
+
+	}
+	return sRes;
+}
+
+
+string CryptoHomophonicSubstitution(string sInStr, string sLexIn = "abcdefghijklmnopqrstuvwxyz", string sLexOut = "n|o|p|q|r|s|t|u|v|w|x|y|z|a|b|c|d|e|f|g|h|i|j|k|l|m", string sFieldDelimiter = "|",
+									int nBehaviour = CRYPTO_BEHAVIOUR_DEFAULTFLAG) {
+
+	if ( CRYPTO_BEHAVIOUR_DEFAULTFLAG == nBehaviour )
+		nBehaviour = CRYPTO_BEHAVIOUR_EXTRACHAR_KEEP | CRYPTO_BEHAVIOUR_CASEIGNORE;
+
+	string sRes = "";
+	string sIn = sInStr;
+	int i = 0;
+
+	if ( nBehaviour & CRYPTO_BEHAVIOUR_CASEIGNORE ) {
+		sIn = GetStringLowerCase(sInStr);
+		sLexIn = GetStringLowerCase(sLexIn);
+		sLexOut = GetStringLowerCase(sLexOut);
+	}
+
+	/*if (sLexOut != "" && GetStringRight(sLexOut, GetStringLength(sFieldDelimiter)) != sFieldDelimiter)
+	 * 	sLexOut += sFieldDelimiter;*/
+
+	int nfa = GetStringLength(sLexIn);
+	int nfb = c_GetFieldCount(sLexOut) - 1;
+
+	if ( nfa != nfb || nfa == 0 )  // TODO: check for warp
+		return "";
+
+	object oMod = GetModule();
+
+	/* now it gets ugly. */
+	for ( i = 0; i < nfb; i++ )
+		SetLocalString(oMod, "_chsb" + IntToString(i), c_GetField(sLexOut, i, sFieldDelimiter));
+	int iLen = GetStringLength(sIn);
+	int iIdx = -1;
+	string cC, cCa;
+
+	for ( i = 0; i < iLen; i++ ) {
+		cC = GetSubString(sIn, i, 1);
+		iIdx = FindSubString(sLexIn, cC);
+
+		if ( -1 == iIdx ) {
+			if ( nBehaviour & CRYPTO_BEHAVIOUR_EXTRACHAR_KEEP )
+				sRes += cC;
+			else
+				continue;
+		}
+
+
+		cC = GetLocalString(oMod, "_chsb" + IntToString(iIdx));
+		if ( cC != "" ) {
+			cCa = GetSubString(sInStr, i, 1);
+			sRes += GetCaseConv(cC, GetIsUpcase(cCa));
+		}
+	}
+	/* de-ugly our variable tables. */
+	//for (i = 0; i < nfb; i++)
+	//    DeleteLocalString(oMod, "_chsb" + IntToString(i));
+	// Skipping that for now, for speed reasons.  Won't clutter Module too much anyways.
+
+	return sRes;
+}
+
+int GetIsUpcase(string sChar) {
+	return -1 != FindSubString(CRYPTO_UPCASE_DEF, GetSubString(sChar, 0, 1));
+}
+
+
+string GetCaseConv(string sChar, int bCase = TRUE) {
+	int bAlreadyCase = GetIsUpcase(sChar);
+
+	if ( ( bAlreadyCase && bCase ) || ( !bAlreadyCase && !bCase ) )
+		return sChar;
+
+	string sRest = GetSubString(sChar, 1, CRYPTO_MAX_STRING_LENGTH);
+
+	if ( bCase ) {
+		/* Assume because of check above we want upcase and have lowercase */
+		int iPos = FindSubString(CRYPTO_LOCASE_DEF, sChar);
+		return GetSubString(CRYPTO_UPCASE_DEF, iPos, 1) + sRest;
+	} else {
+		int iPos = FindSubString(CRYPTO_UPCASE_DEF, sChar);
+		return GetSubString(CRYPTO_UPCASE_DEF, iPos, 1) + sRest;
+	}
+}
+
+
+
+
+
+int c_GetFieldCount(string sFieldA, string sFDelim = "|") {
+	int c = 1;
+
+	int iPos = FindSubString(sFieldA, sFDelim);
+	while ( iPos != -1 ) {
+
+		sFieldA = GetSubString(sFieldA, iPos + 1, CRYPTO_MAX_STRING_LENGTH); // chomp off and add
+		iPos = FindSubString(sFieldA, sFDelim);
+		c += 1;
+	}
+
+	return c;
+}
+
+
+
+string c_GetField(string sFieldA, int nField, string sFDelim = "|") {
+	int nCurrentField = 0;
+	int nPos = FindSubString(sFieldA, sFDelim);
+	string sCurrentField = "";
+
+	while ( -1 != nPos ) {
+		if ( nCurrentField > nField )
+			return ""; // no match
+
+		sCurrentField = GetSubString(sFieldA, 0, nPos);
+		sFieldA = GetSubString(sFieldA, nPos + 1, CRYPTO_MAX_STRING_LENGTH);
+
+		if ( nCurrentField == nField )
+			return sCurrentField;
+
+
+		nPos = FindSubString(sFieldA, sFDelim);
+		nCurrentField += 1;
+	}
+
+	// return the whole field if nothing else matched
+	return sFieldA;
+}

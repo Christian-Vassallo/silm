@@ -1,0 +1,14 @@
+// this stable wants money
+
+#include "inc_horse"
+
+int StartingConditional() {
+	float fRent = GetLocalFloat(OBJECT_SELF, "rent_per_day");
+	if ( 0.0 == fRent )
+		fRent = DAILY_RENT;
+
+
+	struct Rideable r = GetRideable(GetPCSpeaker());
+
+	return r.pay_rent && fRent > 0.0;
+}
