@@ -4,12 +4,12 @@ LISTHOME=$(HOME)
 NAME=Silbermarken
 
 # This gets packaged into your final module
-VALIDEXT=area/*.git area/*.gic area/*.are \
-	dlg/*.dlg utm/*.utm utp/*.utp uts/*.uts utt/*.utt utw/*.utw \
-	utc/*.utc utd/*.utd ute/*.ute uti/*.uti \
-	itp/*.itp ssf/*.ssf \
-	mod/*.fac mod/*.ifo mod/*.jrl \
-	nss/*.ncs
+VALIDEXT=area/\*.git area/\*.gic area/\*.are \
+	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
+	utc/\*.utc utd/\*.utd ute/\*.ute uti/\*.uti \
+	itp/\*.itp ssf/\*.ssf \
+	mod/\*.fac mod/\*.ifo mod/\*.jrl \
+	nss/\*.ncs nss/\*.nss
 
 LISTS=uti utp utc utm
 
@@ -58,7 +58,7 @@ clean:
 local: path
 	erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
 
-install: local
+install: 
 	cp -v $(NAME).mod $(NWNHOME)/modules/
 
 # generates a new package with the current revision

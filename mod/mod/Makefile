@@ -1,5 +1,5 @@
 
 ifo:
-	update-ifo.pl ../area/*.are
+	update-ifo.pl ../area/\*.are
 
 clean:
