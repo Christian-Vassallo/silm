@@ -4,7 +4,7 @@
 
 #include "inc_mysql"
 #include "inc_dbplac"
-
+#include "inc_color"
 
 void main() {
 	object oPC = GetLastUsedBy();
@@ -19,5 +19,5 @@ void main() {
 	}
 
 	//SendMessageToPC(oPC, sText);
-	FloatingTextStringOnCreature(sText, oPC, FALSE);
+	FloatingTextStringOnCreature(ColourTag(cDarkYellow) + sText + ColourTagClose(), oPC, FALSE);
 }
