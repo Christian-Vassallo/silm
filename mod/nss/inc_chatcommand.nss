@@ -386,7 +386,7 @@ int CommandPlaceable(object oPC, int iMode) {
 	int nOpen = -1;
 	int nPersist = -1;
 
-	string sText = getoptargs();
+	string sText = arg(0);
 
 	// Set/GetUseable
 	if ( opt("useable") )
@@ -407,9 +407,10 @@ int CommandPlaceable(object oPC, int iMode) {
 		else
 			AssignCommand(oTarget, ActionOpenDoor(oTarget));
 	}
+	
+	int nIsPersistent = GetPlaceableID(oTarget) > 0;
 
 	if ( nPersist != -1 ) {
-		int nIsPersistent = GetPlaceableID(oTarget);
 
 		if ( nPersist == 0 ) {
 			// Delete from DB
@@ -432,14 +433,14 @@ int CommandPlaceable(object oPC, int iMode) {
 						break;
 					case SAVE_NEW:
 						ToPC("Made object persistent.");
-						nPersist = 1;
+						nIsPersistent = 1;
 						break;
 				}
 			}
 		}
 	}
 
-	if ( nPersist > 0 && GetStringLength(sText) > 0) {
+	if ( nIsPersistent && GetStringLength(sText) > 0) {
 		ToPC("Setting Scene Text to: " + sText);
 		SQLQuery("delete from scene_descriptions where pid = " +
 			IntToString(GetPlaceableID(oTarget)));

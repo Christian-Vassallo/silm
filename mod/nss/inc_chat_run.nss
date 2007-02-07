@@ -291,9 +291,9 @@ void RegisterAllCommands() {
 	RHs("[new_portrait_resref] >> Gets/Sets the portrait", 1);
 
 
-	RegisterCommand("pl", "useable= persist= plot=");
+	RegisterCommand("pl", "useable= persist= plot=", 0, 1);
 	RH("Shows/sets various placeable related things.");
-	RHs("[--persist=bool [--useable=bool] [--plot=bool]");
+	RHs("[--persist=bool] [--useable=bool] [--plot=bool] [placeable scene text]");
 
 	RegisterCommand("rotate", "", 0, 1);
 	RHs("[deg] >> Sets gets the rotation either as relative or absolute value.", 1);
