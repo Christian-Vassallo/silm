@@ -19,5 +19,5 @@ void main() {
 	}
 
 	//SendMessageToPC(oPC, sText);
-	FloatingTextStringOnCreature(ColourTag(cDarkYellow) + sText + ColourTagClose(), oPC, FALSE);
+	FloatingTextStringOnCreature(ColourTag(cLightBlue) + sText + ColourTagClose(), oPC, FALSE);
 }
