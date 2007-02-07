@@ -63,10 +63,10 @@ clean:
 	$(MAKE) -C nss clean clean-backup
 	
 local: path
-	../../buildutil/erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
+	../buildutil/erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
 
 install: 
 	cp -v $(NAME).mod $(NWNHOME)/modules/
 
 # generates a new package with the current revision
-package: path clean itp scripts local
+package: path scripts local
