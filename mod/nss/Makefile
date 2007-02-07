@@ -1,6 +1,6 @@
 # inherits stuff
 
-NSS=nwnnsscomp
+NSS=../../buildutil/nwnnsscomp
 NSSFLAGS=-g -o -q -c
 NSSVERIFYFLAGS=-g -o -q -t4
 

@@ -33,12 +33,19 @@ verify: path
 	$(MAKE) -C nss verify
 
 lists: path
-	for i in $(LISTS); do gen_resref.rb $(LISTHOME)/resref.$${i} $${i}/*.$${i} && \
-		process_resref.rb $(LISTHOME)/resref.$${i} $(LISTHOME)/resref.$${i}.txt; \
+	for i in $(LISTS); do ../buildutil/gen_resref.rb $${i}.marshal $${i}/*.$${i} && \
+		../buildutil/process_resref.rb $${i}.marshal $${i}.marshal.txt; \
 	done
 
+install-lists:
+	for i in $(LISTS); do \
+		cp -v $${i}.marshal $(LISTHOME) && \
+		cp -v $${i}.marshal.txt $(LISTHOME); \
+	done
+	
+
 unused-dlg:
-	find-unused-conversations.pl -v dlg/*.dlg nss/*.nss area/*.git	
+	../../buildutil/find-unused-conversations.pl -v dlg/*.dlg nss/*.nss area/*.git	
 
 unused-nss:
 	$(MAKE) -C nss unused
@@ -56,7 +63,7 @@ clean:
 	$(MAKE) -C nss clean clean-backup
 	
 local: path
-	erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
+	../../buildutil/erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
 
 install: 
 	cp -v $(NAME).mod $(NWNHOME)/modules/
