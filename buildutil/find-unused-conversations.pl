@@ -37,6 +37,7 @@ package FindUnusedConversations;
 use strict;
 use Getopt::Long;
 use File::Glob ':glob';
+use File::Basename;
 use GffRead;
 use GffWrite;
 use Gff;
@@ -132,10 +133,14 @@ foreach $i (@ARGV) {
 	$gff = GffRead::read(filename => $i);
 	$gff->find(find_label => '^/(Creature|Door|Placeable) List\[\d+\]/$',
 		   proc => \&find_proc);
-    } elsif ($i =~ /^(.*)\.nss$/) {
+    } elsif (basename($i) =~ /^(.*)\.nss$/) {
 	check_script($i);
-    } elsif ($i =~ /^(.*)\.dlg$/) {
+    } elsif (basename($i) =~ /^(.*)\.dlg$/) {
 	$main::dialogs{$1}++;
+    } elsif (basename($i) =~ /^(.*)\.utc$/) {
+    	$gff = GffRead::read(filename => $i);
+	$main::conversation{$gff->{Conversation}}++
+		if ($gff->{Conversation} ne "");
     } else {
 	warn "Unknown file $i, not a git file\n";
     }

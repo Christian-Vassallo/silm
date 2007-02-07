@@ -45,7 +45,7 @@ install-lists:
 	
 
 unused-dlg:
-	../../buildutil/find-unused-conversations.pl -v dlg/*.dlg nss/*.nss area/*.git	
+	../buildutil/find-unused-conversations.pl -v dlg/*.dlg nss/*.nss area/*.git utc/*.utc
 
 unused-nss:
 	$(MAKE) -C nss unused
