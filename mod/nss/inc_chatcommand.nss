@@ -386,7 +386,6 @@ int CommandPlaceable(object oPC, int iMode) {
 	int nOpen = -1;
 	int nPersist = -1;
 
-	string sText = arg(0);
 
 	// Set/GetUseable
 	if ( opt("useable") )
@@ -440,6 +439,8 @@ int CommandPlaceable(object oPC, int iMode) {
 		}
 	}
 
+	/*
+	string sText = arg(0);
 	if ( nIsPersistent && GetStringLength(sText) > 0) {
 		ToPC("Setting Scene Text to: " + sText);
 		SQLQuery("delete from scene_descriptions where pid = " +
@@ -448,7 +449,7 @@ int CommandPlaceable(object oPC, int iMode) {
 			IntToString(GetPlaceableID(oTarget)) + ", " + SQLEscape(sText) +
 			");");
 		ToPC("Done.");
-	}
+	}*/
 
 	ToPC("Open: " + IntToString(GetIsOpen(oTarget)));
 	ToPC("Useable: " + IntToString(GetUseableFlag(oTarget)));
