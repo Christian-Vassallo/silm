@@ -23,6 +23,28 @@
 void main() {
 	// * if not runnning normal or better Ai then exit for performance reasons
 	if ( GetAILevel() == AI_LEVEL_VERY_LOW ) return;
+	
+	
+	if ( GetLocalInt(OBJECT_SELF, "sit_nearest")
+		&& ( GetCurrentAction() != ACTION_SIT ) ) {
+		int n = 1;
+		object oChair = GetNearestObject(OBJECT_TYPE_PLACEABLE, OBJECT_SELF, n);
+		while ( GetIsObjectValid(oChair) ) {
+
+			if ( GetDistanceBetween(OBJECT_SELF, oChair) > 30.0 )
+				break;
+
+			if ( GetStringLeft(GetResRef(oChair), 4 + 1 + 5) == "move_chair" && !GetIsObjectValid(GetSittingCreature(oChair)) ) {
+				ClearAllActions();
+				ActionSit(oChair);
+			}
+
+			n += 1;
+			oChair = GetNearestObject(OBJECT_TYPE_PLACEABLE, OBJECT_SELF, n);
+		}
+	}
+
+
 
 	// Buff ourselves up right away if we should
 	if ( GetSpawnInCondition(NW_FLAG_FAST_BUFF_ENEMY) ) {
@@ -93,24 +115,5 @@ void main() {
 		SignalEvent(OBJECT_SELF, EventUserDefined(EVENT_HEARTBEAT));
 	}
 
-	if ( GetLocalInt(OBJECT_SELF, "sit_nearest")
-		&& ( GetCurrentAction() != ACTION_SIT ) ) {
-		int n = 1;
-		object oChair = GetNearestObject(OBJECT_TYPE_PLACEABLE, OBJECT_SELF, n);
-		while ( GetIsObjectValid(oChair) ) {
-
-			if ( GetDistanceBetween(OBJECT_SELF, oChair) > 30.0 )
-				break;
-
-			if ( GetResRef(oChair) == "move_chair" && !GetIsObjectValid(GetSittingCreature(oChair)) ) {
-				ClearAllActions();
-				ActionSit(oChair);
-			}
-
-			n += 1;
-			oChair = GetNearestObject(OBJECT_TYPE_PLACEABLE, OBJECT_SELF, n);
-		}
-
-	}
 }
 
