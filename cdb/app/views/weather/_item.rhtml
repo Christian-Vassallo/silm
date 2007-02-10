@@ -1,0 +1,13 @@
+<tr>
+	<td><%= override.atype %></td>
+	<td><%= WeatherOverride.val_to_type(WeatherOverride::TEMP_TYPES, override.temp) %></td>
+	<td><%= WeatherOverride.val_to_type(WeatherOverride::WIND_TYPES, override.wind) %></td>
+	<td><%= WeatherOverride.val_to_type(WeatherOverride::PREC_TYPES, override.prec) %></td>
+	<td><%= override.ayear %></td>
+	<td><%= override.amonth %></td>
+	<td><%= override.aday %></td>
+	<td><%= override.zyear %></td>
+	<td><%= override.zmonth %></td>
+	<td><%= override.zday %></td>
+	<td><%= link_to "del", :controller => 'weather', :action => 'del', :id => override.id %></td>
+</tr>

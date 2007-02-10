@@ -1,0 +1,12 @@
+<% if start_new_cat %>
+	<% if odd == 1 %></tr><% end %>
+	<%= render :partial => 'craftftr' %>
+	<h1><%= product.craft.name %></h1>
+	<%= render :partial => 'crafthdr' %>
+<% end %>
+
+<% if odd == 0 %><tr><% end %>
+<td>
+	(<%= product.id %>) <b><%= link_to_product product %></b><br><%= "<i> " + product.comment + "</i>" if product.comment != "" %>
+</td>
+<% if odd == 1 %></tr><% end %>

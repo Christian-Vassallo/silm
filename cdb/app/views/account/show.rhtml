@@ -1,0 +1,11 @@
+<% if session[:user].char_view? %>
+Name: <%= @u.playername %><br>
+Account: <%= @u.account %><br>
+Email: <%= @u.email %><br>
+Alter: <%= @u.playerage %><br>
+RpE:<br>
+<pre><%= @u.roleplay_experience %></pre><br>
+Total Playtime: <%= Duration.new(@u.total_time).to_s %>
+<% else %>
+<%= @u.account %>
+<% end %>

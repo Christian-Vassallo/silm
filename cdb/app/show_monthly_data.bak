@@ -1,0 +1,199 @@
+#!/usr/bin/ruby 
+require 'yaml'
+
+require 'rubygems'
+require_gem 'activerecord'
+
+account = ARGV.shift
+account = ".*" if !account
+account = Regexp.new(account)
+
+def field(data, field)
+	r = {}
+	x = data.split(":")
+	r[x.shift] = x.shift while x.size > 0
+	r[field]
+end
+class Account < ActiveRecord::Base; end
+class Character < ActiveRecord::Base; end
+
+class Audit < ActiveRecord::Base
+	set_table_name "audit"
+end
+ActiveRecord::Base.establish_connection(
+	:adapter => 'mysql', :username => 'silm_nwserver', :password => 'NE6uYK2zuV4LEwsh', :database => 'silm_nwserver'
+)
+puts "Collecting stuff."
+logs = Audit.find(:all, :conditions => ["category='module' and (event='startup' or event='login' or event='logout')"], :order => "date asc")
+puts "Collected #{logs.size} audit trails"
+
+chr = {}
+xp = ""
+total_per_login = 0
+total_logins = 0
+$xp_per_month = {}
+$allmonths = []
+$start_this_month = Hash.new(0) # in XP
+$time_this_month = Hash.new(0) # in seconds
+$thismonth = ""
+
+# character -> 
+$time_per_day = {}
+
+
+$average = []
+$total_this_month = 0
+$total_count_this_month = 0
+
+$start = nil
+$end = nil
+
+logs.each do |log|
+	
+	next unless log.player =~ account
+
+	$start = log.date if !$start
+
+	xp = field(log.data, "xp")
+	case log.event
+	when "login"
+		chr[log.player + log.char] = [log.date, xp]
+	when "startup"
+		# cleanup chr data, because we did a restart
+		chr = {}
+	when "logout"
+		if (xp = chr[log.player + log.char]).nil?
+			$stderr.print log.player + " " + log.char
+			$stderr.puts ": logout without login"
+		else
+			date = xp[0]
+			xp = xp[1]
+			xp2 = field(log.data, "xp").to_i
+			xp = xp.to_i
+			diff = xp2-xp
+			duration = (log.date - date)
+
+			diff -= 6000 if diff >= 6000
+			if diff < -1000
+				puts "Skipping a diff of #{diff}" if diff != 6000
+				#next
+			end
+			
+			tmpmonth = log.date.strftime("%Y-%m")
+			if $thismonth != tmpmonth
+				# start new month
+				puts "New month started: #{tmpmonth}"
+
+				$start_this_month.each do |char, val|
+					next if val == 0
+					time = $time_this_month[char]
+					$xp_per_month[char] = {} if !$xp_per_month[char]
+					$xp_per_month[char][$thismonth] = [val, time]
+				
+				end
+				
+				$average << $total_this_month / $total_count_this_month if
+					$total_count_this_month > 0 && $total_this_month > 0
+				
+				$thismonth = tmpmonth
+				$allmonths << $thismonth
+				$start_this_month = Hash.new(0)
+				$time_this_month = Hash.new(0)
+				
+				$total_this_month = 0
+				$total_count_this_month = 0
+			end
+			
+			if diff > 0 || duration > 300
+				total_per_login += diff
+				total_logins += 1 if diff > 0
+			end
+
+			$total_this_month += diff
+			$total_count_this_month += 1
+
+			$start_this_month[log.player + "::" + log.char] += diff
+			$time_this_month[log.player + "::" + log.char] += duration
+			$end = log.date
+			#print log.char
+			#print ": got " + diff.to_s + " on " + log.date.strftime("%c")
+			#puts ", logged in for " + (log.date - date).to_s + "s"
+			
+		end
+		chr.delete(log.player + log.char)
+	end
+end
+
+
+#merge the rest
+$start_this_month.each do |char, val|
+	next if val == 0
+	time = $time_this_month[char]
+	$xp_per_month[char] = {} if !$xp_per_month[char]
+	$xp_per_month[char][$thismonth] = [val, time]
+end
+$average << $total_this_month / $total_count_this_month if
+	$total_count_this_month > 0 && $total_this_month > 0
+
+# now calculate all the top/bottom stuff
+$topratio = 0.0
+$bottomratio = 600000.0
+$avgratio = 0.0
+$avgratioc = 0
+$xp_per_month.each do |char, achar|
+	achar.each do |month, val|
+		xp, time = *val
+		ratio = xp.to_f/ (time.to_f / 1000)
+		$topratio = ratio if ratio > $topratio
+		$bottomratio = ratio if ratio < $bottomratio
+		$avgratio += ratio
+		$avgratioc += 1
+	end
+end
+$avgratio /= $avgratioc
+
+
+print "average per login session: "
+puts (total_per_login.to_f/total_logins).to_s
+row=0
+$f = File.new(ARGV.shift || "monthly_diffs.html", "w")
+$f << "<html><head><style> body,table,td {font-family:verdana;font-size:10px;border: 1px solid grey;}</style><body>"
+$f << "Mask #{account.to_s}"
+$f << "<br>Generated on #{Time.now.strftime('%c')}"
+$f << "<br>Timeframe of data #{$start.strftime('%c')} -> #{$end.strftime('%c')}"
+$f << "<br>avgratio #{$avgratio}, botratio #{$bottomratio}, topratio #{$topratio}"
+$f << "<table width='100%'>"
+$f << "<tr><td><b>char</b></td><td><b>" + $allmonths.join("</b></td><td><b>") + "</b></td><td><b>total</b></td></tr>"
+$f << "<tr><td><i>average/day/month</i></td><td>" + $average.join("</td><td>") + "</td><td><i>per login: "+(total_per_login.to_f/total_logins).to_s+"</i></td></tr>"
+$xp_per_month.sort.each do |char,achar|
+	puts char
+	mi = []
+	t_xp = 0
+	t_time = 0
+	achar.sort.each do |month,val|
+		xp, time = *val
+		t_xp += xp
+		t_time += time
+		ratio = xp.to_f/ (time.to_f / 1000)
+		ratio_s = "%.3f" % [ratio]
+		puts " " + month + ": " + xp.to_s
+		ratio_s = "<font color='red'>" + ratio_s + "</font>" if ratio > 70
+		ratio_s = "<font color='orange'>" + ratio_s + "</font>" if ratio < 15
+		mi << [xp.to_s, time.to_s, ratio_s]
+	end
+	ratio = t_xp.to_f/ (t_time.to_f / 1000)
+	ratio_s = "%.3f" % [ratio]
+	ratio_s = "<font color='red'>" + ratio_s + "</font>" if ratio > 70
+	ratio_s = "<font color='orange'>" + ratio_s + "</font>" if ratio < 15
+	$f << "<tr>"
+	$f << "<td>#{char}</td>" + ("<td>-1</td>" * ($allmonths.size - mi.size)) + "<td>" + mi.map{|n| n.join("<br>")}.join("</td><td>") + "</td>"
+	$f << "<td>" + [t_xp, t_time, ratio_s].join("<br>") + "</td>"
+	$f << "</tr>"
+	row += 1
+	if row % 25 == 0
+		$f << "<tr><td><b>char</b></td><td><b>" + $allmonths.join("</b></td><td><b>") + "</b></td><td><b>total</b></td></tr>"
+	end
+end
+
+$f << "</table></body></html>"
+$f.close

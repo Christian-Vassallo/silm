@@ -1,0 +1,47 @@
+<% if start_new_cat %>
+	<% if odd == 1 %></tr><% end %>
+	<%= render :partial => 'craftftr' %>
+	<h1><%= product.craft.name %></h1>
+	<%= render :partial => 'crafthdr' %>
+<% end %>
+
+<tr>
+<td class="<%= product.active == 1 ? "craft_prod_active" : "craft_prod_inactive" %>"><%=
+	link_to product.id.to_s, :action => 'show', :id => product.id
+%></td>
+<td style='background-color: <%= product.d_colour %>'><b><%= link_to_product product, true %></b></td>
+<%
+	fact = 1.6
+	rgb = [0xff,0xff,0xff]
+	diff = 0
+	diff += product.cskill_min * fact
+	diff = diff > 255 ? 255 : diff
+	rgb[0] -= diff
+	col_min = "#%2x%2x%2x" % rgb
+	rgb = [0xff,0xff,0xff]
+	diff = (product.cskill_max - (product.cskill_max - product.cskill_min)) * fact
+	diff = diff > 255 ? 255 : diff
+	rgb[1] -= diff
+	rgb[2] -= diff
+	col_max = "#%2x%2x%2x" % rgb
+	
+	rgb = [0xff,0xff,0xff]
+	diff = 0
+	diff += (product.skill_dc - 0) * fact if product.skill > -1
+	diff += (product.ability_dc - 10) * fact * fact * fact if product.ability > -1
+	diff = diff > 255 ? 255 : diff
+	case product.ability
+	when -1
+	else
+		rgb[2] -= diff
+		rgb[0] -= diff
+	end
+	col_check = "#%2x%2x%2x" % rgb
+	
+
+%>
+<td style="background-color: <%= col_min %>;"><%= product.cskill_min %></td>
+<td style="background-color: <%= col_max %>;"><%= product.cskill_max %></td>
+<td style="background-color: <%= col_check %>'"><%= product.checks_s %></td>
+<td id="craft_comment"><%= product.comment %></td>
+</tr>

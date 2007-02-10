@@ -1,0 +1,45 @@
+<table class="main">
+<tr>
+	<td class="head">
+		<%= link_to_if showsort, "Name",  :onlineonly => @onlineonly, :search => @search, :order => (@order == "desc" ? "asc" : "desc"), :sort => 'character' %><br>
+		Account
+		<%= @order == "desc" ? "&uArr;" : "&dArr;" if @sort == "character"  %>
+	</td>
+	<td class="head">
+		<%= link_to_if showsort, "Rasse", :onlineonly => @onlineonly,  :search => @search, :order => (@order == "desc" ? "asc" : "desc"), :sort => 'race' %><%= @order == "desc" ? "&uArr;" : "&dArr;" if @sort == "race"  %><br>
+		Gesinnung
+		
+	</td>
+	<td class="head">
+		<%= link_to_if showsort, "Gold",  :onlineonly => @onlineonly,  :search => @search, :order => (@order == "desc" ? "asc" : "desc"), :sort => 'gold' %>
+		<%= @order == "desc" ? "&uArr;" : "&dArr;" if @sort == "gold"  %>
+	</td>
+	<td class="head">
+		<%= link_to_if showsort, "XP",  :onlineonly => @onlineonly,  :search => @search, :order => (@order == "desc" ? "asc" : "desc"), :sort => 'xp' %>
+		<%= @order == "desc" ? "&uArr;" : "&dArr;" if @sort == "xp"  %>
+	</td>
+	<td class="head">
+		<%= link_to_if showsort && nil, "Klassen", :onlineonly => @onlineonly,  :search => @search, :order => (@order == "desc" ? "asc" : "desc"), :sort => 'level' %>
+		<%= @order == "desc" ? "&uArr;" : "&dArr;" if @sort == "level"  %>
+	</td>
+	<td class="head">
+		Key(s)
+	</td>
+	<td class="head">
+		<%= link_to_if showsort, "Letzter Login",  :onlineonly => @onlineonly,  :search => @search, :order => (@order == "desc" ? "asc" : "desc"), :sort => 'last_login' %>
+		<%= @order == "desc" ? "&uArr;" : "&dArr;" if @sort == "last_login"  %>
+		<br>
+		Eingeloggt seit
+	</td>
+	<td class="head">
+		<%= link_to_if showsort, "Erstellt am",  :onlineonly => @onlineonly,  :search => @search, :order => (@order == "desc" ? "asc" : "desc"), :sort => 'create_on' %>
+		<%= @order == "desc" ? "&uArr;" : "&dArr;" if @sort == "create_on"  %>
+		<br>
+		<%= link_to_if showsort, "Angemeldet am", :onlineonly => @onlineonly,  :search => @search, :order => (@order == "desc" ? "asc" : "desc"), :sort => 'register_on' %>
+		<%= @order == "desc" ? "&uArr;" : "&dArr;" if @sort == "register_on"  %>
+	</td>
+	<td class="head">
+		<%= link_to_if showsort, "Status",  :onlineonly => @onlineonly,  :search => @search, :order => (@order == "desc" ? "asc" : "desc"),  :sort => 'status' %>
+		<%= @order == "desc" ? "&uArr;" : "&dArr;" if @sort == "status"  %>
+	</td>
+</tr>

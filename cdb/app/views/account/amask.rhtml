@@ -1,0 +1,16 @@
+<% if !@account %>
+	Not exist or no access, nit.
+<% else %>
+<form method="post">
+<center>
+<div align="center" style="border: 1px solid black; width: 250px; text-align: left; padding: 2px; margin: 2px;">
+<% Account::AMASK.sort {|a,b| a[1] <=> b[1] }.each {|k,v| %>
+<input type="checkbox" name="<%= k %>" value="<%= 1 %>" <%= @account.amask.to_i & v.to_i > 0 ? "checked" : "" %>>
+<%= k %>
+<br>
+<% } %>
+</div>
+<input type="submit">
+</center>
+</form>
+<% end %>

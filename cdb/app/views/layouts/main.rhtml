@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Charakterverwaltung</title>
+	<link rel="stylesheet" href="/stylesheets/main.css" type="text/css">
+	<link rel="stylesheet" href="/stylesheets/scaffold.css" type="text/css">
+</head>
+<body>
+<table class="main" style="width:100%">
+<tr><td class="menue">
+<%= session[:user].nil? ? "Nicht eingelogged, " + link_to("Einloggen", :controller => 'account', :action => 'login') : "Eingelogged als " + session[:user].account + ", " + link_to( "Ausloggen", :controller => 'account', :action => 'logout') %> * <b>Rechte dieses Accounts:</b> Benutzer <%= "Charakter-Administrator" if session[:user] && session[:user].char_admin? %> <%= "Charakter-Benutzer" if session[:user] && session[:user].char_view? %> <%= "Audit-Admin" if session[:user] && session[:user].audit_admin? %> <%= "Mod-Admin" if session[:user] && session[:user].mod_admin? %><br>
+
+<%= link_to_if (session[:user]), "Account-Details", :controller => "account", :action => "details" %>&nbsp;
+* <%= link_to_if (session[:user] && session[:user].details?), "<b>Char-Liste</b>", :controller => "character", :action => "index" %>&nbsp;
+<!-- * <%= link_to_if (session[:user] && session[:user].details?), "Statistiken", :controller => 'stat', :action => 'index' %>&nbsp; -->
+* <%= link_to_if (session[:user] && session[:user].details? && false), "Schach-Liga", :controller => 'schach', :action => 'index' %><br>
+
+<% if session[:user] && session[:user].char_admin? %>
+<%= link_to_if (session[:user] && session[:user].details? && session[:user].char_admin?), "Weather", :controller => 'weather', :action => 'index' %>&nbsp;
+* <%= link_to_if (session[:user] && session[:user].details? && session[:user].char_admin?), "MentorData", :controller => 'stat', :action => 'mentor' %>&nbsp;
+<br>
+<% end %>
+
+<% if session[:user] && session[:user].object_admin? %>
+ObjectAdmin: <%= link_to_if (session[:user] && session[:user].details? && session[:user].object_admin?), "PersistentObject", :controller => 'persistent_objects', :action => 'index' %>&nbsp;
+* <%= link_to_if (session[:user] && session[:user].details? && session[:user].object_admin?), "SceneDescriptions", :controller => 'scene_descriptions', :action => 'index' %>&nbsp;
+<br>
+<% end %>
+
+<% if session[:user] && session[:user].audit_admin? %>
+Audit: <%= link_to_if (session[:user] && session[:user].details? && session[:user].audit_admin?), "Chatlogs", :controller => 'chatlog', :action => 'index' %>&nbsp;
+* <%= link_to_if (session[:user] && session[:user].details? && session[:user].audit_admin?), "Audit", :controller => "audit", :action => 'index' %>&nbsp;
+* <%= link_to_if (session[:user] && session[:user].details? && session[:user].audit_admin?), "Container", :controller => "container", :action => 'index' %>&nbsp;
+* <%= link_to_if (session[:user] && session[:user].details? && session[:user].audit_admin?), "DB Consistency Check", :controller => 'character', :action => 'consistency' %>
+<br>
+<% end %>
+<% if session[:user] && session[:user].craft_view? %>
+Craft: <%= link_to_if (session[:user] && session[:user].details? && session[:user].craft_view?), "Crafting-DB", :controller => 'craft', :action => 'index' %>&nbsp;
+* <%= link_to_if (session[:user] && session[:user].details? && session[:user].craft_admin?), "Merchants", :controller => 'merchant', :action => 'index' %>&nbsp;
+* <%= link_to_if (session[:user] && session[:user].details? && session[:user].craft_view?), "SpellCalc", :controller => 'craft', :action => 'spell' %>&nbsp;
+<% end %>
+<br>
+<% if flash[:notice] %>
+	<% if !flash[:error] %>
+		<font color="green"><i><%=flash[:notice]-%></i></font><br>
+	<% end; if flash[:error] %>
+		<font color="red"><i><%=flash[:notice]-%></i></font><br>
+	<% end %>
+	<font color="red"><% flash[:errors].each_full do |e| %>
+	<%= e %><br>
+	<% end if flash[:errors] %></font>
+<% end %>
+</td>
+
+<td width="250px" align="center" valign="middle" style="empty-cells: show; vertical-align: middle;">
+<% if session[:user] && session[:user].char_view? %>
+<%= link_to "all", {:controller => 'character', :action => 'index', } %>
+<%= link_to "<i>online</i>", {:controller => 'character', :action => 'index', :onlineonly => 1} %>
+<%= link_to "<b>register</b>", {:controller => 'character', :action => 'index', :search => 'register'} %>
+<%= link_to "wait", {:controller => 'character', :action => 'index', :search => 'register_accept_wait'} %>
+<%= link_to "accept", {:controller => 'character', :action => 'index', :search => 'accept'} %>
+<%= link_to "reject", {:controller => 'character', :action => 'index', :search => 'reject'} %>
+<%= form_tag({:controller => 'character', :action => 'index'},{:method => 'get'}) %>
+<input type="checkbox" id="onlineonly" name="onlineonly" value="1" title="Nur online" <%= "checked='checked'" if @onlineonly == "1" %>>
+<input type="text" id="search" name="search" size="20" value="<%= @search %>">
+<%= submit_tag("Go") + end_form_tag %>
+<%= link_to session[:user].account, {:controller => 'character', :action => 'index', :search => session[:user].account } %>
+<% else %>
+<h1>Willkommen!</h1>
+<% end %>
+</td>
+</tr>
+</table>
+
+<table class="main" style="width:100%; height: 100%">
+<tr><td class="content">
+<%= @content_for_layout -%>
+</td></tr>
+</table>
+<% 
+	if session[:user] && session[:user].audit_admin?
+%>
+<hr>
+<%= debug(params) %>
+<hr>
+<%= debug(ActionMailer::Base.deliveries[-1]) %>
+<%
+end
+%>
+
+</body>
+</html>

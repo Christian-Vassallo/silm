@@ -1,0 +1,10 @@
+<% for column in PersistentObject.content_columns %>
+<p>
+  <b><%= column.human_name %>:</b> <%=h @persistent_object.send(column.name) %>
+</p>
+<% end %>
+
+<%
+#link_to 'Edit', :action => 'edit', :id => @persistent_object % >|
+%>
+<%= link_to 'Back', :action => 'list' %>

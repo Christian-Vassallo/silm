@@ -1,0 +1,50 @@
+<h2>Charakter-Liste</h2>
+<p>
+<%=
+# "Query: " + @query.inspect + "<br><br>"
+%>
+
+<%= form_tag({:onlineonly => @onlineonly, :sort => @sort, :order => @order, :search => @search}, {:method => 'post'}) if session[:user].char_admin? %>
+<%= @characters.size %> Char(s) angezeigt, <%= @character_pages.item_count %> Char(s) passen den Kriterien, <%= total = Character.count %> Char(s) in DB.<br>
+Durchschnitts-Level in den letzten 30 Tagen (nur der DB bekannte Chars) <%= "<a id='online'>Nur online!</a>" if @onlineonly == "1" %>: <%= @average_level %><br>
+Chars, die nicht bespielt wurden ("hakless"): <%= hakless = Character.count("xp = 6000") %> (<%= "%.2f" % [100 / (total.to_f / hakless)]%>%)<br>
+
+<%= pagination_links(@character_pages, :window_size => 50, :params => {'search' => @search, 'sort' => @sort, 'order' => @order}) %>
+<%= render :partial => "charlisthdr", :locals => {:showsort => true, :form => session[:user].char_admin? } %>
+<% @characters.each do |c| %>
+<% next if c.race == "Bleistift" && !session[:user].char_view? %>
+<%= render :partial => "charlistitem", :locals => { :c => c, :form => session[:user].char_admin? } %>
+<% end %>
+<%= render :partial => "charlistftr", :locals => {:showsort => true, :form => session[:user].char_admin? } %>
+<%= pagination_links(@character_pages, :window_size => 50, :params => {'search' => @search, 'sort' => @sort, 'order' => @order}) %>
+
+<%= end_form_tag if session[:user].char_admin? %>
+</p>
+
+<% if session[:user] && session[:user].char_admin? %>
+<p>
+<h3>Latest comments</h3>
+<table>
+<%
+first = nil
+for c in @latest_comments do
+%><%=
+	render :partial => "comment", :locals => {:c =>c, :show_char_header => (c.character != first)}
+%><%
+	first = c.character
+end
+%>
+</table>
+</p>
+<% end %>
+
+<p>
+<h3>Legende</h3>
+<i>Neuer Char</i><br>
+<b>Charakter, der Anmeldung benoetigt</b><br>
+<strike>Charakter, der gebannt ist</strike><br>
+</p>
+<p>
+Sollte dein Charakter hier nicht erscheinen, dann logge bitte mit ihm einmal kurz im Spiele ein.  Dies sollte ihn in die Liste bringen.
+</p>
+

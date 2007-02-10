@@ -1,0 +1,37 @@
+<p>
+<h2>Nach Gesamt-XP pro Mentor vergeben</h2>
+<table>
+<tr>
+	<td class="head">Mentor</td>
+	<td class="head">Gesamt-XP</td>
+</tr>
+<%
+	@totalmentor.each do |m|
+%>
+<tr><td class="center">
+<%= Account.find(m.aid).account %>
+</td><td class="center">
+<%= m.xp %>
+</td></tr>
+<% end %>
+
+</table>
+</p><p>
+<h2>Nach XP pro Charakter pro Mentor vergeben</h2>
+
+<table>
+<tr>
+	<td class="head">Mentor</td>
+	<td class="head">Charakter</td>
+	<td class="head">Gesamt-XP</td>
+</tr>
+
+<%
+	@mentor.each do |m|
+%>
+<%= render :partial => 'mentoritem', :locals => {:m => m} %>
+<%
+	end
+%>
+</table>
+</p>
