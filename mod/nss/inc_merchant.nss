@@ -12,6 +12,8 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 	ClearList(oPC, TTT);
 
 	int nMenuLevel0 = GetMenuLevel(oPC, TTT, 0);
+	int nMenuLevel1 = GetMenuLevel(oPC, TTT, 1);
+
 	int nSelected   = GetListSelection(oPC);
 
 
@@ -98,131 +100,168 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		ResetConvList(oPC, oPC, TTT, 50000, "merchant_cb", sTextIntro);
 
 		// Buy from merchant
-	} else if ( 1 == nMenuLevel0 ) {
-		int nFound = 0, nCount = -1, nWant, nMax;
-		string sResRef = "";
-		object oSell;
-		int nPrice;
-		float fMark;
+	} else if ( nMenuLevel0 > 0 ) {
+
+		if ( 0 == nMenuLevel1 ) {
+			// show select screen for
+			// L0 = 0
+			// L0 = 1
+
+			if ( 1 == nMenuLevel0 ) {
+				int nFound = 0, nCount = -1, nWant, nMax;
+				string sResRef = "";
+				object oSell;
+				int nPrice;
+				float fMark;
 
 
-		SQLQuery(
-			"select resref,cur,(merchant_inventory.sell_markdown * (select sell_markdown from merchants where tag="
-			+ sMerc +
-			")),max from merchant_inventory where sell = 1 and ((cur > 0 and cur > min) or (cur = 0 and max = 0 and min = 0)) and merchant = "
-			+
-			"(select id from merchants where tag = " + sMerc + " limit 1) order by resref asc;");
+				SQLQuery(
+					"select resref,cur,(merchant_inventory.sell_markdown * (select sell_markdown from merchants where tag="
+					+ sMerc +
+					")),max from merchant_inventory where sell = 1 and ((cur > 0 and cur > min) or (cur = 0 and max = 0 and min = 0)) and merchant = "
+					+
+					"(select id from merchants where tag = " + sMerc + " limit 1) order by resref asc;");
 
-		while ( SQLFetch() ) {
-			sResRef = SQLGetData(1);
-			nWant = StringToInt(SQLGetData(2));
-			nMax  = StringToInt(SQLGetData(4));
+				while ( SQLFetch() ) {
+					sResRef = SQLGetData(1);
+					nWant = StringToInt(SQLGetData(2));
+					nMax  = StringToInt(SQLGetData(4));
 
-			fMark = StringToFloat(SQLGetData(3));
+					fMark = StringToFloat(SQLGetData(3));
 
-			oSell = GetItemResRefPossessedBy(oMerc, sResRef);
-			if ( !GetIsObjectValid(oSell) )
-				oSell = CreateItemOnObject(sResRef, oMerc, 1, sResRef);
+					oSell = GetItemResRefPossessedBy(oMerc, sResRef);
+					if ( !GetIsObjectValid(oSell) )
+						oSell = CreateItemOnObject(sResRef, oMerc, 1, sResRef);
 
 
-			nPrice = FloatToInt(( 1.0 / fAppraiseMod ) *
-						 fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
+					nPrice = FloatToInt(( 1.0 / fAppraiseMod ) *
+								 fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
 
-			AddListItem(oPC, TTT, GetName(oSell) +
-				( nMax == 0 ? " (gut bestockt)" : " (" + IntToString(nWant) + " auf Lager)" ) +
-				": " + MoneyToString(Value2Money(nPrice)));
-			SetListString(oPC, TTT, sResRef);
-			SetListInt(oPC, TTT, nPrice);
-			SetListFloat(oPC, TTT, IntToFloat(nMax));
+					AddListItem(oPC, TTT, GetName(oSell) +
+						( nMax == 0 ? " (gut bestockt)" : " (" + IntToString(nWant) + " auf Lager)" ) +
+						": " + MoneyToString(Value2Money(nPrice)));
+					SetListString(oPC, TTT, sResRef);
+					SetListInt(oPC, TTT, nPrice);
+					SetListFloat(oPC, TTT, IntToFloat(nMax));
 
-			if ( nPrice < nPCMoney )
-				SetListDisplayMode(oPC, TTT, DISPLAYMODE_GREEN);
-			else
-				SetListDisplayMode(oPC, TTT, DISPLAYMODE_RED);
+					if ( nPrice < nPCMoney )
+						SetListDisplayMode(oPC, TTT, DISPLAYMODE_GREEN);
+					else
+						SetListDisplayMode(oPC, TTT, DISPLAYMODE_RED);
 
-			nFound += 1;
+					nFound += 1;
+				}
+
+				if ( !nFound )
+					sText = sTextNothingToSell;
+				else
+					sText = sTextSell;
+
+
+				ResetConvList(oPC, oPC, TTT, 50000, "merchant_cb", sText, "", "", "merchant_b2m0",
+					"Zurueck zur Liste");
+
+
+			} else if ( 2 == nMenuLevel0 ) {
+				int nFound = 0, nCount = -1, nWant, nMax;
+				string sResRef = "";
+				object oSell;
+				int nPrice;
+				float fMark;
+
+				SQLQuery(
+					"select resref,(merchant_inventory.buy_markup * (select buy_markup from merchants where tag="
+					+
+					sMerc +
+					")),cur,max from merchant_inventory where buy = 1 and ((cur < max) or (min=0 and cur=0 and max=0)) and merchant = "
+					+
+					"(select id from merchants where tag = " + sMerc + " limit 1) order by resref asc;");
+
+				while ( SQLFetch() ) {
+					sResRef = SQLGetData(1);
+					fMark = StringToFloat(SQLGetData(2));
+					nWant = StringToInt(SQLGetData(3));
+					nMax  = StringToInt(SQLGetData(4));
+
+
+
+					nCount = GetItemCountByResRef(oPC, sResRef);
+
+					oSell = GetItemResRefPossessedBy(oPC, sResRef);
+
+					// Do not sell non-existant items
+					if ( nCount == 0 )
+						continue;
+
+					// avoid bug thing
+					if ( nCount == 1 && GetLocalString(oPC, "merc_last_sell") == sResRef ) {
+						DeleteLocalString(oPC, "merc_last_sell");
+						continue;
+					}
+
+					// oops?
+					if ( !GetIsObjectValid(oSell) )
+						return;
+
+					nPrice = FloatToInt(fAppraiseMod *
+								 fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
+
+					AddListItem(oPC, TTT, GetName(oSell) +
+						( nMax ==
+						 0 ? " (immer gesucht)" : " (" +
+						 IntToString(nCount) + " im Inventar, " + IntToString(nMax - nWant) + " gesucht)" ) +
+						": " + MoneyToString(Value2Money(nPrice)));
+					SetListString(oPC, TTT, sResRef);
+					SetListInt(oPC, TTT, nPrice);
+					SetListFloat(oPC, TTT, IntToFloat(nMax));
+
+					if ( !bLimitedMoney || nPrice < nMercMoney )
+						SetListDisplayMode(oPC, TTT, DISPLAYMODE_GREEN);
+					else
+						SetListDisplayMode(oPC, TTT, DISPLAYMODE_RED);
+
+					nFound += 1;
+				}
+
+
+				if ( !nFound ) {
+					sText = sTextNothingToBuy; // "Ihr habt nichts fuer das ich mich interessiere.";
+				} else {
+					sText = sTextBuy; //"Waehle den Gegenstand, den du verkaufen moechtest. Pro Klick wird einer verkauft.";
+				}
+
+				ResetConvList(oPC, oPC, TTT, 50000, "merchant_cb", sText, "", "", "merchant_b2m0",
+					"Zurueck zur Liste");
+			}
+
+		} else {
+			if ( 1 == nMenuLevel0 ) {
+				AddListItem(oPC, TTT, "1 kaufen");
+				SetListInt(oPC, TTT, 1);
+				AddListItem(oPC, TTT, "5 kaufen");
+				SetListInt(oPC, TTT, 2);
+				AddListItem(oPC, TTT, "25 kaufen");
+				SetListInt(oPC, TTT, 3);
+				AddListItem(oPC, TTT, "alle (%d) kaufen");
+				SetListInt(oPC, TTT, 4);
+			} else if ( 2 == nMenuLevel0 ) {
+				AddListItem(oPC, TTT, "1 verkaufen");
+				SetListInt(oPC, TTT, 1);
+				AddListItem(oPC, TTT, "5 verkaufen");
+				SetListInt(oPC, TTT, 2);
+				AddListItem(oPC, TTT, "25 verkaufen");
+				SetListInt(oPC, TTT, 3);
+				AddListItem(oPC, TTT, "alle (%d) verkaufen");
+				SetListInt(oPC, TTT, 4);
+			}
 		}
 
-		if ( !nFound )
-			sText = sTextNothingToSell;
-		else
-			sText = sTextSell;
+	} else if ( 2 == nMenuLevel0 ) {
 
 
-		ResetConvList(oPC, oPC, TTT, 50000, "merchant_cb", sText, "", "", "merchant_b2m0",
-			"Zurueck zur Liste");
 
 
 		// Sell to merchant.
-	} else if ( 2 == nMenuLevel0 ) {
-
-		int nFound = 0, nCount = -1, nWant, nMax;
-		string sResRef = "";
-		object oSell;
-		int nPrice;
-		float fMark;
-
-		SQLQuery(
-			"select resref,(merchant_inventory.buy_markup * (select buy_markup from merchants where tag=" +
-			sMerc +
-			")),cur,max from merchant_inventory where buy = 1 and ((cur < max) or (min=0 and cur=0 and max=0)) and merchant = "
-			+
-			"(select id from merchants where tag = " + sMerc + " limit 1) order by resref asc;");
-
-		while ( SQLFetch() ) {
-			sResRef = SQLGetData(1);
-			fMark = StringToFloat(SQLGetData(2));
-			nWant = StringToInt(SQLGetData(3));
-			nMax  = StringToInt(SQLGetData(4));
-
-
-
-			nCount = GetItemCountByResRef(oPC, sResRef);
-
-			oSell = GetItemResRefPossessedBy(oPC, sResRef);
-
-			// Do not sell non-existant items
-			if ( nCount == 0 )
-				continue;
-
-			// avoid bug thing
-			if ( nCount == 1 && GetLocalString(oPC, "merc_last_sell") == sResRef ) {
-				DeleteLocalString(oPC, "merc_last_sell");
-				continue;
-			}
-
-			// oops?
-			if ( !GetIsObjectValid(oSell) )
-				return;
-
-			nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
-
-			AddListItem(oPC, TTT, GetName(oSell) +
-				( nMax ==
-				 0 ? " (immer gesucht)" : " (" +
-				 IntToString(nCount) + " im Inventar, " + IntToString(nMax - nWant) + " gesucht)" ) +
-				": " + MoneyToString(Value2Money(nPrice)));
-			SetListString(oPC, TTT, sResRef);
-			SetListInt(oPC, TTT, nPrice);
-			SetListFloat(oPC, TTT, IntToFloat(nMax));
-
-			if ( !bLimitedMoney || nPrice < nMercMoney )
-				SetListDisplayMode(oPC, TTT, DISPLAYMODE_GREEN);
-			else
-				SetListDisplayMode(oPC, TTT, DISPLAYMODE_RED);
-
-			nFound += 1;
-		}
-
-
-		if ( !nFound ) {
-			sText = sTextNothingToBuy; // "Ihr habt nichts fuer das ich mich interessiere.";
-		} else {
-			sText = sTextBuy; //"Waehle den Gegenstand, den du verkaufen moechtest. Pro Klick wird einer verkauft.";
-		}
-
-		ResetConvList(oPC, oPC, TTT, 50000, "merchant_cb", sText, "", "", "merchant_b2m0",
-			"Zurueck zur Liste");
-	}
+	} else if ( 2 == nMenuLevel0 ) {}
 
 }
