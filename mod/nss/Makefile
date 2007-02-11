@@ -5,6 +5,7 @@ NSSFLAGS=-g -o -q -c
 NSSVERIFYFLAGS=-g -o -q -t4
 
 all: scripts
+compile: scripts
 scripts:
 	../update-revision.sh ..
 	$(NSS) $(NSSFLAGS) $(NWNHOME) *.nss
@@ -19,5 +20,5 @@ clean-backup:
 	-rm *.*~ *.out
 
 uncrustify:
-	uncrustify -L 2 -c uncrustify.cfg --replace -l C *.nss
+	uncrustify -L 2 -c ../uncrustify.cfg --replace -l C *.nss
 
