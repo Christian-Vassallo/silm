@@ -36,7 +36,7 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage) {
 	object oB;
 	string sStart =  ColourTag(cTeal) + "*";
 	string sShortName = GetName(oPC);
-	string sRest = "*" + ColourTagClose() + " " + ColourisePlayerText(oPC, MODE_TALK, sMessage);
+	string sRest = "*" + ColourTagClose() + " " + ColourisePlayerText(oPC, MODE_TALK, sMessage, cWhite);
 	string sMessage = sStart + sShortName + sRest;
 
 
@@ -76,7 +76,7 @@ int DelegateOwnToPartners(object oPC, int nMode, string sMessage) {
 	string sStart =  ColourTag(cOrange) + "*";
 	string sShortName = GetName(oPC);
 	string sDoesWhat = " " + ( nMode & MODE_TALK ? "spricht" : "fluestert" );
-	string sRest = "*" + ColourTagClose() + " " + ColourisePlayerText(oPC, nMode, sMessage);
+	string sRest = "*" + ColourTagClose() + " " + ColourisePlayerText(oPC, nMode, sMessage, cWhite);
 	string sMessage = sStart + sShortName + sDoesWhat + sRest;
 
 	SQLQuery("select tcid, shortname from telepathic_bonds where cid = " +
@@ -114,7 +114,7 @@ int DelegateHeardToPartners(object oPC, object oSpeakingObject, int nMode, strin
 	string sStart =  ColourTag(cDarkGrey) + "*";
 	string sShortName = GetName(oSpeakingObject);
 	string sDoesWhat = " " + ( nMode & MODE_TALK ? "spricht" : "fluestert" );
-	string sRest = "*" + ColourTagClose() + " " + ColourisePlayerText(oSpeakingObject, nMode, sMessage);
+	string sRest = "*" + ColourTagClose() + " " + ColourisePlayerText(oSpeakingObject, nMode, sMessage, cWhite);
 
 	string sMessage = sStart + sShortName + sDoesWhat + sRest;
 

@@ -76,12 +76,12 @@ void ChatHookAudit(object oPC = OBJECT_SELF, int bSuppress = TRUE, string sData 
 // Parses:
 //    *..* - cOrange
 //    _.._ - cLightBlue
-string ColourisePlayerText(object oPC, int nMode, string sText);
+string ColourisePlayerText(object oPC, int nMode, string sText, struct Colour cTextColour);
 
 
 /* implementation! */
 
-string ColourisePlayerText(object oPC, int nMode, string sText) {
+string ColourisePlayerText(object oPC, int nMode, string sText, struct Colour cTextColour) {
 	int i = 0;
 	string r = "", c = "";
 
@@ -90,7 +90,6 @@ string ColourisePlayerText(object oPC, int nMode, string sText) {
 	int bInLang = 0;
 	int bInOOC = 0;
 
-	struct Colour cTextColour = cWhite;
 	if ( nMode & MODE_WHISPER )
 		cTextColour = cDarkGrey;
 

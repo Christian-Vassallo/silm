@@ -184,7 +184,7 @@ void main() {
 				nOurMode = MODE_TALK;
 
 			// now make the target forcetalk it
-			sText = ColourisePlayerText(oPC, nOurMode, sText);
+			sText = ColourisePlayerText(oPC, nOurMode, sText, cWhite);
 			SpeakToMode(oTarget, sText, nOurMode);
 
 			// Log the junk
@@ -425,7 +425,7 @@ int OnPostText(object oPC, string sText, int iMode, object oTo = OBJECT_INVALID)
 	if ( !GetIsDM(oPC)
 		&& !GetLocalInt(GetModule(), "dont_use_colours") && ( iMode & MODE_TALK || iMode & MODE_WHISPER ) ) {
 
-		sText = ColourisePlayerText(oPC, iMode, sText);
+		sText = ColourisePlayerText(oPC, iMode, sText, cWhite);
 		SpeakString(sText, iMode & MODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER);
 		return 1;
 	}
