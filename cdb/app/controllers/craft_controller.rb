@@ -4,6 +4,8 @@ class CraftController < ApplicationController
 	before_filter :authenticate_craft_view, :only => %w{index spell}
 	before_filter :authenticate_craft_admin, :only => %w{new show kill skill}
 
+	def enchant
+	end
 
 	def spell	
 		rspell = params['spell'] || -1
@@ -112,4 +114,5 @@ class CraftController < ApplicationController
 			end
 		end
 	end
+
 end
