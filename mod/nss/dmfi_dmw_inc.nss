@@ -1976,8 +1976,8 @@ int dmw_conv_ItemListConv(int nCurrent, int nChoice, string sParams = "") {
 	object oItem;
 
 	if ( ( sParams != "" )
-		&& ( !TestStringAgainstPattern(sParams, "next") ) &&
-		( !TestStringAgainstPattern(sParams, "prev") ) ) {
+		&& ( !TestStringAgainstPattern(sParams, "next") )
+		&& ( !TestStringAgainstPattern(sParams, "prev") ) ) {
 		//We've been given an item to work with, save that item!
 		oItem = GetLocalObject(oMySpeaker, "dmw_itemcache" + sParams);
 		SetLocalObject(oMySpeaker, "dmw_item", oItem);

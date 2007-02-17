@@ -369,8 +369,8 @@ void GiveKillXP() {
 	int nXP;
 	while ( GetIsObjectValid(oChar) ) {
 		if ( oPC == oChar
-			|| ( LineOfSightObject(oChar, OBJECT_SELF) &&
-				GetDistanceBetween(oChar, OBJECT_SELF) <= 50.0 ) ) {
+			|| ( LineOfSightObject(oChar, OBJECT_SELF)
+				&& GetDistanceBetween(oChar, OBJECT_SELF) <= 50.0 ) ) {
 			int nLevel = GetHitDice(oChar) + SR_GetECL(oChar);
 			//SendMessageToAllDMs(IntToString(nLevel) +" / "+ IntToString(GetFactionAverageLevel(oChar)));
 			if ( nLevel < GetFactionAverageLevel(oChar) ) {

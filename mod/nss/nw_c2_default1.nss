@@ -21,10 +21,8 @@
 #include "inc_summonai"
 
 void main() {
-	// * if not runnning normal or better Ai then exit for performance reasons
-	if ( GetAILevel() == AI_LEVEL_VERY_LOW ) return;
-	
-	
+
+	//FIXME not the faintest why this doesnt work
 	if ( GetLocalInt(OBJECT_SELF, "sit_nearest")
 		&& ( GetCurrentAction() != ACTION_SIT ) ) {
 		int n = 1;
@@ -34,7 +32,8 @@ void main() {
 			if ( GetDistanceBetween(OBJECT_SELF, oChair) > 30.0 )
 				break;
 
-			if ( GetStringLeft(GetResRef(oChair), 4 + 1 + 5) == "move_chair" && !GetIsObjectValid(GetSittingCreature(oChair)) ) {
+			if ( GetStringLeft(GetResRef(oChair), 4 + 1 + 5) == "move_chair" &&
+				!GetIsObjectValid(GetSittingCreature(oChair)) ) {
 				ClearAllActions();
 				ActionSit(oChair);
 			}
@@ -44,6 +43,8 @@ void main() {
 		}
 	}
 
+	// * if not runnning normal or better Ai then exit for performance reasons
+	if ( GetAILevel() == AI_LEVEL_VERY_LOW ) return;
 
 
 	// Buff ourselves up right away if we should

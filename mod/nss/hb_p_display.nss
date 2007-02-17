@@ -2,10 +2,10 @@
  */
 
 void main() {
-	if (!GetLocalInt(OBJECT_SELF, "has_p_vfx")) {
+	if ( !GetLocalInt(OBJECT_SELF, "has_p_vfx") ) {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT,
 			SupernaturalEffect(EffectVisualEffect(421)),
-		OBJECT_SELF);
+			OBJECT_SELF);
 		SetLocalInt(OBJECT_SELF, "has_p_vfx", 1);
 	}
 }

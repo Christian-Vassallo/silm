@@ -406,7 +406,7 @@ int CommandPlaceable(object oPC, int iMode) {
 		else
 			AssignCommand(oTarget, ActionOpenDoor(oTarget));
 	}
-	
+
 	int nIsPersistent = GetPlaceableID(oTarget) > 0;
 
 	if ( nPersist != -1 ) {
@@ -440,21 +440,21 @@ int CommandPlaceable(object oPC, int iMode) {
 	}
 
 	/*
-	string sText = arg(0);
-	if ( nIsPersistent && GetStringLength(sText) > 0) {
-		ToPC("Setting Scene Text to: " + sText);
-		SQLQuery("delete from scene_descriptions where pid = " +
-			IntToString(GetPlaceableID(oTarget)));
-		SQLQuery("insert into scene_descriptions (pid, text) values(" +
-			IntToString(GetPlaceableID(oTarget)) + ", " + SQLEscape(sText) +
-			");");
-		ToPC("Done.");
-	}*/
+	 * string sText = arg(0);
+	 * if ( nIsPersistent && GetStringLength(sText) > 0) {
+	 * 	ToPC("Setting Scene Text to: " + sText);
+	 * 	SQLQuery("delete from scene_descriptions where pid = " +
+	 * 		IntToString(GetPlaceableID(oTarget)));
+	 * 	SQLQuery("insert into scene_descriptions (pid, text) values(" +
+	 * 		IntToString(GetPlaceableID(oTarget)) + ", " + SQLEscape(sText) +
+	 * 		");");
+	 * 	ToPC("Done.");
+	 * }*/
 
 	ToPC("Open: " + IntToString(GetIsOpen(oTarget)));
 	ToPC("Useable: " + IntToString(GetUseableFlag(oTarget)));
 	ToPC("Persistent: " + IntToString(GetPlaceableID(oTarget)));
-	
+
 	return OK;
 }
 

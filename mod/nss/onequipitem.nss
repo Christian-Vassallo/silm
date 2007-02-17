@@ -78,7 +78,8 @@ void ClothEquip() {
 	else if ( !IsCloakID(iValue)
 			 &&
 			 iType
-			 == BASE_ITEM_ARMOR && GetIsObjectValid(GetItemInSlot(INVENTORY_SLOT_CLOAK, oPC)) ) {
+			 ==
+			 BASE_ITEM_ARMOR && GetIsObjectValid(GetItemInSlot(INVENTORY_SLOT_CLOAK, oPC)) ) {
 		PutCloak(oPC, oItem);
 	}/* remove cloak if current armor has cloak */ else if ( IsCloakID(iValue)
 															&& iType == BASE_ITEM_ARMOR

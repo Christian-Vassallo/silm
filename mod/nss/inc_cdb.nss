@@ -11,50 +11,64 @@ const int
 // Normal players
 AMASK_ANY = 0x0,
 
+// unused.
 AMASK_RESTRICTED = 0x1,
 
+// Automagically set: is registered? (status like %accept%)
 AMASK_REGISTERED =  0x2,
 
-// Access to mentor data/statistics. Can override mentor limits
+// Is a mentor.
 AMASK_MENTOR = 0x4,
+
+// Sees mentor stats.
+// Can override mentor limits.
+// Can give XP as a player.
 AMASK_MENTOR_ADMIN = 0x8,
 
-// Access to game commands, like moving players around and
-// targeting stuff
+// Can do console commands while logged in as SL.
 AMASK_GM = 0x10,
+// Can do console commands while logged in as player.
 AMASK_GM_ADMIN = 0x20,
 
-// May .-talk things.
+// May .-talk npcs as player.
 AMASK_FORCETALK = 0x40,
+// May .-talk things as player.
 AMASK_FORCETALK_OBJECT = 0x80,
 
-// Access to char related information
+// May access character sheets and write private comments.
 AMASK_CHAR = 0x100,
+// May set status and write public comments.
 AMASK_CHAR_ADMIN = 0x200,
 
-// Access to the crafting system administration
-AMASK_CRAFT = 0x1000,
-AMASK_CRAFT_ADMIN = 0x2000,
+// May access persistency tables.
+AMASK_PERSIST = 0x400,
+// unused.
+AMASK_PERSIST_ADMIN_UNUSED = 0x800,
 
-// Access to audit trails and chatlogs
+// May see the crafting database.
+AMASK_CRAFT = 0x1000,
+// May change the crafting database.
+AMASK_CRAFT_ADMIN = 0x2000,
+// May see merchants.
+AMASK_CRAFT_MERCHANT = 0x4000,
+// May change merchants.
+AMASK_CRAFT_MERCHANT_ADMIN = 0x8000,
+
+// May use /lastlog
 AMASK_AUDIT = 0x10000,
+// May see chatlog table.
+// May see audit table.
 AMASK_AUDIT_ADMIN = 0x20000,
 
-// Managing the backend stuff
+// May change server time
+// May restart server
 AMASK_BACKEND = 0x100000,
-AMASK_BACKEND_ADMIN = 0x200000,
-
-// Managing and restarting the server
-AMASK_GOD = 0x33333d;
-//AMASK_RESTRICTED | AMASK_MENTOR | AMASK_MENTOR_ADMIN | AMASK_GM |
-//AMASK_GM_ADMIN | AMASK_CHAR | AMASK_CHAR_ADMIN | AMASK_CRAFT | AMASK_CRAFT_ADMIN |
-//AMASK_AUDIT | AMASK_AUDIT_ADMIN | AMASK_BACKEND | AMASK_BACKEND_ADMIN;
-
-
+// May set amasks.
+// Includes all other stuff.
+AMASK_BACKEND_ADMIN = 0x800000,
+AMASK_GOD           = 0x800000;
 
 int CheckMask(object oPC, int nAMask = AMASK_GM);
-
-
 
 int GetAccountID(object oPC);
 
@@ -84,14 +98,15 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE);
 
 /* Implementation */
 
-
-
 int CheckMask(object oPC, int nAMask = AMASK_GM) {
 	string sAcc = GetPCName(oPC);
 	if ( "" == sAcc )
 		return 0;
 
-	return GetLocalInt(GetModule(), sAcc + "_amask") & nAMask;
+	int nMask = GetLocalInt(GetModule(), sAcc + "_amask");
+
+	return
+		   ( nMask & nAMask ) || ( nMask & AMASK_GOD );
 }
 
 
