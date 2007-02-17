@@ -1,7 +1,7 @@
 /* Scene Display
  *  Displays the associated text in database for this scene.
  */
-
+#include "inc_chat_lib"
 #include "inc_mysql"
 #include "inc_dbplac"
 #include "_colours"
@@ -19,5 +19,5 @@ void main() {
 	}
 
 	//SendMessageToPC(oPC, sText);
-	FloatingTextStringOnCreature(ColourTag(cLightBlue) + sText + ColourTagClose(), oPC, FALSE);
+	FloatingTextStringOnCreature(ColourisePlayerText(oPC, 0, sText, cLightBlue), oPC, FALSE);
 }
