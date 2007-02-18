@@ -1,0 +1,78 @@
+---
+help:
+  access: []
+  type: external
+  sort: 0
+
+o:
+  aliases:
+  - online
+  access: []
+  type: external
+  description: "show all online players/dms"
+  sort: 2
+
+status:
+  aliases:
+  - s
+  access: []
+  type: internal
+  description: "displays server data"
+  sort: 1
+
+register:
+  aliases:
+  - r
+  access: []
+  type: external
+  description: "allows to register to a service"
+  sort: 10
+
+unregister:
+  aliases:
+  - u
+  access: []
+  type: external
+  description: "allows to unregister from a service"
+  sort: 11
+
+killserver:
+  access:
+  - "%admins"
+  - nwbridge
+  type: external
+  description: "send kill -15, -9 to nwserver, (hopefully) restarting it"
+  sort: 105
+
+n:
+  access:
+  - nwbridge
+  - "%admins"
+  type: external
+  description: "send/receive commands to nwbridge"
+  sort: 100
+
+lusers:
+  access:
+  - "%admins"
+  type: external
+  description: "lists all users"
+  sort: 5
+ 
+set:
+  access:
+  - "%admins"
+  - "cnotify"
+  - "dnotify"
+  type: external
+  description: "gets/sets various settings"
+  sort: 7
+
+msg:
+  aliases:
+  - m
+  access:
+  - "%admins"
+  type: external
+  description: "send message to usergroup"
+  sort: 9
