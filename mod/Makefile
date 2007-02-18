@@ -69,4 +69,4 @@ install:
 	cp -v $(NAME).mod $(NWNHOME)/modules/
 
 # generates a new package with the current revision
-package: path scripts local
+package: path scripts itp local
