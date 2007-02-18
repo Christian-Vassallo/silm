@@ -454,8 +454,10 @@ You are registered for the following services: #{yjservices.keys.reject {|key| !
 					@r.accept_subscription(presence.from)
 					msg(presence.from, "Welcome, #{presence.from.to_s}!")
 				else
-					@r.decline_subscription(presence.from)
-					msg(presence.from, "If you need to subscribe to my services, send me 'help'.")
+					@r.accept_subscription(presence.from)
+					msg(presence.from, "Welcome, #{presence.from.to_s}!")
+					#@r.decline_subscription(presence.from)
+					#msg(presence.from, "If you need to subscribe to my services, send me 'help'.")
 				end
 			when :unsubscribe
 			when :subscribed
