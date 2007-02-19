@@ -19,6 +19,8 @@ void main() {
 	object oPC = GetFirstPC();
 
 	ExecuteScript("hb_online", oMod);
+	
+	ExecuteScript("hb_time_xp", oMod);
 
 
 	while ( GetIsObjectValid(oPC) ) {

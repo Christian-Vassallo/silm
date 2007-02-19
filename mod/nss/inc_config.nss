@@ -22,7 +22,12 @@ int C_COMBAT_XP_MAX = 50000;
 float C_COMBAT_XP_SCALE = 0.05;
 
 //Combat XP cap per week real time - fixed part
-int C_COMBAT_XP_1 = 800;
+int C_COMBAT_XP_1 = 400;
+
+// XP through auto XP (n/intvl)
+int C_TIME_XP_1 = 400;
+
+
 
 //Combat XP cap per week real time - proportionality factor to level
 int C_COMBAT_XP_2 = 0;

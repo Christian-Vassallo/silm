@@ -1,39 +1,7 @@
 #!/usr/bin/perl -w 
-# -*- perl -*-
-######################################################################
-# find-unused-conversations.pl -- Find unused conversations
-# Copyright (c) 2004 Tero Kivinen
-# All Rights Reserved.
-######################################################################
-#         Program: find-unused-conversations.pl
-#	  $Source: /u/samba/nwn/bin/RCS/find-unused-conversations.pl,v $
-#	  Author : $Author: kivinen $
-#
-#	  (C) Tero Kivinen 2004 <kivinen@iki.fi>
-#
-#	  Creation          : 17:42 Sep 29 2004 kivinen
-#	  Last Modification : 18:02 Sep 29 2004 kivinen
-#	  Last check in     : $Date: 2004/09/29 15:06:16 $
-#	  Revision number   : $Revision: 1.1 $
-#	  State             : $State: Exp $
-#	  Version	    : 1.32
-#	  Edit time	    : 16 min
-#
-#	  Description       : Find and list unused conversations
-#
-#	  $Log: find-unused-conversations.pl,v $
-#	  Revision 1.1  2004/09/29 15:06:16  kivinen
-#	  	Created.
-#
-#	  $EndLog$
-#
-#
-#
-######################################################################
-# initialization
 
 require 5.6.0;
-package FindUnusedConversations;
+package FindUnusedScripts;
 use strict;
 use Getopt::Long;
 use File::Glob ':glob';
@@ -42,45 +10,6 @@ use GffWrite;
 use Gff;
 
 $Opt::verbose = 0;
-
-######################################################################
-# Get version information
-
-open(PROGRAM, "<$0") || die "Cannot open myself from $0 : $!";
-undef $/;
-$Prog::program = <PROGRAM>;
-$/ = "\n";
-close(PROGRAM);
-if ($Prog::program =~ /\$revision:\s*([\d.]*)\s*\$/i) {
-    $Prog::revision = $1;
-} else {
-    $Prog::revision = "?.?";
-}
-
-if ($Prog::program =~ /version\s*:\s*([\d.]*\.)*([\d]*)\s/mi) {
-    $Prog::save_version = $2;
-} else {
-    $Prog::save_version = "??";
-}
-
-if ($Prog::program =~ /edit\s*time\s*:\s*([\d]*)\s*min\s*$/mi) {
-    $Prog::edit_time = $1;
-} else {
-    $Prog::edit_time = "??";
-}
-
-$Prog::version = "$Prog::revision.$Prog::save_version.$Prog::edit_time";
-$Prog::progname = $0;
-$Prog::progname =~ s/^.*\///g;
-
-$| = 1;
-
-######################################################################
-# Read rc-file
-
-if (defined($ENV{'HOME'})) {
-    read_rc_file("$ENV{'HOME'}/.findunusedconversationsrc");
-}
 
 ######################################################################
 # Option handling
@@ -134,8 +63,6 @@ foreach $i (@ARGV) {
 		   proc => \&find_proc);
     } elsif ($i =~ /^(.*)\.nss$/) {
 	check_script($i);
-    } elsif ($i =~ /^(.*)\.dlg$/) {
-	$main::dialogs{$1}++;
     } else {
 	warn "Unknown file $i, not a git file\n";
     }
@@ -182,9 +109,9 @@ sub check_script {
 
     open(FILE, "<$file") || die "Cannot open $file : $!";
     while (<FILE>) {
-	if (/ActionStartConversation/) {
-	    if (/ActionStartConversation[^\"]*\"(.+)\"/) {
-		$main::conversation{$1}++;
+	if (/ExecuteScript/) {
+	    if (/ExecuteScript[^\"]*\"(.+)\"/) {
+		$main::script{$1}++;
 		print("Found $1 from $file\n")
 		    if ($Opt::verbose > 1);
 	    }

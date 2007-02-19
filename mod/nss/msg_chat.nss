@@ -235,6 +235,7 @@ void main() {
 /* PRE hooks below */
 
 int OnPreText(object oPC, string sText, int iMode, object oTo = OBJECT_INVALID) {
+	int nTS = GetUnixTimestamp();
 
 	string sReturn = mnxCommand("chat", GetPCName(oPC), GetName(oPC), IntToString(GetAccountID(oPC)),
 						 IntToString(GetCharacterID(oPC)), IntToString(iMode), sText);
@@ -248,6 +249,8 @@ int OnPreText(object oPC, string sText, int iMode, object oTo = OBJECT_INVALID) 
 			SendMessageToPC(oPC,
 				"Derzeit ist kein SL im Spiel online, und es trat ein Fehler bei der Weiterleitung auf. Sende deine Nachricht ueber die Moeglichkeiten auf der Website.");
 	}
+
+	SetLocalInt(oPC, "last_message", nTS);
 
 
 	if ( GetIsPC(oPC) )
