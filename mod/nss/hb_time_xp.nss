@@ -4,7 +4,6 @@
  *  Gives no XP if you're alone on the server.
 */
 
-#include "_"
 #include "_const"
 #include "_gen"
 #include "inc_mysql"

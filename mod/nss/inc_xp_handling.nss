@@ -438,13 +438,13 @@ void GiveTimeXP(object oPC, int nAmount) {
 	int iYear = GetCalendarYear();
 	int iXPForMonth = GetTimeXPForMonth(oPC, iYear, iMonth);
 
-	if ( iXPForMonth > GetTimeXPCap(oPC) ) {
+	if ( iXPForMonth > GetTimeXPCap() ) {
 		return;
 	}
 
-	if ( nValue > 0 ) {
-		GiveXPToCreature(oPC, nValue);
-		SetTimeXPForMonth(oPC, iXPForMonth + nValue, iYear, iMonth);
+	if ( nAmount > 0 ) {
+		GiveXPToCreature(oPC, nAmount);
+		SetTimeXPForMonth(oPC, iXPForMonth + nAmount, iYear, iMonth);
 	}
 }
 
@@ -478,7 +478,7 @@ void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE) {
 		SetCombatXPForMonth(oPC, iXPForMonth + nValue, iYear, iMonth);
 		SetCombatXP(oPC, iCombXP + nValue);
 
-		if (!noWarn)
+		if (!bNoWarn)
 			SendMessageToPC(oPC, "Kampferfahrung: " +
 				IntToString(iCombXP + nValue) + " (CAP: " + 
 				IntToString(iXPForMonth + nValue) + ")"
