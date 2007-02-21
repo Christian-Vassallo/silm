@@ -120,5 +120,15 @@ class Character < ActiveRecord::Base
 	def craft_stats
 		CraftingStatistic.find(:all, :conditions => ['`character` = ? and recipe > 0 and (fail > 0 or count > 0)', self.id])
 	end
-
+	
+	# Returns how much xp this cid collected
+	def xp_time
+		f = TimeXP.find_by_sql('select sum(xp) as xp from time_xp where cid = %d' % [self.id])
+		if f && f[0]
+			f[0].xp
+		else
+			0
+		end
+	end
+	
 end

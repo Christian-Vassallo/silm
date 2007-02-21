@@ -18,6 +18,7 @@
 <% if session[:user] && session[:user].char_admin? %>
 <%= link_to_if (session[:user] && session[:user].details? && session[:user].char_admin?), "Weather", :controller => 'weather', :action => 'index' %>&nbsp;
 * <%= link_to_if (session[:user] && session[:user].details? && session[:user].char_admin?), "MentorData", :controller => 'stat', :action => 'mentor' %>&nbsp;
+* <%= link_to_if (session[:user] && session[:user].details? && session[:user].char_admin?), "TimeXP", :controller => 'stat', :action => 'time_xp' %>&nbsp;
 <br>
 <% end %>
 
