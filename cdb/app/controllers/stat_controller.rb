@@ -2,7 +2,7 @@ class StatController < ApplicationController
 	before_filter :authenticate
 	before_filter :enter_details
 
-	before_filter :authenticate_char_admin
+	before_filter :authenticate_char_view
 
 	def mentor
 		@totalmentor = MentorData.find_by_sql("select aid,sum(xp) as xp from mentordata group by aid order by xp desc")
