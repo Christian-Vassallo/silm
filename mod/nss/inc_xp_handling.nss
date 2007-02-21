@@ -12,7 +12,6 @@ int GetKillXP(object oDead, object oKiller, int nBoni = 0);
 void GiveKillXP();
 
 
-int GetTimeXPCap();
 
 // Gives nAmount to oPC, but not above the CAP.
 void GiveTimeXP(object oPC, int nAmount);
@@ -86,6 +85,19 @@ int GetCombatXPForMonth(object oPC, int nYear, int nMonth) {
 	int nCap = StringToInt(SQLGetData(1));
 	return nCap;
 }
+
+int GetTimeXPForMonth(object oPC, int nYear, int nMonth) {
+	int cid = GetCharacterID(oPC);
+	SQLQuery("select sum(`xp`) from `time_xp` where `cid` = " +
+		IntToString(cid) +
+		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + ";");
+	if ( !SQLFetch() )
+		return 0;
+
+	int nCap = StringToInt(SQLGetData(1));
+	return nCap;
+}
+
 
 int GetTimeXPForDay(object oPC, int nYear, int nMonth, int nDay) {
 	int cid = GetCharacterID(oPC);
@@ -187,193 +199,6 @@ void XP_RewardQuestXP(object oPC, int iXP) {
 	GiveXPToCreature(oPC, iXP);
 	ExportSingleCharacter(oPC);
 }
-/*
- * void XP_RewardCombatXP(object oPC, int iXP)
- * {
- * int iCombXP = GetCombatXP(oPC);
- * int iCombXPCap = GetPersistentInt(oPC,"XP_Combat_cap_num");
- * int iCombXPMon = GetPersistentInt(oPC,"XP_Combat_cap_month");
- * int iMonth     = GetCalendarMonth();
- *
- * if(iMonth != iCombXPMon)
- * {
- * 	SetPersistentInt(oPC,"XP_Combat_cap_month",iMonth);
- * 	iCombXPCap = 0;
- * }
- *
- * if(iCombXP >= C_COMBAT_XP_MAX)
- * {
- * 	SendMessageToPC(oPC,"Durch Kaempfen koennt Ihr nun wirklich nichts mehr lernen.");
- * 	return;
- * }
- *
- * if(iCombXPCap > GetTimedXPCap(oPC))
- * {
- * 	SendMessageToPC(oPC,"Ihr muesstet ueber die gemachten Kampferfahrungen erstmal nachdenken.");
- * 	return;
- * }
- *
- *
- * iXP = ModifyXP(oPC,iXP);
- *
- * iXP = FloatToInt(IntToFloat(iXP) * C_COMBAT_XP_SCALE);
- *
- * //Award at least one XP
- * if(iXP > 0)
- * {
- * 	SetPersistentInt(oPC,"XP_Combat_cap_num",iCombXPCap+iXP);
- * 	SendMessageToPC(oPC, "CombatEP/Month:"+ IntToString(iCombXPCap+iXP) +" / CombatEP:"+ IntToString(iCombXP + iXP));
- * 	SetPersistentInt(oPC,"XP_Combat",iCombXP + iXP);
- * 	GiveXPToCreature(oPC,iXP);
- * }
- * }*/
-
-/*void XP_RewardCombatXPToParty(object oPC, int iXP)
- * {
- * object oArea = GetArea(oPC);
- * int iPartyMembers = 0;
- * int iPartyLevelSum = 0;
- * int iMaxLvlOver;
- *
- * object oChar = GetFirstFactionMember(oPC,TRUE);
- * while(GetIsObjectValid(oChar))
- * {
- * 	if(!GetIsDM(oChar) && GetArea(oChar) == oArea)
- * 	 {
- * 	  iPartyMembers++;
- * 	  iPartyLevelSum += GetHitDice(oChar) + SR_GetECL(oChar);
- * 	 }
- * 	oChar = GetNextFactionMember(oPC,TRUE);
- * }
- *
- * //Killed either by DM or NPC, no 'real' party. Sorry, no XP.
- * if(!iPartyMembers) return;
- *
- * iMaxLvlOver = iPartyLevelSum / iPartyMembers + C_MAX_LEVEL_DIFFERENCE;
- *
- * oChar = GetFirstFactionMember(oPC,TRUE);
- * while(GetIsObjectValid(oChar))
- * {
- * 	if(!GetIsDM(oChar) && GetArea(oChar) == oArea)
- * 	 {
- * 	  int iLevel4XP, iModXP;
- *
- * 	  iLevel4XP = GetHitDice(oChar) + SR_GetECL(oChar);
- * 	  if(iLevel4XP > iMaxLvlOver)
- * 		iLevel4XP = iMaxLvlOver;
- *
- * 	  iModXP = FloatToInt(IntToFloat(iXP) * IntToFloat(iLevel4XP) /
- * 		IntToFloat(iPartyLevelSum));
- * 	  XP_RewardCombatXP(oChar,iModXP);
- * 	 }
- * 	oChar = GetNextFactionMember(oPC,TRUE);
- * }
- * }*/
-
-// Get how much experience the CR is worth to a character of the average level.
-//
-/*int XP_GetXPFromCR( float a_fCR, float a_fAvgLvl )
- * {
- *
- * 	if(a_fAvgLvl < 3.0) a_fAvgLvl = 3.0;
- *
- * 	// Base experience to build the experience from.
- * 	float fXP = 300.0;
- *
- * 	if( ( a_fAvgLvl >= 7.0 ) || ( a_fCR >= 1.5 ) )
- * 	{
- *
- * 		fXP *= a_fAvgLvl;
- *
- * 		int nDiff = FloatToInt( ( ( a_fCR < 1.0 ) ? 1.0 : a_fCR ) - a_fAvgLvl );
- *
- * 		switch( nDiff )
- * 		{
- *
- * 			// SEI_NOTE: Broken with styleguide for readability.
- *
- * 			case -7:    fXP /= 12.0;        break;
- * 			case -6:    fXP /= 8.0;         break;
- * 			case -5:    fXP *= 3.0 / 16.0;  break;
- * 			case -4:    fXP /= 4.0;         break;
- * 			case -3:    fXP /= 3.0;         break;
- * 			case -2:    fXP /= 2.0;         break;
- * 			case -1:    fXP *= 2.0 / 3.0;   break;
- * 			case  0:                        break;
- * 			case  1:    fXP *= 3.0 / 2.0;   break;
- * 			case  2:    fXP *= 2.0;         break;
- * 			case  3:    fXP *= 3.0;         break;
- *
- * 			// Rikan: Reduced rise in XP when taking a bit over the top
- * 			case  4:    fXP *= 3.5;         break;
- * 			case  5:    fXP *= 4.0;         break;
- * 			case  6:    fXP *= 4.5;         break;
- * 			case  7:    fXP *= 5.0;         break;
- * /*
- * 			case  4:    fXP *= 4.0;         break;
- * 			case  5:    fXP *= 6.0;         break;
- * 			case  6:    fXP *= 8.0;         break;
- * 			case  7:    fXP *= 12.0;        break;
- */
-// nDiff > 7 || nDiff < -7
-/*            default:    fXP = 0.0;          break;
- *
- * 		} // End switch-case
- *
- * 	} // End if
- *
- * 	// Calculations for CR < 1
- * 	if( ( a_fCR < 0.76 ) && ( fXP > 0.0 ) )
- * 	{
- *
- * 		// SEI_NOTE: Broken with styleguide for readability.
- *
- * 			 if( a_fCR <= 0.11 ) { fXP /= 10.0; }
- * 		else if( a_fCR <= 0.13 ) { fXP /=  8.0; }
- * 		else if( a_fCR <= 0.18 ) { fXP /=  6.0; }
- * 		else if( a_fCR <= 0.28 ) { fXP /=  4.0; }
- * 		else if( a_fCR <= 0.40 ) { fXP /=  3.0; }
- * 		else if( a_fCR <= 0.76 ) { fXP /=  2.0; }
- *
- * 		// Only the CR vs Avg Level table could set nMonsterXP to 0...
- * 		// to fix any round downs that result in 0:
- * 		if( fXP <= 0.0 )
- * 		{
- * 			fXP = 1.0;
- * 		}
- *
- * 	} // End if
- *
- * 	return FloatToInt( fXP );
- *
- * } */                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     // End XP_GetXPFromCR
-
-/*void XP_RewardKillXP()
- * {
- * object oPC = GetLastKiller();
- * object oArea = GetArea(OBJECT_SELF);
- * int iPartyMembers = 0;
- * int iPartyLevelSum = 0;
- * int iTotalXP;
- * object oChar = GetFirstFactionMember(oPC,TRUE);
- *
- * while(GetIsObjectValid(oChar))
- * {
- * 	if(!GetIsDM(oChar) && GetArea(oChar) == oArea)
- * 	 {
- * 	  iPartyMembers++;
- * 	  iPartyLevelSum += GetHitDice(oChar) + SR_GetECL(oChar);
- * 	 }
- * 	oChar = GetNextFactionMember(oPC,TRUE);
- * }
- *
- * if(!iPartyMembers) return;
- *
- * iTotalXP = XP_GetXPFromCR(GetChallengeRating(OBJECT_SELF),
- * 	IntToFloat(iPartyLevelSum) / IntToFloat(iPartyMembers));
- *
- * XP_RewardCombatXPToParty(oPC,iTotalXP);
- * }*/
 
 int GetKillXP(object oDead, object oChar, int nBoni = 0) {
 	int nCRDead = FloatToInt(GetChallengeRating(oDead));
@@ -431,10 +256,6 @@ void GiveKillXP() {
 }
 
 
-int GetTimeXPCap() {
-	return C_TIME_XP_1;
-}
-
 void GiveTimeXP(object oPC, int nAmount) {
 	if ( GetIsDM(oPC) )
 		return;
@@ -447,15 +268,18 @@ void GiveTimeXP(object oPC, int nAmount) {
 	int iMonth = r.month; 
 	int iYear = r.year; 
 	int iXPForMonth = GetTimeXPForMonth(oPC, iYear, iMonth);
+	int iXPForDay = GetTimeXPForDay(oPC, iYear, iMonth, iDay);
 
 
-	if ( iXPForMonth > GetTimeXPCap() ) {
+	if ( iXPForMonth >  C_TIME_XP_MONTH )
 		return;
-	}
+	
+	if ( iXPForDay >  C_TIME_XP_DAY )
+		return;
 
 	if ( nAmount > 0 ) {
 		GiveXPToCreature(oPC, nAmount);
-		SetTimeXPForMonth(oPC, iXPForMonth + nAmount, iYear, iMonth);
+		SetTimeXPForDay(oPC, iXPForMonth + nAmount, iYear, iMonth, iDay);
 	}
 }
 
