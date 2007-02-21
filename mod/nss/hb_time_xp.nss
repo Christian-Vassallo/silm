@@ -4,20 +4,10 @@
  *  Gives no XP if you're alone on the server.
 */
 
-#include "_const"
+#include "inc_config"
 #include "_gen"
 #include "inc_mysql"
 #include "inc_xp_handling"
-const int
-// Results in 96XP/4h
-TIME_XP_AMOUNT = 2,
-TIME_XP_INTERVAL = 60 * 5, 
-
-// only give XP if player said something in the last n seconds.
-TIME_XP_MAX_MESSAGE_TIME = 60 * 3,
-
-// only if the player moved in the last n seconds
-TIME_XP_MAX_MOVE_TIME = 0;
 
 
 void main() {
@@ -38,7 +28,7 @@ void main() {
 		// Do not give XP for being AFK.
 		if (!GetIsDM(oPC) && !GetLocalInt(oPC, "afk")) {
 			nLastForPlayer = GetLocalInt(oPC, "last_time_xp_given");
-			nPlayerLastSaid = GetLocalInt(oPC,"last_message");
+			nPlayerLastSaid = TIME_XP_MAX_MESSAGE_TIME == 0 ? 0 : GetLocalInt(oPC,"last_message");
 			/*lLastPlayerLocation = GetLocalLocation(oPC, "last_time_xp_location");
 			lPlayerPosition = GetLocation(oPC);*/
 			

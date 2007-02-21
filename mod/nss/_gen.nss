@@ -11,6 +11,16 @@ DTI = DURATION_TYPE_INSTANT,
 DTP = DURATION_TYPE_PERMANENT;
 
 
+struct RealTime {
+	int day;
+	int month;
+	int year;
+	int hour;
+	int minute;
+	int second;
+	int error;
+};
+
 
 int hears(object oSpeaker, object oListener, int nTalkMode);
 
@@ -58,6 +68,7 @@ effect EffectUnconscious(int bConceal = FALSE);
 //  65 -> "1 minute and 5 seconds"
 string SecondsToTimeDesc(int nSeconds);
 
+struct RealTime GetRealTime();
 
 // Returns true if oPC is a DM by
 // arbitary criteria.
@@ -186,6 +197,25 @@ int GetPCPartyCount(object oPC);
 
 
 /* impl */
+
+struct RealTime GetRealTime() {
+	struct RealTime r;
+	
+	SQLQuery("select s, m, h, dd, mm, yy;");
+	if (!SQLFetch()) {
+		r.error = 1;
+		SendMessageToAllDMs("GetRealTime() failed. Argfslz.");
+	} else {
+		r.second = StringToInt(SQLGetData(1));
+		r.minute = StringToInt(SQLGetData(2));
+		r.hour = StringToInt(SQLGetData(3));
+		r.day = StringToInt(SQLGetData(4));
+		r.month = StringToInt(SQLGetData(5));
+		r.year = StringToInt(SQLGetData(6));
+	}
+	return r;
+
+}
 
 int GetModStartup() {
 	return GetLocalInt(GetModule(), "startup_ts");

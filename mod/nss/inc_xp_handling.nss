@@ -18,9 +18,9 @@ int GetTimeXPCap();
 void GiveTimeXP(object oPC, int nAmount);
 
 // Returns how much XP this player has got THIS MONTH through Auto XP.
-int GetTimeXPForMonth(object oPC, int nYear, int nMonth);
+int GetTimeXPForDay(object oPC, int nYear, int nMonth, int nDay);
 // ..
-void SetTimeXPForMonth(object oPC, int nXP, int nYear, int nMonth);
+void SetTimeXPForDay(object oPC, int nXP, int nYear, int nMonth, int nDay);
 
 // Returns CombatEP
 int GetCombatXP(object oPC);
@@ -87,11 +87,12 @@ int GetCombatXPForMonth(object oPC, int nYear, int nMonth) {
 	return nCap;
 }
 
-int GetTimeXPForMonth(object oPC, int nYear, int nMonth) {
+int GetTimeXPForDay(object oPC, int nYear, int nMonth, int nDay) {
 	int cid = GetCharacterID(oPC);
 	SQLQuery("select `xp` from `time_xp` where `cid` = " +
 		IntToString(cid) +
-		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + " limit 1;");
+		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + 
+		" and `day` = " + IntToString(nDay) + " limit 1;");
 	if ( !SQLFetch() )
 		return 0;
 
@@ -99,21 +100,25 @@ int GetTimeXPForMonth(object oPC, int nYear, int nMonth) {
 	return nCap;
 }
 
-void SetTimeXPForMonth(object oPC, int nXP, int nYear, int nMonth) {
+void SetTimeXPForDay(object oPC, int nXP, int nYear, int nMonth, int nDay) {
 	int cid = GetCharacterID(oPC);
 	SQLQuery("select `xp` from `time_xp` where `cid` = " +
 		IntToString(cid) +
-		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + " limit 1;");
+		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) +
+		" and `day` = " + IntToString(nDay) + " limit 1;");
+		
 	if ( !SQLFetch() )
-		SQLQuery("insert into `time_xp` (`cid`, `xp`, `year`, `month`) values(" +
+		SQLQuery("insert into `time_xp` (`cid`, `xp`, `year`, `month`, `day`) values(" +
 			IntToString(cid) + ", " + IntToString(nXP) + ", " +
-			IntToString(nYear) + ", " + IntToString(nMonth) + ");");
+			IntToString(nYear) + ", " + IntToString(nMonth) + ", " + IntToString(nDay) + ");");
 	else
 		SQLQuery("update `time_xp` set `xp`=" +
 			IntToString(nXP) +
 			" where `cid` = " +
 			IntToString(cid) +
-			" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + " limit 1;");
+			" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) +
+			" and `day` = " + IntToString(nDay) + " limit 1;"
+		);
 }
 
 
@@ -433,10 +438,16 @@ int GetTimeXPCap() {
 void GiveTimeXP(object oPC, int nAmount) {
 	if ( GetIsDM(oPC) )
 		return;
+	
+	struct RealTime r = GetRealTime();
+	if (r.error)
+		return;
 
-	int iMonth = GetCalendarMonth();
-	int iYear = GetCalendarYear();
+	int iDay = r.day;
+	int iMonth = r.month; 
+	int iYear = r.year; 
 	int iXPForMonth = GetTimeXPForMonth(oPC, iYear, iMonth);
+
 
 	if ( iXPForMonth > GetTimeXPCap() ) {
 		return;
