@@ -22,10 +22,10 @@ const int C_COMBAT_XP_MAX = 50000;
 float C_COMBAT_XP_SCALE = 0.05;
 
 //Combat XP cap per week real time - fixed part
-const int C_COMBAT_XP_1 = 700;
+const int C_COMBAT_XP_1 = 400;
 
 // XP through auto XP (n/intvl)
-const int C_TIME_XP_MONTH = 400;
+const int C_TIME_XP_MONTH = 1320;
 // xp per day
 const int C_TIME_XP_DAY = 120;
 
