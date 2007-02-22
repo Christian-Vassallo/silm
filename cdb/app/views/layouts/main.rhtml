@@ -39,6 +39,7 @@ Audit: <%= link_to_if (session[:user] && session[:user].details? && session[:use
 Craft: <%= link_to_if (session[:user] && session[:user].details? && session[:user].craft_view?), "Crafting-DB", :controller => 'craft', :action => 'index' %>&nbsp;
 * <%= link_to_if (session[:user] && session[:user].details? && session[:user].craft_admin?), "Merchants", :controller => 'merchant', :action => 'index' %>&nbsp;
 * <%= link_to_if (session[:user] && session[:user].details? && session[:user].craft_view?), "SpellCalc", :controller => 'craft', :action => 'spell' %>&nbsp;
+* <%= link_to_if (session[:user] && session[:user].details? && session[:user].craft_view?), "EnchantCalc", :controller => 'craft', :action => 'enchant' %>&nbsp;
 <% end %>
 <br>
 <% if flash[:notice] %>

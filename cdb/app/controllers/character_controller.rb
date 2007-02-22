@@ -187,7 +187,6 @@ class CharacterController < ApplicationController
 
 			if Comment::count(:conditions => ['account = ? and `character` = ? and body = ?', session[:user].id, params[:id], params['comment']['body']]) > 0
 				flash[:notice] = "Bereits einen Kommentar geposted. Werde nicht noch einmal posten."
-				flash[:errors] = ["jo"]
 				return
 			end
 
@@ -199,6 +198,8 @@ class CharacterController < ApplicationController
 
 			c.account = session[:user].id
 			c.character = params[:id]
+			# c.date = Time.now
+			# c.parent = 0
 
 			if !c.save
 				flash[:notice] = "Konnte nicht abspeichern!"

@@ -13,8 +13,8 @@ class StatController < ApplicationController
 	def time_xp
 		@for_cid = (params[:id] || 0).to_i
 
-		@tend = Time.now
-		@tstart = @tend - 3600 * 24 * 30 # 1mon
+		@tend = Time.now - Time.now.hour * 3600
+		@tstart = @tend - (3600 * 24 * 30) # 1mon
 		@tend = Time.mktime(params[:tend][:year], params[:tend][:month], params[:tend][:day]) if params[:tend]
 		#@tstart = Time.mktime(params[:tstart][:year], params[:tstart][:month], params[:tstart][:day]) if params[:tstart]
 		
@@ -24,10 +24,10 @@ class StatController < ApplicationController
 		sort_order = params[:sort_order] == 'asc' ? 'asc' : 'desc'
 
 		where = " where "
-		where += " day <= %d and month <= %d and year <= %d " % [@tend.day, @tend.month, @tend.year]
-		where += " and day >= %d and month >= %d and year >= %d " % [@tstart.day, @tstart.month, @tstart.year]
+		where += " unix_timestamp(str_to_date(concat(day, '.', month, '.', year), '%%d.%%m.%%Y')) <= %d" % [@tend.to_i] 
+		where += " and unix_timestamp(str_to_date(concat(day, '.', month, '.', year), '%%d.%%m.%%Y')) >= %d" % [@tstart.to_i] 
 		where += " and cid = %d" % [@for_cid] if @for_cid > 0
-		
+		@where = where	
 		@xp_total = TimeXP.find_by_sql("select sum(xp) as xp from time_xp %s" % where)
 
 		@xp_per_cid = TimeXP.find_by_sql("select cid, sum(xp) as xp, \

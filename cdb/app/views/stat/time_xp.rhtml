@@ -7,33 +7,34 @@
 
 <pre style="text-align: left;" align="left">
 <b>Total</b>
-<%= @xp_total[0].xp %>
+<%= "  " + @xp_total[0].xp.to_s %>
 
 <b>Per cid totals</b>
 <% for x in @xp_per_cid do -%>
-<%= "  %-5d %-10d (Timeframe: %d.%d -> %d.%d [+%d])" % [x.cid, x.xp, x.min_month, x.min_year, x.max_month, x.max_year,
-	(x.max_year.to_i * 12 * 30 + x.max_month.to_i * 30 + x.max_day.to_i) - (x.min_year.to_i * 30 * 12 + x.min_month.to_i * 30 + x.min_day.to_i)
+<%= "  %-5d %-10d (Timeframe: %d.%d -> %d.%d [+%d])        %s" % [x.cid, x.xp, x.min_month, x.min_year, x.max_month, x.max_year,
+	(x.max_year.to_i * 12 * 30 + x.max_month.to_i * 30 + x.max_day.to_i) - (x.min_year.to_i * 30 * 12 + x.min_month.to_i * 30 + x.min_day.to_i),
+	link_to_character(x.character, true)
 ] %>
 <% end -%>
 
 <b>Per cid per month</b>
 <% for x in @xp_per_cid_per_month do -%>
-<%= "  %-5d %-10d (%d.%d)" % [x.cid, x.xp, x.month, x.year] %>
+<%= "  %-5d %-10d (%2d.%4d)                                 %s" % [x.cid, x.xp, x.month, x.year, link_to_character(x.character, true)]  %>
 <% end -%>
 
 
 <b>Per cid per day</b>
 <% for x in @xp_per_cid_per_day do -%>
-<%= "  %-5d %-10d (%d.%d.%d)" % [x.cid, x.xp, x.day, x.month, x.year] %>
+<%= "  %-5d %-10d (%2d.%2d.%4d)                              %s" % [x.cid, x.xp, x.day, x.month, x.year, link_to_character(x.character, true)] %>
 <% end -%>
 
 <b>Per month</b>
 <% for x in @xp_per_month do -%>
-<%= "  %d.%d %-10d " % [x.month, x.year, x.xp] %>
+<%= "  %-16d (%2d.%4d)" % [x.xp, x.month, x.year] %>
 <% end -%>
 
 <b>Per day</b>
 <% for x in @xp_per_day do -%>
-<%= "  %d.%d.%d %-10d " % [x.day, x.month, x.year, x.xp] %>
+<%= "  %-16d (%2d.%2d.%4d) " % [x.xp, x.day, x.month, x.year] %>
 <% end -%>
 </pre>
