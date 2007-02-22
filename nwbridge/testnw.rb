@@ -1,6 +1,10 @@
 #!/usr/bin/ruby
 
+trap "INT", proc {
+	exit 0
+}
 
 loop do
-	puts(gets.strip.reverse)
+	$stdout.puts(gets.strip.reverse)
+	$stdout.flush
 end

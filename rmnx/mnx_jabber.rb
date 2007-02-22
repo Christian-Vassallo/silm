@@ -6,6 +6,7 @@ require 'xmpp4r/vcard/helper/vcard'
 require 'yaml'
 require 'resolv'
 require 'iconv'
+require 'socket'
 
 require_gem 'activerecord'
 
@@ -18,6 +19,37 @@ class MnxJabber < RMNX::CommandSpace
 	class OnlineUser < ActiveRecord::Base
 		set_table_name 'online'
 	end
+
+
+	class NWBridge
+		def initialize pass
+			@password = pass
+			@t = Thread.new { _t }
+		end
+
+		def cmd(str)
+			@socket.puts(str)
+		end
+
+		def _t
+			loop do
+				begin
+					@socket = TCPSocket.new('localhost', '5120')
+					@socket.puts @password
+					begin
+						str = @socket.gets
+						jnotify("nwbridge", str)
+					rescue Exception => e
+						next
+					end
+
+				rescue Exception => e
+					sleep 5
+				end
+			end
+		end
+	end
+
 
 	def h(x)
 		@iconv.iconv(x)
@@ -42,6 +74,10 @@ class MnxJabber < RMNX::CommandSpace
 		@t = Thread.new {_t}
 		
 		@tail_t = Thread.new {_t_tail}
+
+		@nwbridge = NWBridge.new(
+			IO::read("/home/silm/config/nwbridgepass").strip
+		)
 	end
 
 	#def sql_connect
@@ -444,6 +480,11 @@ You are registered for the following services: #{yjservices.keys.reject {|key| !
 			else
 				msg(jid, "Unknown subcommand '%s' for '%s' Type 'services' to get help." % [a[0], 'services'])
 		end
+	end
+
+	def cmd_n jid, command, a
+		all = a.join(" ")
+		@nwbridge.cmd(all)
 	end
 
 	def j_roster_sub_req item, presence

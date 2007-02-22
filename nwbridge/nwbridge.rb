@@ -1,60 +1,167 @@
 #!/usr/bin/ruby -w
 require 'socket'
+require 'optparse'
+
+$password = "default"
+
+$port = 1400
+
+$allowed_commands = %w{
+	status clientinfo
+	
+	kick 
+
+	listbans banip bankey banname
+	unbanip unbankey unbanname
+
+	maxclients
+
+	say
+}
+
+class String
+	def sane_command
+		return (self.split(/\s/)[0] || "").gsub(/[^a-z]/i, "")
+	end
+end
+class TCPSocket
+	def TCPSocket(*a)
+		super(*a)
+		@authed = false
+	end
+
+	attr_accessor :authed
+
+	def s
+		self.peeraddr[3] + "/" + peeraddr[2] + ":" + peeraddr[1]
+	end
+end
+
+$run = "sh Run"
+$force = false
+
+OptionParser.new {|o|
+	o.on("-p N", "--port N", "specify socket") {|x|
+		$sock = x
+	}
+	o.on("-r S", "--run R", "the command to run") {|x|
+		$run = x
+	}
+	o.on("-f", "--force", "force even if socket exists") {
+		$force = true
+	}
+	o.on( "--read-pass S", "read password from file") {|f|
+		$password = IO::read(f).strip
+	}
+	o.on("-h", "--help", "help") {
+		puts o
+		exit 0
+	}
+}.parse!
+
 
 trap "INT", proc {
-	File.unlink("./nwbridge.sock")
+	log "Terminating", "X"
 	exit 0
 }
 
 Thread.abort_on_exception = true
 
-$u = UNIXServer.open("./nwbridge.sock")
-$p = IO::popen("ruby testnw.rb", "w+")
-$cli = nil
+$u = TCPServer.open($port)
+puts "listening on #{$port}"
+$p = IO::popen($run, "w+")
 
-def _read_nw
-	puts "A> reading nw"
-	while str = $p.gets
-		puts "nw> " + str.strip
-		$cli.puts str.strip if $cli
-	end
-	puts "E> not reading nw"
+$cli = []
+
+def log message, level = "A", sendcli = false
+	send_to_all_clients("nwbridge:#{level}> #{message}") if sendcli
+	$stdout.puts(level + "> " + message.strip)
 end
 
-def _read_us 
-	puts "A> new client"
+def _p_read
+	buf = ""
+	log "reading nw"
 	begin
-		while str = $cli.gets
-			puts "us> " + str.strip
-			_write_nw str.strip
+	loop do
+		buf += $p.sysread(1)
+		while buf =~ /^([^\n\r]+)\r?\n(.*)$/
+			str = $1
+			buf = $2
+			send_to_all_clients str
+			log str, "nw"
+		end
+	end
+	rescue Exception => e
+		log "program terminated: #{e.to_s}"
+	end
+	exit 0
+end
+
+def _client_read c
+	begin
+		c.each_line do |str|
+			str = str.chomp
+			if !c.authed
+				if str == $password
+					c.authed = true
+					c.puts("Authenticated.")
+				else
+					c.close
+				end
+				next
+			end
+
+			handle_client_line c, str
+			log str.strip, "D:us"
 		end
 	rescue Exception => e
-		puts "E> socket terminated: #{e.to_s}"
-		puts e.backtrace.join "\n"
+		log "client gone: #{e.to_s}"
 	end
-	$cli = nil
+	$cli.delete(c)
 end
 
-def _accept_us
+def _accept_client
 	loop do
-		$cli = $u.accept
-		Thread.new { _read_us }
+		c = $u.accept
+		$cli << c
+		Thread.new { _client_read(c) }
 	end
 end
 
-def _write_us str
-	$cli.puts str.strip if $cli
+def handle_client_line client, str
+	sane = str.sane_command
+	
+	if $allowed_commands.index(sane).nil?
+		client.puts("Unknown command #{sane}.")
+		# send_to_all_clients("Client tried to mess up by issuing command `#{sane}'!")
+		return
+	end
+
+	send_to_p str
+	send_to_all_clients str, client
 end
 
-def _write_nw str
-	puts "Writing nw> " + str
-	$p.puts str.strip
-	$p.flush
-	_write_us str.strip
+def send_to_all_clients str, except = nil
+	$cli.each {|c|
+		next if c == except
+		next if !c.authed
+		c.puts str
+	}
 end
 
-read_nw_thread = Thread.new { _read_nw }
-read_us_thread = Thread.new { _accept_us }
-
-while $stdin.gets
+def send_to_p str
+	log str, "us:nw"
+	$p.syswrite(str.strip)
+	sleep 0.1
+	$p.syswrite("\n")
+	sleep 0.1
+	$p.syswrite("\n")
 end
+
+accept_thread = Thread.new { _accept_client }
+p_read_thread = Thread.new { _p_read }
+
+accept_thread.join
+
+#while s = $stdin.gets
+#end
