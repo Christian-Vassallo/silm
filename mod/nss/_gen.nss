@@ -13,6 +13,7 @@ DTP = DURATION_TYPE_PERMANENT;
 
 struct RealTime {
 	int ts;
+	int weekday;
 	int week;
 	int day;
 	int month;
