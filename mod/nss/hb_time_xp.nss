@@ -28,7 +28,7 @@ void main() {
 		// Do not give XP for being AFK.
 		if (!GetIsDM(oPC) && !GetLocalInt(oPC, "afk")) {
 			nLastForPlayer = GetLocalInt(oPC, "last_time_xp_given");
-			nPlayerLastSaid = TIME_XP_MAX_MESSAGE_TIME == 0 ? 0 : GetLocalInt(oPC,"last_message");
+			nPlayerLastSaid = TIME_XP_MAX_MESSAGE_TIME == 0 ? nTS : GetLocalInt(oPC,"last_message");
 			/*lLastPlayerLocation = GetLocalLocation(oPC, "last_time_xp_location");
 			lPlayerPosition = GetLocation(oPC);*/
 			
