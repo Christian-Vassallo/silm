@@ -32,7 +32,7 @@ const int C_TIME_XP_DAY = 120;
 const int
 // Results in 96XP/4h
 TIME_XP_AMOUNT = 3,
-TIME_XP_INTERVAL = 60 * 5, 
+TIME_XP_INTERVAL = 300, // 60 * 5, 
 
 // only give XP if player said something in the last n seconds.
 TIME_XP_MAX_MESSAGE_TIME = 0,

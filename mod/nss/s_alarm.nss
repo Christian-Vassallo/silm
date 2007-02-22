@@ -3,10 +3,12 @@
 
 #include "x2_inc_spellhook"
 
+
+
+
 void EndAlarm(object oCaster, object oTrap);
 
 void main() {
-
 	if ( !X2PreSpellCastCode() )
 		return;
 
@@ -18,7 +20,6 @@ void main() {
 	int nDC = GetSpellSaveDC();
 
 	float fSize = 10.0;
-
 
 	int nHours = 2 * nLevel;
 

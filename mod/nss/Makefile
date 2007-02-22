@@ -1,7 +1,7 @@
 # inherits stuff
 
 NSS=../../buildutil/nwnnsscomp
-NSSFLAGS=-g -o -q -c
+NSSFLAGS=-g -c # -o
 NSSVERIFYFLAGS=-g -o -q -t4
 
 all: scripts
