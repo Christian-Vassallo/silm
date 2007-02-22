@@ -12,6 +12,8 @@ DTP = DURATION_TYPE_PERMANENT;
 
 
 struct RealTime {
+	int ts;
+	int week;
 	int day;
 	int month;
 	int year;
@@ -201,7 +203,8 @@ int GetPCPartyCount(object oPC);
 struct RealTime GetRealTime() {
 	struct RealTime r;
 	
-	SQLQuery("select s, m, h, dd, mm, yy;");
+	SQLQuery("select second(now()), minute(now()), hour(now()), day(now()), " + 
+		"month(now()), year(now()), week(now()), weekday(now()), unix_timestamp(now());");
 	if (!SQLFetch()) {
 		r.error = 1;
 		SendMessageToAllDMs("GetRealTime() failed. Argfslz.");
@@ -212,6 +215,9 @@ struct RealTime GetRealTime() {
 		r.day = StringToInt(SQLGetData(4));
 		r.month = StringToInt(SQLGetData(5));
 		r.year = StringToInt(SQLGetData(6));
+		r.week = StringToInt(SQLGetData(7));
+		r.weekday = StringToInt(SQLGetData(8));
+		r.ts = StringToInt(SQLGetData(9));
 	}
 	return r;
 
