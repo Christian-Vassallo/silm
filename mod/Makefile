@@ -13,6 +13,8 @@ VALIDEXT=area/\*.git area/\*.gic area/\*.are \
 
 LISTS=uti utp utc utm
 
+all: clean package install
+
 
 path:
 ifeq  "$(NWNHOME)" ""
@@ -60,7 +62,7 @@ uncrustify:
 
 clean:
 	$(MAKE) -C nss clean clean-backup
-	rm *.mod
+	-rm *.mod
 	
 local: path
 	../buildutil/erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
@@ -71,4 +73,3 @@ install:
 # generates a new package with the current revision
 package: path scripts ifo itp local
 
-all: clean package install
