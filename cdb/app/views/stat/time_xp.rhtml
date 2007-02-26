@@ -1,40 +1,105 @@
 <h1>TimeXP<%= " for cid #{@for_cid}" if @for_cid > 0 %></h1>
-<form method="get">
+<form method="post">
 <b>start date</b><br><%= select_date @tstart, :prefix => 'tstart' %><br>
 <b>end date</b><br><%= select_date @tend, :prefix => 'tend' %><br>
 <input type="submit">
 </form>
 
-<pre style="text-align: left;" align="left">
-<b>Total</b>
-<%= "  " + @xp_total[0].xp.to_s %>
+<table class="timexp" width="100%">
 
-<b>Per cid totals</b>
+<tr>
+        <th class="timexp" colspan="3">Total</th>
+</tr><tr>
+        <th class="timexp_col">-</th>
+        <th class="timexp_col">timeframe</th>
+        <th class="timexp_col">xp</th>
+</tr>
+<tr>
+        <td class="timexp_name">-</td>
+        <td class="timexp_time"><%= "%2d.%2d.%4d -> %2d.%2d.%4d [+%d]" % [
+                @tstart.day, @tstart.month, @tstart.year,
+                @tend.day, @tend.month, @tend.year,
+                (@tend - @tstart) / 60 / 60 / 24
+        ] %></td>
+        <td class="timexp_xp"><%= "  " + @xp_total[0].xp.to_s %></td>
+</tr>
+
+<tr>
+        <th class="timexp" colspan="3">Per cid totals</th>
+</tr><tr>
+        <th class="timexp_col">char</th>
+        <th class="timexp_col">timeframe</th>
+        <th class="timexp_col">xp</th>
+</tr>
 <% for x in @xp_per_cid do -%>
-<%= "  %-5d %-10d (Timeframe: %d.%d -> %d.%d [+%d])        %s" % [x.cid, x.xp, x.min_month, x.min_year, x.max_month, x.max_year,
-	(x.max_year.to_i * 12 * 30 + x.max_month.to_i * 30 + x.max_day.to_i) - (x.min_year.to_i * 30 * 12 + x.min_month.to_i * 30 + x.min_day.to_i),
-	link_to_character(x.character, true)
-] %>
+<tr>
+        <td class="timexp_name"><%= link_to_character(x.character, true) %></td>
+        <td class="timexp_time"><%= "%d.%d -> %d.%d [+%d]" % [x.min_month, x.min_year, x.max_month, x.max_year,
+                (x.max_year.to_i * 12 * 30 + x.max_month.to_i * 30 + x.max_day.to_i) - 
+                (x.min_year.to_i * 30 * 12 + x.min_month.to_i * 30 + x.min_day.to_i)] %></td>
+        <td class="timexp_xp"><%= "%d" % [x.xp] %></td>
+</tr>
 <% end -%>
 
-<b>Per cid per month</b>
+
+<tr>
+        <th class="timexp" colspan="3">Per cid per month</th>
+</tr><tr>
+        <th class="timexp_col">char</th>
+        <th class="timexp_col">timeframe</th>
+        <th class="timexp_col">xp</th>
+</tr>
 <% for x in @xp_per_cid_per_month do -%>
-<%= "  %-5d %-10d (%2d.%4d)                                 %s" % [x.cid, x.xp, x.month, x.year, link_to_character(x.character, true)]  %>
+<tr>
+        <td class="timexp_name"><%= link_to_character(x.character, true) %></td>
+        <td class="timexp_time"><%= "%2d.%4d" % [x.month, x.year] %></td>
+        <td class="timexp_xp"><%= "%d" % [x.xp] %></td>
+</tr>
 <% end -%>
 
 
-<b>Per cid per day</b>
+<tr>
+        <th class="timexp" colspan="3">Per cid per day</th>
+</tr><tr>
+        <th class="timexp_col">char</th>
+        <th class="timexp_col">timeframe</th>
+        <th class="timexp_col">xp</th>
+</tr>
 <% for x in @xp_per_cid_per_day do -%>
-<%= "  %-5d %-10d (%2d.%2d.%4d)                              %s" % [x.cid, x.xp, x.day, x.month, x.year, link_to_character(x.character, true)] %>
+<tr>
+        <td class="timexp_name"><%= link_to_character(x.character, true) %></td>
+        <td class="timexp_time"><%= "%2d.%2d.%4d" % [x.day, x.month, x.year] %></td>
+        <td class="timexp_xp"><%= "%d" % [x.xp] %></td>
+</tr>
 <% end -%>
 
-<b>Per month</b>
+<tr>
+        <th class="timexp" colspan="3">Per month</th>
+</tr><tr>
+        <th class="timexp_col">-</th>
+        <th class="timexp_col">timeframe</th>
+        <th class="timexp_col">xp</th>
+</tr>
 <% for x in @xp_per_month do -%>
-<%= "  %-16d (%2d.%4d)" % [x.xp, x.month, x.year] %>
+<tr>
+        <td class="timexp_name">-</td>
+        <td class="timexp_time"><%= "%2d.%4d" % [x.month, x.year] %></td>
+        <td class="timexp_xp"><%= "%d" % [x.xp] %></td>
+</tr>
 <% end -%>
 
-<b>Per day</b>
+<tr>
+        <th class="timexp" colspan="3">Per day</th>
+</tr><tr>
+        <th class="timexp_col">-</th>
+        <th class="timexp_col">timeframe</th>
+        <th class="timexp_col">xp</th>
+</tr>
 <% for x in @xp_per_day do -%>
-<%= "  %-16d (%2d.%2d.%4d) " % [x.xp, x.day, x.month, x.year] %>
+<tr>
+        <td class="timexp_name">-</td>
+        <td class="timexp_time"><%= "%2d.%2d.%4d" % [x.day, x.month, x.year] %></td>
+        <td class="timexp_xp"><%= "%d" % [x.xp] %></td>
+</tr>
 <% end -%>
-</pre>
+</table>
