@@ -1,4 +1,5 @@
 #include "_audit"
+#include "inc_debug"
 #include "inc_mysql"
 #include "inc_functions"
 #include "inc_currency"
@@ -93,9 +94,6 @@ int GetIsDMAllowed(object oPC);
 // case-insensitive.
 object FindPCByAccount(string sAccount, int bCheckNameToo = TRUE);
 
-
-// Sends a debug message out.  Low-cost.
-void dbg(string sMessage, object oDebugTarget = OBJECT_INVALID, int nLevel = 1);
 
 // Returns TRUE if oO is a item.
 int GetIsItem(object oO);
@@ -208,7 +206,7 @@ struct RealTime GetRealTime() {
 		"month(now()), year(now()), week(now()), weekday(now()), unix_timestamp(now());");
 	if (!SQLFetch()) {
 		r.error = 1;
-		SendMessageToAllDMs("GetRealTime() failed. Argfslz.");
+		dbg("GetRealTime() failed " + SQLGetLastQuery(), 0);
 	} else {
 		r.second = StringToInt(SQLGetData(1));
 		r.minute = StringToInt(SQLGetData(2));
@@ -290,17 +288,6 @@ int GetIsPolymorphed(object oCreature) {
 		e = GetNextEffect(oCreature);
 	}
 	return 0;
-}
-
-void dbg(string sMessage, object oDebugTarget = OBJECT_INVALID, int nLevel = 1) {
-
-	sMessage = ( GetIsObjectValid(oDebugTarget) ? ObjectToString(oDebugTarget) +
-				"/" + GetName(oDebugTarget) : "" ) + ": " + sMessage;
-
-	if ( GetLocalInt(GetModule(), "debug") >= nLevel )
-		SendMessageToAllDMs(sMessage);
-
-	WriteTimestampedLogEntry(sMessage);
 }
 
 int GetIsPlayerInArea() {

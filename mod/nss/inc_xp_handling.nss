@@ -80,7 +80,7 @@ int GetCombatXPForMonth(object oPC, int nYear, int nMonth) {
 		IntToString(cid) +
 		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + " limit 1;");
 	if ( !SQLFetch() )
-		return 0;
+		return 0xffffff;
 
 	int nCap = StringToInt(SQLGetData(1));
 	return nCap;
@@ -91,8 +91,10 @@ int GetTimeXPForMonth(object oPC, int nYear, int nMonth) {
 	SQLQuery("select sum(`xp`) as `xp` from `time_xp` where `cid` = " +
 		IntToString(cid) +
 		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + ";");
-	if ( !SQLFetch() )
+	if ( !SQLFetch() ) {
+		dbg("GetTimeXPForMonth() failed: " + SQLGetLastQuery(), 2, oPC);
 		return 0xffffff;
+	}
 
 	int nCap = StringToInt(SQLGetData(1));
 	return nCap;
@@ -105,9 +107,10 @@ int GetTimeXPForDay(object oPC, int nYear, int nMonth, int nDay) {
 		IntToString(cid) +
 		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + 
 		" and `day` = " + IntToString(nDay) + " limit 1;");
-	if ( !SQLFetch() )
+	if ( !SQLFetch() ) {
+		dbg("GetTimeXPForDay() failed: " + SQLGetLastQuery(), 2, oPC);
 		return 0xffffff;
-
+	}
 	int nCap = StringToInt(SQLGetData(1));
 	return nCap;
 }
@@ -279,7 +282,7 @@ void GiveTimeXP(object oPC, int nAmount) {
 
 	if ( nAmount > 0 ) {
 		GiveXPToCreature(oPC, nAmount);
-		SetTimeXPForDay(oPC, iXPForMonth + nAmount, iYear, iMonth, iDay);
+		SetTimeXPForDay(oPC, iXPForDay + nAmount, iYear, iMonth, iDay);
 	}
 }
 

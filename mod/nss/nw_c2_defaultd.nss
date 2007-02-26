@@ -31,20 +31,20 @@ void hb() {
 		if ( !GetIsObjectValid(oTorch) )
 			oTorch = CreateItemOnObject(TORCH, OBJECT_SELF, 1);
 		if ( !GetIsObjectValid(oTorch) ) {
-			dbg("Eeerk, cannot create torch '" + TORCH + "', bailing.", OBJECT_SELF, 0);
+			dbg("Eeerk, cannot create torch '" + TORCH + "', bailing.", 1, OBJECT_SELF);
 			return;
 		}
 
 		object oTorchSlot = GetItemInSlot(INVENTORY_SLOT_LEFTHAND);
 
 		if ( GetIsNight() && GetStringLowerCase(GetTag(oTorchSlot)) != TORCH ) {
-			dbg("Equipping torch.", OBJECT_SELF);
+			dbg("Equipping torch.", 5, OBJECT_SELF);
 			ActionEquipItem(oTorch, INVENTORY_SLOT_LEFTHAND);
 			return;
 		}
 
 		if ( GetIsDay() && GetStringLowerCase(GetTag(oTorchSlot)) == TORCH ) {
-			dbg("Unequipping torch.", OBJECT_SELF);
+			dbg("Unequipping torch.", 5, OBJECT_SELF);
 			ActionUnequipItem(oTorchSlot);
 			return;
 		}
