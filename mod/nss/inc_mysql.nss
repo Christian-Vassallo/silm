@@ -113,7 +113,7 @@ void SQLInit() {
 }
 
 string SQLGetLastQuery() {
-	return GetLocalString(GetModule(), "sql_last_query", sSQL);
+	return GetLocalString(GetModule(), "sql_last_query");
 }
 
 void SQLExecDirect(string sSQL) {
