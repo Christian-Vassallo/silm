@@ -12,7 +12,26 @@ class PersistentObjectsController < ApplicationController
 		:redirect_to => { :action => :list }
 
 	def list
-		@persistent_object_pages, @persistent_objects = paginate :persistent_objects, :per_page => 100
+		cond_str = '1=1'
+		cond = []
+		@filter_moveables = params['filter_moveables'] || session['po_filter_moveables'] || false
+		session['po_filter_moveables'] = params['filter_moveables'] if params['filter_moveables']
+				
+		@filter_str = params['filter_str'] || session['po_filter'] || 'blut bloodstain knochen'
+		session['po_filter'] = params['filter_str'] if params['filter_str']	
+
+		if @filter_moveables
+			cond_str += ' and resref not like ?'
+			cond << 'move_%'
+		end
+
+		@filter_str.split(/\s+/).map {|x| x.gsub(/[^a-z]/i, "")}.each {|x|
+			cond_str += ' and resref not like ? '
+			cond << '%' + x + '%'
+		}
+		@persistent_object_pages, @persistent_objects = paginate :persistent_objects, 
+			:conditions => [cond_str].concat(cond), 
+			:per_page => 100
 	end
 
 	def show

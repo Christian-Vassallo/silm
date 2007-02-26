@@ -1,25 +1,29 @@
 <h1>Listing persistent_objects</h1>
-
+<form method="post">
+	<input type="text" name="filter_str" value="<%= @filter_str %>" size="40"><br>
+	<input type="checkbox" name="filter_moveables" value="1" <%= "checked" if @filter_moveables%>> filter_moveables<br>
+	<input type="submit" value="Apply Filter">
+</form>
 <table>
-  <tr>
-  <th>id</th>
-  <% for column in PersistentObject.content_columns %>
-    <th><%= column.human_name %></th>
-  <% end %>
-  </tr>
-  
+	<tr>
+	<th>id</th>
+	<% for column in PersistentObject.content_columns %>
+		<th><%= column.human_name %></th>
+	<% end %>
+	</tr>
+	
 <% for persistent_object in @persistent_objects %>
-  <tr>
-  <td><%= persistent_object.id %></td>
-  <% for column in PersistentObject.content_columns %>
-    <td><%=h persistent_object.send(column.name) %></td>
-  <% end %>
-    <td><%= link_to 'Show', :action => 'show', :id => persistent_object %></td>
-    <%
-    #<td><%= link_to 'Edit', :action => 'edit', :id => persistent_object % ></td>
-    %>
-    <td><%= link_to 'Destroy', { :action => 'destroy', :id => persistent_object }, :confirm => 'Are you sure?', :method => :post %></td>
-  </tr>
+	<tr>
+	<td><%= persistent_object.id %></td>
+	<% for column in PersistentObject.content_columns %>
+		<td><%=h persistent_object.send(column.name) %></td>
+	<% end %>
+		<td><%= link_to 'Show', :action => 'show', :id => persistent_object %></td>
+		<%
+		#<td><%= link_to 'Edit', :action => 'edit', :id => persistent_object % ></td>
+		%>
+		<td><%= link_to 'Destroy', { :action => 'destroy', :id => persistent_object }, :confirm => 'Are you sure?', :method => :post %></td>
+	</tr>
 <% end %>
 </table>
 
