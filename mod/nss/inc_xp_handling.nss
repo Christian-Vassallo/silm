@@ -80,7 +80,7 @@ int GetCombatXPForMonth(object oPC, int nYear, int nMonth) {
 		IntToString(cid) +
 		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + " limit 1;");
 	if ( !SQLFetch() )
-		return 0xffffff;
+		return 0;
 
 	int nCap = StringToInt(SQLGetData(1));
 	return nCap;
@@ -92,8 +92,7 @@ int GetTimeXPForMonth(object oPC, int nYear, int nMonth) {
 		IntToString(cid) +
 		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + ";");
 	if ( !SQLFetch() ) {
-		dbg("GetTimeXPForMonth() failed: " + SQLGetLastQuery(), 2, oPC);
-		return 0xffffff;
+		return 0;
 	}
 
 	int nCap = StringToInt(SQLGetData(1));
@@ -108,8 +107,7 @@ int GetTimeXPForDay(object oPC, int nYear, int nMonth, int nDay) {
 		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + 
 		" and `day` = " + IntToString(nDay) + " limit 1;");
 	if ( !SQLFetch() ) {
-		dbg("GetTimeXPForDay() failed: " + SQLGetLastQuery(), 2, oPC);
-		return 0xffffff;
+		return 0;
 	}
 	int nCap = StringToInt(SQLGetData(1));
 	return nCap;
