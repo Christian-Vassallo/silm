@@ -88,11 +88,11 @@ int GetCombatXPForMonth(object oPC, int nYear, int nMonth) {
 
 int GetTimeXPForMonth(object oPC, int nYear, int nMonth) {
 	int cid = GetCharacterID(oPC);
-	SQLQuery("select sum(`xp`) from `time_xp` where `cid` = " +
+	SQLQuery("select sum(`xp`) as `xp` from `time_xp` where `cid` = " +
 		IntToString(cid) +
 		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + ";");
 	if ( !SQLFetch() )
-		return 0;
+		return 0xffffff;
 
 	int nCap = StringToInt(SQLGetData(1));
 	return nCap;
@@ -106,7 +106,7 @@ int GetTimeXPForDay(object oPC, int nYear, int nMonth, int nDay) {
 		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + 
 		" and `day` = " + IntToString(nDay) + " limit 1;");
 	if ( !SQLFetch() )
-		return 0;
+		return 0xffffff;
 
 	int nCap = StringToInt(SQLGetData(1));
 	return nCap;
@@ -271,10 +271,10 @@ void GiveTimeXP(object oPC, int nAmount) {
 	int iXPForDay = GetTimeXPForDay(oPC, iYear, iMonth, iDay);
 
 
-	if ( iXPForMonth >  C_TIME_XP_MONTH )
+	if ( iXPForMonth > C_TIME_XP_MONTH )
 		return;
 	
-	if ( iXPForDay >  C_TIME_XP_DAY )
+	if ( iXPForDay > C_TIME_XP_DAY )
 		return;
 
 	if ( nAmount > 0 ) {
