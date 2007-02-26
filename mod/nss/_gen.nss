@@ -269,7 +269,7 @@ int GetItemCountByTag(object oInv, string sTag) {
 }
 
 int clamp(int n, int min = 0, int max = 100) {
-	return n > max ? max : n < min ? min : n;
+	return n > max ? max : (n < min ? min : n);
 }
 
 

@@ -23,11 +23,18 @@ const int SQL_SUCCESS = 1;
 // Setup placeholders for ODBC requests and responses
 void SQLInit();
 
-// Execute statement in sSQL
-void SQLExecDirect(string sSQL);
 
 // Alias for SQLExecDirect
 void SQLQuery(string sSQL);
+
+/*
+void TransactionStart();
+void TransactionCancel();
+void TransactionCommit();
+*/
+
+// Returns the last SQL query executed.
+string SQLGetLastQuery();
 
 // Does the NEW, better escaping. Not compatible with SQL*codeSpecialChars().
 string SQLEscape(string sString);
@@ -105,7 +112,12 @@ void SQLInit() {
 	SetLocalString(GetModule(), "NWNX!ODBC!SPACER", sMemory);
 }
 
+string SQLGetLastQuery() {
+	return GetLocalString(GetModule(), "sql_last_query", sSQL);
+}
+
 void SQLExecDirect(string sSQL) {
+	SetLocalString(GetModule(), "sql_last_query", sSQL);
 	SetLocalString(GetModule(), "NWNX!ODBC!EXEC", sSQL);
 }
 
