@@ -108,7 +108,7 @@ zu den drei Textfeldern genau durch, bevor du dich an das Schreiben machst.
 	<p>Vermeide Dinge, die anderen Spielern Worte in den Mund legen ("Ein wahrlich furchteinfloessender
 	Eindruck ueberkommt euch") oder die auf subjektiver Ansicht basieren. ("Die wunderschoene,
 	anregende Frau vor euch ..")</p>
-	<p>Halte dies <b>kompakt</b>, doch <b>nicht zu kurz</b>.  Sage genau dies, was zu sagen ist, und nicht mehr.</p>
+	<p>Halte dies <b>kompakt</b>, doch <b>nicht zu kurz</b>.	Sage genau dies, was zu sagen ist, und nicht mehr.</p>
 	</i>
 </td><td valign="top" class="char_anmeldung">
 <% if @c.status == "new" && (session[:user].char_admin? || session[:user] == @c.account) %>
@@ -118,7 +118,7 @@ zu den drei Textfeldern genau durch, bevor du dich an das Schreiben machst.
 <% end %>
 </td>
 </tr>
-<tr><td valign="top"  width="150px">
+<tr><td valign="top"	width="150px">
 	<center><h3>Wesenszuege</h3></center>
 	<i>
 	<p>Hier trage die ethischen und mentalen Eigenschaften deines Charakters ein.  Dies schliesst seinen
@@ -180,4 +180,12 @@ Note: das hier geht alles nicht.<br>
 <i>Hinweis: Grundlegende HTML-Tags sind verfuegbar.</i>
 <br>
 <% end %>
+</p>
+
+<p>
+<table align="center">
+<% for a in @audit %>
+	<%= render :partial => 'audit/audit_event', :locals => {:a => a, :complete => session[:user] && session[:user].audit_admin?} %>
+<% end %>
+</table>
 </p>

@@ -6,10 +6,12 @@
 # 
 %>
 <tr>
-	<td id="audit"><%= strftime a.date %></td>
-	<td id="audit"><%= a.category %></td>
-	<td id="audit"><%= a.event %></td>
-	<td id="audit"><%= a.data %></td>
-	<td id="audit"><%= a.player %> (<%= a.flags %>) <%= a.char %></td>
-	<td id="audit"><%= a.tplayer %> <%= a.tchar %> </td>
+  <td id="audit"><%= strftime a.date %></td>
+  <td id="audit"><%= a.category %></td>
+  <td id="audit"><%= a.event %></td>
+  <% if complete %>
+    <td id="audit"><%= a.data %></td>
+    <td id="audit"><%= a.player %> (<%= a.flags %>) <%= a.char %></td>
+    <td id="audit"><%= a.tplayer %> <%= a.tchar %> </td>
+  <% end %>
 </tr>
