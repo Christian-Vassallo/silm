@@ -23,6 +23,12 @@
 <b>XP:</b> <%= @c.xp %><br>
 <b>Kampf-XP:</b> <%= @c.xp_combat %><br>
 <b>Auto-XP:</b> <%= link_to @c.xp_time, :controller => 'stat', :action => 'time_xp', :id => @c.id %><br>
+<b>XP-Verhaeltnis:</b><br>
+<%= "%.2f" % [@c.xp_combat.to_f / (@c.xp.to_f / 100.0)] %>% Kampf<br>
+<%= "%.2f" % [(@c.xp.to_f - @c.xp_combat.to_f - @c.xp_time.to_f) / (@c.xp.to_f / 100.0)] %>% SL<br>
+<%= "%.2f" % [@c.xp_time.to_f / (@c.xp.to_f / 100.0)] %>% TimeXP<br>
+<br>
+
 <b>Gold:</b> <%= @c.gold %><br>
 <p>
 <b>Klasse(n)</b><br>
