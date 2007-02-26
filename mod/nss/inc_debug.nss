@@ -9,10 +9,11 @@ void dbg(string sMessage, int nLevel = 1, object oTarget = OBJECT_INVALID);
 
 void dbg(string sMessage, int nLevel = 1, object oTarget = OBJECT_INVALID) {
 	
-	sMessage = "(dbg:" + IntToString(nLevel);
+	string sMsg2 = "(dbg:" + IntToString(nLevel);
 	if (GetIsObjectValid(oTarget))
-		sMessage += ":" + GetResRef(oTarget) + ":" + GetTag(oTarget) + GetName(oTarget);
-	sMessage += ") " + sMessage;
+		sMsg2 += ":" + GetResRef(oTarget) + ":" + GetTag(oTarget) + GetName(oTarget);
+	sMsg2 += ") " + sMessage;
+	sMessage = sMsg2;
 
 	if (GetLocalInt(GetModule(), "dbg") >= nLevel) {
 		WriteTimestampedLogEntry(sMessage);
