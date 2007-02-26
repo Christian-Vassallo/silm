@@ -483,7 +483,8 @@ You are registered for the following services: #{yjservices.keys.reject {|key| !
 	end
 
 	def cmd_n jid, command, a
-		all = a.join(" ")
+		all = a.join(" ").gsub(/[\n\r\t]/, " ")
+		jnotify("nwbridge", "%s: %s" % [jid, all])
 		@nwbridge.cmd(all)
 	end
 
