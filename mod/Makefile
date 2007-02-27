@@ -37,6 +37,8 @@ lists: path
 	for i in $(LISTS); do ../buildutil/gen_resref.rb $${i}.marshal $${i}/*.$${i} && \
 		../buildutil/process_resref.rb $${i}.marshal $${i}.marshal.txt; \
 	done
+	../buildutil/gen_resref.rb are.marshal area/*.are && \
+		../buildutil/process_resref.rb are.marshal are.marshal.txt;
 
 install-lists:
 	for i in $(LISTS); do \
