@@ -1,6 +1,7 @@
 #include "inc_lists"
 #include "inc_cdb"
 #include "_gen"
+#include "inc_xp_handling"
 
 const int
 MENTOR_FLAG_SELF = 1,
@@ -185,6 +186,7 @@ void MentorDoXPTransaction(object oMentor, object oReceiver, int nXP) {
 			", " + IntToString(nCID) + ", " + IntToString(nTCID) + ", " + IntToString(nXP) + ");");
 	}
 
+	_AddNonGMXPDifference(oReceiver, nXP);
 	GiveXPToCreature(oReceiver, nXP);
 
 	SendMessageToPC(oMentor, PCToString(oReceiver, 1) +

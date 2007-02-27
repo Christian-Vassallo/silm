@@ -1348,7 +1348,7 @@ void DoXPFunction(int iXP, object oUser) {
 	if ( iParty && iReward ) {
 		oPartyMember = GetFirstFactionMember(oTarget, TRUE);
 		while ( GetIsObjectValid(oPartyMember) == TRUE ) {
-			GiveXPToCreature(oPartyMember, iReward);
+			//GiveXPToCreature(oPartyMember, iReward);
 			SetLocalInt(oPartyMember, "dmfi_XPGiven", GetLocalInt(oPartyMember, "dmfi_XPGiven") + iReward);
 			SendMessageToPC(oPartyMember, "You have been granted " + IntToString(iReward) + " XP.");
 			oPartyMember = GetNextFactionMember(oTarget, TRUE);
@@ -1358,7 +1358,7 @@ void DoXPFunction(int iXP, object oUser) {
 		oPartyMember = GetFirstFactionMember(oTarget, TRUE);
 		while ( GetIsObjectValid(oPartyMember) == TRUE ) {
 			iReward = ( GetHitDice(oTarget) * iPercent * 10 );
-			GiveXPToCreature(oPartyMember, iReward);
+			//GiveXPToCreature(oPartyMember, iReward);
 			SetLocalInt(oPartyMember, "dmfi_XPGiven", GetLocalInt(oPartyMember, "dmfi_XPGiven") + iReward);
 			SendMessageToPC(oPartyMember, "You have been granted a " +
 				GetLocalString(oUser, "BonusType") + " XP reward of " + IntToString(iReward) + ".");
@@ -1369,7 +1369,7 @@ void DoXPFunction(int iXP, object oUser) {
 		}
 	} else {
 		iReward = ( GetHitDice(oTarget) * iPercent * 10 );
-		GiveXPToCreature(oTarget, iReward);
+		//GiveXPToCreature(oTarget, iReward);
 		SetLocalInt(oTarget, "dmfi_XPGiven", GetLocalInt(oTarget, "dmfi_XPGiven") + iReward);
 		SendMessageToPC(oTarget, "You have been granted a " +
 			GetLocalString(oUser, "BonusType") + " experience reward of " + IntToString(iReward) + ".");

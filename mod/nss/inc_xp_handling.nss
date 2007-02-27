@@ -12,6 +12,10 @@ int GetKillXP(object oDead, object oKiller, int nBoni = 0);
 void GiveKillXP();
 
 
+// Used by hb_xp_guard to differentiate between GM given XP
+// and script given XP
+void _AddNonGMXPDifference(object oPC, int nValue, int nType = 0);
+
 
 // Gives nAmount to oPC, but not above the CAP.
 void GiveTimeXP(object oPC, int nAmount);
@@ -198,6 +202,7 @@ void XP_RewardQuestXP(object oPC, int iXP) {
 	if ( !iXP ) iXP = 1;
 
 	GiveXPToCreature(oPC, iXP);
+	_AddNonGMXPDifference(oPC, iXP);
 	ExportSingleCharacter(oPC);
 }
 
@@ -279,6 +284,7 @@ void GiveTimeXP(object oPC, int nAmount) {
 		return;
 
 	if ( nAmount > 0 ) {
+		_AddNonGMXPDifference(oPC, nAmount);
 		GiveXPToCreature(oPC, nAmount);
 		SetTimeXPForDay(oPC, iXPForDay + nAmount, iYear, iMonth, iDay);
 	}
@@ -307,6 +313,7 @@ void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE) {
 	}
 
 	if ( nValue > 0 ) {
+		_AddNonGMXPDifference(oPC, nValue);
 		GiveXPToCreature(oPC, nValue);
 		// SetPersistentInt(oPC,"XP_Combat_cap_num",iXPForMonth + nValue);
 		// SetPersistentInt(oPC,"XP_Combat",iCombXP + nValue);
@@ -321,4 +328,11 @@ void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE) {
 			);
 
 	}
+}
+
+
+
+void _AddNonGMXPDifference(object oPC, int nValue, int nType = 0) {
+	int nVal = GetLocalInt(oPC, "xpg_other_xp");
+	SetLocalInt(oPC, "xpg_other_xp", nVal + nValue);
 }
