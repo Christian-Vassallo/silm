@@ -19,6 +19,7 @@
 <%= link_to_if (session[:user] && session[:user].details? && session[:user].char_admin?), "Weather", :controller => 'weather', :action => 'index' %>&nbsp;
 * <%= link_to_if (session[:user] && session[:user].details? && session[:user].char_admin?), "MentorData", :controller => 'stat', :action => 'mentor' %>&nbsp;
 * <%= link_to_if (session[:user] && session[:user].details? && session[:user].char_admin?), "TimeXP", :controller => 'stat', :action => 'time_xp' %>&nbsp;
+* <%= link_to_if (session[:user] && session[:user].details? && session[:user].audit_admin?), "Settings", :controller => 'set', :action => 'index' %>
 <br>
 <% end %>
 
@@ -33,7 +34,6 @@ Audit: <%= link_to_if (session[:user] && session[:user].details? && session[:use
 * <%= link_to_if (session[:user] && session[:user].details? && session[:user].audit_admin?), "Audit", :controller => "audit", :action => 'index' %>&nbsp;
 * <%= link_to_if (session[:user] && session[:user].details? && session[:user].audit_admin?), "Container", :controller => "container", :action => 'index' %>&nbsp;
 * <%= link_to_if (session[:user] && session[:user].details? && session[:user].audit_admin?), "DB Consistency Check", :controller => 'character', :action => 'consistency' %>
-* <%= link_to_if (session[:user] && session[:user].details? && session[:user].audit_admin?), "Settings", :controller => 'set', :action => 'index' %>
 <br>
 <% end %>
 <% if session[:user] && session[:user].craft_view? %>
