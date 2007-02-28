@@ -1,9 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>Charakterverwaltung</title>
-	<link rel="stylesheet" href="/stylesheets/main.css" type="text/css">
-	<link rel="stylesheet" href="/stylesheets/scaffold.css" type="text/css">
+  <title>Charakterverwaltung</title>
+  <link rel="stylesheet" href="/stylesheets/main.css" type="text/css">
+  <link rel="stylesheet" href="/stylesheets/scaffold.css" type="text/css">
 </head>
 <body>
 <table class="main" style="width:100%">
@@ -33,6 +33,7 @@ Audit: <%= link_to_if (session[:user] && session[:user].details? && session[:use
 * <%= link_to_if (session[:user] && session[:user].details? && session[:user].audit_admin?), "Audit", :controller => "audit", :action => 'index' %>&nbsp;
 * <%= link_to_if (session[:user] && session[:user].details? && session[:user].audit_admin?), "Container", :controller => "container", :action => 'index' %>&nbsp;
 * <%= link_to_if (session[:user] && session[:user].details? && session[:user].audit_admin?), "DB Consistency Check", :controller => 'character', :action => 'consistency' %>
+* <%= link_to_if (session[:user] && session[:user].details? && session[:user].audit_admin?), "Settings", :controller => 'set', :action => 'index' %>
 <br>
 <% end %>
 <% if session[:user] && session[:user].craft_view? %>
@@ -43,14 +44,14 @@ Craft: <%= link_to_if (session[:user] && session[:user].details? && session[:use
 <% end %>
 <br>
 <% if flash[:notice] %>
-	<% if !flash[:error] %>
-		<font color="green"><i><%=flash[:notice]-%></i></font><br>
-	<% end; if flash[:error] %>
-		<font color="red"><i><%=flash[:notice]-%></i></font><br>
-	<% end %>
-	<font color="red"><% flash[:errors].each_full do |e| %>
-	<%= e %><br>
-	<% end if flash[:errors] %></font>
+  <% if !flash[:error] %>
+    <font color="green"><i><%=flash[:notice]-%></i></font><br>
+  <% end; if flash[:error] %>
+    <font color="red"><i><%=flash[:notice]-%></i></font><br>
+  <% end %>
+  <font color="red"><% flash[:errors].each_full do |e| %>
+  <%= e %><br>
+  <% end if flash[:errors] %></font>
 <% end %>
 </td>
 
@@ -80,7 +81,7 @@ Craft: <%= link_to_if (session[:user] && session[:user].details? && session[:use
 </td></tr>
 </table>
 <% 
-	if session[:user] && session[:user].audit_admin?
+  if session[:user] && session[:user].audit_admin?
 %>
 <hr>
 <%= debug(params) %>
