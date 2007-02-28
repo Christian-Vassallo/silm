@@ -50,7 +50,7 @@ void XPDoXPTransaction(object oGiver, object oReceiver, int nXP) {
 			IntToString(nAID) + ", " + IntToString(nTCID) + ", " + IntToString(nXP) + ");");
 	}
 
-	GiveXPToCreature(oReceiver, nXP);
+	GiveXP(oReceiver, nXP, FALSE);
 
 	SendMessageToAllDMs(GetName(OGiver) + ": " + IntToString(nXP) + " XP -> " + GetName(oReceiver));
 }

@@ -186,8 +186,7 @@ void MentorDoXPTransaction(object oMentor, object oReceiver, int nXP) {
 			", " + IntToString(nCID) + ", " + IntToString(nTCID) + ", " + IntToString(nXP) + ");");
 	}
 
-	_AddNonGMXPDifference(oReceiver, nXP);
-	GiveXPToCreature(oReceiver, nXP);
+	GiveXP(oReceiver, nXP, FALSE);
 
 	SendMessageToPC(oMentor, PCToString(oReceiver, 1) +
 		" hat " + IntToString(nXP) + " XP durch Dich erhalten.");

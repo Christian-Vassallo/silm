@@ -8,6 +8,15 @@ void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE);
 // Returns how much EP oKiller Gets for oDead
 int GetKillXP(object oDead, object oKiller, int nBoni = 0);
 
+
+// Gives nXP to oPlayer, returning the
+// given value (minus penalties).
+// Sets various other variables, including
+// those concering xpguard. Dont mix with
+//  GiveXPToCreature()!
+int GiveXP(object oPlayer, int nXP, int bMultiClassPenalties = TRUE);
+
+
 // Returns how much EP
 void GiveKillXP();
 
@@ -38,6 +47,24 @@ int GetCombatXPForMonth(object oPC, int nYear, int nMonth);
 // This requires an unique key on xp, year, month or your database
 // will be littered with stray inserts
 void SetCombatXPForMonth(object oPC, int nXP, int nYear, int nMonth);
+
+
+
+int GiveXP(object oPlayer, int nXP, int bMultiClassPenalties = TRUE) {
+	if (nXP < 0 || !GetIsPC(oPlayer) || GetIsDM(oPlayer))
+			return 0;
+	
+	int now = GetXP(oPlayer);
+	if (bMultiClassPenalties)
+		GiveXPToCreature(oPlayer, nXP);
+	else
+		SetXP(oPlayer, now + nXP);
+
+	now = GetXP(oPlayer) - now;
+	
+	_AddNonGMXPDifference(oPlayer, now);
+	return now;
+}
 
 //Get the ECL of the character
 int SR_GetECL(object oPC) {
@@ -201,8 +228,7 @@ void XP_RewardQuestXP(object oPC, int iXP) {
 	//Award at least one XP
 	if ( !iXP ) iXP = 1;
 
-	GiveXPToCreature(oPC, iXP);
-	_AddNonGMXPDifference(oPC, iXP);
+	GiveXP(oPC, iXP);
 	ExportSingleCharacter(oPC);
 }
 
@@ -284,8 +310,7 @@ void GiveTimeXP(object oPC, int nAmount) {
 		return;
 
 	if ( nAmount > 0 ) {
-		_AddNonGMXPDifference(oPC, nAmount);
-		GiveXPToCreature(oPC, nAmount);
+		GiveXP(oPC, nAmount, FALSE);
 		SetTimeXPForDay(oPC, iXPForDay + nAmount, iYear, iMonth, iDay);
 	}
 }
@@ -313,8 +338,7 @@ void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE) {
 	}
 
 	if ( nValue > 0 ) {
-		_AddNonGMXPDifference(oPC, nValue);
-		GiveXPToCreature(oPC, nValue);
+		nValue = GiveXP(oPC, nValue);
 		// SetPersistentInt(oPC,"XP_Combat_cap_num",iXPForMonth + nValue);
 		// SetPersistentInt(oPC,"XP_Combat",iCombXP + nValue);
 
