@@ -4,17 +4,23 @@
 require 'const'
 
 class ApplicationController < ActionController::Base
-	layout "main"
+  layout "main"
 
-	after_filter :set_charset
+  after_filter :set_charset
 
-	def set_charset
-		charset = "iso-8859-15"
-		content_type = @headers["Content-Type"] || "text/html"
-		if /^text\//.match(content_type)
-			@headers["Content-Type"] = "#{content_type}; charset=#{charset}" 
-		end
-	end
+  def set_charset
+    charset = "iso-8859-15"
+    content_type = @headers["Content-Type"] || "text/html"
+    if /^text\//.match(content_type)
+      @headers["Content-Type"] = "#{content_type}; charset=#{charset}" 
+    end
+  end
+  
+  
+  def amask(mask)
+    return false if !session[:user]
+    return session[:user].amask & amask == amask
+  end
 
         def goback
                 if session[:redirect_to]
@@ -68,7 +74,7 @@ class ApplicationController < ActionController::Base
                 end
         end
         
-	def authenticate_object_admin
+  def authenticate_object_admin
                 unless session[:user] && session[:user].object_admin?
                         session[:redirect_to] = request.request_uri
                         flash[:notice] = "Du musst Object-Admin sein, um diese Aktion auszufuehren."
@@ -77,7 +83,7 @@ class ApplicationController < ActionController::Base
                 end
         end
 
-	def authenticate_char_view
+  def authenticate_char_view
                 unless session[:user] && session[:user].char_view?
                         session[:redirect_to] = request.request_uri
                         flash[:notice] = "Du musst Administrator sein, um diese Aktion auszufuehren."
@@ -111,19 +117,19 @@ class ApplicationController < ActionController::Base
         end
 
 
-	def enter_details
-		unless session[:user] && session[:user].details?
+  def enter_details
+    unless session[:user] && session[:user].details?
                         session[:redirect_to] = request.request_uri
-			flash[:notice] = "Bitte trage deine persoenlichen Details ein, bevor du deine Anmeldung bearbeitest."
-			redirect_to :controller => "account", :action => "details"
-			return false	
-		end
-	end
+      flash[:notice] = "Bitte trage deine persoenlichen Details ein, bevor du deine Anmeldung bearbeitest."
+      redirect_to :controller => "account", :action => "details"
+      return false  
+    end
+  end
 
         def gobackfilter
                 session[:last_url2] = session[:last_url] #request.request_uri
                 session[:last_url] = request.request_uri
                 true
         end
-	
+  
 end
