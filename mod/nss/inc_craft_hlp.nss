@@ -7,6 +7,8 @@
 #include "_gen"
 #include "_colours"
 #include "inc_craft_data"
+#include "inc_2dacache"
+#include "inc_setting"
 
 /* configuration */
 
@@ -204,8 +206,9 @@ object GetCraftSpellCaster(object oWorkPlace) {
 
 int GetNextCraftLevelXPCAP(int nPracticalLevel) {
 	int nLearnBorder = CRAFT_LEARN_BORDER;
-	if ( GetLocalInt(GetModule(), "CRAFT_LEARN_BORDER") )
-		nLearnBorder = GetLocalInt(GetModule(), "CRAFT_LEARN_BORDER");
+	int nGvCLB = gvGetInt("craft_learn_border");
+	if ( nGvCLB )
+		nLearnBorder = nGvCLB;
 
 	// Increase for each level.
 	if ( nPracticalLevel > 10 )
@@ -345,8 +348,9 @@ int AdvanceCraftSkill(object oPC, struct Recipe r, int nLearnMode) {
 	struct PlayerSkill s = GetPlayerSkill(oPC, r.cskill);
 
 	int nLearnBorder = CRAFT_LEARN_BORDER;
-	if ( GetLocalInt(GetModule(), "CRAFT_LEARN_BORDER") )
-		nLearnBorder = GetLocalInt(GetModule(), "CRAFT_LEARN_BORDER");
+	int nGvCLB = gvGetInt("craft_learn_border");
+	if ( nGvCLB )
+		nLearnBorder = nGvCLB;
 
 	// Increase for each level.
 	if ( s.practical > 10 )
@@ -825,13 +829,30 @@ string GetResRefFromComponentString(string sR) {
 
 
 
-void CreateStackedItemsOnObject(string sResRef, object oCreateOn, int nCount) {
-	int i = 0;
-	if ( nCount < 1 )
+void CreateStackedItemsOnObject(string sResRef, object oCreateOn, int nCount, string sLocal = "", int sLocalV = 0) {
+	if (nCount < 1)
 		return;
 
-	for ( i = 0; i < nCount; i++ )
-		CreateItemOnObject(sResRef, oCreateOn, 1);
+	if (gvGetInt("craft_use_new_create_code")) {
+		object oFirst = CreateItemOnObject(sResRef, oCreateOn, 1);
+		SetStolenFlag(oFirst, 1);	
+		SetLocalInt(oFirst, sLocal, sLocalV);
+		if (nCount > 1) {
+			int i;
+			int nMaxStack = StringToInt(Get2DACached("baseitems", "ILRStackSize", GetBaseItemType(oFirst)));
+			if (nMaxStack > 1) { // item can be stacked!
+				SetItemStackSize(oFirst, GetItemStackSize(oFirst) - 1 + nCount);
+			} else {
+				for ( i = 1; i < nCount; i++ ) {
+					oFirst = CreateItemOnObject(sResRef, oCreateOn, 1);
+					SetStolenFlag(oFirst, 1);
+					SetLocalInt(oFirst, sLocal, sLocalV);
+				}
+			}
+		}
+	} else {
+		object oFirst = CreateItemOnObject(sResRef, oCreateOn, nCount);
+	}
 }
 
 
@@ -857,19 +878,9 @@ int CreateItemOnObjectByResRefString(string sResRefStr, object oCreateOn, int nS
 		nStackSize = FloatToInt(IntToFloat(nStackSizeMin + Random(nStackSizeMax - nStackSizeMin + 1)) *
 						 fFactor);
 
-		// while (nStack < nStackSize) {
-		oNew = CreateItemOnObject(sResRef, oCreateOn, nStackSize);
-		//    nStack = GetItemStackSize(oNew);
-		//}
+		CreateStackedItemsOnObject(sResRef, oCreateOn, nStackSize);
 
-		if ( GetIsObjectValid(oNew) ) {
-			SetStolenFlag(oNew, 1);
-
-			if ( sLocal != "" )
-				SetLocalInt(oNew, sLocal, sLocalVal);
-
-			nCreated += nStackSize;
-		}
+		nCreated += nStackSize;
 
 		iSplit = FindSubString(sResRefStr, sDelimiter);
 	}
@@ -881,19 +892,8 @@ int CreateItemOnObjectByResRefString(string sResRefStr, object oCreateOn, int nS
 	sResRef = GetResRefFromComponentString(sResRef);
 	nStackSize = FloatToInt(IntToFloat(nStackSizeMin + Random(nStackSizeMax - nStackSizeMin + 1)) * fFactor);
 
-	//while (nStack < nStackSize) {
-	oNew = CreateItemOnObject(sResRef, oCreateOn, nStackSize);
-	//    nStack = GetItemStackSize(oNew);
-	//}
-
-	if ( GetIsObjectValid(oNew) ) {
-		SetStolenFlag(oNew, 1);
-
-		if ( sLocal != "" )
-			SetLocalInt(oNew, sLocal, sLocalVal);
-
-		nCreated += nStackSize;
-	}
+	CreateStackedItemsOnObject(sResRef, oCreateOn, nStackSize);
+	nCreated += nStackSize;
 
 	return nCreated;
 }
