@@ -27,7 +27,6 @@ int gvGetInt(string sKey) {
 
 
 string gvSetVar(string sKey, string sType, string sValue) {
-
 	if (gvExistsVar(sKey, sType))
 		SQLQuery("update " + GV_TABLE + " set `value` = " + SQLEscape(sValue) + 
 			" where `key` = " + SQLEscape(sKey) + " and `type` = " + SQLEscape(sType) + 
@@ -37,18 +36,23 @@ string gvSetVar(string sKey, string sType, string sValue) {
 			SQLEscape(sKey) + ", " + SQLEscape(sType) + ", " + SQLEscape(sValue) + 
 			") limit 1;"
 		);
-
 	return sValue;
 }
 
 string gvGetVar(string sKey, string sType) {
-	SQLQuery("select `value` from " + GV_TABLE + " where " +
+	string cacheKey = "gv_" + sType + "_" + sKey;
+	if (GetLocalInt(GetModule(), cacheKey) > 0)
+			return GetLocalString(GetModule(), cacheKey);
+
+	SQLQuery("select `value`, unix_timestamp() from " + GV_TABLE + " where " +
 		" `key` = " + SQLEscape(sKey) + 
 		" and `type` = " + SQLEscape(sType) + 
 		" limit 1;");
-	if (SQLFetch())
+	if (SQLFetch()) {
+		SetLocalString(GetModule(), cacheKey, SQLGetData(1));
+		SetLocalInt(GetModule(), cacheKey, StringToInt(SQLGetData(2)));
 		return SQLGetData(1);
-	else
+	} else
 		return "";
 }
 

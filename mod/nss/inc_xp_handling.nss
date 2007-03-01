@@ -1,6 +1,7 @@
 #include "inc_decay"
 #include "inc_cdb"
 #include "inc_persist"
+#include "inc_setting"
 
 // Gives oPC nValue EP
 void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE);
@@ -85,7 +86,7 @@ int GetBaseXPForLevel(int iLevel) {
 }
 
 //returns Combat EP
-int GetCombatXP(object oPC) {
+int GetLegacyCombatXP(object oPC) {
 	int cid = GetCharacterID(oPC);
 	SQLQuery("select `xp_combat` from `characters` where `id` = " + IntToString(cid) + " limit 1;");
 	SQLFetch();
@@ -99,25 +100,15 @@ int GetCombatXP(object oPC) {
 	return nCap;
 }
 
-void SetCombatXP(object oPC, int nXP) {
+void SetLegacyCombatXP(object oPC, int nXP) {
 	int cid = GetCharacterID(oPC);
 	SQLQuery("update `characters` set `xp_combat`=" +
 		IntToString(nXP) + " where `id`=" + IntToString(cid) + " limit 1;");
 }
 
-int GetCombatXPForMonth(object oPC, int nYear, int nMonth) {
-	int cid = GetCharacterID(oPC);
-	SQLQuery("select `xp` from `combat_xp` where `cid` = " +
-		IntToString(cid) +
-		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + " limit 1;");
-	if ( !SQLFetch() )
-		return 0;
 
-	int nCap = StringToInt(SQLGetData(1));
-	return nCap;
-}
 
-int GetTimeXPForMonth(object oPC, int nYear, int nMonth) {
+int GetCategoryXPForMonth(object oPC, string sCategory, int nYear, int nMonth) {
 	int cid = GetCharacterID(oPC);
 	SQLQuery("select sum(`xp`) as `xp` from `time_xp` where `cid` = " +
 		IntToString(cid) +
@@ -131,9 +122,9 @@ int GetTimeXPForMonth(object oPC, int nYear, int nMonth) {
 }
 
 
-int GetTimeXPForDay(object oPC, int nYear, int nMonth, int nDay) {
+int GetCategoryXPForDay(object oPC, string sCategory, int nYear, int nMonth, int nDay) {
 	int cid = GetCharacterID(oPC);
-	SQLQuery("select `xp` from `time_xp` where `cid` = " +
+	SQLQuery("select `xp` from `" + sCategory + "_xp` where `cid` = " +
 		IntToString(cid) +
 		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + 
 		" and `day` = " + IntToString(nDay) + " limit 1;");
@@ -144,15 +135,15 @@ int GetTimeXPForDay(object oPC, int nYear, int nMonth, int nDay) {
 	return nCap;
 }
 
-void SetTimeXPForDay(object oPC, int nXP, int nYear, int nMonth, int nDay) {
+void SetCategoryXPForDay(object oPC, string sCategory, int nXP, int nYear, int nMonth, int nDay) {
 	int cid = GetCharacterID(oPC);
-	SQLQuery("select `xp` from `time_xp` where `cid` = " +
+	SQLQuery("select `xp` from `" + sCategory + "_xp` where `cid` = " +
 		IntToString(cid) +
 		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) +
 		" and `day` = " + IntToString(nDay) + " limit 1;");
 		
 	if ( !SQLFetch() )
-		SQLQuery("insert into `time_xp` (`cid`, `xp`, `year`, `month`, `day`) values(" +
+		SQLQuery("insert into `" + sCategory + "_xp` (`cid`, `xp`, `year`, `month`, `day`) values(" +
 			IntToString(cid) + ", " + IntToString(nXP) + ", " +
 			IntToString(nYear) + ", " + IntToString(nMonth) + ", " + IntToString(nDay) + ");");
 	else
@@ -167,35 +158,11 @@ void SetTimeXPForDay(object oPC, int nXP, int nYear, int nMonth, int nDay) {
 
 
 
-void SetCombatXPForMonth(object oPC, int nXP, int nYear, int nMonth) {
-	int cid = GetCharacterID(oPC);
-	SQLQuery("select `xp` from `combat_xp` where `cid` = " +
-		IntToString(cid) +
-		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + " limit 1;");
-	if ( !SQLFetch() )
-		SQLQuery("insert into `combat_xp` (`cid`, `xp`, `year`, `month`) values(" +
-			IntToString(cid) + ", " + IntToString(nXP) + ", " +
-			IntToString(nYear) + ", " + IntToString(nMonth) + ");");
-	else
-		SQLQuery("update `combat_xp` set `xp`=" +
-			IntToString(nXP) +
-			" where `cid` = " +
-			IntToString(cid) +
-			" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + " limit 1;");
-}
-
-
-
-
 //returns Quest EP
 int GetQuestXP(object oPC) {
 	return GetXP(oPC) - GetCombatXP(oPC);
 }
 
-
-int GetTimedXPCap(object oPC) {
-	return C_COMBAT_XP_1 + GetHitDice(oPC) * C_COMBAT_XP_2;
-}
 
 //Get the number of XP the character has to spend
 int GetFreeXP(object oPC) {
@@ -205,7 +172,7 @@ int GetFreeXP(object oPC) {
 }
 
 void XP_LoseXP(object oPC, int iHowMuch, int iSilently = TRUE, int iOnlyFree = FALSE) {
-	int iCombXP = GetCombatXP(oPC);
+	int iCombXP = GetLegacyCombatXP(oPC);
 
 	if ( iOnlyFree && iHowMuch > GetFreeXP(oPC) )
 		iHowMuch = GetFreeXP(oPC);
@@ -213,6 +180,7 @@ void XP_LoseXP(object oPC, int iHowMuch, int iSilently = TRUE, int iOnlyFree = F
 	/* "XP-Verlust" */
 	if ( !iSilently )
 		DelayCommand(4.0, FloatingTextStrRefOnCreature(58299, oPC, FALSE));
+
 	SetXP(oPC, GetXP(oPC) - iHowMuch);
 
 	/* Lost XP will be subtracted from the combat XP */
@@ -299,19 +267,19 @@ void GiveTimeXP(object oPC, int nAmount) {
 	int iDay = r.day;
 	int iMonth = r.month; 
 	int iYear = r.year; 
-	int iXPForMonth = GetTimeXPForMonth(oPC, iYear, iMonth);
-	int iXPForDay = GetTimeXPForDay(oPC, iYear, iMonth, iDay);
+	int iXPForMonth = GetCategoryXPForMonth(oPC, "time", iYear, iMonth);
+	int iXPForDay = GetCategoryXPForDay(oPC, "time", iYear, iMonth, iDay);
 
 
-	if ( iXPForMonth > C_TIME_XP_MONTH )
+	if ( iXPForMonth > gvGetInt("time_xp_limit_month") )
 		return;
 	
-	if ( iXPForDay > C_TIME_XP_DAY )
+	if ( iXPForDay > gvGetInt("time_xp_limit_day") )
 		return;
 
 	if ( nAmount > 0 ) {
 		GiveXP(oPC, nAmount, FALSE);
-		SetTimeXPForDay(oPC, iXPForDay + nAmount, iYear, iMonth, iDay);
+		SetCategoryXPForDay(oPC, "time", iXPForDay + nAmount, iYear, iMonth, iDay);
 	}
 }
 
@@ -320,18 +288,31 @@ void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE) {
 	if ( GetIsDM(oPC) )
 		return;
 
-	int iCombXP = GetCombatXP(oPC);
-	int iMonth = GetCalendarMonth();
-	int iYear = GetCalendarYear();
-	int iXPForMonth = GetCombatXPForMonth(oPC, iYear, iMonth);
+	int iCombXP = GetLegacyCombatXP(oPC);
+	
+	struct RealTime r = GetRealTime();
+	if (r.error)
+		return;
 
+	int iDay = r.day;
+	int iMonth = r.month; 
+	int iYear = r.year; 
+	int iXPForMonth = GetCategoryXPForMonth(oPC, "combat", iYear, iMonth);
+	int iXPForDay = GetCategoryXPForDay(oPC, "combat", iYear, iMonth, iDay);
 
-	if ( iCombXP >= C_COMBAT_XP_MAX ) {
+	if ( iCombXP >= gvGetInt("combat_xp_max" ) ) {
 		if (!bNoWarn)
 			SendMessageToPC(oPC, "Durch Kaempfen koennt Ihr nun wirklich nichts mehr lernen.");
 		return;
 	}
-	if ( iXPForMonth > GetTimedXPCap(oPC) ) {
+
+	if ( gvGetInt("combat_xp_limit_month") > 0 && iXPForMonth > gvGetInt("combat_xp_limit_month") ) {
+		if (!bNoWarn)
+			SendMessageToPC(oPC, "Ihr muesstet ueber die gemachten Kampferfahrungen erstmal nachdenken.");
+		return;
+	}
+	
+	if ( gvGetInt("combat_xp_limit_day") > 0 && iXPForMonth > gvGetInt("combat_xp_limit_month") ) {
 		if (!bNoWarn)
 			SendMessageToPC(oPC, "Ihr muesstet ueber die gemachten Kampferfahrungen erstmal nachdenken.");
 		return;
@@ -342,8 +323,8 @@ void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE) {
 		// SetPersistentInt(oPC,"XP_Combat_cap_num",iXPForMonth + nValue);
 		// SetPersistentInt(oPC,"XP_Combat",iCombXP + nValue);
 
-		SetCombatXPForMonth(oPC, iXPForMonth + nValue, iYear, iMonth);
-		SetCombatXP(oPC, iCombXP + nValue);
+		SetCategoryXPForDay(oPC, "combat", iXPForMonth + nValue, iYear, iMonth, iDay);
+		SetLegacyCombatXP(oPC, iCombXP + nValue);
 
 		if (!bNoWarn)
 			SendMessageToPC(oPC, "Kampferfahrung: " +

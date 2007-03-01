@@ -26,6 +26,8 @@ struct RealTime {
 };
 
 
+int GetMinutesPerHour();
+
 int hears(object oSpeaker, object oListener, int nTalkMode);
 
 int hears(object oSpeaker, object oListener, int nTalkMode) {
@@ -199,6 +201,10 @@ int GetPCPartyCount(object oPC);
 
 /* impl */
 
+int GetMinutesPerHour() {
+	return FloatToInt(HoursToSeconds(1) / 60);
+}
+
 struct RealTime GetRealTime() {
 	struct RealTime r;
 	
@@ -318,16 +324,17 @@ void ToPC(string sMsg, object oPC = OBJECT_SELF) {
 }
 
 
-/*void ToDMs(string sMsg) {
- * 	object o = GetFirstPC();
+void ToDMs(string sMsg) {
+/* 	object o = GetFirstPC();
  * 	while (GetIsObjectValid(o)) {
  * 		if (CheckMask(oPC, AMASK_GM) && !GetIsDM(o))
  * 			SendMessageToPC(o, sMsg);
  *
  * 		o = GetNextPC();
  * 	}
- * 	SendMessageToAllDMs(sMsg);
- * }*/
+ */
+	SendMessageToAllDMs(sMsg);
+}
 
 string GetPCName(object oPC) {
 	return GetPCPlayerName(oPC) == "" ? GetLocalString(oPC, "player_name") : GetPCPlayerName(oPC);

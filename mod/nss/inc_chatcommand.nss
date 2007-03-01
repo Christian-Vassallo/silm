@@ -180,6 +180,9 @@ int CommandAFK(object oPC, int iMode);
 
 int CommandReadTracks(object oPC, int iMode);
 
+
+int CommandRehash(object oPC, int iMode);
+
 /* implementation */
 
 // This is a stub you can copypaste to implement your own command.
@@ -193,6 +196,21 @@ int CommandReadTracks(object oPC, int iMode);
 int CommandStub(object oPC, int iMode) {
 	return OK;
 }
+
+int CommandRehash(object oPC, int iMode) {
+	SQLQuery("select `key`, `type`, `value`, unix_timestamp() from `gv`;");
+	int c;
+	string cacheKey;
+	while (SQLFetch()) {
+		c += 1;
+		cacheKey = "gv_" + SQLGetData(2) + "_" + SQLGetData(1);
+		SetLocalInt(GetModule(), cacheKey, StringToInt(SQLGetData(4)));
+		SetLocalString(GetModule(), cacheKey, SQLGetData(3));
+	}
+	ToDMs("Rehashed " + IntToString(c) + " gvs.");
+	return OK;
+}
+
 
 void VoidCreateItemOnObject(string sItemTemplate, object oTarget = OBJECT_SELF, int nStackSize = 1,
 							string sNewTag = "") {

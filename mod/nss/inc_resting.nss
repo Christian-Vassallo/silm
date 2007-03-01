@@ -20,7 +20,7 @@ void CommitResting(object oPC) {
 }
 
 void FinishedResting(object oPC) {
-	SetLocalDecay(oPC, "Resting_Counter", C_HOURS_BETWEEN_REST * 60, 60);
+	SetLocalDecay(oPC, "Resting_Counter", gvGetInt("t_hours_between_rest") * 60, 60);
 	save_player(oPC, FALSE);
 	SendMessageToPC(oPC, "Charakter gespeichert.");
 }
@@ -35,7 +35,7 @@ void CancelledResting(object oPC) {
 
 	//Time between rests is proportional to the time having rested until
 	//disturbed
-	int iMinutes = ( C_HOURS_BETWEEN_REST * 450 * iTime ) / iMax;
+	int iMinutes = ( gvGetInt("t_hours_between_rest") * 450 * iTime ) / iMax;
 
 	SetLocalDecay(oPC, "Resting_Counter", iMinutes, 60);
 }

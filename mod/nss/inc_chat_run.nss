@@ -339,6 +339,9 @@ void RegisterAllCommands() {
 	RegisterCommand("time", "yr= mo= dy= hr= mn= sc=");
 	RAF(AMASK_BACKEND);
 
+	RegisterCommand("rehash", "", 0, 0);
+	RAF(AMASK_BACKEND);
+
 	RegisterCommand("createkey", "app=", 1, 2);
 	RHs("[--app=x] key_tag [name]", 0);
 
@@ -547,6 +550,9 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 	if ( "m" == sCommand && bRunMacro )
 		return CommandMacro(oPC, iMode);
+	
+	if ( "rehash" == sCommand )
+		return CommandRehash(oPC, iMode);
 
 	if ( "fix" == sCommand )
 		return CommandFix(oPC, iMode);

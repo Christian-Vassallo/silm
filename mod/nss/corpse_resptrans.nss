@@ -8,8 +8,8 @@ void main() {
 	SetAreaTransitionBMP(AREA_TRANSITION_RANDOM);
 	if ( GetIsPC(oClicker) ) {
 		ReincarnatePC(oClicker);
-		XP_LoseXP(oClicker, GetLegacyPersistentInt(oClicker, "PC_XP_PENALTY"));
 		SetLegacyPersistentInt(oClicker, "PC_XP_PENALTY", 0);
+		XP_LoseXP(oClicker, GetLegacyPersistentInt(oClicker, "PC_XP_PENALTY"));
 	}
 	//FIXME: RespawnTarget
 	AssignCommand(oClicker, JumpToObject(GetObjectByTag("RESPAWN_LOC")));

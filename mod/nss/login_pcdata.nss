@@ -31,7 +31,7 @@ void main() {
 	string sPlayerName = SQLEncodeSpecialChars(GetPCPlayerName(OBJECT_SELF));
 	string sXP = IntToString(GetXP(OBJECT_SELF));
 	string sGold = IntToString(GetValue(OBJECT_SELF));
-	string sCombatXP = IntToString(GetCombatXP(OBJECT_SELF));
+	string sCombatXP = IntToString(GetLegacyCombatXP(OBJECT_SELF));
 	//string sCAP = IntToString(GetPersistentInt(OBJECT_SELF,"XP_Combat_cap_num"));
 
 	string sKlasse1 = GetClassName(GetClassByPosition(1));

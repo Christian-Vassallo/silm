@@ -11,8 +11,9 @@
  */
 
 #include "inc_config"
+#include "_gen"
 
-int DEC_TIME_ACCEL = 60 / C_MINUTES_PER_HOUR;
+int DEC_TIME_ACCEL = 60 / GetMinutesPerHour();
 
 void SetTimeStamp(object oWho, string sPref) {
 	SetLocalInt(oWho, sPref + "_s", GetTimeSecond());
