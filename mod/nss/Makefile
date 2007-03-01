@@ -1,20 +1,52 @@
 # inherits stuff
 
-NSS=../../buildutil/nwnnsscomp
-NSSFLAGS=-g -c # -o
+NCC=../../buildutil/nwnnsscomp
+NCCFLAGS=-g -c -o -q
 NSSVERIFYFLAGS=-g -o -q -t4
 
-all: scripts
-compile: scripts
-scripts:
-	../../buildutil/update-revision.sh ..
-	$(NSS) $(NSSFLAGS) $(NWNHOME) *.nss
+includes := _gen _buildinfo _const \
+	c_chessinc c_array4 c_const \
+	corpse_raise \
+	dmfi_dmwcs_inc dmfi_dmw_inc \
+	tms_inc_spawn \
+	_memleakfix \
+	nw_i0_generic x0_i0_behavior x0_i0_spells x0_i0_treasure x2_inc_spellhook
 
-verify:
-	$(NSS) $(NSSVERIFYFLAGS) $(NWNHOME) *.nss
+includesstart := $(filter inc_% %_inc_% %_i0_% funcs_% %inc, $(basename $(wildcard *.nss)))
+
+includesncs := $(addsuffix .ncs, $(includes) $(includesstart))
+includesnss := $(addsuffix .nss, $(includes) $(includesstart))
+objects  := $(filter-out $(includesncs), $(addsuffix .ncs, $(basename $(wildcard *.nss))))
+sources  := $(filter-out $(includesnss), $(wildcard *.nss))
+
+
+revision := $(shell svn info --non-interactive .. | grep Revision | cut -d " " -f 2)
+date := $(shell svn info --non-interactive .. | grep 'Last Changed Date' | cut -d " " -f 4-)
+root := $(shell svn info --non-interactive .. | grep 'Repository Root' | cut -d " " -f 3-)
+builddate := $(shell date "+%Y-%m-%d %X %z (%a, %d %b %Y)")
+
+depgrep = $(shell grep -E '^\#include ".+"' $(1) | sed 's/^\#include \"//g' | sed 's/\"$$//g')
+
+all: update-revision $(objects)
+
+update-revision:
+	@-rm _buildinfo.nss
+	@echo 'const string PROJECT = "Silbermarken";' > _buildinfo.nss
+	@echo 'const string REVISION = "$(revision)";' >>_buildinfo.nss
+	@echo 'const string REPOSITORY = "$(root)";' >>_buildinfo.nss
+	@echo 'const string COMMIT_ON = "$(date)";' >>_buildinfo.nss
+	@echo 'const string BUILD_ON = "$(builddate)";' >>_buildinfo.nss
+
+
+$(sources) : $(includesnss)
+
+$(objects) : %.ncs : %.nss 
+	$(NCC) $(NCCFLAGS) $(NWNHOME) $<
+
+
 
 clean:
-	-rm *.ncs *.ndb _buildinfo.nss
+	-rm *.ncs *.ndb
 
 clean-backup:
 	-rm *.*~ *.out
