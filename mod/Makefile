@@ -28,10 +28,8 @@ endif
 
 script: scripts
 scripts: path
-	$(MAKE) -C nss
+	$(MAKE) -j 8 -C nss
 
-verify: path
-	$(MAKE) -C nss verify
 
 lists: path
 	for i in $(LISTS); do ../buildutil/gen_resref.rb $${i}.marshal $${i}/*.$${i} && \
