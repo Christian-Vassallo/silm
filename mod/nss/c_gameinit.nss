@@ -1,5 +1,5 @@
 #include "c_chessinc"
-#include "_mnx"
+#include "inc_mnx"
 
 void Variant_Standard();
 

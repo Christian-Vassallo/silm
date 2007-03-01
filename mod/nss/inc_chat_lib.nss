@@ -1,8 +1,8 @@
-#include "_chat"
 #include "_gen"
-#include "_target"
-#include "_colours"
-#include "_limbo"
+#include "inc_chat"
+#include "inc_target"
+#include "inc_colours"
+#include "inc_limbo"
 
 
 

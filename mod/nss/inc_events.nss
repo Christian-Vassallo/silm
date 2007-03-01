@@ -26,7 +26,7 @@
  *  [player events are 200-299: not impl.]
  */
 
-#include "_log"
+#include "inc_log"
 
 // Item gets activated (Use Unique Power)
 const int EVENT_ITEM_ACTIVATE = 1;

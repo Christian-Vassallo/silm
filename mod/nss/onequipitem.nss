@@ -1,7 +1,7 @@
 #include "_gen"
 #include "inc_horse"
 #include "inc_torches"
-#include "_clothing"
+#include "inc_clothing"
 
 void ClothEquip();
 

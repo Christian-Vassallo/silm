@@ -1,10 +1,10 @@
 //#include "_map"
-#include "_chat"
+#include "inc_chat"
 #include "inc_cdb"
 #include "_gen"
-#include "_audit"
+#include "inc_audit"
 #include "inc_currency"
-#include "_mnx"
+#include "inc_mnx"
 
 void main() {
 	object oPC = GetExitingObject();

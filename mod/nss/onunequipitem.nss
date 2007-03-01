@@ -1,5 +1,5 @@
 #include "inc_torches"
-#include "_clothing"
+#include "inc_clothing"
 
 //Destroy the work-in-progress items if it's unequipped during
 //manufacturing and clear the conversation

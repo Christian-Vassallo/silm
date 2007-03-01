@@ -1,5 +1,5 @@
 #include "_gen"
-#include "_mnx"
+#include "inc_mnx"
 
 void main() {
 	object oPC = OBJECT_SELF;

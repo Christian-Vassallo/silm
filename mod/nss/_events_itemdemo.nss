@@ -12,7 +12,7 @@
  * 	and edit to suit your needs.
  */
 
-#include "_events"
+#include "inc_events"
 
 void main() {
 	switch ( GetEvent() ) {

@@ -1,6 +1,6 @@
-#include "_events"
-#include "_target"
-#include "_chat"
+#include "inc_events"
+#include "inc_target"
+#include "inc_chat"
 #include "inc_cdb"
 
 

@@ -1,5 +1,5 @@
 #include "_gen"
-#include "_audit"
+#include "inc_audit"
 
 void main() {
 	object oDoor = OBJECT_SELF;

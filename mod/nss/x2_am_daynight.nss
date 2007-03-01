@@ -1,5 +1,5 @@
 #include "x2_am_inc"
-#include "_limbo"
+#include "inc_limbo"
 #include "_gen"
 #include "nw_i0_plot"
 

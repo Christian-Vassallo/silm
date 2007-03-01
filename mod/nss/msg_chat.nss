@@ -1,6 +1,6 @@
-#include "_chat"
+#include "inc_chat"
 #include "_gen"
-#include "_mnx"
+#include "inc_mnx"
 #include "inc_cdb"
 #include "inc_chat_lib"
 #include "inc_chat_run"

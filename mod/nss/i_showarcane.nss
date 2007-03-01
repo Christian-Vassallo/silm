@@ -1,5 +1,5 @@
 #include "_gen"
-#include "_events"
+#include "inc_events"
 
 void main() {
 	if ( EVENT_ITEM_ACTIVATE != GetEvent() )

@@ -1,10 +1,10 @@
-#include "_chat"
+#include "inc_chat"
 #include "_gen"
-#include "_target"
+#include "inc_target"
 #include "inc_chatcommand"
-#include "_getopt"
+#include "inc_getopt"
 #include "inc_chat_lib"
-#include "_mnx_lib"
+#include "inc_mnx_lib"
 
 
 const string

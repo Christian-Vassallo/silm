@@ -1,9 +1,9 @@
 #include "inc_cdb"
-#include "_chat"
+#include "inc_chat"
 #include "_gen"
-#include "_mnx"
-#include "_limbo"
-#include "_audit"
+#include "inc_mnx"
+#include "inc_limbo"
+#include "inc_audit"
 #include "inc_currency"
 
 #include "_buildinfo"

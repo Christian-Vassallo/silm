@@ -1,6 +1,6 @@
 #include "inc_cdb"
 #include "_gen"
-#include "_chat"
+#include "inc_chat"
 #include "inc_chat_lib"
 
 

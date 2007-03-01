@@ -1,4 +1,4 @@
-#include "_chat"
+#include "inc_chat"
 
 /* Note:
  * 	This code needs to be rock_bloody_stable.

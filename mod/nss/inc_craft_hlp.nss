@@ -5,7 +5,7 @@
 #include "inc_mysql"
 #include "inc_cdb"
 #include "_gen"
-#include "_colours"
+#include "inc_colours"
 #include "inc_craft_data"
 #include "inc_2dacache"
 #include "inc_setting"

@@ -2,17 +2,17 @@
  * This file contains chat commands.
  */
 
-#include "_mnx"
+#include "inc_mnx"
 
 #include "_const"
 #include "inc_chat_lib"
 #include "_gen"
-#include "_target"
-#include "_limbo"
+#include "inc_target"
+#include "inc_limbo"
 #include "inc_cdb"
 #include "inc_dbplac"
 #include "inc_security"
-#include "_getopt"
+#include "inc_getopt"
 #include "inc_craft_hlp"
 #include "inc_decay"
 

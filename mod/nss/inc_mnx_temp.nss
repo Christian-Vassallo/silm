@@ -1,6 +1,6 @@
 /* New weather system */
 #include "_gen"
-#include "_mnx"
+#include "inc_mnx"
 
 struct Weather {
 	string area_type; // one of (river, open, north)

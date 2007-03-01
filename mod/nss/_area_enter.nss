@@ -9,10 +9,10 @@
 #include "_gen"
 #include "inc_mysql"
 
-#include "_events"
+#include "inc_events"
 #include "inc_dbplac"
 
-#include "_mnx"
+#include "inc_mnx"
 #include "inc_mnx_temp"
 
 

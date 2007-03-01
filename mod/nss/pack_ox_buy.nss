@@ -1,5 +1,5 @@
 #include "inc_currency"
-#include "_audit"
+#include "inc_audit"
 
 void main() {
 	int iPrice = GetLocalInt(OBJECT_SELF, "PRICE");

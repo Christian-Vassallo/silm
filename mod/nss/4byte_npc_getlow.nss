@@ -10,7 +10,8 @@ void playdead(int nRounds = 1);
 
 void main() {
 	if ( GetLocalInt(OBJECT_SELF, "Do_It") ) {
-		playdead(2);
+
+playdead(2);
 	}
 }
 

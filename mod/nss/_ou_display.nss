@@ -4,7 +4,7 @@
 #include "inc_chat_lib"
 #include "inc_mysql"
 #include "inc_dbplac"
-#include "_colours"
+#include "inc_colours"
 
 void main() {
 	object oPC = GetLastUsedBy();

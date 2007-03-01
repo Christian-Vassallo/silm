@@ -1,7 +1,7 @@
 #include "x2_inc_switches"
 #include "_gen"
 #include "inc_draw"
-#include "_events"
+#include "inc_events"
 
 #include "inc_planewalk"
 #include "inc_craft"
