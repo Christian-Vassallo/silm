@@ -20,6 +20,8 @@ void CheckXP(object oPC) {
 	int nLastCheckedXP = GetLocalInt(oPC, "xpg_last_xp");
 	int nOtherXPGiven = GetLocalInt(oPC, "xpg_other_xp");
 	int nCurrentXP = GetXP(oPC);
+	if (0 == nLastCheckedXP)
+		nLastCheckedXP = nCurrentXP;
 	
 	nLastCheckedXP += nOtherXPGiven;
 
