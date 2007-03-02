@@ -110,7 +110,7 @@ void SetLegacyCombatXP(object oPC, int nXP) {
 
 int GetCategoryXPForMonth(object oPC, string sCategory, int nYear, int nMonth) {
 	int cid = GetCharacterID(oPC);
-	SQLQuery("select sum(`xp`) as `xp` from `time_xp` where `cid` = " +
+	SQLQuery("select sum(`xp`) as `xp` from `" + sCategory + "_xp` where `cid` = " +
 		IntToString(cid) +
 		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + ";");
 	if ( !SQLFetch() ) {
@@ -147,7 +147,7 @@ void SetCategoryXPForDay(object oPC, string sCategory, int nXP, int nYear, int n
 			IntToString(cid) + ", " + IntToString(nXP) + ", " +
 			IntToString(nYear) + ", " + IntToString(nMonth) + ", " + IntToString(nDay) + ");");
 	else
-		SQLQuery("update `time_xp` set `xp`=" +
+		SQLQuery("update `" + sCategory + "_xp` set `xp`=" +
 			IntToString(nXP) +
 			" where `cid` = " +
 			IntToString(cid) +
