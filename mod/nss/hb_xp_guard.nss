@@ -35,13 +35,7 @@ void CheckXP(object oPC) {
 }
 
 void main() {
-	object oPC = GetFirstPC();
-	while (GetIsObjectValid(oPC)) {
-
-		if (!GetIsDM(oPC) && GetIsPC(oPC)) {
-			CheckXP(oPC);
-		}
-
-		oPC = GetNextPC();
+	if (!GetIsDM(oPC) && GetIsPC(oPC)) {
+		CheckXP(oPC);
 	}
 }
