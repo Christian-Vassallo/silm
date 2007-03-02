@@ -31,11 +31,11 @@ void main() {
 
 	SQLQuery("truncate table `online`;");
 
-
-	iYear = GetLegacyPersistentInt(oMod, "TIME_YEAR");
-	iMonth = GetLegacyPersistentInt(oMod, "TIME_MONTH");
-	iDay = GetLegacyPersistentInt(oMod, "TIME_DAY");
-	iHour = GetLegacyPersistentInt(oMod, "TIME_HOUR");
+	
+	iYear = gvGetInt("t_year");
+	iMonth = gvGetInt("t_month");
+	iDay = gvGetInt("t_day");
+	iHour = gvGetHour("t_hour");
 
 	if ( !iYear )
 		WriteTimestampedLogEntry("No time entry, starting with preset module time");

@@ -41,10 +41,10 @@ void main() {
 		_ClockFix();
 		SetLocalInt(oMod, "Module_Hour", iHour);
 
-		SetLegacyPersistentInt(oMod, "TIME_YEAR", GetCalendarYear());
-		SetLegacyPersistentInt(oMod, "TIME_MONTH", GetCalendarMonth());
-		SetLegacyPersistentInt(oMod, "TIME_DAY", GetCalendarDay());
-		SetLegacyPersistentInt(oMod, "TIME_HOUR", iHour);
+		gvSetInt("t_year", GetCalendarYear());
+		gvSetInt("t_month", GetCalendarMonth());
+		gvSetInt("t_day", GetCalendarDay());
+		gvSetInt("t_hour", iHour);
 
 		//Place for scripts/routines which are to be executed once every
 		//game hour
