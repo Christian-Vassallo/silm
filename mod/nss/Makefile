@@ -30,7 +30,6 @@ depgrep = $(shell grep -E '^\#include ".+"' $(1) | sed 's/^\#include \"//g' | se
 all: update-revision $(objects)
 
 update-revision:
-	@-rm _buildinfo.nss
 	@echo 'const string PROJECT = "Silbermarken";' > _buildinfo.nss
 	@echo 'const string REVISION = "$(revision)";' >>_buildinfo.nss
 	@echo 'const string REPOSITORY = "$(root)";' >>_buildinfo.nss

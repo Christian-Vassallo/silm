@@ -8,7 +8,7 @@
 #include "inc_chat_run"
 #include "x2_inc_switches"
 #include "_buildinfo"
-
+#include "inc_setting"
 void main() {
 	object oMod = GetModule();
 	int iHour, iDay, iMonth, iYear;
@@ -35,7 +35,7 @@ void main() {
 	iYear = gvGetInt("t_year");
 	iMonth = gvGetInt("t_month");
 	iDay = gvGetInt("t_day");
-	iHour = gvGetHour("t_hour");
+	iHour = gvGetInt("t_hour");
 
 	if ( !iYear )
 		WriteTimestampedLogEntry("No time entry, starting with preset module time");

@@ -1,6 +1,6 @@
 #include "inc_decay"
 #include "inc_persist"
-
+#include "inc_setting"
 
 //Workaround for Time-Stop-Bug: Resync clocks with core clock
 //Once every game hour is said to be enough

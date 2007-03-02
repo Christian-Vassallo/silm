@@ -13,7 +13,7 @@ VALIDEXT=area/\*.git area/\*.gic area/\*.are \
 
 LISTS=uti utp utc utm
 
-all: clean package install
+all: package install
 
 
 path:
