@@ -22,6 +22,8 @@ void main() {
 	
 	ExecuteScript("hb_time_xp", oMod);
 
+ExecuteScript("hb_xp_guard", oPC);
+
 
 	while ( GetIsObjectValid(oPC) ) {
 		if ( !GetIsDM(oPC) ) {
@@ -29,7 +31,6 @@ void main() {
 			//executed every heartbeat
 			//ExecuteScript("hb_hunger",oPC);
 			ExecuteScript("hb_running", oPC);
-			ExecuteScript("hb_xp_guard", oPC);
 			ExecuteScript("hb_persistency", oPC);
 		}
 		oPC = GetNextPC();
