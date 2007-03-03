@@ -58,4 +58,12 @@ class StatController < ApplicationController
     
     @xp_per_day = TimeXP.find_by_sql("select day,month,year,sum(xp) as xp from time_xp %s group by day,year,month order by year, month, day %s" % [where, sort_order])
   end
+
+
+
+  def lph_toplist
+    @lph = Character::find_by_sql(
+      'select `character`, (messages / (total_time / 3600)) as lph from `characters` order by lph desc;'
+    )
+  end
 end
