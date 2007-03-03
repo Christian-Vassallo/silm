@@ -1,14 +1,14 @@
 <% if @c.nil? %>
-	Dieser Charakter existiert nicht, oder gehoert nicht zu dir.
+  Dieser Charakter existiert nicht, oder gehoert nicht zu dir.
 <% else %>
 
 <% if session[:user] && session[:user].char_view? %>
-	<h3>Alle Chars dieses Accounts/Keys</h3>
-	<%= render :partial => "charlisthdr", :locals => { :showsort => false } %>
-	<% @c.account.other_chars(session, @c).each do |c| %>
-		<%= render :partial => "charlistitem", :locals => { :c => c, :form => false } %>
-	<% end %>
-	<%= render :partial => "charlistftr", :locals => { :form => false }%>
+  <h3>Alle Chars dieses Accounts/Keys</h3>
+  <%= render :partial => "charlisthdr", :locals => { :showsort => false } %>
+  <% @c.account.other_chars(session, @c).each do |c| %>
+    <%= render :partial => "charlistitem", :locals => { :c => c, :form => false } %>
+  <% end %>
+  <%= render :partial => "charlistftr", :locals => { :form => false }%>
 <% end %>
 
 <%= form_tag %>
@@ -16,9 +16,11 @@
 <small><%= @c.account.amask_a.join(' | ') %></small><br>
 <h2><%= @c.race %><%= " (" + @c.subrace + ")" if @c.subrace != "" %> (<%= @c.sex %>), <%= "%.1f" % @c.age %> Jahre</h2>
 <h3>Status: <%= (session[:user].char_admin? && !@c.locked?) ? select("c", "status",
-	Character::StatusFields, { :selected => @c.status }
+  Character::StatusFields, { :selected => @c.status }
 ) : @c.status %></h3>
 <b>Gesamte Spielzeit:</b> <%= Duration.new(@c.total_time + @c.login_for).to_s %><br>
+<b>Gesamte Nachrichten-Anzahl:</b> <%= @c.messages %><br>
+<b>LinesPerHour:</b> <%= @c.lph %><br>
 <b>Erstellungsdatum:</b> <%= @c.create_on.strftime("%d/%m/%y") %><br>
 <b>XP:</b> <%= @c.xp %><br>
 <b>Kampf-XP:</b> <%= @c.xp_combat %><br>
@@ -62,25 +64,25 @@ Wille: <%= @c.will %><br>
 Reflex: <%= @c.reflex %><br>
 Zaehigkeit: <%= @c.fortitude %><br>
 </p>
-	
+  
 <p>
-	<b>Crafting-Skills</b><br>
-	<%
-		@c.craft_skills.each do |sk|
-		%>
-		<%= sk.craft.name %>: <%= sk.skill_practical %> (<%= sk.skill_theory %>)<br>
-		<%
-		end
-	%>
+  <b>Crafting-Skills</b><br>
+  <%
+    @c.craft_skills.each do |sk|
+    %>
+    <%= sk.craft.name %>: <%= sk.skill_practical %> (<%= sk.skill_theory %>)<br>
+    <%
+    end
+  %>
 </p>
 <p>
-	<b>Rezepte</b><br>
-	<% if session[:user] && session[:user].char_view?
-		@c.craft_stats.each do |st|
-	%>
-	<%= (st.recipe.nil? ? "(geloeschtes oder unbekanntes Rezept)" : st.recipe.name) %>: <%= st.count %> success, <%= st.fail %> fail<br>
-		
-	<% end; end %>
+  <b>Rezepte</b><br>
+  <% if session[:user] && session[:user].char_view?
+    @c.craft_stats.each do |st|
+  %>
+  <%= (st.recipe.nil? ? "(geloeschtes oder unbekanntes Rezept)" : st.recipe.name) %>: <%= st.count %> success, <%= st.fail %> fail<br>
+    
+  <% end; end %>
 </p>
 
 <% if @c.status == "new" && session[:user] == @c.account %>
@@ -99,17 +101,17 @@ zu den drei Textfeldern genau durch, bevor du dich an das Schreiben machst.
 <p>
 <table align="center" width="80%">
 <tr><td valign="top" width="150px">
-	<center><h3>Aussehen</h3></center>
-	<i>
-	<p>Dies ist der Text, den du auch bei der Erstellung deines Charakters unter "Aussehen"
-	angegeben hast.  Er sollte eine moeglichst neutrale, objektive Beschreibung der
-	koerperlichen Erscheinung deines Charakters sein, die andere durch reines Beobachten
-	aufschluesseln koennen.</p>
-	<p>Vermeide Dinge, die anderen Spielern Worte in den Mund legen ("Ein wahrlich furchteinfloessender
-	Eindruck ueberkommt euch") oder die auf subjektiver Ansicht basieren. ("Die wunderschoene,
-	anregende Frau vor euch ..")</p>
-	<p>Halte dies <b>kompakt</b>, doch <b>nicht zu kurz</b>.	Sage genau dies, was zu sagen ist, und nicht mehr.</p>
-	</i>
+  <center><h3>Aussehen</h3></center>
+  <i>
+  <p>Dies ist der Text, den du auch bei der Erstellung deines Charakters unter "Aussehen"
+  angegeben hast.  Er sollte eine moeglichst neutrale, objektive Beschreibung der
+  koerperlichen Erscheinung deines Charakters sein, die andere durch reines Beobachten
+  aufschluesseln koennen.</p>
+  <p>Vermeide Dinge, die anderen Spielern Worte in den Mund legen ("Ein wahrlich furchteinfloessender
+  Eindruck ueberkommt euch") oder die auf subjektiver Ansicht basieren. ("Die wunderschoene,
+  anregende Frau vor euch ..")</p>
+  <p>Halte dies <b>kompakt</b>, doch <b>nicht zu kurz</b>.  Sage genau dies, was zu sagen ist, und nicht mehr.</p>
+  </i>
 </td><td valign="top" class="char_anmeldung">
 <% if @c.status == "new" && (session[:user].char_admin? || session[:user] == @c.account) %>
 <%= text_area "c", "appearance", :cols => 101, :rows => 30 %>
@@ -118,14 +120,14 @@ zu den drei Textfeldern genau durch, bevor du dich an das Schreiben machst.
 <% end %>
 </td>
 </tr>
-<tr><td valign="top"	width="150px">
-	<center><h3>Wesenszuege</h3></center>
-	<i>
-	<p>Hier trage die ethischen und mentalen Eigenschaften deines Charakters ein.  Dies schliesst seinen
-	Goetterglauben, seine moralische Sichtweise auf die Welt, sein philosophisches Weltbild und sein
-	Temperament ein.</p>
-	<p>In etwa <b>eine halbe A4-Seite</b>.</p>
-	</i>
+<tr><td valign="top"  width="150px">
+  <center><h3>Wesenszuege</h3></center>
+  <i>
+  <p>Hier trage die ethischen und mentalen Eigenschaften deines Charakters ein.  Dies schliesst seinen
+  Goetterglauben, seine moralische Sichtweise auf die Welt, sein philosophisches Weltbild und sein
+  Temperament ein.</p>
+  <p>In etwa <b>eine halbe A4-Seite</b>.</p>
+  </i>
 </td><td valign="top" class="char_anmeldung">
 <% if @c.status == "new" && (session[:user].char_admin? || session[:user] == @c.account) %>
 <%= text_area "c", "traits",:cols => 101, :rows => 30 %>
@@ -133,13 +135,13 @@ zu den drei Textfeldern genau durch, bevor du dich an das Schreiben machst.
 <%= fmt @c.traits %>
 <% end %>
 </td></tr><tr><td valign="top" width="150px">
-	<center><h3>Biographie</h3></center>
-	<i>
-	<p>Der Hergang deines Charakters.  Seine Kindheit, sein Aufwachsen;  seine eventuelle Ausbildung,
-	seine Freundschaften und Beziehungen.  Sollte deine Klasse einen Vertrauten oder Gefaehrten
-	einschliessen, so bringe ihn hier in die Geschichte eingeflochten an.</p>
-	<p>In etwa <b>eine A4-Seite</b>.</p>
-	</i>
+  <center><h3>Biographie</h3></center>
+  <i>
+  <p>Der Hergang deines Charakters.  Seine Kindheit, sein Aufwachsen;  seine eventuelle Ausbildung,
+  seine Freundschaften und Beziehungen.  Sollte deine Klasse einen Vertrauten oder Gefaehrten
+  einschliessen, so bringe ihn hier in die Geschichte eingeflochten an.</p>
+  <p>In etwa <b>eine A4-Seite</b>.</p>
+  </i>
 </td><td valign="top" class="char_anmeldung">
 <% if @c.status == "new" && (session[:user].char_admin? || session[:user] == @c.account) %> 
 <%= text_area "c", "biography",:cols => 101, :rows => 30 %>
@@ -185,7 +187,7 @@ Note: das hier geht alles nicht.<br>
 <p>
 <table align="center">
 <% for a in @audit %>
-	<%= render :partial => 'audit/audit_event', :locals => {:a => a, :complete => session[:user] && session[:user].audit_admin?} %>
+  <%= render :partial => 'audit/audit_event', :locals => {:a => a, :complete => session[:user] && session[:user].audit_admin?} %>
 <% end %>
 </table>
 </p>

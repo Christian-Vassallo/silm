@@ -138,4 +138,8 @@ class Character < ActiveRecord::Base
     )
   end
 
+  def lph
+    messages.to_f / (total_time / 3600)
+  end
+
 end
