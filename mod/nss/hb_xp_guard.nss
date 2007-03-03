@@ -25,7 +25,7 @@ void CheckXP(object oPC) {
 	
 	nLastCheckedXP += nOtherXPGiven;
 
-	SetLocalInt(oPC, "xpg_last_xp", nLastCheckedXP);
+	SetLocalInt(oPC, "xpg_last_xp", nCurrentXP);
 	SetLocalInt(oPC, "xpg_other_xp", 0);
 
 	if (0 == nCurrentXP - nLastCheckedXP)
@@ -37,6 +37,7 @@ void CheckXP(object oPC) {
 }
 
 void main() {
+	object oPC = OBJECT_SELF;
 	if (!GetIsDM(oPC) && GetIsPC(oPC)) {
 		CheckXP(oPC);
 	}
