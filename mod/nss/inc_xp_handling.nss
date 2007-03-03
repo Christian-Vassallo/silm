@@ -320,10 +320,8 @@ void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE) {
 
 	if ( nValue > 0 ) {
 		nValue = GiveXP(oPC, nValue);
-		// SetPersistentInt(oPC,"XP_Combat_cap_num",iXPForMonth + nValue);
-		// SetPersistentInt(oPC,"XP_Combat",iCombXP + nValue);
 
-		SetCategoryXPForDay(oPC, "combat", iXPForMonth + nValue, iYear, iMonth, iDay);
+		SetCategoryXPForDay(oPC, "combat", iXPForDay + nValue, iYear, iMonth, iDay);
 		SetLegacyCombatXP(oPC, iCombXP + nValue);
 
 		if (!bNoWarn)
