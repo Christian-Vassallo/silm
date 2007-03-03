@@ -342,6 +342,9 @@ void RegisterAllCommands() {
 	RegisterCommand("rehash", "", 0, 0);
 	RAF(AMASK_BACKEND);
 
+	RegisterCommand("sql", "", 1, 1);
+	RAF(AMASK_BACKEND);
+
 	RegisterCommand("createkey", "app=", 1, 2);
 	RHs("[--app=x] key_tag [name]", 0);
 
@@ -551,6 +554,9 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( "m" == sCommand && bRunMacro )
 		return CommandMacro(oPC, iMode);
 	
+	if ( "sql" == sCommand )
+		return CommandSQL(oPC, iMode);
+
 	if ( "rehash" == sCommand )
 		return CommandRehash(oPC, iMode);
 

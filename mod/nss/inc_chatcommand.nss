@@ -28,6 +28,8 @@
 
 #include "inc_track"
 
+int CommandSQL(object oPC, int iMode);
+
 int CommandShowWeather(object oPC, int iMode);
 
 int CommandTag(object oPC, int iMode);
@@ -194,6 +196,15 @@ int CommandRehash(object oPC, int iMode);
 // Note that the executing object is oPC itself; it is merely passed
 // in as a convenience.
 int CommandStub(object oPC, int iMode) {
+	return OK;
+}
+
+
+int CommandSQL(object oPC, int iMode) {
+	string query = arg(0);
+
+	SQLQuery(query);
+	
 	return OK;
 }
 
