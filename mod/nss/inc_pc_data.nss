@@ -1,4 +1,3 @@
-#include "inc_config"
 #include "inc_cdb"
 #include "inc_xp_handling"
 #include "inc_mysql"

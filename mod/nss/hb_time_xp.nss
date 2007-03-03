@@ -4,7 +4,6 @@
  *  Gives no XP if you're alone on the server.
 */
 
-#include "inc_config"
 #include "_gen"
 #include "inc_mysql"
 #include "inc_xp_handling"

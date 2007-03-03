@@ -10,7 +10,6 @@
  *
  */
 
-#include "inc_config"
 #include "_gen"
 
 int DEC_TIME_ACCEL = 60 / GetMinutesPerHour();

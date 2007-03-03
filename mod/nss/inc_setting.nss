@@ -1,12 +1,17 @@
 /*
  * Global module settings
  */
+#include "inc_mysql"
+
 const string
 	GV_TABLE = "gv";
 
 
 int gvSetInt(string sKey, int nValue);
 int gvGetInt(string sKey);
+
+string gvSetStr(string sKey, string sValue);
+string gvGetStr(string sKey);
 
 
 string gvSetVar(string sKey, string sType, string sValue);
@@ -23,6 +28,13 @@ int gvGetInt(string sKey) {
 	return StringToInt(
 		gvGetVar(sKey, "int")
 	);
+}
+
+string gvSetStr(string sKey, string sValue) {
+	return gvSetVar(sKey, "string", sValue);
+}
+string gvGetStr(string sKey) {
+	return gvGetVar(sKey, "string");
 }
 
 

@@ -1,13 +1,12 @@
-#include "inc_config"
-
+#include "inc_setting"
 
 string GetDatabaseName(object oWhat, int iForcePC = 0) {
 	if ( GetIsPC(oWhat) || iForcePC ) {
 		string sName = GetName(oWhat);
-		return C_DB_PREF_PLAYER + IntToString(GetStringLength(sName)) + "_" + sName;
+		return gvGetStr("p_db_pref_player") + IntToString(GetStringLength(sName)) + "_" + sName;
 	}
 
-	return C_DB_PREF_OBJECT + GetTag(oWhat);
+	return gvGetStr("p_db_pref_object") + GetTag(oWhat);
 }
 
 object GetLegacyDatabaseObject(object oWhat, int iForcePC = 0) {

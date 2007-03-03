@@ -1,6 +1,5 @@
 #include "_gen"
 #include "inc_cdb"
-#include "inc_config"
 
 #include "x2_inc_spellhook"
 
