@@ -1,4 +1,8 @@
 <h1>Listing scene_descriptions</h1>
+<form method="get">
+  <input type="checkbox" name="show_locked" value="1" <%= @show_locked ? 'checked' : '' %>>show locked?<br>
+  <input type="submit" value="set">
+</form>
 
 <table>
   <tr>
@@ -9,7 +13,7 @@
   
 <% for scene_description in @scene_descriptions %>
   <tr>
-  <% for column in SceneDescription.content_columns %>
+  <% for column in (SceneDescription.content_columns) %>
     <td><%=h scene_description.send(column.name) %></td>
   <% end %>
     <td><%= link_to_if ! scene_description.locked?, 'Show', :action => 'show', :id => scene_description %></td>

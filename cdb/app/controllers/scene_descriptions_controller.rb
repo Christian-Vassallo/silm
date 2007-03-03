@@ -12,9 +12,17 @@ class SceneDescriptionsController < ApplicationController
          :redirect_to => { :action => :list }
 
   def list
-    @scene_description_pages, @scene_descriptions = paginate :scene_descriptions,
-      :per_page => 100,
-      :order => 'pid asc'
+    @show_locked = params['show_locked'] == '1'
+    if params['show_locked'] == '1'
+      @scene_description_pages, @scene_descriptions = paginate :scene_descriptions,
+        :per_page => 100,
+        :order => 'pid asc'
+    else
+      @scene_description_pages, @scene_descriptions = paginate :scene_descriptions,
+        :per_page => 100,
+        :conditions => ['`locked` = ?', 'false'],
+        :order => 'pid asc'
+    end
   end
 
   def show
