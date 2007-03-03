@@ -70,9 +70,6 @@ void main() {
 
 	ExecuteScript("_events_register", OBJECT_SELF);
 
-	mnxCommand("startup", REVISION);
-
-
 	SetLocalInt(oMod, "tracking", 1);
 
 	SetLocalInt(oMod, "startup_ts", GetUnixTimestamp());
