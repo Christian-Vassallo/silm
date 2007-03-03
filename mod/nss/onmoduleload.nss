@@ -78,4 +78,6 @@ void main() {
 	SetLocalInt(oMod, "startup_ts", GetUnixTimestamp());
 
 	WriteTimestampedLogEntry("Module initialization done.");
+
+	mnxCommand("startup", REVISION);
 }
