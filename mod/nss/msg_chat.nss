@@ -250,8 +250,6 @@ int OnPreText(object oPC, string sText, int iMode, object oTo = OBJECT_INVALID) 
 				"Derzeit ist kein SL im Spiel online, und es trat ein Fehler bei der Weiterleitung auf. Sende deine Nachricht ueber die Moeglichkeiten auf der Website.");
 	}
 
-	SetLocalInt(oPC, "last_message", nTS);
-
 
 	if ( GetIsPC(oPC) )
 		HandleDelegate(oPC, sText, iMode, oTo);
@@ -267,6 +265,9 @@ int OnPreText(object oPC, string sText, int iMode, object oTo = OBJECT_INVALID) 
 		&& !( iMode & MODE_COMMAND ) && !( iMode & MODE_FORCETALK ) && !( iMode & MODE_TELEPATHICBOND ) )
 		ChatLog(oPC, iMode, sText, oTo);
 
+	SetLocalInt(oPC, "last_message", nTS);
+	int nTotal = GetLocalInt(oPC, "message_count");
+	SetLocalInt(oPC, "message_count", nTotal + 1);
 
 	// Condition A: It was a player who said something
 	// Condition B: It was a NPC who said something

@@ -81,6 +81,8 @@ int GetOrCreateCharacterID(object oPC);
 int GetAccountIsDM(object oPC);
 
 
+void UpdateMessageCount(object oPC, int nMessages);
+
 object GetPCByCID(int nCID);
 
 // notifies oPC about his character not in the database,
@@ -109,6 +111,14 @@ int CheckMask(object oPC, int nAMask = AMASK_GM) {
 		   ( nMask & nAMask ) || ( nMask & AMASK_GOD );
 }
 
+void UpdateMessageCount(object oPC, int nMessages) {
+	int nCID = GetCharacterID(oPC);
+	if (!nCID)
+		return;
+
+	SQLQuery("update `characters` set messages = messages + " + IntToString(nMessages) + 
+		" where cid = " + IntToString(nCID) + " limit 1;");
+}
 
 object GetPCByCID(int nCID) {
 	object oPC = GetFirstPC();

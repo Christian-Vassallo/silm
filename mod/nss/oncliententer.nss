@@ -74,6 +74,7 @@ void main() {
 	SetLocalInt(oPC, "bandage", 0);
 	SetLocalInt(oPC, "medicine", 0);
 
+	SetLocalInt(oPC, "message_count", 0);
 
 	// Remove the language tokens.
 	int i;

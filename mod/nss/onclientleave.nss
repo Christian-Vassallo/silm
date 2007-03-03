@@ -8,9 +8,15 @@
 
 void main() {
 	object oPC = GetExitingObject();
+	
+	int nMsgCount = GetLocalInt(oPC, "message_count");
+
 
 	int nGold = Money2Value(CountCreatureMoney(oPC, 0));
-	audit("logout", oPC, audit_fields("xp", IntToString(GetXP(oPC)), "gold", IntToString(nGold)));
+	audit("logout", oPC, audit_fields("xp", IntToString(GetXP(oPC)), "gold", IntToString(nGold), "messages", IntToString(nMsgCount)));
+
+	if (!GetIsDM(oPC))
+		UpdateMessageCount(oPC, nMsgCount);
 
 	ExecuteScript("_mod_clleave_cdb", oPC);
 	//ExecuteScript("_mod_cleave_onl",oPC);
