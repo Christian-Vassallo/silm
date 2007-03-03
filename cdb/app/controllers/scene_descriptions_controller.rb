@@ -1,6 +1,6 @@
 class SceneDescriptionsController < ApplicationController
-	before_filter :authenticate_object_admin
-	layout "main"
+  before_filter :authenticate_object_admin
+  layout "main"
 
   def index
     list
@@ -12,7 +12,8 @@ class SceneDescriptionsController < ApplicationController
          :redirect_to => { :action => :list }
 
   def list
-    @scene_description_pages, @scene_descriptions = paginate :scene_descriptions, :per_page => 100
+    @scene_description_pages, @scene_descriptions = paginate :scene_descriptions, :per_page => 100,
+      :conditions => ['`locked` = \'false\'']
   end
 
   def show
