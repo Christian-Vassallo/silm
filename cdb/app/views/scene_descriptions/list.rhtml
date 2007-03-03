@@ -12,9 +12,9 @@
   <% for column in SceneDescription.content_columns %>
     <td><%=h scene_description.send(column.name) %></td>
   <% end %>
-    <td><%= link_to 'Show', :action => 'show', :id => scene_description %></td>
-    <td><%= link_to 'Edit', :action => 'edit', :id => scene_description %></td>
-    <td><%= link_to 'Destroy', { :action => 'destroy', :id => scene_description }, :confirm => 'Are you sure?', :method => :post %></td>
+    <td><%= link_to_if ! scene_description.locked?, 'Show', :action => 'show', :id => scene_description %></td>
+    <td><%= link_to_if ! scene_description.locked?, 'Edit', :action => 'edit', :id => scene_description %></td>
+    <td><%= link_to_if ! scene_description.locked?, 'Destroy', { :action => 'destroy', :id => scene_description }, :confirm => 'Are you sure?', :method => :post %></td>
   </tr>
 <% end %>
 </table>
