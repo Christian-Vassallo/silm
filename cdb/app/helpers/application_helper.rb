@@ -73,11 +73,11 @@ module ApplicationHelper
 
 
   def get_current_month()
-    return GVSetting.find(:first, :condition => ["`key` = 't_month'"]).value
+    return GVSetting.find(:first, :conditions => ["`key` = 't_month'"]).value
   end
   
   def get_current_day()
-    return GVSetting.find(:first, :condition => ["`key` = 't_day'"]).value
+    return GVSetting.find(:first, :conditions => ["`key` = 't_day'"]).value
   end
 
 end
