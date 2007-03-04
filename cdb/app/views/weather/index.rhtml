@@ -14,9 +14,9 @@
 
 <br/>
 
-ADate: <%= text_field_tag "ayear", "1461" %>.<%= text_field_tag "amonth", "1" %>.<%= text_field_tag "aday", "30" %><br/>
+ADate: <%= text_field_tag "ayear", "1382" %>.<%= text_field_tag "amonth", get_current_month() %>.<%= text_field_tag "aday", get_current_day() %><br/>
 
-ZDate: <%= text_field_tag "zyear", "1461" %>.<%= text_field_tag "zmonth", "2" %>.<%= text_field_tag "zday", "15" %><br/>
+ZDate: <%= text_field_tag "zyear", "1382" %>.<%= text_field_tag "zmonth", get_current_month() %>.<%= text_field_tag "zday", get_current_day() %><br/>
 
 <%= select_tag("temp", '<option>' + WeatherOverride::TEMP_TYPES.join('</option><option>') + '</option>') %>
 <%= select_tag("wind", '<option>' + WeatherOverride::WIND_TYPES.join('</option><option>') + '</option>') %>

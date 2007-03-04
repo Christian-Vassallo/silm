@@ -69,5 +69,15 @@ module ApplicationHelper
     return false if !session[:user]
     return session[:user].amask & mask == mask
   end
+
+
+
+  def get_current_month()
+    return GVSetting.find(:first, :condition => ["`key` = 't_month'"]).value
+  end
   
+  def get_current_day()
+    return GVSetting.find(:first, :condition => ["`key` = 't_day'"]).value
+  end
+
 end
