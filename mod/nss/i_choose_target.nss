@@ -1,7 +1,7 @@
 #include "inc_events"
 #include "inc_target"
 #include "inc_chat"
-#include "inc_cdb"
+#include "inc_amask"
 
 
 void main() {
@@ -14,7 +14,10 @@ void main() {
 	object oTarget = GetItemActivatedTarget();
 	location lTarget = GetItemActivatedTargetLocation();
 
-	if ( !CheckMask(oPC, AMASK_GM) && !CheckMask(oPC, AMASK_FORCETALK) ) {
+	if ( !amask(oPC, AMASK_GM) &&
+		 !amask(oPC, AMASK_FORCETALK) &&
+		 !amask(oPC, AMASK_GLOBAL_FORCETALK)
+	) {
 		SendMessageToPC(oPC, "Ich mag dich nicht.  PAFF!");
 		DestroyObject(oSelf);
 		return;

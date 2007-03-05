@@ -44,7 +44,7 @@ void DBook_MakeDialog(object oPC) {
 	if ( !iSelRecipe ) {
 		DeleteLocalInt(oPC, "selected_recipe");
 
-		if (/*CheckMask(oPC, AMASK_CRAFT_ADMIN)*/ GetIsDM(oPC) )
+		if (GetIsDM(oPC) )
 			SQLQuery("select `id`, `name` from `craft_prod` where `cskill` = " +
 				IntToString(nCSkill) + " order by `name` asc;");
 		else

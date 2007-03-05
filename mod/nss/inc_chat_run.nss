@@ -146,7 +146,7 @@ void RegisterCommand(string sCommandName, string sOptions, int nMinArg = -1, int
 	SetLocalInt(oM, "cmd_" + LastCommand + "_argc_min", nMinArg);
 	SetLocalInt(oM, "cmd_" + LastCommand + "_argc_max", nMaxArg);
 
-	SetLocalInt(oM, "cmd_" + LastCommand + "_amask", AMASK_GM);
+	SetLocalInt(oM, "cmd_" + LastCommand + "_amask", AMASK_GLOBAL_GM);
 }
 
 void RH(string sText, int nAMask = AMASK_ANY) {
@@ -253,9 +253,7 @@ void RegisterAllCommands() {
 	/* GM commands */
 
 	RegisterCommand("shun", "");
-	RAF(AMASK_GM);
 	RegisterCommand("unshun", "");
-	RAF(AMASK_GM);
 
 	RegisterCommand("fix", "", 1, 1);
 	RHs("Fixes things.");
@@ -316,12 +314,11 @@ void RegisterAllCommands() {
 	RegisterCommand("hp", "", 0, 1);
 	RHs("[hp] >> Gets/Sets HP.", 1);
 
-	RegisterCommand("stat", "", 1, 1);
-	RHs("type >> type of (mentor, xp_dist)", 0);
-	RAF(AMASK_AUDIT);
+//	RegisterCommand("stat", "", 1, 1);
+//	RHs("type >> type of (mentor, xp_dist)", 0);
+//	RAF(AMASK_AUDIT);
 
 	RegisterCommand("say", "");
-
 
 	RegisterCommand("ta", "n= tag= area= f= d l m=", 0, 1);
 	RHs("[-f 1.." +
@@ -334,16 +331,16 @@ void RegisterAllCommands() {
 	RHs("[-n n] --tag Tag a >> Find nth object that has 'Tag' for tag", 1);
 	RHs("-d new_default_slot >> Sets your default slot");
 	RHs("-l >> List all currently selected targets");
-	RAF(AMASK_GM | AMASK_CRAFT);
+	RAF(AMASK_GM);
 
 	RegisterCommand("time", "yr= mo= dy= hr= mn= sc=");
-	RAF(AMASK_BACKEND);
+	RAF(AMASK_CAN_EDIT_GV);
 
 	RegisterCommand("rehash", "", 0, 0);
-	RAF(AMASK_BACKEND);
+	RAF(AMASK_CAN_EDIT_GV);
 
 	RegisterCommand("sql", "", 1, 1);
-	RAF(AMASK_BACKEND);
+	RAF(AMASK_CAN_DO_BACKEND);
 
 	RegisterCommand("createkey", "app=", 1, 2);
 	RHs("[--app=x] key_tag [name]", 0);
@@ -365,11 +362,11 @@ void RegisterAllCommands() {
 
 	RegisterCommand("getrecipe", "", 1, 1);
 	RHs("id >> Returns recipe with id", 0);
-	RAF(AMASK_CRAFT);
+	RAF(AMASK_GLOBAL_GM);
 
 
 	RegisterCommand("rmnx", "", 1);
-	RAF(AMASK_BACKEND_ADMIN);
+	RAF(AMASK_CAN_DO_BACKEND);
 
 	RegisterCommand("remind", "");
 
@@ -400,10 +397,9 @@ void RegisterAllCommands() {
 		"skillincrease(skill, val) skilldecrease(skill, val), cutsceneghost()");
 
 	RegisterCommand("_xp", "levelup cap");
-	RAF(AMASK_GM_ADMIN);
+	RAF(AMASK_CAN_DO_BACKEND);
 
 	RegisterCommand("info", "");
-	RAF(AMASK_GM);
 
 
 	RegisterCommand("area", "rsl tli= tsi= explore");
@@ -447,7 +443,7 @@ void RegisterAllCommands() {
 	RegisterCommand("create", "");
 
 	RegisterCommand("kick", "");
-	RAF(AMASK_GM | AMASK_RESTRICTED);
+	RAF(AMASK_GLOBAL_GM);
 
 	RegisterCommand("vfx", "x= y= z=");
 
@@ -461,8 +457,6 @@ void RegisterAllCommands() {
 
 	RegisterCommand("cpm", "", 3, 3);
 	RHs("a b c >> CopyItemAndModify(Target, a, b, c, TRUE);");
-
-
 
 	RegisterCommand("caq", "");
 	RHs(">> Clears the action queue.", 1);
@@ -501,7 +495,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 	int nAMask = GetLocalInt(GetModule(), "cmd_" + sCommand + "_amask");
 
-	if ( !GetLocalInt(GetModule(), "no_new_acl") && nAMask > 0 && !CheckMask(oPC, nAMask) ) {
+	if ( !GetLocalInt(GetModule(), "no_new_acl") && nAMask > 0 && !amask(oPC, nAMask) ) {
 		return ACCESS;
 	}
 
@@ -529,7 +523,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 		int i = 0;
 		for ( i = 0; i < nCount; i++ ) {
 			int nMask = GetLocalInt(GetModule(), "cmd_" + sCommand + "ham_" + IntToString(i));
-			if ( CheckMask(oPC, nMask) || nMask == 0 ) {
+			if ( amask(oPC, nMask) || nMask == 0 ) {
 				ToPC(GetLocalString(GetModule(), "cmd_" + sCommand + "h_" + IntToString(i)));
 				nDisp++;
 			}
@@ -851,7 +845,7 @@ void RunMacro(object oPC, int iMode, string sMacro) {
 }
 
 int CommandMacro(object oPC, int iMode) {
-	if ( !CheckMask(oPC, AMASK_RESTRICTED) )
+	if ( !amask(oPC, AMASK_CAN_USE_MACROS) )
 		return ACCESS;
 
 	// create/update: macro "macroname" "macrovalue"
@@ -902,7 +896,7 @@ int CommandMacro(object oPC, int iMode) {
 	}
 
 	if ( opt("i") ) {
-		if ( !CheckMask(oPC, AMASK_GM) ) {
+		if ( !amask(oPC, AMASK_CAN_USE_MACROS) ) {
 			ToPC("Only DMs are allowed to create macro items.");
 			return OK;
 		}

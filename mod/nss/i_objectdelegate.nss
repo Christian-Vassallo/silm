@@ -11,7 +11,7 @@ void main() {
 	object oTarget = GetItemActivatedTarget();
 	location lTarget = GetItemActivatedTargetLocation();
 
-	if ( !CheckMask(oPC, AMASK_GM) ) {
+	if ( !amask(oPC, AMASK_CAN_DO_BACKEND) ) {
 		SendMessageToPC(oPC, "Ich mag dich nicht.  PAFF!");
 		DestroyObject(oSelf);
 		return;

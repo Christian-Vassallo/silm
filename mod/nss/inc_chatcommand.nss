@@ -942,7 +942,7 @@ int CommandLastLog(object oPC, int iMode) {
 	int nCount = 15;
 	string sArea = SQLEscape(GetTag(GetArea(oPC)));
 
-	if ( CheckMask(oPC, AMASK_AUDIT) ) {
+	if ( amask(oPC, AMASK_CAN_SEE_CHATLOGS) ) {
 		if ( opt("count") )
 			nCount = StringToInt(optv("count"));
 
@@ -1615,7 +1615,7 @@ int CommandCAQ(object oPC, int iMode) {
 
 
 int CommandStatus(object oPC, int iMode) {
-	if ( CheckMask(oPC, AMASK_GM) ) {
+	if ( amask(oPC, AMASK_GM) ) {
 		SendMessageToPC(oPC, "Players logged in:");
 		object o = GetFirstPC();
 		while ( GetIsObjectValid(o) ) {
@@ -1647,7 +1647,7 @@ int CommandStatus(object oPC, int iMode) {
 
 
 int CommandFollow(object oPC, int iMode) {
-	if ( !CheckMask(oPC, AMASK_GM) ) {
+	if ( !amask(oPC, AMASK_GM) ) {
 		object oNear = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC);
 		if ( !GetIsPC(oNear) )
 			return FAIL;
@@ -2083,7 +2083,7 @@ int CommandVoiceChat(object oPC, string sArg, int iMode) {
 		return SYNTAX;
 	}
 
-	if ( ( sOpt == "target" || sOpt == "t" ) && CheckMask(oPC, AMASK_GM) ) {
+	if ( ( sOpt == "target" || sOpt == "t" ) && amask(oPC, AMASK_GLOBAL_GM) ) {
 		object oTarget = GetTarget();
 		if ( !GetIsCreature(oTarget) )
 			return NotifyBadTarget();
@@ -2259,7 +2259,7 @@ int CommandAnimation(object oPC, string sArg, int iMode) {
 	}
 
 
-	if ( sOpt == "target" && CheckMask(oPC, AMASK_GM) ) {
+	if ( sOpt == "target" && amask(oPC, AMASK_GLOBAL_GM) ) {
 		object oTarget = GetTarget();
 		if ( CREATURE_SIZE_INVALID == GetCreatureSize(oTarget) ) {
 			return NotifyBadTarget();

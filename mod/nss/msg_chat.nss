@@ -158,7 +158,7 @@ void main() {
 		}
 	}
 
-	if ( bIsForceTalk && ( CheckMask(oPC, AMASK_GM) || CheckMask(oPC, AMASK_FORCETALK) ) ) {
+	if ( bIsForceTalk && ( GetIsDM(oPC) || amask(oPC, AMASK_FORCETALK | AMASK_GLOBAL_FORCETALK) ) ) {
 		Suppress();
 
 		// Chomp off the ft character first
@@ -168,7 +168,7 @@ void main() {
 		object oTarget = GetTarget(nTarget);
 
 		if ( nTarget < 1 || nTarget > TARGET_MAX || !GetIsObjectValid(oTarget) || (
-				!CheckMask(oPC, AMASK_GM) && ( GetIsPC(oTarget) || !GetIsCreature(oTarget) ) )
+				!amask(oPC, AMASK_GLOBAL_GM) && ( GetIsPC(oTarget) || !GetIsCreature(oTarget) ) )
 		) {
 			ToPC("Kein gueltiges Ziel.");
 

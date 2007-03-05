@@ -300,8 +300,7 @@ void PerformModify(object oPC, int iDelta) {
 			 * 	PerformModifyCloak(oPC,iDelta);
 			 * 	break;*/
 		default:
-			if ( CheckMask(oPC, AMASK_GM) )
-				SendMessageToPC(oPC, "Invalid CUST_TYPE: " + IntToString(GetLocalInt(oPC, "CUST_TYPE")));
+			SendMessageToPC(oPC, "Invalid CUST_TYPE: " + IntToString(GetLocalInt(oPC, "CUST_TYPE")));
 		case CUST_TYPE_ARMOR:
 			PerformModifyArmor(oPC, iDelta);
 			break;
@@ -317,8 +316,7 @@ void PerformModifyCol(object oPC, int iDelta) {
 			PerformModifyCloakCol(oPC, iDelta);
 			break;
 		default:
-			if ( CheckMask(oPC, AMASK_GM) )
-				SendMessageToPC(oPC, "Invalid CUST_TYPE: " + IntToString(GetLocalInt(oPC, "CUST_TYPE")));
+			SendMessageToPC(oPC, "Invalid CUST_TYPE: " + IntToString(GetLocalInt(oPC, "CUST_TYPE")));
 
 		case CUST_TYPE_ARMOR:
 			PerformModifyArmorCol(oPC, iDelta);
