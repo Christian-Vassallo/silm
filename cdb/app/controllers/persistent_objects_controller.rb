@@ -1,5 +1,5 @@
 class PersistentObjectsController < ApplicationController
-  before_filter :authenticate_object_admin
+  before_filter { authenticate(Account::CAN_SET_PERSISTENCY) }
   layout "main"
 
   def index

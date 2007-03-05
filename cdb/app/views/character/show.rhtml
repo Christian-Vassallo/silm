@@ -2,7 +2,7 @@
   Dieser Charakter existiert nicht, oder gehoert nicht zu dir.
 <% else %>
 
-<% if session[:user] && session[:user].char_view? %>
+<% if amask(Account::CAN_SEE_ALL_CHARACTERS) %>
   <h3>Alle Chars dieses Accounts/Keys</h3>
   <%= render :partial => "charlisthdr", :locals => { :showsort => false } %>
   <% @c.account.other_chars(session, @c).each do |c| %>
@@ -15,7 +15,7 @@
 <h1>Character: <%= @c['character'] %></h1>
 <small><%= @c.account.amask_a.join(' | ') %></small><br>
 <h2><%= @c.race %><%= " (" + @c.subrace + ")" if @c.subrace != "" %> (<%= @c.sex %>), <%= "%.1f" % @c.age %> Jahre</h2>
-<h3>Status: <%= (session[:user].char_admin? && !@c.locked?) ? select("c", "status",
+<h3>Status: <%= (amask(Account::IS_CHARACTER_ADMIN) && !@c.locked?) ? select("c", "status",
   Character::StatusFields, { :selected => @c.status }
 ) : @c.status %></h3>
 <b>Gesamte Spielzeit:</b> <%= Duration.new(@c.total_time + @c.login_for).to_s %><br>
@@ -77,7 +77,7 @@ Zaehigkeit: <%= @c.fortitude %><br>
 </p>
 <p>
   <b>Rezepte</b><br>
-  <% if session[:user] && session[:user].char_view?
+  <% if amask(Account::CAN_SEE_ALL_CHARACTERS)
     @c.craft_stats.each do |st|
   %>
   <%= (st.recipe.nil? ? "(geloeschtes oder unbekanntes Rezept)" : st.recipe.name) %>: <%= st.count %> success, <%= st.fail %> fail<br>
@@ -113,7 +113,7 @@ zu den drei Textfeldern genau durch, bevor du dich an das Schreiben machst.
   <p>Halte dies <b>kompakt</b>, doch <b>nicht zu kurz</b>.  Sage genau dies, was zu sagen ist, und nicht mehr.</p>
   </i>
 </td><td valign="top" class="char_anmeldung">
-<% if @c.status == "new" && (session[:user].char_admin? || session[:user] == @c.account) %>
+<% if @c.status == "new" && (amask(Account::IS_CHARACTER_ADMIN) || session[:user] == @c.account) %>
 <%= text_area "c", "appearance", :cols => 101, :rows => 30 %>
 <% else %>
 <%= fmt @c.appearance %>
@@ -129,7 +129,7 @@ zu den drei Textfeldern genau durch, bevor du dich an das Schreiben machst.
   <p>In etwa <b>eine halbe A4-Seite</b>.</p>
   </i>
 </td><td valign="top" class="char_anmeldung">
-<% if @c.status == "new" && (session[:user].char_admin? || session[:user] == @c.account) %>
+<% if @c.status == "new" && (amask(Account::IS_CHARACTER_ADMIN) || session[:user] == @c.account) %>
 <%= text_area "c", "traits",:cols => 101, :rows => 30 %>
 <% else %>
 <%= fmt @c.traits %>
@@ -143,7 +143,7 @@ zu den drei Textfeldern genau durch, bevor du dich an das Schreiben machst.
   <p>In etwa <b>eine A4-Seite</b>.</p>
   </i>
 </td><td valign="top" class="char_anmeldung">
-<% if @c.status == "new" && (session[:user].char_admin? || session[:user] == @c.account) %> 
+<% if @c.status == "new" && (amask(Account::IS_CHARACTER_ADMIN) || session[:user] == @c.account) %> 
 <%= text_area "c", "biography",:cols => 101, :rows => 30 %>
 <% else %>
 <%= fmt @c.biography %>
@@ -153,13 +153,13 @@ zu den drei Textfeldern genau durch, bevor du dich an das Schreiben machst.
 <% if @c.locked? %>
 <b>Dieser Charakterbogen ist gesperrt und kann nicht veraendert werden.</b>
 <% else %>
-<%= submit_tag("Anmeldung absenden") if session[:user].char_admin? || @c.status == "new" %>
+<%= submit_tag("Anmeldung absenden") if amask(Account::IS_CHARACTER_ADMIN) || @c.status == "new" %>
 <% end %>
 <%= end_form_tag %>
 </p>
 
 <p>
-<% if session[:user].char_admin? && false %>
+<% if amask(Account::IS_CHARACTER_ADMIN) && false %>
 Note: das hier geht alles nicht.<br>
 <%= form_tag(:controller => 'character', :action => 'rename_char', :id => @c.id) + text_field("c", "character") + submit_tag("Charakter umbenennen") + end_form_tag %>
 <%= form_tag(:controller => 'character', :action => 'chmod_char', :id => @c.id) + submit_tag("Charakter-Datei 0 chmodden") + end_form_tag %>
@@ -172,12 +172,12 @@ Note: das hier geht alles nicht.<br>
 <h3>Kommentare</h3>
 <table align="center" width="80%">
 <% for c in @c.comments %>
-<%= render :partial => "comment", :locals => {:c => c, :show_char_header => false} if (session[:user].char_view? || c.public?) %>
+<%= render :partial => "comment", :locals => {:c => c, :show_char_header => false} if (amask(Account::CAN_SEE_ALL_CHARACTERS) || c.public?) %>
 <% end %>
 </table>
 <%= form_tag + text_area("comment", "body") %>
 <br>
-<%= "Public: " + check_box("comment", "public") if session[:user].char_admin? %>
+<%= "Public: " + check_box("comment", "public") if amask(Account::IS_CHARACTER_ADMIN) %>
 <%= submit_tag("Kommentar abgeben") + end_form_tag %>
 <i>Hinweis: Grundlegende HTML-Tags sind verfuegbar.</i>
 <br>
@@ -187,7 +187,7 @@ Note: das hier geht alles nicht.<br>
 <p>
 <table align="center">
 <% for a in @audit %>
-  <%= render :partial => 'audit/audit_event', :locals => {:a => a, :complete => session[:user] && session[:user].audit_admin?} %>
+  <%= render :partial => 'audit/audit_event', :locals => {:a => a, :complete => amask(Account::CAN_SEE_AUDIT_TRAILS) } %>
 <% end %>
 </table>
 </p>

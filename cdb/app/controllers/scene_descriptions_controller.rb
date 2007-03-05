@@ -1,6 +1,5 @@
 class SceneDescriptionsController < ApplicationController
-  before_filter :authenticate_object_admin
-  layout "main"
+  before_filter { authenticate(Account::CAN_SET_PERSISTENCY) }
 
   def index
     list

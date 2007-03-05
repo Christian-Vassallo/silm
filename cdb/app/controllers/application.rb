@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   
   def amask(mask)
     return false if !session[:user]
-    return session[:user].amask & amask == amask
+    return session[:user].amask & amask > 0 
   end
 
         def goback
@@ -33,98 +33,29 @@ class ApplicationController < ActionController::Base
         end
 
         protected
-        def authenticate
+        def authenticate mask = 0
                 unless session[:user]
                         session[:redirect_to] = request.request_uri
                         flash[:notice] = "Du musst dich einloggen um auf diese Seite zuzugreifen."
                         redirect_to :controller => "account", :action => "login"
                         return false
-                end
-        end
-        def authenticate_char_admin
-                unless session[:user] && session[:user].char_admin? 
-                        session[:redirect_to] = request.request_uri
-                        flash[:notice] = "Du musst Administrator sein, um diese Aktion auszufuehren."
-                        redirect_to :controller => "account", :action => "index"
+                else if mask > 0 && !amask(mask)
+                  flash[:notice] = "Du hast nicht die noetigen Rechte, um diese Seite zu sehen."  
+                        redirect_to :controller => "account", :action => "details"
                         return false
                 end
-        end
-        def authenticate_mod_admin
-                unless session[:user] && session[:user].mod_admin?
-                        session[:redirect_to] = request.request_uri
-                        flash[:notice] = "Du musst Administrator sein, um diese Aktion auszufuehren."
-                        redirect_to :controller => "account", :action => "index"
-                        return false
-                end
-        end
-        def authenticate_audit_admin
-                unless session[:user] && session[:user].audit_admin?
-                        session[:redirect_to] = request.request_uri
-                        flash[:notice] = "Du musst Administrator sein, um diese Aktion auszufuehren."
-                        redirect_to :controller => "account", :action => "index"
-                        return false
-                end
-        end
-        def authenticate_craft_admin
-                unless session[:user] && session[:user].craft_admin?
-                        session[:redirect_to] = request.request_uri
-                        flash[:notice] = "Du musst Administrator sein, um diese Aktion auszufuehren."
-                        redirect_to :controller => "account", :action => "index"
-                        return false
-                end
-        end
-        
-  def authenticate_object_admin
-                unless session[:user] && session[:user].object_admin?
-                        session[:redirect_to] = request.request_uri
-                        flash[:notice] = "Du musst Object-Admin sein, um diese Aktion auszufuehren."
-                        redirect_to :controller => "account", :action => "index"
-                        return false
-                end
-        end
-
-  def authenticate_char_view
-                unless session[:user] && session[:user].char_view?
-                        session[:redirect_to] = request.request_uri
-                        flash[:notice] = "Du musst Administrator sein, um diese Aktion auszufuehren."
-                        redirect_to :controller => "account", :action => "index"
-                        return false
-                end
-        end
-        def authenticate_mod_view
-                unless session[:user] && session[:user].mod_view?
-                        session[:redirect_to] = request.request_uri
-                        flash[:notice] = "Du musst Administrator sein, um diese Aktion auszufuehren."
-                        redirect_to :controller => "account", :action => "index"
-                        return false
-                end
-        end
-        def authenticate_audit_view
-                unless session[:user] && session[:user].audit_view?
-                        session[:redirect_to] = request.request_uri
-                        flash[:notice] = "Du musst Administrator sein, um diese Aktion auszufuehren."
-                        redirect_to :controller => "account", :action => "index"
-                        return false
-                end
-        end
-        def authenticate_craft_view
-                unless session[:user] && session[:user].craft_view?
-                        session[:redirect_to] = request.request_uri
-                        flash[:notice] = "Du musst Administrator sein, um diese Aktion auszufuehren."
-                        redirect_to :controller => "account", :action => "index"
-                        return false
-                end
+                  
         end
 
 
-  def enter_details
-    unless session[:user] && session[:user].details?
-                        session[:redirect_to] = request.request_uri
-      flash[:notice] = "Bitte trage deine persoenlichen Details ein, bevor du deine Anmeldung bearbeitest."
-      redirect_to :controller => "account", :action => "details"
-      return false  
-    end
-  end
+        def enter_details
+          unless session[:user] && session[:user].details?
+                              session[:redirect_to] = request.request_uri
+            flash[:notice] = "Bitte trage deine persoenlichen Details ein, bevor du deine Anmeldung bearbeitest."
+            redirect_to :controller => "account", :action => "details"
+            return false  
+          end
+        end
 
         def gobackfilter
                 session[:last_url2] = session[:last_url] #request.request_uri

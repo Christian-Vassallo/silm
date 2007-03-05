@@ -1,4 +1,4 @@
-<% if session[:user].char_view? %>
+<% if amask(Account::SEE_ALL_CHARACTERS) %>
 Name: <%= @u.playername %><br>
 Account: <%= @u.account %><br>
 Email: <%= @u.email %><br>

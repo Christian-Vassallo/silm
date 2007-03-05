@@ -1,11 +1,12 @@
  'duration'
 
 class CharacterController < ApplicationController
-  before_filter :authenticate
-  before_filter :enter_details
+  # before_filter :enter_details
 
-  before_filter :authenticate_char_admin, :only => ['consistency']
-  before_filter :authenticate_audit_admin, :only => ['notify']
+  #before_filter :authenticate_char_admin, :only => ['consistency']
+  #before_filter :authenticate_audit_admin, :only => ['notify']
+  before_filter :only => ['consistency'], { authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
+  before_filter :only => ['notify'], { authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
 
   def notify
     c = Character.find(863)
@@ -34,7 +35,7 @@ class CharacterController < ApplicationController
 
     # cond_s = "`race` != 'Bleistift' and " if @loggedonly == "1"
 
-    if session[:user] && session[:user].char_view?
+    if amask(Account::SEE_ALL_CHARACTERS) 
       search = ""
       search = params['search'] if params['search']
       @search = search
@@ -74,7 +75,7 @@ class CharacterController < ApplicationController
     cond = [cond_s + " 1=1", cond_a].flatten
 
     # now do the updating
-    if session[:user].char_admin?
+    if amask(Account::IS_CHARACTER_ADMIN) 
       @query = qn = params.keys.map {|n| $1 if n =~ /^character_(\d+)$/}.compact
       qn.each {|cu|
         cn = Character.find(:first, :conditions => ['id = ?', cu])
@@ -115,13 +116,13 @@ class CharacterController < ApplicationController
     @latest_comments = Comment.find(:all, :limit => 20, :order => "date desc"
       #:group => "`character`"
     ) if
-      session[:user] && session[:user].char_view?
+      amask(Account::SEE_ALL_CHARACTERS)
   end
 
   def show
     @debug = []
     order = "id asc"
-    if session[:user] && session[:user].char_view?
+    if amask(Account::SEE_ALL_CHARACTERS) 
       @c = Character.find(:first, :conditions => ['id = ?', params[:id]], :order => order)
     else
       @c = Character.find(:first, :conditions => ['id = ? and account = ?', params[:id], session[:user].id], :order => order)
@@ -132,7 +133,7 @@ class CharacterController < ApplicationController
     if params['c'] && @c != nil
       @debug << "updating file"
       # Only char_admins may change character status
-      if !session[:user].char_admin?
+      if !amask(Account::IS_CHARACTER_ADMIN) 
         @debug << "not charadmin"
         @debug << params['c']['status'].inspect
         @debug << @c.status
@@ -168,7 +169,7 @@ class CharacterController < ApplicationController
 
         # Send notification to all char_admins if status is now register and was new
         if status == "register" && oldstat == "new"
-          to = Account.find(:all, :conditions => ['char_admin = true'])
+          to = Account.find(:all, :conditions => ['amask & ?', Account::IS_CHARACTER_ADMIN])
           Notifications.deliver_register(@c, to)
         end
 
@@ -194,7 +195,7 @@ class CharacterController < ApplicationController
 
       c = Comment.new(params['comment'])
 
-      if !session[:user].char_view?
+      if !amask(Account::SEE_ALL_CHARACTERS)
         c.status = 'public'
       end
 
@@ -210,14 +211,14 @@ class CharacterController < ApplicationController
         flash[:notice] = "Posted."
         
         # Send notification to all char_admins if the owner of the commented on char posted
-        if @c.account == session[:user] && c.status == "public" && !session[:user].char_admin?
-          to = Account.find(:all, :conditions => ["char_admin = 'true'"])
+        if @c.account == session[:user] && c.status == "public" && !amask(Account::IS_CHARACTER_ADMIN) 
+          to = Account.find(:all, :conditions => ['amask & ?', Account::IS_CHARACTER_ADMIN])
           Notifications.deliver_comment(c, to)
           flash[:notice] = "Posted, sowie Email an alle char_admins geschickt." if to.size > 0
         end
 
         # Send notification to the owning account if a public comment was posted by a char_admin
-        if session[:user].char_admin? && c.status == "public" 
+        if amask(Account::IS_CHARACTER_ADMIN) && c.status == "public" 
           to = [c.character.account]
           Notifications.deliver_comment(c, to)
           flash[:notice] = "Posted, sowie Email an Spieler geschickt."

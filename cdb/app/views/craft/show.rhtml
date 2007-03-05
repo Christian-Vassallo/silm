@@ -72,12 +72,12 @@ display colour<br>
 <select name="product[d_colour]">
 <%
 {
-	'#eeeeee', '_other',
-	'#ffffff', 'white',
-	'#ddff00', 'Gift',
-	'#9BE4FF', 'Heilung',
-	'#67FFB0', 'Gegengift',
-	'#ffc4c4', 'Offensiv',
+  '#eeeeee', '_other',
+  '#ffffff', 'white',
+  '#ddff00', 'Gift',
+  '#9BE4FF', 'Heilung',
+  '#67FFB0', 'Gegengift',
+  '#ffc4c4', 'Offensiv',
 }.each do |k,v|
 %>
 <%= "<option value='%s' %s>%s</option>" % [k.downcase, (k.downcase == @product.d_colour.downcase) ? 'selected' : '', v] %>
@@ -89,6 +89,6 @@ display colour<br>
 <%= submit_tag "Save" %>
 </p>
 <%= end_form_tag %>
-<%= button_to "Delete", {:action => 'kill', :id => @product.id}, {:confirm => "Eh, sicher?" } if session[:user] && session[:user].craft_admin? %>
-<%= button_to "Create copy", {:action => 'copy', :id => @product.id}, {:confirm => "Eh, sicher?" } if session[:user] && session[:user].craft_admin? %>
+<%= button_to "Delete", {:action => 'kill', :id => @product.id}, {:confirm => "Eh, sicher?" } if amask(Account::CAN_EDIT_CRAFTING) %>
+<%= button_to "Create copy", {:action => 'copy', :id => @product.id}, {:confirm => "Eh, sicher?" } if amask(Account::CAN_EDIT_CRAFTING) %>
 <% end %>
