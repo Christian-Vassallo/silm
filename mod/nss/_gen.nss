@@ -130,6 +130,11 @@ string GetPCName(object oPC);
 
 void ToPC(string sMsg, object oPC = OBJECT_SELF);
 
+
+// returns a random float between fStart and fEnd,
+// or 0.0 on error
+float random(float fStart, float fEnd);
+
 //void ToDMs(string sMsg);
 
 
@@ -200,6 +205,17 @@ int GetPCPartyCount(object oPC);
 
 
 /* impl */
+
+
+
+float random(float fStart, float fEnd) {
+	string sStart = FloatToString(fStart),
+		sEnd = FloatToString(fEnd);
+	SQLQuery("select " + sStart + " + (" + sEnd + " - " + sStart + ") * rand();");
+	if (!SQLFetch())
+		return 0.0;
+	return StringToFloat(SQLGetData(1));
+}
 
 int GetMinutesPerHour() {
 	return FloatToInt(HoursToSeconds(1) / 60);
