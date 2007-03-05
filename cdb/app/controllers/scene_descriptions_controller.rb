@@ -1,5 +1,5 @@
 class SceneDescriptionsController < ApplicationController
-  before_filter { authenticate(Account::CAN_SET_PERSISTENCY) }
+  before_filter {|c| c.authenticate(Account::CAN_SET_PERSISTENCY) }
 
   def index
     list

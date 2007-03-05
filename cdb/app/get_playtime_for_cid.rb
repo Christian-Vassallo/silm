@@ -3,9 +3,8 @@
 require 'rubygems'
 require_gem 'activerecord'
 
-cid = ARGV.shift or fail "No cid specified."
-cid = cid.to_i
-
+cid = ARGV.shift or fail "No char specified."
+cid = "%" + cid + "%"
 
 def field(data, field)
   r = {}
@@ -23,7 +22,7 @@ ActiveRecord::Base.establish_connection(
 puts "connected"
 
 puts "Collecting"
-logs = Audit.find(:all, :conditions => ["category='module' and (event='login' or event='logout' or event='startup') and char = ?", cid], :order => "date asc")
+logs = Audit.find(:all, :conditions => ["category='module' and (event='login' or event='logout' or event='startup') and `char` like ?", cid], :order => "date asc")
 puts "Collected #{logs.size} audit trails"
 
 alltime = 0

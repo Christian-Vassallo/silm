@@ -1,7 +1,7 @@
 <h1>lines per hour toplist</h1>
 
 <pre>
-<% for item in @lph -%>
-<%= "%50s %f" % [item['character'], item['lph']]  %>
-<% end -%>
+<% i = 1 ; for item in @lph -%>
+<%= "%4d. %-50s %30f" % [i, item['character'], item['lph']]  %>
+<% i += 1; end -%>
 </pre>

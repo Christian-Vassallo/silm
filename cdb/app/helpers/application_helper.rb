@@ -25,14 +25,14 @@ module ApplicationHelper
     t += " <u>#{c.class1_level + c.class2_level + c.class3_level}</u>" if !short
   
     if !short
-      cx = c.comments.reject {|n| !session[:user].char_view? && !n.public? }.reject {|n| n.system? }
+      cx = c.comments.reject {|n| amask(Account::SEE_ALL_CHARACTERS) && !n.public? }.reject {|n| n.system? }
       t += " (#{cx.size} comment" + (cx.size > 1 ? "s" : "") + ")" if cx.size > 0
       
       t += " <a id='online'>Online!</a>" if c.online?
     end
     
     
-    if session[:user] && session[:user].char_view?
+    if amask(Account::SEE_ALL_CHARACTERS) 
       if !short
         t += "<br>  >"
       end
@@ -67,7 +67,7 @@ module ApplicationHelper
 
   def amask(mask)
     return false if !session[:user]
-    return session[:user].amask & mask == mask
+    return (session[:user].amask & mask > 0)
   end
 
 

@@ -1,6 +1,6 @@
 class StatController < ApplicationController
 
-  before_filter { authenticate(Account::SEE_ALL_CHARACTERS) }
+  before_filter {|c| c.authenticate(Account::SEE_ALL_CHARACTERS) }
 
   def mentor
     @totalmentor = MentorData.find_by_sql("select aid,sum(xp) as xp from mentordata group by aid order by xp desc")
@@ -29,7 +29,7 @@ class StatController < ApplicationController
       if session['timexp_start']
         @tstart = session['timexp_start']
       else
-        @tstart = @tend - (3600 * 24 * 30) # 1mon
+        @tstart = @tend - (3600 * 24 * 30 * 12) # 1yr
       end
     end
 
@@ -50,18 +50,18 @@ class StatController < ApplicationController
     
     @xp_per_cid_per_month = TimeXP.find_by_sql("select cid, sum(xp) as xp, month, year from time_xp %s group by cid, year, month order by xp %s" % [where, sort_order])
     
-    @xp_per_cid_per_day = TimeXP.find_by_sql("select cid, sum(xp) as xp, day, month, year from time_xp %s group by cid, day, year, month order by year,month,day %s" % [where, sort_order])
+    @xp_per_cid_per_day = TimeXP.find_by_sql("select cid, sum(xp) as xp, day, month, year, str_to_date(concat(day,'.',month,'.',year), '%%d.%%m.%%Y') as ts from time_xp %s group by cid, day, year, month order by ts %s" % [where, sort_order])
 
-    @xp_per_month = TimeXP.find_by_sql("select month,year,sum(xp) as xp from time_xp %s group by year,month order by year, month %s" % [where, sort_order])
-    
-    @xp_per_day = TimeXP.find_by_sql("select day,month,year,sum(xp) as xp from time_xp %s group by day,year,month order by year, month, day %s" % [where, sort_order])
+    @xp_per_month = TimeXP.find_by_sql("select month,year,sum(xp) as xp, str_to_date(concat(month,'.',year), '%%m.%%Y') as ts from time_xp %s group by year,month order by ts %s" % [where, sort_order])
+ 
+    @xp_per_day = TimeXP.find_by_sql("select day,month,year,sum(xp) as xp, str_to_date(concat(day,'.',month,'.',year), '%%d.%%m.%%Y') as ts from time_xp %s group by day,year,month order by ts %s" % [where, sort_order])
   end
 
 
 
   def lph_toplist
     @lph = Character::find_by_sql(
-      'select `character`, (messages / (total_time / 3600)) as lph from `characters` order by lph desc;'
+      'select `character`, (messages / (total_time / 3600)) as `lph` from `characters` where messages > 400 and total_time > 3600 * 3 order by `lph` desc;'
     )
   end
 end

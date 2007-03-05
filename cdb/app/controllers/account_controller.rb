@@ -2,9 +2,9 @@ require 'duration'
 
 class AccountController < ApplicationController
 
-  before_filter :authenticate { :only => ['details', 'logout', 'show']
-  before_filter :only => ['show'], { authenticate(Account::SEE_ALL_CHARACTERS) }
-  before_filter :only => ['amask'], { authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
+  before_filter :authenticate, :only => ['logout', 'show']
+  before_filter(:only => ['show']) {|c| c.authenticate(Account::SEE_ALL_CHARACTERS) }
+  before_filter(:only => ['amask']) {|c| c.authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
 
   def login
       @param = params

@@ -1,29 +1,31 @@
 class Account < ActiveRecord::Base
 	AMASK = {
-		'AMASK_ANY' = 0,
-		'AMASK_SEE_ALL_CHARACTERS' = 1,
-		'AMASK_IS_CHARACTER_ADMIN' = 2,
-		'AMASK_CAN_USE_MACROS' = 4,
-		'AMASK_SEE_ALL_MENTORS' = 8,
-		'AMASK_IS_GM' = 16,
-		'AMASK_GM' = 16,
-		'AMASK_IS_GLOBAL_GM' = 32,
-		'AMASK_GLOBAL_GM' = 32,
-		'AMASK_FORCETALK' = 64,
-		'AMASK_GLOBAL_FORCETALK' = 128,
-		'AMASK_CAN_SET_PERSISTENCY' = 256,
-		'AMASK_CAN_SET_PERSISTENCY_UNUSED_ADMIN_RESERVED' = 512,
-		'AMASK_CAN_SEE_CRAFTING' = 1024,
-		'AMASK_CAN_EDIT_CRAFTING' = 2048,
-		'AMASK_CAN_SEE_MERCHANTS' = 4096,
-		'AMASK_CAN_EDIT_MERCHANTS' = 8192,
-		'AMASK_CAN_SEE_CHATLOGS' = 16384,
-		'AMASK_CAN_SEE_PRIVATE_CHATLOGS' = 32768,
-		'AMASK_CAN_SEE_AUDIT_TAILS' = 65536,
-		'AMASK_CAN_RESTART_SERVER' = 131072,
-		'AMASK_CAN_SEE_GV' = 262144,
-		'AMASK_CAN_EDIT_GV' = 524288,
-		'AMASK_CAN_DO_BACKEND' = 1048576,
+		'AMASK_ANY' , 0,
+		'AMASK_SEE_ALL_CHARACTERS' , 1,
+		'AMASK_CAN_SEE_ALL_CHARACTERS' , 1,
+		'AMASK_IS_CHARACTER_ADMIN' , 2,
+		'AMASK_CAN_USE_MACROS' , 4,
+		'AMASK_SEE_ALL_MENTORS' , 8,
+		'AMASK_CAN_SEE_ALL_MENTORS' , 8,
+		'AMASK_IS_GM' , 16,
+		'AMASK_GM' , 16,
+		'AMASK_IS_GLOBAL_GM' , 32,
+		'AMASK_GLOBAL_GM' , 32,
+		'AMASK_FORCETALK' , 64,
+		'AMASK_GLOBAL_FORCETALK' , 128,
+		'AMASK_CAN_SET_PERSISTENCY' , 256,
+		'AMASK_CAN_CHANGE_WEATHER' , 512,
+		'AMASK_CAN_SEE_CRAFTING' , 1024,
+		'AMASK_CAN_EDIT_CRAFTING' , 2048,
+		'AMASK_CAN_SEE_MERCHANTS' , 4096,
+		'AMASK_CAN_EDIT_MERCHANTS' , 8192,
+		'AMASK_CAN_SEE_CHATLOGS' , 16384,
+		'AMASK_CAN_SEE_PRIVATE_CHATLOGS' , 32768,
+		'AMASK_CAN_SEE_AUDIT_TRAILS' , 65536,
+		'AMASK_CAN_RESTART_SERVER' , 131072,
+		'AMASK_CAN_SEE_GV' , 262144,
+		'AMASK_CAN_EDIT_GV' , 524288,
+		'AMASK_CAN_DO_BACKEND' , 1048576,
 	}
 	AMASK.each {|k,v|
 		Account::const_set(k.gsub(/^AMASK_/, ""), v)
@@ -46,7 +48,8 @@ class Account < ActiveRecord::Base
 	end
 
 	def details?
-		email != "" && playerage != "" && roleplay_experience != "" && playername != "" && sex != "n"
+		# email != "" && playerage != "" && roleplay_experience != "" && playername != "" && sex != "n"
+		true
 	end
 
 	def dm?
@@ -54,7 +57,7 @@ class Account < ActiveRecord::Base
 	end
 	
 	def other_chars(session, char = nil)
-		if char != nil && session[:user] && session[:user].char_view?
+		if char != nil && amask & Account::SEE_ALL_CHARACTERS > 0
 			return Character.find(:all, :conditions => ['`create_key` = ? or `account` = ?', char.create_key, char.account.id])
 		end
 		return characters
@@ -70,8 +73,9 @@ class Account < ActiveRecord::Base
 
 	def amask_a
 		r = []
+		vv = []
 		AMASK.sort{|a,b| a[1] <=> b[1]}.each {|k,v|
-			r << k if self.amask & v == v
+			begin vv << v; r << k end if self.amask & v == v && !vv.index(v)
 		}
 		r
 	end

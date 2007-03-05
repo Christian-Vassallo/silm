@@ -1,12 +1,10 @@
  'duration'
 
 class CharacterController < ApplicationController
-  # before_filter :enter_details
+  before_filter :authenticate
 
-  #before_filter :authenticate_char_admin, :only => ['consistency']
-  #before_filter :authenticate_audit_admin, :only => ['notify']
-  before_filter :only => ['consistency'], { authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
-  before_filter :only => ['notify'], { authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
+  before_filter(:only => ['consistency']) {|c| c.authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
+  before_filter(:only => ['notify']) {|c| c.authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
 
   def notify
     c = Character.find(863)

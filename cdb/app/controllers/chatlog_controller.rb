@@ -1,5 +1,5 @@
 class ChatlogController < ApplicationController
-  before_filter { authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
+  before_filter {|c| c.authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
 
   def index
     search = (params['chatlog_search'] || "").strip

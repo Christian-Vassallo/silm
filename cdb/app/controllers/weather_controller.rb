@@ -1,5 +1,5 @@
 class WeatherController < ApplicationController
-  before_filter { authenticate(Account::SEE_ALL_CHARACTERS) }
+  before_filter {|c| c.authenticate(Account::CAN_CHANGE_WEATHER) }
 
   def index
     @overrides = WeatherOverride.find(:all, :order => "atype desc, ayear asc, amonth asc, aday asc")

@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   
   def amask(mask)
     return false if !session[:user]
-    return session[:user].amask & amask > 0 
+    return session[:user].amask & mask > 0 
   end
 
         def goback
@@ -32,29 +32,37 @@ class ApplicationController < ActionController::Base
                 end
         end
 
-        protected
-        def authenticate mask = 0
-                unless session[:user]
+        
+	def authenticate mask = 0
+                if !session[:user]
                         session[:redirect_to] = request.request_uri
                         flash[:notice] = "Du musst dich einloggen um auf diese Seite zuzugreifen."
                         redirect_to :controller => "account", :action => "login"
                         return false
-                else if mask > 0 && !amask(mask)
+                end
+		
+		unless enter_details
+			return false
+		end
+		
+		if mask > 0 && !amask(mask)
                   flash[:notice] = "Du hast nicht die noetigen Rechte, um diese Seite zu sehen."  
                         redirect_to :controller => "account", :action => "details"
                         return false
                 end
                   
         end
+        protected
 
 
         def enter_details
           unless session[:user] && session[:user].details?
-                              session[:redirect_to] = request.request_uri
-            flash[:notice] = "Bitte trage deine persoenlichen Details ein, bevor du deine Anmeldung bearbeitest."
-            redirect_to :controller => "account", :action => "details"
-            return false  
+		session[:redirect_to] = request.request_uri
+		flash[:notice] = "Bitte trage deine persoenlichen Details ein, bevor du deine Anmeldung bearbeitest."
+		redirect_to :controller => "account", :action => "details"
+		return false  
           end
+	  return true
         end
 
         def gobackfilter

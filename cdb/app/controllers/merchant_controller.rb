@@ -1,5 +1,5 @@
 class MerchantController < ApplicationController
-  before_filter { authenticate(Account::CAN_EDIT_CRAFTING) }
+  before_filter {|c| c.authenticate(Account::CAN_EDIT_CRAFTING) }
 
   # List all merchants and their inventory
   def index

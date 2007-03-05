@@ -1,6 +1,5 @@
 class PersistentObjectsController < ApplicationController
-  before_filter { authenticate(Account::CAN_SET_PERSISTENCY) }
-  layout "main"
+  before_filter {|c| c.authenticate(Account::CAN_SET_PERSISTENCY) }
 
   def index
     list
