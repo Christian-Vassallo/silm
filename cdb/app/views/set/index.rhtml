@@ -18,12 +18,12 @@
     <%= m['type'] %>
   </td>
     <td class="set_value">
-      <%= amask(Account::AMASK_BACKEND_ADMIN) ? (f.text_field "value", :size => 50) : m['value'] %>
+      <%= amask(Account::AMASK_CAN_EDIT_GV) ? (f.text_field "value", :size => 50) : m['value'] %>
   </td>
 </tr>
 <%
     end
 end %>
 </table>
-<%= submit_tag "Save" if amask(Account::AMASK_BACKEND_ADMIN) %>
+<%= submit_tag "Save" if amask(Account::AMASK_CAN_EDIT_GV) %>
 <%= end_form_tag %>

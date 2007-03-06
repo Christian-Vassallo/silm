@@ -12,7 +12,7 @@ class SetController < ApplicationController
         return
       end
 
-    end if amask(Account::AMASK_GM_ADMIN) && params['settings']
+    end if params['settings'] && amask?(Account::AMASK_CAN_EDIT_GV)
 
   end
 end
