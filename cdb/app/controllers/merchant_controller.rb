@@ -1,5 +1,5 @@
 class MerchantController < ApplicationController
-  before_filter {|c| c.authenticate(Account::CAN_EDIT_CRAFTING) }
+  before_filter {|c| c.authenticate(Account::CAN_EDIT_MERCHANTS) }
 
   # List all merchants and their inventory
   def index
@@ -54,7 +54,7 @@ class MerchantController < ApplicationController
       'max' => 25,
       'buy_markup' => 1.0,
       'sell_markdown' => 1.0,
-      'comment' => 'add by %s' % [session[:user].account],
+      'comment' => 'add by %s' % [get_user.account],
     }
 
     @new = MerchantInventory.new(defaults)

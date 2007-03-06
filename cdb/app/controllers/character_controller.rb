@@ -6,15 +6,8 @@ class CharacterController < ApplicationController
   before_filter(:only => ['consistency']) {|c| c.authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
   before_filter(:only => ['notify']) {|c| c.authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
 
-  def notify
-    c = Character.find(863)
-    
-    to = [session[:user]]
-    em = Notifications.deliver_status(c, to)
-  end
-
   def index
-    return if !session[:user]
+    return if !get_user
   
     perpage = 30
     #@onlineonly = "1"
@@ -33,7 +26,7 @@ class CharacterController < ApplicationController
 
     # cond_s = "`race` != 'Bleistift' and " if @loggedonly == "1"
 
-    if amask(Account::SEE_ALL_CHARACTERS) 
+    if amask?(Account::SEE_ALL_CHARACTERS) 
       search = ""
       search = params['search'] if params['search']
       @search = search
@@ -68,12 +61,12 @@ class CharacterController < ApplicationController
       end
     else
       cond_s = "account = ? and "
-      cond_a = [session[:user].id]
+      cond_a = [get_user.id]
     end
     cond = [cond_s + " 1=1", cond_a].flatten
 
     # now do the updating
-    if amask(Account::IS_CHARACTER_ADMIN) 
+    if amask?(Account::IS_CHARACTER_ADMIN) 
       @query = qn = params.keys.map {|n| $1 if n =~ /^character_(\d+)$/}.compact
       qn.each {|cu|
         cn = Character.find(:first, :conditions => ['id = ?', cu])
@@ -83,7 +76,7 @@ class CharacterController < ApplicationController
         cn.update_attributes(params["character_#{cu}"])
         if cn.status != oldstat
           co = Comment.new(:body => "Status: #{oldstat} -> #{cn.status}", :status => 'system')
-          co.account = session[:user].id
+          co.account = get_user.id
           co.character = cn.id
           co.save
         end
@@ -114,7 +107,7 @@ class CharacterController < ApplicationController
     @latest_comments = Comment.find(:all, :limit => 20, :order => "date desc"
       #:group => "`character`"
     ) if
-      amask(Account::SEE_ALL_CHARACTERS)
+      amask?(Account::SEE_ALL_CHARACTERS)
   end
 
   def show
@@ -123,7 +116,7 @@ class CharacterController < ApplicationController
     if amask(Account::SEE_ALL_CHARACTERS) 
       @c = Character.find(:first, :conditions => ['id = ?', params[:id]], :order => order)
     else
-      @c = Character.find(:first, :conditions => ['id = ? and account = ?', params[:id], session[:user].id], :order => order)
+      @c = Character.find(:first, :conditions => ['id = ? and account = ?', params[:id], get_user.id], :order => order)
     end
     
     @audit = @c.last_audited_logins(50)
@@ -160,7 +153,7 @@ class CharacterController < ApplicationController
 
         if status != oldstat
           co = Comment.new(:body => "Status: #{oldstat} -> #{status}", :status => 'system')
-          co.account = session[:user].id
+          co.account = get_user.id
           co.character = @c.id
           co.save
         end
@@ -172,7 +165,7 @@ class CharacterController < ApplicationController
         end
 
         # Send notification to user if status != new and status != register
-        if status != "new" && status != "register" && status != "register_accept" && session[:user] != @c.account
+        if status != "new" && status != "register" && status != "register_accept" && get_user != @c.account
           to = [@c.account]
           em = Notifications.deliver_status(@c, to)
         end
@@ -186,7 +179,7 @@ class CharacterController < ApplicationController
       
       params['comment']['body'].strip!
 
-      if Comment::count(:conditions => ['account = ? and `character` = ? and body = ?', session[:user].id, params[:id], params['comment']['body']]) > 0
+      if Comment::count(:conditions => ['account = ? and `character` = ? and body = ?', get_user.id, params[:id], params['comment']['body']]) > 0
         flash[:notice] = "Bereits einen Kommentar geposted. Werde nicht noch einmal posten."
         return
       end
@@ -197,7 +190,7 @@ class CharacterController < ApplicationController
         c.status = 'public'
       end
 
-      c.account = session[:user].id
+      c.account = get_user.id
       c.character = params[:id]
       # c.date = Time.now
       # c.parent = 0
@@ -209,7 +202,7 @@ class CharacterController < ApplicationController
         flash[:notice] = "Posted."
         
         # Send notification to all char_admins if the owner of the commented on char posted
-        if @c.account == session[:user] && c.status == "public" && !amask(Account::IS_CHARACTER_ADMIN) 
+        if @c.account == get_user && c.status == "public" && !amask(Account::IS_CHARACTER_ADMIN) 
           to = Account.find(:all, :conditions => ['amask & ?', Account::IS_CHARACTER_ADMIN])
           Notifications.deliver_comment(c, to)
           flash[:notice] = "Posted, sowie Email an alle char_admins geschickt." if to.size > 0

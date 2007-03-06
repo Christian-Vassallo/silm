@@ -11,7 +11,7 @@ class WeatherController < ApplicationController
   end
 
   def add
-    o = {'aid' => session[:user]['id'] }
+    o = {'aid' => get_user['id'] }
     %w{atype ayear amonth aday zyear zmonth zday temp wind prec}.each do |i|
       o[i] = params[i]
     end

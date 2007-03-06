@@ -1,5 +1,5 @@
 class SetController < ApplicationController
-
+  
   def index
     @settings = GVSetting::find(:all, :order => '`type`, `key` desc')
 
@@ -12,7 +12,7 @@ class SetController < ApplicationController
         return
       end
 
-    end if params['settings']
+    end if amask(Account::AMASK_GM_ADMIN) && params['settings']
 
   end
 end

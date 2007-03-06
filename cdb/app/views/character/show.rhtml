@@ -85,7 +85,7 @@ Zaehigkeit: <%= @c.fortitude %><br>
   <% end; end %>
 </p>
 
-<% if @c.status == "new" && session[:user] == @c.account %>
+<% if @c.status == "new" && get_user == @c.account %>
 <p>
 <h2>Hallo, <%= link_to_account @c.account %>!</h2>
 </p>
@@ -113,7 +113,7 @@ zu den drei Textfeldern genau durch, bevor du dich an das Schreiben machst.
   <p>Halte dies <b>kompakt</b>, doch <b>nicht zu kurz</b>.  Sage genau dies, was zu sagen ist, und nicht mehr.</p>
   </i>
 </td><td valign="top" class="char_anmeldung">
-<% if @c.status == "new" && (amask(Account::IS_CHARACTER_ADMIN) || session[:user] == @c.account) %>
+<% if @c.status == "new" && (amask(Account::IS_CHARACTER_ADMIN) || get_user == @c.account) %>
 <%= text_area "c", "appearance", :cols => 101, :rows => 30 %>
 <% else %>
 <%= fmt @c.appearance %>
@@ -129,7 +129,7 @@ zu den drei Textfeldern genau durch, bevor du dich an das Schreiben machst.
   <p>In etwa <b>eine halbe A4-Seite</b>.</p>
   </i>
 </td><td valign="top" class="char_anmeldung">
-<% if @c.status == "new" && (amask(Account::IS_CHARACTER_ADMIN) || session[:user] == @c.account) %>
+<% if @c.status == "new" && (amask(Account::IS_CHARACTER_ADMIN) || get_user == @c.account) %>
 <%= text_area "c", "traits",:cols => 101, :rows => 30 %>
 <% else %>
 <%= fmt @c.traits %>
@@ -143,7 +143,7 @@ zu den drei Textfeldern genau durch, bevor du dich an das Schreiben machst.
   <p>In etwa <b>eine A4-Seite</b>.</p>
   </i>
 </td><td valign="top" class="char_anmeldung">
-<% if @c.status == "new" && (amask(Account::IS_CHARACTER_ADMIN) || session[:user] == @c.account) %> 
+<% if @c.status == "new" && (amask(Account::IS_CHARACTER_ADMIN) || get_user == @c.account) %> 
 <%= text_area "c", "biography",:cols => 101, :rows => 30 %>
 <% else %>
 <%= fmt @c.biography %>

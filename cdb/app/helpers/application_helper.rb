@@ -9,6 +9,7 @@ module ApplicationHelper
     t
   end
 
+
   def link_to_character(c, short = false)
     return "Character not found" if c.nil?
     t = link_to((case c.status
@@ -34,17 +35,18 @@ module ApplicationHelper
     
     if amask(Account::SEE_ALL_CHARACTERS) 
       if !short
-        t += "<br>  >"
+        t += "<br><small>&nbsp;>"
       end
       if !short
         t += " "
         t += c.account.nil? ? "<i>Stray character, no such account_id!</i>" :
           link_to(c.account.account, :controller => 'character', :action => 'index', :search => c.account.account)
       end
-      t += " " + link_to("?", :controller => "account", :action => "show", :id => c.account.id) if c.account
+      t += " " + link_to_account(c.account, true)
       if !short
         t += ""
         t += " <a id='dm'>DM!</a>" if c.dm?
+		t += "</small>"
       end
     end
     
@@ -52,10 +54,13 @@ module ApplicationHelper
     t
   end
 
-  def link_to_account(a)
-    link_to (a.display_name != "" ? a.display_name : a.account), :controller => 'account', :action => 'show', :id => a.id
+  def link_to_account(a, short = false)
+	t = ""
+    t += link_to(short ? "?" : a.account, :controller => 'account', :action => 'show', :id => a.id)
+	t += (short ? "" : " ") + link_to("a", :controller => 'account', :action => 'amask', :id => a.id) if a.amask > 0
+	t
   end
-
+  
 
   def strftime(otime)
     otime.strftime(session[:user].nil? || session[:user].strftime == "" ? "%c" : session[:user].strftime)
@@ -66,8 +71,8 @@ module ApplicationHelper
   end
 
   def amask(mask)
-    return false if !session[:user]
-    return (session[:user].amask & mask > 0)
+    return false if !get_user
+    return (get_user.amask & mask > 0)
   end
 
 
@@ -79,5 +84,10 @@ module ApplicationHelper
   def get_current_day()
     return GVSetting.find(:first, :conditions => ["`key` = 't_day'"]).value
   end
+
+	def get_user
+		return nil if !session[:uid] || session[:uid] < 1
+		return Account::find(session[:uid])
+	end
 
 end

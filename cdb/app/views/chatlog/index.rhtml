@@ -1,5 +1,7 @@
 <form>
-	<input type="text" name="chatlog_search" value="<%= @csearch %>">
+  <input type="text" name="chatlog_search" value="<%= @csearch %>" size="40">
+    <br>
+  <input type="text" name="goto" value="<%= @goto.to_s %>" size="40">
 </form>
 
 <%= pagination_links(@log_pages, :window_size => 50, :params => {:chatlog_search => @csearch}) %>

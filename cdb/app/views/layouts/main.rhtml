@@ -8,13 +8,13 @@
 <body>
 <table class="main" style="width:100%">
 <tr><td class="menue">
-<%= session[:user].nil? ? "Nicht eingelogged, " + link_to("Einloggen", :controller => 'account', :action => 'login') : "Eingelogged als " + session[:user].account + ", " + link_to( "Ausloggen", :controller => 'account', :action => 'logout') %>
+<%= get_user.nil? ? "Nicht eingelogged, " + link_to("Einloggen", :controller => 'account', :action => 'login') :
+	"Eingelogged als " + get_user.account + ", " + 
+	link_to( "Ausloggen", :controller => 'account', :action => 'logout') %>
 <br>
 
-<%= link_to_if (session[:user]), "Account-Details", :controller => "account", :action => "details" %>&nbsp;
-* <%= link_to_if (session[:user] && session[:user].details?), "<b>Char-Liste</b>", :controller => "character", :action => "index" %>&nbsp;
-<!-- * <%= link_to_if (session[:user] && session[:user].details?), "Statistiken", :controller => 'stat', :action => 'index' %>&nbsp; -->
-* <%= link_to_if (session[:user] && session[:user].details? && false), "Schach-Liga", :controller => 'schach', :action => 'index' %><br>
+<%= link_to_if get_user, "Account-Details", :controller => "account", :action => "details" %>&nbsp;
+* <%= link_to_if (get_user && get_user.details?), "<b>Char-Liste</b>", :controller => "character", :action => "index" %>&nbsp;
 
 <%= link_to_if amask(Account::AMASK_CAN_CHANGE_WEATHER), "Weather", :controller => 'weather', :action => 'index' %>&nbsp;
 * <%= link_to_if amask(Account::AMASK_CAN_SEE_ALL_MENTORS), "MentorData", :controller => 'stat', :action => 'mentor' %>&nbsp;
@@ -64,7 +64,7 @@ Craft:
 <input type="checkbox" id="onlineonly" name="onlineonly" value="1" title="Nur online" <%= "checked='checked'" if @onlineonly == "1" %>>
 <input type="text" id="search" name="search" size="20" value="<%= @search %>">
 <%= submit_tag("Go") + end_form_tag %>
-<%= link_to session[:user].account, {:controller => 'character', :action => 'index', :search => session[:user].account } %>
+<%= link_to get_user.account, {:controller => 'character', :action => 'index', :search => get_user.account } %>
 <% else %>
 <h1>Willkommen!</h1>
 <% end %>
@@ -82,6 +82,8 @@ Craft:
 %>
 <hr>
 <%= debug(params) %>
+<hr>
+<%= debug(@debug) %>
 <hr>
 <%= debug(ActionMailer::Base.deliveries[-1]) %>
 <%

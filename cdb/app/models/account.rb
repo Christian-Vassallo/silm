@@ -25,7 +25,8 @@ class Account < ActiveRecord::Base
 		'AMASK_CAN_RESTART_SERVER' , 131072,
 		'AMASK_CAN_SEE_GV' , 262144,
 		'AMASK_CAN_EDIT_GV' , 524288,
-		'AMASK_CAN_DO_BACKEND' , 1048576,
+		'AMASK_CAN_SEE_ACCOUNT_DETAILS', 1048576,
+		'AMASK_CAN_DO_BACKEND' , 8589934592,
 	}
 	AMASK.each {|k,v|
 		Account::const_set(k.gsub(/^AMASK_/, ""), v)
@@ -63,6 +64,9 @@ class Account < ActiveRecord::Base
 		return characters
 	end
 
+	def amask?(mask)
+		super.amask & mask > 0
+	end
 
 	def total_time
 		tt = 0
@@ -70,13 +74,32 @@ class Account < ActiveRecord::Base
 		all.each {|n| tt += n.total_time }
 		return tt
 	end
-
+	
+	#returns an [] with all KEYs this user has
 	def amask_a
 		r = []
 		vv = []
 		AMASK.sort{|a,b| a[1] <=> b[1]}.each {|k,v|
-			begin vv << v; r << k end if self.amask & v == v && !vv.index(v)
+			if !vv.index(v) && amask & v > 0
+				vv << v
+				r << k
+			end 
+		}
+		r
+	end
+	
+	
+	#returns an [] with all KEYs sorted by value
+	def self.amask_a
+		r = []
+		vv = []
+		AMASK.sort{|a,b| a[1] <=> b[1]}.each {|k,v|
+			if !vv.index(v)
+				vv << v
+				r << k
+			end 
 		}
 		r
 	end
 end
+

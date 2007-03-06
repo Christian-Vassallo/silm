@@ -3,24 +3,25 @@ require 'duration'
 class AccountController < ApplicationController
 
   before_filter :authenticate, :only => ['logout', 'show']
-  before_filter(:only => ['show']) {|c| c.authenticate(Account::SEE_ALL_CHARACTERS) }
-  before_filter(:only => ['amask']) {|c| c.authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
+  before_filter(:only => ['show']) {|c| c.authenticate(Account::CAN_SEE_ACCOUNT_DETAILS) }
+  before_filter(:only => ['amask']) {|c| c.authenticate(Account::CAN_DO_BACKEND) }
 
   def login
       @param = params
   
-    if session[:user].nil? && params['login'] != nil
-      session[:user] = Account.authenticate(params['login']['account'], params['login']['password'])
-      if !session[:user]
+    if get_user.nil? && params['login'] != nil
+      session[:uid] = Account.authenticate(params['login']['account'], params['login']['password']).id
+      if !get_user
         flash[:notice] = "Benutzername nicht gefunden, oder falsches Passowrt!"
         flash[:error] = true
-      end
-      redirect_to :controller => 'character', :action => 'index' if session[:user]
+      else
+        redirect_to :controller => 'character', :action => 'index'
+	  end
     end
   end
 
   def logout
-      session[:user] = nil
+      session[:uid] = nil
   end
 
   def index
@@ -28,12 +29,12 @@ class AccountController < ApplicationController
   end
 
   def details
-    @account = session[:user]
+    @account = get_user
     det = params['account']
     if det != nil
-      if !session[:user].update_attributes(det)
+      if !get_user.update_attributes(det)
         flash[:notice] = "Konnte die Werte nicht speichern!"
-        flash[:errors] = session[:user].errors
+        flash[:errors] = get_user.errors
       else
         flash[:notice] = "Okay, abgespeichert!"
         redirect_to :controller => 'character', :action => 'index'
@@ -46,15 +47,34 @@ class AccountController < ApplicationController
   end
 
 
-  def amask
-    id = params[:id]
-    begin
-      @account = Account::find(id)
-    rescue
-      @account = nil
-      return
-    end
+	def amask
 
-    new_mask = params[:mask]
-  end
+		id = params[:id]
+		begin
+			@account = Account::find(id)
+		rescue
+			@account = nil
+			return
+		end
+
+		new_mask = params[:mask]
+		if new_mask
+
+			mask = 0
+
+			new_mask = new_mask.to_a.reject {|x| x[0] !~ /^AMASK_/ }.each {|k,v|
+				mask |= Account::AMASK[k] if Account::AMASK[k]
+			}
+			@account.update_attribute('amask', mask)
+			
+			if !@account.save
+				flash[:errors] = @account.errors
+				flash[:notice] = "cannot save new amask?"
+			else
+				flash[:notice] = "new mask = #{mask}, saved"
+			end
+		end
+
+		@pusers = Account::find(:all, :conditions => 'amask > 0', :order => 'amask desc')
+	end
 end
