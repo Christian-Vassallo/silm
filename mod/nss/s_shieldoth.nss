@@ -1,6 +1,6 @@
 #include "_gen"
 #include "x2_inc_spellhook"
-
+#include "inc_debug"
 
 void CycleShieldOther(object oCleric, object oTarget, int nLastHP, int nLastMaxHP, float fRemaining,
 					  float fInterval);
@@ -50,6 +50,12 @@ void CycleShieldOther(object oCleric, object oTarget, int nLastHP, int nLastMaxH
 
 	int nClericCurrentHP = GetCurrentHitPoints(oCleric);
 
+	dbg("CycleShieldOther(): " + GetName(oCleric) + " : " + GetName(oTarget), 3);
+	dbg("CycleShieldOther(): lhp " + IntToString(nLastHP) + " lmhp " + 
+		IntToString(nLastMaxHP) + " remain " + FloatToString(fRemaining), 3);
+	dbg("CycleShieldOther(): chp " + IntToString(nCurrentHP) + ", mhp " + 
+		IntToString(nMaxHP) + " cchp " + IntToString(nClericCurrentHP), 3);
+
 	// Oy. Its dead, Jim.
 	// End the spell, show's over.
 	if ( nCurrentHP < -9 ) {
@@ -61,7 +67,7 @@ void CycleShieldOther(object oCleric, object oTarget, int nLastHP, int nLastMaxH
 	// Oyyy! Its us that'll be dead.
 	// End the spell, show's over.
 	if ( nClericCurrentHP < -9 ) {
-		SendMessageToPC(oCleric, "Andere Schuetzen endet (Schuetzender tot).");
+		SendMessageToPC(oCleric, "Andere Schuetzen endet (Schuetzender tot (das bist du!)).");
 		SetLocalInt(oTarget, "shield_other", 0);
 		return;
 	}
