@@ -10,7 +10,7 @@
 //:: Created On: 27.02.2005
 //:://////////////////////////////////////////////
 
-
+#include "inc_setting"
 // #include "inc_nwnx"
 
 // regenerates nHitPoints of oPC in several Minutes
@@ -212,7 +212,7 @@ void AddBandage(object oPC, object oTarget, object oItem) {
 
 			if ( GetResRef(oTarget) == "healerkit" ) {
 				int nBandage = GetBandageValue(oTarget);
-				if ( nBandage < 12 ) {
+				if ( nBandage < gvGetInt("healerkit_max_medicines") ) {
 					FloatingTextStringOnCreature("Die Bandage wurde der Heiltasche hinzugefuegt.", oPC, FALSE);
 					SetHealerKitValues(oTarget, GetBandageValue(oTarget) + 1, GetMedicineValue(oTarget));
 					DestroyObject(oItem);
@@ -238,7 +238,7 @@ void AddMedicine(object oPC, object oTarget, object oItem) {
 		if ( GetDistanceBetween(oPC, oTarget) < 2.0 ) {
 			if ( GetResRef(oTarget) == "healerkit" ) {
 				int nBandage = GetMedicineValue(oTarget);
-				if ( nBandage < 4 ) {
+				if ( nBandage < gvGetInt("healerkit_max_medicines") ) {
 					SetHealerKitValues(oTarget, GetBandageValue(oTarget), GetMedicineValue(oTarget) + 1);
 					DestroyObject(oItem);
 				} else {
@@ -280,34 +280,31 @@ void CureDisease(object oPC, effect eDisease, int nHealSkill) {
 }
 
 int GetBandageValue(object oHealerKit) {
-	//int nOldVal = StringToInt(GetSubString(GetTag(oHealerKit), 11, 2));
+	string name = GetName(oHealerKit);
+	int nIndex = FindSubString(name, ":");
+	if (-1 == nIndex)
+		return 0;
 
-	int nValue = GetLocalInt(oHealerKit, "bandages");
-	//if (!nValue) {
-	//    nValue = nOldVal;
-	//    SetLocalInt(oHealerKit, "bandages", nValue);
-	//}
+	int nOldVal = StringToInt(GetSubString(name, nIndex + 2, 2));
+	if (nOldVal > gvGetInt("healerkit_max_bandages"))
+		return 0;
 
 	return nValue;
-
 }
 
 
 int GetMedicineValue(object oHealerKit) {
-	//int nOldVal = StringToInt(GetSubString(GetTag(oHealerKit), 15, 1));
-
-	int nValue = GetLocalInt(oHealerKit, "medicines");
-	//if (!nValue) {
-	//    nValue = nOldVal;
-	//    SetLocalInt(oHealerKit, "medicines", nValue);
-	//}
+	int length = GetStringLength(GetName(oHealerKit));
+	int nOldVal = StringToInt(GetSubString(GetName(oHealerKit), length - 2 - 2, length - 2 ));
+	if (nOldVal > gvGetInt("healerkit_max_medicines"))
+		return 0;
 
 	return nValue;
 }
 
 void SetHealerKitValues(object oHealerKit, int nBandage, int nMedicine) {
-	SetLocalInt(oHealerKit, "bandages", nBandage);
-	SetLocalInt(oHealerKit, "medicines", nMedicine);
+	// SetLocalInt(oHealerKit, "bandages", nBandage);
+	// SetLocalInt(oHealerKit, "medicines", nMedicine);
 
 	string sBandage = IntToString(nBandage);
 	string sMedicine = IntToString(nMedicine);
