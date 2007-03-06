@@ -29,7 +29,7 @@ AMASK_GLOBAL_FORCETALK = 128,
 // Can set objects as persistent/nonpersistent
 AMASK_CAN_SET_PERSISTENCY = 256,
 
-// For later usage
+// Can change the weather!
 AMASK_CAN_CHANGE_WEATHER = 512,
 
 // Can see the crafting database
@@ -53,7 +53,6 @@ AMASK_CAN_SEE_PRIVATE_CHATLOGS = 32768,
 // can see all audit trails!
 AMASK_CAN_SEE_AUDIT_TAILS = 65536,
 
-
 AMASK_CAN_RESTART_SERVER = 131072,
 
 // can see global variables
@@ -62,9 +61,11 @@ AMASK_CAN_SEE_GV = 262144,
 // can edit global variables
 AMASK_CAN_EDIT_GV = 524288,
 
+AMASK_CAN_SEE_ACCOUNT_DETAILS = 1048576,
+
 // /rmnx
 // /sql
-AMASK_CAN_DO_BACKEND = 1048576;
+AMASK_CAN_DO_BACKEND = 8589934592; // 2<<32
 
 // Returns > 0 if oPC has nAMask, 0 otherwise
 // The special case DM/Non-DM for AMASK_GM
