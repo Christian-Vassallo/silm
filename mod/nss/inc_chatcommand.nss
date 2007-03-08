@@ -957,7 +957,6 @@ int CommandLastLog(object oPC, int iMode) {
 		);
 
 	} else {
-
 		SQLQuery("select `timestamp`,`account_s`,`character_s`,`mode`,`text` from `chatlogs` where `area` = "
 			+ sArea +
 			" and `timestamp` >= (select `timestamp` from `chatlogs` where `area`=" +

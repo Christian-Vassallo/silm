@@ -248,7 +248,7 @@ void RegisterAllCommands() {
 	RegisterCommand("lastlog", "count=");
 	RHs("Zeigt die letzten Zeilen des Gebietschats an, soweit sie dich betreffen.", AMASK_ANY);
 	RHs("[-count=20] >> Retrieves the last 15 lines of text spoken.", AMASK_GM);
-	RAF(AMASK_ANY);
+	RAF(AMASK_CAN_SEE_CHATLOGS);
 
 	/* GM commands */
 
