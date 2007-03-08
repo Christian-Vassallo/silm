@@ -10,13 +10,14 @@ class AccountController < ApplicationController
       @param = params
   
     if get_user.nil? && params['login'] != nil
-      session[:uid] = Account.authenticate(params['login']['account'], params['login']['password']).id
-      if !get_user
+      accobj = Account.authenticate(params['login']['account'], params['login']['password'])
+            if !accobj
         flash[:notice] = "Benutzername nicht gefunden, oder falsches Passowrt!"
         flash[:error] = true
       else
+        session[:uid] = accobj['id']
         redirect_to :controller => 'character', :action => 'index'
-	  end
+    end
     end
   end
 
@@ -47,34 +48,34 @@ class AccountController < ApplicationController
   end
 
 
-	def amask
+  def amask
 
-		id = params[:id]
-		begin
-			@account = Account::find(id)
-		rescue
-			@account = nil
-			return
-		end
+    id = params[:id]
+    begin
+      @account = Account::find(id)
+    rescue
+      @account = nil
+      return
+    end
 
-		new_mask = params[:mask]
-		if new_mask
+    new_mask = params[:mask]
+    if new_mask
 
-			mask = 0
+      mask = 0
 
-			new_mask = new_mask.to_a.reject {|x| x[0] !~ /^AMASK_/ }.each {|k,v|
-				mask |= Account::AMASK[k] if Account::AMASK[k]
-			}
-			@account.update_attribute('amask', mask)
-			
-			if !@account.save
-				flash[:errors] = @account.errors
-				flash[:notice] = "cannot save new amask?"
-			else
-				flash[:notice] = "new mask = #{mask}, saved"
-			end
-		end
+      new_mask = new_mask.to_a.reject {|x| x[0] !~ /^AMASK_/ }.each {|k,v|
+        mask |= Account::AMASK[k] if Account::AMASK[k]
+      }
+      @account.update_attribute('amask', mask)
+      
+      if !@account.save
+        flash[:errors] = @account.errors
+        flash[:notice] = "cannot save new amask?"
+      else
+        flash[:notice] = "new mask = #{mask}, saved"
+      end
+    end
 
-		@pusers = Account::find(:all, :conditions => 'amask > 0', :order => 'amask desc')
-	end
+    @pusers = Account::find(:all, :conditions => 'amask > 0', :order => 'amask desc')
+  end
 end
