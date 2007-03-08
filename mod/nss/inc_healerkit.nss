@@ -295,7 +295,7 @@ int GetBandageValue(object oHealerKit) {
 
 int GetMedicineValue(object oHealerKit) {
 	int length = GetStringLength(GetName(oHealerKit));
-	int nOldVal = StringToInt(GetSubString(GetName(oHealerKit), length - 2 - 2, length - 2 ));
+	int nOldVal = StringToInt(GetSubString(GetName(oHealerKit), length - 3, length - 2 ));
 	if (nOldVal > gvGetInt("healerkit_max_medicines"))
 		return gvGetInt("healerkit_max_medicines");
 
