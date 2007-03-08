@@ -24,8 +24,8 @@ void main() {
 	object oPC = GetFirstPC();
 	while (GetIsObjectValid(oPC)) {
 		
-		// Do not give XP for being AFK.
-		if (!GetIsDM(oPC) && !GetLocalInt(oPC, "afk")) {
+		// Do /*not*/ give XP for being AFK.
+		if (!GetIsDM(oPC) /*&& !GetLocalInt(oPC, "afk")*/) {
 			nLastForPlayer = GetLocalInt(oPC, "last_time_xp_given");
 			nPlayerLastSaid = gvGetInt("time_xp_max_message_time") == 0 ? nTS : GetLocalInt(oPC,"last_message");
 			/*lLastPlayerLocation = GetLocalLocation(oPC, "last_time_xp_location");
