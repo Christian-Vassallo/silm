@@ -225,6 +225,16 @@ void main() {
 		AddListItem(oPC, CT, "Fuchs");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_FOX);
 	}
+	
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BLACK_CAT) ) {
+		AddListItem(oPC, CT, "Schwarze Hauskatze");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_BLACK_CAT);
+	}
+	
+	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_WHITE_CAT) ) {
+		AddListItem(oPC, CT, "Weisse Hauskatze");
+		SetListInt(oPC, CT, POLYMORPH_TYPE_WHITE_CAT);
+	}
 
 
 	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_WOLF) ) {
