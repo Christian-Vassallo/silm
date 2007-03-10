@@ -1,5 +1,6 @@
 class MerchantController < ApplicationController
-  before_filter {|c| c.authenticate(Account::CAN_EDIT_MERCHANTS) }
+  before_filter(:only => %w{index}) {|c| c.authenticate(Account::CAN_SEE_MERCHANTS) }
+  before_filter(:only => %w{kill_merc kill_inv add}) {|c| c.authenticate(Account::CAN_EDIT_MERCHANTS) }
 
   # List all merchants and their inventory
   def index
@@ -47,6 +48,7 @@ class MerchantController < ApplicationController
 
     @mm = @m.merchant_inventory
 
+if amask(Account::CAN_EDIT_MERCHANTS)
     defaults = {
       'resref' => "",
       'min' => 0,
@@ -89,5 +91,6 @@ class MerchantController < ApplicationController
     @m.update_attributes(params['m'])
     @m.save
   end
+end
 
 end

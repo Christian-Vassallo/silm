@@ -1,6 +1,7 @@
 class CraftController < ApplicationController
   before_filter {|c| c.authenticate(Account::CAN_SEE_CRAFTING) }
-  before_filter(:only => %w{new show kill skill}) {|c| c.authenticate(Account::CAN_EDIT_CRAFTING) }
+  before_filter(:only => %w{index}) {|c| c.authenticate(Account::CAN_SEE_CRAFTING) }
+  before_filter(:only => %w{new show kill skill copy spell enchant}) {|c| c.authenticate(Account::CAN_EDIT_CRAFTING) }
 
   def enchant
   end

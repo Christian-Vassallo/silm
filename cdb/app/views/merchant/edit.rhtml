@@ -1,6 +1,57 @@
 <% if @m.nil? %>
 	NOT FOUND
 <% else %>
+
+<% unless amask(Account::CAN_EDIT_CRAFTING) %>
+<h2><%= @m.tag %></h2>
+<b>appraise DC</b><br><%= @m.appraise_dc %><br><br>
+<table width="*" align="center">
+<tr>
+<th>id</th>
+<th>resref</th>
+<th>buy</th>
+<th>sell</th>
+<th>min/cur/max</th>
+<th>buy_mark</th>
+<th>sell_mark</th>
+<th>decay</th>
+<th>gain</th>
+<th>comment</th>
+<th>ts</th>
+<th>action?</th>
+</tr>
+
+<%
+@mm.each do |m|
+%>
+<tr>
+	<td><%= m.id %></td>
+	<td>
+	<%= m.resref %>
+	<br>
+	<span id="resref"><%=
+		CraftingProduct::RESREFS[m.resref].nil? ?
+			"<i>Unbekannte ResRef</i>" :
+		CraftingProduct::RESREFS[m.resref][:name] || "<i>Bekannte ResRef, kein Name in DB</i>"
+	%></span>
+	</td>
+	<td><%= m.buy %></td>
+	<td><%= m.sell %></td>
+	<td><%= m.min %>/<%= m.cur %>/<%= m.max %></td>
+	<td><%= m.buy_markup %></td>
+	<td><%= m.sell_markdown %></td>
+	<td><%= m.decay %></td>
+	<td><%= m.gain %></td>
+	<td><%= m.comment %></td>
+	<td id="ts"><%= m.ts %></td>
+	<td></td>
+</tr>
+<% end %>
+
+
+
+<% else # amask
+%>
 <h2>Warnung</h2>
 Diese Daten sind nicht "live". Bevor man bearbeitet, die neueste Version laden und die Bearbeitung moeglichst rasch abwickeln, so Spieler im Spiel sind und die Haendler benutzen.
 <%= form_tag  %>
@@ -11,7 +62,6 @@ Diese Daten sind nicht "live". Bevor man bearbeitet, die neueste Version laden u
 <b>buy markup</b<br><%= text_field "m", "buy_markup" %><br><br>
 <b>sell markdown</b><br><%= text_field "m", "sell_markdown" %><br><br>
 <b>comment</b><br><%= text_area "m", "comment", :rows => 5 %><br><br>
-
 <table width="*" align="center">
 <tr>
 <th>id</th>
@@ -61,10 +111,8 @@ Diese Daten sind nicht "live". Bevor man bearbeitet, die neueste Version laden u
 end %>
 
 
-<tr>
-</tr>
-<tr>
 
+<tr>
 <td></td>
 <td><%= text_field "new", "resref", :size => 20 %></td>
 <td><%= check_box "new", "buy" %></td>
@@ -90,5 +138,6 @@ end %>
 <b>text_mercnomoney</b><br><%= text_area "m", "text_mercnomoney", :rows => 5 %><br><br>
 
 <%= end_form_tag %>
-</p>
+<% end #amask
+%>
 <% end %>
