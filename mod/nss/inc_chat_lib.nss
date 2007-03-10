@@ -23,7 +23,7 @@ cEmote = cOrange,
 cNPCEmote = cDarkMagenta,
 cHighLight = cYellow,
 cOOC = cLightGrey,
-cLanguage = cMidGreen;
+cLanguage = cLightBlue;
 
 
 
