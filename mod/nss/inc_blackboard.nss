@@ -97,20 +97,29 @@ struct BlackboardEntry GetBlackBoardEntry(int nNth, object oBlackBoard = OBJECT_
 }
 
 
+/* MenuLevel0
+ * 0 -> Entries
+ *   2 -> Remove this note
+ *   3 -> Duplicate this note
+ */
 void MakeBlackBoardDialog(object oPC, object oBlackBoard) {
 	ClearList(oPC, "bb");
 
-	int iSelected = GetLocalInt(oPC, "bb_sel");
+	int nMenuLevel0 = GetMenuLevel(oPC, "bb", 0);
+	int nSelected   = GetListSelection(oPC);
+	int nBBEntry = 0;
 
 	string sHeader = "UNDEF";
 	struct BlackboardEntry r;
 
-	if ( !iSelected ) {
+
+	// show all notes
+	if (nMenuLevel0 == 0) {
 		//show the complete listing
 		int nCount = GetBlackBoardEntryCount(oBlackBoard);
 		int i;
 		for ( i = 0; i < nCount; i++ ) {
-			r = GetBlackBoardEntry(iSelected + 1, oBlackBoard);
+			r = GetBlackBoardEntry(nSelected + 1, oBlackBoard);
 			if ( r.id > 0 ) {
 				AddListItem(oPC, "bb", r.title);
 				SetListInt(oPC, "bb", r.id);
@@ -121,12 +130,12 @@ void MakeBlackBoardDialog(object oPC, object oBlackBoard) {
 		sHeader = "";
 
 		ResetConvList(oPC, oPC, "bb", 50000, "cb_blackboard", sHeader);
-	} else {
+	
+	// show note and display the entry options
+	} else if (nMenuLevel0 > 0) {
 		// show the contents of a specific item
-
-		iSelected = GetLocalInt(oPC, "selected_bb");
-
-		r = GetBlackBoardEntry(iSelected, oBlackBoard);
+		nBBEntry = GetListInt(oPC, "bb", nSelected); //GetLocalInt(oPC, "selected_bb");
+		r = GetBlackBoardEntry(nBBEntry, oBlackBoard);
 
 		if ( r.id == 0 ) {
 			sHeader = "Diese Notiz wurde bereits entfernt ..";
@@ -141,7 +150,7 @@ void MakeBlackBoardDialog(object oPC, object oBlackBoard) {
 
 			AddListItem(oPC, "bb", "Diese Notiz abnehmen");
 			SetListInt(oPC, "bb", 1);
-			AddListItem(oPC, "bb", "Diese Notiz abschreiben (Schreibzeug und Pergament noetig)");
+			AddListItem(oPC, "bb", "Diese Notiz abschreiben (Schreibzeug und Pergament noetig!)");
 			SetListInt(oPC, "bb", 2);
 		}
 

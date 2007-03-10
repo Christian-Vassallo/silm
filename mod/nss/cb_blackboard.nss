@@ -4,24 +4,40 @@
 
 void main() {
 	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
-	int iSelPart = GetLocalInt(oPC, "bb_sel");
-	int iSelection = GetLocalInt(oPC, "ConvList_Select");
-	iSelection = GetListInt(oPC, "bb", iSelection);
 	object oBlackBoard = GetLocalObject(OBJECT_SELF, "bb_board");
+
+	int nMenuLevel0 = GetMenuLevel(oPC, "bb", 0);
+	int nMenuLevel1 = GetMenuLevel(oPC, "bb", 1);
+	int nSelected   = GetListSelection(oPC);
+	int nBBEntry    = GetLocalInt(oPC, "bb_last_selected");
 
 	object oPaper;
 	struct BlackboardEntry r;
+	int iSelectedNoteID = GetLocalInt(oPC, "bb_last_selected");
 
 	// in entry?
-	if ( iSelPart > 0 ) {
+	switch ( nMenuLevel0 ) {
+		case 0:
+			if (nSelected > 0) {
+				SetMenuLevel(oPC, "bb", 0, nSelected);
+			}
+			break;
+
+	}
+	if (nMenuLevel0 > 0) {
+		switch (nMenuLevel1) {
+			case 1:
+				SendMessageToPC(oPC, "Abnehmen: " + IntToString(nBBEntry));
+				break;
+			case 2:
+				SendMessageToPC(oPC, "Abschreiben: " + IntToString(nBBEntry));
+				break;
+		}
+		/*
 		// listen for sub-options
-		int iSelectedNoteID = GetLocalInt(oPC, "bb_last_selected");
-		r = GetBlackBoardEntry(iSelectedNoteID, oBlackBoard);
 
 		switch ( iSelection ) {
 			case 1: // Remove note
-				DeleteBlackBoardEntry(oBlackBoard, iSelectedNoteID);
-				Floaty("Ihr entfernt diese Notiz.", oPC, 1);
 				// fall through
 
 			case 2: // duplicate note
@@ -49,6 +65,7 @@ void main() {
 	} else {
 		// Woah. Back to menue.
 		SetLocalInt(oPC, "bb_sel", iSelection);
+	}*/
 	}
 
 	MakeBlackBoardDialog(oPC, oBlackBoard);
