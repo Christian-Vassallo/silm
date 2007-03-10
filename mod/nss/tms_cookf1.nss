@@ -10,7 +10,7 @@ void main() {
 
 	while ( GetIsObjectValid(oObj) ) {
 		sTag = GetTag(oObj);
-		if ( GetStringLeft(sTag, 9) == "FOOD_RAW_" ) break;
+		if ( GetStringLowerCase ( GetStringLeft(sTag, 9) ) == "food_raw_" ) break;
 		oObj = GetNextItemInInventory(oPC);
 	}
 	if ( !GetIsObjectValid(oObj) ) {
