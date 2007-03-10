@@ -119,7 +119,7 @@ void MakeBlackBoardDialog(object oPC, object oBlackBoard) {
 		int nCount = GetBlackBoardEntryCount(oBlackBoard);
 		int i;
 		for ( i = 0; i < nCount; i++ ) {
-			r = GetBlackBoardEntry(nSelected + 1, oBlackBoard);
+			r = GetBlackBoardEntry(i + 1, oBlackBoard);
 			if ( r.id > 0 ) {
 				AddListItem(oPC, "bb", r.title);
 				SetListInt(oPC, "bb", r.id);
