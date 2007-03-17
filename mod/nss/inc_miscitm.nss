@@ -84,7 +84,7 @@ int ActivateMiscItem(object oPC, object oItem, location lTarget, object oTarget)
 //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 // Besondere "verfluchte" Speisen
 //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	if ( sTag == "FOOD_curse01" ) {
+	if ( sTag == "food_curse01" ) {
 		DestroyObject(oItem);
 		DelayCommand(1.0f, AssignCommand(oPC, PlayAnimation(ANIMATION_FIREFORGET_DRINK, 1.0f, 5.0f)));
 		DelayCommand(2.0f, FloatingTextStringOnCreature("Das war lecker.", oPC, FALSE));
@@ -92,7 +92,7 @@ int ActivateMiscItem(object oPC, object oItem, location lTarget, object oTarget)
 		return 1;
 	}
 
-	if ( sTag == "FOOD_curse02" ) {
+	if ( sTag == "food_curse02" ) {
 		DestroyObject(oItem);
 		DelayCommand(1.0f, AssignCommand(oPC, PlayAnimation(ANIMATION_FIREFORGET_DRINK, 1.0f, 5.0f)));
 		DelayCommand(2.0f, FloatingTextStringOnCreature("Das war lecker.", oPC, FALSE));
@@ -100,14 +100,14 @@ int ActivateMiscItem(object oPC, object oItem, location lTarget, object oTarget)
 		return 1;
 	}
 
-	if ( sTag == "FOOD_curse03" ) {
+	if ( sTag == "food_curse03" ) {
 		DestroyObject(oItem);
 		FloatingTextStringOnCreature("Das war lecker.", oPC, FALSE);
 		DelayCommand(30.0, giggleCurse(oPC));
 		return 1;
 	}
 
-	if ( sTag == "FOOD_curse04" ) {
+	if ( sTag == "food_curse04" ) {
 		DestroyObject(oItem);
 		FloatingTextStringOnCreature("Das war lecker.", oPC, FALSE);
 		SetLocalDecay(oPC, "Resting_Food", 0, 60);
@@ -120,7 +120,7 @@ int ActivateMiscItem(object oPC, object oItem, location lTarget, object oTarget)
 //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 // Essen verspeisen
 //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	if ( GetStringLeft(sTag, 5) == "FOOD_" ) {
+	if ( GetStringLeft(sTag, 5) == "food_" ) {
 		int iDuration = 60;
 		int iStomach = GetLocalDecay(oPC, "Resting_Food");
 
@@ -144,14 +144,14 @@ int ActivateMiscItem(object oPC, object oItem, location lTarget, object oTarget)
 
 
 		// Gekochte Speisen
-		if ( GetSubString(sTag, 5, 3) == "COK" ) {
+		if ( GetSubString(sTag, 5, 3) == "cok" ) {
 			FloatingTextStringOnCreature("Das war lecker.", oPC, FALSE);
 			return 1;
 		}
 
 
 		// Rohe Speisen
-		if ( GetSubString(sTag, 5, 3) == "RAW" ) {
+		if ( GetSubString(sTag, 5, 3) == "raw" ) {
 			if ( d10() == 1 ) {
 				FloatingTextStringOnCreature("Rohe Nahrungsmittel bergen immer eine Infektionsgefahr.", oPC,
 					FALSE);
@@ -164,16 +164,16 @@ int ActivateMiscItem(object oPC, object oItem, location lTarget, object oTarget)
 	}
 
 	// Getraenke
-	if ( GetSubString(sTag, 5, 3) == "LIQ" ) {
+	if ( GetSubString(sTag, 5, 3) == "liq" ) {
 		DelayCommand(1.0f, AssignCommand(oPC, PlayAnimation(ANIMATION_FIREFORGET_DRINK, 1.0f, 5.0f)));
 		DelayCommand(2.0f, FloatingTextStringOnCreature("Das war lecker.", oPC, FALSE));
 		//Create an empty milk bottle / water bottle in exchange for the one just downed.
-		if ( sTag == "FOOD_LIQ_x00_060" || sTag == "FOOD_LIQ_997_060" ) {
+		if ( sTag == "food_liq_x00_060" || sTag == "food_liq_997_060" ) {
 			CreateItemOnObject("milkbottle_empty", oPC);
 			if ( d20() == 1 )
 				hiccupCurse(oPC);
 		}
-		if ( sTag == "FOOD_LIQ_000_060" ) {
+		if ( sTag == "food_liq_000_060" ) {
 			CreateItemOnObject("waterbot_empty", oPC);
 			if ( d20() == 1 )
 				hiccupCurse(oPC);
