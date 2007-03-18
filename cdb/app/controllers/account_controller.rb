@@ -3,22 +3,21 @@ require 'duration'
 class AccountController < ApplicationController
 
   before_filter :authenticate, :only => ['logout', 'show']
-  before_filter(:only => ['show']) {|c| c.authenticate(Account::CAN_SEE_ACCOUNT_DETAILS) }
-  before_filter(:only => ['amask']) {|c| c.authenticate(Account::CAN_DO_BACKEND) }
+  before_filter(:only => ['show', 'amask']) {|c| c.authenticate(Account::CAN_SEE_ACCOUNT_DETAILS) }
 
   def login
       @param = params
   
-    if get_user.nil? && params['login'] != nil
-      accobj = Account.authenticate(params['login']['account'], params['login']['password'])
-            if !accobj
-        flash[:notice] = "Benutzername nicht gefunden, oder falsches Passowrt!"
-        flash[:error] = true
-      else
-        session[:uid] = accobj['id']
-        redirect_to :controller => 'character', :action => 'index'
-    end
-    end
+	if get_user.nil? && params['login'] != nil
+    		accobj = Account.authenticate(params['login']['account'], params['login']['password'])
+		if accobj.nil?
+			flash[:notice] = "Benutzername nicht gefunden, oder falsches Passowrt!"
+			flash[:error] = true
+		else
+        		session[:uid] = accobj['id']
+		        redirect_to :controller => 'character', :action => 'index'
+		end
+	end
   end
 
   def logout
@@ -58,8 +57,8 @@ class AccountController < ApplicationController
       return
     end
 
-    new_mask = params[:mask]
-    if new_mask
+	new_mask = params[:mask]
+	if new_mask && amask?(Account::CAN_DO_BACKEND)
 
       mask = 0
 

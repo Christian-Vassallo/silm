@@ -11,6 +11,11 @@ class StatController < ApplicationController
   def time_xp
     @for_cid = (params[:id] || 0).to_i
 
+    if params[:sub] == "Only today"
+       @tend = Time.mktime(Time.now.year, Time.now.month, Time.now.day)
+       @tstart = @tend
+    else
+
     if params[:tend]
       @tend = Time.mktime(params[:tend][:year], params[:tend][:month], params[:tend][:day])
       session['timexp_end'] = @tend
@@ -32,6 +37,8 @@ class StatController < ApplicationController
         @tstart = @tend - (3600 * 24 * 30 * 12) # 1yr
       end
     end
+
+ end 
 
   sort_by = params[:sort_by]
   sort_order = params[:sort_order] == 'asc' ? 'asc' : 'desc'

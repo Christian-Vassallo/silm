@@ -1,5 +1,5 @@
 class ChatlogController < ApplicationController
-  before_filter {|c| c.authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
+  before_filter {|c| c.authenticate(Account::CAN_SEE_CHATLOGS) }
 
   def index
     if params['goto']
@@ -11,8 +11,7 @@ class ChatlogController < ApplicationController
     search = (params['chatlog_search'] || "").strip
     @csearch = search
     search = search.split(" ").reject{|x| x.strip == ""}.compact
-    #cond = "!(mode & 0) or ( "
-    cond = "!(mode & 8) and ( "
+    cond = "!(mode & 8) and timestamp >= date_sub(now(), interval 3 month) and ( "
     conda = []
     if search.size > 0
       search.each {|s|
