@@ -134,7 +134,7 @@ void MakeBlackBoardDialog(object oPC, object oBlackBoard) {
 	// show note and display the entry options
 	} else if (nMenuLevel0 > 0) {
 		// show the contents of a specific item
-		nBBEntry = GetListInt(oPC, "bb", nSelected); //GetLocalInt(oPC, "selected_bb");
+		nBBEntry = GetListInt(oPC, "bb", nMenuLevel0 - 1); //GetLocalInt(oPC, "selected_bb");
 		r = GetBlackBoardEntry(nBBEntry, oBlackBoard);
 
 		if ( r.id == 0 ) {
