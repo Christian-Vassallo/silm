@@ -408,6 +408,9 @@ void RegisterAllCommands() {
 	RHs("-tli [new_colour_1] [new_colour_2] >> Gets/Sets MainLight colour for the current tile.");
 	RHs("-tsi [new_colour_1] [new_colour_2] >> Gets/Sets SourceLight colour for the current tile.");
 
+	RegisterCommand("inspect", "pl", 0, 0);
+	RHs("-pl >> Show persistent placeables.");
+	RAF(AMASK_CAN_SET_PERSISTENCY);
 
 
 	RegisterCommand("so", "type= m=");

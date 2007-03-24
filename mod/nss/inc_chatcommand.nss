@@ -185,6 +185,8 @@ int CommandReadTracks(object oPC, int iMode);
 
 int CommandRehash(object oPC, int iMode);
 
+int CommandIndicate(object oPC, int iMode);
+
 /* implementation */
 
 // This is a stub you can copypaste to implement your own command.
@@ -197,6 +199,32 @@ int CommandRehash(object oPC, int iMode);
 // in as a convenience.
 int CommandStub(object oPC, int iMode) {
 	return OK;
+}
+
+
+int CommandIndicate(object oPC, int iMode) {
+	float fRadius = 60.0;
+	float fDuration = 4.0;
+
+	int bPersistencies = opt("ip");
+	
+	effect eglow = EffectVisualEffect(VFX_DUR_GLOW_BROWN);
+
+	if (bPersistencies) {
+		int i = 1;
+		object oN = GetNearestObject(OBJECT_TYPE_PLACEABLE, oPC, i);
+		while (GetIsObjectValid(oN)) {
+			if (GetPlaceableID(oN) > 0) {
+				ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eglow, oN, fDuration);
+			}
+			i += 1;
+			oN = GetNearestObject(OBJECT_TYPE_PLACEABLE, oPC, i);
+		}
+		ToPC("Showing all persistent placeables within " + FloatToString(fRadius) + " for " + FloatToString(fDuration));
+
+	}
+	return OK;
+
 }
 
 
