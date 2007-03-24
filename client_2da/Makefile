@@ -20,4 +20,7 @@ clean-backup:
 clean: clean-backup
 	
 hak: path
-	erfpack.pl -h -o $(NWNHOME)/hak/$(NAME).hak $(VALIDEXT)
+	erfpack.pl -H -o $(NWNHOME)/hak/$(NAME).hak $(VALIDEXT)
+
+publish:
+	rsync -Pzva $(NWNHOME)/hak/$(NAME).hak elven@swordcoast.net::nwn-w/hak/
