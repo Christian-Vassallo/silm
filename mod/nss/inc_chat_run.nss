@@ -553,6 +553,9 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	
 	if ( "sql" == sCommand )
 		return CommandSQL(oPC, iMode);
+	
+	if ( "inspect" == sCommand )
+		return CommandInspect(oPC, iMode);
 
 	if ( "rehash" == sCommand )
 		return CommandRehash(oPC, iMode);

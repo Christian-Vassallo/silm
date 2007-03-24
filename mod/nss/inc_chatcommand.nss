@@ -202,7 +202,7 @@ int CommandStub(object oPC, int iMode) {
 }
 
 
-int CommandIndicate(object oPC, int iMode) {
+int CommandInspect(object oPC, int iMode) {
 	float fRadius = 60.0;
 	float fDuration = 4.0;
 
