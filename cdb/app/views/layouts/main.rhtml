@@ -4,13 +4,14 @@
   <title>Charakterverwaltung</title>
   <link rel="stylesheet" href="/stylesheets/main.css" type="text/css">
   <link rel="stylesheet" href="/stylesheets/scaffold.css" type="text/css">
+  <%= javascript_include_tag("jquery", "jquery.interface") %>
 </head>
 <body>
 <table class="main" style="width:100%">
 <tr><td class="menue">
 <%= get_user.nil? ? "Nicht eingelogged, " + link_to("Einloggen", :controller => 'account', :action => 'login') :
-	"Eingelogged als " + get_user.account + ", " + 
-	link_to( "Ausloggen", :controller => 'account', :action => 'logout') %>
+  "Eingelogged als " + get_user.account + ", " + 
+  link_to( "Ausloggen", :controller => 'account', :action => 'logout') %>
 <br>
 
 <%= link_to_if get_user, "Account-Details", :controller => "account", :action => "details" %>&nbsp;
