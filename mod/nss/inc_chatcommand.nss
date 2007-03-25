@@ -206,21 +206,23 @@ int CommandInspect(object oPC, int iMode) {
 	float fRadius = 60.0;
 	float fDuration = 4.0;
 
-	int bPersistencies = opt("ip");
+	int bPersistencies = opt("pl");
 	
-	effect eglow = EffectVisualEffect(VFX_DUR_GLOW_BROWN);
+	int nShow = 0;
 
 	if (bPersistencies) {
 		int i = 1;
 		object oN = GetNearestObject(OBJECT_TYPE_PLACEABLE, oPC, i);
 		while (GetIsObjectValid(oN)) {
 			if (GetPlaceableID(oN) > 0) {
-				ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eglow, oN, fDuration);
+				effect eglow = EffectVisualEffect(VFX_DUR_GLOW_BROWN);
+				DelayCommand(IntToFloat(i) * 0.1f, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eglow, oN, fDuration));
+				nShow += 1;
 			}
 			i += 1;
 			oN = GetNearestObject(OBJECT_TYPE_PLACEABLE, oPC, i);
 		}
-		ToPC("Showing all persistent placeables within " + FloatToString(fRadius) + " for " + FloatToString(fDuration));
+		ToPC("Showing all persistent placeables within " + FloatToString(fRadius) + " for " + FloatToString(fDuration) + ": " + IntToString(nShow));
 
 	}
 	return OK;
