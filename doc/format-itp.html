@@ -1,0 +1,48 @@
+<html><head><title>Neverwinter Nights Custom Palette format.</title></head><body bgcolor="#eeeeff">
+
+<h1>NWN Custom Palette File Format</h1>
+
+<p>The custom palettes are resource files in GFF format, of type <code>ITP</code>.
+It may be helpful while reading this document to have 
+<a href="http://www.torlack.com/">Torlack's nwnexplorer program</a>
+open on a module file with a few entries in a custom
+palette. Look under the category 'Blueprint Palettes'.
+You should also be familiar with
+<a href="http://www.torlack.com/index.html?topics=nwndata_itp">
+Torlack's description of the GFF format
+</a>
+(though he calls it ITP) 
+
+</p><p>The root entry has one child element called <code>MAIN</code>, of LIST type.
+
+</p><p>The file represents a tree. There are three types of nodes in the
+tree: terminals, non-terminals, and entity descriptors.  Non-terminals
+may not contain entity definitions, they may only contain a list of
+other non-terminal nodes. Terminals may only contain entity
+definitions, not other non-terminals nor terminals.
+
+</p><p>Non-terminal nodes contain two elements.
+
+</p><ul>
+<li> An element named <code>STRREF</code> but of type UINT32, somehow
+indicating the name of the category the node represents. It is an
+index into the dialog.tlk string table.
+
+</li><li> A variable named <code>LIST</code>, of type LIST&gt;, containing the child entry nodes.
+</li></ul>
+
+<p>A terminal node has the same two child elements as a non-terminal
+node, with the addition of a UINT8 named <code>ID</code>.  All
+terminal nodes have a unique ID. The entity blueprint resources refer
+back to their palette node with a property <code>PaletteID</code> also
+of type UINT8, containing that number.
+
+</p><p>However, for a terminal node, the LIST element contains only entity
+descriptors.  The contents of an entity descriptor depend upon the
+type of palette. For all palettes, there is a STRING named
+<code>NAME</code>, and a RESREF named <code>RESREF</code>. Creatures
+have two more, <code>CR</code> and <code>FACTION</code>, but they are
+not relevant to us.
+
+
+</p></body></html>
