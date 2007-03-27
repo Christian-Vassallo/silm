@@ -53,6 +53,9 @@ const int EVENT_PC_LOGIN = 200;
 const int EVENT_PC_LOGOUT = 201;
 const int EVENT_PC_LEVELUP = 202;
 
+const int EVENT_NPC_SPAWN = 301;
+const int EVENT_NPC_DIE = 302;
+const int EVENT_NPC_EQUIP = 303;
 
 // GetEnteringObject() enters the area.
 const int EVENT_AREA_ENTER = 100;
@@ -74,6 +77,8 @@ const int EVENT_EXECUTE_SCRIPT_CONTINUE = 0;
 
 // Mark the script to end execution
 const int EVENT_EXECUTE_SCRIPT_END = 1;
+
+
 
 
 /* Prefixes */

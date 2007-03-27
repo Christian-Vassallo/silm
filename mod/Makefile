@@ -4,12 +4,13 @@ LISTHOME=$(HOME)
 NAME=Silbermarken
 
 # This gets packaged into your final module
-VALIDEXT=area/\*.git area/\*.gic area/\*.are \
+VALIDEXT=area/\*.git area/\*.are \
 	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
 	utc/\*.utc utd/\*.utd ute/\*.ute uti/\*.uti \
 	itp/\*.itp ssf/\*.ssf \
 	mod/\*.fac mod/\*.ifo mod/\*.jrl \
-	nss/\*.ncs nss/\*.nss
+	nss/\*.ncs 
+		# nss/\*.nss
 
 LISTS=uti utp utc utm
 

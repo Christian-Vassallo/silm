@@ -91,7 +91,6 @@ struct BlackboardEntry GetBlackBoardEntry(int nNth, object oBlackBoard = OBJECT_
 		r.sigil = StringToInt(sSigil);
 		r.sigil_text = sSigilText;
 		r.explosive_runes = StringToInt(SQLGetData(9));
-
 	}
 	return r;
 }
@@ -134,8 +133,8 @@ void MakeBlackBoardDialog(object oPC, object oBlackBoard) {
 	// show note and display the entry options
 	} else if (nMenuLevel0 > 0) {
 		// show the contents of a specific item
-		nBBEntry = GetListInt(oPC, "bb", nMenuLevel0 - 2); //GetLocalInt(oPC, "selected_bb");
-		r = GetBlackBoardEntry(nBBEntry, oBlackBoard);
+		// nBBEntry = GetListInt(oPC, "bb", nMenuLevel0 - 2); //GetLocalInt(oPC, "selected_bb");
+		r = GetBlackBoardEntry(nMenuLevel0 - 1, oBlackBoard);
 
 		if ( r.id == 0 ) {
 			sHeader = "Diese Notiz wurde bereits entfernt ..";
