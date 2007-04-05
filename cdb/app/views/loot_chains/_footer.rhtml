@@ -1,8 +1,11 @@
 <% if amask(Account::CAN_EDIT_LOOT_CHAINS) %>
-	<td><%= text_field :new, :base %></td>
-	<td><%= text_field :new, :resref %></td>
-	<td><%= text_field :new, :tag %></td>
-	<td><%= text_field :new, :loot %></td>
+	<td><%= select("loot", "racial_type", RACIAL_TYPES.sort{|a,b| a[1] <=>b[1]})%> </td>
+	<td><%= text_field :new, :resref, :size => 15 %></td>
+	<td><%= text_field :new, :tag, :size => 15 %></td>
+	<td><%= text_field :new, :name , :size => 15%></td>
+	<td>-</td>
+	<td><%= text_field :new, :loot, :size => 15 %></td>
+	<td><%= text_field :new, :chance, :size => 10 %></td>
 	<td><i>fill in to add</i></td>
 <% end %>
 </tbody>
