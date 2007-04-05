@@ -14,7 +14,7 @@ class LootAggregator < RMNX::CommandSpace
 		s = ''
 		a = []
 
-		loot = Loot::find_by_sql('select loot from ? where ' +
+		loot = Loot::find_by_sql(['select loot from %s where ' +
 			'(racial_type = 0 or racial_type = ?) and ' +
 				'(? like resref) and ' +
 				'(? like tag) and ' +
@@ -23,7 +23,7 @@ class LootAggregator < RMNX::CommandSpace
 			'order by racial_type, resref, tag, lvar asc',
 				'loots', 
 				racial_type, resref, tag, lvar
-		)
+		])
 		loot = loot.map{|x| x.loot}.join("#").gsub(/##+/, '#')
 		return loot
 	end
