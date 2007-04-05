@@ -267,7 +267,7 @@ void main() {
 
 	//* Create a small amount of treasure on the creature
 	if ( !GetLocalInt(OBJECT_SELF, "Copying") )
-		CTG_GenerateNPCTreasure(TREASURE_TYPE_MONSTER, OBJECT_SELF);
+		CTG_GenerateNPCTreasure(OBJECT_SELF);
 
 	// ***** ADD ANY SPECIAL ON-SPAWN CODE HERE ***** //
 
