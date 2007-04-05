@@ -1,5 +1,6 @@
 #include "c_chessinc"
 #include "inc_mnx"
+#include "inc_mysql"
 
 void Variant_Standard();
 
@@ -17,6 +18,8 @@ void main() {
 	SetLocalInt(OBJECT_SELF, "enpassantpos", 0);
 
 	SetLocalString(OBJECT_SELF, "GameLog", "");
+
+	SetLocalInt(OBJECT_SELF, "GameStart", GetUnixTimestamp());
 
 
 	int nVariant = GetLocalInt(OBJECT_SELF, "nVariant");
