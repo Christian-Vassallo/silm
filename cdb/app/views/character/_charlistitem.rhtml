@@ -30,7 +30,7 @@
     <%= c.create_on.strftime("%d/%m/%y") -%><%= "<br>" + c.register_on.strftime("%d/%m/%y") if c.register_on != nil -%>
   </td>
   <td class="center">
-    <% if form %>
+    <% if false && form %>
       <%= amask(Account::IS_CHARACTER_ADMIN) ? select("character_#{c.id}", "status",
               Character::StatusFields, { :selected => c.status }) : c.status
       %>

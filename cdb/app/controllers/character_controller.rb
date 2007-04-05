@@ -1,114 +1,129 @@
- 'duration'
-
 class CharacterController < ApplicationController
-  before_filter :authenticate
+	before_filter :authenticate
 
-  before_filter(:only => ['consistency']) {|c| c.authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
-  before_filter(:only => ['notify']) {|c| c.authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
-
-  def index
-    return if !get_user
-  
-    perpage = 30
-    #@onlineonly = "1"
-
-    # @loggedonly = params['loggedonly'] || "0"
-    # @loggedonly = "1" if !session[:user].char_view?
-    @onlineonly = params['onlineonly'] || "0"
-    @sort = "last_login"
-    @sort = params['sort'] if params['sort'] && %w{id character race gold xp last_login status create_on register_on}.index(params['sort'])
-    @order = "desc"
-    @order = params['order'] if params['order'] && %w{asc desc}.index(params['order'])
-    order = "`#{@sort}` #{@order}"
-    cond_s = ""
-    cond_a = []
-    cond_s = "`current_time` > 0 and " if @onlineonly == "1"
-
-    # cond_s = "`race` != 'Bleistift' and " if @loggedonly == "1"
-
-    if amask?(Account::SEE_ALL_CHARACTERS) 
-      search = ""
-      search = params['search'] if params['search']
-      @search = search
-      if search != ""
-        if Character::StatusFields.index(search)
-          cond_s += "`status` like ? "
-          cond_a = ['%' + search + '%']
-          #i f search == "register"
-          # cond_s += "or (`status` = 'acc' ) "
-          # end
-          cond_s += "and "
-        elsif search =~ /^\d+$/
-          cond_s += '`id` = ? and '
-          cond_a = [search]
-        elsif search =~ /^dm$/i
-          cond_s += '(select dm from accounts where accounts.id=account) = \'true\' and '
-        else
-          search = '%' + search + '%' 
-        
-          acc = Account.find(:all, :conditions => ['`account` like ?', search])
-          cond_s += "("
-          cond_s += ("account = ? or " * acc.size)
-          cond_s += "`character` like ? or create_key like ? or "
-          cond_s += "other_keys like ? or create_ip like ? or race like ? or "
-          cond_s += "subrace like ? or "
-          cond_s += "class1 like ? or class2 like ? or class3 like ? or "
-          cond_s += "status like ? or familiar_name like ? or "
-          cond_s += "deity like ? "
-          cond_s += ") and "
-          cond_a = [acc.map {|n| n.id }, [search] * 12].flatten
-        end
-      end
-    else
-      cond_s = "account = ? and "
-      cond_a = [get_user.id]
-    end
-    cond = [cond_s + " 1=1", cond_a].flatten
-
-    # now do the updating
-    if amask?(Account::IS_CHARACTER_ADMIN) 
-      @query = qn = params.keys.map {|n| $1 if n =~ /^character_(\d+)$/}.compact
-      qn.each {|cu|
-        cn = Character.find(:first, :conditions => ['id = ?', cu])
-        next if !cn
-
-        oldstat = cn.status
-        cn.update_attributes(params["character_#{cu}"])
-        if cn.status != oldstat
-          co = Comment.new(:body => "Status: #{oldstat} -> #{cn.status}", :status => 'system')
-          co.account = get_user.id
-          co.character = cn.id
-          co.save
-        end
-      }
-    end
-
-    if cond.size > 0
-      @character_pages, @characters = paginate :characters, :order => order, :conditions => cond, :per_page => perpage
-      if @characters.size == 1 && @search != ""
-        redirect_to :controller => 'character', :action => 'show', :id => @characters[0].id
-        return
-      end
-    else
-      @character_pages, @characters = paginate :characters, :order => order, :per_page => perpage
-    end
-    condq = "race != 'Bleistift' and `last_login` >= (unix_timestamp() - 60*60*24*30)" +
-      (@onlineonly == "1" ? " and `current_time` > 0" : "")
-
-    lv  = Character.find(:all, :conditions => [condq]).map {
-        |ch| ch.class1_level + ch.class2_level + ch.class3_level
-      }
-
-    max = 0
-    lv.each {|n| max += n }
-    @average_level = max.to_f / lv.size.to_f
+	before_filter(:only => ['consistency']) {|c| c.authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
+	before_filter(:only => ['notify']) {|c| c.authenticate(Account::CAN_SEE_AUDIT_TRAILS) }
 
 
-    @latest_comments = Comment.find(:all, :limit => 20, :order => "date desc"
-      #:group => "`character`"
-    ) if
-      amask?(Account::SEE_ALL_CHARACTERS)
-  end
+
+	def search_remote
+		index true
+		render :action => 'search_remote', :layout => false
+	end
+
+	def index no_redirect = false
+		return if !get_user
+		
+		perpage = 30
+		@onlineonly = "1"
+		@onlineonly = params['onlineonly'] || "0"
+		
+		@sort = "last_login"
+		@sort = params['sort'] if params['sort'] && %w{id character race gold xp last_login status create_on register_on}.index(params['sort'])
+		@order = "desc"
+		@order = params['order'] if params['order'] && %w{asc desc}.index(params['order'])
+		order = "`#{@sort}` #{@order}"
+
+		@search = params['search'] || ""
+		
+		cond = get_search_conditions_for @search, @onlineonly 
+
+		if cond.size > 0
+		  @character_pages, @characters = paginate :characters, :order => order, :conditions => cond, :per_page => perpage
+		  if !no_redirect && @characters.size == 1 && @search != ""
+			redirect_to :controller => 'character', :action => 'show', :id => @characters[0].id
+			return
+		  end
+		else
+		  @character_pages, @characters = paginate :characters, :order => order, :per_page => perpage
+		end
+
+		# now do the updating
+		#if amask?(Account::IS_CHARACTER_ADMIN) 
+		#  @query = qn = params.keys.map {|n| $1 if n =~ /^character_(\d+)$/}.compact
+		#  qn.each {|cu|
+		#	cn = Character.find(:first, :conditions => ['id = ?', cu])
+		#	next if !cn
+#
+#			oldstat = cn.status
+#			cn.update_attributes(params["character_#{cu}"])
+#			if cn.status != oldstat
+#			  co = Comment.new(:body => "Status: #{oldstat} -> #{cn.status}", :status => 'system')
+#			  co.account = get_user.id
+#			  co.character = cn.id
+#			  co.save
+#			end
+#		  }
+#		end
+
+
+
+		lv  = Character.find(:all, :conditions => cond).map {
+			|ch| ch.class1_level + ch.class2_level + ch.class3_level
+		  }
+
+		max = 0
+		lv.each {|n| max += n }
+		@average_level = max.to_f / lv.size.to_f
+
+		@latest_comments = Comment.find(:all, :limit => 20, :order => "date desc"
+		  #:group => "`character`"
+		) if
+		  amask?(Account::SEE_ALL_CHARACTERS)
+	end
+
+
+	# Returns the SQL condition string for "search, onlineonly" as an array
+	def get_search_conditions_for search, onlineonly
+		return if !get_user
+	  
+		cond_s = ""
+		cond_a = []
+		cond_s = "`current_time` > 0 and " if @onlineonly == "1"
+
+		# cond_s = "`race` != 'Bleistift' and " if @loggedonly == "1"
+
+		if amask?(Account::SEE_ALL_CHARACTERS) 
+		  if search != ""
+			if Character::StatusFields.index(search)
+			  cond_s += "`status` like ? "
+			  cond_a = ['%' + search + '%']
+			  #i f search == "register"
+			  # cond_s += "or (`status` = 'acc' ) "
+			  # end
+			  cond_s += "and "
+			elsif search =~ /^\d+$/
+			  cond_s += '`id` = ? and '
+			  cond_a = [search]
+			elsif search =~ /^dm$/i
+			  cond_s += '(select dm from accounts where accounts.id=account) = \'true\' and '
+			else
+			  search = '%' + search + '%' 
+			
+			  acc = Account.find(:all, :conditions => ['`account` like ?', search])
+			  cond_s += "("
+			  cond_s += ("account = ? or " * acc.size)
+			  cond_s += "`character` like ? or create_key like ? or "
+			  cond_s += "other_keys like ? or create_ip like ? or race like ? or "
+			  cond_s += "subrace like ? or "
+			  cond_s += "class1 like ? or class2 like ? or class3 like ? or "
+			  cond_s += "status like ? or familiar_name like ? or "
+			  cond_s += "deity like ? "
+			  cond_s += ") and "
+			  cond_a = [acc.map {|n| n.id }, [search] * 12].flatten
+			end
+		  end
+		else
+		  cond_s = "account = ? and "
+		  cond_a = [get_user.id]
+		end
+		cond = [cond_s + " 1=1", cond_a].flatten
+
+		return cond
+	end
+
+#	private :get_search_results_for
+
 
   def show
     @debug = []

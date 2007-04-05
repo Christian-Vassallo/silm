@@ -1,25 +1,13 @@
 <h2>Charakter-Liste</h2>
-<p>
-<%=
-# "Query: " + @query.inspect + "<br><br>"
-%>
 
-<%= form_tag({:onlineonly => @onlineonly, :sort => @sort, :order => @order, :search => @search}, {:method => 'post'}) if amask(Account::IS_CHARACTER_ADMIN) %>
-<%= @characters.size %> Char(s) angezeigt, <%= @character_pages.item_count %> Char(s) passen den Kriterien, <%= total = Character.count %> Char(s) in DB.<br>
-Durchschnitts-Level in den letzten 30 Tagen (nur der DB bekannte Chars) <%= "<a id='online'>Nur online!</a>" if @onlineonly == "1" %>: <%= @average_level %><br>
-Chars, die nicht bespielt wurden ("hakless"): <%= hakless = Character.count("xp = 6000") %> (<%= "%.2f" % [100 / (total.to_f / hakless)]%>%)<br>
-
-<%= pagination_links(@character_pages, :window_size => 50, :params => {'search' => @search, 'sort' => @sort, 'order' => @order}) %>
-<%= render :partial => "charlisthdr", :locals => {:showsort => true, :form => amask(Account::IS_CHARACTER_ADMIN) } %>
-<% @characters.each do |c| %>
-<% next if c.race == "Bleistift" && !amask(Account::SEE_ALL_CHARACTERS) %>
-<%= render :partial => "charlistitem", :locals => { :c => c, :form => amask(Account::IS_CHARACTER_ADMIN) } %>
-<% end %>
-<%= render :partial => "charlistftr", :locals => {:showsort => true, :form => amask(Account::IS_CHARACTER_ADMIN) } %>
-<%= pagination_links(@character_pages, :window_size => 50, :params => {'search' => @search, 'sort' => @sort, 'order' => @order}) %>
-
-<%= end_form_tag if amask(Account::IS_CHARACTER_ADMIN) %>
-</p>
+<%= render :partial => 'search', :locals => {
+	:characters => @characters,
+	:character_pages => @character_pages,
+	:search => @search,
+	:onlineonly => @onlineonly,
+	:sort => @sort,
+	:order => @order,
+}%>
 
 <% if amask(Account::IS_CHARACTER_ADMIN) %>
 <p>
@@ -48,3 +36,9 @@ end
 Sollte dein Charakter hier nicht erscheinen, dann logge bitte mit ihm einmal kurz im Spiele ein.  Dies sollte ihn in die Liste bringen.
 </p>
 
+  <%= observe_field('search', {
+	:frequency => 1,
+	:url => { :action => 'search_remote' },
+	:update => 'search_results',
+	:with => "'onlineonly=' + escape($('onlineonly').checked == 'true' ? '1': '0') + '&search=' + escape(value)"
+  }); %>
