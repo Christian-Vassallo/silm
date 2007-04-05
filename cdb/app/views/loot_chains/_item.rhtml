@@ -1,0 +1,20 @@
+<tr>
+	<% if amask(Account::CAN_EDIT_LOOT_CHAINS) && loot_helper != nil %>
+	<td><%= loot_helper.text_field :base %></td>
+	<td><%= loot_helper.text_field :resref %></td>
+	<td><%= loot_helper.text_field :tag %></td>
+	<td><%= loot_helper.check_box :replace %></td>
+	<td><%= loot_helper.text_field :loot %></td>
+	<% else %>
+	<td><%= loot.base %></td>
+	<td><%= loot.resref %></td>
+	<td><%= loot.tag %></td>
+	<td><%= loot.replace %></td>
+	<td><%= loot.loot %></td>
+	<% end %>
+	<td><%= link_to_if amask(Account::CAN_EDIT_LOOT_CHAINS), "edit", 
+		:action => 'edit', :id => loot.id %> *
+	<%= link_to_if amask(Account::CAN_EDIT_LOOT_CHAINS), "delete", 
+		:action => 'kill', :id => loot.id %>
+	</td>
+</tr>

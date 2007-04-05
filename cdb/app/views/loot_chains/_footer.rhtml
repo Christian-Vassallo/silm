@@ -1,0 +1,11 @@
+<% if amask(Account::CAN_EDIT_LOOT_CHAINS) %>
+	<td><%= text_field :new, :base %></td>
+	<td><%= text_field :new, :resref %></td>
+	<td><%= text_field :new, :tag %></td>
+	<td><%= text_field :new, :loot %></td>
+	<td><i>fill in to add</i></td>
+<% end %>
+</tbody>
+</table>
+<%= submit_tag() + end_form_tag() if amask(Account::CAN_EDIT_LOOT_CHAINS) %>
+

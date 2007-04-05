@@ -11,6 +11,7 @@ class MerchantController < ApplicationController
     m = params[:id]
     MerchantInventory.delete_all("merchant = ?", m)
     Merchant.delete(m)
+    redirect_to :action => 'index', :controller => 'merchant'
   end
 
   def kill_inv
@@ -81,7 +82,7 @@ if amask(Account::CAN_EDIT_MERCHANTS)
       n.merchant = @m.id
       if !n.save
         flash[:notice] = "Cannot save!"
-        flash[:errors] = mi.errors
+        flash[:errors] = n.errors
         return
       end
       flash[:notice] = "Saved!"
