@@ -6,9 +6,17 @@ class Loot < ActiveRecord::Base
 end
 
 class LootAggregator < RMNX::CommandSpace
+	include RMNX::Config
+
 	def initialize
+		sql_connect
 	end
 
+	def sql_connect
+		sql = gety("odbc")
+		ActiveRecord::Base.establish_connection(sql)
+		ActiveRecord::Base.connection.instance_eval {@connection.reconnect = true}
+	end
 	
 	def mnx_getloot racial_type, resref, tag, name, lvar
 		s = ''
