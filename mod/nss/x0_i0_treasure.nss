@@ -7,7 +7,7 @@
 void CTG_GenerateNPCTreasure(object oNPC = OBJECT_SELF);
 
 
-int CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn);
+void CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn);
 
 void CTG_GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
 	struct mnxRet r = mnxCmd("getloot", 
@@ -26,13 +26,14 @@ void CTG_GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
 	if (gvGetInt("treasure_clean_npcs")) {
 		object o = GetFirstItemInInventory(oNPC);
 		while (GetIsObjectValid(o)) {
-			if (!GetPlotFlag(o))
+			if (!GetPlotFlag(o)) {
 				DestroyObject(o);
+			}
 			o = GetNextItemInInventory(oNPC);
 		}
 	}
 
-	CreateChainedOnObjectByResRefString(loot, oNPC);
+	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(loot, oNPC));
 }
 
 void CreateStackedItemsOnObject(string sResRef, object oCreateOn, int nCount) {
@@ -82,7 +83,7 @@ string GetResRefFromChainString(string sR) {
 	return sR;
 }
 
-int CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn) {
+void CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn) {
 	int nCreated = 0;
 	string sResRef = sResRefStr;
 	object oNew;
@@ -114,6 +115,6 @@ int CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn) {
 	CreateStackedItemsOnObject(sResRef, oCreateOn, fFactor);
 	nCreated += fFactor;
 
-	return nCreated;
+	//return nCreated;
 }
 
