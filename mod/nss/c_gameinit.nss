@@ -1,7 +1,7 @@
 #include "c_chessinc"
 #include "inc_mnx"
 #include "inc_mysql"
-
+#include "_gen"
 void Variant_Standard();
 
 void Variant_Pawns();

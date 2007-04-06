@@ -6,8 +6,8 @@ const string CHESS_TABLE = "chess_games";
 
 
 void SaveChessGame(object oGameMaster) {
-#	if (GetLocalInt(oGameMaster, "GameSate") != 3)
-#		return;
+//	if (GetLocalInt(oGameMaster, "GameSate") != 3)
+//		return;
 
 	int nStart = GetLocalInt(oGameMaster, "GameStart");
 	int variant = GetLocalInt(oGameMaster, "nVariant");
