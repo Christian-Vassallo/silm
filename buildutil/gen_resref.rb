@@ -48,20 +48,24 @@ thri.each do |tit|
 		d =~ %r{^/(?:Localized|First)?Name/4:\s+(.+)$}
 		name = $1
 		name += " " + $1 if d =~ %r{^/LastName/4:\s+(.+)$}
-		#d =~ %r{^/AddCost:\s+(\d+)$}
-		#addcost = $1
-		#d =~ %r{^/Plot:\s+(\d+)$}
-		#plot = $1
-		#d =~ %r{^/Stolen:\s+(\d+)$}
-		#stolen = $1
-		#d =~ %r{^/PaletteID:\s+(\d+)$}
-		#palette = $1
-		#d =~ %r{^/BaseItem:\s+(\d+)$}
-		#baseitem = $1
-		#d =~ %r{^/StackSize:\s+(\d+)$}
-		#stacksize = $1
-		#d =~ %r{^/Cursed:\s+(\d+)$}
-		#cursed = $1
+		d =~ %r{^/AddCost:\s+(\d+)$}
+		addcost = $1.to_i #same as || 0
+
+		d =~ %r{^/Plot:\s+(\d+)$}
+		plot = $1.to_i
+		
+		d =~ %r{^/Stolen:\s+(\d+)$}
+		stolen = $1.to_i
+		d =~ %r{^/PaletteID:\s+(\d+)$}
+		palette = $1.to_i
+		d =~ %r{^/BaseItem:\s+(\d+)$}
+		baseitem = $1.to_i 
+
+		d =~ %r{^/StackSize:\s+(\d+)$}
+		stacksize = $1.to_i
+
+		d =~ %r{^/Cursed:\s+(\d+)$}
+		cursed = $1.to_i
 
 		if name == ""
 			puts "Skipping #{resref}"
@@ -73,13 +77,13 @@ thri.each do |tit|
 			:tag => tag, 
 			:name => name,
 
-			#:addcost => addcost.to_i,
-			#:plot => plot.to_i,
-			#:stolen => stolen.to_i,
-			#:palette => palette.to_i,
-			#:baseitem => baseitem.to_i,
-			#:stacksize => stacksize.to_i,
-			#:cursed => cursed.to_i
+			:addcost => addcost.to_i,
+			:plot => plot.to_i,
+			:stolen => stolen.to_i,
+			:palette => palette.to_i,
+			:baseitem => baseitem.to_i,
+			:stacksize => stacksize.to_i,
+			:cursed => cursed.to_i
 		}
 
 		# puts resref
