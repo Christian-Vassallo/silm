@@ -2,6 +2,11 @@ class LootChainsController < ApplicationController
 	before_filter() {|c| c.authenticate(Account::CAN_SEE_LOOT_CHAINS) }
 	before_filter(:only => %w{add kill}) {|c| c.authenticate(Account::CAN_EDIT_LOOT_CHAINS) }
 
+	def auto_complete_for_new_loot
+		auto_complete_responder_for_resrefs(params[:new][:loot])
+	end
+
+
 	def index
 		@new = Loot::new
 		@loot_chains = Loot::find(:all, :order => 'racial_type, tag, resref asc')
@@ -24,7 +29,7 @@ class LootChainsController < ApplicationController
 				(params['new']['resref'] != "" || params['new']['racial_type'] != 0 ||
 				 params['new']['tag'] != "") && params['new']['loot'] != ""
 			n = Loot::new(params['new'])
-			n.racial_type = -1 if n.racial_type == nil
+			# n.racial_type = -1 if n.racial_type == nil
 			if !n.save
 				flash[:notice] = "Cannot create new item."
 				flash[:errors] = n.errors
@@ -42,6 +47,20 @@ class LootChainsController < ApplicationController
 		rescue
 		end
 		redirect_to :action => 'index', :controller => 'loot_chains'
+	end
+
+	private
+	def auto_complete_responder_for_resrefs(ref)
+		# resref => { :name }
+		
+		@resrefs = CraftingProduct::RESREFS.reject{|resref,hash|
+			resref !~ /^.*#{Regexp.escape(ref)}.*$/ && 
+			hash[:name] !~ /^.*#{Regexp.escape(ref)}.*$/
+		}
+
+		@resrefs = @resrefs.sort[0,15]
+
+		render :partial => 'autocomplete/resref'
 	end
 
 end

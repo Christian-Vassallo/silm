@@ -55,14 +55,6 @@ class Character < ActiveRecord::Base
   # true
   #end
 
-  def dm?
-    dm == 'true'
-  end
-
-  def dm
-    account.dm
-  end
-
   def alignment(long = false)
     (case alignment_ethical
       when 1

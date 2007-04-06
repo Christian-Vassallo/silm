@@ -43,11 +43,6 @@ module ApplicationHelper
           link_to(c.account.account, :controller => 'character', :action => 'index', :search => c.account.account)
       end
       t += " " + link_to_account(c.account, true)
-      if !short
-        t += ""
-        t += " <a id='dm'>DM!</a>" if c.dm?
-		t += "</small>"
-      end
     end
     
 

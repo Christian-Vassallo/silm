@@ -57,10 +57,6 @@ class Account < ActiveRecord::Base
 		true
 	end
 
-	def dm?
-		dm == 'true'
-	end
-	
 	def other_chars(session, char = nil)
 		if char != nil && amask & Account::SEE_ALL_CHARACTERS > 0
 			return Character.find(:all, :conditions => ['`create_key` = ? or `account` = ?', char.create_key, char.account.id])

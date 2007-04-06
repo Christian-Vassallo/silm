@@ -20,6 +20,7 @@
 
 <%= link_to_if get_user, "Account-Details", :controller => "account", :action => "details" %>&nbsp;
 * <%= link_to_if (get_user && get_user.details?), "<b>Char-Liste</b>", :controller => "character", :action => "index" %>&nbsp;
+* <%= link_to_if (get_user && get_user.details?), "Schach", :controller => 'chess', :action => 'index' %>&nbsp;
 * <%= link_to_if amask(Account::AMASK_CAN_CHANGE_WEATHER), "Weather", :controller => 'weather', :action => 'index' %>&nbsp;
 * <%= link_to_if amask(Account::AMASK_CAN_SEE_ALL_MENTORS), "MentorData", :controller => 'stat', :action => 'mentor' %>&nbsp;
 * <%= link_to_if amask(Account::AMASK_CAN_SEE_ALL_CHARACTERS), "TimeXP", :controller => 'stat', :action => 'time_xp' %>&nbsp;

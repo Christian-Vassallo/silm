@@ -95,8 +95,6 @@ class CharacterController < ApplicationController
 			elsif search =~ /^\d+$/
 			  cond_s += '`id` = ? and '
 			  cond_a = [search]
-			elsif search =~ /^dm$/i
-			  cond_s += '(select dm from accounts where accounts.id=account) = \'true\' and '
 			else
 			  search = '%' + search + '%' 
 			

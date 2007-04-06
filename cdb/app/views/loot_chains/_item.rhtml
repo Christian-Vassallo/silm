@@ -1,12 +1,14 @@
 <tr>
 	<% if amask(Account::CAN_EDIT_LOOT_CHAINS) && loot_helper != nil %>
 	<td><%= loot_helper.select("racial_type", RACIAL_TYPES)%></td>
-	<td><%= loot_helper.text_field :resref, :size => 15 %></td>
-	<td><%= loot_helper.text_field :tag, :size => 15 %></td>
-	<td><%= loot_helper.text_field :name, :size => 15 %></td>
+	<td><%= loot_helper.text_field :resref,:size => 15 %></td>
+	<td><%= loot_helper.text_field :tag,:size => 15  %></td>
+	<td><%= loot_helper.text_field :name,:size => 15  %></td>
 	<td><%= loot_helper.check_box :replace %></td>
-	<td><%= loot_helper.text_field :loot, :size => 15 %></td>
-	<td><%= loot_helper.text_field :chance, :size => 15 %></td>
+	<td>
+		<%= loot_helper.text_field :loot  %>
+	</td>
+	<td><%= loot_helper.text_field :chance, :size => 2%></td>
 	<% else %>
 	<td><%= RACIAL_TYPES.index(loot.racial_type) %></td>
 	<td><%= loot.resref %></td>
