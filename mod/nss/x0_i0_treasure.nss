@@ -61,17 +61,30 @@ void CreateStackedItemsOnObject(string sResRef, object oCreateOn, int nCount) {
 }
 
 
-int GetFactorFromChainString(string sR) {
+int GetMinFactorFromChainString(string sR) {
 	int f = 1;
 	int iW = FindSubString(sR, ":");
 	if ( iW != -1 ) {
 		string sub = GetSubString(sR, iW + 1, 1024);
 		f = StringToInt(sub);
-		if ( f < 0 )
+		if ( f < 1 )
 			f = 1;
 	}
 	return f;
 }
+
+int GetMaxFactorFromChainString(string sR) {
+	int f = 1;
+	int iW = FindSubString(sR, ".");
+	if ( iW != -1 ) {
+		string sub = GetSubString(sR, iW + 1, 1024);
+		f = StringToInt(sub);
+		if ( f < 1 )
+			f = 1;
+	}
+	return f;
+}
+
 
 string GetResRefFromChainString(string sR) {
 	string r = sR;
@@ -91,29 +104,39 @@ void CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn) {
 
 	int iSplit = FindSubString(sResRefStr, sDelimiter);
 	int iW = -1;
-	int fFactor = 1;
+	int nMin, nMax, nActual;
 
 	while ( iSplit != -1 ) {
 		sResRef = GetSubString(sResRefStr, 0, iSplit);
 		sResRefStr = GetSubString(sResRefStr, iSplit + GetStringLength(sDelimiter), 1024);
 
-		fFactor = GetFactorFromChainString(sResRef);
+		nMin = GetMinFactorFromChainString(sResRef);
+		nMax = GetMaxFactorFromChainString(sResRef);
+		if (nMax < nMin)
+			nMax = nMin;
+		nActual = nMin + Random(nMax-nMin + 1);
+
 		sResRef = GetResRefFromChainString(sResRef);
 
-		CreateStackedItemsOnObject(sResRef, oCreateOn, fFactor);
+		CreateStackedItemsOnObject(sResRef, oCreateOn, nActual);
 
-		nCreated += fFactor;
+		nCreated += nActual;
 
 		iSplit = FindSubString(sResRefStr, sDelimiter);
 	}
 
 	sResRef = sResRefStr;
 
-	fFactor = GetFactorFromChainString(sResRef);
+	nMin = GetMinFactorFromChainString(sResRef);
+	nMin = GetMaxFactorFromChainString(sResRef);
+		if (nMax < nMin)
+			nMax = nMin;
+	nActual = nMin + Random(nMax-nMin + 1);
+
 	sResRef = GetResRefFromChainString(sResRef);
 
-	CreateStackedItemsOnObject(sResRef, oCreateOn, fFactor);
-	nCreated += fFactor;
+	CreateStackedItemsOnObject(sResRef, oCreateOn, nActual);
+	nCreated += nActual;
 
 	//return nCreated;
 }
