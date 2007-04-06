@@ -21,5 +21,15 @@ void CTG_GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
 		return;
 	}
 	string loot = r.ret;
+
+	if (!GetLocalInt(GetModule(), "treasure_dont_clean_npcs")) {
+		object o = GetFirstItemInInventory(oNPC);
+		while (GetIsObjectValid(o)) {
+			if (!GetPlotFlag(o))
+				DestroyObject(o);
+			o = GetNextItemInInventory(oNPC);
+		}
+	}
+
 	CreateItemOnObjectByResRefString(loot, oNPC, 1, 1);
 }
