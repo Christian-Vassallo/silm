@@ -5,8 +5,10 @@ void main() {
 	object oGM = OBJECT_SELF;
 	object oPlayer = GetPCSpeaker();
 	if (GetLocalObject(oGM, "oWhitePlayer") == oPlayer)
-		SaveChessGame(oGM, RESULT_BLACK);
+		SetLocalInt(oGM, "GameResult", RESULT_BLACK);
 	else
-		SaveChessGame(oGM, RESULT_WHITE);
+		SetLocalInt(oGM, "GameResult", RESULT_WHITE);
+
+	SaveChessGame(oGM);
 }
 

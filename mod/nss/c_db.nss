@@ -4,19 +4,20 @@
 
 const string CHESS_TABLE = "chess_games";
 
-const int
-	RESULT_DRAW = 1,
-	RESULT_WHITE = 2,
-	RESULT_BLACK = 3;
 
-void SaveChessGame(object oGameMaster, int result) {
+void SaveChessGame(object oGameMaster) {
+#	if (GetLocalInt(oGameMaster, "GameSate") != 3)
+#		return;
+
 	int nStart = GetLocalInt(oGameMaster, "GameStart");
 	int variant = GetLocalInt(oGameMaster, "nVariant");
+	int result = GetLocalInt(oGameMaster, "GameResult");
 	string sLog = GetLocalString(oGameMaster, "GameLog");
 	object oWhite = GetLocalObject(oGameMaster, "oWhitePlayer");
-	object oBlack = GetLocalObject(oGameMaster, "oWhitePlayer");
+	object oBlack = GetLocalObject(oGameMaster, "oBlackPlayer");
 	int white = GetAccountID(oWhite);
 	int black = GetAccountID(oBlack);
+	
 
 	SQLQuery("insert into " + CHESS_TABLE + 
 		" (white, black, result, variant, start, end, log)" + 
@@ -36,4 +37,6 @@ void SaveChessGame(object oGameMaster, int result) {
 		SQLEscape(sLog) + 
 		");"
 	);
+	
+	SetLocalInt(oGameMaster, "SavedToDB", 1);
 }

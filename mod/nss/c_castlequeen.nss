@@ -49,10 +49,12 @@ void main() {
 				SetLocalInt(oGM, "Turn", nTurn);
 				nCheckMate = CheckForCheckMate();
 				if ( nCheckMate == 2 ) {
+					SetLocalInt(oGM, "GameResult", RESULT_DRAW);
 					Announce("Patt!");
 					nEndGame = 1;
 					SetLocalInt(oGM, "GameState", 3);
 				} else if ( nCheckMate == 1 ) {
+					SetLocalInt(oGM, "GameResult", GetLocalInt(oGM, "Turn") == -1 ? RESULT_BLACK : RESULT_WHITE);
 					Announce("Schachmatt!");
 					nEndGame = 1;
 					SetLocalInt(oGM, "GameState", 3);

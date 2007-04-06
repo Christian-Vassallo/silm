@@ -49,11 +49,13 @@ void main() {
 				nCheckMate = CheckForCheckMate();
 				if ( nCheckMate == 2 ) {
 					Announce("Patt!");
+					SetLocalInt(oGM, "GameResult", RESULT_DRAW);
 					nEndGame = 1;
 					SetLocalInt(oGM, "GameState", 3);
 				} else if ( nCheckMate == 1 ) {
 					Announce("Schachmatt!");
 					nEndGame = 1;
+					SetLocalInt(oGM, "GameResult", GetLocalInt(oGM, "Turn") == -1 ? RESULT_BLACK : RESULT_WHITE);
 					SetLocalInt(oGM, "GameState", 3);
 				} else {
 					//find opposing king

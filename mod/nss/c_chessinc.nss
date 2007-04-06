@@ -188,10 +188,12 @@ void MovePiece(int nOldPosition, int nNewPosition, int nTake = FALSE) {
 	if ( nCheckMate == 2 ) {
 		Announce("Patt!");
 		nEndGame = 1;
+		SetLocalInt(oGM, "GameResult", RESULT_DRAW);
 		SetLocalInt(oGM, "GameState", 3);
 	} else if ( nCheckMate == 1 ) {
 		Announce("Schachmatt!");
 		nEndGame = 1;
+		SetLocalInt(oGM, "GameResult", nTurn == 1 ? RESULT_BLACK : RESULT_WHITE);
 		SetLocalInt(oGM, "GameState", 3);
 	} else {
 		//find opposing king
@@ -1179,12 +1181,14 @@ void PromotePawn(string sNewPiece, int nNewPiece) {
 
 	nCheckMate = CheckForCheckMate();
 	if ( nCheckMate == 2 ) {
+		SetLocalInt(oGM, "GameResult", RESULT_DRAW);
 		Announce("Patt!");
 		nEndGame = 1;
 		SetLocalInt(oGM, "GameState", 3);
 	} else if ( nCheckMate == 1 ) {
 		Announce("Schachmatt!");
 		nEndGame = 1;
+		SetLocalInt(oGM, "GameResult", GetLocalInt(oGM, "Turn") == -1 ? RESULT_BLACK : RESULT_WHITE);
 		SetLocalInt(oGM, "GameState", 3);
 	} else {
 		//find opposing king
@@ -1287,5 +1291,4 @@ void GameLog2(string act) {
 		SendMessageToAllDMs("Bug in c_chessinc 1347: No gamemaster found, but got request for GameLog.");
 
 }
-
 
