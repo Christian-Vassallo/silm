@@ -29,7 +29,7 @@ endif
 
 script: scripts
 scripts: path
-	$(MAKE) -j 8 -C nss
+	$(MAKE) -j 2 -C nss
 
 
 lists: path
@@ -39,7 +39,7 @@ lists: path
 	../buildutil/gen_resref.rb are.marshal area/*.are && \
 		../buildutil/process_resref.rb are.marshal are.marshal.txt;
 
-install-lists:
+lists-install:
 	for i in $(LISTS); do \
 		cp -v $${i}.marshal $(LISTHOME) && \
 		cp -v $${i}.marshal.txt $(LISTHOME); \

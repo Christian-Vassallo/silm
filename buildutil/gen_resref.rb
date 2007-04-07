@@ -9,19 +9,19 @@ $source = ARGV.size == 0 ? nil : ARGV or fail "No source specified."
 
 $threads = 8
 
-$i = {}
+$ih = {}
 
 def save
-  $i.freeze
-  f = File.new($target, "wb")
-  Marshal.dump($i, f)
-  f.close
-  puts "written: #{$i.size}"
-  
-  f = File.new($target, "rb")
-  i = Marshal.load(f)
-  f.close
-  puts "verified loading: #{i.size}"
+	$ih.freeze
+	f = File.new($target, "wb")
+	Marshal.dump($ih, f)
+	f.close
+	puts "written: #{$ih.size}"
+
+	f = File.new($target, "rb")
+	i = Marshal.load(f)
+	f.close
+	puts "verified loading: #{i.size}"
 end
 
 trap "SIGINT", proc {save; exit}
@@ -65,7 +65,7 @@ threadify(items, $threads) {|tit|
 			next
 		end
 
-		$i[resref] = {
+		$ih[resref] = {
 			:resref => resref,
 			:tag => tag, 
 			:name => name,
@@ -82,7 +82,8 @@ threadify(items, $threads) {|tit|
 		# puts resref
 		p.inc
 	end
-}
+}.each {|t| t.join }
+
 p.finish
 
 save

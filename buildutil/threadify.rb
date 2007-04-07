@@ -10,14 +10,18 @@ def threadify(a, count = 2, &block)
 	end
 	thra.reject! {|f| f.size == 0}
 
+	threads = []
+
 	thra.each do |tha|
-		Thread.new {
+		threads << Thread.new {
 			begin
 				yield(tha)
 			rescue Exception => e
 				$stderr.puts "Thread failed with exception #{e}"
+				$stderr.puts(e.backtrace.join("\n"))
 
 			end
 		}
 	end
+	threads
 end
