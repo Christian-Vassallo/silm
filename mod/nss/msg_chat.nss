@@ -105,7 +105,7 @@ void main() {
 	int bIsForceTalk = ( !( iMode & MODE_PRIVATE )
 						&& ( GetStringLeft(sText, 1) == "." ) && ( GetStringLeft(sText, 2) != ".." ) );
 	int bIsTelepathicBond = ( !( iMode & MODE_PRIVATE ) && GetStringLeft(sText, 1) == "$" );
-	int bIsGo = ( !( iMode & MODE_PRIVATE ) && ( GetStringLeft(sText, 1) == "," ) );
+	int bIsGo = ( amask(oPC, AMASK_GM) && !( iMode & MODE_PRIVATE ) && ( GetStringLeft(sText, 1) == "," ) );
 
 	if ( bIsCommand )
 		iMode |= MODE_COMMAND;
