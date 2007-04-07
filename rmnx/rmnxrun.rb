@@ -12,6 +12,7 @@ require 'mnx_commandsplit'
 require 'mnx_temp'
 require 'mnx_jabber'
 require 'mnx_loot'
+require 'mnx_location'
 
 
 Thread.abort_on_exception = true
@@ -119,6 +120,7 @@ s.add_command_space(Misc.new)
 s.add_command_space(CommandSplit.new)
 s.add_command_space(OptParse.new)
 s.add_command_space(LootAggregator.new)
+s.add_command_space(Location.new)
 
 s.add_command_space(CommandTemperature.new)
 

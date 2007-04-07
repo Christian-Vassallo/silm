@@ -1,6 +1,6 @@
 require 'rubygems'
 
-class LootAggregator < RMNX::CommandSpace
+class Location < RMNX::CommandSpace
 	include RMNX::Config
 
 	def initialize
