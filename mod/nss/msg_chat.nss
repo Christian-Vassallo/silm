@@ -139,7 +139,7 @@ void main() {
 	
 	
 	// Hehe, hack. But works.
-	if ( bIsGo && GetIsDM(oPC) || amask(oPC, AMASK_GM | AMASK_GLOBAL_GM) ) {
+	if ( bIsGo && (GetIsDM(oPC) || amask(oPC, AMASK_GM | AMASK_GLOBAL_GM)) ) {
 		sText = "/go " + GetSubString(sText, 1, 1024);
 		bIsCommand = 1;
 		iMode |= MODE_COMMAND;
