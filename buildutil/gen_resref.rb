@@ -12,7 +12,6 @@ $threads = 8
 $ih = {}
 
 def save
-	$ih.freeze
 	f = File.new($target, "wb")
 	Marshal.dump($ih, f)
 	f.close

@@ -39,7 +39,7 @@ lists: path
 	../buildutil/gen_resref.rb are.marshal area/*.are && \
 		../buildutil/process_resref.rb are.marshal are.marshal.txt;
 
-lists-install:
+lists_install:
 	for i in $(LISTS); do \
 		cp -v $${i}.marshal $(LISTHOME) && \
 		cp -v $${i}.marshal.txt $(LISTHOME); \
