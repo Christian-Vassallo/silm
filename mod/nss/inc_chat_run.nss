@@ -560,7 +560,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 		return CommandGo(oPC, iMode);
 	
 	if ( "re" == sCommand )
-		return CommandGo(oPC, iMode);
+		return CommandGoReturn(oPC, iMode);
 	
 	if ( "sql" == sCommand )
 		return CommandSQL(oPC, iMode);
