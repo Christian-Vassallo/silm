@@ -190,6 +190,7 @@ int CommandIndicate(object oPC, int iMode);
 
 
 int CommandGo(object oPC, int iMode);
+int CommandGoReturn(object oPC, int iMode);
 
 /* implementation */
 
@@ -238,9 +239,17 @@ int CommandGo(object oPC, int iMode) {
 		ToPC("This is not a valid location.");
 		return FAIL;
 	}
+
+	SetLocalLocation(oPC, "go_last_location", GetLocation(oPC));
 	
 	JumpToLocation(l);
 
+	return OK;
+}
+
+int CommandGoReturn(object oPC, int iMode) {
+	location l = GetLocalLocation(oPC, "go_last_location");
+	JumpToLocation(l);
 	return OK;
 }
 

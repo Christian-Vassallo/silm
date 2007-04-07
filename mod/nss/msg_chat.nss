@@ -105,6 +105,7 @@ void main() {
 	int bIsForceTalk = ( !( iMode & MODE_PRIVATE )
 						&& ( GetStringLeft(sText, 1) == "." ) && ( GetStringLeft(sText, 2) != ".." ) );
 	int bIsTelepathicBond = ( !( iMode & MODE_PRIVATE ) && GetStringLeft(sText, 1) == "$" );
+	int bIsGo = ( !( iMode & MODE_PRIVATE ) && ( GetStringLeft(sText, 1) == "," ) );
 
 	if ( bIsCommand )
 		iMode |= MODE_COMMAND;
@@ -113,6 +114,12 @@ void main() {
 	if ( bIsTelepathicBond )
 		iMode |= MODE_TELEPATHICBOND;
 
+
+	// Hehe, hack. But works.
+	if (bIsGo) {
+		sText = "/go " + GetSubString(sText, 1, 1024);
+		iMode |= MODE_COMMAND;
+	}
 
 	if (
 		OnPreText(oPC, sText, iMode, oTo)

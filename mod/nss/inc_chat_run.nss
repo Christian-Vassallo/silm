@@ -254,6 +254,8 @@ void RegisterAllCommands() {
 
 	RegisterCommand("go", "", 1, 1);
 	RHs("loc >> Go to location.");
+	RegisterCommand("re", "", 0, 0);
+	RHs("Return to from whence you came.");
 
 	RegisterCommand("shun", "");
 	RegisterCommand("unshun", "");
@@ -555,6 +557,9 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 		return CommandMacro(oPC, iMode);
 
 	if ( "go" == sCommand )
+		return CommandGo(oPC, iMode);
+	
+	if ( "re" == sCommand )
 		return CommandGo(oPC, iMode);
 	
 	if ( "sql" == sCommand )
