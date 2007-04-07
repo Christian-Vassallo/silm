@@ -217,7 +217,7 @@ module RMNX
 						send_reply reply
 						@rcp.delete rcp
 						next
-					when /^[A-Z]+$/i
+					when /^[A-Z_]+$/i
 						print(([cmd] + param).inspect + ": ")
 						a = aquire_receipt
 						@rcp[a.to_s] = [cmd.downcase, param, Time.new.to_i]
