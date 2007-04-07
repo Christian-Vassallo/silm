@@ -1,5 +1,7 @@
 #!/usr/bin/ruby -w
+$: << File::dirname(__FILE__)
 require 'rubygems'
+require 'threadify'
 require_gem 'progressbar'
 
 $target = ARGV.shift or fail "No target specified."
@@ -29,16 +31,7 @@ items = $source
 puts "source size = #{items.size}"
 p = ProgressBar.new("read", items.size)
 
-per_thread = items.size / $threads
-thri = []
-for t in 0..$threads do
-	base = t * per_thread
-	thri[t] = items[base, per_thread].compact
-	puts "assign: #{base} -> #{base + per_thread}"
-	puts " thri[t] = #{thri[t].size}"
-end
-
-thri.each do |tit|
+threadify(items, $threads) {|tit|
 	tit.each do |n|
 		d = `gffprint.pl #{n}`
 		d =~ %r{^/(?:Template)?ResRef:\s+([a-z0-9_]+)$}mi
@@ -89,7 +82,7 @@ thri.each do |tit|
 		# puts resref
 		p.inc
 	end
-end
+}
 p.finish
 
 save
