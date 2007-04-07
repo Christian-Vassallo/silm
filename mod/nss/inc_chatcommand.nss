@@ -15,6 +15,7 @@
 #include "inc_getopt"
 #include "inc_craft_hlp"
 #include "inc_decay"
+#include "inc_mysql"
 
 #include "inc_draw"
 #include "inc_draw_text"
@@ -187,6 +188,9 @@ int CommandRehash(object oPC, int iMode);
 
 int CommandIndicate(object oPC, int iMode);
 
+
+int CommandGo(object oPC, int iMode);
+
 /* implementation */
 
 // This is a stub you can copypaste to implement your own command.
@@ -201,6 +205,44 @@ int CommandStub(object oPC, int iMode) {
 	return OK;
 }
 
+
+int CommandGo(object oPC, int iMode) {
+	string loc = arg(0);
+	struct mnxRet r = mnxCmd("location_count", loc);
+
+	if (r.error) {
+		ToPC("Command failed.");
+		return FAIL;
+	}
+
+	int count = StringToInt(
+		GetStringLeft(r.ret, FindSubString(r.ret, "#"))
+	);
+	loc = GetSubString(r.ret, FindSubString(r.ret, "#") + 1, 1024);
+
+	if (0 == count) {
+		ToPC("No locations found matching your criteria.");
+		return FAIL;
+	}
+
+	if (count > 1) {
+		ToPC("Ambigious location. Matches:");
+		ToPC(loc);
+		return FAIL;
+	}
+
+	r = mnxCmd("location", loc);
+
+	location l = nStringToLocation(r.ret);
+	if (!GetIsObjectValid(GetAreaFromLocation(l))) {
+		ToPC("This is not a valid location.");
+		return FAIL;
+	}
+	
+	JumpToLocation(l);
+
+	return OK;
+}
 
 int CommandInspect(object oPC, int iMode) {
 	float fRadius = 60.0;
