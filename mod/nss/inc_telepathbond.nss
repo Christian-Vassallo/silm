@@ -52,6 +52,10 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage) {
 			if ( sShortName != "" )
 				sMessage = sStart + sShortName + sRest;
 			SendMessageToPC(oB, sMessage);
+			
+			if (gvGetInt("telepathbond_delegate_to_dm"))
+				SendMessageToAllDMs("[TB] " + GetName(oPC) + " > " + GetName(oB) + ": " + sMessage);
+
 			nCount++;
 		}
 
