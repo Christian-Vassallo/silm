@@ -42,7 +42,11 @@ void CreateStackedItemsOnObject(string sResRef, object oCreateOn, int nCount) {
 
 	if (gvGetInt("treasure_use_new_create_code")) {
 		object oFirst = CreateItemOnObject(sResRef, oCreateOn, 1);
-		SetStolenFlag(oFirst, 1);	
+		if (gvGetInt("treasure_debug")) {
+			SendMessageToAllDMs("treasure> Created first: " + IntToString(GetItemStackSize(oFirst)));
+			SendMessageToAllDMs("treasure> following: " + IntToString(nCount));
+		}
+
 		if (nCount > 1) {
 			int i;
 			int nMaxStack = StringToInt(Get2DACached("baseitems", "ILRStackSize", GetBaseItemType(oFirst)));
@@ -51,15 +55,11 @@ void CreateStackedItemsOnObject(string sResRef, object oCreateOn, int nCount) {
 			} else {
 				for ( i = 1; i < nCount; i++ ) {
 					oFirst = CreateItemOnObject(sResRef, oCreateOn, 1);
-					SetStolenFlag(oFirst, 1);
 				}
 			}
 		}
 	} else {
-		int i;
-		for (i = 0; i < nCount; i++) {
-			/*object oFirst = */CreateItemOnObject(sResRef, oCreateOn, 1);
-		}
+			CreateItemOnObject(sResRef, oCreateOn, nCount);
 	}
 }
 
@@ -118,8 +118,17 @@ void CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn) {
 		if (nMax < nMin)
 			nMax = nMin;
 		nActual = nMin + Random(nMax-nMin + 1);
+	
+		if (gvGetInt("treasure_debug")) {
+			SendMessageToAllDMs("treasure> rrA=" + sResRef);
+		}
 
 		sResRef = GetResRefFromChainString(sResRef);
+	
+		if (gvGetInt("treasure_debug")) {
+			SendMessageToAllDMs("treasure> rr=" + sResRef);
+			SendMessageToAllDMs("treasure> nmin=" + IntToString(nMin) + " nmax=" + IntToString(nMax) + " nactual=" + IntToString(nActual));
+		}
 
 		CreateStackedItemsOnObject(sResRef, oCreateOn, nActual);
 
@@ -129,14 +138,23 @@ void CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn) {
 	}
 
 	sResRef = sResRefStr;
+	if (gvGetInt("treasure_debug")) {
+		SendMessageToAllDMs("treasure> rrA=" + sResRef);
+	}
 
 	nMin = GetMinFactorFromChainString(sResRef);
-	nMin = GetMaxFactorFromChainString(sResRef);
-		if (nMax < nMin)
-			nMax = nMin;
+	nMax = GetMaxFactorFromChainString(sResRef);
+	if (nMax < nMin)
+		nMax = nMin;
 	nActual = nMin + Random(nMax-nMin + 1);
-
+	
 	sResRef = GetResRefFromChainString(sResRef);
+
+	if (gvGetInt("treasure_debug")) {
+		SendMessageToAllDMs("treasure> rr=" + sResRef);
+		SendMessageToAllDMs("treasure> nmin=" + IntToString(nMin) + " nmax=" + IntToString(nMax) + " nactual=" + IntToString(nActual));
+	}
+
 
 	CreateStackedItemsOnObject(sResRef, oCreateOn, nActual);
 	nCreated += nActual;
