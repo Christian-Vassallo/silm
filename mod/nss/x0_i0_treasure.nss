@@ -40,7 +40,7 @@ void CreateStackedItemsOnObject(string sResRef, object oCreateOn, int nCount) {
 	if (nCount < 1)
 		return;
 
-	if (gvGetInt("craft_use_new_create_code")) {
+	if (gvGetInt("treasure_use_new_create_code")) {
 		object oFirst = CreateItemOnObject(sResRef, oCreateOn, 1);
 		SetStolenFlag(oFirst, 1);	
 		if (nCount > 1) {
@@ -56,7 +56,10 @@ void CreateStackedItemsOnObject(string sResRef, object oCreateOn, int nCount) {
 			}
 		}
 	} else {
-		object oFirst = CreateItemOnObject(sResRef, oCreateOn, nCount);
+		int i;
+		for (i = 0; i < nCount; i++) {
+			/*object oFirst = */CreateItemOnObject(sResRef, oCreateOn, 1);
+		}
 	}
 }
 
