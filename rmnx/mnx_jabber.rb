@@ -91,7 +91,7 @@ class MnxJabber < RMNX::CommandSpace
 	
         def mnx_startup rev
 		savey("online", [])
-                jnotify('cnotify', "Server startup.")
+                jnotify('cnotify', "Server startup (Revision: %s)" % [rev])
                 jnotify('dnotify', "Server startup (Rev: %s): %s" % [rev, Time.now.to_s])
 		File.open("/home/silm/.revision", "w") {|f| f.puts(rev)}
         end
@@ -112,14 +112,15 @@ class MnxJabber < RMNX::CommandSpace
         def mnx_cliententer account, char, aid, cid, isdm, ip, key
 		host = ""
 		dnsovr = gety("dnsovr", {})
-		if dnsovr[ip]
-			host = dnsovr[ip]
-		else
-			begin
+		begin
+			if dnsovr[ip]
+				host = dnsovr[ip]
+			else
 				host = Resolv::DNS.new.getname(ip).to_s if ip != ""
-			rescue
 			end
+		rescue
 		end
+
 		savey("online", gety("online") << {
 			'account' => account,
 			'char' => char,
@@ -135,7 +136,7 @@ class MnxJabber < RMNX::CommandSpace
 		
 		account = h account
 		char = h char
-                jnotify('cnotify', "%s (%s) joins the game (DM: %s)" % [char, account, isdm], aid.to_i)
+                jnotify('cnotify', "%s (%s [account_id: %s]) joins the fray %s" % [char, account, aid.to_s, isdm == 'true' ? 'as a DM' : 'as a player'], aid.to_i)
 		jnotify('dnotify', "enter %s(%s): %s(%s) dm: %s, %s/%s/%s" % [account, aid, char, cid, isdm, ip, host, key], aid.to_i)
 
 		return (host == "" ? ip : host).strip
@@ -145,7 +146,7 @@ class MnxJabber < RMNX::CommandSpace
 		savey("online", gety("online").reject {|i| i['account'] == account }) 
 		account = h account
 		char = h char
-                jnotify('cnotify', "leave %s(%s): %s(%s)" % [account, aid.to_s, char, cid.to_s], aid.to_i)
+                jnotify('cnotify', "%s leaves" % [char], aid.to_i)
                 jnotify('dnotify', "leave %s(%s): %s(%s)" % [account, aid.to_s, char, cid.to_s], aid.to_i)
         end
 
@@ -229,6 +230,9 @@ class MnxJabber < RMNX::CommandSpace
 			service = service[1..-1]
 			return 0 if !yjug[service]
 			yjug[service].each do |to|
+				next if !get_setting(to, "receive_while_offline") &&
+					!jid_online?(to)
+
 				next if !donotskip && concernsaccount > 0 &&
 					!get_setting(to, "receive_concerning_self") &&
 					has_account?(to, concernsaccount)
@@ -243,6 +247,9 @@ class MnxJabber < RMNX::CommandSpace
 			yjservices = gety("jservices")
 			return 0 if !yjservices[service]
 			yjservices[service]['subscribe'].each do |to|
+				next if !get_setting(to, "receive_while_offline") &&
+					!jid_online?(to)
+
 				next if !donotskip && concernsaccount > 0 &&
 					!get_setting(to, "receive_concerning_self") &&
 					has_account?(to, concernsaccount)
@@ -296,6 +303,10 @@ class MnxJabber < RMNX::CommandSpace
 		return o.map {|f| f['aid'].to_i }.index(account.to_i)
 	end
 
+	def jid_online?(jid)
+		return true
+	end
+
 	def get_jid_by_aid(aid)
 		u = gety("users")
 		u.each do |jid, usr|
@@ -314,9 +325,10 @@ class MnxJabber < RMNX::CommandSpace
 	end
 
 	DEFAULT_SETTINGS = {
-		'receive_while_ingame' => false,
-		'receive_while_offline' => true,
-		'receive_concerning_self' => false,
+		'receive_while_ingame' => 0,
+		'receive_while_offline' => 1,
+		'receive_concerning_self' => 1,
+		'account_id' => 0,
 	}
 
 	def get_setting(jid, var)
