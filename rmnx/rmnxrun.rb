@@ -68,12 +68,15 @@ class TextHandler < RMNX::CommandSpace
 	MODE_FORCETALK = 256
 	
 	REPLACE = {
-		/scheppernt/, "scheppernd"
+		/scheppernt/ => "scheppernd",
+		/ [?!\.,] $/ => '? ',
+
 	}
 
 	def mnx_ontext t, mode
 		mode = mode.to_i
-		if !(mode & MODE_DM_MODE) && (mode & MODE_TALK || mode & MODE_WHISPER)
+
+		if mode & MODE_TALK == MODE_TALK || mode & MODE_WHISPER == MODE_WHISPER
 			REPLACE.each {|k,v|
 				t.gsub! k, v
 			}
@@ -120,10 +123,8 @@ s.add_command_space(Misc.new)
 s.add_command_space(CommandSplit.new)
 s.add_command_space(OptParse.new)
 s.add_command_space(LootAggregator.new)
-s.add_command_space(Location.new)
-
+s.add_command_space(LocationService.new)
 s.add_command_space(CommandTemperature.new)
-
 s.add_command_space(MnxJabber.new)
 
 puts "Registered all commands."
