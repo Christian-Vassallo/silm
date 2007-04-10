@@ -17,9 +17,13 @@ class LocationService < RMNX::CommandSpace
 	end
 
 	def mnx_location_count a
+		online_charnames = gety("online").map {|x| x['char'] }
+		
 		matches = Location::find(:all, :conditions => [
 			'name like ?', '%' + a + '%'
-		])
+		]).map {|x| x['name']}
+
+		matches = online_charnames.concat(online_charnames)
 		
 		direct = Location::find(:first, :conditions => [
 			'name = ?', a
@@ -27,26 +31,37 @@ class LocationService < RMNX::CommandSpace
 
 		return "1##{a}" if direct
 	
-		return "%d#%s" % [matches.size, matches.map{|x| x['name']}.join(", ")]
+		return "%d#%s" % [matches.size, matches.join(", ")]
 	end
 
 
 	def mnx_location a
+		online_charnames = gety("online").map {|x| 
+			x['char']
+		}.reject {|x|
+			x !~ /#{ Regexp.escape(a).gsub('%', '.*') }/
+		}
+		
 		matches = Location::find(:all, :conditions => [
 			'name like ?', '%' + a +  '%'
 		])
+
 
 		direct = Location::find(:first, :conditions => [
 			'name = ?', a
 		])
 
-		if matches.size != 1 && !direct
+		if (online_charnames.size + hits.size) != 1 && !direct
 			raise "MultiMatchError"
 		end
 
-		m = direct || matches[0]
-
-		return l2s(m["area"], m["x"], m["y"], m["z"] || 0.0, m["f"] || 1.0)
+		m = direct || online_charnames[0] || matches[0]
+		
+		if m.is_a?(String)
+			return "p#{m}"
+		else
+			return "l" + l2s(m["area"], m["x"], m["y"], m["z"] || 0.0, m["f"] || 1.0)
+		end
 	end
 
 	private

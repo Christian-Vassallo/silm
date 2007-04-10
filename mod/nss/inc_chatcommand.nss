@@ -233,17 +233,34 @@ int CommandGo(object oPC, int iMode) {
 	}
 
 	r = mnxCmd("location", loc);
+	if (r.error) { 
+		ToPC("Command failed (2).");
+		return FAIL;
+	}
 
-	location l = nStringToLocation(r.ret);
+	location l;
+	string swhat = GetStringLeft(r.ret, 1);
+	string srest = GetSubString(r.ret, 1, 1024 * 12);
+
+	if ("l" == swhat)
+		l = nStringToLocation(srest);
+	else if ("p" == swhat) {
+		object target = GetPCByCID(StringToInt(srest));
+		l = GetLocation(target);
+	} else if ("t" == swhat) {
+		l = GetLocation(GetObjectByTag(srest));
+	} else {
+		ToPC("Command failed (3).");
+		return FAIL;
+	}
+
 	if (!GetIsObjectValid(GetAreaFromLocation(l))) {
 		ToPC("This is not a valid location.");
 		return FAIL;
 	}
 
 	SetLocalLocation(oPC, "go_last_location", GetLocation(oPC));
-	
 	JumpToLocation(l);
-
 	return OK;
 }
 
