@@ -15,7 +15,7 @@ void main() {
 		SPELL_DISPEL_MAGIC == nSpell
 		|| SPELL_GREATER_DISPELLING == nSpell
 		|| SPELL_LESSER_DISPEL == nSpell
-		|| SPELL_MORDENKAINENS_DISJUNCTION
+		|| SPELL_MORDENKAINENS_DISJUNCTION == nSpell
 	) {
 		RemoveAllEffects(OBJECT_SELF);
 		DestroyObject(OBJECT_SELF, 1.0f);
