@@ -1,29 +1,44 @@
 require 'rubygems'
+require_gem 'activerecord'
 
-class Location < RMNX::CommandSpace
+class Location < ActiveRecord::Base; end
+
+class LocationService < RMNX::CommandSpace
 	include RMNX::Config
 
 	def initialize
+		sql_connect
+	end
+
+	def sql_connect
+		sql = gety("odbc")
+		ActiveRecord::Base.establish_connection(sql)
+		ActiveRecord::Base.connection.instance_eval {@connection.reconnect = true}
 	end
 
 	def mnx_location_count a
-		l = gety("locations")
-	
-		matches = l.reject {|ll|
-			ll['name'] !~ /#{Regexp.escape(a)}/
-		}
+		matches = Location::find(:all, :conditions => [
+			'name like ?', '%' + a + '%'
+		])
+		
+		direct = Location::find(:first, :conditions => [
+			'name = ?', a
+		])
 
+		return "1##{a}" if direct
+	
 		return "%d#%s" % [matches.size, matches.map{|x| x['name']}.join(", ")]
 	end
 
 
 	def mnx_location a
-		l = gety("locations")
-		direct = nil
-		matches = l.reject {|ll|
-			direct = ll if ll['name'] == a
-			ll['name'] !~ /#{Regexp.escape(a.downcase)}/
-		}
+		matches = Location::find(:all, :conditions => [
+			'name like ?', '%' + a +  '%'
+		])
+
+		direct = Location::find(:first, :conditions => [
+			'name = ?', a
+		])
 
 		if matches.size != 1 && !direct
 			raise "MultiMatchError"
