@@ -23,7 +23,7 @@ class LocationService < RMNX::CommandSpace
 			'name like ?', '%' + a + '%'
 		]).map {|x| x['name']}
 
-		matches = online_charnames.concat(online_charnames)
+		matches = online_charnames.concat(matches)
 		
 		direct = Location::find(:first, :conditions => [
 			'name = ?', a
@@ -51,7 +51,7 @@ class LocationService < RMNX::CommandSpace
 			'name = ?', a
 		])
 
-		if (online_charnames.size + hits.size) != 1 && !direct
+		if (online_charnames.size + matches.size) != 1 && !direct
 			raise "MultiMatchError"
 		end
 
