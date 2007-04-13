@@ -6,16 +6,15 @@ NAME=Silbermarken
 # This gets packaged into your final module
 VALIDEXT=area/\*.git area/\*.are \
 	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
-	utc/\*.utc utd/\*.utd ute/\*.ute uti/\*.uti \
+	utc/\*.utc utd/\*.utd ute/\*.ute \
+	`find uti -iname *.uti` \
 	itp/\*.itp ssf/\*.ssf \
 	mod/\*.fac mod/\*.ifo mod/\*.jrl \
 	nss/\*.ncs 
-		# nss/\*.nss
 
 LISTS=uti utp utc utm
 
 all: package install
-
 
 path:
 ifeq  "$(NWNHOME)" ""
@@ -58,6 +57,13 @@ ifo:
 itp:
 	$(MAKE) -C itp
 
+uti:
+	$(MAKE) -C uti
+utp:
+	$(MAKE) -C utp
+utc:
+	$(MAKE) -C utc
+
 uncrustify:
 	$(MAKE) -C nss uncrustify
 
@@ -72,5 +78,5 @@ install:
 	cp -v $(NAME).mod $(NWNHOME)/modules/
 
 # generates a new package with the current revision
-package: path scripts ifo itp local
+package: path scripts uti utp utc ifo itp local
 
