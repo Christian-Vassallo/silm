@@ -8,6 +8,7 @@ $dbspecfile = ARGV.shift or fail "No database spec file"
 $target = ARGV.shift or fail "No target directory"
 $basefile = "cp_basic.uti"
 $filemask = "cp_%d.uti"
+$tagmask = "cp_%d"
 
 trap "INT", proc {
 	exit 1
@@ -35,7 +36,7 @@ puts "%d recipes" % a.size
 
 ids = {}
 a.each do |recipe|
-	file = $filemask % recipe['id']
+	file = $tagmask % recipe['id']
 	ids[file] = recipe
 	#if File::exists?(file)
 	#	next
@@ -53,10 +54,13 @@ ids.each {|k,v|
 		$stderr.puts "Recipe #{v['id']} has no name set."
 		next
 	end
+	file = k + ".uti"
 	name = "(Rezept) " + v.cskill.name + ": " + v.name
-	system("cp", $basefile, k)
-	system("gffmodify.pl", k,
+	system("cp", $basefile, file)
+	system("gffmodify.pl", file,
 		'--variable', 'craft_recipe#int=' + v['id'].to_s,
+		'-m', '/Tag=' + k,
+		'-m', '/TemplateResRef=' + k,
 		'-m', '/LocalizedName/4=' + name,
 		'-m', '/Cost=' + v['cost'].to_s
 	)
