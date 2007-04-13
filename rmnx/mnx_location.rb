@@ -17,7 +17,11 @@ class LocationService < RMNX::CommandSpace
 	end
 
 	def mnx_location_count a
-		online_charnames = gety("online").map {|x| x['char'] }
+		online_charnames = gety("online").map {|x|
+			x['char']
+		}.reject {|x|
+			x !~ /#{ Regexp.escape(a).gsub('%', '.*') }/
+		}
 		
 		matches = Location::find(:all, :conditions => [
 			'name like ?', '%' + a + '%'
@@ -31,7 +35,7 @@ class LocationService < RMNX::CommandSpace
 
 		return "1##{a}" if direct
 	
-		return "%d#%s" % [matches.size, matches.join(", ")]
+		return "%d#%s" % [matches.size, matches.join(", ").strip]
 	end
 
 
