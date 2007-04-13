@@ -1,6 +1,13 @@
 
-verify:
-	for i in $(PFX)*.uti; do \
-		echo $${i}; \
-		gffprint.pl $${i} >/dev/null ; \
-	done
+all: clean_recipes recipes
+
+# Generates new recipe items from database
+
+clean: clean_recipes
+
+clean_recipes:
+	-rm cp_[0-9]*.uti
+
+recipes:
+	../../buildutil/gen_recipes.rb ../../database.yaml .
+
