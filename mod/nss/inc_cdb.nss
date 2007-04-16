@@ -21,6 +21,8 @@ int GetAccountIsDM(object oPC);
 
 void UpdateMessageCount(object oPC, int nMessages);
 
+object GetPCByAID(int nAID);
+
 object GetPCByCID(int nCID);
 
 // notifies oPC about his character not in the database,
@@ -45,6 +47,17 @@ void UpdateMessageCount(object oPC, int nMessages) {
 
 	SQLQuery("update `characters` set messages = messages + " + IntToString(nMessages) + 
 		" where cid = " + IntToString(nCID) + " limit 1;");
+}
+
+object GetPCByAID(int nAID) {
+	object oPC = GetFirstPC();
+	while ( GetIsObjectValid(oPC) ) {
+		if ( GetAccountID(oPC) == nAID )
+			return oPC;
+
+		oPC = GetNextPC();
+	}
+	return OBJECT_INVALID;
 }
 
 object GetPCByCID(int nCID) {
