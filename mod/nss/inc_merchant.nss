@@ -194,7 +194,7 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			if ( !GetIsObjectValid(oSell) )
 				return;
 
-			if ( GetPlotFlag(oSell) || GetStolenFlag(oSell) )
+			if ( GetPlotFlag(oSell) )
 				return;
 
 			nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
