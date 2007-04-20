@@ -157,7 +157,7 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		int nFound = 0, nCount = -1, nWant, nMax;
 		string sResRef = "";
 		object oSell;
-		int nPrice;
+		int nPrice = 0;
 		int nAvailable;
 		float fMark;
 
@@ -194,8 +194,9 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			// oops?
 			if ( !GetIsObjectValid(oSell) )
 				nAvailable = 0;
-
-			nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
+			
+			if (nAvailable)
+				nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
 
 			AddListItem(oPC, TTT, GetName(oSell) +
 				( nMax ==
