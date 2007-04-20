@@ -193,8 +193,13 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 
 			// oops?
 			if ( !GetIsObjectValid(oSell) ) {
-				oSell = CreateItemOnObject( sResRef, OBJECT_SELF,1);
 				nAvailable = 0;
+				oSell = CreateItemOnObject(sResRef, oMerc);
+			}
+
+			if (!GetIsObjectValid(oSell)) {
+				ToPC("Kann kein Item mit dieser ResRef erstellen (" + sResRef + "). Dies ist ein Bug. Bitte melde ihn den SLs.");
+				continue;
 			}
 			
 			nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
