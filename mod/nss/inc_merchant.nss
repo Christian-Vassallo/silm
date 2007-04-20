@@ -192,11 +192,12 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			}
 
 			// oops?
-			if ( !GetIsObjectValid(oSell) )
+			if ( !GetIsObjectValid(oSell) ) {
+				oSell = CreateItemOnObject( sResRef, OBJECT_SELF,1);
 				nAvailable = 0;
+			}
 			
-			if (nAvailable)
-				nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
+			nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
 
 			AddListItem(oPC, TTT, GetName(oSell) +
 				( nMax ==
