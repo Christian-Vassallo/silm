@@ -1,15 +1,50 @@
 #include "inc_mnx"
 #include "inc_setting"
+#include "inc_cdb"
 
 // Create treasure on an NPC.
 // This function will typically be called from within the
 // NPC's OnSpawn handler.
-void CTG_GenerateNPCTreasure(object oNPC = OBJECT_SELF);
+void GenerateNPCTreasure(object oNPC = OBJECT_SELF);
+
+
+// Generates loot on a player as he hits a stone.
+// Gets called on EACH hit.
+void GenerateGemChainTreasure(object oStone, object oPlayer);
 
 
 void CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn);
 
-void CTG_GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
+void GenerateGemChainTreasure(object oStone, object oPlayer) {
+	if (!GetIsPC(oPlayer))
+		return;
+
+	string sTag = GetTag(oStone);
+	string sAreaTag = GetTag(GetArea(oStone));
+	int nAID = GetAccountID(oPlayer);
+	int nCID = GetCharacterID(oPlayer);
+	string sAID = IntToString(nAID);
+	string sCID = IntToString(nCID);
+
+	struct mnxRet r = mnxCmd("getgemloot",
+		sTag,
+		sAreaTag,
+		sAID,
+		sCID
+	);
+
+	if (r.error) {
+		SendMessageToAllDMs("Error generating loot for a stone: " + sTag + " (" + GetName(oPlayer) + ")");
+		return;
+	}
+
+	string loot = r.ret;
+
+	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(loot, oPlayer));
+}
+
+
+void GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
 	struct mnxRet r = mnxCmd("getloot", 
 		IntToString(GetRacialType(oNPC)), 
 		GetResRef(oNPC), 
