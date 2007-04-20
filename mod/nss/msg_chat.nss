@@ -106,6 +106,7 @@ void main() {
 						&& ( GetStringLeft(sText, 1) == "." ) && ( GetStringLeft(sText, 2) != ".." ) );
 	int bIsTelepathicBond = ( !( iMode & MODE_PRIVATE ) && GetStringLeft(sText, 1) == "$" );
 	int bIsGo = ( !( iMode & MODE_PRIVATE ) && ( GetStringLeft(sText, 1) == "," ) );
+	int bIsFamiliarSpeech = ( !(iMode & MODE_PRIVATE) && GetStringLeft(sText, 1) == ":" );
 
 	if ( bIsCommand )
 		iMode |= MODE_COMMAND;
@@ -113,7 +114,7 @@ void main() {
 		iMode |= MODE_FORCETALK;
 	if ( bIsTelepathicBond )
 		iMode |= MODE_TELEPATHICBOND;
-
+	
 
 
 	if (
@@ -145,7 +146,7 @@ void main() {
 		iMode |= MODE_COMMAND;
 	}
 
-	if ( bIsTelepathicBond && !GetIsDM(oPC) ) {
+	if ( bIsTelepathicBond && !GetIsDM(oPC) && !bIsGo && !bIsFamiliarSpeech ) {
 		Suppress();
 		sText = GetSubString(sText, 1, 2048);
 
@@ -166,6 +167,21 @@ void main() {
 			 * DeleteLocalString( oPC, "NWNX!CHAT!SUPRESS" );
 			 * return;*/
 		}
+	}
+
+	if ( bIsFamiliarSpeech && FAMILIAR_CREATURE_TYPE_NONE != GetAnimalCompanionCreatureType(oPC)) {
+
+		string sFamText = GetSubString(sText, 1, 1024 * 2);
+		sFamText = ColourisePlayerText(oPC, iMode, sFamText, cWhite); 
+
+		object oAssoc = GetAssociate(ASSOCIATE_TYPE_FAMILIAR);
+		if (!GetIsObjectValid(oAssoc)) {
+			ToPC("Derzeit ist euer Vertrauter nicht in Reichweite.");
+		} else {
+			AssignCommand(oAssoc, SpeakString(sFamText));
+		}
+		
+		Suppress();
 	}
 
 	if ( bIsForceTalk && ( GetIsDM(oPC) || amask(oPC, AMASK_FORCETALK | AMASK_GLOBAL_FORCETALK) ) ) {
