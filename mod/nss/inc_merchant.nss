@@ -103,7 +103,6 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		int nPrice;
 		float fMark;
 
-
 		SQLQuery(
 			"select resref,cur,(merchant_inventory.sell_markdown * (select sell_markdown from merchants where tag="
 			+ sMerc +
@@ -159,6 +158,7 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		string sResRef = "";
 		object oSell;
 		int nPrice;
+		int nAvailable;
 		float fMark;
 
 		SQLQuery(
@@ -173,29 +173,27 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			fMark = StringToFloat(SQLGetData(2));
 			nWant = StringToInt(SQLGetData(3));
 			nMax  = StringToInt(SQLGetData(4));
-
-
-
+			
 			nCount = GetItemCountByResRef(oPC, sResRef);
+
+			nAvailable = 1;
 
 			oSell = GetItemResRefPossessedBy(oPC, sResRef);
 
 			// Do not sell non-existant items
 			if ( nCount == 0 )
-				continue;
+				nAvailable = 0;
 
 			// avoid bug thing
 			if ( nCount == 1 && GetLocalString(oPC, "merc_last_sell") == sResRef ) {
 				DeleteLocalString(oPC, "merc_last_sell");
-				continue;
+				nCount -= 1;
+				nAvailable = 0;
 			}
 
 			// oops?
 			if ( !GetIsObjectValid(oSell) )
-				return;
-
-			if ( GetPlotFlag(oSell) )
-				return;
+				nAvailable = 0;
 
 			nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
 
@@ -208,7 +206,7 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			SetListInt(oPC, TTT, nPrice);
 			SetListFloat(oPC, TTT, IntToFloat(nMax));
 
-			if ( !bLimitedMoney || nPrice < nMercMoney )
+			if ( nAvailable && (!bLimitedMoney || nPrice < nMercMoney) )
 				SetListDisplayMode(oPC, TTT, DISPLAYMODE_GREEN);
 			else
 				SetListDisplayMode(oPC, TTT, DISPLAYMODE_RED);

@@ -110,7 +110,8 @@ void main() {
 			// take item away
 			object oThing = GetItemResRefPossessedBy(oPC, sSellsWhat);
 			if ( !GetIsObjectValid(oThing) ) {
-				SendMessageToPC(oPC, "Bug.");
+
+				SendMessageToPC(oPC, "Von dieser Ware hast du nichts zu verkaufen.");
 
 			} else {
 				if ( GetItemStackSize(oThing) > 1 ) {
