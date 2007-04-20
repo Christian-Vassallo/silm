@@ -39,6 +39,9 @@ string MoneyToString(struct Money m) {
 	if ( m.copper > 0 )
 		r += IntToString(m.copper) + " Kupfer ";
 
+	if ("" == r)
+		r = "(Keine Summe angegeben) ";
+
 	return GetStringLeft(r, GetStringLength(r) - 1);
 }
 
