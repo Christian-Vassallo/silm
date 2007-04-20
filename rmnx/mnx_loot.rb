@@ -2,10 +2,12 @@ require 'rubygems'
 require_gem 'activerecord'
 
 
-class Loot < ActiveRecord::Base
-end
 
 class LootAggregator < RMNX::CommandSpace
+	class GemChain < ActiveRecord::Base; end
+
+	class LootChain < ActiveRecord::Base; end
+
 	include RMNX::Config
 
 	def initialize
@@ -17,12 +19,27 @@ class LootAggregator < RMNX::CommandSpace
 		ActiveRecord::Base.establish_connection(sql)
 		ActiveRecord::Base.connection.instance_eval {@connection.reconnect = true}
 	end
+
+	def mnx_getgemchainloot areatag, stonetag, aid, cid
+		s = ''
+		a = []
+
+		loot = GemChain::find_by_sql(['select * from gem_chains where ' +
+				'rand() - chance <= 0 and ' +
+				'(area = \'\' or ? like area) and ' +
+				'(stone = \'\' or ? like stone) ' +
+				'order by area, stone `order` asc',
+			areatag, stonetag
+		])
+		
+		compact_and_prepare loot
+	end
 	
 	def mnx_getloot racial_type, resref, tag, name, lvar = ""
 		s = ''
 		a = []
 
-		loot = Loot::find_by_sql(['select * from loots where ' +
+		loot = LootChain::find_by_sql(['select * from loot_chains where ' +
 				'rand() - chance <= 0 and ' +
 				'(racial_type = -1 or racial_type = ?) and ' +
 				'(resref = \'\' or ? like resref) and ' +
@@ -32,7 +49,11 @@ class LootAggregator < RMNX::CommandSpace
 				'order by racial_type, tag, resref, `name`, `order` asc',
 			racial_type, resref, tag, name, lvar
 		])
+		
+		compact_and_prepare loot
+	end
 
+	def compact_and_prepare a
 		loop do
 			reduces = loot.map {|l| l.replace}.max
 			break if !reduces || reduces == 0
