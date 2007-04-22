@@ -2,6 +2,8 @@ class LootChainsController < ApplicationController
 	before_filter() {|c| c.authenticate(Account::CAN_SEE_LOOT_CHAINS) }
 	before_filter(:only => %w{add kill}) {|c| c.authenticate(Account::CAN_EDIT_LOOT_CHAINS) }
 
+	ORDER = "racial_type, tag, resref, `name`, `order` asc"
+
 	def auto_complete_for_new_loot
 		auto_complete_responder_for_resrefs(params[:new][:loot])
 	end
@@ -9,7 +11,7 @@ class LootChainsController < ApplicationController
 
 	def index
 		@new = Loot::new
-		@loot_chains = Loot::find(:all, :order => 'racial_type, tag, resref asc')
+		@loot_chains = Loot::find(:all, :order => ORDER)
 
 		# Save any changes.
 		if amask(Account::CAN_EDIT_LOOT_CHAINS) && params['loot_chains']
@@ -36,7 +38,7 @@ class LootChainsController < ApplicationController
 				return
 			end
 			flash[:notice] = "Created/saved."
-			@loot_chains = Loot::find(:all, :order => 'racial_type, tag, resref asc')
+			@loot_chains = Loot::find(:all, :order => ORDER)
 		end
 	end
 
@@ -52,10 +54,10 @@ class LootChainsController < ApplicationController
 	private
 	def auto_complete_responder_for_resrefs(ref)
 		# resref => { :name }
-		
+		ref = ref.downcase
 		@resrefs = CraftingProduct::RESREFS.reject{|resref,hash|
-			resref !~ /^.*#{Regexp.escape(ref)}.*$/ && 
-			hash[:name] !~ /^.*#{Regexp.escape(ref)}.*$/
+			resref.downcase !~ /^.*#{Regexp.escape(ref)}.*$/ && 
+			(hash[:name] || "").downcase !~ /^.*#{Regexp.escape(ref)}.*$/
 		}
 
 		@resrefs = @resrefs.sort[0,15]
