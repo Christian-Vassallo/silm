@@ -550,8 +550,10 @@ int HandleDelegate(object oPC, string sText, int iMode, object oTo = OBJECT_INVA
 				}
 			} else {
 				if ( GetLocalInt(o, "d_all") || GetLocalInt(o, sChan) || GetLocalInt(o, "d_" + sOPCId) ) {
-					c += 1;
-					SendMessageToPC(o, "D[" + sMode + "] " + PCToString(oPC, 1) + ": " + sText);
+					if ( !(GetIsDM(oPC) && iMode & MODE_DM) ) {
+						c += 1;
+						SendMessageToPC(o, "D[" + sMode + "] " + PCToString(oPC, 1) + ": " + sText);
+					}
 				}
 			}
 		}

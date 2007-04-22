@@ -236,8 +236,6 @@ int CommandNudge(object oPC, int iMode) {
 	pos.z += z;
 	
 	loc = Location(area, pos, facing);
-	SetPosition();
-// 	AssignCommand(oTarget, ClearAllActions(1));
 
 	AssignCommand(oTarget, ActionJumpToLocation(loc));
 	ToPC("nudge> done.");
