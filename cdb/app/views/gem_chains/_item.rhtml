@@ -12,7 +12,7 @@
 		<small><%= CraftingProduct::RESREFS[loot.loot.split(":",2)[0]] && CraftingProduct::RESREFS[loot.loot.split(":",2)[0]][:name]%><%= ":" + loot.loot.split(":",2)[1] if loot.loot.split(":")[1] %></small>
 		</div>
 	</td>
-	<td><%= loot_helper.text_field :chance, :size => 4%></td>
+	<td><%= loot_helper.text_field :chance, :size => 10%></td>
 	<% else %>
 	<td><%= loot.stone %></td>
 	<td><%= loot.area %></td>
