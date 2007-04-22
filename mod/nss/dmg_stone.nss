@@ -40,6 +40,7 @@ void main() {
 
 		while ( GetCurrentHitPoints() / nRate <= nLadung ) {
 			CreateItemOnObject(sRessource, oPC, 1);
+			audit("mine", oPC, audit_fields("resref", sRessource, "area", GetTag(GetArea(oPC))), "mining");
 			nLadung--;
 		}
 		
