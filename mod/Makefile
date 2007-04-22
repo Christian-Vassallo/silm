@@ -55,14 +55,15 @@ ifo:
 	$(MAKE) -C mod ifo
 
 itp:
-	$(MAKE) -C itp
+	$(MAKE) -C itp all
 
 uti:
-	$(MAKE) -C uti
+	$(MAKE) -C uti recipes
+
 utp:
-	$(MAKE) -C utp
+	$(MAKE) -C utp all
 utc:
-	$(MAKE) -C utc
+	$(MAKE) -C utc all
 
 uncrustify:
 	$(MAKE) -C nss uncrustify
@@ -78,5 +79,5 @@ install:
 	cp -v $(NAME).mod $(NWNHOME)/modules/
 
 # generates a new package with the current revision
-package: path scripts uti utp utc ifo itp local
+package: path uti utp utc ifo itp scripts local
 
