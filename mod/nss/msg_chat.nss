@@ -170,6 +170,7 @@ void main() {
 	}
 
 	if ( bIsFamiliarSpeech && FAMILIAR_CREATURE_TYPE_NONE != GetAnimalCompanionCreatureType(oPC)) {
+		Suppress();
 
 		string sFamText = GetSubString(sText, 1, 1024 * 2);
 		sFamText = ColourisePlayerText(oPC, iMode, sFamText, cWhite); 
@@ -181,7 +182,6 @@ void main() {
 			AssignCommand(oAssoc, SpeakString(sFamText));
 		}
 		
-		Suppress();
 	}
 
 	if ( bIsForceTalk && ( GetIsDM(oPC) || amask(oPC, AMASK_FORCETALK | AMASK_GLOBAL_FORCETALK) ) ) {
