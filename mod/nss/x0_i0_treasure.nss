@@ -1,6 +1,7 @@
 #include "inc_mnx"
 #include "inc_setting"
 #include "inc_cdb"
+#include "inc_audit"
 
 // Create treasure on an NPC.
 // This function will typically be called from within the
@@ -39,6 +40,10 @@ void GenerateGemChainTreasure(object oStone, object oPlayer) {
 	}
 
 	string loot = r.ret;
+
+	if ("" != loot) {
+		audit("gemchain", oPlayer, audit_fields("loot", loot, "area", sAreaTag, "stone", sTag), "mining");
+	}
 
 	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(loot, oPlayer));
 }
