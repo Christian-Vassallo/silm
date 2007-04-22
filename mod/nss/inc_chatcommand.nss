@@ -191,6 +191,7 @@ int CommandIndicate(object oPC, int iMode);
 
 int CommandGo(object oPC, int iMode);
 int CommandGoReturn(object oPC, int iMode);
+int CommandNudge(object oPC, int iMode);
 
 /* implementation */
 
@@ -206,6 +207,43 @@ int CommandStub(object oPC, int iMode) {
 	return OK;
 }
 
+
+
+int CommandNudge(object oPC, int iMode) {
+
+	object oTarget = GetTarget();
+	
+	if (!GetIsObjectValid(oTarget))
+		return NotifyBadTarget();
+	
+	float
+		x = StringToFloat(optv("x")),
+		y = StringToFloat(optv("y")),
+		z = StringToFloat(optv("z"));
+
+	if (0f == x && 0f == y && 0f == z) {
+		ToPC("nudge> nothing to be done.");
+		return OK;
+	}
+	
+	location loc = GetLocation(oTarget);
+	vector pos = GetPositionFromLocation(loc);
+	object area = GetAreaFromLocation(loc);
+	float facing = GetFacingFromLocation(loc);
+	
+	pos.x += x;
+	pos.y += y;
+	pos.z += z;
+	
+	loc = Location(area, pos, facing);
+	SetPosition();
+// 	AssignCommand(oTarget, ClearAllActions(1));
+
+	AssignCommand(oTarget, ActionJumpToLocation(loc));
+	ToPC("nudge> done.");
+
+	return OK;
+}
 
 int CommandGo(object oPC, int iMode) {
 	string loc = arg(0);
@@ -1914,6 +1952,9 @@ int CommandCreate(object oPC, int iMode) {
 		SendMessageToPC(oPC, "Syntax: objtype(int), resref, location(obj, loc), [tag(str)] [stacksize(int)]");
 		return SYNTAX;
 	}
+
+
+
 
 	SendMessageToPC(oPC, "Attempting to create '" + sRes + "' ..");
 

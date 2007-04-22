@@ -252,6 +252,10 @@ void RegisterAllCommands() {
 
 	/* GM commands */
 
+	RegisterCommand("n", "x= y= z=", 0, 0);
+	RHs("[-x=float] [-y=float] [-z=float] >> nudge current target in direction");
+
+
 	RegisterCommand("go", "", 1, 1);
 	RHs("loc >> Go to location.");
 	RegisterCommand("re", "", 0, 0);
@@ -555,6 +559,9 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 	if ( "m" == sCommand && bRunMacro )
 		return CommandMacro(oPC, iMode);
+
+	if ( "n" == sCommand )
+		return CommandNudge(oPC, iMode);
 
 	if ( "go" == sCommand )
 		return CommandGo(oPC, iMode);
