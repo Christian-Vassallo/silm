@@ -106,6 +106,12 @@ int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bR
 
 		case NOTFOUND:
 			ToPC("Befehl nicht gefunden.", oPC);
+			if (gvGetInt("chat_debug")) {
+				SendMessageToAllDMs("chat> NOTFOUND(RunCommand): '" + sCommand + "':'" + sRest + "'::" + IntToString(iMode) + "::" + 
+					IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+			}
+			break;
+
 		case FAIL:
 			return FALSE;
 
@@ -524,7 +530,8 @@ void RegisterAllCommands() {
 int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro = TRUE, int bRunAlias = TRUE, int bRunModifiers = TRUE) {
 
 	// No need for that MODE flag, we know already it is a command.
-	iMode -= MODE_COMMAND;
+	if (iMode & MODE_COMMAND)
+		iMode -= MODE_COMMAND;
 
 	if (gvGetInt("chat_debug")) {
 		SendMessageToAllDMs("chat> run: '" + sCommand + "':'" + sArg + "'::" + IntToString(iMode) + "::" + 
