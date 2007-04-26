@@ -516,6 +516,11 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	// No need for that MODE flag, we know already it is a command.
 	iMode -= MODE_COMMAND;
 
+	if (gvGetInt("chat_debug")) {
+		SendMessageToAllDMs("chat> run: " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
+			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+	}
+
 	string sOpt = "";
 	int nArgMin = 0;
 	int nArgMax = 0;
@@ -532,12 +537,20 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 		nArgMin = GetLocalInt(GetModule(), "cmd_" + sCommand + "_argc_min");
 		nArgMax = GetLocalInt(GetModule(), "cmd_" + sCommand + "_argc_max");
 	} else {
+		if (gvGetInt("chat_debug")) {
+			SendMessageToAllDMs("chat> NOTFOUND(register): " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
+				IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+		}
 		return NOTFOUND;
 	}
 
 	int nAMask = GetLocalInt(GetModule(), "cmd_" + sCommand + "_amask");
 
 	if ( !GetLocalInt(GetModule(), "no_new_acl") && nAMask > 0 && !amask(oPC, nAMask) ) {
+		if (gvGetInt("chat_debug")) {
+			SendMessageToAllDMs("chat> NOACCESS(): " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
+				IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+		}
 		return ACCESS;
 	}
 
@@ -871,7 +884,10 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( "rwalk" == sCommand )
 		return CommandRandomWalk(oPC, iMode);
 
-	WriteTimestampedLogEntry("Command not found: " + sCommand + "(" + sArg + ")");
+	if (gvGetInt("chat_debug")) {
+		SendMessageToAllDMs("chat> NOTFOUND(call): " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
+			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+	}
 
 	return OK;
 }
