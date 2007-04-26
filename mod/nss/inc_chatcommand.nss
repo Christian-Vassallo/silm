@@ -29,7 +29,7 @@
 
 #include "inc_track"
 
-int CommandSQL(object oPC, int iMode);
+
 
 int CommandShowWeather(object oPC, int iMode);
 

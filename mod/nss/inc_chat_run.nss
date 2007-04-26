@@ -16,17 +16,31 @@ string
 LastCommand;
 
 
+
+
+int CommandModSelf(object oPC, int iMode);
+int CommandModRadius(object oPC, int iMode);
+int CommandModRectangle(object oPC, int iMode);
+int CommandModLine(object oPC, int iMode);
+int CommandModArea(object oPC, int iMode);
+int CommandModServer(object oPC, int iMode);
+int CommandModOnline(object oPC, int iMode);
+
+
+int CommandSQL(object oPC, int iMode);
+
+
 // This evaluates a string of commands, not prefixed with the
 // command character.
 // Example:  "ta self && app 298 && restore"
-int CommandEval(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bRunAlias = TRUE);
+int CommandEval(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bRunAlias = TRUE, int bRunModifiers = TRUE);
 
 // Runs a single command.  Usually called by CommandEval.
-int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bRunAlias = TRUE);
+int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bRunAlias = TRUE, int bRunModifiers = TRUE);
 
 
 
-int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro = TRUE, int bRunAlias = TRUE);
+int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro = TRUE, int bRunAlias = TRUE, int bRunModifiers = TRUE);
 
 void RunMacro(object oPC, int iMode, string sMacro);
 int CommandMacro(object oPC, int iMode);
@@ -46,7 +60,7 @@ void RegisterAccessFlags(int nFlags);
 
 
 
-int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bRunAlias = TRUE) {
+int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bRunAlias = TRUE, int bRunModifiers = TRUE) {
 	string sCommand, sRest;
 
 	sText = GetStringTrim(sText);
@@ -76,7 +90,7 @@ int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bR
 	sCommand = GetStringTrim(sCommand);
 	sRest = GetStringTrim(sRest);
 
-	switch ( OnCommand(oPC, sCommand, sRest, iMode, bRunMacro, bRunAlias) ) {
+	switch ( OnCommand(oPC, sCommand, sRest, iMode, bRunMacro, bRunAlias, bRunModifiers) ) {
 		case ACCESS:
 			ToPC("Ihr habt nicht die noetigen Rechte, um diesen Befehl auszufuehren.", oPC);
 			return FALSE;
@@ -105,7 +119,7 @@ int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bR
 }
 
 
-int CommandEval(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bRunAlias = TRUE) {
+int CommandEval(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bRunAlias = TRUE, int bRunModifiers = TRUE) {
 	int i = 0;
 	string sCmd = "";
 
@@ -114,7 +128,7 @@ int CommandEval(object oPC, int iMode, string sText, int bRunMacro = TRUE, int b
 
 	for ( i = 0; i < nCommandCount; i++ ) {
 		sCmd = mCommandSplitGet(i);
-		if ( !RunCommand(oPC, iMode, sCmd, bRunMacro, bRunAlias) )
+		if ( !RunCommand(oPC, iMode, sCmd, bRunMacro, bRunAlias, bRunModifiers) )
 			return FALSE;
 	}
 	return TRUE;
@@ -185,6 +199,23 @@ void RegisterAccessFlags(int nFlags) {
 
 
 void RegisterAllCommands() {
+	/* modifiers */
+	RegisterCommand("self", "");
+	
+	RegisterCommand("online", "dms");
+
+	RegisterCommand("area", "");
+	
+	RegisterCommand("rect", "x= y=");
+
+	RegisterCommand("radius", "r=");
+	
+	RegisterCommand("line", "c=");
+	
+	RegisterCommand("server", "");
+	RAF(AMASK_CAN_DO_BACKEND);
+
+
 	/* public commands */
 	RegisterCommand("m", "i d l", 1, 2);
 	RHs("MacroName [MacroCode] >> Creates and executes macros");
@@ -480,8 +511,7 @@ void RegisterAllCommands() {
 
 
 
-int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro = TRUE, int bRunAlias = TRUE)
-{
+int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro = TRUE, int bRunAlias = TRUE, int bRunModifiers = TRUE) {
 
 	// No need for that MODE flag, we know already it is a command.
 	iMode -= MODE_COMMAND;
@@ -559,6 +589,19 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 	if ( "m" == sCommand && bRunMacro )
 		return CommandMacro(oPC, iMode);
+
+	if ( bRunModifiers ) {
+		if ("self" == sCommand)
+			return CommandModSelf(oPC, iMode);
+		if ("online" == sCommand)
+			return CommandModOnline(oPC, iMode);
+		if ("radius" == sCommand)
+			return CommandModRadius(oPC, iMode);
+		if ("area" == sCommand)
+			return CommandModArea(oPC, iMode);
+		if ("server" == sCommand)
+			return CommandModServer(oPC, iMode);
+	}
 
 	if ( "n" == sCommand )
 		return CommandNudge(oPC, iMode);
@@ -978,33 +1021,45 @@ int CommandMacro(object oPC, int iMode) {
 }
 
 
-/* the languages! */
-/*int iLang = -1;
- * if ( LANGUAGE_INVALID != ( iLang = GetLanguageByString( sCommand ) ) ) {
- *
- * 	if ( GetStringLength( sArg ) > 0 ) {
- *
- * 		object oLangItem = GetItemPossessedBy( oPC, LANGUAGE_ITEM_TAG + IntToString( iLang ) );
- *
- * 		if ( iLang != LANGUAGE_COMMON && !IsDM( oPC ) && !GetIsObjectValid( oLangItem ) ) {
- * 			// FIX: SK check einbauen fuer Gestammmel?
- *
- * 			SendMessageToPC( oPC, "Du sprichst diese Sprache nicht." );
- * 		} else if ( !(MODE_TALK & iMode) && !(MODE_WHISPER & iMode) ) {
- * 			SendMessageToPC( oPC, "Du kannst nur in 'Reden' und 'Fluestern'' andere Sprachen sprechen." );
- * 		} else {
- * 			string sLText = Translate( iLang, sArg );
- *
- * 			SpeakToMode( oPC, sLText, iMode );
- *
- * 			// Now broadcast the real deal to all in range who are allowed to listen in!
- * 			int nTalkV = ( iMode & MODE_TALK ? TALKVOLUME_TALK : ( iMode & MODE_SHOUT ? TALKVOLUME_SHOUT : TALKVOLUME_WHISPER ) );
- *
- * 			SpeakLanguageToOthers( oPC, sArg, iLang, nTalkV );
- * 		}
- * 	} else {
- * 		SendMessageToPC( oPC, "Syntax: /" + sCommand + " Text zu uebersetzen");
- * 	}
- * 	return 1;
- * }*/
+int CommandModSelf(object oPC, int iMode) {
+	string sRest = getoptargs();
+	SetTarget(oPC, TARGET_MACRO_SLOT);
+	return CommandEval(oPC, iMode, sRest, 1, 1, 0);
+	// ClearTarget(oPC, TARGET_MACRO_SLOT);
+}
+
+int CommandModRadius(object oPC, int iMode) {
+	return FAIL;
+}
+
+int CommandModRectangle(object oPC, int iMode) {
+	return FAIL;
+}
+
+int CommandModLine(object oPC, int iMode) {
+	return FAIL;
+}
+
+int CommandModArea(object oPC, int iMode) {
+	return FAIL;
+}
+
+int CommandModServer(object oPC, int iMode) {
+	return FAIL;
+}
+
+int CommandModOnline(object oPC, int iMode) { 
+	string sRest = getoptargs();
+	object oLoop = GetFirstPC();
+	while (GetIsPC(oLoop)) {
+		
+		SetTarget(oLoop, TARGET_MACRO_SLOT);
+		if (OK != CommandEval(oPC, iMode, sRest, 1, 1, 0))
+			return FAIL;
+
+		oLoop = GetNextPC();
+	}
+	return OK;
+}
+
 
