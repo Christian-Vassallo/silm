@@ -536,6 +536,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if (gvGetInt("chat_debug")) {
 		SendMessageToAllDMs("chat> run: '" + sCommand + "':'" + sArg + "'::" + IntToString(iMode) + "::" + 
 			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+		SendMessageToAllDMs("chat> runs on: " + GetName(oPC) + " / " + GetName(OBJECT_SELF));
 	}
 
 	string sOpt = "";
@@ -1058,8 +1059,11 @@ int CommandModSelf(object oPC, int iMode) {
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
 	
-	SetTarget(oPC, TARGET_MACRO_SLOT);
+	SetTarget(oPC);
 	
+	if (gvGetInt("chat_debug")) {
+		SendMessageToAllDMs("chat:mod:self> " + sRest);
+	}
 	int ret = CommandEval(oPC, iMode, sRest, 1, 1, 0);
 
 	SetDefaultSlot(nOldTarget);
@@ -1102,10 +1106,15 @@ int CommandModOnline(object oPC, int iMode) {
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
 
-	while (GetIsPC(oLoop)) {
+	while (GetIsObjectValid(oLoop)) {
 
-		SetTarget(oLoop, TARGET_MACRO_SLOT);
-		if (OK != CommandEval(oPC, iMode, sRest, 1, 1, 0))
+		SetTarget(oLoop);
+		
+		if (gvGetInt("chat_debug")) {
+			SendMessageToAllDMs("chat:mod:online> " + sRest + ": " + GetName(oLoop));
+		}
+
+		if (!CommandEval(oPC, iMode, sRest, 1, 1, 0))
 			break;
 
 		oLoop = GetNextPC();
