@@ -557,9 +557,6 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 	if ( opt("h") ) {
 
-		if ( !GetLocalInt(GetModule(), "cmd_" + sCommand) )
-			return NOTFOUND;
-
 		int nCount = GetLocalInt(GetModule(), "cmd_" + sCommand + "_h");
 		int nDisp = 0;
 		int i = 0;
@@ -1022,7 +1019,7 @@ int CommandMacro(object oPC, int iMode) {
 
 
 int CommandModSelf(object oPC, int iMode) {
-	string sRest = getoptargs();
+	string sRest = arg(0);
 	
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
@@ -1063,7 +1060,7 @@ int CommandModServer(object oPC, int iMode) {
 }
 
 int CommandModOnline(object oPC, int iMode) { 
-	string sRest = getoptargs();
+	string sRest = arg(0);
 	object oLoop = GetFirstPC();
 	
 	int bDoDM = opt("dms");
