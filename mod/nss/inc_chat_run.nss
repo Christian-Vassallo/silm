@@ -871,8 +871,9 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( "rwalk" == sCommand )
 		return CommandRandomWalk(oPC, iMode);
 
+	WriteTimestampedLogEntry("Command not found: " + sCommand + "(" + sArg + ")");
 
-	return NOTFOUND;
+	return OK;
 }
 
 
