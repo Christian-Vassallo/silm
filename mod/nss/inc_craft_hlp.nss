@@ -852,6 +852,7 @@ void CreateStackedItemsOnObject(string sResRef, object oCreateOn, int nCount, st
 		}
 	} else {
 		object oFirst = CreateItemOnObject(sResRef, oCreateOn, nCount);
+		SetLocalInt(oFirst, sLocal, sLocalV);
 	}
 }
 
