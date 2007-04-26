@@ -90,6 +90,11 @@ int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bR
 	sCommand = GetStringTrim(sCommand);
 	sRest = GetStringTrim(sRest);
 
+	if (gvGetInt("chat_debug")) {
+		SendMessageToAllDMs("chat> run(RunCommand): '" + sCommand + "':'" + sRest + "'::" + IntToString(iMode) + "::" + 
+			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+	}
+
 	switch ( OnCommand(oPC, sCommand, sRest, iMode, bRunMacro, bRunAlias, bRunModifiers) ) {
 		case ACCESS:
 			ToPC("Ihr habt nicht die noetigen Rechte, um diesen Befehl auszufuehren.", oPC);
@@ -125,6 +130,11 @@ int CommandEval(object oPC, int iMode, string sText, int bRunMacro = TRUE, int b
 
 	int nCommandCount = mCommandSplit(sText, COMMAND_SPLIT);
 
+	if (gvGetInt("chat_debug")) {
+		SendMessageToAllDMs("chat> CommandEval(): '" + sText + "'::" + IntToString(iMode) + "::" + 
+			IntToString(nCommandCount) + "::" +
+			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+	}
 
 	for ( i = 0; i < nCommandCount; i++ ) {
 		sCmd = mCommandSplitGet(i);
@@ -517,7 +527,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	iMode -= MODE_COMMAND;
 
 	if (gvGetInt("chat_debug")) {
-		SendMessageToAllDMs("chat> run: " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
+		SendMessageToAllDMs("chat> run: '" + sCommand + "':'" + sArg + "'::" + IntToString(iMode) + "::" + 
 			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
 	}
 
@@ -538,7 +548,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 		nArgMax = GetLocalInt(GetModule(), "cmd_" + sCommand + "_argc_max");
 	} else {
 		if (gvGetInt("chat_debug")) {
-			SendMessageToAllDMs("chat> NOTFOUND(register): " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
+			SendMessageToAllDMs("chat> NOTFOUND(register): '" + sCommand + "':'" + sArg + "'::'" + IntToString(iMode) + "::" + 
 				IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
 		}
 		return NOTFOUND;
