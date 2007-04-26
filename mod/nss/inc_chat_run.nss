@@ -1023,12 +1023,26 @@ int CommandMacro(object oPC, int iMode) {
 
 int CommandModSelf(object oPC, int iMode) {
 	string sRest = getoptargs();
+	
+	int nOldTarget = GetDefaultSlot();
+	SetDefaultSlot(TARGET_MACRO_SLOT);
+	
 	SetTarget(oPC, TARGET_MACRO_SLOT);
-	return CommandEval(oPC, iMode, sRest, 1, 1, 0);
+	
+	int ret = CommandEval(oPC, iMode, sRest, 1, 1, 0);
+
+	SetDefaultSlot(nOldTarget);
 	// ClearTarget(oPC, TARGET_MACRO_SLOT);
+	//
+	return ret;
 }
 
 int CommandModRadius(object oPC, int iMode) {
+	float radius = 6.0;
+
+	if (opt("r"))
+		radius = StringToFloat(optv("r"));
+
 	return FAIL;
 }
 
@@ -1051,14 +1065,23 @@ int CommandModServer(object oPC, int iMode) {
 int CommandModOnline(object oPC, int iMode) { 
 	string sRest = getoptargs();
 	object oLoop = GetFirstPC();
+	
+	int bDoDM = opt("dms");
+
+	int nOldTarget = GetDefaultSlot();
+	SetDefaultSlot(TARGET_MACRO_SLOT);
+
 	while (GetIsPC(oLoop)) {
-		
+
 		SetTarget(oLoop, TARGET_MACRO_SLOT);
 		if (OK != CommandEval(oPC, iMode, sRest, 1, 1, 0))
-			return FAIL;
+			break;
 
 		oLoop = GetNextPC();
 	}
+
+	SetDefaultSlot(nOldTarget);
+
 	return OK;
 }
 
