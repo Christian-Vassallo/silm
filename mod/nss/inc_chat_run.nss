@@ -105,11 +105,11 @@ int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bR
 			return FALSE;
 
 		case NOTFOUND:
-			ToPC("Befehl nicht gefunden.", oPC);
 			if (gvGetInt("chat_debug")) {
 				SendMessageToAllDMs("chat> NOTFOUND(RunCommand): '" + sCommand + "':'" + sRest + "'::" + IntToString(iMode) + "::" + 
 					IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
 			}
+			ToPC("Befehl nicht gefunden.", oPC);
 			break;
 
 		case FAIL:
@@ -621,12 +621,16 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( bRunModifiers ) {
 		if ("self" == sCommand)
 			return CommandModSelf(oPC, iMode);
+
 		if ("online" == sCommand)
 			return CommandModOnline(oPC, iMode);
+
 		if ("radius" == sCommand)
 			return CommandModRadius(oPC, iMode);
+
 		if ("area" == sCommand)
 			return CommandModArea(oPC, iMode);
+
 		if ("server" == sCommand)
 			return CommandModServer(oPC, iMode);
 	}
@@ -902,10 +906,8 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( "rwalk" == sCommand )
 		return CommandRandomWalk(oPC, iMode);
 
-	if (gvGetInt("chat_debug")) {
-		SendMessageToAllDMs("chat> NOTFOUND(call): " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
-			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
-	}
+	SendMessageToAllDMs("chat> NOTFOUND(call): " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
+		IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
 
 	return OK;
 }
@@ -995,11 +997,6 @@ int CommandMacro(object oPC, int iMode) {
 	}
 
 	if ( opt("i") ) {
-		if ( !amask(oPC, AMASK_CAN_USE_MACROS) ) {
-			ToPC("Only DMs are allowed to create macro items.");
-			return OK;
-		}
-
 		SQLQuery("select command from macro where (account = " +
 			sAID +
 			" or account = 0) and macro = " + SQLEscape(sMacroName) + " order by account desc limit 1;");
@@ -1064,48 +1061,102 @@ int CommandModSelf(object oPC, int iMode) {
 	if (gvGetInt("chat_debug")) {
 		SendMessageToAllDMs("chat:mod:self> " + sRest);
 	}
+	
 	int ret = CommandEval(oPC, iMode, sRest, 1, 1, 0);
 
 	SetDefaultSlot(nOldTarget);
 	// ClearTarget(oPC, TARGET_MACRO_SLOT);
 	//
-	return ret;
+	return ret ? OK : FAIL;
 }
 
 int CommandModRadius(object oPC, int iMode) {
+	string sRest = arg(0);
+	
 	float radius = 6.0;
+	int otype = OBJECT_TYPE_ALL;
 
 	if (opt("r"))
 		radius = StringToFloat(optv("r"));
 
-	return FAIL;
+	if (opt("type"))
+		otype = StringToInt(optv("type"));
+
+	if (gvGetInt("chat_debug"))
+		SendMessageToAllDMs("chat:mod:radius> r = " + FloatToString(radius));
+	
+	int nOldTarget = GetDefaultSlot();
+	SetDefaultSlot(TARGET_MACRO_SLOT);
+
+	object oLoop = GetFirstObjectInShape(SHAPE_SPHERE, radius, GetLocation(oPC), FALSE, otype);
+	while (GetIsObjectValid(oLoop)) {
+		SetTarget(oLoop);
+		if (!CommandEval(oPC, iMode, sRest, 1, 1, 0)) {
+			if (gvGetInt("chat_debug"))
+				SendMessageToAllDMs("chat:mod:radius> Eval() returned FALSE");
+			return FAIL;
+		}
+		
+		oLoop = GetNextObjectInShape(SHAPE_SPHERE, radius, GetLocation(oPC), FALSE, otype);
+	}
+	SetDefaultSlot(nOldTarget);
+
+	return OK;
 }
 
 int CommandModRectangle(object oPC, int iMode) {
+	ToPC("mod:rect> Not in yet.");
 	return FAIL;
 }
 
 int CommandModLine(object oPC, int iMode) {
+	ToPC("mod:line> Not in yet.");
 	return FAIL;
 }
 
 int CommandModArea(object oPC, int iMode) {
-	return FAIL;
+	string sRest = arg(0);
+	int otype = OBJECT_TYPE_ALL;
+	
+	if (opt("type"))
+		otype = StringToInt(optv("type"));
+	
+	int nOldTarget = GetDefaultSlot();
+	SetDefaultSlot(TARGET_MACRO_SLOT);
+
+	object oLoop = GetFirstObjectInArea(GetArea(oPC));
+	while (GetIsObjectValid(oLoop)) {
+		if (GetObjectType(oLoop) == otype) {
+			SetTarget(oLoop);
+			if (!CommandEval(oPC, iMode, sRest, 1, 1, 0)) {
+				if (gvGetInt("chat_debug"))
+					SendMessageToAllDMs("chat:mod:area> Eval() returned FALSE");
+				return FAIL;
+			}
+		}
+
+		oLoop = GetNextObjectInArea(GetArea(oPC));
+	}
+	SetDefaultSlot(nOldTarget);
+
+	return OK;
+return FAIL;
 }
 
 int CommandModServer(object oPC, int iMode) {
+	ToPC("mod:server> Not in yet.");
 	return FAIL;
 }
 
 int CommandModOnline(object oPC, int iMode) { 
 	string sRest = arg(0);
-	object oLoop = GetFirstPC();
 	
 	int bDoDM = opt("dms");
 
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
 
+	object oLoop = GetFirstPC();
 	while (GetIsObjectValid(oLoop)) {
 
 		SetTarget(oLoop);
@@ -1114,8 +1165,14 @@ int CommandModOnline(object oPC, int iMode) {
 			SendMessageToAllDMs("chat:mod:online> " + sRest + ": " + GetName(oLoop));
 		}
 
-		if (!CommandEval(oPC, iMode, sRest, 1, 1, 0))
-			break;
+		if (!CommandEval(oPC, iMode, sRest, 1, 1, 0)) {
+			if (gvGetInt("chat_debug"))
+				SendMessageToAllDMs("chat:mod:online> Eval() returned FALSE");
+			return FAIL;
+		}
+		
+		if (gvGetInt("chat_debug"))
+			SendMessageToAllDMs("chat:mod:online> continuing.");
 
 		oLoop = GetNextPC();
 	}
