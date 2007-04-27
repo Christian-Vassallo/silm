@@ -46,7 +46,7 @@ void UpdateMessageCount(object oPC, int nMessages) {
 		return;
 
 	SQLQuery("update `characters` set messages = messages + " + IntToString(nMessages) + 
-		" where cid = " + IntToString(nCID) + " limit 1;");
+		" where `id` = " + IntToString(nCID) + " limit 1;");
 }
 
 object GetPCByAID(int nAID) {
