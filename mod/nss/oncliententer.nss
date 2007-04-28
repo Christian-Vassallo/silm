@@ -27,9 +27,9 @@ void main() {
 	SendMessageToPC(oPC, "Commited on: " + COMMIT_ON);
 	SendMessageToPC(oPC, "Built on: " + BUILD_ON);
 
-	//struct mnxRet r = mnxRun(oPC, "uptime");
-	//if (!r.error)
-	//    SendMessageToPC(oPC, "Uptime: " + r.ret);
+	struct mnxRet r = mnxRun(oPC, "uptime");
+	if (!r.error)
+		SendMessageToPC(oPC, "Uptime: " + r.ret);
 	// SendMessageToPC(oPC, "");
 
 
