@@ -299,13 +299,19 @@ int CommandNudge(object oPC, int iMode) {
 	loc = Location(area, pos, facing);
 
 	if (GetIsPlaceable(oTarget)) {
-		object oNew = CopyObject(oTarget, loc);
-		if (GetIsObjectValid(oNew))
+		object oNew = CreateObject(OBJECT_TYPE_PLACEABLE, GetResRef(oTarget), loc, FALSE, GetTag(oTarget)); // CopyObject(oTarget, loc);
+		if (GetIsObjectValid(oNew)) {
+			ToPC("done, create/kill placeable.");
 			DestroyObject(oTarget, 0.2f);
+		}
+		else {
+			ToPC("Cannot copy object to new location.");
+			return FAIL;
+		}
 	} else {
 		AssignCommand(oTarget, ActionJumpToLocation(loc));
+		ToPC("done, action queued.");
 	}
-	ToPC("done.");
 
 	return OK;
 }
