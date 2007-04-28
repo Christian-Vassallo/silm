@@ -924,7 +924,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( "rwalk" == sCommand )
 		ret = CommandRandomWalk(oPC, iMode);
 	
-	SetLocalString(GetModule(), "chat_current_command_name", sCommand);
+	SetLocalString(GetModule(), "chat_current_command_name", "");
 
 	// SendMessageToAllDMs("chat> NOTFOUND(call): " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
 	//	IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
