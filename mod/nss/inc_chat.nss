@@ -105,7 +105,7 @@ void ChatInit() {
 	object oMod = GetModule();
 	// memory for chat text
 	string sMemory;
-	for ( i = 0; i < 16; i++ )  // reserve 16*128 bytes
+	for ( i = 0; i < 8; i++ )  // reserve 8*128 bytes
 		sMemory +=
 			"................................................................................................................................";
 	SetLocalString(oMod, "NWNX!INIT", "1");
