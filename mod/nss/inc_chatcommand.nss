@@ -562,7 +562,7 @@ int CommandAFK(object oPC, int iMode) {
 
 			e = GetNextEffect(oPC);
 		}
-
+		SendMessageToAllDMs(GetName(oPC) + " ist nicht mehr afk.");
 		FloatingTextStringOnCreature("*Nicht mehr AFK*", oPC, TRUE);
 
 	} else {
@@ -570,6 +570,7 @@ int CommandAFK(object oPC, int iMode) {
 						VFX_DUR_AFK)), oPC));
 		SetLocalInt(oPC, "afk", 1 /* unix_ts? avoiding sql call for now*/);
 		FloatingTextStringOnCreature("*AFK*", oPC, TRUE);
+		SendMessageToAllDMs(GetName(oPC) + " ist afk.");
 	}
 
 	return OK;
