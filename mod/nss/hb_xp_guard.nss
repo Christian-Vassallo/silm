@@ -32,10 +32,10 @@ void CheckXP(object oPC, string sGMsOnline) {
 		nLastCheckedXP = nCurrentXP;
 
 	
-	int nUnaccountedDifference = (nCurrentXP - nLastCheckedXP- nOtherXPDifference);
+	int nUnaccountedDifference = (nCurrentXP - nLastCheckedXP - nOtherXPDifference);
 
 	// Nothing to be done for now
-	if (0 == nUnaccountedDifference)
+	if (0 == nUnaccountedDifference || -3 == nUnaccountedDifference)
 		return;
 
 	AddGMXP(oPC, sGMsOnline, nUnaccountedDifference);
