@@ -27,6 +27,7 @@
 #include "inc_mnx_temp"
 #include "inc_xp_handling"
 
+#include "inc_nwnx_func"
 #include "inc_track"
 
 
@@ -73,6 +74,7 @@ int CommandPortrait(object oPC, int iMode);
 int CommandPlaceable(object oPC, int iMode);
 int CommandCreature(object oPC, int iMode);
 int CommandArea(object oPC, int iMode);
+int CommandItem(object oPC, int iMode);
 
 int CommandGetRecipe(object oPC, int iMode);
 
@@ -193,6 +195,8 @@ int CommandGo(object oPC, int iMode);
 int CommandGoReturn(object oPC, int iMode);
 int CommandNudge(object oPC, int iMode);
 
+int CommandEventHandler(object oPC, int iMode);
+
 /* implementation */
 
 // This is a stub you can copypaste to implement your own command.
@@ -204,6 +208,63 @@ int CommandNudge(object oPC, int iMode);
 // Note that the executing object is oPC itself; it is merely passed
 // in as a convenience.
 int CommandStub(object oPC, int iMode) {
+	return OK;
+}
+
+
+int CommandEventHandler(object oPC, int iMode) {
+		
+	object oT = GetTarget();
+
+	if (argc() == 2) {
+		string sEvent = arg(0);
+		string sVal = arg(1);
+		if ("heartbeat" == sEvent)
+			SetEventHandler(oT, CREATURE_EVENT_HEARTBEAT, sVal);
+		else if ("perception" == sEvent)
+			SetEventHandler(oT, CREATURE_EVENT_PERCEPTION, sVal);
+		else if ("spellcast" == sEvent)
+			SetEventHandler(oT, CREATURE_EVENT_SPELLCAST, sVal);
+		else if ("attacked" == sEvent)
+			SetEventHandler(oT, CREATURE_EVENT_ATTACKED, sVal);
+		else if ("damaged" == sEvent)
+			SetEventHandler(oT, CREATURE_EVENT_DAMAGED, sVal);
+		else if ("endcombat" == sEvent)
+			SetEventHandler(oT, CREATURE_EVENT_ENDCOMBAT, sVal);
+		else if ("conversation" == sEvent)
+			SetEventHandler(oT, CREATURE_EVENT_CONVERSATION, sVal);
+		else if ("spawn" == sEvent)
+			SetEventHandler(oT, CREATURE_EVENT_SPAWN, sVal);
+		else if ("rested" == sEvent)
+			SetEventHandler(oT, CREATURE_EVENT_RESTED, sVal);
+		else if ("death" == sEvent)
+			SetEventHandler(oT, CREATURE_EVENT_DEATH, sVal);
+		else if ("userdef" == sEvent)
+			SetEventHandler(oT, CREATURE_EVENT_USERDEF, sVal);
+		else if ("blocked" == sEvent)
+			SetEventHandler(oT, CREATURE_EVENT_BLOCKED, sVal);
+		else {
+			ToPC("Unknown event: " + sEvent);
+			return FAIL;
+		}
+	} else if (argc() != 0) {
+		ToPC("Syntax error: 0 or 2 arguments.");
+		return SYNTAX;
+	}
+
+	ToPC("heartbeat: " + GetEventHandler(oT, CREATURE_EVENT_HEARTBEAT));
+	ToPC("perception: " + GetEventHandler(oT, CREATURE_EVENT_PERCEPTION));
+	ToPC("spellcast: " + GetEventHandler(oT, CREATURE_EVENT_SPELLCAST));
+	ToPC("attacked: " + GetEventHandler(oT, CREATURE_EVENT_ATTACKED));
+	ToPC("damaged: " + GetEventHandler(oT, CREATURE_EVENT_DAMAGED));
+	ToPC("endcombat: " + GetEventHandler(oT, CREATURE_EVENT_ENDCOMBAT));
+	ToPC("conversation: " + GetEventHandler(oT, CREATURE_EVENT_CONVERSATION));
+	ToPC("spawn: " + GetEventHandler(oT, CREATURE_EVENT_SPAWN));
+	ToPC("rested: " + GetEventHandler(oT, CREATURE_EVENT_RESTED));
+	ToPC("death: " + GetEventHandler(oT, CREATURE_EVENT_DEATH));
+	ToPC("userdef: " + GetEventHandler(oT, CREATURE_EVENT_USERDEF));
+	ToPC("blocked: " + GetEventHandler(oT, CREATURE_EVENT_BLOCKED));
+
 	return OK;
 }
 
@@ -222,7 +283,7 @@ int CommandNudge(object oPC, int iMode) {
 		z = StringToFloat(optv("z"));
 
 	if (0f == x && 0f == y && 0f == z) {
-		ToPC("nudge> nothing to be done.");
+		ToPC("nothing to be done.");
 		return OK;
 	}
 	
@@ -237,8 +298,14 @@ int CommandNudge(object oPC, int iMode) {
 	
 	loc = Location(area, pos, facing);
 
-	AssignCommand(oTarget, ActionJumpToLocation(loc));
-	ToPC("nudge> done.");
+	if (GetIsPlaceable(oTarget)) {
+		object oNew = CopyObject(oTarget, loc);
+		if (GetIsObjectValid(oNew))
+			DestroyObject(oTarget, 0.2f);
+	} else {
+		AssignCommand(oTarget, ActionJumpToLocation(loc));
+	}
+	ToPC("done.");
 
 	return OK;
 }
@@ -507,6 +574,37 @@ int CommandObject(object oPC, int iMode) {
 	return OK;
 }
 
+int CommandItem(object oPC, int iMode) {
+	
+	object oTarget = GetTarget();
+	if (!GetIsItem(oTarget))
+		return NotifyBadTarget();
+
+	int weight = -1;
+	int drop = -1;
+	int value = -1;
+
+	if (opt("weight"))
+		weight = StringToInt(optv("weight"));
+	if (opt("droppable"))
+		drop = StringToBool(optv("droppable"));
+	if (opt("value"))
+		value = StringToInt(optv("value"));
+
+
+	if (-1 != weight)
+		SetItemWeight(oTarget, weight);
+	if (-1 != drop)
+		SetUndroppableFlag(oTarget, !drop);
+	if (-1 != value)
+		SetGoldPieceValue(oTarget, value);
+
+	ToPC("Droppable: " + IntToString(GetUndroppableFlag(oTarget)));
+	ToPC("Weight: " + IntToString(GetItemWeight(oTarget)));
+	ToPC("Value: " + IntToString(GetGoldPieceValue(oTarget)));
+	return OK;
+}
+
 int CommandCreature(object oPC, int iMode) {
 	object oTarget = GetTarget();
 	if ( !GetIsCreature(oTarget) && !GetIsPC(oTarget) )
@@ -515,7 +613,9 @@ int CommandCreature(object oPC, int iMode) {
 	int
 	bImmortal = -1,
 	bCommandable = -1,
-	bPlot = -1;
+	bPlot = -1,
+	race = -1,
+	faction = -1;
 
 	if ( opt("plot") )
 		bPlot = StringToBool(optv("plot"));
@@ -525,20 +625,35 @@ int CommandCreature(object oPC, int iMode) {
 	if ( opt("c") )
 		bCommandable = StringToBool(optv("c"));
 
+	if ( opt("race") )
+		race = StringToInt(optv("race"));
+	
+	if ( opt("faction") )
+		race = StringToInt(optv("faction"));
+
 	if ( -1 != bImmortal )
 		SetImmortal(oTarget, bImmortal);
 	if ( -1 != bCommandable )
 		SetCommandable(bCommandable, oTarget);
+	
+	if ( -1 != race )
+		SetRacialType(oTarget, race);
+	if ( -1 != faction )
+		SetFactionID(oTarget, faction);
 
 	ToPC("Commandable: " + IntToString(GetCommandable(oTarget)));
 	ToPC("Plot: " + IntToString(GetPlotFlag(oTarget)));
 	ToPC("Immortal: " + IntToString(GetImmortal(oTarget)));
+	ToPC("RacialType: " + IntToString(GetRacialType(oTarget)));
+	ToPC("Faction: " + IntToString(GetFactionID(oTarget)));
+	ToPC("Conversation: " + GetConversation(oTarget));
 
 	if ( opt("inv") )
 		OpenInventory(oTarget, oPC);
 
 	return OK;
 }
+
 
 int CommandPlaceable(object oPC, int iMode) {
 	object oTarget = GetTarget();

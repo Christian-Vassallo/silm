@@ -33,24 +33,20 @@ int GetSelectedNodeID();
 int GetSelectedAbsoluteNodeID();
 string GetSelectedNodeText(int nLangID = LANGUAGE_ENGLISH, int nGender = GENDER_MALE);
 
-int GetEventType()
-{
+int GetEventType() {
     SetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_ID", "      ");
     return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_ID"));
 }
 
-object GetActionTarget()
-{
+object GetActionTarget() {
     return GetLocalObject(GetModule(), "NWNX!EVENTS!TARGET");
 }
 
-object GetEventItem()
-{
+object GetEventItem() {
     return GetLocalObject(GetModule(), "NWNX!EVENTS!ITEM");
 }
 
-vector GetEventPosition()
-{
+vector GetEventPosition() {
     SetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_POSITION", "                                              ");
     string sVector = GetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_POSITION");
     float x, y, z;

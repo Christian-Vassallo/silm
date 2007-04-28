@@ -1,7 +1,7 @@
 #include "inc_audit"
 #include "inc_debug"
 #include "inc_mysql"
-#include "inc_functions"
+#include "inc_nwnx_func"
 #include "inc_currency"
 #include "inc_2dacache"
 
@@ -137,10 +137,6 @@ float random(float fStart, float fEnd);
 
 //void ToDMs(string sMsg);
 
-
-object GetFirstArea();
-
-object GetNextArea();
 
 
 void Floaty(string sMsg, object oPC = OBJECT_SELF, int nBroadCast = 0);
@@ -336,6 +332,10 @@ int GetUnixTimestamp() {
 
 
 void ToPC(string sMsg, object oPC = OBJECT_SELF) {
+	string sCurrentCommand = GetLocalString(GetModule(), "chat_current_command_name");
+	if (sCurrentCommand != "")
+		sMsg = sCurrentCommand + "> " + sMsg;
+
 	SendMessageToPC(oPC, sMsg);
 }
 
@@ -737,23 +737,6 @@ string FamiliarToString(object oPC) {
 	return "None";
 }
 
-
-
-
-object GetFirstArea() {
-	int i = 0;
-	SetLocalInt(GetModule(), "area_iterator", 0);
-	object wP = GetObjectByTag("area_marker", i);
-	return GetArea(wP);
-}
-
-object GetNextArea() {
-	int i = GetLocalInt(OBJECT_SELF, "area_iterator");
-	i += 1;
-	SetLocalInt(GetModule(), "area_iterator", i);
-	object wP = GetObjectByTag("area_marker", i);
-	return GetArea(wP);
-}
 
 
 

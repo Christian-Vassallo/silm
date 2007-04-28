@@ -325,7 +325,7 @@ void RegisterAllCommands() {
 	RHs("Gets/Sets the charges of the current item", 1);
 
 
-	RegisterCommand("cr", "i= c= a= phenotype= subrace= wings= tail= bp= portrait= inv=", 0, 0);
+	RegisterCommand("cr", "i= c= a= phenotype= subrace= wings= tail= bp= portrait= race= faction= inv", 0, 0);
 	RH("ToDo.");
 
 	RegisterCommand("app", "", 0, 1);
@@ -344,6 +344,9 @@ void RegisterAllCommands() {
 	RegisterCommand("portrait", "", 0, 1);
 	RHs("[new_portrait_resref] >> Gets/Sets the portrait", 1);
 
+	RegisterCommand("it", "droppable= weight= value=", 0, 0);
+	RH("Shows/sets various item related things.");
+	RHs("[--droppable=bool] [--weight=int] [--value=int]");
 
 	RegisterCommand("pl", "useable= persist= plot=", 0, 1);
 	RH("Shows/sets various placeable related things.");
@@ -420,6 +423,11 @@ void RegisterAllCommands() {
 	RHs("id >> Returns recipe with id", 0);
 	RAF(AMASK_GLOBAL_GM);
 
+	RegisterCommand("event", "", 0, 2);
+	RH("Shows/sets event handlers.");
+	RHs(">> Shows events.");
+	RHs("eventname script >> Sets script for eventname.");
+	RAF(AMASK_GLOBAL_GM);
 
 	RegisterCommand("rmnx", "", 1);
 	RAF(AMASK_CAN_DO_BACKEND);
@@ -615,301 +623,313 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 	setsleep(fWait);
 
+	int ret = 0;
+
+	SetLocalString(GetModule(), "chat_current_command_name", sCommand);
+
 	if ( "m" == sCommand && bRunMacro )
-		return CommandMacro(oPC, iMode);
+		ret = CommandMacro(oPC, iMode);
 
 	if ( bRunModifiers ) {
 		if ("self" == sCommand)
-			return CommandModSelf(oPC, iMode);
+			ret = CommandModSelf(oPC, iMode);
 
 		if ("online" == sCommand)
-			return CommandModOnline(oPC, iMode);
+			ret = CommandModOnline(oPC, iMode);
 
 		if ("radius" == sCommand)
-			return CommandModRadius(oPC, iMode);
+			ret = CommandModRadius(oPC, iMode);
 
 		if ("area" == sCommand)
-			return CommandModArea(oPC, iMode);
+			ret = CommandModArea(oPC, iMode);
 
 		if ("server" == sCommand)
-			return CommandModServer(oPC, iMode);
+			ret = CommandModServer(oPC, iMode);
 	}
 
+	if ( "event" == sCommand )
+		ret = CommandEventHandler(oPC, iMode);
+
+	if ( "it" == sCommand )
+		ret = CommandItem(oPC, iMode);
+
 	if ( "n" == sCommand )
-		return CommandNudge(oPC, iMode);
+		ret = CommandNudge(oPC, iMode);
 
 	if ( "go" == sCommand )
-		return CommandGo(oPC, iMode);
+		ret = CommandGo(oPC, iMode);
 	
 	if ( "re" == sCommand )
-		return CommandGoReturn(oPC, iMode);
+		ret = CommandGoReturn(oPC, iMode);
 	
 	if ( "sql" == sCommand )
-		return CommandSQL(oPC, iMode);
+		ret = CommandSQL(oPC, iMode);
 	
 	if ( "inspect" == sCommand )
-		return CommandInspect(oPC, iMode);
+		ret = CommandInspect(oPC, iMode);
 
 	if ( "rehash" == sCommand )
-		return CommandRehash(oPC, iMode);
+		ret = CommandRehash(oPC, iMode);
 
 	if ( "fix" == sCommand )
-		return CommandFix(oPC, iMode);
+		ret = CommandFix(oPC, iMode);
 
 	if ( "rt" == sCommand )
-		return CommandReadTracks(oPC, iMode);
+		ret = CommandReadTracks(oPC, iMode);
 
 	if ( "afk" == sCommand )
-		return CommandAFK(oPC, iMode);
+		ret = CommandAFK(oPC, iMode);
 
 	if ( "cr" == sCommand )
-		return CommandCreature(oPC, iMode);
+		ret = CommandCreature(oPC, iMode);
 
 	if ( "obj" == sCommand )
-		return CommandObject(oPC, iMode);
+		ret = CommandObject(oPC, iMode);
 
 	if ( "pl" == sCommand )
-		return CommandPlaceable(oPC, iMode);
+		ret = CommandPlaceable(oPC, iMode);
 
 	if ( "weather" == sCommand )
-		return CommandShowWeather(oPC, iMode);
+		ret = CommandShowWeather(oPC, iMode);
 
-	if ( "_tag" == sCommand )
-		return CommandTag(oPC, iMode);
+	if ( "tag" == sCommand )
+		ret = CommandTag(oPC, iMode);
 
-	if ( "_description" == sCommand )
-		return CommandDescription(oPC, iMode);
+	if ( "description" == sCommand )
+		ret = CommandDescription(oPC, iMode);
 
 	if ( "castspell" == sCommand )
-		return CommandCastSpell(oPC, iMode);
+		ret = CommandCastSpell(oPC, iMode);
 
 	if ( "getdyepot" == sCommand )
-		return CommandGetDyePot(oPC, iMode);
+		ret = CommandGetDyePot(oPC, iMode);
 
 	if ( "bloodyhell" == sCommand )
-		return CommandOhHellBang(oPC, iMode);
+		ret = CommandOhHellBang(oPC, iMode);
 
 	if ( "rotate" == sCommand )
-		return CommandRotate(oPC, iMode);
+		ret = CommandRotate(oPC, iMode);
 
 	if ( "hp" == sCommand )
-		return CommandHP(oPC, iMode);
+		ret = CommandHP(oPC, iMode);
 
 	if ( "stat" == sCommand )
-		return CommandStat(oPC, iMode);
+		ret = CommandStat(oPC, iMode);
 
 	if ( "createkey" == sCommand )
-		return CommandCreateKey(oPC, iMode);
+		ret = CommandCreateKey(oPC, iMode);
 
 	if ( "say" == sCommand )
-		return CommandSay(oPC, iMode);
+		ret = CommandSay(oPC, iMode);
 
 	if ( "write" == sCommand )
-		return CommandWrite(oPC, iMode);
+		ret = CommandWrite(oPC, iMode);
 
 
 	if ( "time" == sCommand )
-		return CommandTime(oPC, iMode);
+		ret = CommandTime(oPC, iMode);
 
 	if ( "lock" == sCommand )
-		return CommandLock(oPC, iMode);
+		ret = CommandLock(oPC, iMode);
 
 	if ( "planewalk" == sCommand )
-		return CommandPlaneWalk(oPC, iMode);
+		ret = CommandPlaneWalk(oPC, iMode);
 
 
 	if ( "getrecipe" == sCommand )
-		return CommandGetRecipe(oPC, iMode);
+		ret = CommandGetRecipe(oPC, iMode);
 
 	if ( "rmnx" == sCommand )
-		return CommandRMNX(oPC, iMode);
+		ret = CommandRMNX(oPC, iMode);
 
 	if ( "remind" == sCommand )
-		return CommandRemind(oPC, iMode);
+		ret = CommandRemind(oPC, iMode);
 
 	if ( "lastlog" == sCommand )
-		return CommandLastLog(oPC, iMode);
+		ret = CommandLastLog(oPC, iMode);
 
 	if ( "uptime" == sCommand )
-		return CommandUptime(oPC, iMode);
+		ret = CommandUptime(oPC, iMode);
 
 	if ( "charges" == sCommand )
-		return CommandCharges(oPC, iMode);
+		ret = CommandCharges(oPC, iMode);
 
 	if ( "ooc" == sCommand )
-		return CommandOOC(oPC, iMode);
+		ret = CommandOOC(oPC, iMode);
 
 	if ( "effect" == sCommand )
-		return CommandEffect(oPC, iMode);
+		ret = CommandEffect(oPC, iMode);
 
 	if ( "_xp" == sCommand )
-		return CommandXP(oPC, iMode);
+		ret = CommandXP(oPC, iMode);
 
 	if ( "info" == sCommand )
-		return CommandInfo(oPC, iMode);
+		ret = CommandInfo(oPC, iMode);
 
 	if ( "password" == sCommand )
-		return CommandPassword(oPC, iMode);
+		ret = CommandPassword(oPC, iMode);
 
 	if ( "status" == sCommand )
-		return CommandStatus(oPC, iMode);
+		ret = CommandStatus(oPC, iMode);
 
 	if ( "ta" == sCommand )
-		return CommandTarget(oPC, iMode);
+		ret = CommandTarget(oPC, iMode);
 
 	if ( "portrait" == sCommand )
-		return CommandPortrait(oPC, iMode);
+		ret = CommandPortrait(oPC, iMode);
 
 	if ( "bp" == sCommand )
-		return CommandBodyPart(oPC, iMode);
+		ret = CommandBodyPart(oPC, iMode);
 
 	if ( "wings" == sCommand )
-		return CommandWing(oPC, iMode);
+		ret = CommandWing(oPC, iMode);
 
 	if ( "tail" == sCommand )
-		return CommandTail(oPC, iMode);
+		ret = CommandTail(oPC, iMode);
 
 	if ( "subrace" == sCommand )
-		return CommandSubRace(oPC, iMode);
+		ret = CommandSubRace(oPC, iMode);
 
 	if ( "area" == sCommand )
-		return CommandArea(oPC, iMode);
+		ret = CommandArea(oPC, iMode);
 
 
 	if ( "shun" == sCommand )
-		return CommandShunUnshun(oPC, iMode, 1);
+		ret = CommandShunUnshun(oPC, iMode, 1);
 
 	if ( "unshun" == sCommand )
-		return CommandShunUnshun(oPC, iMode, 0);
+		ret = CommandShunUnshun(oPC, iMode, 0);
 
 	if ( "ignore" == sCommand )
-		return CommandIgnoreList(oPC, iMode, 1);
+		ret = CommandIgnoreList(oPC, iMode, 1);
 
 	if ( "unignore" == sCommand )
-		return CommandIgnoreList(oPC, iMode, 0);
+		ret = CommandIgnoreList(oPC, iMode, 0);
 
 	if ( "so" == sCommand )
-		return CommandShowObj(oPC, iMode);
+		ret = CommandShowObj(oPC, iMode);
 
 	if ( "ko" == sCommand )
-		return CommandKillObj(oPC, iMode);
+		ret = CommandKillObj(oPC, iMode);
 
 	if ( "setname" == sCommand )
-		return CommandSetName(oPC, iMode);
+		ret = CommandSetName(oPC, iMode);
 
 	if ( "app" == sCommand )
-		return CommandSetAppearance(oPC, iMode);
+		ret = CommandSetAppearance(oPC, iMode);
 
 	if ( "pht" == sCommand )
-		return CommandSetPhenotype(oPC, iMode);
+		ret = CommandSetPhenotype(oPC, iMode);
 
 	if ( "f2s" == sCommand )
-		return CommandFleshToStone(oPC, iMode);
+		ret = CommandFleshToStone(oPC, iMode);
 
 	if ( "s2f" == sCommand )
-		return CommandStoneToFlesh(oPC, iMode);
+		ret = CommandStoneToFlesh(oPC, iMode);
 
 	if ( "fixfactions" == sCommand )
-		return CommandFixFactions(oPC, iMode);
+		ret = CommandFixFactions(oPC, iMode);
 
 	if ( "limbo" == sCommand )
-		return CommandLimbo(oPC, iMode);
+		ret = CommandLimbo(oPC, iMode);
 
 	if ( "gettargetchooser" == sCommand )
-		return CommandGetTargetChooser(oPC, iMode);
+		ret = CommandGetTargetChooser(oPC, iMode);
 
 	if ( "restore" == sCommand )
-		return CommandRestore(oPC, iMode);
+		ret = CommandRestore(oPC, iMode);
 
 	if ( "set" == sCommand )
-		return CommandSetVar(oPC, iMode);
+		ret = CommandSetVar(oPC, iMode);
 
 	if ( "get" == sCommand )
-		return CommandGetVar(oPC, iMode);
+		ret = CommandGetVar(oPC, iMode);
 
 
 	if ( "showconst" == sCommand )
-		return CommandShowConst(oPC, iMode);
+		ret = CommandShowConst(oPC, iMode);
 
 	if ( "kill" == sCommand )
-		return CommandKill(oPC, iMode);
+		ret = CommandKill(oPC, iMode);
 
 	if ( "create" == sCommand )
-		return CommandCreate(oPC, iMode);
+		ret = CommandCreate(oPC, iMode);
 
 	if ( "v" == sCommand )
-		return CommandVoiceChat(oPC, getoptargs(), iMode);
+		ret = CommandVoiceChat(oPC, getoptargs(), iMode);
 
 	if ( "a" == sCommand )
-		return CommandAnimation(oPC, getoptargs(), iMode);
+		ret = CommandAnimation(oPC, getoptargs(), iMode);
 
 	/* aliases for anim */
 	if ( "sit" == sCommand )
-		return CommandAnimation(oPC, "sit", iMode);
+		ret = CommandAnimation(oPC, "sit", iMode);
 
 	if ( "meditate" == sCommand )
-		return CommandAnimation(oPC, "meditate", iMode);
+		ret = CommandAnimation(oPC, "meditate", iMode);
 
 	if ( "sitcross" == sCommand )
-		return CommandAnimation(oPC, "sitcross", iMode);
+		ret = CommandAnimation(oPC, "sitcross", iMode);
 
 	if ( "dance" == sCommand )
-		return CommandAnimation(oPC, "dance", iMode);
+		ret = CommandAnimation(oPC, "dance", iMode);
 
 	if ( "kneel" == sCommand )
-		return CommandAnimation(oPC, "kneel", iMode);
+		ret = CommandAnimation(oPC, "kneel", iMode);
 
 	if ( "lieleft" == sCommand )
-		return CommandAnimation(oPC, "lieleft", iMode);
+		ret = CommandAnimation(oPC, "lieleft", iMode);
 
 	if ( "lieright" == sCommand )
-		return CommandAnimation(oPC, "lieright", iMode);
+		ret = CommandAnimation(oPC, "lieright", iMode);
 
 	/* end of alias list */
 
 	if ( "kick" == sCommand )
-		return CommandKick(oPC, iMode);
+		ret = CommandKick(oPC, iMode);
 
 	if ( "vfx" == sCommand )
-		return CommandVFX(oPC, iMode);
+		ret = CommandVFX(oPC, iMode);
 
 	if ( "fx" == sCommand )
-		return CommandFX(oPC, iMode);
+		ret = CommandFX(oPC, iMode);
 
 	if ( "die" == sCommand || "dice" == sCommand )
-		return CommandDice(oPC, iMode);
+		ret = CommandDice(oPC, iMode);
 
 
 	if ( "fetch" == sCommand )
-		return CommandFetch(oPC, iMode);
+		ret = CommandFetch(oPC, iMode);
 
 	if ( "jump" == sCommand )
-		return CommandJump(oPC, iMode);
+		ret = CommandJump(oPC, iMode);
 
 	if ( "cp" == sCommand )
-		return CommandCopyObject(oPC, iMode);
+		ret = CommandCopyObject(oPC, iMode);
 
 	if ( "cpm" == sCommand )
-		return CommandCopyMod(oPC, iMode);
+		ret = CommandCopyMod(oPC, iMode);
 
 	if ( "follow" == sCommand )
-		return CommandFollow(oPC, iMode);
+		ret = CommandFollow(oPC, iMode);
 
 	if ( "caq" == sCommand )
-		return CommandCAQ(oPC, iMode);
+		ret = CommandCAQ(oPC, iMode);
 
 
 	if ( "wwp" == sCommand )
-		return CommandWWP(oPC, iMode);
+		ret = CommandWWP(oPC, iMode);
 
 
 	if ( "rwalk" == sCommand )
-		return CommandRandomWalk(oPC, iMode);
+		ret = CommandRandomWalk(oPC, iMode);
+	
+	SetLocalString(GetModule(), "chat_current_command_name", sCommand);
 
-	SendMessageToAllDMs("chat> NOTFOUND(call): " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
-		IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+	// SendMessageToAllDMs("chat> NOTFOUND(call): " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
+	//	IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
 
-	return OK;
+	return ret;
 }
 
 
