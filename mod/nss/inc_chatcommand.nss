@@ -750,8 +750,6 @@ int CommandShowWeather(object oPC, int iMode) {
 
 int CommandDescription(object oPC, int iMode) {
 	object oTarget = GetTarget();
-	if ( GetIsPC(oTarget) || ( !GetIsPlaceable(oTarget) && !GetIsItem(oTarget) ) )
-		return NotifyBadTarget();
 
 	string sT = arg(0);
 	if ( sT != "" ) {
@@ -765,8 +763,6 @@ int CommandDescription(object oPC, int iMode) {
 
 int CommandTag(object oPC, int iMode) {
 	object oTarget = GetTarget();
-	if ( GetIsPC(oTarget) )
-		return NotifyBadTarget();
 
 	string sT = arg(0);
 	if ( sT != "" ) {

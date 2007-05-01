@@ -316,8 +316,8 @@ void RegisterAllCommands() {
 
 	RegisterCommand("obj", "plot= destroyable=");
 
-	RegisterCommand("_tag", "", 0, 1);
-	RegisterCommand("_description", "", 0, 1);
+	RegisterCommand("tag", "", 0, 1);
+	RegisterCommand("description", "", 0, 1);
 
 	RegisterCommand("it", "charges=");
 
