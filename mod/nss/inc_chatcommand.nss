@@ -213,8 +213,6 @@ int CommandStub(object oPC, int iMode) {
 
 
 int CommandEventHandler(object oPC, int iMode) {
-	return OK;
-
 	object oT = GetTarget();
 
 	if (argc() == 2) {
@@ -584,7 +582,7 @@ int CommandObject(object oPC, int iMode) {
 
 int CommandItem(object oPC, int iMode) {
 	
-	/*object oTarget = GetTarget();
+	object oTarget = GetTarget();
 	if (!GetIsItem(oTarget))
 		return NotifyBadTarget();
 
@@ -609,7 +607,7 @@ int CommandItem(object oPC, int iMode) {
 
 	ToPC("Droppable: " + IntToString(GetUndroppableFlag(oTarget)));
 	ToPC("Weight: " + IntToString(GetItemWeight(oTarget)));
-	ToPC("Value: " + IntToString(GetGoldPieceValue(oTarget)));*/
+	ToPC("Value: " + IntToString(GetGoldPieceValue(oTarget)));
 	return OK;
 }
 
@@ -633,11 +631,11 @@ int CommandCreature(object oPC, int iMode) {
 	if ( opt("c") )
 		bCommandable = StringToBool(optv("c"));
 
-	/*if ( opt("race") )
+	if ( opt("race") )
 		race = StringToInt(optv("race"));
 	if ( opt("faction") )
 		race = StringToInt(optv("faction"));
-	*/
+	
 
 	if ( -1 != bImmortal )
 		SetImmortal(oTarget, bImmortal);
@@ -652,9 +650,9 @@ int CommandCreature(object oPC, int iMode) {
 	ToPC("Commandable: " + IntToString(GetCommandable(oTarget)));
 	ToPC("Plot: " + IntToString(GetPlotFlag(oTarget)));
 	ToPC("Immortal: " + IntToString(GetImmortal(oTarget)));
-	//ToPC("RacialType: " + IntToString(GetRacialType(oTarget)));
-	//ToPC("Faction: " + IntToString(GetFactionID(oTarget)));
-	//ToPC("Conversation: " + GetConversation(oTarget));
+	ToPC("RacialType: " + IntToString(GetRacialType(oTarget)));
+	ToPC("Faction: " + IntToString(GetFactionID(oTarget)));
+	ToPC("Conversation: " + GetConversation(oTarget));
 
 	if ( opt("inv") )
 		OpenInventory(oTarget, oPC);
