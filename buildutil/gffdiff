@@ -1,11 +1,14 @@
 #!/bin/sh
-OPT=$2
-if [ "$OPT"v = "v" ]; then
-	OPT="--"
-fi
+OPT="--"
 
-for f in `ls -1 $1`; do
-	#diff -wqB $f `basename $f`
-	gffcmp.pl $OPT "$f" "`basename $f`" 2>&1 | grep -v "uninitialized";
+for f in $@; do
+	B=`basename $f`
+
+	if [ ! -e $B ]; then
+		echo "File $B is new."
+		continue
+	fi
+
+	gffcmp.pl "$f" "$B" 2>&1 | grep -v "uninitialized";
 done
 
