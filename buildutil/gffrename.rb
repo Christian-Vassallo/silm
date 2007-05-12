@@ -16,6 +16,8 @@ path = File::dirname(source)
 base = File::basename(source)
 ext = $2
 
+fail "Source and target have the same base. No point." if base == File::basename(target)
+
 field = "/" + case ext
 	when "uti", "utc", "utp"
 		"TemplateResRef"
@@ -23,13 +25,19 @@ field = "/" + case ext
 		fail "Unsupported extension: #{ext}"
 end
 
+
+inrepo = `svn info '#{source}' | grep Revision`.strip  != ""
+
 fail "system(gffmodify.pl) failed" if
 	!system("gffmodify.pl",
 		"-m", "#{field}=#{target.downcase}",
 		"-m", "/Tag=#{target}",
 	source)
 
-fail "system(svn mv) failed" if 
-	!system("svn", "mv", "--force", "--non-interactive", source, target)
 
-# File::move(source, target + "." + ext)
+if inrepo
+	fail "system(svn mv) failed" if 
+		!system("svn", "mv", "--force", "--non-interactive", source, target)
+else
+	system("mv", "-v", "--", source, target + "." + ext)
+end
