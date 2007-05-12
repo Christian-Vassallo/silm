@@ -220,15 +220,15 @@ void RegisterAllCommands() {
 	
 	RegisterCommand("online", "dms");
 
-	RegisterCommand("area", "");
+	RegisterCommand("area", "type=");
 	
-	RegisterCommand("rect", "x= y=");
+	RegisterCommand("rect", "x= y= type=");
 
-	RegisterCommand("radius", "r=");
+	RegisterCommand("radius", "r= type=");
 	
 	RegisterCommand("line", "c=");
 	
-	RegisterCommand("server", "");
+	RegisterCommand("server", "type=");
 	RAF(AMASK_CAN_DO_BACKEND);
 
 
