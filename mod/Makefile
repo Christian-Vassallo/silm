@@ -12,6 +12,14 @@ VALIDEXT=area/\*.git area/\*.are \
 	mod/\*.fac mod/\*.ifo mod/\*.jrl \
 	nss/\*.ncs 
 
+VALIDEXTDEV=area/\*.git area/\*.are \
+	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
+	utc/\*.utc utd/\*.utd ute/\*.ute \
+	`find uti -iname *.uti` \
+	itp/\*.itp ssf/\*.ssf \
+	mod/\*.fac mod/\*.ifo mod/\*.jrl \
+	nss/\*.nss
+
 LISTS=uti utp utc utm
 
 all: package install
@@ -74,10 +82,14 @@ clean:
 	
 local: path
 	../buildutil/erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
+dev-local: path
+	../buildutil/erfpack.pl -m -o $(NAME).mod $(VALIDEXTDEV)
+
 
 install: 
 	cp -v $(NAME).mod $(NWNHOME)/modules/
 
 # generates a new package with the current revision
 package: path uti utp utc ifo itp scripts local
+dev-package: path uti utp utc ifo itp dev-local
 
