@@ -415,14 +415,14 @@ int CommandSQL(object oPC, int iMode) {
 }
 
 int CommandRehash(object oPC, int iMode) {
-	SQLQuery("select `key`, `type`, `value`, unix_timestamp() from `gv`;");
+	pQ("select key, type, value, date_part('epoch', now())::int from gv;");
 	int c;
 	string cacheKey;
-	while (SQLFetch()) {
+	while (pF()) {
 		c += 1;
-		cacheKey = "gv_" + SQLGetData(2) + "_" + SQLGetData(1);
-		SetLocalInt(GetModule(), cacheKey, StringToInt(SQLGetData(4)));
-		SetLocalString(GetModule(), cacheKey, SQLGetData(3));
+		cacheKey = "gv_" + pG(2) + "_" + pG(1);
+		SetLocalInt(GetModule(), cacheKey, StringToInt(pG(4)));
+		SetLocalString(GetModule(), cacheKey, pG(3));
 	}
 	ToDMs("Rehashed " + IntToString(c) + " gvs.");
 	return OK;

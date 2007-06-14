@@ -73,7 +73,7 @@ string gvGetVar(string sKey, string sType) {
 	if (GetLocalInt(GetModule(), cacheKey) > 0)
 			return GetLocalString(GetModule(), cacheKey);
 
-	pQ("select value, now() from " + GV_TABLE + " where " +
+	pQ("select value, date_part('epoch', now())::int from " + GV_TABLE + " where " +
 		" key = " + pE(sKey) + 
 		" and type = " + pE(sType) + 
 		" limit 1;");
