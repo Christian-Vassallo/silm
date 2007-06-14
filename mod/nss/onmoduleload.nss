@@ -2,6 +2,7 @@
 #include "_gen"
 #include "inc_nwnx"
 #include "inc_mysql"
+#include "inc_pgsql"
 #include "inc_persist"
 #include "inc_pc_data"
 #include "inc_chat"
@@ -22,6 +23,7 @@ void main() {
 
 	InitNWNX();
 	SQLInit();
+	pSQLInit();
 	ChatInit();
 	mnxInit();
 
