@@ -1,7 +1,7 @@
 /*
  * Global module settings
  */
-#include "inc_mysql"
+#include "inc_pgsql"
 
 const string
 	GV_TABLE = "gv";
@@ -13,10 +13,15 @@ int gvGetInt(string sKey);
 string gvSetStr(string sKey, string sValue);
 string gvGetStr(string sKey);
 
+float gvSetFloat(string sKey, float fValue);
+float gvGetFloat(string sKey);
 
 string gvSetVar(string sKey, string sType, string sValue);
 string gvGetVar(string sKey, string sType);
+
 int gvExistsVar(string sKey, string sType);
+
+// Imp
 
 
 int gvSetInt(string sKey, int nValue) {
@@ -29,6 +34,18 @@ int gvGetInt(string sKey) {
 		gvGetVar(sKey, "int")
 	);
 }
+float gvSetFloat(string sKey, float fValue) {
+	return StringToFloat(
+		gvSetVar(sKey, "float", FloatToString(fValue))
+	);
+}
+
+float gvGetFloat(string sKey) {
+	return StringToFloat(
+		gvGetVar(sKey, "float")
+	);
+}
+
 
 string gvSetStr(string sKey, string sValue) {
 	return gvSetVar(sKey, "string", sValue);
@@ -40,12 +57,12 @@ string gvGetStr(string sKey) {
 
 string gvSetVar(string sKey, string sType, string sValue) {
 	if (gvExistsVar(sKey, sType))
-		SQLQuery("update " + GV_TABLE + " set `value` = " + SQLEscape(sValue) + 
-			" where `key` = " + SQLEscape(sKey) + " and `type` = " + SQLEscape(sType) + 
+		pQ("update " + GV_TABLE + " set value = " + pE(sValue) + 
+			" where key = " + pE(sKey) + " and type = " + pE(sType) + 
 			" limit 1;");
 	else
-		SQLQuery("insert into " + GV_TABLE + " (`key`, `type`, `value`) values(" +
-			SQLEscape(sKey) + ", " + SQLEscape(sType) + ", " + SQLEscape(sValue) + 
+		pQ("insert into " + GV_TABLE + " (key, type, value) values(" +
+			pE(sKey) + ", " + pE(sType) + ", " + pE(sValue) + 
 			") limit 1;"
 		);
 	return sValue;
@@ -56,22 +73,22 @@ string gvGetVar(string sKey, string sType) {
 	if (GetLocalInt(GetModule(), cacheKey) > 0)
 			return GetLocalString(GetModule(), cacheKey);
 
-	SQLQuery("select `value`, unix_timestamp() from " + GV_TABLE + " where " +
-		" `key` = " + SQLEscape(sKey) + 
-		" and `type` = " + SQLEscape(sType) + 
+	pQ("select value, now() from " + GV_TABLE + " where " +
+		" key = " + pE(sKey) + 
+		" and type = " + pE(sType) + 
 		" limit 1;");
-	if (SQLFetch()) {
-		SetLocalString(GetModule(), cacheKey, SQLGetData(1));
-		SetLocalInt(GetModule(), cacheKey, StringToInt(SQLGetData(2)));
-		return SQLGetData(1);
+	if (pF()) {
+		SetLocalString(GetModule(), cacheKey, pG(1));
+		SetLocalInt(GetModule(), cacheKey, StringToInt(pG(2)));
+		return pG(1);
 	} else
 		return "";
 }
 
 int gvExistsVar(string sKey, string sType) {
-	SQLQuery("select `value` from " + GV_TABLE + " where " +
-		" `key` = " + SQLEscape(sKey) + 
-		" and `type` = " + SQLEscape(sType) + 
+	pQ("select value from " + GV_TABLE + " where " +
+		" key = " + pE(sKey) + 
+		" and type = " + pE(sType) + 
 		" limit 1;");
-	return 1 == SQLFetch();
+	return 1 == pF();
 }
