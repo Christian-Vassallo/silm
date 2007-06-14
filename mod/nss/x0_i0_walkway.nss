@@ -344,6 +344,10 @@ int GetNearestWalkWayPoint(object oCreature=OBJECT_SELF)
         sPrefix = "WP_";
     } else {
         nNumPoints = GetLocalInt(oCreature, "WN_NUM");
+		if (nNumPoints < 1 && gvGetInt("wp_use_night_for_day")) {
+			nNumPoints = GetLocalInt(oCreature, "WP_NUM");
+			sPrefix = "WP_";
+		}
         sPrefix = "WN_";
     }
 
@@ -485,7 +489,7 @@ int GetIsPostOrWalking(object oWalker = OBJECT_SELF)
         if (GetLocalInt(oWalker, "WP_NUM") > 0) {
             return TRUE;
         }
-    } else if (GetLocalInt(oWalker, "WN_NUM") > 0) {
+    } else if (GetLocalInt(oWalker, "WN_NUM") > 0 || (gvGetInt("wp_use_night_for_day") && GetLocalInt(oWalker, "WP_NUM") > 0)) {
         return TRUE;
     }
 
