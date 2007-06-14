@@ -51,6 +51,7 @@ void pSQLInit() {
 		sMemory +=
 			"................................................................................................................................";
 	SetLocalString(GetModule(), "NWNX!PGSQL!SPACER", sMemory);
+	pQ("set search_path = nwserver;");
 }
 
 string pSQLGetLastQuery() {
