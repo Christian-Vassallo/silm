@@ -1,7 +1,6 @@
 // A generic script to allow for money collection.
 
-#include "inc_mysql"
-#include "_gen"
+#include "inc_pgsql"
 
 
 
@@ -23,8 +22,8 @@ void OnCollectboxDisturb(object oGivenByPC, object oItem) {
 	int nAmount = GetItemStackSize(oItem) * nMulti;
 
 	if ( nAmount > 0 )
-		SQLQuery("update collectboxes set `value`=`value`+" +
-			IntToString(nAmount) + " where `name`=" + SQLEscape(sName) + " limit 1;");
+		pG("update collectboxes set value=value+" +
+			IntToString(nAmount) + " where name=" + pE(sName) + ";");
 
 	DestroyObject(oItem);
 	FloatingTextStringOnCreature(
