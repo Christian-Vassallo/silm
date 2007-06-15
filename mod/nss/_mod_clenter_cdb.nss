@@ -1,5 +1,5 @@
 #include "_gen"
-#include "inc_mysql"
+#include "inc_pgsql"
 #include "inc_cdb"
 #include "inc_audit"
 #include "inc_char_rules"
@@ -28,10 +28,10 @@ void main() {
 	int nAID = GetAccountID(oPC);
 	string sAID = IntToString(nAID);
 
-	SQLQuery("select `status`,`amask` from `accounts` where `id`='" + sAID + "' limit 1;");
-	SQLFetch();
-	string sAccountStatus = SQLGetData(1);
-	int namask = StringToInt(SQLGetData(2));
+	pQ("select status,amask from accounts where id='" + sAID + "' limit 1;");
+	pF();
+	string sAccountStatus = pG(1);
+	int namask = StringToInt(pG(2));
 
 	/* now set the runtime data stuff */
 
@@ -40,7 +40,7 @@ void main() {
 		SetCommandable(0, oPC);
 		return;
 	} else if ( sAccountStatus == "ban" ) {
-		SendMessageToPC(oPC, "Dieser Account darf derzeit nicht gespielt werden; er ist gebannt."); // Landet auch im Spieler-Logfile
+		SendMessageToPC(oPC, "Dieser Account ist hier nicht willkommen."); // Landet auch im Spieler-Logfile
 		SetCommandable(0, oPC);
 		BootPC(oPC); // bevor Gebietswechsel durch Startscript
 		return;
@@ -54,9 +54,9 @@ void main() {
 		return;
 
 
-	SQLQuery("select `status` from `characters` where `id`='" + IntToString(nCID) + "' limit 1;");
-	SQLFetch();
-	string sStatus = SQLGetData(1);
+	pQ("select status from characters where id='" + IntToString(nCID) + "' limit 1;");
+	pF();
+	string sStatus = pG(1);
 
 	int bMayEnterGame = TRUE;
 

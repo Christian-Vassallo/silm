@@ -1,4 +1,4 @@
-#include "inc_mysql"
+#include "inc_pgsql"
 #include "inc_cdb"
 #include "inc_audit"
 #include "_gen"
@@ -15,8 +15,8 @@ void main() {
 		return;
 
 	string
-	sChar = SQLEscape(GetName(oPC)),
-	sAccount = SQLEscape(GetPCName(oPC)),
+	sChar = pE(GetName(oPC)),
+	sAccount = pE(GetPCName(oPC)),
 	sKey = GetPCPublicCDKey(oPC),
 	sIP = GetPCIPAddress(oPC),
 	sDesc = "";    //SQLEscape(GetDescription(oPC));
@@ -35,10 +35,10 @@ void main() {
 	string sAID = IntToString(nAID);
 
 
+/*	pQ(
+		"update accounts set total_time = total_time + (unix_timestamp() - (select current_time from characters where id='"
+		+ sID + "' limit 1)) where id='" + sAID + "' limit 1;");*/
 	SQLQuery(
-		"update `accounts` set `total_time`=`total_time` + (unix_timestamp() - (select `current_time` from `characters` where `id`='"
-		+ sID + "' limit 1)) where `id`='" + sAID + "' limit 1;");
-	SQLQuery(
-		"update `characters` set `total_time`=`total_time` + (unix_timestamp() - `current_time`), `current_time`=0 where `id`='"
+		"update characters set total_time = total_time + (now() - login_time), login_time = null where id='"
 		+ sID + "';");
 }

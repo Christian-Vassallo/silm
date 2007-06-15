@@ -1,4 +1,4 @@
-#include "inc_mysql"
+#include "inc_pgsql"
 #include "_gen"
 #include "inc_currency"
 #include "inc_amask"
@@ -45,8 +45,8 @@ void UpdateMessageCount(object oPC, int nMessages) {
 	if (!nCID)
 		return;
 
-	SQLQuery("update `characters` set messages = messages + " + IntToString(nMessages) + 
-		" where `id` = " + IntToString(nCID) + " limit 1;");
+	pQ("update characters set messages = messages + " + IntToString(nMessages) + 
+		" where id = " + IntToString(nCID) + " limit 1;");
 }
 
 object GetPCByAID(int nAID) {
@@ -88,12 +88,12 @@ int GetAccountID(object oPC) {
 		return GetLocalInt(GetModule(), sAcc + "_aid");
 
 
-	SQLQuery("select `id` from `" +
-		TABLE_ACCOUNTS + "` where `account`=" + SQLEscape(GetPCName(oPC)) + " limit 1;");
-	if ( !SQLFetch() )
+	pQ("select id from " +
+		TABLE_ACCOUNTS + " where account = " + pE(GetPCName(oPC)) + " limit 1;");
+	if ( !pF() )
 		return 0;
 	else {
-		int nID = StringToInt(SQLGetData(1));
+		int nID = StringToInt(pG(1));
 		SetLocalInt(GetModule(), sAcc + "_aid", nID);
 		return nID;
 	}
@@ -108,11 +108,11 @@ int GetAccountIsDM(object oPC) {
 	if ( 0 == iID )
 		return 0;
 
-	SQLQuery("select `dm` from `" + TABLE_ACCOUNTS + "` where `id`='" + IntToString(iID) + "' limit 1;");
-	if ( !SQLFetch() )
+	pQ("select dm from " + TABLE_ACCOUNTS + " where id = " + IntToString(iID) + " limit 1;");
+	if ( !pF() )
 		return 0;
 
-	return SQLGetData(1) == "true";
+	return pG(1) == "t";
 }
 
 
@@ -133,14 +133,14 @@ int GetCharacterID(object oPC) {
 		return 0;
 
 
-	SQLQuery("select `id` from `" +
+	pQ("select id from " +
 		TABLE_CHARACTERS +
-		"` where `account`='" + IntToString(nAID) + "' and `character`=" + SQLEscape(sAcc) + " limit 1;");
+		" where  account = " + IntToString(nAID) + " and character = " + pE(sAcc) + " limit 1;");
 
-	if ( !SQLFetch() )
+	if ( !pF() )
 		return 0;
 	else {
-		int nID = StringToInt(SQLGetData(1));
+		int nID = StringToInt(pG(1));
 		SetLocalInt(oMod, sAcc + sDMFlag + "_cid", nID);
 		return nID;
 	}
@@ -161,18 +161,18 @@ int GetOrCreateAccountID(object oPC) {
 	if ( sAccount == "" )
 		return 0;
 
-	sAccount = SQLEscape(sAccount);
+	sAccount = pE(sAccount);
 
-	SQLQuery("select `id` from `" + TABLE_ACCOUNTS + "` where `account`=" + sAccount + " limit 1;");
-	if ( !SQLFetch() )
-		SQLQuery("insert into `" +
-			TABLE_ACCOUNTS + "` (`account`, `create_on`) values(" + sAccount + ", now());");
+	pQ("select id from " + TABLE_ACCOUNTS + " where account = " + sAccount + " limit 1;");
+	if ( !pF() )
+		pQ("insert into " +
+			TABLE_ACCOUNTS + " (account, create_on) values(" + sAccount + ");");
 
-	SQLQuery("select `id` from `" + TABLE_ACCOUNTS + "` where `account`=" + sAccount + " limit 1;");
-	if ( !SQLFetch() )
+	pQ("select id from " + TABLE_ACCOUNTS + " where account = " + sAccount + " limit 1;");
+	if ( !pF() )
 		return 0;
 	else {
-		int nID = StringToInt(SQLGetData(1));
+		int nID = StringToInt(pG(1));
 		SetLocalInt(GetModule(), sAcc + "_aid", nID);
 		return nID;
 	}
@@ -198,27 +198,27 @@ int GetOrCreateCharacterID(object oPC) {
 
 	string
 	sAID = IntToString(nAID),
-	sChar = SQLEscape(GetName(oPC));
+	sChar = pE(GetName(oPC));
 
-	SQLQuery("select `id` from `" +
+	pQ("select id from " +
 		TABLE_CHARACTERS +
-		"` where `account`='" + IntToString(nAID) + "' and `character`=" + sChar + " limit 1;");
+		" where account = " + IntToString(nAID) + " and character =" + sChar + " limit 1;");
 
-	if ( !SQLFetch() )
-		SQLQuery("insert into `" +
+	if ( !pF() )
+		pQ("insert into " +
 			TABLE_CHARACTERS +
-			"` (`account`, `character`, `create_ip`, `create_key`, `create_on`) values('" +
+			" (account, character, create_ip, create_key) values(" +
 			sAID +
-			"', " + sChar + ", '" + GetPCIPAddress(oPC) + "', '" + GetPCPublicCDKey(oPC) + "', now());");
+			", " + sChar + ", '" + GetPCIPAddress(oPC) + "', '" + GetPCPublicCDKey(oPC) + "');");
 
-	SQLQuery("select `id` from `" +
+	pQ("select id from " +
 		TABLE_CHARACTERS +
-		"` where `account`='" + IntToString(nAID) + "' and `character`=" + sChar + " limit 1;");
+		" where account = " + IntToString(nAID) + " and character = " + sChar + " limit 1;");
 
-	if ( !SQLFetch() )
+	if ( !pF() )
 		return 0;
 	else {
-		int nID = StringToInt(SQLGetData(1));
+		int nID = StringToInt(pG(1));
 		SetLocalInt(oMod, sAcc + sDMFlag + "_cid", nID);
 		return nID;
 	}
@@ -230,11 +230,11 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 		return 0;
 
 	string
-	sChar = SQLEscape(GetName(oPC)),
-	sAccount = SQLEscape(GetPCName(oPC)),
+	sChar = pE(GetName(oPC)),
+	sAccount = pE(GetPCName(oPC)),
 	sKey = GetPCPublicCDKey(oPC),
 	sIP = GetPCIPAddress(oPC),
-	sDesc = "",    //SQLEscape(GetDescription(oPC));
+	sDesc = "",    //pE(GetDescription(oPC));
 	sGender = "";
 	switch ( GetGender(oPC) ) {
 		case GENDER_FEMALE:
@@ -266,30 +266,30 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 
 	/* CHARACTER */
 
-	SQLQuery("select `id` from `characters` where `account`='" +
-		sAID + "' and `character`=" + sChar + " limit 1;");
+	pQ("select id from characters where  account = " +
+		sAID + " and character = " + sChar + " limit 1;");
 
 	// Create some initial record.
-	if ( SQL_SUCCESS != SQLFetch() ) {
+	if ( !pF() ) {
 		SendMessageToAllDMs("New character: " + GetName(oPC) + "(" + GetPCName(oPC) + ")");
-		SQLQuery(
-			"insert into `characters` (`account`, `character`, `create_ip`, `create_key`, `create_on`) values('"
+		pQ(
+			"insert into characters (account, character, create_ip, create_key) values("
 			+
-			sAID + "', " + sChar + ", '" + sIP + "', '" + sKey + "', now());");
+			sAID + ", " + sChar + ", '" + sIP + "', '" + sKey + "');");
 		//audit("new", oPC, audit_fields("info", "new character"), "cdb");
 	}
 
 
-	SQLQuery("select `id`, `create_key`, `other_keys`, `status` from `characters` where `account`='" +
-		sAID + "' and `character`=" + sChar + " limit 1;");
-	SQLFetch();
+	pQ("select id, create_key, other_keys, status from characters where account=" +
+		sAID + " and character=" + sChar + " limit 1;");
+	pF();
 
 
 	string
-	sID = SQLGetData(1),     // IntToString(StringToInt(GetMaxID("characters"))),
-	sCreateKey = SQLGetData(2),
-	sOtherKeys = SQLGetData(3),
-	sStatus = SQLGetData(4);
+	sID = pG(1),     // IntToString(StringToInt(GetMaxID("characters"))),
+	sCreateKey = pG(2),
+	sOtherKeys = pG(3),
+	sStatus = pG(4);
 
 	if ( sID == "" ) {
 		audit("error", oPC, audit_fields("info", "Cannot find or create character"), "cdb");
@@ -307,48 +307,48 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 
 	int nGold = Money2Value(CountCreatureMoney(oPC, 0));
 	// Update base data
-	SQLQuery("update `characters` set " +
-		"`race` = " + SQLEscape(RaceToString(oPC)) + ", " +
-		"`subrace` = " + SQLEscape(GetSubRace(oPC)) + ", " +
-		"`alignment_moral` = '" + IntToString(GetAlignmentGoodEvil(oPC)) + "', " +
-		"`alignment_ethical` = '" + IntToString(GetAlignmentLawChaos(oPC)) + "', " +
-		"`xp` = '" + IntToString(GetXP(oPC)) + "', `gold` = '" + IntToString(nGold) + "', " +
+	pQ("update characters set " +
+		"race = " + pE(RaceToString(oPC)) + ", " +
+		"subrace = " + pE(GetSubRace(oPC)) + ", " +
+		"alignment_moral = '" + IntToString(GetAlignmentGoodEvil(oPC)) + "', " +
+		"alignment_ethical = '" + IntToString(GetAlignmentLawChaos(oPC)) + "', " +
+		"xp = '" + IntToString(GetXP(oPC)) + "', gold = '" + IntToString(nGold) + "', " +
 
-		"`sex` = '" + sGender + "', " +
-		"`age` = '" + IntToString(GetAge(oPC)) + "', " +
-		"`deity` = " + SQLEscape(GetDeity(oPC)) + ", " +
+		"sex = '" + sGender + "', " +
+		"age = '" + IntToString(GetAge(oPC)) + "', " +
+		"deity = " + pE(GetDeity(oPC)) + ", " +
 
-		"`str` = '" + IntToString(GetAbilityScore(oPC, ABILITY_STRENGTH, 1))  + "', " +
-		"`dex` = '" + IntToString(GetAbilityScore(oPC, ABILITY_DEXTERITY, 1))  + "', " +
-		"`con` = '" + IntToString(GetAbilityScore(oPC, ABILITY_CONSTITUTION, 1))  + "', " +
-		"`wis` = '" + IntToString(GetAbilityScore(oPC, ABILITY_WISDOM, 1))  + "', " +
-		"`int` = '" + IntToString(GetAbilityScore(oPC, ABILITY_INTELLIGENCE, 1))  + "', " +
-		"`chr` = '" + IntToString(GetAbilityScore(oPC, ABILITY_CHARISMA, 1))  + "', " +
+		"str = '" + IntToString(GetAbilityScore(oPC, ABILITY_STRENGTH, 1))  + "', " +
+		"dex = '" + IntToString(GetAbilityScore(oPC, ABILITY_DEXTERITY, 1))  + "', " +
+		"con = '" + IntToString(GetAbilityScore(oPC, ABILITY_CONSTITUTION, 1))  + "', " +
+		"wis = '" + IntToString(GetAbilityScore(oPC, ABILITY_WISDOM, 1))  + "', " +
+		"int = '" + IntToString(GetAbilityScore(oPC, ABILITY_INTELLIGENCE, 1))  + "', " +
+		"chr = '" + IntToString(GetAbilityScore(oPC, ABILITY_CHARISMA, 1))  + "', " +
 
-		"`reflex` = '" + IntToString(GetReflexSavingThrow(oPC))  + "', " +
-		"`fortitude` = '" + IntToString(GetFortitudeSavingThrow(oPC))  + "', " +
-		"`will` = '" + IntToString(GetWillSavingThrow(oPC))  + "'" +
+		"reflex = '" + IntToString(GetReflexSavingThrow(oPC))  + "', " +
+		"fortitude = '" + IntToString(GetFortitudeSavingThrow(oPC))  + "', " +
+		"will = '" + IntToString(GetWillSavingThrow(oPC))  + "'" +
 
-		" where `id`='" + sID + "' limit 1;");
+		" where id='" + sID + "' limit 1;");
 
 	// XXX update nwnx_functions to work with 1.67
-	//SQLQuery("update `characters` set `description` = '" + sDesc + "' where `id`='" + sID + "' limit 1;");
+	//pQ("update characters set description = '" + sDesc + "' where id='" + sID + "' limit 1;");
 
 
 
 	// Update player position
 	vector v = GetPosition(oPC);
-	string sArea = SQLEscape(GetTag(GetArea(oPC)));
-	SQLQuery("update `characters` set `area` = " + sArea + ", `x` = '" + FloatToString(v.x) + "', " +
-		"`y` = '" +
+	string sArea = pE(GetTag(GetArea(oPC)));
+	pQ("update characters set area = " + sArea + ", x = '" + FloatToString(v.x) + "', " +
+		"y = '" +
 		FloatToString(v.y) +
-		"', `z` = '" + FloatToString(v.z) + "', `f` = '" + FloatToString(GetFacing(oPC)) + "' limit 1;");
+		"', z = '" + FloatToString(v.z) + "', f = '" + FloatToString(GetFacing(oPC)) + "' limit 1;");
 
 
 	if ( bIsLogin ) {
 
 		// Update last login time
-		SQLQuery("update `characters` set `last_login`=now() where `id`='" + sID + "' limit 1;");
+		pQ("update characters set last_login=now() where id='" + sID + "' limit 1;");
 
 
 		// Find domains
@@ -398,20 +398,20 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 			( sDomain1 != "" ) ? ( sDomain2 = "Wasser" ) : ( sDomain1 = "Wasser" );
 
 		// Update classes and stuff
-		SQLQuery("update `characters` set " +
-			"`class1` = " + SQLEscape(ClassToString(GetClassByPosition(1, oPC))) + ", " +
-			"`class1_level` = '" + IntToString(GetLevelByClass(GetClassByPosition(1, oPC), oPC)) + "', " +
-			"`class2` = " + SQLEscape(ClassToString(GetClassByPosition(2, oPC))) + ", " +
-			"`class2_level` = '" + IntToString(GetLevelByClass(GetClassByPosition(2, oPC), oPC)) + "', " +
-			"`class3` = " + SQLEscape(ClassToString(GetClassByPosition(3, oPC))) + ", " +
-			"`class3_level` = '" + IntToString(GetLevelByClass(GetClassByPosition(3, oPC), oPC)) + "', " +
+		pQ("update characters set " +
+			"class1 = " + pE(ClassToString(GetClassByPosition(1, oPC))) + ", " +
+			"class1_level = '" + IntToString(GetLevelByClass(GetClassByPosition(1, oPC), oPC)) + "', " +
+			"class2 = " + pE(ClassToString(GetClassByPosition(2, oPC))) + ", " +
+			"class2_level = '" + IntToString(GetLevelByClass(GetClassByPosition(2, oPC), oPC)) + "', " +
+			"class3 = " + pE(ClassToString(GetClassByPosition(3, oPC))) + ", " +
+			"class3_level = '" + IntToString(GetLevelByClass(GetClassByPosition(3, oPC), oPC)) + "', " +
 
-			"`familiar_class` = " + SQLEscape(FamiliarToString(oPC)) + ", " +
-			"`familiar_name` = " + SQLEscape(GetFamiliarName(oPC)) + ", " +
+			"familiar_class = " + pE(FamiliarToString(oPC)) + ", " +
+			"familiar_name = " + pE(GetFamiliarName(oPC)) + ", " +
 
-			"`domain1` = '" + sDomain1 + "', `domain2`='" + sDomain2 + "' " +
+			"domain1 = '" + sDomain1 + "', domain2='" + sDomain2 + "' " +
 
-			" where `id`='" + sID + "' limit 1;");
+			" where id='" + sID + "' limit 1;");
 
 
 		// Update keys, if necessary.
@@ -419,34 +419,12 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 			if ( sOtherKeys != "" )
 				sOtherKeys += " ";
 			sOtherKeys += sKey;
-			SQLQuery("update `characters` set `other_keys`='" +
-				sOtherKeys + "' where `id`='" + sID + "' limit 1;");
+			pQ("update characters set other_keys='" +
+				sOtherKeys + "' where id='" + sID + "' limit 1;");
 		}
 
-		SQLQuery("update `characters` set `current_time`=unix_timestamp() where `id`='" + sID + "' limit 1;");
+		pQ("update characters set login_time = now() where id='" + sID + "' limit 1;");
 	}
 
 	return nCID;
 }
-
-
-/*int GetMayPlay(object oPC) {
- * 	int
- * 		nAID = GetAccountID(oPC),
- * 		nCID = GetCharacterID(oPC);
- * 	if (nCID == 0)
- * 		return 0;
- *
- * 	SQLQuery("select `status` from `accounts` where `id`='" + IntToString(nAID) + "' limit 1;");
- * 	SQLFetch();
- * 	string sAccountStatus = SQLGetData(1);
- *
- * 	if (sAccountStatus != "accept")
- * 		return 0;
- *
- * 	SQLQuery("select `status` from `characters` where `id`='" + IntToString(nCID) + "' limit 1;");
- * 	SQLFetch();
- * 	string sStatus = SQLGetData(1);
- *
- * 	return 1;
- * }*/

@@ -2,6 +2,7 @@
 #include "inc_cdb"
 #include "inc_persist"
 #include "inc_setting"
+#include "inc_pgsql"
 
 // Gives oPC nValue EP
 void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE);
@@ -87,72 +88,74 @@ int GetBaseXPForLevel(int iLevel) {
 
 //returns Combat EP
 int GetLegacyCombatXP(object oPC) {
+	pB();
 	int cid = GetCharacterID(oPC);
-	SQLQuery("select `xp_combat` from `characters` where `id` = " + IntToString(cid) + " limit 1;");
-	SQLFetch();
+	pQ("select xp_combat from characters where id = " + IntToString(cid) + " limit 1;");
+	pF();
 	int nCap = StringToInt(SQLGetData(1));
 	if ( -1 == nCap ) {
 		nCap = GetLegacyPersistentInt(oPC, "XP_Combat");
 		// no_more_legacy
-		SQLQuery("update `characters` set `xp_combat`=" +
-			IntToString(nCap) + ", `legacy_xp` = 1 where `id`=" + IntToString(cid) + " limit 1;");
+		pQ("update characters set  xp_combat = " +
+			IntToString(nCap) + ", legacy_xp = 1 where id =" + IntToString(cid) + " limit 1;");
 	}
+	pC();
 	return nCap;
 }
 
 void SetLegacyCombatXP(object oPC, int nXP) {
 	int cid = GetCharacterID(oPC);
-	SQLQuery("update `characters` set `xp_combat`=" +
-		IntToString(nXP) + " where `id`=" + IntToString(cid) + " limit 1;");
+	SQLQuery("update characters set xp_combat=" +
+		IntToString(nXP) + " where id=" + IntToString(cid) + " limit 1;");
 }
 
 
 
 int GetCategoryXPForMonth(object oPC, string sCategory, int nYear, int nMonth) {
 	int cid = GetCharacterID(oPC);
-	SQLQuery("select sum(`xp`) as `xp` from `" + sCategory + "_xp` where `cid` = " +
+	pQ("select sum(xp) as xp from " + sCategory + "_xp where character = " +
 		IntToString(cid) +
-		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + ";");
-	if ( !SQLFetch() ) {
+		" and year = " + IntToString(nYear) + " and month = " + IntToString(nMonth) + ";");
+	if ( !pF() ) {
 		return 0;
 	}
 
-	int nCap = StringToInt(SQLGetData(1));
+	int nCap = StringToInt(pG(1));
 	return nCap;
 }
 
 
 int GetCategoryXPForDay(object oPC, string sCategory, int nYear, int nMonth, int nDay) {
 	int cid = GetCharacterID(oPC);
-	SQLQuery("select `xp` from `" + sCategory + "_xp` where `cid` = " +
+	pQ("select xp from " + sCategory + "_xp where character = " +
 		IntToString(cid) +
-		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) + 
-		" and `day` = " + IntToString(nDay) + " limit 1;");
-	if ( !SQLFetch() ) {
+		" and year = " + IntToString(nYear) + " and month = " + IntToString(nMonth) + 
+		" and day = " + IntToString(nDay) + " limit 1;");
+	if ( !pF() ) {
 		return 0;
 	}
-	int nCap = StringToInt(SQLGetData(1));
+	int nCap = StringToInt(pG(1));
 	return nCap;
 }
 
 void SetCategoryXPForDay(object oPC, string sCategory, int nXP, int nYear, int nMonth, int nDay) {
 	int cid = GetCharacterID(oPC);
-	SQLQuery("select `xp` from `" + sCategory + "_xp` where `cid` = " +
+	pQ("select xp from " + sCategory + "_xp where character = " +
 		IntToString(cid) +
-		" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) +
-		" and `day` = " + IntToString(nDay) + " limit 1;");
+		" and year = " + IntToString(nYear) + " and month = " + IntToString(nMonth) +
+		" and day = " + IntToString(nDay) + " limit 1;");
 		
-	if ( !SQLFetch() )
-		SQLQuery("insert into `" + sCategory + "_xp` (`cid`, `xp`, `year`, `month`, `day`) values(" +
+	if ( !pF() )
+		pQ("insert into " + sCategory + "_xp (character, xp, year, month, day) values(" +
 			IntToString(cid) + ", " + IntToString(nXP) + ", " +
 			IntToString(nYear) + ", " + IntToString(nMonth) + ", " + IntToString(nDay) + ");");
 	else
-		SQLQuery("update `" + sCategory + "_xp` set `xp`=" +
+		pQ("update " + sCategory + "_xp set xp = " +
 			IntToString(nXP) +
-			" where `cid` = " +
+			" where character = " +
 			IntToString(cid) +
-			" and `year` = " + IntToString(nYear) + " and `month` = " + IntToString(nMonth) +
-			" and `day` = " + IntToString(nDay) + " limit 1;"
+			" and year = " + IntToString(nYear) + " and month = " + IntToString(nMonth) +
+			" and day = " + IntToString(nDay) + " limit 1;"
 		);
 }
 

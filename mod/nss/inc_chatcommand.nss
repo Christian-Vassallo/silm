@@ -414,6 +414,15 @@ int CommandSQL(object oPC, int iMode) {
 	return OK;
 }
 
+int CommandpSQL(object oPC, int iMode) {
+	string query = arg(0);
+
+	pQ(query);
+	
+	return OK;
+}
+
+
 int CommandRehash(object oPC, int iMode) {
 	pQ("select key, type, value, date_part('epoch', now())::int from gv;");
 	int c;
@@ -1715,10 +1724,10 @@ int CommandPassword(object oPC, int iMode) {
 		return FAIL;
 	}
 
-	SQLQuery("update `accounts` set `password`=sha1(" +
-		SQLEscape(sPass) + ") where `id`='" + IntToString(iAID) + "' limit 1;");
-	SQLQuery("update `accounts` set `register_on`=now() where `id`='" +
-		IntToString(iAID) + "' and `register_on` = NULL limit 1;");
+	pQ("update accounts set password = sha1(" +
+		pE(sPass) + ") where id = '" + IntToString(iAID) + "' limit 1;");
+	pQ("updateaccounts set register_on = now() where id='" +
+		IntToString(iAID) + "' and register_on = NULL limit 1;");
 
 	SendMessageToPC(oPC,
 		"Dein Passwort wurde gesetzt; du kannst dich damit nun in der Charakterverwaltung einloggen.");
