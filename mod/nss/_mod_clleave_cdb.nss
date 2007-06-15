@@ -38,7 +38,8 @@ void main() {
 /*	pQ(
 		"update accounts set total_time = total_time + (unix_timestamp() - (select current_time from characters where id='"
 		+ sID + "' limit 1)) where id='" + sAID + "' limit 1;");*/
-	SQLQuery(
-		"update characters set total_time = total_time + (now() - login_time), login_time = null where id='"
-		+ sID + "';");
+
+//SQLQuery(
+//		"update characters set total_time = total_time + (now() - login_time), login_time = null where id='"
+//		+ sID + "';");
 }

@@ -423,7 +423,7 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 				sOtherKeys + "' where id='" + sID + "' limit 1;");
 		}
 
-		pQ("update characters set login_time = now() where id='" + sID + "' limit 1;");
+//		pQ("update characters set login_time = now() where id='" + sID + "' limit 1;");
 	}
 
 	return nCID;
