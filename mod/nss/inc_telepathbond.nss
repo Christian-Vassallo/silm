@@ -1,5 +1,5 @@
 #include "inc_cdb"
-#include "_gen"
+#include "inc_pgsql"
 #include "inc_chat"
 #include "inc_chat_lib"
 
@@ -40,8 +40,8 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage) {
 	string sMessage = sStart + sShortName + sRest;
 
 
-	SQLQuery("select tcid, shortname from telepathic_bonds where cid = " +
-		IntToString(nCID) + " and expire <= unix_timestamp();");
+	SQLQuery("select t_character, shortname from telepathic_bonds where character = " +
+		IntToString(nCID) + " and expire <= unixts();");
 
 	while ( SQLFetch() ) {
 		nTCID = StringToInt(SQLGetData(1));
@@ -83,8 +83,8 @@ int DelegateOwnToPartners(object oPC, int nMode, string sMessage) {
 	string sRest = "*" + ColourTagClose() + " " + ColourisePlayerText(oPC, nMode, sMessage, cWhite);
 	string sMessage = sStart + sShortName + sDoesWhat + sRest;
 
-	SQLQuery("select tcid, shortname from telepathic_bonds where cid = " +
-		IntToString(nCID) + " and active=1 and expire <= unix_timestamp();");
+	SQLQuery("select t_character, shortname from telepathic_bonds where character = " +
+		IntToString(nCID) + " and active=1 and expire <= unixts();");
 
 	while ( SQLFetch() ) {
 		nTCID = StringToInt(SQLGetData(1));
@@ -122,8 +122,8 @@ int DelegateHeardToPartners(object oPC, object oSpeakingObject, int nMode, strin
 
 	string sMessage = sStart + sShortName + sDoesWhat + sRest;
 
-	SQLQuery("select tcid, shortname from telepathic_bonds where cid = " +
-		IntToString(nCID) + " and active=1 and expire <= unix_timestamp();");
+	SQLQuery("select t_character, shortname from telepathic_bonds where character = " +
+		IntToString(nCID) + " and active=1 and expire <= unixts();");
 
 	while ( SQLFetch() ) {
 		nTCID = StringToInt(SQLGetData(1));
@@ -150,7 +150,7 @@ void SetBondsActive(object oPC, int bState) {
 	bState = 0 != bState;
 
 	SQLQuery("update telepathic_bonds set active=" +
-		IntToString(bState) + " where cid = " + IntToString(nCID) + " and expire <= unix_timestamp();");
+		IntToString(bState) + " where character = " + IntToString(nCID) + " and expire <= unixts();");
 }
 
 // Sends this message to all active bond partners.
