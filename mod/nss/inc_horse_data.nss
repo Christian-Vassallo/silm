@@ -108,10 +108,10 @@ struct Rideable SetRideable(struct Rideable r) {
 	pQ("select id from rideables where id = " + IntToString(r.id) + ";");
 	if ( pF() ) {
 		pQ("update rideables set " +
-			"stable=" + SQLEscape(r.stable) + ", " +
-			"type=" + SQLEscape(r.type) + ", " +
+			"stable=" + pE(r.stable) + ", " +
+			"type=" + pE(r.type) + ", " +
 			"phenotype=" + IntToString(r.phenotype) + ", " +
-			"name=" + SQLEscape(r.name) + ", " +
+			"name=" + pE(r.name) + ", " +
 			"delivered_in_hour=" + IntToString(r.delivered_in_hour) + ", " +
 			"delivered_in_day=" + IntToString(r.delivered_in_day) + ", " +
 			"delivered_in_month=" + IntToString(r.delivered_in_month) + ", " +
@@ -124,8 +124,8 @@ struct Rideable SetRideable(struct Rideable r) {
 			"insert into rideables (character,stable,type,phenotype,name,delivered_in_hour,delivered_in_day,delivered_in_month,delivered_in_year,bought,pay_rent) values("
 			+
 			IntToString(r.cid) +
-			", " + SQLEscape(r.stable) + ", " + SQLEscape(r.type) + ", " + IntToString(r.phenotype) + ", " +
-			SQLEscape(r.name) +
+			", " + pE(r.stable) + ", " + pE(r.type) + ", " + IntToString(r.phenotype) + ", " +
+			pE(r.name) +
 			", " +
 			IntToString(r.delivered_in_hour) +
 			", " +
