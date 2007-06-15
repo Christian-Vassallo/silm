@@ -40,12 +40,12 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage) {
 	string sMessage = sStart + sShortName + sRest;
 
 
-	SQLQuery("select t_character, shortname from telepathic_bonds where character = " +
+	pG("select t_character, shortname from telepathic_bonds where character = " +
 		IntToString(nCID) + " and expire <= unixts();");
 
-	while ( SQLFetch() ) {
-		nTCID = StringToInt(SQLGetData(1));
-		sShortName = SQLGetData(2);
+	while ( pF() ) {
+		nTCID = StringToInt(pG(1));
+		sShortName = pG(2);
 		oB = GetPCByCID(nTCID);
 
 		if ( GetIsPC(oB) ) {
@@ -83,12 +83,12 @@ int DelegateOwnToPartners(object oPC, int nMode, string sMessage) {
 	string sRest = "*" + ColourTagClose() + " " + ColourisePlayerText(oPC, nMode, sMessage, cWhite);
 	string sMessage = sStart + sShortName + sDoesWhat + sRest;
 
-	SQLQuery("select t_character, shortname from telepathic_bonds where character = " +
-		IntToString(nCID) + " and active=1 and expire <= unixts();");
+	pQ("select t_character, shortname from telepathic_bonds where character = " +
+		IntToString(nCID) + " and active='t' and expire <= unixts();");
 
-	while ( SQLFetch() ) {
-		nTCID = StringToInt(SQLGetData(1));
-		sShortName = SQLGetData(2);
+	while ( pF() ) {
+		nTCID = StringToInt(pG(1));
+		sShortName = pG(2);
 		oB = GetPCByCID(nTCID);
 
 		if ( GetIsPC(oB) && !hears(oPC, oB, nMode & MODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER) ) {
@@ -122,11 +122,11 @@ int DelegateHeardToPartners(object oPC, object oSpeakingObject, int nMode, strin
 
 	string sMessage = sStart + sShortName + sDoesWhat + sRest;
 
-	SQLQuery("select t_character, shortname from telepathic_bonds where character = " +
-		IntToString(nCID) + " and active=1 and expire <= unixts();");
+	pQ("select t_character, shortname from telepathic_bonds where character = " +
+		IntToString(nCID) + " and active='t' and expire <= unixts();");
 
-	while ( SQLFetch() ) {
-		nTCID = StringToInt(SQLGetData(1));
+	while ( pF() ) {
+		nTCID = StringToInt(pG(1));
 		oB = GetPCByCID(nTCID);
 
 		if ( GetIsPC(oB)
@@ -149,7 +149,7 @@ void SetBondsActive(object oPC, int bState) {
 
 	bState = 0 != bState;
 
-	SQLQuery("update telepathic_bonds set active=" +
+	pQ("update telepathic_bonds set active=" +
 		IntToString(bState) + " where character = " + IntToString(nCID) + " and expire <= unixts();");
 }
 
@@ -170,11 +170,11 @@ void SetBondsActive(object oPC, int bState) {
  * 	object oB;
  * 	string sShort;
  *
- * 	SQLQuery("select tcid, shortname from telepathic_bonds where cid = " + IntToString(nCID) + " and active=1 and expire <= unix_timestamp();");
+ * 	pQ("select tcid, shortname from telepathic_bonds where cid = " + IntToString(nCID) + " and active=1 and expire <= unix_timestamp();");
  *
- * 	while (SQLFetch()) {
- * 		nTCID = StringToInt(SQLGetData(1));
- * 		sShort = SQLGetData(2);
+ * 	while (pF()) {
+ * 		nTCID = StringToInt(pG(1));
+ * 		sShort = pG(2);
  * 		oB = GetPCByCID(nTCID);
  * 		if (GetIsPC(oB)) {
  * 			sMessage = "(TB) " + sShort + ": " + sMessage;
