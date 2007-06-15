@@ -40,7 +40,7 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage) {
 	string sMessage = sStart + sShortName + sRest;
 
 
-	pG("select t_character, shortname from telepathic_bonds where character = " +
+	pQ("select t_character, shortname from telepathic_bonds where character = " +
 		IntToString(nCID) + " and expire <= unixts();");
 
 	while ( pF() ) {
