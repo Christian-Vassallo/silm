@@ -105,7 +105,7 @@ int GetLegacyCombatXP(object oPC) {
 
 void SetLegacyCombatXP(object oPC, int nXP) {
 	int cid = GetCharacterID(oPC);
-	SQLQuery("update characters set xp_combat=" +
+	pQ("update characters set xp_combat=" +
 		IntToString(nXP) + " where id=" + IntToString(cid) + ";");
 }
 
