@@ -78,7 +78,7 @@ void LoadEffects(object oPC) {
 
 	int nfx = 0;
 	pQ(
-		"select when,effect,duration_type,duration,veffect from persistent_effects where character = "	+ IntToString(nCID) + ";");
+		"select apply_when,effect,duration_type,duration,veffect from persistent_effects where character = "	+ IntToString(nCID) + ";");
 	while ( pF() ) {
 		//string sWhen = pG(1);
 		string sEffect = pG(2);
