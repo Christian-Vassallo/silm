@@ -938,9 +938,9 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 int GetIsMacro(object oPC, string sMacroName) {
 	string sAID = IntToString(GetAccountID(oPC));
-	SQLQuery("select id from macro where account = " +
-		sAID + " and macro = " + SQLEscape(sMacroName) + " limit 1;");
-	return SQLFetch();
+	pQ("select id from macro where account = " +
+		sAID + " and macro = " + pE(sMacroName) + " limit 1;");
+	return pF();
 }
 
 
@@ -1052,7 +1052,7 @@ int CommandMacro(object oPC, int iMode) {
 		SetLocalString(oPC, "macro_" + sMacroName, sMacro);
 		pQ("select id from macro where account = " +
 			sAID + " and macro = " + pE(sMacroName) + " limit 1;");
-		if ( SQLFetch() ) {
+		if ( pF() ) {
 			string sID = pG(1);
 			pQ("update macro set command = " + pE(sMacro) + " where id = " + sID + ";");
 			ToPC(sMacroName + " updated.");
