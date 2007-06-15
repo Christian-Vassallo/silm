@@ -1,4 +1,4 @@
-#include "_gen"
+#include "inc_pgsql"
 #include "inc_cdb"
 
 void LoadEffects(object oPC);
@@ -77,10 +77,8 @@ void LoadEffects(object oPC) {
 		return;
 
 	int nfx = 0;
-	SQLQuery(
-		"select `when`,`effect`,`duration_type`,`duration`,`veffect` from `persistent_effects` where `cid`="
-		+
-		IntToString(nCID) + ";");
+	pQ(
+		"select when,effect,duration_type,duration,veffect from persistent_effects where character = "	+ IntToString(nCID) + ";");
 	while ( SQLFetch() ) {
 		//string sWhen = SQLGetData(1);
 		string sEffect = SQLGetData(2);
