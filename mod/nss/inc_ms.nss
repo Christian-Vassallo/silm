@@ -1,6 +1,6 @@
 #include "inc_lists"
 #include "inc_cdb"
-#include "_gen"
+#include "inc_pgsql"
 #include "inc_xp_handling"
 
 const int
@@ -12,7 +12,7 @@ MENTOR_FLAG_SERVER = 16;
 
 
 struct Mentor {
-	int aid;
+	int account;
 	int last_charge_cycle;
 	int charge;
 	int charge_per_hour;
@@ -60,18 +60,18 @@ struct Mentor GetMentor(object oPC) {
 	if ( 0 == nAID )
 		return r;
 
-	SQLQuery(
-		"select last_charge_cycle,charge,charge_per_hour,capacity,amount_per_pc,flags from mentors where aid="
+	pQ(
+		"select last_charge_cycle,charge,charge_per_hour,capacity,amount_per_pc,flags from mentors where account="
 		+
-		IntToString(nAID) + " limit 1;");
-	if ( SQLFetch() ) {
-		r.aid = nAID;
-		r.last_charge_cycle = StringToInt(SQLGetData(1));
-		r.charge = StringToInt(SQLGetData(2));
-		r.charge_per_hour = StringToInt(SQLGetData(3));
-		r.capacity = StringToInt(SQLGetData(4));
-		r.amount_per_pc = StringToInt(SQLGetData(5));
-		r.flags = StringToInt(SQLGetData(6));
+		IntToString(nAID) + ";");
+	if ( pF() ) {
+		r.account = nAID;
+		r.last_charge_cycle = StringToInt(pG(1));
+		r.charge = StringToInt(pG(2));
+		r.charge_per_hour = StringToInt(pG(3));
+		r.capacity = StringToInt(pG(4));
+		r.amount_per_pc = StringToInt(pG(5));
+		r.flags = StringToInt(pG(6));
 
 		// Update the charge thingy
 		r = GetMentorCharge(r);
@@ -81,16 +81,16 @@ struct Mentor GetMentor(object oPC) {
 }
 
 void SaveMentor(struct Mentor sM) {
-	if ( 0 == sM.aid )
+	if ( 0 == sM.account )
 		return;
 
-	SQLQuery("update mentors set " +
-		"last_charge_cycle = unix_timestamp(), charge = " + IntToString(sM.charge) + ", " +
+	pQ("update mentors set " +
+		"last_charge_cycle = unixts(), charge = " + IntToString(sM.charge) + ", " +
 		"charge_per_hour = " + IntToString(sM.charge_per_hour) + ", " +
 		"capacity = " + IntToString(sM.capacity) + ", " +
 		"amount_per_pc = " + IntToString(sM.amount_per_pc) +
 
-		" where aid = " + IntToString(sM.aid) + " limit 1;"
+		" where account = " + IntToString(sM.account) + ";"
 	);
 }
 
@@ -174,14 +174,14 @@ void MentorDoXPTransaction(object oMentor, object oReceiver, int nXP) {
 	}
 
 
-	SQLQuery("select id from mentordata where aid=" +
-		IntToString(nAID) + " and cid=" + IntToString(nCID) + " and tcid=" + IntToString(nTCID) + " limit 1;");
-	if ( SQLFetch() ) {
-		string id = SQLGetData(1);
+	pQ("select id from mentordata where account=" +
+		IntToString(nAID) + " and character=" + IntToString(nCID) + " and t_character=" + IntToString(nTCID) + ";");
+	if ( pF() ) {
+		string id = pG(1);
 
-		SQLQuery("update mentordata set `xp`=`xp`+" + IntToString(nXP) + " where id = " + id + " limit 1;");
+		pQ("update mentordata set xp=xp+" + IntToString(nXP) + " where id = " + id + ";");
 	} else {
-		SQLQuery("insert into mentordata (aid, cid, tcid, xp) values(" +
+		pQ("insert into mentordata (account, character, t_character, xp) values(" +
 			IntToString(nAID) +
 			", " + IntToString(nCID) + ", " + IntToString(nTCID) + ", " + IntToString(nXP) + ");");
 	}
@@ -219,7 +219,7 @@ int MS_MakeDialog(object oPC) {
 
 	struct Mentor sM = GetMentor(oPC);
 
-	if ( 0 == sM.aid ) {
+	if ( 0 == sM.account ) {
 		ToPC(
 			"Du bist nicht als Mentor in der Datenbank eingetragen, und kannst daher diesen Stein nicht benutzen.",
 			oPC);
