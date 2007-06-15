@@ -17,8 +17,8 @@ void SaveChessGame(object oGameMaster) {
 	int black = GetAccountID(oBlack);
 	
 
-	SQLQuery("insert into " + CHESS_TABLE + 
-		" (white, black, result, variant, start, end, log)" + 
+	pQ("insert into " + CHESS_TABLE + 
+		" (white, black, result, variant, start_ts, end_ts, log)" + 
 		" values(" +
 		IntToString(white) + ", " +
 		IntToString(black) + ", '" + 
@@ -31,8 +31,8 @@ void SaveChessGame(object oGameMaster) {
 			variant == VARIANT_FISCHERRANDOM ? "fischerrandom" : 
 			"displacement"
 		) + "', " +		
-		IntToString(nStart) + ", now(), " +
-		SQLEscape(sLog) + 
+		"NULL" /*IntToString(nStart)*/ + ", now(), " +
+		pE(sLog) + 
 		");"
 	);
 	
