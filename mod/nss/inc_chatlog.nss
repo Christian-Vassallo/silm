@@ -1,4 +1,4 @@
-#include "inc_mysql"
+#include "inc_pgsql"
 #include "inc_cdb"
 
 void ChatLog(object oPC, int nMode, string sMessage, object oTo);
@@ -30,14 +30,14 @@ void ChatLog(object oPC, int nMode, string sMessage, object oTo) {
 	sAccTo = SQLEscape(GetPCPlayerName(oTo)),
 	sCharTo = SQLEscape(GetName(oTo));
 
-	SQLQuery(
-		"insert into `chatlogs` (`account`,`character`,`account_s`,`character_s`,`taid`,`tcid`,`taccount`,`tcharacter`,`area`,`text`,`mode`) values("
+	pQ(
+		"insert into chatlogs (account,character,account_s,character_s,t_account,t_character,t_account_s,t_character_s,area,text,mode) values("
 		+
 		IntToString(nAID) + ", " + IntToString(nCID) + ", " + sAccount + ", " + sChar + ", " +
 		IntToString(nTAID) + ", "  + IntToString(nTCID) + ", " + sAccTo + ", " + sCharTo + ", " +
 		sArea + ", " + sText + ", " + IntToString(nMode) +
 		");");
 
-	// SQLQuery("delete from `chatlog` order by `timestamp` asc limit 0,500;");
+	// SQLQuery("delete from chatlog order by timestamp asc limit 0,500;");
 
 }
