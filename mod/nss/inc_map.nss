@@ -10,7 +10,7 @@
 
 /* auskommentiert bis ich es repariert hab mal */
 
-#include "inc_mysql"
+#include "inc_pgsql"
 #include "_gen"
 #include "inc_cdb"
 
@@ -47,8 +47,8 @@ int SaveMapPinsForPlayer(object oPC) {
 		object
 		oArea = GetLocalObject(oPC, "NW_MAP_PIN_AREA_" + IntToString(i));
 		string
-		s = SQLEscape(GetLocalString(oPC, "NW_MAP_PIN_NTRY_" + IntToString(i))),
-		a = SQLEscape(GetTag(oArea));
+		s = pE(GetLocalString(oPC, "NW_MAP_PIN_NTRY_" + IntToString(i))),
+		a = pE(GetTag(oArea));
 		float
 		x = GetLocalFloat(oPC, "NW_MAP_PIN_XPOS_" + IntToString(i)),
 		y = GetLocalFloat(oPC, "NW_MAP_PIN_YPOS_" + IntToString(i));
@@ -60,7 +60,7 @@ int SaveMapPinsForPlayer(object oPC) {
 			continue;
 		}
 
-		SQLExecDirect(
+		pQ(
 			"insert into " + PINDB + " (character,text,x,y,area) " +
 			"values(" +
 			sCID + ", " + s + ", '" + FloatToString(x) + "', '" + FloatToString(y) + "', " + a + ");"
@@ -78,18 +78,18 @@ int RestoreMapPinsForPlayer(object oPC) {
 	string sCID = IntToString(nCID);
 
 
-	SQLExecDirect("select text,x,y,area from " +
+	pQ("select text,x,y,area from " +
 		PINDB + " where character = '" + sCID + "' limit 500;");
 
 	int count = 0;
 
-	while ( SQLFetch() == SQL_SUCCESS ) {
+	while ( pF() ) {
 		string
-		s = SQLGetData(1),
-		a = SQLGetData(4);
+		s = pG(1),
+		a = pG(4);
 		float
-		x = StringToFloat(SQLGetData(2)),
-		y = StringToFloat(SQLGetData(3));
+		x = StringToFloat(pG(2)),
+		y = StringToFloat(pG(3));
 		object
 		oa = GetObjectByTag(a);
 
