@@ -1,4 +1,4 @@
-#include "inc_mysql"
+#include "inc_pgsql"
 #include "inc_cdb"
 
 
@@ -11,9 +11,9 @@ void AddGMXP(object oPlayer, string sGMs, int nAmount) {
 	if (!nCID)
 		return;
 
-	SQLQuery("insert into gm_xp (cid,aid_gm,xp) values( " + IntToString(nCID) + 
-		", " + SQLEscape(sGMs) + 
-		", " + IntToString(nAmount) + " );");
+	pQ("insert into gm_xp (cid,account_gms,xp) values( " + IntToString(nCID) + 
+		", { " + pE(sGMs) + 
+		"}, " + IntToString(nAmount) + " );");
 
 }
 
@@ -50,7 +50,7 @@ void main() {
 	while (GetIsObjectValid(oPC)) {
 		if (GetIsDM(oPC)) {
 			nAID = GetAccountID(oPC);
-			gms += IntToString(nAID) + ":";
+			gms += IntToString(nAID) + ", ";
 		}
 		oPC = GetNextPC();
 	}
