@@ -6,7 +6,7 @@
 // This file is licensed under the terms of the
 // GNU GENERAL PUBLIC LICENSE (GPL) Version 2
 
-// #include "inc_cdb"
+#include "inc_loctools"
 
 
 /************************************/
@@ -48,17 +48,6 @@ int SQLFetch();
 // Return value of column iCol in the current row of result set sResultSetName
 string SQLGetData(int iCol);
 
-// Return a string value when given a location
-string nLocationToString(location lLocation);
-
-// Return a location value when given the string form of the location
-location nStringToLocation(string sLocation);
-
-// Return a string value when given a vector
-string nVectorToString(vector vVector);
-
-// Return a vector value when given the string form of the vector
-vector nStringToVector(string sVector);
 
 // Set oObject's persistent string variable sVarName to sValue
 // Optional parameters:
@@ -170,91 +159,6 @@ string SQLGetData(int iCol) {
 
 	return sColValue;
 }
-
-// These functions deal with various data types. Ultimately, all information
-// must be stored in the database as strings, and converted back to the proper
-// form when retrieved.
-
-string nVectorToString(vector vVector) {
-	return "#X#" + FloatToString(vVector.x) + "#Y#" + FloatToString(vVector.y) +
-		   "#Z#" + FloatToString(vVector.z) + "#E#";
-}
-
-vector nStringToVector(string sVector) {
-	float fX, fY, fZ;
-	int iPos, iCount;
-	int iLen = GetStringLength(sVector);
-
-	if ( iLen > 0 ) {
-		iPos = FindSubString(sVector, "#X#") + 3;
-		iCount = FindSubString(GetSubString(sVector, iPos, iLen - iPos), "#");
-		fX = StringToFloat(GetSubString(sVector, iPos, iCount));
-
-		iPos = FindSubString(sVector, "#Y#") + 3;
-		iCount = FindSubString(GetSubString(sVector, iPos, iLen - iPos), "#");
-		fY = StringToFloat(GetSubString(sVector, iPos, iCount));
-
-		iPos = FindSubString(sVector, "#Z#") + 3;
-		iCount = FindSubString(GetSubString(sVector, iPos, iLen - iPos), "#");
-		fZ = StringToFloat(GetSubString(sVector, iPos, iCount));
-	}
-
-	return Vector(fX, fY, fZ);
-}
-
-string nLocationToString(location lLocation) {
-	object oArea = GetAreaFromLocation(lLocation);
-	vector vPosition = GetPositionFromLocation(lLocation);
-	float fOrientation = GetFacingFromLocation(lLocation);
-	string sReturnValue;
-
-	if ( GetIsObjectValid(oArea) )
-		sReturnValue =
-			"#A#" + GetTag(oArea) + "#X#" + FloatToString(vPosition.x) +
-			"#Y#" + FloatToString(vPosition.y) + "#Z#" +
-			FloatToString(vPosition.z) + "#O#" + FloatToString(fOrientation) + "#E#";
-
-	return sReturnValue;
-}
-
-location nStringToLocation(string sLocation) {
-	location lReturnValue;
-	object oArea;
-	vector vPosition;
-	float fOrientation, fX, fY, fZ;
-
-	int iPos, iCount;
-	int iLen = GetStringLength(sLocation);
-
-	if ( iLen > 0 ) {
-		iPos = FindSubString(sLocation, "#A#") + 3;
-		iCount = FindSubString(GetSubString(sLocation, iPos, iLen - iPos), "#");
-		oArea = GetObjectByTag(GetSubString(sLocation, iPos, iCount));
-
-		iPos = FindSubString(sLocation, "#X#") + 3;
-		iCount = FindSubString(GetSubString(sLocation, iPos, iLen - iPos), "#");
-		fX = StringToFloat(GetSubString(sLocation, iPos, iCount));
-
-		iPos = FindSubString(sLocation, "#Y#") + 3;
-		iCount = FindSubString(GetSubString(sLocation, iPos, iLen - iPos), "#");
-		fY = StringToFloat(GetSubString(sLocation, iPos, iCount));
-
-		iPos = FindSubString(sLocation, "#Z#") + 3;
-		iCount = FindSubString(GetSubString(sLocation, iPos, iLen - iPos), "#");
-		fZ = StringToFloat(GetSubString(sLocation, iPos, iCount));
-
-		vPosition = Vector(fX, fY, fZ);
-
-		iPos = FindSubString(sLocation, "#D#") + 3;
-		iCount = FindSubString(GetSubString(sLocation, iPos, iLen - iPos), "#");
-		fOrientation = StringToFloat(GetSubString(sLocation, iPos, iCount));
-
-		lReturnValue = Location(oArea, vPosition, fOrientation);
-	}
-
-	return lReturnValue;
-}
-
 
 void SetPersistentData(object oPC, string sType, string sVarName, string sValue, int iExpiration = 0,
 					   string sTable = "var") {

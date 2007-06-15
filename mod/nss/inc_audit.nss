@@ -1,8 +1,8 @@
 // _audit
 
 
-#include "inc_mysql"
-
+#include "inc_pgsql"
+#include "inc_loctools"
 
 const string
 AUDIT_TABLE = "audit";
@@ -53,23 +53,23 @@ void audit(string sEvent, object oPC = OBJECT_SELF, string sData = "", string sS
 		sP = "r:" + GetResRef(oPC);
 
 
-	string sSQL = "insert into `" +
+	string sSQL = "insert into " +
 				  AUDIT_TABLE +
-				  "` (`player`, `char`, `location`, `flags`, `event`, `data`, `category`, `tplayer`, `tchar`) values(";
-	sSQL += "" + SQLEscape(sP) + ", ";
-	sSQL += "" + SQLEscape(sC) + ", ";
-	sSQL += "" + SQLEscape(sLocation) + ", ";
-	sSQL += "" + SQLEscape(sFlags) + ", ";
-	sSQL += "" + SQLEscape(sEvent) + ", ";
-	sSQL += "" + SQLEscape(sData) + ", ";
-	sSQL += "" + SQLEscape(sSection) + ", ";
-	sSQL += "" + SQLEscape(sTP) + ", ";
-	sSQL += "" + SQLEscape(sTC) + "";
+				  " (player, char, location, flags, event, data, category, tplayer, tchar) values(";
+	sSQL += "" + pE(sP) + ", ";
+	sSQL += "" + pE(sC) + ", ";
+	sSQL += "" + pE(sLocation) + ", ";
+	sSQL += "" + pE(sFlags) + ", ";
+	sSQL += "" + pE(sEvent) + ", ";
+	sSQL += "" + pE(sData) + ", ";
+	sSQL += "" + pE(sSection) + ", ";
+	sSQL += "" + pE(sTP) + ", ";
+	sSQL += "" + pE(sTC) + "";
 	sSQL += ");";
 
 	string sMsg = "A :: " + sP + " :: " + sC + " :: " + sFlags + " :: " + sEvent + " :: " + sData;
 
-	SQLExecDirect(sSQL);
+	pQ(sSQL);
 
 	WriteTimestampedLogEntry(sMsg);
 
