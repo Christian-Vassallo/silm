@@ -1,5 +1,5 @@
-#include "inc_mysql"
 #include "inc_cdb"
+#include "inc_pgsql"
 
 void main() {
 
@@ -12,7 +12,7 @@ void main() {
 	int nIDKilled = GetCharacterID(oKilled),
 		nIDKiller = GetCharacterID(oKiller);
 
-	SQLQuery("insert into `kills_pc` (`killer`, `killee`, `date`, `area`) values('" +
-		IntToString(nIDKiller) +
-		"', '" + IntToString(nIDKilled) + "', now(), " + SQLEscape(GetResRef(GetArea(oKilled))) + ");");
+	pQ("insert into pc_kills (killer_id, killee_id, area_resref) values('" +
+		IntToString(nIDKiller) + "', '" + IntToString(nIDKilled) + "', " +
+		pE(GetResRef(GetArea(oKilled))) + ");");
 }

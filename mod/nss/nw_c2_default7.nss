@@ -15,6 +15,8 @@
 #include "x0_i0_spawncond"
 #include "inc_xp_handling"
 #include "inc_summon"
+#include "inc_pgsql"
+#include "inc_cdb"
 
 void _Respawn(int iObType, string sResRef, location lLocation) {
 	CreateObject(iObType, sResRef, lLocation);
@@ -24,6 +26,21 @@ void main() {
 	int nClass = GetLevelByClass(CLASS_TYPE_COMMONER);
 	int nAlign = GetAlignmentGoodEvil(OBJECT_SELF);
 	object oKiller = GetLastKiller();
+	object oKilled =  OBJECT_SELF;
+
+	int nID = GetCharacterID(oKiller);
+	if (nID > 0) {
+		pB();
+		pQ("select id from monster_kills where killer_id = " + IntToString(nID) + " and resref = " + pE(GetResRef(oKilled)) + ";");
+		if (pF()) {
+			string sID = pG(1);
+			pQ("update monster_kills set count = count + 1 where id = " + sID);
+		} else {
+			pQ("insert into monster_kills (killer_id, monster_resref) values(" + IntToString(nID) + ", " + pE(GetResRef(oKilled)) + ";");
+		}
+		pC();
+	}
+
 	WriteTimestampedLogEntry(GetName(oKiller) + " toetet " + GetName(OBJECT_SELF));
 	float fRespawnTime;
 
