@@ -1,4 +1,4 @@
-#include "inc_mysql"
+#include "inc_pgsql"
 #include "inc_cdb"
 
 struct Rideable {
@@ -79,22 +79,22 @@ struct Rideable SetRideableDeliveredIn(struct Rideable r) {
 struct Rideable GetRideable(object oPC) {
 	int nCID = GetCharacterID(oPC);
 	struct Rideable r;
-	SQLQuery(
-		"select `id`,`character`,`stable`,`type`,`phenotype`,`name`,`delivered_in_hour`, `delivered_in_day`, `delivered_in_month`, `delivered_in_year` ,`bought`, `pay_rent` from `rideables` where `character`="
-		+ IntToString(nCID) + " limit 1;");
-	if ( SQLFetch() ) {
-		r.id = StringToInt(SQLGetData(1));
+	pQ(
+		"select id,character,stable,type,phenotype,name,delivered_in_hour, delivered_in_day, delivered_in_month, delivered_in_year ,bought, pay_rent from rideables where character = "
+		+ IntToString(nCID) + ";");
+	if ( pF() ) {
+		r.id = StringToInt(pG(1));
 		r.cid = nCID;
-		r.stable = SQLGetData(3);
-		r.type = SQLGetData(4);
-		r.phenotype = StringToInt(SQLGetData(5));
-		r.name = SQLGetData(6);
-		r.delivered_in_hour = StringToInt(SQLGetData(7));
-		r.delivered_in_day = StringToInt(SQLGetData(8));
-		r.delivered_in_month = StringToInt(SQLGetData(9));
-		r.delivered_in_year = StringToInt(SQLGetData(10));
-		r.bought = StringToInt(SQLGetData(11));
-		r.pay_rent = StringToInt(SQLGetData(12));
+		r.stable = pG(3);
+		r.type = pG(4);
+		r.phenotype = StringToInt(pG(5));
+		r.name = pG(6);
+		r.delivered_in_hour = StringToInt(pG(7));
+		r.delivered_in_day = StringToInt(pG(8));
+		r.delivered_in_month = StringToInt(pG(9));
+		r.delivered_in_year = StringToInt(pG(10));
+		r.bought = pG(11) == "t";
+		r.pay_rent = pG(12) == "t";
 	}
 
 	return r;
@@ -104,23 +104,24 @@ struct Rideable SetRideable(struct Rideable r) {
 	if ( !GetIsValidRideable(r) )
 		return r;
 
-	SQLQuery("select `id` from `rideables` where `id`=" + IntToString(r.id) + " limit 1;");
-	if ( SQLFetch() ) {
-		SQLQuery("update `rideables` set " +
-			"`stable`=" + SQLEscape(r.stable) + ", " +
-			"`type`=" + SQLEscape(r.type) + ", " +
-			"`phenotype`=" + IntToString(r.phenotype) + ", " +
-			"`name`=" + SQLEscape(r.name) + ", " +
-			"`delivered_in_hour`=" + IntToString(r.delivered_in_hour) + ", " +
-			"`delivered_in_day`=" + IntToString(r.delivered_in_day) + ", " +
-			"`delivered_in_month`=" + IntToString(r.delivered_in_month) + ", " +
-			"`delivered_in_year`=" + IntToString(r.delivered_in_year) + ", " +
-			"`bought`=" + IntToString(r.bought) + ", " +
-			"`pay_rent`=" + IntToString(r.pay_rent) +
-			" where `id`=" + IntToString(r.id) + " limit 1;");
+	pB();
+	pQ("select id from rideables where id = " + IntToString(r.id) + ";");
+	if ( pF() ) {
+		pQ("update rideables set " +
+			"stable=" + SQLEscape(r.stable) + ", " +
+			"type=" + SQLEscape(r.type) + ", " +
+			"phenotype=" + IntToString(r.phenotype) + ", " +
+			"name=" + SQLEscape(r.name) + ", " +
+			"delivered_in_hour=" + IntToString(r.delivered_in_hour) + ", " +
+			"delivered_in_day=" + IntToString(r.delivered_in_day) + ", " +
+			"delivered_in_month=" + IntToString(r.delivered_in_month) + ", " +
+			"delivered_in_year=" + IntToString(r.delivered_in_year) + ", " +
+			"bought=" + (r.bought == 1 ? "t" : "f") + ", " +
+			"pay_rent=" + (r.pay_rent == 1 ? "t" : "f") +
+			" where id=" + IntToString(r.id) + ";");
 	} else {
-		SQLQuery(
-			"insert into `rideables` (`character`,`stable`,`type`,`phenotype`,`name`,`delivered_in_hour`,`delivered_in_day`,`delivered_in_month`,`delivered_in_year`,`bought`,`pay_rent`) values("
+		pQ(
+			"insert into rideables (character,stable,type,phenotype,name,delivered_in_hour,delivered_in_day,delivered_in_month,delivered_in_year,bought,pay_rent) values("
 			+
 			IntToString(r.cid) +
 			", " + SQLEscape(r.stable) + ", " + SQLEscape(r.type) + ", " + IntToString(r.phenotype) + ", " +
@@ -130,10 +131,12 @@ struct Rideable SetRideable(struct Rideable r) {
 			", " +
 			IntToString(r.delivered_in_day) +
 			", " + IntToString(r.delivered_in_month) + ", " + IntToString(r.delivered_in_year) + ", " +
-			IntToString(r.bought) + ", " + IntToString(r.pay_rent) + ");");
-		SQLQuery("select `id` from `rideables` oder by `id` desc limit 1;");
-		SQLFetch();
-		r.id = StringToInt(SQLGetData(1));
+			(r.bought == 1 ? "t" : "f") + ", " + (r.pay_rent == 1 ? "t" : "f") + ");");
+		pQ("select id from rideables oder by id desc;");
+		pF();
+		r.id = StringToInt(pG(1));
 	}
+	pC();
+
 	return r;
 }
