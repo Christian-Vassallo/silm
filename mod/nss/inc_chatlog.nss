@@ -22,13 +22,13 @@ void ChatLog(object oPC, int nMode, string sMessage, object oTo) {
 	nTCID = GetCharacterID(oPC);
 
 	string
-	sAccount = SQLEscape(GetPCPlayerName(oPC)),
-	sChar = SQLEscape(GetName(oPC)),
-	sText = SQLEscape(sMessage),
-	sArea = SQLEscape(GetTag(GetArea(oPC))),
+	sAccount = pE(GetPCPlayerName(oPC)),
+	sChar = pE(GetName(oPC)),
+	sText = pE(sMessage),
+	sArea = pE(GetTag(GetArea(oPC))),
 
-	sAccTo = SQLEscape(GetPCPlayerName(oTo)),
-	sCharTo = SQLEscape(GetName(oTo));
+	sAccTo = pE(GetPCPlayerName(oTo)),
+	sCharTo = pE(GetName(oTo));
 
 	pQ(
 		"insert into chatlogs (account,character,account_s,character_s,t_account,t_character,t_account_s,t_character_s,area,text,mode) values("
