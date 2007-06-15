@@ -9,7 +9,7 @@
 //
 //:://////////////////////////////////////////////
 
-#include "_gen"
+#include "inc_pgsql"
 #include "inc_cdb"
 
 const string sTrackSQLTable = "tracks";
@@ -83,7 +83,7 @@ int showTrack(object oPC, int cid, float fDist, int id, location loc, int age, i
 
 //Loescht alle Spuren die aelter als x RL-Tage sind
 void deleteOldTracks() {
-	SQLQuery("DELETE FROM `" + sTrackSQLTable + "` WHERE `age` < (unix_timestamp() - (3 * 60*60*24));");
+	pQ("DELETE FROM " + sTrackSQLTable + " WHERE age < (unixts() - (3 * 60*60*24));");
 }
 
 // Suchen nach einer Spur im Umkreis der aktuellen Position
@@ -112,32 +112,32 @@ void track(object oPC, int bShowMessage = TRUE) {
 
 	int trackNumber = 0;
 	string sSQL =
-		"SELECT id,area,x,y,facing,round((unix_timestamp() - age) / 3600) as age,deep,size,gender,speed,barefoot,cid FROM `"
-		+ sTrackSQLTable + "` WHERE `area` = " + sArea + " "
-		+ "AND `x`>" +
-		xmin + " AND `x`<" + xmax + " AND `y`>" + ymin + " AND `y`<" + ymax + " LIMIT 4";
+		"SELECT id,area,x,y,facing,round(( unixts() / 3600) as age,deep,size,gender,speed,barefoot,character FROM "
+		+ sTrackSQLTable + " WHERE area = " + sArea + " "
+		+ "AND x>" +
+		xmin + " AND x<" + xmax + " AND y>" + ymin + " AND y<" + ymax + " LIMIT 4";
 	SQLQuery(sSQL);
 
-	while ( SQLFetch() == SQL_SUCCESS ) {
-		if ( SQLGetData(2) == "" )
+	while ( pF() ) {
+		if ( pG(2) == "" )
 			return;
 
-		trackDebug("Found track: " + SQLGetData(2) + ", radius = " + FloatToString(radius));
+		trackDebug("Found track: " + pG(2) + ", radius = " + FloatToString(radius));
 		//Spurenalter beeinflusst Spurensuche
-		int age = StringToInt(SQLGetData(6)); // in hours
+		int age = StringToInt(pG(6)); // in hours
 		radius -= age / 10;
 
 		trackDebug("After Age sub: " + FloatToString(radius) + ", age = " + IntToString(age));
 
 		//Spurentiefe beeinflusst Spurensuche => je tiefer desto besser
-		int deep = StringToInt(SQLGetData(7));
+		int deep = StringToInt(pG(7));
 		radius += IntToFloat(deep) / 2.0f;
 
 		trackDebug("After deep: " + FloatToString(radius));
 
 
-		float x = StringToFloat(SQLGetData(3));
-		float y = StringToFloat(SQLGetData(4));
+		float x = StringToFloat(pG(3));
+		float y = StringToFloat(pG(4));
 		float distance = getDistance(pos.x, pos.y, x, y);
 
 		trackDebug("dist vs rad: " + FloatToString(distance) + " <? " + FloatToString(radius));
@@ -147,15 +147,15 @@ void track(object oPC, int bShowMessage = TRUE) {
 			//Spur gefunden => anzeigen
 			trackDebug("-> can see it");
 
-			float facing = StringToFloat(SQLGetData(5));
+			float facing = StringToFloat(pG(5));
 			location loc = Location(area, Vector(x, y, 0.0f), facing);
 
-			int nID = StringToInt(SQLGetData(1));
-			int nCID = StringToInt(SQLGetData(12));
-			int size = StringToInt(SQLGetData(8));
-			int gender = StringToInt(SQLGetData(9));
-			int speed = StringToInt(SQLGetData(10));
-			int bareFoot = StringToInt(SQLGetData(11));
+			int nID = StringToInt(pG(1));
+			int nCID = StringToInt(pG(12));
+			int size = StringToInt(pG(8));
+			int gender = StringToInt(pG(9));
+			int speed = StringToInt(pG(10));
+			int bareFoot = StringToInt(pG(11));
 			if ( showTrack(oPC, nCID, radius, nID, loc, age, deep, size, gender, speed, bareFoot) )
 				trackNumber++;
 		}
@@ -264,12 +264,14 @@ void leaveTracksHB(object oPC) {
 	//Neue Spur speichern
 	if ( newTrack ) {
 		int nCID = GetCharacterID(oPC);
+		if (nCID < 1)
+			return;
 		SetLocalLocation(oPC, "lastTrackLocation", currentLoc);
 
 		//Spurentiefe bestimmen
 		int deep = getTrackDeep(GetWeight(oPC));
 
-		string sArea = SQLEscape(GetResRef(area));
+		string sArea = pE(GetResRef(area));
 		vector pos = GetPositionFromLocation(currentLoc);
 		string x = FloatToString(pos.x);
 		string y = FloatToString(pos.y);
@@ -277,8 +279,8 @@ void leaveTracksHB(object oPC) {
 		string gender = IntToString(GetGender(oPC));
 		string size = IntToString(GetCreatureSize(oPC));
 
-		string sSQL = "INSERT INTO `" + sTrackSQLTable + "` (`area` , `x` , `y` , `facing` , "
-					  + "`deep` , `size` , `gender` , `speed` , `barefoot`, `age`, `cid` )"
+		string sSQL = "INSERT INTO " + sTrackSQLTable + " (area , x , y , facing , "
+					  + "deep , size , gender , speed , barefoot, age, character )"
 					  + " VALUES (" +
 					  sArea + ", '" + x + "', '" + y + "', '" + facing + "', '" + IntToString(deep) + "', "
 					  + "'" +
@@ -287,8 +289,8 @@ void leaveTracksHB(object oPC) {
 					  gender +
 					  "', '" +
 					  IntToString(speed) +
-					  "', '" + IntToString(bareFoot) + "', unix_timestamp(), " + IntToString(nCID) + " );";
-		SQLExecDirect(sSQL);
+					  "', '" + IntToString(bareFoot) + "', unixts(), " + IntToString(nCID) + " );";
+		pQ(sSQL);
 		trackDebug("( " + GetName(oPC) + " ): " + sSQL);
 	}
 }
