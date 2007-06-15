@@ -713,8 +713,8 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( "hp" == sCommand )
 		ret = CommandHP(oPC, iMode);
 
-	if ( "stat" == sCommand )
-		ret = CommandStat(oPC, iMode);
+//	if ( "stat" == sCommand )
+//		ret = CommandStat(oPC, iMode);
 
 	if ( "createkey" == sCommand )
 		ret = CommandCreateKey(oPC, iMode);
