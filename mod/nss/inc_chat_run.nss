@@ -5,7 +5,7 @@
 #include "inc_getopt"
 #include "inc_chat_lib"
 #include "inc_mnx_lib"
-
+#include "inc_pgsql"
 
 const string
 COMMAND_SPLIT = "&&",
@@ -986,12 +986,12 @@ int CommandMacro(object oPC, int iMode) {
 
 
 	if ( opt("d") ) {
-		SQLQuery("select id from macro where account = " +
-			sAID + " and macro = " + SQLEscape(sMacroName) + " order by account desc limit 1;");
-		if ( SQLFetch() ) {
+		pQ("select id from macro where account = " +
+			sAID + " and macro = " + pE(sMacroName) + " order by account desc limit 1;");
+		if ( pF() ) {
 			// Delete the macro
-			SQLQuery("delete from macro where `account` = " +
-				sAID + " and `macro` = " + SQLEscape(sMacroName) + " limit 1;");
+			pQ("delete from macro where account = " +
+				sAID + " and macro = " + pE(sMacroName) + " limit 1;");
 			ToPC("Macro '" + sMacroName + "' deleted.");
 		} else {
 			ToPC("Macro '" + sMacroName + "' not found (or not yours).");
@@ -1002,12 +1002,12 @@ int CommandMacro(object oPC, int iMode) {
 	}
 
 	if ( opt("l") ) {
-		SQLQuery("select id,macro,command from macro where (account = " +
+		pQ("select id,macro,command from macro where (account = " +
 			sAID + " or account = 0) order by account desc;");
 		int n = 0;
-		while ( SQLFetch() ) {
-			sMacroName = SQLGetData(2);
-			sMacro = SQLGetData(3);
+		while ( pF() ) {
+			sMacroName = pG(2);
+			sMacro = pG(3);
 			ToPC(sMacroName + ": " + sMacro);
 			n++;
 		}
@@ -1017,14 +1017,14 @@ int CommandMacro(object oPC, int iMode) {
 	}
 
 	if ( opt("i") ) {
-		SQLQuery("select command from macro where (account = " +
+		pQ("select command from macro where (account = " +
 			sAID +
-			" or account = 0) and macro = " + SQLEscape(sMacroName) + " order by account desc limit 1;");
-		if ( !SQLFetch() ) {
+			" or account = 0) and macro = " + pE(sMacroName) + " order by account desc limit 1;");
+		if ( !pF() ) {
 			ToPC("Macro not found.");
 			return FAIL;
 		} else {
-			sMacro = SQLGetData(1);
+			sMacro = pG(1);
 			object oI = CreateItemOnObject("macro", oPC, 1);
 			SetName(oI, "Macro: " + sMacroName);
 			SetLocalString(oI, "macro", sMacro);
@@ -1036,29 +1036,29 @@ int CommandMacro(object oPC, int iMode) {
 
 
 	if ( argc() == 1 ) {
-		SQLQuery("select command from macro where (account = " +
+		pQ("select command from macro where (account = " +
 			sAID +
-			" or account = 0) and macro = " + SQLEscape(sMacroName) + " order by account desc limit 1;");
-		if ( !SQLFetch() ) {
+			" or account = 0) and macro = " + pE(sMacroName) + " order by account desc limit 1;");
+		if ( !pF() ) {
 			ToPC("Macro not found.");
 			return FAIL;
 		} else {
-			sMacro = SQLGetData(1);
+			sMacro = pG(1);
 			DelayCommand(getsleep(), RunMacro(oPC, iMode, sMacro));
 		}
 
 	} else {
 		// save new personal macro
 		SetLocalString(oPC, "macro_" + sMacroName, sMacro);
-		SQLQuery("select id from macro where account = " +
-			sAID + " and macro = " + SQLEscape(sMacroName) + " limit 1;");
+		pQ("select id from macro where account = " +
+			sAID + " and macro = " + pE(sMacroName) + " limit 1;");
 		if ( SQLFetch() ) {
-			string sID = SQLGetData(1);
-			SQLQuery("update macro set command = " + SQLEscape(sMacro) + " where id = " + sID + " limit 1;");
+			string sID = pG(1);
+			pQ("update macro set command = " + pE(sMacro) + " where id = " + sID + ";");
 			ToPC(sMacroName + " updated.");
 		} else {
-			SQLQuery("insert into macro (account, macro, command) values(" +
-				sAID + ", " + SQLEscape(sMacroName) + ", " + SQLEscape(sMacro) + ");");
+			pQ("insert into macro (account, macro, command) values(" +
+				sAID + ", " + pE(sMacroName) + ", " + pE(sMacro) + ");");
 			ToPC(sMacroName + " saved.");
 		}
 
