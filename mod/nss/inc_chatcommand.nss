@@ -44,7 +44,7 @@ int CommandCastSpell(object oPC, int iMode);
 
 int CommandOhHellBang(object oPC, int iMode);
 
-int CommandStat(object oPC, int iMode);
+//int CommandStat(object oPC, int iMode);
 
 
 
@@ -939,7 +939,7 @@ int CommandHP(object oPC, int iMode) {
 	return OK;
 }
 
-int CommandStat(object oPC, int iMode) {
+/*int CommandStat(object oPC, int iMode) {
 
 	string sType = arg(0);
 
@@ -982,7 +982,7 @@ int CommandStat(object oPC, int iMode) {
 	ToPC("End of " + sType + ".");
 
 	return OK;
-}
+}*/
 
 
 
@@ -1200,7 +1200,7 @@ int CommandRemind(object oPC, int iMode) {
 
 int CommandLastLog(object oPC, int iMode) {
 	int nCount = 15;
-	string sArea = SQLEscape(GetTag(GetArea(oPC)));
+	string sArea = pE(GetTag(GetArea(oPC)));
 
 	if ( amask(oPC, AMASK_CAN_SEE_CHATLOGS) ) {
 		if ( opt("count") )
@@ -1209,31 +1209,31 @@ int CommandLastLog(object oPC, int iMode) {
 		if ( nCount < 1 || nCount > 200 )
 			nCount = 15;
 
-		SQLQuery("select `timestamp`,`account_s`,`character_s`,`mode`,`text` from `chatlogs` where `area` = "
+		pQ("select ts,account_s,character_s,mode,text from chatlogs where area = "
 			+ sArea +
-			" and `timestamp` >= (select `timestamp` from `chatlogs` where `area`=" +
-			sArea + " order by `timestamp` desc limit " + IntToString(nCount) + ",1)" +
-			" order by `timestamp` asc;"
+			" and ts >= (select ts from chatlogs where area=" +
+			sArea + " order by ts desc limit " + IntToString(nCount) + ",1)" +
+			" order by ts asc;"
 		);
 
 	} else {
-		SQLQuery("select `timestamp`,`account_s`,`character_s`,`mode`,`text` from `chatlogs` where `area` = "
+/*		SQLQuery("select timestamp,`account_s`,`character_s`,`mode`,`text` from `chatlogs` where `area` = "
 			+ sArea +
 			" and `timestamp` >= (select `timestamp` from `chatlogs` where `area`=" +
 			sArea + " and `timestamp` >= substract(now(), interval 20 minute)" +
 			" order by `timestamp` desc limit " + IntToString(nCount) + ",1)" +
 			" order by `timestamp` asc;"
-		);
-
+		);*/
+		return FAIL;
 	}
 
-	while ( SQLFetch() ) {
+	while ( pF() ) {
 		string
-		sTS = SQLGetData(1),
-		sAcc = SQLGetData(2),
-		sChar = SQLGetData(3),
-		sMode = SQLGetData(4),
-		sText = SQLGetData(5);
+		sTS = pG(1),
+		sAcc = pG(2),
+		sChar = pG(3),
+		sMode = pG(4),
+		sText = pG(5);
 		int nMode = StringToInt(sMode);
 
 		if ( nMode & MODE_PRIVATE )
