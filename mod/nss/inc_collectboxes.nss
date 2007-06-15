@@ -1,7 +1,7 @@
 // A generic script to allow for money collection.
 
 #include "inc_pgsql"
-
+#include "_gen"
 
 
 void OnCollectboxDisturb(object oGivenByPC, object oItem) {
