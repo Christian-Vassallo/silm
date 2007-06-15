@@ -26,6 +26,7 @@ void main() {
 
 	DelayCommand(300.0, save_player(OBJECT_SELF, TRUE));
 
+/*
 	string sCharName = SQLEncodeSpecialChars(GetName(OBJECT_SELF));
 	string sKey = GetPCPublicCDKey(OBJECT_SELF);
 	string sPlayerName = SQLEncodeSpecialChars(GetPCPlayerName(OBJECT_SELF));
@@ -133,17 +134,20 @@ void main() {
 	}
 
 	int nCID = GetCharacterID(OBJECT_SELF);
+*/
 
-	if ( GetIsRidingHorse(OBJECT_SELF) ) {
+
+/*	if ( GetIsRidingHorse(OBJECT_SELF) ) {
 		sSQL = "SELECT name FROM tab_pferde WHERE `character` = '" + IntToString(nCID) + "' limit 1;";
 		SQLExecDirect(sSQL);
 		if ( SQLFetch() == SQL_SUCCESS ) {
 			SetLocalString(OBJECT_SELF, "horse_name", SQLGetData(1));
 		}
 	}
+*/
 
 
-	if ( !GetLocalInt(OBJECT_SELF, "first_login") && !GetIsDM(OBJECT_SELF) ) {
+/*	if ( !GetLocalInt(OBJECT_SELF, "first_login") && !GetIsDM(OBJECT_SELF) ) {
 		SQLQuery("select `AreaTag`,X,Y,Z from tab_chars where Char_Name = '" +
 			sCharName + "' and GSA_Account = '" + sPlayerName + "' limit 1;");
 		if ( SQLFetch() ) {
@@ -162,6 +166,8 @@ void main() {
 		}
 		SetLocalInt(OBJECT_SELF, "first_login", 1);
 	}
+*/
+
 }
 
 // Return Alignmentstring
