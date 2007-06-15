@@ -79,10 +79,10 @@ void LoadEffects(object oPC) {
 	int nfx = 0;
 	pQ(
 		"select when,effect,duration_type,duration,veffect from persistent_effects where character = "	+ IntToString(nCID) + ";");
-	while ( SQLFetch() ) {
-		//string sWhen = SQLGetData(1);
-		string sEffect = SQLGetData(2);
-		//string sDurationType = SQLGetData(3);
+	while ( pF() ) {
+		//string sWhen = pG(1);
+		string sEffect = pG(2);
+		//string sDurationType = pG(3);
 
 		SetLocalString(oPC, "peffect_" + IntToString(nfx), sEffect);
 		nfx++;

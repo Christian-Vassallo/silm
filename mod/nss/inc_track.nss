@@ -102,7 +102,7 @@ void track(object oPC, int bShowMessage = TRUE) {
 	radius += GetLevelByClass(CLASS_TYPE_RANGER, oPC) / 2.0f; //Waldlaeufer-Bonus
 	radius += GetLevelByClass(CLASS_TYPE_DRUID, oPC) / 3.0f; //Druiden-Bonus
 
-	string sArea = SQLEscape(GetResRef(area));
+	string sArea = pE(GetResRef(area));
 	vector pos = GetPosition(oPC);
 	string xmin = FloatToString(pos.x - radius);
 	string xmax = FloatToString(pos.x + radius);
@@ -116,7 +116,7 @@ void track(object oPC, int bShowMessage = TRUE) {
 		+ sTrackSQLTable + " WHERE area = " + sArea + " "
 		+ "AND x>" +
 		xmin + " AND x<" + xmax + " AND y>" + ymin + " AND y<" + ymax + " LIMIT 4";
-	SQLQuery(sSQL);
+	pQ(sSQL);
 
 	while ( pF() ) {
 		if ( pG(2) == "" )
