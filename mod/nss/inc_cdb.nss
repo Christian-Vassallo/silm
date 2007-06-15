@@ -46,7 +46,7 @@ void UpdateMessageCount(object oPC, int nMessages) {
 		return;
 
 	pQ("update characters set messages = messages + " + IntToString(nMessages) + 
-		" where id = " + IntToString(nCID) + " limit 1;");
+		" where id = " + IntToString(nCID) + ";");
 }
 
 object GetPCByAID(int nAID) {
@@ -89,7 +89,7 @@ int GetAccountID(object oPC) {
 
 
 	pQ("select id from " +
-		TABLE_ACCOUNTS + " where account = " + pE(GetPCName(oPC)) + " limit 1;");
+		TABLE_ACCOUNTS + " where account = " + pE(GetPCName(oPC)) + ";");
 	if ( !pF() )
 		return 0;
 	else {
@@ -108,7 +108,7 @@ int GetAccountIsDM(object oPC) {
 	if ( 0 == iID )
 		return 0;
 
-	pQ("select dm from " + TABLE_ACCOUNTS + " where id = " + IntToString(iID) + " limit 1;");
+	pQ("select dm from " + TABLE_ACCOUNTS + " where id = " + IntToString(iID) + ";");
 	if ( !pF() )
 		return 0;
 
@@ -135,7 +135,7 @@ int GetCharacterID(object oPC) {
 
 	pQ("select id from " +
 		TABLE_CHARACTERS +
-		" where  account = " + IntToString(nAID) + " and character = " + pE(sAcc) + " limit 1;");
+		" where  account = " + IntToString(nAID) + " and character = " + pE(sAcc) + ";");
 
 	if ( !pF() )
 		return 0;
@@ -163,12 +163,12 @@ int GetOrCreateAccountID(object oPC) {
 
 	sAccount = pE(sAccount);
 
-	pQ("select id from " + TABLE_ACCOUNTS + " where account = " + sAccount + " limit 1;");
+	pQ("select id from " + TABLE_ACCOUNTS + " where account = " + sAccount + ";");
 	if ( !pF() )
 		pQ("insert into " +
 			TABLE_ACCOUNTS + " (account, create_on) values(" + sAccount + ");");
 
-	pQ("select id from " + TABLE_ACCOUNTS + " where account = " + sAccount + " limit 1;");
+	pQ("select id from " + TABLE_ACCOUNTS + " where account = " + sAccount + ";");
 	if ( !pF() )
 		return 0;
 	else {
@@ -202,7 +202,7 @@ int GetOrCreateCharacterID(object oPC) {
 
 	pQ("select id from " +
 		TABLE_CHARACTERS +
-		" where account = " + IntToString(nAID) + " and character =" + sChar + " limit 1;");
+		" where account = " + IntToString(nAID) + " and character =" + sChar + ";");
 
 	if ( !pF() )
 		pQ("insert into " +
@@ -213,7 +213,7 @@ int GetOrCreateCharacterID(object oPC) {
 
 	pQ("select id from " +
 		TABLE_CHARACTERS +
-		" where account = " + IntToString(nAID) + " and character = " + sChar + " limit 1;");
+		" where account = " + IntToString(nAID) + " and character = " + sChar + ";");
 
 	if ( !pF() )
 		return 0;
@@ -267,7 +267,7 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 	/* CHARACTER */
 
 	pQ("select id from characters where  account = " +
-		sAID + " and character = " + sChar + " limit 1;");
+		sAID + " and character = " + sChar + ";");
 
 	// Create some initial record.
 	if ( !pF() ) {
@@ -329,7 +329,7 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 		"fortitude = '" + IntToString(GetFortitudeSavingThrow(oPC))  + "', " +
 		"will = '" + IntToString(GetWillSavingThrow(oPC))  + "'" +
 
-		" where id='" + sID + "' limit 1;");
+		" where id='" + sID + "';");
 
 	// XXX update nwnx_functions to work with 1.67
 	//pQ("update characters set description = '" + sDesc + "' where id='" + sID + "' limit 1;");
@@ -342,13 +342,13 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 	pQ("update characters set area = " + sArea + ", x = '" + FloatToString(v.x) + "', " +
 		"y = '" +
 		FloatToString(v.y) +
-		"', z = '" + FloatToString(v.z) + "', f = '" + FloatToString(GetFacing(oPC)) + "' limit 1;");
+		"', z = '" + FloatToString(v.z) + "', f = '" + FloatToString(GetFacing(oPC)) + "';");
 
 
 	if ( bIsLogin ) {
 
 		// Update last login time
-		pQ("update characters set last_login=now() where id='" + sID + "' limit 1;");
+		pQ("update characters set last_login=now() where id='" + sID + "';");
 
 
 		// Find domains
@@ -411,7 +411,7 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 
 			"domain1 = '" + sDomain1 + "', domain2='" + sDomain2 + "' " +
 
-			" where id='" + sID + "' limit 1;");
+			" where id='" + sID + "';");
 
 
 		// Update keys, if necessary.
@@ -420,7 +420,7 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 				sOtherKeys += " ";
 			sOtherKeys += sKey;
 			pQ("update characters set other_keys='" +
-				sOtherKeys + "' where id='" + sID + "' limit 1;");
+				sOtherKeys + "' where id='" + sID + "';");
 		}
 
 //		pQ("update characters set login_time = now() where id='" + sID + "' limit 1;");

@@ -90,14 +90,14 @@ int GetBaseXPForLevel(int iLevel) {
 int GetLegacyCombatXP(object oPC) {
 	pB();
 	int cid = GetCharacterID(oPC);
-	pQ("select xp_combat from characters where id = " + IntToString(cid) + " limit 1;");
+	pQ("select xp_combat from characters where id = " + IntToString(cid) + ";");
 	pF();
 	int nCap = StringToInt(SQLGetData(1));
 	if ( -1 == nCap ) {
 		nCap = GetLegacyPersistentInt(oPC, "XP_Combat");
 		// no_more_legacy
 		pQ("update characters set  xp_combat = " +
-			IntToString(nCap) + ", legacy_xp = 1 where id =" + IntToString(cid) + " limit 1;");
+			IntToString(nCap) + ", legacy_xp = 1 where id =" + IntToString(cid) + ";");
 	}
 	pC();
 	return nCap;
@@ -106,7 +106,7 @@ int GetLegacyCombatXP(object oPC) {
 void SetLegacyCombatXP(object oPC, int nXP) {
 	int cid = GetCharacterID(oPC);
 	SQLQuery("update characters set xp_combat=" +
-		IntToString(nXP) + " where id=" + IntToString(cid) + " limit 1;");
+		IntToString(nXP) + " where id=" + IntToString(cid) + ";");
 }
 
 
@@ -130,7 +130,7 @@ int GetCategoryXPForDay(object oPC, string sCategory, int nYear, int nMonth, int
 	pQ("select xp from " + sCategory + "_xp where character = " +
 		IntToString(cid) +
 		" and year = " + IntToString(nYear) + " and month = " + IntToString(nMonth) + 
-		" and day = " + IntToString(nDay) + " limit 1;");
+		" and day = " + IntToString(nDay) + ";");
 	if ( !pF() ) {
 		return 0;
 	}
@@ -143,7 +143,7 @@ void SetCategoryXPForDay(object oPC, string sCategory, int nXP, int nYear, int n
 	pQ("select xp from " + sCategory + "_xp where character = " +
 		IntToString(cid) +
 		" and year = " + IntToString(nYear) + " and month = " + IntToString(nMonth) +
-		" and day = " + IntToString(nDay) + " limit 1;");
+		" and day = " + IntToString(nDay) + ";");
 		
 	if ( !pF() )
 		pQ("insert into " + sCategory + "_xp (character, xp, year, month, day) values(" +
@@ -155,7 +155,7 @@ void SetCategoryXPForDay(object oPC, string sCategory, int nXP, int nYear, int n
 			" where character = " +
 			IntToString(cid) +
 			" and year = " + IntToString(nYear) + " and month = " + IntToString(nMonth) +
-			" and day = " + IntToString(nDay) + " limit 1;"
+			" and day = " + IntToString(nDay) + ";"
 		);
 }
 

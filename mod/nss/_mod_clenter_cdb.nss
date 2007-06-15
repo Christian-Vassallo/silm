@@ -28,7 +28,7 @@ void main() {
 	int nAID = GetAccountID(oPC);
 	string sAID = IntToString(nAID);
 
-	pQ("select status,amask from accounts where id='" + sAID + "' limit 1;");
+	pQ("select status,amask from accounts where id='" + sAID + "';");
 	pF();
 	string sAccountStatus = pG(1);
 	int namask = StringToInt(pG(2));
@@ -54,7 +54,7 @@ void main() {
 		return;
 
 
-	pQ("select status from characters where id='" + IntToString(nCID) + "' limit 1;");
+	pQ("select status from characters where id='" + IntToString(nCID) + "';");
 	pF();
 	string sStatus = pG(1);
 
