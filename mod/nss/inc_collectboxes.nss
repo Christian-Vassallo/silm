@@ -22,7 +22,7 @@ void OnCollectboxDisturb(object oGivenByPC, object oItem) {
 	int nAmount = GetItemStackSize(oItem) * nMulti;
 
 	if ( nAmount > 0 )
-		pG("update collectboxes set value=value+" +
+		pQ("update collectboxes set value=value+" +
 			IntToString(nAmount) + " where name=" + pE(sName) + ";");
 
 	DestroyObject(oItem);
