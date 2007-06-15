@@ -15,21 +15,6 @@
 #include "inc_cdb"
 
 const string PINDB = "mappins";
-/*
- * DROP TABLE IF EXISTS `tab_mappins`;
- * CREATE TABLE IF NOT EXISTS `tab_mappins` (
- * `id` bigint(20) NOT NULL auto_increment,
- * `account` varchar(250) NOT NULL default '',
- * `charname` text NOT NULL,
- * `text` text NOT NULL,
- * `x` float NOT NULL default '0',
- * `y` float NOT NULL default '0',
- * `area` varchar(250) NOT NULL default '',
- * PRIMARY KEY  (`id`),
- * KEY `account` (`account`)
- * ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
- */
-
 
 // Saves all MapPins for player oPC,
 // deleting the old ones.
@@ -53,7 +38,7 @@ int SaveMapPinsForPlayer(object oPC) {
 	string sCID = IntToString(nCID);
 
 	/* First, delete the old ones in the Database. */
-	SQLExecDirect("delete from `" + PINDB + "` where `character` = " + sCID + ";");
+	SQLExecDirect("delete from " + PINDB + " where character = " + sCID + ";");
 
 	int count = GetLocalInt(oPC, "NW_TOTAL_MAP_PINS");
 
@@ -76,7 +61,7 @@ int SaveMapPinsForPlayer(object oPC) {
 		}
 
 		SQLExecDirect(
-			"insert into `" + PINDB + "` (`character`,`text`,`x`,`y`,`area`) " +
+			"insert into " + PINDB + " (character,text,x,y,area) " +
 			"values(" +
 			sCID + ", " + s + ", '" + FloatToString(x) + "', '" + FloatToString(y) + "', " + a + ");"
 		);
@@ -93,8 +78,8 @@ int RestoreMapPinsForPlayer(object oPC) {
 	string sCID = IntToString(nCID);
 
 
-	SQLExecDirect("select `text`,`x`,`y`,`area` from `" +
-		PINDB + "` where `character` = '" + sCID + "' limit 500;");
+	SQLExecDirect("select text,x,y,area from " +
+		PINDB + " where character = '" + sCID + "' limit 500;");
 
 	int count = 0;
 
