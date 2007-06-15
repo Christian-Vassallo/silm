@@ -59,11 +59,11 @@ string gvSetVar(string sKey, string sType, string sValue) {
 	if (gvExistsVar(sKey, sType))
 		pQ("update " + GV_TABLE + " set value = " + pE(sValue) + 
 			" where key = " + pE(sKey) + " and type = " + pE(sType) + 
-			" limit 1;");
+			";");
 	else
 		pQ("insert into " + GV_TABLE + " (key, type, value) values(" +
 			pE(sKey) + ", " + pE(sType) + ", " + pE(sValue) + 
-			") limit 1;"
+			");"
 		);
 	return sValue;
 }
@@ -76,7 +76,7 @@ string gvGetVar(string sKey, string sType) {
 	pQ("select value, date_part('epoch', now())::int from " + GV_TABLE + " where " +
 		" key = " + pE(sKey) + 
 		" and type = " + pE(sType) + 
-		" limit 1;");
+		";");
 	if (pF()) {
 		SetLocalString(GetModule(), cacheKey, pG(1));
 		SetLocalInt(GetModule(), cacheKey, StringToInt(pG(2)));
@@ -89,6 +89,6 @@ int gvExistsVar(string sKey, string sType) {
 	pQ("select value from " + GV_TABLE + " where " +
 		" key = " + pE(sKey) + 
 		" and type = " + pE(sType) + 
-		" limit 1;");
+		";");
 	return 1 == pF();
 }
