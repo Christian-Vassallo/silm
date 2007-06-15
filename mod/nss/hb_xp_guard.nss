@@ -12,8 +12,8 @@ void AddGMXP(object oPlayer, string sGMs, int nAmount) {
 		return;
 
 	pQ("insert into gm_xp (cid,account_gms,xp) values( " + IntToString(nCID) + 
-		", { " + pE(sGMs) + 
-		"}, " + IntToString(nAmount) + " );");
+		", '{ " + sGMs + 
+		"}', " + IntToString(nAmount) + " );");
 
 }
 
