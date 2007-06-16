@@ -52,7 +52,7 @@ void pSQLInit() {
 			"................................................................................................................................";
 	SetLocalString(GetModule(), "NWNX!PGSQL!SPACER", sMemory);
 	pQ("set search_path = nwserver;");
-	pQ("set client_encoding = iso-8859-1;");
+	pQ("set client_encoding = 'iso-8859-1';");
 }
 
 string pSQLGetLastQuery() {
