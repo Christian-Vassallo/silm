@@ -166,7 +166,7 @@ int GetOrCreateAccountID(object oPC) {
 	pQ("select id from " + TABLE_ACCOUNTS + " where account = " + sAccount + ";");
 	if ( !pF() )
 		pQ("insert into " +
-			TABLE_ACCOUNTS + " (account, create_on) values(" + sAccount + ");");
+			TABLE_ACCOUNTS + " (account) values(" + sAccount + ");");
 
 	pQ("select id from " + TABLE_ACCOUNTS + " where account = " + sAccount + ";");
 	if ( !pF() )
