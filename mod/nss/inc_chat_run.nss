@@ -400,6 +400,8 @@ void RegisterAllCommands() {
 
 	RegisterCommand("sql", "", 1, 1);
 	RAF(AMASK_CAN_DO_BACKEND);
+	RegisterCommand("psql", "", 1, 1);
+	RAF(AMASK_CAN_DO_BACKEND);
 
 	RegisterCommand("createkey", "app=", 1, 2);
 	RHs("[--app=x] key_tag [name]", 0);
@@ -664,6 +666,8 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	
 	if ( "sql" == sCommand )
 		ret = CommandSQL(oPC, iMode);
+	if ( "psql" == sCommand )
+		ret = CommandpSQL(oPC, iMode);
 	
 	if ( "inspect" == sCommand )
 		ret = CommandInspect(oPC, iMode);
