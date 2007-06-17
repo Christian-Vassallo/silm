@@ -11,7 +11,7 @@ void AddGMXP(object oPlayer, string sGMs, int nAmount) {
 	if (!nCID)
 		return;
 
-	pQ("insert into gm_xp (cid,account_gms,xp) values( " + IntToString(nCID) + 
+	pQ("insert into gm_xp (character,account_gms,xp) values( " + IntToString(nCID) + 
 		", '{ " + sGMs + 
 		"}', " + IntToString(nAmount) + " );");
 
