@@ -13,7 +13,6 @@
 
 <%= form_tag %>
 <h1>Character: <%= @c['character'] %></h1>
-<small><%= @c.account.amask_a.join(' | ') %></small><br>
 <h2><%= @c.race %><%= " (" + @c.subrace + ")" if @c.subrace != "" %> (<%= @c.sex %>), <%= "%.1f" % @c.age %> Jahre</h2>
 <h3>Status: <%= (amask(Account::IS_CHARACTER_ADMIN) && !@c.locked?) ? select("c", "status",
   Character::StatusFields, { :selected => @c.status }

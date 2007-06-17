@@ -1,6 +1,12 @@
 class ChessGame < ActiveRecord::Base
-	has_one :white, :class_name => 'account', :foreign_key => 'id'
-	has_one :black, :class_name => 'account', :foreign_key => 'id'
+
+	def white
+		Account::find(super)
+	end
+
+	def black
+		Account::find(super)
+	end
 
 	# Returns the winner
 	def winner

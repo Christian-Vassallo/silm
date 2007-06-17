@@ -44,6 +44,16 @@ Rails::Initializer.run do |config|
   
   # config.action_controller.session_store = :active_record_store
   # config.action_controller.session_options[:session_expires] = Time.local(2020, "jan")
+
+  config.action_mailer.smtp_settings = {
+    :address => 'localhost',
+    :port => 25,
+    :domain => 'swordcoast.net',
+    :user_name => 'silm',
+    :password => '4nGGgXvNitfDzXiMCUtbXGAJZ3JL8H',
+    :authentication => 'login'
+  }
+
 end
 
 # Add new inflection rules using the following format 

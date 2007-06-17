@@ -93,5 +93,23 @@ if amask(Account::CAN_EDIT_MERCHANTS)
     @m.save
   end
 end
+	
+	def auto_complete_for_new_resref
+		auto_complete_responder_for_resrefs(params[:new][:resref])
+	end
+
+	private
+	def auto_complete_responder_for_resrefs(ref)
+		# resref => { :name }
+		ref = ref.downcase
+		@resrefs = CraftingProduct::RESREFS.reject{|resref,hash|
+			resref.downcase !~ /^.*#{Regexp.escape(ref)}.*$/ && 
+			(hash[:name] || "").downcase !~ /^.*#{Regexp.escape(ref)}.*$/
+		}
+
+		@resrefs = @resrefs.sort[0,15]
+
+		render :partial => 'autocomplete/resref'
+	end
 
 end

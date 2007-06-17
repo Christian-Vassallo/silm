@@ -46,7 +46,7 @@ class GemChainsController < ApplicationController
 			GemChain::delete(id)
 		rescue
 		end
-		redirect_to :action => 'index', :controller => 'loot_chains'
+		redirect_to :action => 'index', :controller => 'gem_chains'
 	end
 
 	private

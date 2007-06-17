@@ -2,16 +2,20 @@
 
 <table>
   <tr>
-  <% for column in ChessGame.content_columns %>
-    <th><%= column.human_name %></th>
-  <% end %>
+    <th>Am</th>
+    <th>Resultat</th>
+    <th>Weiss</th>
+    <th>Schwarz</th>
+    <th>Variante</th>
   </tr>
   
 <% for chess_game in @chess_games %>
   <tr>
-  <% for column in ChessGame.content_columns %>
-    <td><%=h chess_game.send(column.name) %></td>
-  <% end %>
+    <td><%=h chess_game.end %></td>
+    <td><%= chess_game.result %></td>
+    <td><%= link_to_account chess_game.white %></td>
+    <td><%= link_to_account chess_game.black %></td>
+    <td><%= chess_game.variant %></td>
   </tr>
 <% end %>
 </table>

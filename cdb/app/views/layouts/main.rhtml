@@ -23,11 +23,13 @@
 * <%= link_to_if (get_user && get_user.details?), "Schach", :controller => 'chess', :action => 'index' %>&nbsp;
 * <%= link_to_if amask(Account::AMASK_CAN_CHANGE_WEATHER), "Weather", :controller => 'weather', :action => 'index' %>&nbsp;
 * <%= link_to_if amask(Account::AMASK_CAN_SEE_ALL_MENTORS), "MentorData", :controller => 'stat', :action => 'mentor' %>&nbsp;
-* <%= link_to_if amask(Account::AMASK_CAN_SEE_ALL_CHARACTERS), "TimeXP", :controller => 'stat', :action => 'time_xp' %>&nbsp;
-* <%= link_to_if amask(Account::CAN_SEE_GV), "Settings", :controller => 'set', :action => 'index' %>
 * <%= link_to_if amask(Account::SEE_ALL_CHARACTERS), "LPH Toplist", :controller => 'stat', :action => 'lph_toplist' %>
+<br>
+<%= link_to_if amask(Account::AMASK_CAN_SEE_ALL_CHARACTERS), "TimeXP", :controller => 'stat', :action => 'time_xp' %>&nbsp;
+* <%= link_to_if amask(Account::CAN_SEE_GV), "Settings", :controller => 'set', :action => 'index' %>
 * <%= link_to_if amask(Account::CAN_SEE_LOOT_CHAINS), "Loot Chains", :controller => 'loot_chains', :action => 'index' %>
 * <%= link_to_if amask(Account::CAN_SEE_LOOT_CHAINS), "Gem Chains", :controller => 'gem_chains', :action => 'index' %>
+* <%= link_to_if amask(Account::IS_GM), "Locations", :controller => 'location', :action => 'index' %>
 <br>
 
 ObjectAdmin:
@@ -86,7 +88,7 @@ Craft:
 </td></tr>
 </table>
 <% 
-  if amask(Account::CAN_SEE_AUDIT_TRAILS)
+  if false && amask(Account::CAN_SEE_AUDIT_TRAILS)
 %>
 <hr>
 <%= debug(params) %>

@@ -43,7 +43,7 @@ class StatController < ApplicationController
   sort_by = params[:sort_by]
   sort_order = params[:sort_order] == 'asc' ? 'asc' : 'desc'
 
-  where = " where "
+  where = " where cid != 0 and "
   where += " unix_timestamp(str_to_date(concat(day, '.', month, '.', year), '%%d.%%m.%%Y')) <= %d" % [@tend.to_i] 
     where += " and unix_timestamp(str_to_date(concat(day, '.', month, '.', year), '%%d.%%m.%%Y')) >= %d" % [@tstart.to_i] 
     where += " and cid = %d" % [@for_cid] if @for_cid > 0
