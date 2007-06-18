@@ -1212,7 +1212,7 @@ int CommandLastLog(object oPC, int iMode) {
 		pQ("select ts,account_s,character_s,mode,text from chatlogs where area = "
 			+ sArea +
 			" and ts >= (select ts from chatlogs where area=" +
-			sArea + " order by ts desc limit " + IntToString(nCount) + ",1)" +
+			sArea + " order by ts desc offset " + IntToString(nCount) + " limit 1)" +
 			" order by ts asc;"
 		);
 
