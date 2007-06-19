@@ -529,7 +529,7 @@ struct Recipe FindRecipeByPlanOrComponents(string sPlan, string sComponents, int
 				  +
 				  "skill, skill_dc, ability, ability_dc, feat, count_min, count_max, xp_cost, practical_xp_factor, "
 				  +
-				  "max_per_day, lock_duration, name, desc, spell_fail, id, components_save_dc, "
+				  "max_per_day, lock_duration, name, description, spell_fail, id, components_save_dc, "
 				  +
 				  "s_craft";
 

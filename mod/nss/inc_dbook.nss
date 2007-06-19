@@ -45,7 +45,7 @@ void DBook_MakeDialog(object oPC) {
 		DeleteLocalInt(oPC, "selected_recipe");
 
 		if (GetIsDM(oPC) )
-			pQ("select id, name from craft_prod where cskill = " +
+			pQ("select id, name from craft_recipes where cskill = " +
 				IntToString(nCSkill) + " order by name asc;");
 		else
 			pQ(
