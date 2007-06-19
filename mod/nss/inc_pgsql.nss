@@ -26,6 +26,9 @@ int pF();
 int pSQLFetch();
 
 string pG(int n);
+int pGi(int n);
+float pGf(int n);
+
 // Return value of column iCol in the current row of result set sResultSetName
 string pSQLGetData(int iCol);
 
@@ -106,6 +109,12 @@ void pR() {
 
 string pG(int n) {
 	return pSQLGetData(n);
+}
+int pGi(int n) {
+	return StringToInt(pSQLGetData(n));
+}
+float pGf(int n) {
+	return StringToFloat(pSQLGetData(n));
 }
 
 string pSQLGetData(int iCol) {
