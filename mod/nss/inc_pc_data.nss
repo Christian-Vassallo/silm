@@ -88,7 +88,7 @@ void save_player(object oPC, int autosave = FALSE) {
 	// SaveMapPinsForPlayer(oPC);
 
 	// save Location
-	if ( GetLocalInt(GetArea(oPC), "no_save") != 1 ) {
+	/*if ( GetLocalInt(GetArea(oPC), "no_save") != 1 ) {
 		string sCharName = SQLEncodeSpecialChars(GetName(oPC));
 		string sPlayerName = SQLEncodeSpecialChars(GetPCPlayerName(oPC));
 		vector vPosition = GetPosition(oPC);
@@ -106,7 +106,7 @@ void save_player(object oPC, int autosave = FALSE) {
 					  "  WHERE Char_Name='" + sCharName + "' AND GSA_Account='" + sPlayerName + "';";
 		SQLExecDirect(sSQL);
 		//SendMessageToPC(oPC, "Location saved: "+ sSQL);
-	}
+	}*/
 
 	/* DONT save polymorphed characters. That re-applies the polymorph effect
 	 * and thus the visuals, and re-sets the TP to Max + 10 */
