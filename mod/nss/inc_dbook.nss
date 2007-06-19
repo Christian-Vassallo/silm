@@ -45,17 +45,17 @@ void DBook_MakeDialog(object oPC) {
 		DeleteLocalInt(oPC, "selected_recipe");
 
 		if (GetIsDM(oPC) )
-			SQLQuery("select `id`, `name` from `craft_prod` where `cskill` = " +
-				IntToString(nCSkill) + " order by `name` asc;");
+			pQ("select id, name from craft_prod where cskill = " +
+				IntToString(nCSkill) + " order by name asc;");
 		else
-			SQLQuery(
-				"select `id`, `name` from `craft_prod` where `id` = (select `recipe` from `craft_rcpbook` where `craft_prod`.`id` = `craft_rcpbook`.`recipe` and `character` = "
+			pQ(
+				"select id, name from craft_recipes where id = (select recipe from craft_rcpbook where craft_recipes.id = craft_rcpbook.recipe and character = "
 				+ IntToString(nCID) +
-				" and `cskill` = " + IntToString(nCSkill) + " limit 1) and active = 1 order by `name` asc;");
+				" and cskill = " + IntToString(nCSkill) + " limit 1) and active = 1 order by name asc;");
 
-		while ( SQLFetch() ) {
-			nID = StringToInt(SQLGetData(1));
-			sName = SQLGetData(2);
+		while ( pF() ) {
+			nID = StringToInt(pG(1));
+			sName = pG(2);
 
 			AddListItem(oPC, "rcp", sName);
 			SetListInt(oPC, "rcp", nID);
@@ -98,18 +98,18 @@ void DBook_MakeDialog(object oPC) {
 
 		ClearList(oPC, "rcp");
 
-		SQLQuery(
-			"select replace(`desc`,'\r\n','\n'),`cskill_min`,`cskill_max` from `craft_prod` where `id` = " +
+		pQ(
+			"select description,cskill_min,cskill_max from craft_recipes where id = " +
 			IntToString(nID) + " limit 1;");
 
-		if ( !SQLFetch() ) {
+		if ( !pF() ) {
 			sRecipeText =
 				"Rezept nicht gefunden!  Dies ist ein Datenbank-Fehler; bitte die Uhrzeit und was gerade getan wurde merken und das ganze dann einem SL melden.";
 		} else {
 			string
-			sD = SQLGetData(1),
-			sMin = SQLGetData(2),
-			sMax = SQLGetData(3);
+			sD = pG(1),
+			sMin = pG(2),
+			sMax = pG(3);
 			sRecipeText = sD + "  Benoetigte Mindest-Faehigkeit in diesem Handwerk: " + sMin;
 
 			AddListItem(oPC, "rcp", "Dieses Rezept als Arbeitsplan festlegen.");

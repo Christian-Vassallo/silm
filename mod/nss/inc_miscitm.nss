@@ -7,7 +7,6 @@
 #include "inc_decay"
 #include "inc_healerkit"
 #include "inc_kjcurse"
-#include "inc_keystone"
 #include "inc_horse"
 #include "inc_craft"
 #include "inc_craft_hlp"
@@ -287,26 +286,16 @@ int ActivateMiscItem(object oPC, object oItem, location lTarget, object oTarget)
 //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-// Zugangssteine
-//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-
-	if ( GetStringRight(sTag, 9) == "_keystone" ) {
-		UseKeyStone(oPC, oTarget, oItem);
-		return 1;
-	}
-//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-
-//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 // Nishunes Spiegel der Offenbarung
 //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
-	if ( sTag == "spiegel_offenbarung" ) {
+/*	if ( sTag == "spiegel_offenbarung" ) {
 		//SendMessageToPC(oPC, "Die Nebel im Spiegel lften sich langsam und formen ein klares Bildnis");
 		ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectAbilityIncrease(ABILITY_WISDOM, 5), oPC, 3600.0);
 		ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(VFX_DUR_PROT_PREMONITION), oPC,
 			3600.0);
 		return 1;
-	}
+	}*/
 //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -375,27 +364,29 @@ int ActivateMiscItem(object oPC, object oItem, location lTarget, object oTarget)
 			Notify(MSG_CRAFT_NEED_BOOK_TO_SCRIBE, oPC);
 		} else {
 
+			pB();
 			// Is it already in there?
-			SQLQuery("select count(`id`) from `" +
+			pQ("select count(id) from " +
 				TABLE_RCPBOOK +
-				"` where `character` = " +
+				" where character = " +
 				IntToString(nCID) +
-				" and `cskill` = " +
-				IntToString(csk) + " and `recipe` = " + IntToString(recipe) + " limit 1;");
-			SQLFetch();
-			if ( SQLGetData(1) == "1" ) {
+				" and cskill = " +
+				IntToString(csk) + " and recipe = " + IntToString(recipe) + " limit 1;");
+			if ( pF() ) {
 				Notify(MSG_CRAFT_BOOK_HAS_RECIPE, oPC);
 			} else {
-				SQLQuery("insert into `" +
+				pQ("insert into " +
 					TABLE_RCPBOOK +
-					"` (`character`,`cskill`,`recipe`) values(" +
-					IntToString(nCID) + ", " + IntToString(csk) + ", " + IntToString(recipe) + ");");
+					" (character,cskill,recipe) values(" +
+					IntToString(nCID) + ", " + IntToString(csk) + ", " + 
+					IntToString(recipe) + ");");
 
 				AssignCommand(oPC, ActionPlayAnimation(ANIMATION_FIREFORGET_READ));
 
 				Notify(MSG_CRAFT_BOOK_RECIPE_ADDED, oPC);
 				DestroyObject(oItem);
 			}
+			pC();
 		}
 		return 1;
 	}

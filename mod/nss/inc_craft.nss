@@ -5,7 +5,6 @@
 
 #include "inc_craft_hlp"
 #include "inc_craft_data"
-#include "inc_mysql"
 #include "inc_cdb"
 #include "inc_2dacache"
 #include "inc_draw"

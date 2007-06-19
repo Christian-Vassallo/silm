@@ -19,17 +19,9 @@ void main() {
 	if ( iSelPart > 0 ) {
 		// listen for sub-options
 		switch ( iSelection ) {
+
 			case 1:
-
-				// SQLQuery("select `name` from `" + TABLE_PROD + "` where `id` = " + IntToString(iSelPart));
-				// SQLFetch();
-				// sName = SQLGetData(1);
-
 				SetLocalInt(oPC, "craft_plan", iSelPart);
-				//SetLocalString(oPC, "craft_plan", sPlan);
-				//SetLocalString(oPC, "craft_plan_name", sName);
-
-				// Notify(MSG_CRAFT_PLAN_SET + sName, oPC);
 				break;
 
 			default:
