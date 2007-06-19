@@ -1,6 +1,7 @@
 #include "inc_audit"
 #include "inc_debug"
 #include "inc_mysql"
+#include "inc_pgsql"
 #include "inc_nwnx_func"
 #include "inc_currency"
 #include "inc_2dacache"
@@ -120,6 +121,8 @@ int StringToBool(string s);
 string BoolToString(int b);
 
 int GetUnixTimestamp();
+
+string GetTimestampTZ();
 
 
 // Returns the unix ts when the mod was started
@@ -328,6 +331,12 @@ int GetUnixTimestamp() {
 	SQLQuery("select unix_timestamp();");
 	SQLFetch();
 	return StringToInt(SQLGetData(1));
+}
+
+string GetTimestampTZ() {
+	pQ("select now()::timestamptz;");
+	pF();
+	return pG(1);
 }
 
 
