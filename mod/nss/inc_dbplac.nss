@@ -55,7 +55,7 @@ void LoadPlaciesForArea(object oA) {
 		f = StringToFloat(pG(5));
 		sName = pG(6);
 		id = StringToInt(pG(7));
-		nLocked = StringToInt(pG(8));
+		nLocked = pGb(8);
 
 		lT = Location(oA, v, f);
 		object oP = CreateObject(OBJECT_TYPE_PLACEABLE, sResRef, lT, FALSE);
@@ -146,7 +146,7 @@ int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
 			"" + pE(GetResRef(oP)) + ", " +
 			"" + FloatToString(v.x) + ", " + FloatToString(v.y) + ", " + FloatToString(v.z) + ", " +
 			"'" + FloatToString(f) + "', " +
-			"" + IntToString(GetLocked(oP)) + ", " + IntToString(nID) + "" +
+			"" + (GetLocked(oP) ? "t" : "f") + ", " + (nID == 0 ? "NULL" : IntToString(nID)) + "" +
 			")");
 
 		pQ("select id from " + PLAC_TABLE + " order by id desc limit 1;");
@@ -166,7 +166,7 @@ int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
 					"name=" + sName + ", " +
 					"store_tag=" + sStoreTag + ", " +
 					"lock_key=" + sLockKey + ", " +
-					"last_placed_by=" + IntToString(nID) + " " +
+					"last_placed_by=" + (nID == 0 ? "NULL" : IntToString(nID)) + " " +
 
 					" where id = " + IntToString(id) + ";";
 
