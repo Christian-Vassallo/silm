@@ -19,7 +19,7 @@ void main() {
 
 	SetLocalString(OBJECT_SELF, "GameLog", "");
 
-	SetLocalInt(OBJECT_SELF, "GameStart", GetUnixTimestamp());
+	SetLocalString(OBJECT_SELF, "GameStart", GetTimestampTZ());
 
 
 	int nVariant = GetLocalInt(OBJECT_SELF, "nVariant");

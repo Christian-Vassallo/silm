@@ -7,7 +7,7 @@ const string CHESS_TABLE = "chess_games";
 
 void SaveChessGame(object oGameMaster) {
 
-	int nStart = GetLocalInt(oGameMaster, "GameStart");
+	string sStart = GetLocalString(oGameMaster, "GameStart");
 	int variant = GetLocalInt(oGameMaster, "nVariant");
 	int result = GetLocalInt(oGameMaster, "GameResult");
 	string sLog = GetLocalString(oGameMaster, "GameLog");
@@ -30,8 +30,8 @@ void SaveChessGame(object oGameMaster) {
 			variant == VARIANT_PAWNS ? "pawns" : 
 			variant == VARIANT_FISCHERRANDOM ? "fischerrandom" : 
 			"displacement"
-		) + "', " +		
-		"NULL" /*IntToString(nStart)*/ + ", now(), " +
+		) + "', '" +		
+		sStart + "', now(), " +
 		pE(sLog) + 
 		");"
 	);
