@@ -51,7 +51,7 @@ void DBook_MakeDialog(object oPC) {
 			pQ(
 				"select id, name from craft_recipes where id = (select recipe from craft_rcpbook where craft_recipes.id = craft_rcpbook.recipe and character = "
 				+ IntToString(nCID) +
-				" and cskill = " + IntToString(nCSkill) + " limit 1) and active = 1 order by name asc;");
+				" and cskill = " + IntToString(nCSkill) + " limit 1) and active = 't' order by name asc;");
 
 		while ( pF() ) {
 			nID = StringToInt(pG(1));

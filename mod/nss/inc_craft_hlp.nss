@@ -670,7 +670,7 @@ struct PlayerSkill GetPlayerSkill(object oPC, int nCSkill) {
 			pQ("select cskill_max from " +
 				TABLE_PROD +
 				" where cskill = " +
-				IntToString(nCSkill) + " and active > 0 order by cskill_max desc limit 1;");
+				IntToString(nCSkill) + " and active = 't' order by cskill_max desc limit 1;");
 			if ( pF() ) {
 				int nMax = StringToInt(pG(1));
 				if ( nMax < s.practical )
