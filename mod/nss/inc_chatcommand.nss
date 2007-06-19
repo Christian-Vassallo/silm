@@ -44,9 +44,6 @@ int CommandCastSpell(object oPC, int iMode);
 
 int CommandOhHellBang(object oPC, int iMode);
 
-//int CommandStat(object oPC, int iMode);
-
-
 
 int CommandRotate(object oPC, int iMode);
 int CommandHP(object oPC, int iMode);
@@ -938,52 +935,6 @@ int CommandHP(object oPC, int iMode) {
 
 	return OK;
 }
-
-/*int CommandStat(object oPC, int iMode) {
-
-	string sType = arg(0);
-
-	if ( "mentor" == sType ) {
-		// Show mentor statistics
-		ToPC("Mentor totals:");
-		SQLQuery("select accounts.account,sum(mentordata.xp) as xp,mentordata.ts from mentordata " +
-			"left join accounts on (mentordata.aid = accounts.id) group by mentordata.aid order by mentordata.xp desc;");
-		while ( SQLFetch() ) {
-			ToPC(" " + SQLGetData(1) + ": " + SQLGetData(2));
-			ToPC("  " + SQLGetData(3) + " last");
-		}
-		ToPC("End of total listing.");
-
-		int cid;
-
-		ToPC("Online players:");
-		object o = GetFirstPC();
-		while ( GetIsPC(o) ) {
-			cid = GetCharacterID(o);
-			SQLQuery(
-				"select sum(mentordata.xp),count(mentordata.xp),max(mentordata.ts),characters.character from mentordata "
-				+
-				"left join characters on (mentordata.cid=characters.id) where mentordata.tcid = 1 group by mentordata.xp order by mentordata.ts desc");
-			if ( SQLFetch() ) {
-				ToPC(GetName(o) + ":");
-				ToPC(" " + SQLGetData(4) + ", " + SQLGetData(2) + " times");
-				ToPC("  " + SQLGetData(1) + " total");
-				ToPC("  " + SQLGetData(3) + " last");
-			}
-			o = GetNextPC();
-		}
-		ToPC("End of listing.");
-	}
-
-	if ( "xp_dist" == sType ) {
-		ToPC("Nuffink.");
-	}
-
-	ToPC("End of " + sType + ".");
-
-	return OK;
-}*/
-
 
 
 
