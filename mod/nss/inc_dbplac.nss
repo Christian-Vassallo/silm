@@ -1,5 +1,5 @@
-#include "inc_mysql"
 #include "_gen"
+#include "inc_pgsql"
 #include "inc_cdb"
 // Databased placplacs
 
@@ -31,7 +31,7 @@ void LoadPlaciesForArea(object oA) {
 		return;
 
 
-	string sAreaTag = SQLEscape(GetResRef(oA));
+	string sAreaTag = pE(GetResRef(oA));
 
 	WriteTimestampedLogEntry("Loading Placies for " + sAreaTag);
 
@@ -43,19 +43,19 @@ void LoadPlaciesForArea(object oA) {
 
 	int count = 0;
 
-	SQLQuery("select resref,x,y,z,f,`name`,`id`,`locked` from `" +
-		PLAC_TABLE + "` where `area` = " + sAreaTag + ";");
+	pQ("select resref,x,y,z,f,name,id,locked from " +
+		PLAC_TABLE + " where area = " + sAreaTag + ";");
 
-	while ( SQL_SUCCESS == SQLFetch() ) {
+	while ( SQL_SUCCESS == pF() ) {
 
-		sResRef = SQLGetData(1);
-		v.x = StringToFloat(SQLGetData(2));
-		v.y = StringToFloat(SQLGetData(3));
-		v.z = StringToFloat(SQLGetData(4));
-		f = StringToFloat(SQLGetData(5));
-		sName = SQLGetData(6);
-		id = StringToInt(SQLGetData(7));
-		nLocked = StringToInt(SQLGetData(8));
+		sResRef = pG(1);
+		v.x = StringToFloat(pG(2));
+		v.y = StringToFloat(pG(3));
+		v.z = StringToFloat(pG(4));
+		f = StringToFloat(pG(5));
+		sName = pG(6);
+		id = StringToInt(pG(7));
+		nLocked = StringToInt(pG(8));
 
 		lT = Location(oA, v, f);
 		object oP = CreateObject(OBJECT_TYPE_PLACEABLE, sResRef, lT, FALSE);
@@ -81,7 +81,7 @@ void LoadPlaciesForArea(object oA) {
 
 
 void SavePlaciesForArea(object oA) {
-	string sAreaTag = SQLEscape(GetResRef(oA));
+	string sAreaTag = pE(GetResRef(oA));
 
 	string sResRef;
 	vector v;
@@ -106,9 +106,9 @@ void KillPlacies(object oA) {
 	if ( sAreaTag == "" )
 		return;
 
-	sAreaTag = SQLEscape(sAreaTag);
+	sAreaTag = pE(sAreaTag);
 
-	SQLQuery("delete from `" + PLAC_TABLE + "` where `area` = " + sAreaTag + ";");
+	pQ("delete from " + PLAC_TABLE + " where area = " + sAreaTag + ";");
 }
 
 
@@ -121,7 +121,7 @@ int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
 	if ( sAreaTag == "" )
 		return SAVE_ERROR;
 
-	sAreaTag = SQLEscape(sAreaTag);
+	sAreaTag = pE(sAreaTag);
 
 	int nID = 0;
 	if ( GetIsPC(oPlacedBy) && !GetIsDM(oPlacedBy) )
@@ -130,47 +130,47 @@ int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
 	int id = GetLocalInt(oP, "placie_id");
 	vector v = GetPosition(oP);
 	float f = GetFacing(oP);
-	string sName = SQLEscape(GetName(oP));
-	string sStoreTag = SQLEscape(GetLocalString(oP, "store_tag"));
-	string sLockKey = SQLEscape(GetLockKeyTag(oP));
+	string sName = pE(GetName(oP));
+	string sStoreTag = pE(GetLocalString(oP, "store_tag"));
+	string sLockKey = pE(GetLockKeyTag(oP));
 
 	if ( id == 0 ) {
-		SQLQuery("insert into `" +
+		pQ("insert into " +
 			PLAC_TABLE +
-			"` (`area`,`name`,`store_tag`,`lock_key`,`resref`,`x`,`y`,`z`,`f`,`locked`,`first_placed_by`) values("
+			" (area,name,store_tag,lock_key,resref,x,y,z,f,locked,first_placed_by) values("
 			+
 			"" + sAreaTag + ", " +
 			"" + sName + ", " +
 			"" + sStoreTag + ", " +
 			"" + sLockKey + ", " +
-			"" + SQLEscape(GetResRef(oP)) + ", " +
+			"" + pE(GetResRef(oP)) + ", " +
 			"" + FloatToString(v.x) + ", " + FloatToString(v.y) + ", " + FloatToString(v.z) + ", " +
 			"'" + FloatToString(f) + "', " +
 			"" + IntToString(GetLocked(oP)) + ", " + IntToString(nID) + "" +
 			")");
 
-		SQLQuery("select `id` from `" + PLAC_TABLE + "` order by `id` desc limit 1;");
-		SQLFetch();
-		id = StringToInt(SQLGetData(1));
+		pQ("select id from " + PLAC_TABLE + " order by id desc limit 1;");
+		pF();
+		id = StringToInt(pG(1));
 		SetLocalInt(oP, "placie_id", id);
 		return SAVE_NEW;
 
 	} else {
-		string sQ = "update `" + PLAC_TABLE + "` set " +
-					"`resref` = " + SQLEscape(GetResRef(oP)) + ", " +
-					"`x`='" +
+		string sQ = "update " + PLAC_TABLE + " set " +
+					"resref = " + pE(GetResRef(oP)) + ", " +
+					"x='" +
 					FloatToString(v.x) +
-					"', `y`='" + FloatToString(v.y) + "', `z`='" + FloatToString(v.z) + "', " +
-					"`f`='" + FloatToString(f) + "', " +
-					"`area`=" + sAreaTag + ", " +
-					"`name`=" + sName + ", " +
-					"`store_tag`=" + sStoreTag + ", " +
-					"`lock_key`=" + sLockKey + ", " +
-					"`last_placed_by`=" + IntToString(nID) + " " +
+					"', y='" + FloatToString(v.y) + "', z='" + FloatToString(v.z) + "', " +
+					"f='" + FloatToString(f) + "', " +
+					"area=" + sAreaTag + ", " +
+					"name=" + sName + ", " +
+					"store_tag=" + sStoreTag + ", " +
+					"lock_key=" + sLockKey + ", " +
+					"last_placed_by=" + IntToString(nID) + " " +
 
-					" where `id` = '" + IntToString(id) + "' limit 1;";
+					" where id = " + IntToString(id) + ";";
 
-		SQLQuery(sQ);
+		pQ(sQ);
 
 		return SAVE_UPDATE;
 	}
@@ -179,7 +179,7 @@ int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
 void KillPlacie(object oP, float fDelay = 0.0, int bDestroy = TRUE) {
 	int id = GetLocalInt(oP, "placie_id");
 	if ( id > 0 ) {
-		SQLQuery("delete from `" + PLAC_TABLE + "` where `id` = '" + IntToString(id) + "' limit 1;");
+		pQ("delete from " + PLAC_TABLE + " where id = " + IntToString(id) + ";");
 	}
 	if ( bDestroy )
 		DestroyObject(oP, fDelay);
