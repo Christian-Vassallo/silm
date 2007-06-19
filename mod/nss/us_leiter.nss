@@ -32,7 +32,6 @@
 //:: Created On: 25.04.2005
 //:: Last Update: 03.12.2005
 //:://////////////////////////////////////////////
-#include "inc_keystone"
 #include "inc_decay"
 #include "inc_persist"
 #include "inc_subr_data"
@@ -40,21 +39,7 @@
 void main() {
 	string sTarget = GetLocalString(OBJECT_SELF, "ziel");
 	object oPC = GetLastUsedBy();
-	string sKeyStone = GetLocalString(OBJECT_SELF, "KeyStone");
 	location lLoc = GetLocation(GetWaypointByTag(sTarget));
-
-	// KeyStone wurde festgelegt und muss geprueft werden
-	if ( sKeyStone != "" ) {
-		// Spieler ist berechtigt
-		if ( CheckKeyStone(sKeyStone, oPC) == TRUE ) {
-			AssignCommand(oPC, JumpToLocation(lLoc));
-		}
-		// Spieler ist nicht berechtigt
-		else {
-			SendMessageToPC(oPC, "Sie haben keine Berechtigung dieses Portal zu nutzen!");
-			return;
-		}
-	}
 
 	// verschliessbare Tuer mit Animation?
 	if ( GetStringLeft(GetTag(OBJECT_SELF), 5) == "DOOR_" ) {

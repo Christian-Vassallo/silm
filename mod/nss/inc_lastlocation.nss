@@ -11,14 +11,14 @@ location GetLastLocationOnLogout(object oPC) {
 	int id = GetCharacterID(oPC);
 	location ret;
 
-	if (id) {
+/*	if (id) {
 		pQ("select x,y,z,f,area from " + TABLE_LASTLOCATION + " where character = " + IntToString(id) + ";");
 		if (pF()) {
 			ret.position = Vector(pGf(1), pGf(2), pGf(3));
 			ret.area = GetObjectByTag(pG(5));
 			ret.facing = pGf(4);
 		}
-	}
+	}*/
 	return ret;
 }
 
@@ -28,7 +28,7 @@ void SetLastLocation(object oPC) {
 	if (!id)
 		return;
 
-	pQ("select id from " + TABLE_LASTLOCATION + " where character = " + IntToString(id) + ";");
+/*	pQ("select id from " + TABLE_LASTLOCATION + " where character = " + IntToString(id) + ";");
 	if (pF()) {
 
 	} else {
@@ -40,5 +40,5 @@ void SetLastLocation(object oPC) {
 		"area = " +
 
 		" where character = " + IntToString(id) + ";");
-	}
+	}*/
 }
