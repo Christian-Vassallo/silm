@@ -1,42 +1,65 @@
+// Run on module start
 void pSQLInit();
 
-
+// Run a query
 void pQ(string sSQL);
+
+// Run a query
 void pSQLQuery(string sSQL);
 
+// Escape and return a string using 'xx' || 'xx'
 string pE(string str);
+
+// Escape and return a string using 'xx' || 'xx'
 string pSQLEscape(string str);
 
+// Begin transaction
 void pB();
+
+// Commit transaction
 void pC();
+
+// Rollback transaction
 void pR();
 
-// Returns the last SQL query executed.
+// Abort transaction
+void pA();
+
+// Returns the last SQL query executed (globally!).
 string pSQLGetLastQuery();
 
-// Escape this string to be psql compatible
-string pSQLEscape(string sString);
 
-
+// Fetch next row. Returns 1 on success, 0 on no more rows
 int pF();
-// Position cursor on next row of the resultset
-// Call this before using SQLGetData().
-// returns: SQL_SUCCESS if there is a row
-//          SQL_ERROR if there are no more rows
 int pSQLFetch();
 
+// Returns column n in the result set
 string pG(int n);
+
+// Returns column n in the result set as int
 int pGi(int n);
+
+// Returns column n in the result set as float
 float pGf(int n);
+
+// Returns column n in the result set as boolean (0 or 1)
 int pGb(int n);
 
 // Return value of column iCol in the current row of result set sResultSetName
 string pSQLGetData(int iCol);
 
+// Return a int formatted for insert or update
+string pSi(int n, int b0isNULL = TRUE);
 
-void pSQLSetSCORCOSQL(string sSQL);
-void pSQLStoreObject(object oToStore);
-object pSQLRetrieveObject(location loc, object oOwner);
+// Return a string formatted for insert or update
+string pSs(string s, int bEmptyIsNULL = FALSE);
+
+// Return a float formatted for insert or update
+string pSf(float f, int b0isNULL = TRUE);
+
+// Return a bool formatted for insert or update (0 = false, rest = true)
+string pSb(int b);
+
 
 
 /************************************/
@@ -56,7 +79,7 @@ void pSQLInit() {
 			"................................................................................................................................";
 	SetLocalString(GetModule(), "NWNX!PGSQL!SPACER", sMemory);
 	pQ("set search_path = nwserver;");
-	pQ("set client_encoding = 'iso-8859-1';");
+	pQ("set client_encoding = 'iso-8859-15';");
 }
 
 string pSQLGetLastQuery() {
@@ -105,7 +128,11 @@ void pC() {
 }
 
 void pR() {
-	pSQLQuery("ROLLBACK");
+	pSQLQuery("ROLLBACK;");
+}
+
+void pA() {
+	pSQLQuery("ABORT;");
 }
 
 string pG(int n) {
@@ -114,6 +141,7 @@ string pG(int n) {
 int pGi(int n) {
 	return StringToInt(pSQLGetData(n));
 }
+
 float pGf(int n) {
 	return StringToFloat(pSQLGetData(n));
 }
@@ -171,7 +199,7 @@ string pSQLEscape(string str) {
 		c = GetSubString(str, i, 1);
 
 		if ( c == "'" ) {
-			new += "' || chr(39) || '";
+			new += "'||chr(39)||'";
 			last = i + 1;
 			count += 1;
 		} else
@@ -181,15 +209,19 @@ string pSQLEscape(string str) {
 	return new;
 }
 
-void pSQLSetSCORCOSQL(string sSQL) {
-	SetLocalString(GetModule(), "NWNX!PGSQL!SETSCORCOSQL", sSQL);
+
+string pSi(int n, int b0isNULL = TRUE) {
+	return b0isNULL && 0 == n ? "NULL" : IntToString(n);
 }
 
-
-object pSQLRetrieveObject(location loc, object oOwner) {
-	return RetrieveCampaignObject("NWNX", "-", loc, oOwner);
+string pSs(string s, int bEmptyIsNULL = FALSE) {
+	return bEmptyIsNULL && "" == s ? "NULL" : pE(s);
 }
 
-void pSQLStoreObject(object oToStore) {
-	StoreCampaignObject("NWNX", "-", oToStore);
+string pSf(float f, int b0isNULL = TRUE) {
+	return b0isNULL && 0.0 == f ? "NULL" : FloatToString(f);
+}
+
+string pSb(int b) {
+	return 0 == b ? 'f' : 't';
 }
