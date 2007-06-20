@@ -223,5 +223,5 @@ string pSf(float f, int b0isNULL = TRUE) {
 }
 
 string pSb(int b) {
-	return 0 == b ? 'f' : 't';
+	return 0 == b ? "'f'" : "'t'";
 }
