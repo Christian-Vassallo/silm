@@ -12,13 +12,13 @@ NWNXDIR = ..
 
 # CFLAGS = -g -O2 -I$(NWNXDIR)
 # CXXFLAGS= -g -O2 $(CFLAGS)
-CPPFLAGS = -mcpu=i386  -I$(NWNXDIR)
+CPPFLAGS = -march=i686  -I$(NWNXDIR)
 
 NWNXBASE=$(NWNXDIR)/NWNXBase.o $(NWNXDIR)/gline.o 
 
 all: nwnx_functions.so
 
-nwnx_functions.so: FunctionHooks.o NWNXFunction.o plugin-functions.o
+nwnx_functions.so: NWNXFunction.o plugin-functions.o
 	$(CXX) $(FLAGS) -o $@ $^ $(LIBS) $(DEFS)
 
 plugin-t: plugin-t.o $(NWNXBASE)
@@ -31,4 +31,4 @@ distclean: clean
 	/bin/rm -f Makefile
 
 install: all
-	mkdir -p /home/nwn/ ; install nwnx_functions.so /home/nwn/
+	mkdir -p /usr/local/share/nwn/ ; install nwnx_functions.so /usr/local/share/nwn/
