@@ -707,7 +707,7 @@ void SetPlayerSkill(object oPC, struct PlayerSkill s) {
 		"skill_practical=" + IntToString(s.practical) + ", " +
 		"skill_theory_xp=" + IntToString(s.theory_xp) + ", " +
 		"skill_practical_xp=" + IntToString(s.practical_xp) +
-		" where character = " + sID + " and cskill=" + IntToString(s.cskill) + " limit 1;");
+		" where character = " + sID + " and cskill=" + IntToString(s.cskill) + ";");
 
 }
 
@@ -765,7 +765,7 @@ void SetPlayerRecipeStat(object oPC, struct PlayerRecipeStat t) {
 		"count=" + IntToString(t.count) + ", " +
 		"fail=" + IntToString(t.fail) + ", " +
 		"last=" + IntToString(t.last) +
-		" where character = " + sID + " and recipe=" + IntToString(t.id) + " limit 1;");
+		" where character = " + sID + " and recipe=" + IntToString(t.id) + ";");
 
 }
 
