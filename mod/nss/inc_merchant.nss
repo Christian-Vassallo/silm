@@ -91,9 +91,6 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		// sell
 		AddListItem(oPC, TTT, "Dinge an den Haendler verkaufen");
 		SetListInt(oPC, TTT, 2);
-		
-		AddListItem(oPC, TTT, "Dinge mit dem Haendler tauschen");
-		SetListInt(oPC, TTT, 3);
 
 
 		ResetConvList(oPC, oPC, TTT, 50000, "merchant_cb", sTextIntro);
@@ -198,87 +195,6 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			if ( !GetIsObjectValid(oSell) ) {
 				nAvailable = 0;
 				oSell = CreateItemOnObject(sResRef, oMerc);
-			}
-
-			if (!GetIsObjectValid(oSell)) {
-				ToPC("Kann kein Item mit dieser ResRef erstellen (" + sResRef + "). Dies ist ein Bug. Bitte melde ihn den SLs.");
-				continue;
-			}
-			
-			nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
-
-			AddListItem(oPC, TTT, GetName(oSell) +
-				( nMax ==
-				 0 ? " (immer gesucht)" : " (" +
-				 IntToString(nCount) + " im Inventar, " + IntToString(nMax - nWant) + " gesucht)" ) +
-				": " + MoneyToString(Value2Money(nPrice)));
-			SetListString(oPC, TTT, sResRef);
-			SetListInt(oPC, TTT, nPrice);
-			SetListFloat(oPC, TTT, IntToFloat(nMax));
-
-			if ( nAvailable && (!bLimitedMoney || nPrice < nMercMoney) )
-				SetListDisplayMode(oPC, TTT, DISPLAYMODE_GREEN);
-			else
-				SetListDisplayMode(oPC, TTT, DISPLAYMODE_RED);
-
-			nFound += 1;
-		}
-
-
-		if ( !nFound ) {
-			sText = sTextNothingToBuy; // "Ihr habt nichts fuer das ich mich interessiere.";
-		} else {
-			sText = sTextBuy; //"Waehle den Gegenstand, den du verkaufen moechtest. Pro Klick wird einer verkauft.";
-		}
-
-		ResetConvList(oPC, oPC, TTT, 50000, "merchant_cb", sText, "", "", "merchant_b2m0",
-			"Zurueck zur Liste");
-	
-	// Swap with merchant
-	} else if ( 3 == nMenuLevel0 ) {
-
-		
-		string
-			sTakesR, sGivesR;
-
-		int	takesC, givesC,
-		min,cur,max;
-
-		SQLQuery(
-			"select takes_resref, takes_count, gives_resref, gives_count, min, cur, max from merchant_inventory_exchange where " +
-			"merchant_id = (select id from merchants where tag = " + sMerc + " limit 1) order by takes_resref asc;");
-
-		while ( SQLFetch() ) {
-			sTakesR = SQLGetData(1);
-			sGivesR = SQLGetData(3);
-			takesC = StringToInt(SQLGetData(2));
-			givesC = StringToInt(SQLGetData(4));
-			min = StringToInt(SQLGetData(5));
-			min = StringToInt(SQLGetData(6));
-			min = StringToInt(SQLGetData(7));
-
-
-			nCount = GetItemCountByResRef(oPC, sTakesR);
-
-			nAvailable = 1;
-
-			oSell = GetItemResRefPossessedBy(oPC, sTakesR);
-
-			// Do not swap non-existant items
-			if ( nCount == 0 )
-				nAvailable = 0;
-
-			// avoid bug thing
-			if ( nCount == takesC && GetLocalString(oPC, "merc_last_swap") == sResRef ) {
-				DeleteLocalString(oPC, "merc_last_swap");
-				nCount -= takesC;
-				nAvailable = 0;
-			}
-
-			// oops?
-			if ( !GetIsObjectValid(oSell) ) {
-				nAvailable = 0;
-				oSell = CreateItemOnObject(sTakesC, oMerc);
 			}
 
 			if (!GetIsObjectValid(oSell)) {
