@@ -31,7 +31,7 @@ void main() {
 
 	ExecuteScript("_mod_load_cdb", GetModule());
 
-	SQLQuery("truncate table `online`;");
+	pQ("truncate online;");
 
 	
 	iYear = gvGetInt("t_year");
