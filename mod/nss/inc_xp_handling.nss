@@ -91,7 +91,8 @@ int GetLegacyCombatXP(object oPC) {
 	pB();
 	int cid = GetCharacterID(oPC);
 	pQ("select xp_combat from characters where id = " + IntToString(cid) + ";");
-	pF();
+	if (!pF())
+		return 0;
 	int nCap = StringToInt(SQLGetData(1));
 	if ( -1 == nCap ) {
 		nCap = GetLegacyPersistentInt(oPC, "XP_Combat");
@@ -311,13 +312,15 @@ void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE) {
 
 	if ( gvGetInt("combat_xp_limit_month") > 0 && iXPForMonth > gvGetInt("combat_xp_limit_month") ) {
 		if (!bNoWarn)
-			SendMessageToPC(oPC, "Ihr muesstet ueber die gemachten Kampferfahrungen erstmal nachdenken.");
+			SendMessageToPC(oPC, "Ihr muesstet ueber die gemachten Kampferfahrungen erstmal nachdenken. (Monatslimit: " + 
+				IntToString(iXPForMonth) + " > " + IntToString(gvGetInt("combat_xp_limit_month")) + ")");
+
 		return;
 	}
 	
-	if ( gvGetInt("combat_xp_limit_day") > 0 && iXPForMonth > gvGetInt("combat_xp_limit_month") ) {
+	if ( gvGetInt("combat_xp_limit_day") > 0 && iXPForDay > gvGetInt("combat_xp_limit_day") ) {
 		if (!bNoWarn)
-			SendMessageToPC(oPC, "Ihr muesstet ueber die gemachten Kampferfahrungen erstmal nachdenken.");
+			SendMessageToPC(oPC, "Ihr muesstet ueber die gemachten Kampferfahrungen erstmal nachdenken. (Tageslimit)");
 		return;
 	}
 
