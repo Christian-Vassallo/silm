@@ -234,7 +234,7 @@ void main() {
 
 		// Now do all sorts of commands, but only for PCs.
 		if ( GetIsPC(oPC) )
-			CommandEval(oPC, iMode, sText);
+			CommandEval(oPC, iMode, sText, TRUE, TRUE, gvGetInt("s_modlevel"));
 
 
 	}

@@ -38,7 +38,7 @@ void main() {
 
 	ToPC("Targeting done ..", oPC);
 
-	CommandEval(oPC, MODE_TALK, sMacro, FALSE);
+	CommandEval(oPC, MODE_TALK, sMacro, FALSE, TRUE, gvGetInt("s_runlevel_macro"));
 
 	SetDefaultSlot(nOldTarget, oPC);
 

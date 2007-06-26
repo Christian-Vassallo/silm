@@ -12,19 +12,20 @@ COMMAND_SPLIT = "&&",
 COMMAND_SPLIT_RX = "\s*&&\s*";
 
 
+
 string
 LastCommand;
 
 
 
 
-int CommandModSelf(object oPC, int iMode);
-int CommandModRadius(object oPC, int iMode);
-int CommandModRectangle(object oPC, int iMode);
-int CommandModLine(object oPC, int iMode);
-int CommandModArea(object oPC, int iMode);
-int CommandModServer(object oPC, int iMode);
-int CommandModOnline(object oPC, int iMode);
+int CommandModSelf(object oPC, int iMode, int nRunLevel);
+int CommandModRadius(object oPC, int iMode, int nRunLevel);
+int CommandModRectangle(object oPC, int iMode, int nRunLevel);
+int CommandModLine(object oPC, int iMode, int nRunLevel);
+int CommandModArea(object oPC, int iMode, int nRunLevel);
+int CommandModServer(object oPC, int iMode, int nRunLevel);
+int CommandModOnline(object oPC, int iMode, int nRunLevel);
 
 
 int CommandSQL(object oPC, int iMode);
@@ -33,14 +34,14 @@ int CommandSQL(object oPC, int iMode);
 // This evaluates a string of commands, not prefixed with the
 // command character.
 // Example:  "ta self && app 298 && restore"
-int CommandEval(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bRunAlias = TRUE, int bRunModifiers = TRUE);
+int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel);
 
 // Runs a single command.  Usually called by CommandEval.
-int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bRunAlias = TRUE, int bRunModifiers = TRUE);
+int RunCommand(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel);
 
 
 
-int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro = TRUE, int bRunAlias = TRUE, int bRunModifiers = TRUE);
+int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro , int bRunAlias, int nRunModLevel);
 
 void RunMacro(object oPC, int iMode, string sMacro);
 int CommandMacro(object oPC, int iMode);
@@ -60,7 +61,7 @@ void RegisterAccessFlags(int nFlags);
 
 
 
-int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bRunAlias = TRUE, int bRunModifiers = TRUE) {
+int RunCommand(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel) {
 	string sCommand, sRest;
 
 	sText = GetStringTrim(sText);
@@ -92,10 +93,10 @@ int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bR
 
 	if (gvGetInt("chat_debug")) {
 		SendMessageToAllDMs("chat> run(RunCommand): '" + sCommand + "':'" + sRest + "'::" + IntToString(iMode) + "::" + 
-			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
 	}
 
-	switch ( OnCommand(oPC, sCommand, sRest, iMode, bRunMacro, bRunAlias, bRunModifiers) ) {
+	switch ( OnCommand(oPC, sCommand, sRest, iMode, bRunMacro, bRunAlias, nRunModLevel) ) {
 		case ACCESS:
 			ToPC("Ihr habt nicht die noetigen Rechte, um diesen Befehl auszufuehren.", oPC);
 			return FALSE;
@@ -107,7 +108,7 @@ int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bR
 		case NOTFOUND:
 			if (gvGetInt("chat_debug")) {
 				SendMessageToAllDMs("chat> NOTFOUND(RunCommand): '" + sCommand + "':'" + sRest + "'::" + IntToString(iMode) + "::" + 
-					IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+					IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
 			}
 			ToPC("Befehl nicht gefunden.", oPC);
 			break;
@@ -130,7 +131,7 @@ int RunCommand(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bR
 }
 
 
-int CommandEval(object oPC, int iMode, string sText, int bRunMacro = TRUE, int bRunAlias = TRUE, int bRunModifiers = TRUE) {
+int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel) {
 	int i = 0;
 	string sCmd = "";
 
@@ -139,12 +140,12 @@ int CommandEval(object oPC, int iMode, string sText, int bRunMacro = TRUE, int b
 	if (gvGetInt("chat_debug")) {
 		SendMessageToAllDMs("chat> CommandEval(): '" + sText + "'::" + IntToString(iMode) + "::" + 
 			IntToString(nCommandCount) + "::" +
-			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
 	}
 
 	for ( i = 0; i < nCommandCount; i++ ) {
 		sCmd = mCommandSplitGet(i);
-		if ( !RunCommand(oPC, iMode, sCmd, bRunMacro, bRunAlias, bRunModifiers) )
+		if ( !RunCommand(oPC, iMode, sCmd, bRunMacro, bRunAlias, nRunModLevel) )
 			return FALSE;
 	}
 	return TRUE;
@@ -537,7 +538,7 @@ void RegisterAllCommands() {
 
 
 
-int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro = TRUE, int bRunAlias = TRUE, int bRunModifiers = TRUE) {
+int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro, int bRunAlias, int nRunModLevel) {
 
 	// No need for that MODE flag, we know already it is a command.
 	if (iMode & MODE_COMMAND)
@@ -545,7 +546,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 	if (gvGetInt("chat_debug")) {
 		SendMessageToAllDMs("chat> run: '" + sCommand + "':'" + sArg + "'::" + IntToString(iMode) + "::" + 
-			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
 		SendMessageToAllDMs("chat> runs on: " + GetName(oPC) + " / " + GetName(OBJECT_SELF));
 	}
 
@@ -556,7 +557,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( bRunAlias ) {
 		string sAlias = GetLocalString(GetModule(), "alias_" + sCommand);
 		if ( "" != sAlias ) {
-			return RunCommand(oPC, iMode, sAlias + " " + sArg, bRunMacro, FALSE);
+			return RunCommand(oPC, iMode, sAlias + " " + sArg, bRunMacro, FALSE, nRunModLevel);
 		}
 	}
 
@@ -567,7 +568,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	} else {
 		if (gvGetInt("chat_debug")) {
 			SendMessageToAllDMs("chat> NOTFOUND(register): '" + sCommand + "':'" + sArg + "'::'" + IntToString(iMode) + "::" + 
-				IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+				IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
 		}
 		return NOTFOUND;
 	}
@@ -577,7 +578,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( !GetLocalInt(GetModule(), "no_new_acl") && nAMask > 0 && !amask(oPC, nAMask) ) {
 		if (gvGetInt("chat_debug")) {
 			SendMessageToAllDMs("chat> NOACCESS(): " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
-				IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+				IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
 		}
 		return ACCESS;
 	}
@@ -632,21 +633,21 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( "m" == sCommand && bRunMacro )
 		ret = CommandMacro(oPC, iMode);
 
-	if ( bRunModifiers ) {
+	if ( nRunModLevel > 0 ) {
 		if ("self" == sCommand)
-			ret = CommandModSelf(oPC, iMode);
+			ret = CommandModSelf(oPC, iMode, nRunModLevel);
 
 		if ("online" == sCommand)
-			ret = CommandModOnline(oPC, iMode);
+			ret = CommandModOnline(oPC, iMode, nRunModLevel);
 
 		if ("radius" == sCommand)
-			ret = CommandModRadius(oPC, iMode);
+			ret = CommandModRadius(oPC, iMode, nRunModLevel);
 
 		if ("area" == sCommand)
-			ret = CommandModArea(oPC, iMode);
+			ret = CommandModArea(oPC, iMode, nRunModLevel);
 
 		if ("server" == sCommand)
-			ret = CommandModServer(oPC, iMode);
+			ret = CommandModServer(oPC, iMode, nRunModLevel);
 	}
 
 	if ( "event" == sCommand )
@@ -931,7 +932,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	SetLocalString(GetModule(), "chat_current_command_name", "");
 
 	// SendMessageToAllDMs("chat> NOTFOUND(call): " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
-	//	IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(bRunModifiers));
+	//	IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
 
 	return ret;
 }
@@ -960,7 +961,7 @@ void RunMacro(object oPC, int iMode, string sMacro) {
 
 	SetDefaultSlot(nSlot);
 
-	CommandEval(oPC, iMode, sMacro, FALSE);
+	CommandEval(oPC, iMode, sMacro, FALSE, TRUE, gvGetInt("s_modlevel_macro"));
 
 	SetDefaultSlot(nOldTarget);
 
@@ -1074,7 +1075,7 @@ int CommandMacro(object oPC, int iMode) {
 }
 
 
-int CommandModSelf(object oPC, int iMode) {
+int CommandModSelf(object oPC, int iMode, int nRunModLevel) {
 	string sRest = arg(0);
 	
 	int nOldTarget = GetDefaultSlot();
@@ -1094,7 +1095,7 @@ int CommandModSelf(object oPC, int iMode) {
 	return ret ? OK : FAIL;
 }
 
-int CommandModRadius(object oPC, int iMode) {
+int CommandModRadius(object oPC, int iMode, int nRunModLevel) {
 	string sRest = arg(0);
 	
 	float radius = 6.0;
@@ -1115,7 +1116,7 @@ int CommandModRadius(object oPC, int iMode) {
 	object oLoop = GetFirstObjectInShape(SHAPE_SPHERE, radius, GetLocation(oPC), FALSE, otype);
 	while (GetIsObjectValid(oLoop)) {
 		SetTarget(oLoop);
-		if (!CommandEval(oPC, iMode, sRest, 1, 1, 0)) {
+		if (!CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1)) {
 			if (gvGetInt("chat_debug"))
 				SendMessageToAllDMs("chat:mod:radius> Eval() returned FALSE");
 			return FAIL;
@@ -1128,17 +1129,17 @@ int CommandModRadius(object oPC, int iMode) {
 	return OK;
 }
 
-int CommandModRectangle(object oPC, int iMode) {
+int CommandModRectangle(object oPC, int iMode, int nRunModLevel) {
 	ToPC("mod:rect> Not in yet.");
 	return FAIL;
 }
 
-int CommandModLine(object oPC, int iMode) {
+int CommandModLine(object oPC, int iMode, int nRunModLevel) {
 	ToPC("mod:line> Not in yet.");
 	return FAIL;
 }
 
-int CommandModArea(object oPC, int iMode) {
+int CommandModArea(object oPC, int iMode, int nRunModLevel) {
 	string sRest = arg(0);
 	int otype = OBJECT_TYPE_ALL;
 	
@@ -1152,7 +1153,7 @@ int CommandModArea(object oPC, int iMode) {
 	while (GetIsObjectValid(oLoop)) {
 		if (GetObjectType(oLoop) == otype) {
 			SetTarget(oLoop);
-			if (!CommandEval(oPC, iMode, sRest, 1, 1, 0)) {
+			if (!CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1)) {
 				if (gvGetInt("chat_debug"))
 					SendMessageToAllDMs("chat:mod:area> Eval() returned FALSE");
 				return FAIL;
@@ -1167,12 +1168,12 @@ int CommandModArea(object oPC, int iMode) {
 return FAIL;
 }
 
-int CommandModServer(object oPC, int iMode) {
+int CommandModServer(object oPC, int iMode, int nRunModLevel) {
 	ToPC("mod:server> Not in yet.");
 	return FAIL;
 }
 
-int CommandModOnline(object oPC, int iMode) { 
+int CommandModOnline(object oPC, int iMode, int nRunModLevel) { 
 	string sRest = arg(0);
 	
 	int bDoDM = opt("dms");
@@ -1189,7 +1190,7 @@ int CommandModOnline(object oPC, int iMode) {
 			SendMessageToAllDMs("chat:mod:online> " + sRest + ": " + GetName(oLoop));
 		}
 
-		if (!CommandEval(oPC, iMode, sRest, 1, 1, 0)) {
+		if (!CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1)) {
 			if (gvGetInt("chat_debug"))
 				SendMessageToAllDMs("chat:mod:online> Eval() returned FALSE");
 			return FAIL;
