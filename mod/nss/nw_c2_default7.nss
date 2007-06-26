@@ -36,7 +36,7 @@ void main() {
 			string sID = pG(1);
 			pQ("update monster_kills set count = count + 1 where id = " + sID);
 		} else {
-			pQ("insert into monster_kills (killer_id, monster_resref) values(" + IntToString(nID) + ", " + pE(GetResRef(oKilled)) + ");");
+			pQ("insert into monster_kills (killer_id, resref) values(" + IntToString(nID) + ", " + pE(GetResRef(oKilled)) + ");");
 		}
 		pC();
 	}
