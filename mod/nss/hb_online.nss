@@ -25,10 +25,10 @@ void main() {
 			 pSs(GetName(oPC)) + "," + 
 			 pSb(GetIsDM(oPC)) + "," + 
 			 pSs(GetResRef(GetArea(oPC))) + "," + 
-			 pSf(p.x) + "," + 
-			 pSf(p.y) + "," + 
-			 pSf(p.z) + "," + 
-			 pSf(f) + "),";
+			 pSf(p.x, FALSE) + "," + 
+			 pSf(p.y, FALSE) + "," + 
+			 pSf(p.z, FALSE) + "," + 
+			 pSf(f, FALSE) + "),";
 
 		oPC = GetNextPC();
 	}

@@ -27,8 +27,6 @@ void main() {
 	AddAlias("Drow");
 	AddAlias("Dhaeraow");
 	AddAlias("Ilythiiri");
-	AddAlias("Halfdrow");
-	AddAlias("Halbdrow");
 	SetSRItem("ELF_DRO", 1);
 	SetSPA(12, "DARK");
 	SetFlags(0x00020000); // Lichtempfindlich
