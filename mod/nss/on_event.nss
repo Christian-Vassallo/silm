@@ -100,6 +100,6 @@ void EventUseItem(object oPC, object oItem, object oTarget, location lTarget) {
 	}
 
 	if ("move_target_1" == sTag) {
-		ExecuteScript("ii_move_target_1");
+		ExecuteScript("ii_move_target_1", oPC);
 	}
 }
