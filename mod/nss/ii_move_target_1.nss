@@ -33,7 +33,7 @@ void main() {
 
 				if (GetIsObjectValid(oCurrentTarget)) {
 					AssignCommand(oCurrentTarget, ClearAllActions(TRUE));
-					AssignCommand(oCurrentTarget, ActionForceFollowObject(oTarget));
+					AssignCommand(oCurrentTarget, ActionForceFollowObject(oTarget, 2.0f));
 				} else {
 					SendMessageToPC(oPC, "Current target cannot follow PC.");
 				}
