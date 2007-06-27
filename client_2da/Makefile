@@ -23,4 +23,4 @@ hak: path
 	erfpack.pl -H -o $(NWNHOME)/hak/$(NAME).hak $(VALIDEXT)
 
 publish:
-	rsync -Pzva $(NWNHOME)/hak/$(NAME).hak elven@swordcoast.net::nwn-w/hak/
+	rsync -Pzva --chmod=go+r $(NWNHOME)/hak/$(NAME).hak elven@miyeritar.swordcoast.net::nwn-w/hak/
