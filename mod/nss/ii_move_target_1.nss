@@ -23,19 +23,33 @@ void main() {
 
 	object oCurrentTarget = GetLocalObject(oItem, "current_target");
 	int nRun = GetLocalInt(oItem, "current_target_run") == 1;
+	int nQueues = GetLocalInt(oItem, "current_target_queues") == 1;
 
 	if (GetIsObjectValid(oTarget)) {
 		if (!GetIsCreature(oTarget)) {
-			SendMessageToPC(oPC, "Not a valid target.");
+			
+			if (oTarget == oItem) {
+				// toggle queueing
+				nQueues = !nQueues;
+				SetLocalInt(oItem, "current_target_queues", nQueues);
+				if (nRun)
+					SendMessageToPC(oPC, "Target queues actions.");
+				else
+					SendMessageToPC(oPC, "Target does not queue actions.");
+
+			} else {
+				SendMessageToPC(oPC, "Not a valid target.");
+			}
 		} else {
 			if (GetIsPC(oTarget)) {
 				// make him follow
 
-				if (GetIsObjectValid(oCurrentTarget)) {
-					AssignCommand(oCurrentTarget, ClearAllActions(TRUE));
+				if (GetIsObjectValid(oCurrentTarget) && GetIsCreature(oCurrentTarget)) {
+					if (!nQueues)
+						AssignCommand(oCurrentTarget, ClearAllActions(TRUE));
 					AssignCommand(oCurrentTarget, ActionForceFollowObject(oTarget, 2.0f));
 				} else {
-					SendMessageToPC(oPC, "Current target cannot follow PC.");
+					SendMessageToPC(oPC, "Current target cannot follow selected PC, because its not a creature.");
 				}
 			} else {
 				if (oTarget == oCurrentTarget) {
@@ -49,12 +63,14 @@ void main() {
 					ShowTargetFor(-1, oTarget, oPC);
 					SetLocalObject(oItem, "current_target", oTarget);
 					SetLocalInt(oItem, "current_target_run", 0);
+					SetLocalInt(oItem, "current_target_queues", 0);
 				}
 			}
 		}
 	} else {
 		if (GetIsObjectValid(oCurrentTarget)) {
-			AssignCommand(oCurrentTarget, ClearAllActions(TRUE));
+			if (!nQueues)
+				AssignCommand(oCurrentTarget, ClearAllActions(TRUE));
 			AssignCommand(oCurrentTarget, ActionMoveToLocation(lTarget, nRun));
 		} else {
 			SendMessageToPC(oPC, "No valid target for this item is set.");
