@@ -26,7 +26,22 @@ int GetTargetSlot(object oPC = OBJECT_SELF);
 int NotifyBadTarget(string sAddMsg = "", object oPC = OBJECT_SELF);
 
 
+void ShowTargetFor(int nSlot, object oTarget, object oPC = OBJECT_SELF);
+
 // impl
+
+void ShowTargetFor(int nSlot, object oTarget, object oPC = OBJECT_SELF) {
+	SendMessageToPC(oPC, "O[" +
+		IntToString(nSlot) +
+		"]: '" +
+		GetName(oTarget) +
+		"', Tag: " +
+		GetTag(oTarget) +
+		", ResRef: " +
+		GetResRef(oTarget) +
+		", OID: " + ObjectToString(oTarget) + ", " + ObjectTypeToString(GetObjectType(oTarget)));
+	SendMessageToPC(oPC, "O[" + IntToString(nSlot) + "]: " + LocationToStringPrintable(GetLocation(oTarget)));
+}
 
 
 int SanitiseSlot(int n, object oPC = OBJECT_SELF) {
