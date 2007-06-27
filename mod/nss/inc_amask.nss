@@ -1,3 +1,5 @@
+#include "_gen"
+
 const int
 // Normal players
 AMASK_ANY = 0,
