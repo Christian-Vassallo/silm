@@ -53,25 +53,6 @@ void ChatHookAudit(object oPC = OBJECT_SELF, int bSuppress = TRUE, string sData 
 
 
 
-// Cough up a syntax helper
-/*int Syntax(string s = "", int bAddTarget = FALSE, object oPC = OBJECT_SELF) {
- * 	string cmd = GetLocalString(oPC, "last_chat_command");
- *
- * 	SendMessageToPC(oPC, "Syntax: " + cmd + " " + (bAddTarget == TRUE ? "[-t=1.." + IntToString(TARGET_MAX) + "] " : "" ) + s);
- * 	return SYNTAX;
- * }
- *
- *
- * // Display an example
- * int Example(string s = "", object oPC = OBJECT_SELF) {
- * 	string cmd = GetLocalString(oPC, "last_chat_command");
- *
- * 	SendMessageToPC(oPC, "Example: " + cmd + " " + s);
- * 	return SYNTAX;
- * }*/
-
-
-
 // Applies emote colours to the given text.
 // Parses:
 //    *..* - cOrange
