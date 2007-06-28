@@ -202,10 +202,15 @@ int GetPCCount(object oArea = OBJECT_INVALID, int bOnlyDMs = FALSE);
 
 int GetPCPartyCount(object oPC);
 
+// returns s as unsigned
+int u(int s);
 
 /* impl */
 
 
+int u(int s) {
+	return s < 0 ? 0 : s;
+}
 
 float random(float fStart, float fEnd) {
 	string sStart = FloatToString(fStart),

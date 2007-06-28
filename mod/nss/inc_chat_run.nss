@@ -18,7 +18,7 @@ LastCommand;
 
 
 
-
+int CommandModSet(object oPC, int iMode, int nRunLevel);
 int CommandModSelf(object oPC, int iMode, int nRunLevel);
 int CommandModRadius(object oPC, int iMode, int nRunLevel);
 int CommandModRectangle(object oPC, int iMode, int nRunLevel);
@@ -62,6 +62,7 @@ void RegisterAccessFlags(int nFlags);
 
 
 int RunCommand(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel) {
+	nRunModLevel = u(nRunModLevel);
 	string sCommand, sRest;
 
 	sText = GetStringTrim(sText);
@@ -132,6 +133,7 @@ int RunCommand(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias
 
 
 int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel) {
+	nRunModLevel = u(nRunModLevel);
 	int i = 0;
 	string sCmd = "";
 
@@ -217,6 +219,8 @@ void RegisterAccessFlags(int nFlags) {
 
 void RegisterAllCommands() {
 	/* modifiers */
+	RegisterCommand("g", "");
+
 	RegisterCommand("self", "");
 	
 	RegisterCommand("online", "dms");
@@ -299,6 +303,18 @@ void RegisterAllCommands() {
 	RAF(AMASK_CAN_SEE_CHATLOGS);
 
 	/* GM commands */
+
+	RegisterCommand("gi", "", 1, 1);
+	RHs("setname >> create item for setname");
+
+	RegisterCommand("gs", "", 0, 1);
+	RHs("[setname] >> get/set current set");
+
+	RegisterCommand("ga", "s=", 0, 0);
+	RHs("[-s=setname] >> add target to current/setname set");
+
+	RegisterCommand("gc", "s=", 0, 0);
+	RHs("[-s=setname] >> clear current/setname set");
 
 	RegisterCommand("n", "x= y= z=", 0, 0);
 	RHs("[-x=float] [-y=float] [-z=float] >> nudge current target in direction");
@@ -469,7 +485,7 @@ void RegisterAllCommands() {
 	RegisterCommand("info", "");
 
 
-	RegisterCommand("area", "rsl tli= tsi= explore");
+	RegisterCommand("ar", "rsl tli= tsi= explore");
 	RHs("-rsl >> RecomputeStaticLighting() for the current area.");
 	RHs("-explore >> Explores the area for the current target.");
 	RHs("-tli [new_colour_1] [new_colour_2] >> Gets/Sets MainLight colour for the current tile.");
@@ -539,6 +555,7 @@ void RegisterAllCommands() {
 
 
 int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro, int bRunAlias, int nRunModLevel) {
+	nRunModLevel = u(nRunModLevel);
 
 	// No need for that MODE flag, we know already it is a command.
 	if (iMode & MODE_COMMAND)
@@ -634,6 +651,9 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 		ret = CommandMacro(oPC, iMode);
 
 	if ( nRunModLevel > 0 ) {
+		if ("g" == sCommand)
+			ret = CommandModSet(oPC, iMode, nRunModLevel);
+
 		if ("self" == sCommand)
 			ret = CommandModSelf(oPC, iMode, nRunModLevel);
 
@@ -649,6 +669,17 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 		if ("server" == sCommand)
 			ret = CommandModServer(oPC, iMode, nRunModLevel);
 	}
+
+
+	// Set management
+	if ( "gi" == sCommand )
+		ret = CommandManageSetItem(oPC, iMode);
+	if ( "gs" == sCommand )
+		ret = CommandManageSetSet(oPC, iMode);
+	if ( "gc" == sCommand )
+		ret = CommandManageSetClear(oPC, iMode);
+	if ( "ga" == sCommand )
+		ret = CommandManageSetAdd(oPC, iMode);
 
 	if ( "event" == sCommand )
 		ret = CommandEventHandler(oPC, iMode);
@@ -795,7 +826,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( "subrace" == sCommand )
 		ret = CommandSubRace(oPC, iMode);
 
-	if ( "area" == sCommand )
+	if ( "ar" == sCommand )
 		ret = CommandArea(oPC, iMode);
 
 
@@ -1075,6 +1106,37 @@ int CommandMacro(object oPC, int iMode) {
 }
 
 
+
+int CommandModSet(object oPC, int iMode, int nRunModLevel) {
+	string sRest = arg(0);
+	
+	if (gvGetInt("chat_debug")) {
+		SendMessageToAllDMs("chat:mod:self> " + sRest);
+	}
+	
+	int nOldTarget = GetDefaultSlot();
+	SetDefaultSlot(TARGET_MACRO_SLOT);
+	
+	string sSetName = GetCurrentSet(oPC);
+
+	int nSz = GetSetSize(sSetName, oPC);
+	int i;
+	int ret;
+	object t;
+	for (i = 0; i < nSz; i++) {
+		t = GetFromSet(sSetName, i, oPC);
+		SetTarget(t);
+		ret = CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1);
+		if (!ret)
+			return FAIL;
+	}
+	
+	SetDefaultSlot(nOldTarget);
+
+	return OK;
+}
+
+
 int CommandModSelf(object oPC, int iMode, int nRunModLevel) {
 	string sRest = arg(0);
 	
@@ -1087,7 +1149,7 @@ int CommandModSelf(object oPC, int iMode, int nRunModLevel) {
 		SendMessageToAllDMs("chat:mod:self> " + sRest);
 	}
 	
-	int ret = CommandEval(oPC, iMode, sRest, 1, 1, 0);
+	int ret = CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1);
 
 	SetDefaultSlot(nOldTarget);
 	// ClearTarget(oPC, TARGET_MACRO_SLOT);

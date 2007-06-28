@@ -103,4 +103,8 @@ void EventUseItem(object oPC, object oItem, object oTarget, location lTarget) {
 		ExecuteScript("ii_move_target_1", oPC);
 		BypassEvent();
 	}
+	if ("move_target_g" == sTag) {
+		ExecuteScript("ii_move_target_g", oPC);
+		BypassEvent();
+	}
 }

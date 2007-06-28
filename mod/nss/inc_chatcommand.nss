@@ -29,8 +29,12 @@
 
 #include "inc_nwnx_func"
 #include "inc_track"
+#include "inc_objset"
 
 
+int CommandManageSetItem(object oPC, int iMode);
+int CommandManageSetSet(object oPC, int iMode);
+int CommandManageSetClear(object oPC, int iMode);
 
 int CommandShowWeather(object oPC, int iMode);
 
@@ -208,6 +212,46 @@ int CommandStub(object oPC, int iMode) {
 	return OK;
 }
 
+int CommandManageSetItem(object oPC, int iMode) {
+	string name = arg(0);
+	object oI = CreateItemOnObject("move_target_g", oPC);
+	SetLocalString(oI, "objset_name", name);
+	SetName(oI, "group: " + name);
+	return OK;
+}
+
+int CommandManageSetAdd(object oPC, int iMode) {
+	string set = GetCurrentSet(oPC);
+	if ("" == set) {
+		ToPC("No group set.");
+		return FAIL;
+	}
+	AddToSet(set, oPC, GetTarget());
+	ToPC("groupadd: " + set + " -> " + GetName(GetTarget()));
+	return OK;
+}
+
+int CommandManageSetSet(object oPC, int iMode) {
+	string new = arg(0);
+	if ("" == new) {
+		ToPC("group: " + GetCurrentSet(oPC));
+	} else {
+		ToPC("groupsel: " + new);
+		SetCurrentSet(new, oPC);
+	}
+	return OK;
+}
+
+int CommandManageSetClear(object oPC, int iMode) {
+	string set = GetCurrentSet(oPC);
+	if (opt("s"))
+		set = optv("s");
+	
+	ClearSet(set, oPC);
+	ToPC("groupclear: " + set);
+	return OK;
+}
+
 
 int CommandEventHandler(object oPC, int iMode) {
 	object oT = GetTarget();
@@ -317,7 +361,7 @@ int CommandGo(object oPC, int iMode) {
 	struct mnxRet r = mnxCmd("location_count", loc);
 
 	if (r.error) {
-		ToPC("Command failed.");
+		ToPC("Command failed. Check rmnx error logs.");
 		return FAIL;
 	}
 
@@ -339,7 +383,7 @@ int CommandGo(object oPC, int iMode) {
 
 	r = mnxCmd("location", loc);
 	if (r.error) { 
-		ToPC("Command failed (2).");
+		ToPC("Command failed Check rmnx error logs. (2)");
 		return FAIL;
 	}
 
@@ -1870,6 +1914,8 @@ int CommandFollow(object oPC, int iMode) {
 
 
 	// follow - make self follow current target
+	// follow me - make current target follow self
+	
 	// follow target - make target follow self!
 	// follow target target - make target follow target
 
@@ -1882,12 +1928,18 @@ int CommandFollow(object oPC, int iMode) {
 
 	object oT = GetTarget();
 
-
+	if (argc() == 1 && p0 == "me") {
+		AssignCommand(GetTarget(), ActionForceFollowObject(oPC, 1.5));
+		return OK;
+	}
+	
 	// make self follow current target
 	if ( argc() == 0 ) {
 //        ClearAllActions(1);
 		ActionForceFollowObject(oT);
 		return OK;
+	
+	// make target follow self
 	} else if ( argc() == 1 ) {
 //        AssignCommand(o0, ClearAllActions(1));
 		AssignCommand(o0, ActionForceFollowObject(oPC, 1.5));
