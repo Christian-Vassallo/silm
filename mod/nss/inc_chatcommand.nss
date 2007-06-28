@@ -226,7 +226,7 @@ int CommandManageSetAdd(object oPC, int iMode) {
 		ToPC("No group set.");
 		return FAIL;
 	}
-	AddToSet(set, oPC, GetTarget());
+	AddToSet(set, GetTarget(), oPC);
 	ToPC("groupadd: " + set + " -> " + GetName(GetTarget()));
 	return OK;
 }
