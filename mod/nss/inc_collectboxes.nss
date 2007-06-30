@@ -12,23 +12,40 @@ void OnCollectboxDisturb(object oGivenByPC, object oItem) {
 		return;
 	}
 
+    //coin_0100
 	if ( GetStringLeft(GetResRef(oItem), 5) != "coin_" ) {
-		ToPC("Dieses Objekt passt nicht durch den Schlitz.", oGivenByPC);
+		ToPC("Dieses Objekt passt nicht hier hin ..", oGivenByPC);
 		ActionGiveItem(oItem, oGivenByPC);
 		return;
-	}                                             //coin_0100
+	}
 
+
+	ppP("select text, character from collectboxes where name = ?;");
+	ppSs(sName);
+	ppQ();
+	if (!pF()) {
+		SendMessageToAllDMs("Collectbox has no database entry.");
+		ActionGiveItem(oItem, oGivenByPC);
+		return;
+	}
+
+	string sText = pGs(1);
+
+	if ("" == sText) {
+			sText = "Ein leises Klimpern erklingt, als die Muenzen am Boden des Sammelgefaesses auftreffen.";
+	}
+	
 	int nMulti = StringToInt(GetStringRight(GetResRef(oItem), 4));
 	int nAmount = GetItemStackSize(oItem) * nMulti;
 
 	if ( nAmount > 0 )
-		pQ("update collectboxes set value=value+" +
-			IntToString(nAmount) + " where name=" + pE(sName) + ";");
+		pQ("update collectboxes set value = value+" +
+			IntToString(nAmount) + " where name = " + pE(sName) + ";");
 
 	DestroyObject(oItem);
 	FloatingTextStringOnCreature(
-		"Ein leises Klimpern erklingt, als die Muenzen am Boden des Sammelgefaesses auftreffen.", oGivenByPC,
-		1);
+		sText, oGivenByPC,
+	1);
 
 	return;
 }
