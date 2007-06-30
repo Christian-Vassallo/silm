@@ -19,6 +19,7 @@ LastCommand;
 
 
 int CommandModSet(object oPC, int iMode, int nRunLevel);
+int CommandModHere(object oPC, int iMode, int nRunLevel);
 int CommandModSelf(object oPC, int iMode, int nRunLevel);
 int CommandModRadius(object oPC, int iMode, int nRunLevel);
 int CommandModRectangle(object oPC, int iMode, int nRunLevel);
@@ -221,8 +222,10 @@ void RegisterAllCommands() {
 	/* modifiers */
 	RegisterCommand("g", "");
 
-	RegisterCommand("self", "");
+	RegisterCommand("here", "");
 	
+	RegisterCommand("self", "");
+
 	RegisterCommand("online", "dms");
 
 	RegisterCommand("area", "type=");
@@ -653,6 +656,9 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( nRunModLevel > 0 ) {
 		if ("g" == sCommand)
 			ret = CommandModSet(oPC, iMode, nRunModLevel);
+		
+		if ("here" == sCommand)
+			ret = CommandModHere(oPC, iMode, nRunModLevel);
 
 		if ("self" == sCommand)
 			ret = CommandModSelf(oPC, iMode, nRunModLevel);
@@ -1134,6 +1140,25 @@ int CommandModSet(object oPC, int iMode, int nRunModLevel) {
 	SetDefaultSlot(nOldTarget);
 
 	return OK;
+}
+
+int CommandModHere(object oPC, int iMode, int nRunModLevel) {
+	string sRest = arg(0);
+	
+	int nOldTarget = GetDefaultSlot();
+	SetDefaultSlot(TARGET_MACRO_SLOT);
+	
+	SetTargetLocation(GetLocation(oPC));
+	
+	if (gvGetInt("chat_debug")) {
+		SendMessageToAllDMs("chat:mod:here> " + sRest);
+	}
+	
+	int ret = CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1);
+
+	SetDefaultSlot(nOldTarget);
+
+	return ret ? OK : FAIL;
 }
 
 
