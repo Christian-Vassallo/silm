@@ -234,7 +234,13 @@ int CommandManageSetAdd(object oPC, int iMode) {
 int CommandManageSetSet(object oPC, int iMode) {
 	string new = arg(0);
 	if ("" == new) {
-		ToPC("group: " + GetCurrentSet(oPC));
+		object o; int i; int t = GetSetSize(GetCurrentSet(oPC));
+		ToPC("group: " + GetCurrentSet(oPC) + " (" + IntToString(t) + ")");
+		for (i = 0; i < t; i++) {
+			o = GetFromSet(GetCurrentSet(oPC), i, oPC);
+			ToPC(IntToString(i) + ": " + ObjectToString(o) + " " + GetResRef(o) + " " + GetTag(o));
+		}
+
 	} else {
 		ToPC("groupsel: " + new);
 		SetCurrentSet(new, oPC);
