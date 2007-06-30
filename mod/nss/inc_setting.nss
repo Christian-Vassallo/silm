@@ -1,7 +1,7 @@
 /*
  * Global module settings
  */
-#include "inc_pgsql"
+#include "inc_pgsql_base"
 
 const string
 	GV_TABLE = "gv";

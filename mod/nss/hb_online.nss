@@ -21,7 +21,7 @@ void main() {
 		q += "(" +
 			 pSi(GetAccountID(oPC), TRUE) + "," +
 			 pSi(GetCharacterID(oPC), TRUE) + "," +
-			 pSs( GetPCName(pPC) ) + "," + 
+			 pSs( GetPCName(oPC) ) + "," + 
 			 pSs(GetName(oPC)) + "," + 
 			 pSb(GetIsDM(oPC)) + "," + 
 			 pSs(GetResRef(GetArea(oPC))) + "," + 
