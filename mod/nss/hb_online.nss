@@ -3,8 +3,8 @@
 #include "inc_pgsql"
 
 void main() {
-	pB();
-	pQ("truncate online;");
+//	pB();
+//
 	object oPC = GetFirstPC();
 
 	// Noones here, dont even bother!
@@ -35,6 +35,9 @@ void main() {
 
 	q = GetStringLeft(q, GetStringLength(q) - 1); // chomp off last ,
 	q += ";";
+	
+	pQ("truncate online;");
 	pQ(q);
-	pC();
+
+//	pC();
 }
