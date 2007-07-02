@@ -1727,7 +1727,7 @@ int CommandPassword(object oPC, int iMode) {
 
 	pQ("update accounts set password = sha1(" +
 		pE(sPass) + ") where id = '" + IntToString(iAID) + "' limit 1;");
-	pQ("updateaccounts set register_on = now() where id='" +
+	pQ("update accounts set register_on = now() where id='" +
 		IntToString(iAID) + "' and register_on = NULL limit 1;");
 
 	SendMessageToPC(oPC,
