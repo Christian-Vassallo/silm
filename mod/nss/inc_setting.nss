@@ -78,9 +78,10 @@ string gvGetVar(string sKey, string sType) {
 		" and type = " + pE(sType) + 
 		";");
 	if (pF()) {
-		SetLocalString(GetModule(), cacheKey, pG(1));
+		string ret = pG(1);
+		SetLocalString(GetModule(), cacheKey, ret);
 		SetLocalInt(GetModule(), cacheKey, StringToInt(pG(2)));
-		return pG(1);
+		return ret;
 	} else
 		return "";
 }

@@ -98,7 +98,7 @@ void pSQLExecDirect(string sSQL) {
 }
 
 void pSQLQuery(string sSQL) {
-	pSQLExecDirect(sSQL);
+	pSQLExecDirect(sSQL + ";");
 }
 
 int pF() {

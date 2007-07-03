@@ -1,5 +1,5 @@
 #include "_gen"
-#include "inc_mysql"
+#include "inc_pgsql"
 #include "inc_lists"
 #include "inc_currency"
 
@@ -15,30 +15,31 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 
 
 	string sTag = GetStringLowerCase(GetTag(oMerc));
-	string sMerc = SQLEscape(sTag);
+	string sMerc = sTag;
 
 
-	SQLQuery(
-		"select text_intro,text_buy,text_sell,text_nothingtobuy,text_nothingtosell,money,appraise_dc,money_limited from merchants where tag = "
-		+ sMerc + " limit 1;");
+	pQ(
+		"select text_intro,text_buy,text_sell,text_nothingtobuy,text_nothingtosell,text_swap,money,appraise_dc,money_limited from merchants where tag = "
+		+ pSs(sMerc) + ";");
 
-	if ( !SQLFetch() ) {
+	if ( !pF() ) {
 		SendMessageToPC(oPC,
 			"Bug. :/ Kein Haendler mit diesem tag gefunden, aber NPC hat Script dran. Hm, hm. Datenbank offski?");
 		return;
 	}
 
 
-	string sTextIntro = SQLGetData(1),
-		   sTextBuy = SQLGetData(2),
-		   sTextSell = SQLGetData(3),
-		   sTextNothingToBuy = SQLGetData(4),
-		   sTextNothingToSell = SQLGetData(5),
+	string sTextIntro = pG(1),
+		   sTextBuy = pG(2),
+		   sTextSell = pG(3),
+		   sTextNothingToBuy = pG(4),
+		   sTextNothingToSell = pG(5),
+		   sTextSwap = pG(6),
 		   sText = "";
 
-	int nMercMoney = StringToInt(SQLGetData(6)),
-		nAppraiseDC = StringToInt(SQLGetData(7)),
-		bLimitedMoney = StringToInt(SQLGetData(8));
+	int nMercMoney = StringToInt(pG(7)),
+		nAppraiseDC = StringToInt(pG(8)),
+		bLimitedMoney = StringToInt(pG(9));
 
 
 	float fAppraiseMod = GetLocalFloat(oPC, TTT + "_" + sTag);
@@ -63,25 +64,6 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 	int nPCMoney = Money2Value(CountCreatureMoney(oPC, 0));
 
 
-	// Decay all bleedin items.
-	SQLQuery("update merchant_inventory set last_decay = unix_timestamp() where last_decay = 0;");
-	SQLQuery("update merchant_inventory set last_gain = unix_timestamp() where last_gain = 0;");
-
-	SQLQuery(
-		"update merchant_inventory set cur = if(cur - floor( (unix_timestamp() - last_decay)/60/60 * decay ) >= min, cur - floor( (unix_timestamp() - last_decay)/60/60 * decay ), min) , last_decay = unix_timestamp() where last_decay > 0 and decay != 0 and "
-		+
-		"cur > min and cur >= floor( (unix_timestamp() - last_decay)/60/60 * decay) and " +
-		"merchant = (select id from merchants where tag = " + sMerc + " limit 1);");
-
-	SQLQuery(
-		"update merchant_inventory set cur = if(cur + floor( (unix_timestamp() - last_gain)/60/60 * gain ) <= max, cur + floor( (unix_timestamp() - last_gain)/60/60 * gain ), max) , last_gain = unix_timestamp() where last_gain > 0 and gain != 0 and "
-		+
-		"cur < max and cur < floor( (unix_timestamp() - last_gain)/60/60 * gain) and " +
-		"merchant = (select id from merchants where tag = " + sMerc + " limit 1);");
-
-
-	// SQLQuery("update merchant_inventory set cur = max where cur > max;");
-
 	// Main menue.
 	if ( 0 == nMenuLevel0 ) {
 		// buy
@@ -91,6 +73,10 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		// sell
 		AddListItem(oPC, TTT, "Dinge an den Haendler verkaufen");
 		SetListInt(oPC, TTT, 2);
+		
+
+		//AddListItem(oPC, TTT, "Dinge mit dem Haendler tauschen");
+		//SetListInt(oPC, TTT, 3);
 
 
 		ResetConvList(oPC, oPC, TTT, 50000, "merchant_cb", sTextIntro);
@@ -103,19 +89,18 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		int nPrice;
 		float fMark;
 
-		SQLQuery(
-			"select resref,cur,(merchant_inventory.sell_markdown * (select sell_markdown from merchants where tag="
-			+ sMerc +
-			")),max from merchant_inventory where sell = 1 and ((cur > 0 and cur > min) or (cur = 0 and max = 0 and min = 0)) and merchant = "
-			+
-			"(select id from merchants where tag = " + sMerc + " limit 1) order by resref asc;");
+		pQ(
+			"select resref,cur,sell_mark,max from stores " + 
+			"where sell = 1 and ((cur > 0 and cur > min) or (cur = 0 and max = 0 and min = 0)) and " +
+			"merchant = " + pSs(sMerc) + " order by resref asc;"
+		);
 
-		while ( SQLFetch() ) {
-			sResRef = SQLGetData(1);
-			nWant = StringToInt(SQLGetData(2));
-			nMax  = StringToInt(SQLGetData(4));
+		while ( pF() ) {
+			sResRef = pGs(1);
+			nWant = pGi(2);
+			nMax  = pGi(4);
 
-			fMark = StringToFloat(SQLGetData(3));
+			fMark = pGf(3);
 
 			oSell = GetItemResRefPossessedBy(oMerc, sResRef);
 			if ( !GetIsObjectValid(oSell) )
@@ -161,18 +146,17 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		int nAvailable;
 		float fMark;
 
-		SQLQuery(
-			"select resref,(merchant_inventory.buy_markup * (select buy_markup from merchants where tag=" +
-			sMerc +
-			")),cur,max from merchant_inventory where buy = 1 and ((cur < max) or (min=0 and cur=0 and max=0)) and merchant = "
-			+
-			"(select id from merchants where tag = " + sMerc + " limit 1) order by resref asc;");
+		pQ(
+			"select resref,buy_mark,cur,max from merchant_inventory where " +
+			"buy = 1 and ((cur < max) or (min=0 and cur=0 and max=0)) and merchant = " + 
+			pSs(sMerc) + " order by resref asc;"
+		);
 
-		while ( SQLFetch() ) {
-			sResRef = SQLGetData(1);
-			fMark = StringToFloat(SQLGetData(2));
-			nWant = StringToInt(SQLGetData(3));
-			nMax  = StringToInt(SQLGetData(4));
+		while ( pF() ) {
+			sResRef = pG(1);
+			fMark = pGf(2);
+			nWant = pGi(3);
+			nMax  = pGi(4);
 			
 			nCount = GetItemCountByResRef(oPC, sResRef);
 
@@ -230,6 +214,111 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 
 		ResetConvList(oPC, oPC, TTT, 50000, "merchant_cb", sText, "", "", "merchant_b2m0",
 			"Zurueck zur Liste");
+	
+	// Swap with merchant
+	} else if ( 3 == nMenuLevel0 ) {
+		/*
+		int nAvailable;
+		object
+			oTakes, oGives;
+
+		string
+			sTakesR, sGivesR;
+
+		int	takesC, givesC,
+			takesA, givesA;
+
+		int bAdhereInventory;
+
+		int nPlayerItems;
+		
+		int nID;
+
+		SQLQuery(
+			"select takes_resref, takes_count, gives_resref, gives_count, adhere_inventory, " +
+			"(select max-cur from merchant_inventory where merchant_inventory.resref = merchant_inventory_exchange.takes_resref) as takes_available, " +
+			"(select cur-min from merchant_inventory where merchant_inventory.resref = merchant_inventory_exchange.gives_resref) as gives_available, " +
+			"id " +
+			"from merchant_inventory_exchange where " +
+			"merchant_id = (select id from merchants where tag = " + sMerc + " limit 1) order by takes_resref asc;"
+		);
+
+		while ( pF() ) {
+			sTakesR = pG(1);
+			sGivesR = pG(3);
+			takesC = StringToInt(pG(2));
+			givesC = StringToInt(pG(4));
+			bAdhereInventory = StringToInt(pG(5));
+			takesA = StringToInt(pG(6));
+			givesA = StringToInt(pG(7));
+			nID = StringToInt(pG(8));
+
+			nPlayerItems = GetItemCountByResRef(oPC, sTakesR);
+
+			nAvailable = 1;
+
+
+			// Check player has at least takes_count items
+			if (nAvailable && nPlayerItems < takesC) {
+				nAvailable = 0;
+			}
+			
+			// Check merchant has at least gives_count items
+			if (nAvailable && givesA < givesC) {
+				nAvailable = 0;
+			}
+			
+			// Check merchant has enough room for takes_count items
+			if (nAvailable && takesC > takesA) {
+				nAvailable = 0;
+			}
+
+			// BUG: The last transaction depleted the players inventory.
+			// Skip this one out.
+			// This is a limitation of the list managment system and nwserver.
+			// Dont worry about it.
+			/ *if ( nCount == takesC && GetLocalString(oPC, "merc_last_swap") == sResRef ) {
+				DeleteLocalString(oPC, "merc_last_swap");
+				nAvailable = 0;
+			}* / 
+			
+			oTakes = GetItemResRefPossessedBy(oPC, sTakesR);
+
+			// oops?
+			if ( !GetIsObjectValid(oTakes) ) {
+				ToPC("Kann kein Item mit dieser ResRef erstellen (" + sTakesR + "). Dies ist ein Bug. Bitte melde ihn den SLs.");
+				continue;
+			}
+
+			// priceTakes = GetGoldPieceValue(oTakes) / GetItemStackSize(oTakes);
+			// nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
+		
+
+			// Display text: NameTakes (takesC/takesA) -> NameGives (givesC/givesA)
+			
+			AddListItem(oPC, TTT, "Tausche " + 
+				IntToString(takesC) + " " + GetName(oTakes) +
+				" gegen " + 
+				IntToString(givesC) + " " + GetName(oGives)
+			);
+			SetListInt(oPC, TTT, nID);
+			//SetListString(oPC, TTT, sResRef);
+			//SetListInt(oPC, TTT, nPrice);
+			//SetListFloat(oPC, TTT, IntToFloat(nMax));
+
+			if ( nAvailable )
+				SetListDisplayMode(oPC, TTT, DISPLAYMODE_GREEN);
+			else
+				SetListDisplayMode(oPC, TTT, DISPLAYMODE_RED);
+			*
+		}
+
+
+		sText = sTextSwap;
+
+		ResetConvList(oPC, oPC, TTT, 50000, "merchant_cb", sText, "", "", "merchant_b2m0",
+			"Zurueck zur Liste");
+		*/
 	}
 
 }

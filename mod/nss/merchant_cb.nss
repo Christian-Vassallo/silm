@@ -12,13 +12,13 @@ void main() {
 	int nSelected   = GetListSelection(oPC);
 
 
-	string sMerc = SQLEscape(GetStringLowerCase(GetTag(oMerc)));
+	string sMerc = GetStringLowerCase(GetTag(oMerc));
 
 
-	SQLQuery("select text_pcnomoney,text_mercnomoney,money,money_limited from merchants where tag = " +
+	pQ("select text_pcnomoney,text_mercnomoney,money,money_limited from merchants where tag = " +
 		sMerc + " limit 1;");
 
-	if ( !SQLFetch() ) {
+	if ( !pF() ) {
 		SendMessageToPC(oPC,
 			"Bug. :/ Kein Haendler mit diesem tag gefunden, aber NPC hat Script dran. Hm, hm. Datenbank offski?");
 		return;
@@ -26,12 +26,12 @@ void main() {
 
 
 	string
-	sTextPCNoMoney = SQLGetData(1),
-	sTextMercNoMoney = SQLGetData(2);
+	sTextPCNoMoney = pG(1),
+	sTextMercNoMoney = pG(2);
 
-	int nMercMoney = StringToInt(SQLGetData(3)),
+	int nMercMoney = pGi(3),
 		nPCMoney = Money2Value(CountCreatureMoney(oPC)),
-		bLimitedMoney = StringToInt(SQLGetData(4));
+		bLimitedMoney = pGi(4);
 
 
 	if ( 0 == nMenuLevel0 ) {
@@ -40,10 +40,14 @@ void main() {
 		if ( 0 == nSelected ) {
 			SetMenuLevel(oPC, TTT, 0, 1);
 
-			// Sell to merchant.
+		// Sell to merchant.
 		} else if ( 1 == nSelected ) {
 			SetMenuLevel(oPC, TTT, 0, 2);
-		}
+
+		// swap with merchant
+		}// else if ( 3 == nSelected ) {
+		//	SetMenuLevel(oPC, TTT, 0, 3);
+		//}
 
 
 		/*} else if (1 == nMenuLevel0) {
@@ -84,12 +88,9 @@ void main() {
 
 				// Update DB
 				if ( 0.0 != fMax )
-					SQLQuery(
-						"update merchant_inventory set cur = cur - 1 where merchant = (select id from merchants where tag = "
-						+ sMerc + " limit 1) and resref = " + SQLEscape(sBuyWhat) + " limit 1;");
+					pQ("update stores cur = cur - 1 where merchant = " + pSs(sMerc) + " and resref = " + pSs(sBuyWhat) + " limit 1;");
 
-				SQLQuery("update merchants set money = money + " +
-					IntToString(nPCPaysHowMuch) + " where tag = " + sMerc + " limit 1;");
+				pQ("update merchants set money = money + " + pSi(nPCPaysHowMuch) + " where tag = " + sMerc + " limit 1;");
 
 				audit("buy", oPC, audit_fields("merchant", GetTag(oMerc), "resref", sBuyWhat, "price",
 						IntToString(nPCPaysHowMuch)), "merchant");
@@ -125,13 +126,10 @@ void main() {
 
 				// update DB
 				if ( 0.0 != fMax )
-					SQLQuery(
-						"update merchant_inventory set cur = cur + 1 where merchant = (select id from merchants where tag = "
-						+ sMerc + " limit 1) and resref = " + SQLEscape(sSellsWhat) + " limit 1;");
+					pQ("update stores set cur = cur + 1 where merchant = " + pSs(sMerc) + " and resref = " + pSs(sSellsWhat) + " limit 1;");
 
 				if ( bLimitedMoney )
-					SQLQuery("update merchants set money = money - " +
-						IntToString(nMercPaysHowMuch) + " where tag = " + sMerc + " limit 1;");
+					pQ("update merchants set money = money - " + pSi(nMercPaysHowMuch) + " where tag = " + pSs(sMerc) + " limit 1;");
 
 				audit("sell", oPC, audit_fields("merchant", GetTag(oMerc), "resref", sSellsWhat, "price",
 						IntToString(nMercPaysHowMuch)), "merchant");
@@ -140,6 +138,11 @@ void main() {
 				GiveMoneyToCreature(oPC, Value2Money(nMercPaysHowMuch));
 			}
 		}
+	
+	// swap with merchant
+	} else if ( 3 == nMenuLevel0 ) {
+		int nSwapDBID = GetListInt(oPC, TTT, nSelected);
+		SendMessageToPC(oPC, "Swapping ID " + IntToString(nSwapDBID));
 	}
 
 
