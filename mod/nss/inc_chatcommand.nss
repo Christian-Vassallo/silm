@@ -1726,9 +1726,9 @@ int CommandPassword(object oPC, int iMode) {
 	}
 
 	pQ("update accounts set password = sha1(" +
-		pE(sPass) + ") where id = '" + IntToString(iAID) + "' limit 1;");
+		pE(sPass) + ") where id = '" + IntToString(iAID) + "';");
 	pQ("update accounts set register_on = now() where id='" +
-		IntToString(iAID) + "' and register_on = NULL limit 1;");
+		IntToString(iAID) + "' and register_on = NULL;");
 
 	SendMessageToPC(oPC,
 		"Dein Passwort wurde gesetzt; du kannst dich damit nun in der Charakterverwaltung einloggen.");
