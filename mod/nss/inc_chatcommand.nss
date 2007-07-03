@@ -1448,7 +1448,7 @@ int CommandXP(object oPC, int iMode) {
 		int bIsCAPXP = opt("cap");
 
 		if ( bIsCAPXP ) {
-			AddCombatEP(oPC, nXP);
+			AddCombatXP(oPC, nXP);
 
 
 			SendMessageToPC(oPC, "XP is: " + IntToString(GetXP(oT)));

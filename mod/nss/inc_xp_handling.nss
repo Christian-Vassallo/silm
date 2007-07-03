@@ -1,3 +1,4 @@
+#include "_gen"
 #include "inc_decay"
 #include "inc_cdb"
 #include "inc_persist"
@@ -5,10 +6,10 @@
 #include "inc_pgsql"
 
 // Gives oPC nValue EP
-void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE);
+void AddCombatXP(object oPC, int nValue, int bNoWarn = FALSE);
 
 // Returns how much EP oKiller Gets for oDead
-int GetKillXP(object oDead, object oKiller, int nBoni = 0);
+int GetKillXP(object oDead, object oKiller);
 
 
 // Gives nXP to oPlayer, returning the
@@ -204,60 +205,62 @@ void XP_RewardQuestXP(object oPC, int iXP) {
 	ExportSingleCharacter(oPC);
 }
 
-int GetKillXP(object oDead, object oChar, int nBoni = 0) {
-	int nCRDead = FloatToInt(GetChallengeRating(oDead));
-	int nCRChar = GetHitDice(oChar) + SR_GetECL(oChar);
-	int nXP;
-	int nDiff = nCRChar - nCRDead - nBoni;
+/*
+  * GetKillXP
+  * Calculates Kill XP according CR difference and global settings
+  * Returns Kill XP as int
+*/
+int GetKillXP(object oDead, object oChar) {
+    float nCRDead = GetChallengeRating(oDead);
+    //No XP if CR < 1. No levelling up on rabbits, you!
+    if (nCRDead < 1f) return 0;
 
-	if ( nDiff > 6 ) nXP = 0;
-	//else if(nDiff == 8) nXP = 2;
-	//else if(nDiff == 7) nXP = 5;
-	else if ( nDiff == 6 ) nXP = 10;
-	else if ( nDiff == 5 ) nXP = 12;
-	else if ( nDiff == 4 ) nXP = 15;
-	else if ( nDiff == 3 ) nXP = 18;
-	else if ( nDiff == 2 ) nXP = 20;
-	else if ( nDiff == 1 ) nXP = 22;
-	else if ( nDiff == 0 ) nXP = 25;
-	else if ( nDiff == -1 ) nXP = 28;
-	else if ( nDiff == -2 ) nXP = 30;
-	else if ( nDiff == -3 ) nXP = 32;
-	else if ( nDiff == -4 ) nXP = 35;
-	else if ( nDiff == -5 ) nXP = 38;
-	else if ( nDiff == -6 ) nXP = 40;
-	else if ( nDiff == -7 ) nXP = 45;
-	else if ( nDiff <= -8 ) nXP = 50;
-	//SendMessageToAllDMs("Monster-HG="+ IntToString(nCRDead) +" / Char-HG="+ IntToString(nCRChar) +" / EP="+ IntToString(nXP));
-	if ( GetChallengeRating(oDead) < 1.0 ) nXP = 0; // no EP for HS0.x
-	return nXP;
+    float nCRChar = IntToFloat(GetHitDice(oChar));
+    float nXPScale = gvGetFloat("combat_xp_scale");
+    float nMaxCRDiff = IntToFloat(gvGetInt("combat_xp_max_cr_difference"));
+    float nDiff;
+    int nXP;
+    float nBaseXP = 30f;
+    float nXPperDiff = 4f;
+
+    nDiff = nCRDead - nCRChar;
+
+	d("GetKillXP(): nDiff = " + FloatToString(nDiff), "combat_xp");
+    //No XP if CR difference is way out of bounds. Fight someone of yer own size, crivens!
+    if (nDiff > nMaxCRDiff || nDiff < nMaxCRDiff * -1.0)
+		return 0;
+
+    //Unscaled XP is nBaseXP + nXPperDiff per CR difference, multiplied by global setting.
+    nXP = FloatToInt((nDiff * nXPperDiff + nBaseXP) * nXPScale);
+	d("GetKillXP(): nXP = " + FloatToString(nDiff), "combat_xp");
+    return nXP;
 }
 
+
+//On Monster death: distributes XP to players
 void GiveKillXP() {
-	object oPC = GetLastKiller();
+ object oPC = GetLastKiller();
 
-	if ( GetIsDM(oPC) )
-		return;
+ if ( GetIsDM(oPC) )
+  return;
 
-	object oChar = GetFirstFactionMember(oPC);
-	int nXP;
-	while ( GetIsObjectValid(oChar) ) {
-		if ( oPC == oChar
-			|| ( LineOfSightObject(oChar, OBJECT_SELF)
-				&& GetDistanceBetween(oChar, OBJECT_SELF) <= 50.0 ) ) {
-			int nLevel = GetHitDice(oChar) + SR_GetECL(oChar);
-			//SendMessageToAllDMs(IntToString(nLevel) +" / "+ IntToString(GetFactionAverageLevel(oChar)));
-			if ( nLevel < GetFactionAverageLevel(oChar) ) {
-				nXP = GetKillXP(OBJECT_SELF, oChar, 1);
-				AddCombatEP(oChar, nXP);
-			} else {
-				nXP = GetKillXP(OBJECT_SELF, oChar);
-				AddCombatEP(oChar, nXP);
-			}
-		}
-		oChar = GetNextFactionMember(oPC);
-	}
+//Checks PCs egligible for kill XP (i.e. nearby)
+ object oChar = GetFirstFactionMember(oPC);
+ int nXP;
+ while ( GetIsObjectValid(oChar) ) {
+  //PC landing killing blow gets XP
+  if ( oPC == oChar ||
+  //PC is within a certain distance and has line of sight
+  (LineOfSightObject(oChar, OBJECT_SELF) &&
+    GetDistanceBetween(oChar, OBJECT_SELF) <= 50.0 ) ) {
+    int nLevel = GetHitDice(oChar);
+    nXP = GetKillXP(OBJECT_SELF, oChar);
+    AddCombatXP(oChar, nXP);
+  }
+  oChar = GetNextFactionMember(oPC);
+ }
 }
+
 
 
 void GiveTimeXP(object oPC, int nAmount) {
@@ -287,42 +290,56 @@ void GiveTimeXP(object oPC, int nAmount) {
 	}
 }
 
-void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE) {
 
+//It adds combat XP. To character, and the DB.
+//Now go away.
+void AddCombatXP(object oPC, int nValue, int bNoWarn = FALSE) {
 	if ( GetIsDM(oPC) )
 		return;
 
 	int iCombXP = GetLegacyCombatXP(oPC);
-	
+
 	struct RealTime r = GetRealTime();
 	if (r.error)
 		return;
 
+	float nECLAdj = gvGetFloat("combat_xp_ecl_adjustment");
+	int iMonthCap = gvGetInt("combat_xp_limit_month");
+	int iDayCap = gvGetInt("combat_xp_limit_day");
+
 	int iDay = r.day;
-	int iMonth = r.month; 
-	int iYear = r.year; 
+	int iMonth = r.month;
+	int iYear = r.year;
 	int iXPForMonth = GetCategoryXPForMonth(oPC, "combat", iYear, iMonth);
 	int iXPForDay = GetCategoryXPForDay(oPC, "combat", iYear, iMonth, iDay);
 
+	float nECL = IntToFloat(SR_GetECL(oPC));
+
 	if ( iCombXP >= gvGetInt("combat_xp_max" ) ) {
 		if (!bNoWarn)
-			SendMessageToPC(oPC, "Durch Kaempfen koennt Ihr nun wirklich nichts mehr lernen.");
+			SendMessageToPC(oPC, "Durch Kaempfen koennt Ihr nun wirklich nichts mehrlernen.");
 		return;
 	}
 
-	if ( gvGetInt("combat_xp_limit_month") > 0 && iXPForMonth > gvGetInt("combat_xp_limit_month") ) {
+	//Checks monthly combat XP cap, adjusted by ECL
+	float fUpperLimit = IntToFloat(iMonthCap) * (1.0 - (nECL * nECLAdj));
+	if ( iMonthCap > 0 && IntToFloat(iXPForMonth) > fUpperLimit ) {
+		d("montly_cap = " + IntToString(iMonthCap) + ", limit = " + FloatToString(fUpperLimit), "combat_xp");
 		if (!bNoWarn)
-			SendMessageToPC(oPC, "Ihr muesstet ueber die gemachten Kampferfahrungen erstmal nachdenken.");
-
+		SendMessageToPC(oPC, "Ihr muesstet ueber die gemachten Kampferfahrungenerstmal nachdenken.");
 		return;
 	}
-	
-	if ( gvGetInt("combat_xp_limit_day") > 0 && iXPForDay > gvGetInt("combat_xp_limit_day") ) {
+
+	//Checks daily combat XP cap, adjusted by ECL
+	fUpperLimit = IntToFloat(iDayCap) * (1.0 - (nECL * nECLAdj));
+	if ( iDayCap > 0 && IntToFloat(iXPForDay) > fUpperLimit ) {
+		d("daily_cap = " + IntToString(iDayCap) + ", limit = " + FloatToString(fUpperLimit), "combat_xp");
 		if (!bNoWarn)
-			SendMessageToPC(oPC, "Ihr muesstet ueber die gemachten Kampferfahrungen erstmal nachdenken. (Tageslimit)");
+			SendMessageToPC(oPC, "Ihr muesstet ueber die gemachten Kampferfahrungenerstmal nachdenken. (Tageslimit)");
 		return;
 	}
 
+	//Adds the XP, duh!
 	if ( nValue > 0 ) {
 		nValue = GiveXP(oPC, nValue);
 
@@ -331,12 +348,16 @@ void AddCombatEP(object oPC, int nValue, int bNoWarn = FALSE) {
 
 		if (!bNoWarn)
 			SendMessageToPC(oPC, "Kampferfahrung: " +
-				IntToString(iCombXP + nValue) + " (CAP: " + 
+				IntToString(iCombXP + nValue) + " (CAP: " +
 				IntToString(iXPForMonth + nValue) + ")"
 			);
 
 	}
 }
+
+
+
+
 
 
 
