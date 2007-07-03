@@ -225,14 +225,14 @@ int GetKillXP(object oDead, object oChar) {
 
     nDiff = nCRDead - nCRChar;
 
-	d("GetKillXP(): nDiff = " + FloatToString(nDiff), "combat_xp");
+	d("GetKillXP(): nDiff = " + FloatToString(nDiff) + "(" + IntToString(nCRDead) + " - " + IntToString(nCRChar) + ")", "combat_xp");
     //No XP if CR difference is way out of bounds. Fight someone of yer own size, crivens!
     if (nDiff > nMaxCRDiff || nDiff < nMaxCRDiff * -1.0)
 		return 0;
 
     //Unscaled XP is nBaseXP + nXPperDiff per CR difference, multiplied by global setting.
     nXP = FloatToInt((nDiff * nXPperDiff + nBaseXP) * nXPScale);
-	d("GetKillXP(): nXP = " + FloatToString(nDiff), "combat_xp");
+	d("GetKillXP(): nXP = " + FloatToString(nXP), "combat_xp");
     return nXP;
 }
 
@@ -255,6 +255,7 @@ void GiveKillXP() {
     GetDistanceBetween(oChar, OBJECT_SELF) <= 50.0 ) ) {
     int nLevel = GetHitDice(oChar);
     nXP = GetKillXP(OBJECT_SELF, oChar);
+	d("GiveKillXP(): to = " + GetName(oChar) + ", xp = " + IntToString(nXP), "combat_xp");
     AddCombatXP(oChar, nXP);
   }
   oChar = GetNextFactionMember(oPC);
@@ -314,6 +315,8 @@ void AddCombatXP(object oPC, int nValue, int bNoWarn = FALSE) {
 	int iXPForDay = GetCategoryXPForDay(oPC, "combat", iYear, iMonth, iDay);
 
 	float nECL = IntToFloat(SR_GetECL(oPC));
+	
+	d("ecl = " + FloatToString(nECL) + ", xp_month = " + IntToString(iXPForMonth) + ", xp_day = " + IntToString(iXPForDay), "combat_xp");
 
 	if ( iCombXP >= gvGetInt("combat_xp_max" ) ) {
 		if (!bNoWarn)
@@ -323,8 +326,8 @@ void AddCombatXP(object oPC, int nValue, int bNoWarn = FALSE) {
 
 	//Checks monthly combat XP cap, adjusted by ECL
 	float fUpperLimit = IntToFloat(iMonthCap) * (1.0 - (nECL * nECLAdj));
+	d("montly_cap = " + IntToString(iMonthCap) + ", limit = " + FloatToString(fUpperLimit), "combat_xp");
 	if ( iMonthCap > 0 && IntToFloat(iXPForMonth) > fUpperLimit ) {
-		d("montly_cap = " + IntToString(iMonthCap) + ", limit = " + FloatToString(fUpperLimit), "combat_xp");
 		if (!bNoWarn)
 		SendMessageToPC(oPC, "Ihr muesstet ueber die gemachten Kampferfahrungenerstmal nachdenken.");
 		return;
@@ -332,8 +335,8 @@ void AddCombatXP(object oPC, int nValue, int bNoWarn = FALSE) {
 
 	//Checks daily combat XP cap, adjusted by ECL
 	fUpperLimit = IntToFloat(iDayCap) * (1.0 - (nECL * nECLAdj));
+	d("daily_cap = " + IntToString(iDayCap) + ", limit = " + FloatToString(fUpperLimit), "combat_xp");
 	if ( iDayCap > 0 && IntToFloat(iXPForDay) > fUpperLimit ) {
-		d("daily_cap = " + IntToString(iDayCap) + ", limit = " + FloatToString(fUpperLimit), "combat_xp");
 		if (!bNoWarn)
 			SendMessageToPC(oPC, "Ihr muesstet ueber die gemachten Kampferfahrungenerstmal nachdenken. (Tageslimit)");
 		return;
