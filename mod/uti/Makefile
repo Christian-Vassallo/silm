@@ -11,3 +11,5 @@ clean_recipes:
 recipes:
 	../../buildutil/gen_recipes.rb ../../database.yaml .
 
+deploy:
+	rsync -Pdu --include \*.uti --delete-after --exclude \* . $(NWNHOME)/res

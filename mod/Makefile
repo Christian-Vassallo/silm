@@ -5,12 +5,10 @@ NAME=Silbermarken
 
 # This gets packaged into your final module
 VALIDEXT=area/\*.git area/\*.are \
-	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
-	utc/\*.utc utd/\*.utd ute/\*.ute \
-	`find uti -iname *.uti` \
+	utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
+	utd/\*.utd ute/\*.ute \
 	itp/\*.itp ssf/\*.ssf \
-	mod/\*.fac mod/\*.ifo mod/\*.jrl \
-	nss/\*.ncs 
+	mod/\*.fac mod/\*.ifo mod/\*.jrl 
 
 VALIDEXTDEV=area/\*.git area/\*.are \
 	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
@@ -18,7 +16,12 @@ VALIDEXTDEV=area/\*.git area/\*.are \
 	`find uti -iname *.uti` \
 	itp/\*.itp ssf/\*.ssf \
 	mod/\*.fac mod/\*.ifo mod/\*.jrl \
-	nss/\*.nss
+	nss/\*.ncs nss/\*.nss
+
+VALIDEXTPLAYER=area/\*.git area/\*.are \
+	utp/\*.utp \
+	itp/\*.itp ssf/\*.ssf \
+	mod/\*.fac mod/\*.ifo mod/\*.jrl 
 
 LISTS=uti utp utc utm
 
@@ -38,6 +41,14 @@ script: scripts
 scripts: path
 	$(MAKE) -j 2 -C nss
 
+deploy:
+	$(MAKE) -C nss deploy
+	$(MAKE) -C uti deploy
+	$(MAKE) -C utc deploy
+	$(MAKE) -C dlg deploy
+
+clean-deploy:
+	rm -rf $(NWNHOME)/res/*
 
 lists: path
 	for i in $(LISTS); do ../buildutil/gen_resref.rb $${i}.marshal $${i}/*.$${i} && \
@@ -79,12 +90,14 @@ uncrustify:
 clean:
 	$(MAKE) -C nss clean clean-backup
 	-rm *.mod
-	
+
+
 local: path
 	../buildutil/erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
 dev-local: path
 	../buildutil/erfpack.pl -m -o $(NAME).mod $(VALIDEXTDEV)
-
+player-local: path
+	../buildutil/erfpack.pl -m -o $(NAME).mod $(VALIDEXTPLAYER)
 
 install: 
 	cp -v $(NAME).mod $(NWNHOME)/modules/
@@ -92,4 +105,3 @@ install:
 # generates a new package with the current revision
 package: path uti utp utc ifo itp scripts local
 dev-package: path uti utp utc ifo itp dev-local
-

@@ -1,21 +1,34 @@
 UPITP=java -cp ../../buildutil/jnwserver net.swordcoast.jnwserver.util.UpdateITP
+
 NAME=silm_itp
 
 VALIDEXT=*palcus.itp
+
 LIST=uti 
 
-all: itp
+all: itp verify
 
-itp:
-	for i in $(LIST); do \
-		$(UPITP) ../$$i $$i.palette; \
-	done
+creature:
+	$(UPITP) ../utc creaturepalcus.itp
+door:
+	$(UPITP) ../utd doorpalcus.itp
+encounter:
+	$(UPITP) ../ute encounterpalcus.itp
+item:
+	$(UPITP) ../uti itempalcus.itp
+placeable:
+	$(UPITP) ../utp placeablepalcus.itp
+sound:
+	$(UPITP) ../uts soundpalcus.itp
+store:
+	$(UPITP) ../utm storepalcus.itp
+trigger:
+	$(UPITP) ../utt triggerpalcus.itp
+waypoint:
+	$(UPITP) ../utw waypointpalcus.itp
 
-verify:
-	for i in $(PFX)*.itp; do \
-		echo $${i}; \
-		gffprint.pl $${i} >/dev/null ; \
-	done
+
+itp: creature door encounter item placeable sound store trigger waypoint
 
 hak:
 	erfpack.pl -H -o $(NWNHOME)/hak/$(NAME).hak $(VALIDEXT)

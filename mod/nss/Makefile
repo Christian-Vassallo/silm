@@ -29,6 +29,8 @@ depgrep = $(shell grep -E '^\#include ".+"' $(1) | sed 's/^\#include \"//g' | se
 
 all: update-revision $(objects)
 
+scripts: $(objects)
+
 update-revision:
 	@echo 'const string PROJECT = "Silbermarken";' > _buildinfo.nss
 	@echo 'const string REVISION = "$(revision)";' >>_buildinfo.nss
@@ -42,7 +44,11 @@ $(sources) : $(includesnss)
 $(objects) : %.ncs : %.nss 
 	$(NCC) $(NCCFLAGS) $(NWNHOME) $<
 
-
+path:
+ifeq  "$(NWNHOME)" ""
+	@echo "env var NWNHOME not set."
+	exit 1
+endif
 
 clean:
 	-rm *.ncs *.ndb
@@ -53,3 +59,5 @@ clean-backup:
 uncrustify:
 	uncrustify -L 2 -c ../conf/uncrustify.cfg --replace -l C *.nss
 
+deploy:
+	rsync -Pdu --include \*.ncs --delete-after --exclude \* . $(NWNHOME)/res
