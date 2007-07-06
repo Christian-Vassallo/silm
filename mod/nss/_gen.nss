@@ -23,6 +23,7 @@ struct RealTime {
 	int hour;
 	int minute;
 	int second;
+	string timefmt; // Formatted time by SQL, just for convenience
 	int error;
 };
 
@@ -87,9 +88,6 @@ struct RealTime GetRealTime();
 
 
 int GetIsPolymorphed(object oCreature);
-
-
-int GetIsDMAllowed(object oPC);
 
 
 // Returns the player object to which sAccount matches; either
@@ -202,23 +200,31 @@ int GetPCCount(object oArea = OBJECT_INVALID, int bOnlyDMs = FALSE);
 
 int GetPCPartyCount(object oPC);
 
+int round(float f, int nPrecision);
+
+
 // returns s as unsigned
 int u(int s);
 
 /* impl */
 
 
+int round(float f, int nPrecision) {
+	pQ("select round(" + pSf(f) + ", " + pSi(nPrecision) + ";");
+	return pGi(1);
+}
+
 int u(int s) {
 	return s < 0 ? 0 : s;
 }
 
 float random(float fStart, float fEnd) {
-	string sStart = FloatToString(fStart),
-		sEnd = FloatToString(fEnd);
-	SQLQuery("select " + sStart + " + (" + sEnd + " - " + sStart + ") * rand();");
-	if (!SQLFetch())
+	string sStart = pSf(fStart),
+		sEnd = pSf(fEnd);
+	pQ("select " + sStart + " + (" + sEnd + " - " + sStart + ") * random();");
+	if (!pF())
 		return 0.0;
-	return StringToFloat(SQLGetData(1));
+	return pGf(1);
 }
 
 int GetMinutesPerHour() {
@@ -228,21 +234,33 @@ int GetMinutesPerHour() {
 struct RealTime GetRealTime() {
 	struct RealTime r;
 	
-	SQLQuery("select second(now()), minute(now()), hour(now()), day(now()), " + 
-		"month(now()), year(now()), week(now()), weekday(now()), unix_timestamp(now());");
-	if (!SQLFetch()) {
+	pQ("select " +
+		"extract(seconds from now()::int, " +
+		"extract(minutes from now())::int, " +
+		"extract(hours from now())::int, " +
+		"extract(days from now())::int, " + 
+		"extract(months from now())::int, " +
+		"extract(years from now())::int, " +
+		"extract(weeks from now())::int, " +
+		"extract(dow from now())::int, " +
+		"unixts(now()), " +
+		"now()::varchar" +
+		";"
+	);
+	if (!pF()) {
 		r.error = 1;
-		dbg("GetRealTime() failed " + SQLGetLastQuery(), 0);
+		dbg("GetRealTime() failed " + pSQLGetLastQuery(), 0);
 	} else {
-		r.second = StringToInt(SQLGetData(1));
-		r.minute = StringToInt(SQLGetData(2));
-		r.hour = StringToInt(SQLGetData(3));
-		r.day = StringToInt(SQLGetData(4));
-		r.month = StringToInt(SQLGetData(5));
-		r.year = StringToInt(SQLGetData(6));
-		r.week = StringToInt(SQLGetData(7));
-		r.weekday = StringToInt(SQLGetData(8));
-		r.ts = StringToInt(SQLGetData(9));
+		r.second = pGi(1);
+		r.minute = pGi(2);
+		r.hour = pGi(3);
+		r.day = pGi(4);
+		r.month = pGi(5);
+		r.year = pGi(6);
+		r.week = pGi(7);
+		r.weekday = pGi(8);
+		r.ts = pGi(9);
+		r.timefmt = pGs(10);
 	}
 	return r;
 
@@ -333,9 +351,11 @@ int RemoveAllEffects(object oObj) {
 
 
 int GetUnixTimestamp() {
-	SQLQuery("select unix_timestamp();");
-	SQLFetch();
-	return StringToInt(SQLGetData(1));
+	pQ("select unixts();");
+	if (pF())
+		return pGi(1);
+	else
+		return 0;
 }
 
 string GetTimestampTZ() {
@@ -838,18 +858,6 @@ string GetSpellName(int nSpellID) {
 
 	return GetStringByStrRef(nRes);
 }
-
-
-int GetIsDMAllowed(object oPC) {
-	string
-	sAccount = SQLEscape(GetPCName(oPC)),
-	sKey = SQLEscape(GetPCPublicCDKey(oPC));
-
-	SQLQuery("select id from `dms` where `account` = " + sAccount + " and `key` = " + sKey + " limit 1;");
-
-	return SQLFetch() == SQL_SUCCESS;
-}
-
 
 
 effect StringToEffect(string sE) {
