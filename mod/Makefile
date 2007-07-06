@@ -5,8 +5,6 @@ NAME=Silbermarken
 
 # This gets packaged into your final module
 VALIDEXT=area/\*.git area/\*.are \
-	utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
-	utd/\*.utd ute/\*.ute \
 	itp/\*.itp ssf/\*.ssf \
 	mod/\*.fac mod/\*.ifo mod/\*.jrl 
 
@@ -46,6 +44,13 @@ deploy:
 	$(MAKE) -C uti deploy
 	$(MAKE) -C utc deploy
 	$(MAKE) -C dlg deploy
+	$(MAKE) -C utm deploy
+	$(MAKE) -C utp deploy
+	$(MAKE) -C ute deploy
+	$(MAKE) -C uts deploy
+	$(MAKE) -C utt deploy
+	$(MAKE) -C utw deploy
+	$(MAKE) -C utd deploy
 
 clean-deploy:
 	rm -rf $(NWNHOME)/res/*

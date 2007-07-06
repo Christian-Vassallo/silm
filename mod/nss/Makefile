@@ -1,7 +1,7 @@
 # inherits stuff
 
 NCC=../../buildutil/nwnnsscomp
-NCCFLAGS=-g -c -o -q
+NCCFLAGS=-g -c -q
 NSSVERIFYFLAGS=-g -o -q -t4
 
 includes := _gen _buildinfo _const \
