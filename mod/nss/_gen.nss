@@ -235,7 +235,7 @@ struct RealTime GetRealTime() {
 	struct RealTime r;
 	
 	pQ("select " +
-		"extract(seconds from now()::int, " +
+		"extract(seconds from now())::int, " +
 		"extract(minutes from now())::int, " +
 		"extract(hours from now())::int, " +
 		"extract(days from now())::int, " + 
