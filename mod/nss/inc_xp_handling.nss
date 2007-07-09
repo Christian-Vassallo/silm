@@ -225,14 +225,14 @@ int GetKillXP(object oDead, object oChar) {
 
     nDiff = nCRDead - nCRChar;
 
-	d("GetKillXP(): nDiff = " + FloatToString(nDiff) + "(" + IntToString(nCRDead) + " - " + IntToString(nCRChar) + ")", "combat_xp");
+    d("GetKillXP(): nDiff = " + FloatToString(nDiff) + "(" + FloatToString(nCRDead) + " - " + FloatToString(nCRChar) + ")", "combat_xp");
     //No XP if CR difference is way out of bounds. Fight someone of yer own size, crivens!
     if (nDiff > nMaxCRDiff || nDiff < nMaxCRDiff * -1.0)
 		return 0;
 
     //Unscaled XP is nBaseXP + nXPperDiff per CR difference, multiplied by global setting.
     nXP = FloatToInt((nDiff * nXPperDiff + nBaseXP) * nXPScale);
-	d("GetKillXP(): nXP = " + FloatToString(nXP), "combat_xp");
+    d("GetKillXP(): nXP = " + IntToString(nXP), "combat_xp");
     return nXP;
 }
 
