@@ -19,8 +19,9 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 
 
 	pQ(
-		"select text_intro,text_buy,text_sell,text_nothingtobuy,text_nothingtosell,text_swap,money,appraise_dc,money_limited from merchants where tag = "
-		+ pSs(sMerc) + ";");
+		"select text_intro,text_buy,text_sell,text_nothingtobuy,text_nothingtosell,text_swap,money,appraise_dc,money_limited from merchants where tag = " + 
+		pSs(sMerc) + ";"
+	);
 
 	if ( !pF() ) {
 		SendMessageToPC(oPC,
