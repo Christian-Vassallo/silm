@@ -93,8 +93,8 @@ struct Rideable GetRideable(object oPC) {
 		r.delivered_in_day = StringToInt(pG(8));
 		r.delivered_in_month = StringToInt(pG(9));
 		r.delivered_in_year = StringToInt(pG(10));
-		r.bought = pG(11) == "t";
-		r.pay_rent = pG(12) == "t";
+		r.bought = pGb(11);
+		r.pay_rent = pGb(12);
 	}
 
 	return r;
@@ -116,8 +116,8 @@ struct Rideable SetRideable(struct Rideable r) {
 			"delivered_in_day=" + IntToString(r.delivered_in_day) + ", " +
 			"delivered_in_month=" + IntToString(r.delivered_in_month) + ", " +
 			"delivered_in_year=" + IntToString(r.delivered_in_year) + ", " +
-			"bought=" + (r.bought == 1 ? "t" : "f") + ", " +
-			"pay_rent=" + (r.pay_rent == 1 ? "t" : "f") +
+			"bought=" + pSb(r.bought) + ", " +
+			"pay_rent=" + pSb(r.pay_rent) +
 			" where id=" + IntToString(r.id) + ";");
 	} else {
 		pQ(
@@ -131,7 +131,7 @@ struct Rideable SetRideable(struct Rideable r) {
 			", " +
 			IntToString(r.delivered_in_day) +
 			", " + IntToString(r.delivered_in_month) + ", " + IntToString(r.delivered_in_year) + ", " +
-			(r.bought == 1 ? "t" : "f") + ", " + (r.pay_rent == 1 ? "t" : "f") + ");");
+			pSb(r.bought) + ", " + pSb(r.pay_rent) + ");");
 		pQ("select id from rideables oder by id desc;");
 		pF();
 		r.id = StringToInt(pG(1));
