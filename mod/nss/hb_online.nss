@@ -12,7 +12,7 @@ void main() {
 		return;
 
 	string q =
-		"insert into online (aid, cid, account, character, dm, area, x, y, z, f) values";
+		"insert into online (aid, cid, account, character, dm, area, area_s, x, y, z, f) values";
 
 	while ( GetIsObjectValid(oPC) ) {
 		vector p = GetPosition(oPC);
@@ -25,6 +25,7 @@ void main() {
 			 pSs(GetName(oPC)) + "," + 
 			 pSb(GetIsDM(oPC)) + "," + 
 			 pSs(GetResRef(GetArea(oPC))) + "," + 
+			 pSs(GetName(GetArea(oPC))) + "," + 
 			 pSf(p.x, FALSE) + "," + 
 			 pSf(p.y, FALSE) + "," + 
 			 pSf(p.z, FALSE) + "," + 
