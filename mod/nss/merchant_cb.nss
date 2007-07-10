@@ -12,7 +12,7 @@ void main() {
 	int nSelected   = GetListSelection(oPC);
 
 
-	string sMerc = GetStringLowerCase(GetTag(oMerc));
+	string sMerc = pSs(GetStringLowerCase(GetTag(oMerc)));
 
 
 	pQ("select text_pcnomoney,text_mercnomoney,money,money_limited from merchants where tag = " +
@@ -129,7 +129,7 @@ void main() {
 					pQ("update stores set cur = cur + 1 where merchant = " + pSs(sMerc) + " and resref = " + pSs(sSellsWhat) + " limit 1;");
 
 				if ( bLimitedMoney )
-					pQ("update merchants set money = money - " + pSi(nMercPaysHowMuch) + " where tag = " + pSs(sMerc) + " limit 1;");
+					pQ("update merchants set money = money - " + pSi(nMercPaysHowMuch) + " where tag = " + sMerc + " limit 1;");
 
 				audit("sell", oPC, audit_fields("merchant", GetTag(oMerc), "resref", sSellsWhat, "price",
 						IntToString(nMercPaysHowMuch)), "merchant");
