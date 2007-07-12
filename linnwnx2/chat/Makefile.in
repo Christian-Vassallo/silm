@@ -23,7 +23,7 @@ NWNXBASE=$(NWNXDIR)/NWNXBase.o $(NWNXDIR)/gline.o
 
 all: nwnx_chat.so
 
-nwnx_chat.so: NWNXChat.o plugin-chat.o 
+nwnx_chat.so: HookChat.o NWNXChat.o plugin-chat.o 
 	$(CXX) $(FLAGS) -o $@ $^ $(LIBS) $(DEFS)
 
 clean:

@@ -23,7 +23,7 @@ NWNXBASE=$(NWNXDIR)/NWNXBase.o $(NWNXDIR)/gline.o
 
 all: nwnx_events.so
 
-nwnx_events.so: NWNXEvents.o plugin-events.o 
+nwnx_events.so: CExoLinkedList.o CExoLocString.o HookFunc.o NWNXEvents.o plugin-events.o 
 	$(CXX) $(FLAGS) -o $@ $^ $(LIBS) $(DEFS)
 
 clean:

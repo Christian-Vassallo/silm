@@ -23,7 +23,7 @@ NWNXBASE=$(NWNXDIR)/NWNXBase.o $(NWNXDIR)/gline.o
 
 all: nwnx_resman.so
 
-nwnx_resman.so: NWNXResMan.o plugin-resman.o 
+nwnx_resman.so: HookDemandRes.o NwnDefines.o NWNXResMan.o plugin-resman.o 
 	$(CXX) $(FLAGS) -o $@ $^ $(LIBS) $(DEFS)
 
 clean:
