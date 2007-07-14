@@ -88,9 +88,9 @@ void main() {
 
 				// Update DB
 				if ( 0.0 != fMax )
-					pQ("update stores cur = cur - 1 where merchant = " + pSs(sMerc) + " and resref = " + pSs(sBuyWhat) + " limit 1;");
+					pQ("update stores cur = cur - 1 where merchant = " + pSs(sMerc) + " and resref = " + pSs(sBuyWhat) + ";");
 
-				pQ("update merchants set money = money + " + pSi(nPCPaysHowMuch) + " where tag = " + sMerc + " limit 1;");
+				pQ("update merchants set money = money + " + pSi(nPCPaysHowMuch) + " where tag = " + sMerc + ";");
 
 				audit("buy", oPC, audit_fields("merchant", GetTag(oMerc), "resref", sBuyWhat, "price",
 						IntToString(nPCPaysHowMuch)), "merchant");
@@ -126,10 +126,10 @@ void main() {
 
 				// update DB
 				if ( 0.0 != fMax )
-					pQ("update stores set cur = cur + 1 where merchant = " + pSs(sMerc) + " and resref = " + pSs(sSellsWhat) + " limit 1;");
+					pQ("update stores set cur = cur + 1 where merchant = " + pSs(sMerc) + " and resref = " + pSs(sSellsWhat) + ";");
 
 				if ( bLimitedMoney )
-					pQ("update merchants set money = money - " + pSi(nMercPaysHowMuch) + " where tag = " + sMerc + " limit 1;");
+					pQ("update merchants set money = money - " + pSi(nMercPaysHowMuch) + " where tag = " + sMerc + ";");
 
 				audit("sell", oPC, audit_fields("merchant", GetTag(oMerc), "resref", sSellsWhat, "price",
 						IntToString(nMercPaysHowMuch)), "merchant");
