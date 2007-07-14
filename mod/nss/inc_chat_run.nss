@@ -238,6 +238,9 @@ void RegisterAllCommands() {
 	
 	RegisterCommand("server", "type=");
 	RAF(AMASK_CAN_DO_BACKEND);
+	
+	RegisterCommand("run", "", 1, 1);
+	RAF(AMASK_CAN_DO_BACKEND);
 
 
 	/* public commands */
@@ -676,6 +679,9 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 			ret = CommandModServer(oPC, iMode, nRunModLevel);
 	}
 
+
+	if ("run" == sCommand)
+		ret = CommandRunScript(oPC, iMode);
 
 	// Set management
 	if ( "gi" == sCommand )

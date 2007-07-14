@@ -32,6 +32,8 @@
 #include "inc_objset"
 
 
+int CommandRunScript(object oPC, int iMode);
+
 int CommandManageSetItem(object oPC, int iMode);
 int CommandManageSetSet(object oPC, int iMode);
 int CommandManageSetClear(object oPC, int iMode);
@@ -209,6 +211,18 @@ int CommandEventHandler(object oPC, int iMode);
 // Note that the executing object is oPC itself; it is merely passed
 // in as a convenience.
 int CommandStub(object oPC, int iMode) {
+	return OK;
+}
+
+
+
+int CommandRunScript(object oPC, int iMode) {
+	string s = arg(0);
+	object o = GetTarget();
+	if (!GetIsObjectValid(o))
+		return NotifyBadTarget();
+	
+	ExecuteScript(s, o);
 	return OK;
 }
 
