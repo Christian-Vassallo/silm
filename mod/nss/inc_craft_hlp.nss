@@ -15,6 +15,7 @@
 const string
 TABLE_PROD = "craft_recipes",
 TABLE_SKILL = "craft_skill",
+TABLE_SKILLMAP = "craft_skillmap",
 TABLE_STAT = "craft_stat",
 TABLE_CRAFTS = "craft_crafts",
 TABLE_RCPBOOK = "craft_rcpbook";
@@ -242,7 +243,7 @@ int GetCraftSkillByTag(string sCraftTag) {
 	if ( !pF() )
 		return 0;
 
-	return StringToInt(pG(1));
+	return pGi(1);
 }
 
 
@@ -336,7 +337,7 @@ int GetIsCraftValidSpell(int nCSkill, int nSpell, int nMetaMagic = METAMAGIC_NON
 		TABLE_PROD +
 		" where cskill = " + IntToString(nCSkill) + " and spell = " + IntToString(nSpell) + ";");
 	pF();
-	int nCount = StringToInt(pG(1));
+	int nCount = pGi(1);
 	return nCount > 0;
 }
 
@@ -539,14 +540,14 @@ struct Recipe FindRecipeByPlanOrComponents(string sPlan, string sComponents, int
 
 		pQ("select " + sqlq + " from " +
 			TABLE_PROD + " where id = " + IntToString(nID) + " limit 1;");
-		nFound = ( pF() == SQL_SUCCESS );
+		nFound = ( pF() );
 
 	} else {
 
 		if ( sPlan != "" ) {
 			pQ("select " + sqlq + " from " +
 				TABLE_PROD + " where components = " + sComponents + " limit 1;");
-			nFound = ( pF() == SQL_SUCCESS );
+			nFound = ( pF() );
 
 		} else {
 			// Try to find by components.
@@ -555,7 +556,7 @@ struct Recipe FindRecipeByPlanOrComponents(string sPlan, string sComponents, int
 			pQ("select count(resref) from " +
 				TABLE_PROD + " where components = " + sComponents + ";");
 			pF();
-			int nCount = StringToInt(pG(1));
+			int nCount = pGi(1);
 
 			if ( nCount > 1 ) {
 				nFound = 0;
@@ -563,7 +564,7 @@ struct Recipe FindRecipeByPlanOrComponents(string sPlan, string sComponents, int
 			} else {
 				pQ("select " +
 					sqlq + " from " + TABLE_PROD + " where components = " + sComponents + ";");
-				nFound = ( pF() == SQL_SUCCESS );
+				nFound = ( pF() );
 			}
 		}
 
@@ -608,25 +609,25 @@ struct Recipe FindRecipeByPlanOrComponents(string sPlan, string sComponents, int
 		}
 
 
-		r.cskill = StringToInt(pG(6));
-		r.cskill_min = StringToInt(pG(7));
-		r.cskill_max = StringToInt(pG(8));
-		r.skill = StringToInt(pG(9));
-		r.skill_dc = StringToInt(pG(10));
-		r.ability = StringToInt(pG(11));
-		r.ability_dc = StringToInt(pG(12));
-		r.feat = StringToInt(pG(13));
-		r.count_min = StringToInt(pG(14));
-		r.count_max = StringToInt(pG(15));
-		r.xp_cost = StringToFloat(pG(16));
-		r.practical_xp_factor = StringToFloat(pG(17));
-		r.max_per_day = StringToFloat(pG(18));
-		r.lock_duration = StringToInt(pG(19));
+		r.cskill = pGi(6);
+		r.cskill_min = pGi(7);
+		r.cskill_max = pGi(8);
+		r.skill = pGi(9);
+		r.skill_dc = pGi(10);
+		r.ability = pGi(11);
+		r.ability_dc = pGi(12);
+		r.feat = pGi(13);
+		r.count_min = pGi(14);
+		r.count_max = pGi(15);
+		r.xp_cost = pGf(16);
+		r.practical_xp_factor = pGf(17);
+		r.max_per_day = pGf(18);
+		r.lock_duration = pGi(19);
 		r.name = pG(20);
 		r.desc = pG(21);
-		r.spell_fail = StringToInt(pG(22));
-		r.id = StringToInt(pG(23));
-		r.components_save_dc = StringToInt(pG(24));
+		r.spell_fail = pGi(22);
+		r.id = pGi(23);
+		r.components_save_dc = pGi(24);
 		r.s_craft = pG(25);
 
 		if ( r.count_min > r.count_max )
@@ -652,32 +653,20 @@ struct PlayerSkill GetPlayerSkill(object oPC, int nCSkill) {
 		int nID = GetCharacterID(oPC);
 		string sID = IntToString(nID);
 		pQ(
-			"select skill_theory, skill_theory_xp, skill_practical, skill_practical_xp, id from "
+			"select skill_theory, skill_theory_xp, skill_practical, skill_practical_xp, id, skill_practical_effective, skill_theory_effective from "
 			+
-			TABLE_SKILL +
+			TABLE_SKILLMAP +
 			" where character = " + sID + " and cskill = " + IntToString(nCSkill) + " limit 1;");
 		if ( pF() ) {
 			s.cid = nID;
 			s.cskill = nCSkill;
-			s.theory = StringToInt(pG(1));
-			s.theory_xp = StringToInt(pG(2));
-			s.practical = StringToInt(pG(3));
-			s.practical_xp = StringToInt(pG(4));
-			s.id = StringToInt(pG(5));
-
-			// Upper limit!
-
-			pQ("select cskill_max from " +
-				TABLE_PROD +
-				" where cskill = " +
-				IntToString(nCSkill) + " and active = 't' order by cskill_max desc limit 1;");
-			if ( pF() ) {
-				int nMax = StringToInt(pG(1));
-				if ( nMax < s.practical )
-					s.practical = nMax;
-				if ( nMax < s.theory )
-					s.theory = nMax;
-			}
+			s.theory = pGi(1);
+			s.theory_xp = pGi(2);
+			s.practical = pGi(3);
+			s.practical_xp = pGi(4);
+			s.id = pGi(5);
+			s.epractical = pGi(6);
+			s.etheory = pGi(7);
 
 		} else {
 			pQ("insert into " +
@@ -686,7 +675,7 @@ struct PlayerSkill GetPlayerSkill(object oPC, int nCSkill) {
 			s.cskill = nCSkill;
 			pQ("select id from " + TABLE_SKILL + " order by id desc limit 1;");
 			pF();
-			s.id = StringToInt(pG(1));
+			s.id = pGi(1);
 
 		}
 	}
@@ -727,12 +716,12 @@ struct PlayerRecipeStat GetPlayerRecipeStat(object oPC, struct Recipe r) {
 			" where character = " + sID + " and recipe = " + IntToString(r.id) + " limit 1;");
 
 		if ( pF() ) {
-			t.id = StringToInt(pG(4));
+			t.id = pGi(4);
 			t.cid = nID;
 			t.recipe = r.id;
-			t.count = StringToInt(pG(1));
-			t.fail = StringToInt(pG(2));
-			t.last = StringToInt(pG(3));
+			t.count = pGi(1);
+			t.fail = pGi(2);
+			t.last = pGi(3);
 
 		} else {
 			pQ("insert into " +
@@ -744,7 +733,7 @@ struct PlayerRecipeStat GetPlayerRecipeStat(object oPC, struct Recipe r) {
 			t.last = GetUnixTimestamp();
 			pQ("select id from " + TABLE_STAT + " order by id desc limit 1;");
 			pF();
-			t.id = StringToInt(pG(1));
+			t.id = pGi(1);
 		}
 
 	}
@@ -778,7 +767,7 @@ int GetCraftCount(object oPC) {
 	string sID = IntToString(nID);
 	pQ("select count(id) from " + TABLE_SKILL + " where character=" + sID + ";");
 	pF();
-	int nCount = StringToInt(pG(1));
+	int nCount = pGi(1);
 	return nCount;
 }
 

@@ -518,7 +518,7 @@ void DoCraft(object oPC, object oWorkPlace) {
 	if ( !nFailed
 		&& r.ability > -1
 		&& !ThrowCraftCheck(oPC, oWorkPlace, GetAbilityModifier(r.ability, oPC) +
-			( s.practical / 20 ) + nAddBonus, r.ability_dc) ) {
+			( s.epractical / 20 ) + nAddBonus, r.ability_dc) ) {
 		if ( GetThrowCraftWasNaturalFail(oWorkPlace) )
 			nFailedMiserably = 1;
 

@@ -122,7 +122,9 @@ struct PlayerSkill {
 
 	int cskill;
 	int practical;
+	int epractical;
 	int theory;
+	int etheory;
 	int practical_xp;
 	int theory_xp;
 };

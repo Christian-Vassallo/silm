@@ -54,7 +54,7 @@ void DBook_MakeDialog(object oPC) {
 				" and cskill = " + IntToString(nCSkill) + " limit 1) and active = 't' order by name asc;");
 
 		while ( pF() ) {
-			nID = StringToInt(pG(1));
+			nID = pGi(1);
 			sName = pG(2);
 
 			AddListItem(oPC, "rcp", sName);
@@ -69,7 +69,7 @@ void DBook_MakeDialog(object oPC) {
 					  IntToString(nCount) +
 					  " Rezepte sind darin enthalten.  Eure Faehigkeiten in diesem Handwerk belaufen sich auf "
 					  +
-					  IntToString(psk.practical) + " praktische Stufen, sowie " +
+					  IntToString(psk.practical) + " praktische Stufen (davon " + IntToString(psk.epractical) + " effektiv), sowie " +
 					  IntToString(psk.theory) + " theoretische Stufen.  Eure Erfahrungspunkte liegen bei " +
 					  IntToString(psk.practical_xp) +
 					  " XP - fuer einen Aufstieg sind noch " +
