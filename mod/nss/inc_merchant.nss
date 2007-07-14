@@ -92,8 +92,8 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 
 		pQ(
 			"select resref,cur,sell_mark,max from stores " + 
-			"where sell = 1 and ((cur > 0 and cur > min) or (cur = 0 and max = 0 and min = 0)) and " +
-			"merchant = " + pSs(sMerc) + " order by resref asc;"
+			"where sells = 1 and ((cur > 0 and cur > min) or (cur = 0 and max = 0 and min = 0)) and " +
+			"tag = " + pSs(sMerc) + " order by resref asc;"
 		);
 
 		while ( pF() ) {
@@ -148,8 +148,8 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		float fMark;
 
 		pQ(
-			"select resref,buy_mark,cur,max from merchant_inventory where " +
-			"buy = 1 and ((cur < max) or (min=0 and cur=0 and max=0)) and merchant = " + 
+			"select resref,buy_mark,cur,max from stores " +
+			"where buys = 1 and ((cur < max) or (min=0 and cur=0 and max=0)) and tag = " + 
 			pSs(sMerc) + " order by resref asc;"
 		);
 
