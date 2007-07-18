@@ -13,7 +13,7 @@ void main() {
 		return;
 
 
-	if ( TestStringAgainstPattern("move_**", sRes) ) {
+	if ( TestStringAgainstPattern("move_**", sRes) && !TestStringAgainstPattern("move_target_**", sRes) ) {
 		location lT = GetLocation(oPC);
 
 		string sResRef = GetResRef(oItem);
