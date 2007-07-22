@@ -13,7 +13,7 @@
 //:: Created On: 07-03-2005
 //:://////////////////////////////////////////////
 
-#include "inc_mysql"
+#include "inc_pgsql"
 
 // Define ResRef from Master Object
 string GetHiddenObjectResRef(object oMaster);
@@ -94,13 +94,12 @@ string GetHiddenObjectResRef(object oMaster) {
 	string sAllResRef;
 	int nNumRows = 0;
 	int nPosition;
-	string sSQL = "SELECT ResRef from tab_ressourcen WHERE Typ='" + sTyp + "';";
-	SQLExecDirect(sSQL);
-	while ( SQLFetch() == SQL_SUCCESS ) {
+	pQ("SELECT resref from hiddenobject_resources WHERE typ = " + pSs(sTyp) + ";");
+	while ( pF() ) {
 		if ( sAllResRef == "" ) {
-			sAllResRef = SQLGetData(1);
+			sAllResRef = pGs(1);
 		} else {
-			sAllResRef = sAllResRef + "#" + SQLGetData(1);
+			sAllResRef = sAllResRef + "#" + pGs(1);
 		}
 		nNumRows++;
 	}
@@ -138,11 +137,10 @@ string GetHiddenObjectResRef(object oMaster) {
 
 int GetSG(string sResRef) {
 	string nSG;
-	string sSQL = "SELECT SG from tab_ressourcen WHERE ResRef='" + sResRef + "';";
-	SQLExecDirect(sSQL);
-	if ( SQLFetch() == SQL_SUCCESS ) {
-		nSG = SQLGetData(1);
-	}
+	string sSQL = "SELECT dc from hiddenobject_resources WHERE resref = " + pSs(sResRef) + ";";
+	pQ(sSQL);
+	if (pF())
+		nSG = pGs(1);
 	return StringToInt(nSG);
 }
 
@@ -150,10 +148,10 @@ int GetSG(string sResRef) {
 int GetBonus(string sResRef, object oPC) {
 	string sBonus;
 	int nBonus;
-	string sSQL = "SELECT Bonus from tab_ressourcen WHERE ResRef='" + sResRef + "';";
-	SQLExecDirect(sSQL);
-	if ( SQLFetch() == SQL_SUCCESS ) {
-		sBonus = SQLGetData(1);
+	string sSQL = "SELECT bonus from hiddenobject_resources WHERE resref = " + pSs(sResRef) + ";";
+	pQ(sSQL);
+	if ( pF() ) {
+		sBonus = pGs(1);
 	}
 	if ( sBonus == "natur" ) {
 		int nBonus = GetLevelByClass(CLASS_TYPE_DRUID, oPC) / 2;
@@ -164,10 +162,10 @@ int GetBonus(string sResRef, object oPC) {
 
 int GetValue(string sResRef) {
 	string nValue;
-	string sSQL = "SELECT Value from tab_ressourcen WHERE ResRef='" + sResRef + "';";
-	SQLExecDirect(sSQL);
-	if ( SQLFetch() == SQL_SUCCESS ) {
-		nValue = SQLGetData(1);
+	string sSQL = "SELECT value from hiddenobject_resources WHERE resref = " + pSs(sResRef) + ";";
+	pQ(sSQL);
+	if ( pF() ) {
+		nValue = pGs(1);
 	}
 	return d20() + StringToInt(nValue);
 }
