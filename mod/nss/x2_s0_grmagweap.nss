@@ -4,10 +4,10 @@
 //:: Copyright (c) 2001 Bioware Corp.
 //:://////////////////////////////////////////////
 /*
- * Grants a +1 enhancement bonus per 3 caster levels
- * (maximum of +5).
- * lasts 1 hour per level
- */
+  Grants a +1 enhancement bonus per 3 caster levels
+  (maximum of +5).
+  lasts 1 hour per level
+*/
 //:://////////////////////////////////////////////
 //:: Created By: Andrew Nobbs
 //:: Created On: Nov 28, 2002
@@ -22,70 +22,69 @@
 
 #include "x2_inc_spellhook"
 
-void  AddGreaterEnhancementEffectToWeapon(object oMyWeapon, float fDuration, int nBonus) {
-	int DmgBonus;
-	switch ( nBonus ) {
-		case 1: DmgBonus = IP_CONST_DAMAGEBONUS_1;
-		case 2: DmgBonus = IP_CONST_DAMAGEBONUS_2;
-		case 3: DmgBonus = IP_CONST_DAMAGEBONUS_3;
-		case 4: DmgBonus = IP_CONST_DAMAGEBONUS_4;
-		case 5: DmgBonus = IP_CONST_DAMAGEBONUS_5;
-	}
-
-	IPSafeAddItemProperty(oMyWeapon, ItemPropertyDamageBonus(IP_CONST_DAMAGETYPE_MAGICAL, DmgBonus),
-		fDuration, X2_IP_ADDPROP_POLICY_IGNORE_EXISTING, FALSE, TRUE);
-	return;
+void  AddGreaterEnhancementEffectToWeapon(object oMyWeapon, float fDuration, int nBonus)
+{
+   IPSafeAddItemProperty(oMyWeapon,ItemPropertyEnhancementBonus(nBonus), fDuration, X2_IP_ADDPROP_POLICY_REPLACE_EXISTING,FALSE,TRUE);
+   return;
 }
 
-void main() {
+void main()
+{
 
-	/*
-	 * Spellcast Hook Code
-	 * Added 2003-07-07 by Georg Zoeller
-	 * If you want to make changes to all spells,
-	 * check x2_inc_spellhook.nss to find out more
-	 *
-	 */
+    /*
+      Spellcast Hook Code
+      Added 2003-07-07 by Georg Zoeller
+      If you want to make changes to all spells,
+      check x2_inc_spellhook.nss to find out more
 
-	if ( !X2PreSpellCastCode() ) {
-		// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
-		return;
-	}
+    */
 
-	// End of Spell Cast Hook
+    if (!X2PreSpellCastCode())
+    {
+    // If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
+        return;
+    }
+
+    // End of Spell Cast Hook
 
 
-	//Declare major variables
-	effect eVis = EffectVisualEffect(VFX_IMP_SUPER_HEROISM);
-	effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
-	int nDuration = GetCasterLevel(OBJECT_SELF);
-	int nCasterLvl = nDuration / 3;
-	int nMetaMagic = GetMetaMagicFeat();
+    //Declare major variables
+    effect eVis = EffectVisualEffect(VFX_IMP_SUPER_HEROISM);
+    effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
+    int nDuration = GetCasterLevel(OBJECT_SELF);
+    int nCasterLvl = nDuration / 3;
+    int nMetaMagic = GetMetaMagicFeat();
 
-	//Limit nCasterLvl to 5, so it max out at +5 enhancement to the weapon.
-	if ( nCasterLvl > 5 ) {
-		nCasterLvl = 5;
-	}
+    //Limit nCasterLvl to 5, so it max out at +5 enhancement to the weapon.
+    if(nCasterLvl > 5)
+    {
+        nCasterLvl = 5;
+    }
 
-	object oMyWeapon   =  IPGetTargetedOrEquippedMeleeWeapon();
+     object oMyWeapon   =  IPGetTargetedOrEquippedMeleeWeapon();
 
-	if ( nMetaMagic == METAMAGIC_EXTEND ) {
-		nDuration = nDuration * 2; //Duration is +100%
-	}
+    if (nMetaMagic == METAMAGIC_EXTEND)
+    {
+        nDuration = nDuration * 2; //Duration is +100%
+    }
 
-	if ( GetIsObjectValid(oMyWeapon) ) {
-		SignalEvent(GetItemPossessor(oMyWeapon), EventSpellCastAt(OBJECT_SELF, GetSpellId(), FALSE));
+    if(GetIsObjectValid(oMyWeapon) )
+    {
+        SignalEvent(GetItemPossessor(oMyWeapon), EventSpellCastAt(OBJECT_SELF, GetSpellId(), FALSE));
 
-		if ( nDuration > 0 ) {
-			ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, GetItemPossessor(oMyWeapon));
-			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eDur, GetItemPossessor(oMyWeapon), HoursToSeconds(
-					nDuration));
-			AddGreaterEnhancementEffectToWeapon(oMyWeapon, ( HoursToSeconds(nDuration) ), nCasterLvl);
+        if (nDuration>0)
+        {
+            ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, GetItemPossessor(oMyWeapon));
+            ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eDur, GetItemPossessor(oMyWeapon), HoursToSeconds(nDuration));
+			SetupReminder(OBJECT_SELF, GetSpellName(GetSpellId()), HoursToSeconds(nDuration), eDur);
+            AddGreaterEnhancementEffectToWeapon(oMyWeapon, (HoursToSeconds(nDuration)), nCasterLvl);
 
-		}
-		return;
-	}   else {
-		FloatingTextStrRefOnCreature(83615, OBJECT_SELF);
-		return;
-	}
+        }
+        return;
+    }
+        else
+    {
+           FloatingTextStrRefOnCreature(83615, OBJECT_SELF);
+           return;
+    }
 }
