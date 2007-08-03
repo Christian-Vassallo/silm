@@ -1,12 +1,16 @@
 # Set as environment var!
 # NWNHOME=/home/elven/nwn
 LISTHOME=$(HOME)
-NAME=Silbermarken
+NAME=www.silbermarken.de
 
 # This gets packaged into your final module
 VALIDEXT=area/\*.git area/\*.are \
+	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
+	utc/\*.utc utd/\*.utd ute/\*.ute \
 	itp/\*.itp ssf/\*.ssf \
-	mod/\*.fac mod/\*.ifo mod/\*.jrl 
+	mod/\*.fac mod/\*.ifo mod/\*.jrl \
+	`find uti -iname *.uti` \
+ 	nss/\*.ncs 
 
 VALIDEXTDEV=area/\*.git area/\*.are \
 	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
@@ -41,16 +45,6 @@ scripts: path
 
 deploy:
 	$(MAKE) -C nss deploy
-	$(MAKE) -C uti deploy
-	$(MAKE) -C utc deploy
-	$(MAKE) -C dlg deploy
-	$(MAKE) -C utm deploy
-	$(MAKE) -C utp deploy
-	$(MAKE) -C ute deploy
-	$(MAKE) -C uts deploy
-	$(MAKE) -C utt deploy
-	$(MAKE) -C utw deploy
-	$(MAKE) -C utd deploy
 
 clean-deploy:
 	rm -rf $(NWNHOME)/res/*
