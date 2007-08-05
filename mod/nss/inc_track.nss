@@ -112,7 +112,7 @@ void track(object oPC, int bShowMessage = TRUE) {
 
 	int trackNumber = 0;
 	string sSQL =
-		"SELECT id,area,x,y,facing,round(( unixts() / 3600) as age,deep,size,gender,speed,barefoot,character FROM "
+		"SELECT id,area,x,y,facing,round( unixts() / 3600) as age,deep,size,gender,speed,barefoot,character FROM "
 		+ sTrackSQLTable + " WHERE area = " + sArea + " "
 		+ "AND x>" +
 		xmin + " AND x<" + xmax + " AND y>" + ymin + " AND y<" + ymax + " LIMIT 4";
