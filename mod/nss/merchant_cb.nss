@@ -88,7 +88,7 @@ void main() {
 
 				// Update DB
 				if ( 0.0 != fMax )
-					pQ("update stores set cur = cur - 1 where merchant = " + pSs(sMerc) + " and resref = " + pSs(sBuyWhat) + ";");
+					pQ("update stores set cur = cur - 1 where tag = " + pSs(sMerc) + " and resref = " + pSs(sBuyWhat) + ";");
 
 				pQ("update merchants set money = money + " + pSi(nPCPaysHowMuch) + " where tag = " + sMerc + ";");
 
@@ -126,7 +126,7 @@ void main() {
 
 				// update DB
 				if ( 0.0 != fMax )
-					pQ("update stores set cur = cur + 1 where merchant = " + pSs(sMerc) + " and resref = " + pSs(sSellsWhat) + ";");
+					pQ("update stores set cur = cur + 1 where tag = " + pSs(sMerc) + " and resref = " + pSs(sSellsWhat) + ";");
 
 				if ( bLimitedMoney )
 					pQ("update merchants set money = money - " + pSi(nMercPaysHowMuch) + " where tag = " + sMerc + ";");
