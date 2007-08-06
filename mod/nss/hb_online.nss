@@ -3,13 +3,14 @@
 #include "inc_pgsql"
 
 void main() {
-//	pB();
-//
 	object oPC = GetFirstPC();
+	
+	
+	pQ("truncate online;");
 
-	// Noones here, dont even bother!
-	if ( !GetIsObjectValid(oPC) )
+	if ( !GetIsObjectValid(oPC) ) {
 		return;
+	}
 
 	string q =
 		"insert into online (aid, cid, account, character, dm, area, area_s, x, y, z, f) values";
@@ -37,7 +38,6 @@ void main() {
 	q = GetStringLeft(q, GetStringLength(q) - 1); // chomp off last ,
 	q += ";";
 	
-	pQ("truncate online;");
 	pQ(q);
 
 //	pC();
