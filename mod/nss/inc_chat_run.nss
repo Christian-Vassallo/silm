@@ -227,6 +227,7 @@ void RegisterAllCommands() {
 	RegisterCommand("self", "");
 
 	RegisterCommand("online", "dms");
+	RAF(AMASK_CAN_DO_BACKEND);
 
 	RegisterCommand("area", "type=");
 	
@@ -385,11 +386,13 @@ void RegisterAllCommands() {
 	RHs("-i >> Instant cast.  Do not progress action queue, go directly to jail.");
 	RHs("-c >> Do not require the spell to be memorised");
 	RHs("--loc >> Cast spell on location instead of target");
+	RAF(AMASK_CAN_DO_BACKEND);
 
 	RegisterCommand("getdyepot", "", 1, 2);
 
 	RegisterCommand("bloodyhell", "", 0, 0);
 	RH("For escapism");
+	RAF(AMASK_CAN_DO_BACKEND);
 
 
 
@@ -416,7 +419,7 @@ void RegisterAllCommands() {
 	RAF(AMASK_GM);
 
 	RegisterCommand("time", "yr= mo= dy= hr= mn= sc=");
-	RAF(AMASK_CAN_EDIT_GV);
+	RAF(AMASK_CAN_DO_BACKEND);
 
 	RegisterCommand("rehash", "", 0, 0);
 	RAF(AMASK_CAN_EDIT_GV);
@@ -452,12 +455,13 @@ void RegisterAllCommands() {
 	RH("Shows/sets event handlers.");
 	RHs(">> Shows events.");
 	RHs("eventname script >> Sets script for eventname.");
-	RAF(AMASK_GLOBAL_GM);
+	RAF(AMASK_CAN_DO_BACKEND);
 
 	RegisterCommand("rmnx", "", 1);
 	RAF(AMASK_CAN_DO_BACKEND);
 
 	RegisterCommand("remind", "");
+	RAF(AMASK_CAN_DO_BACKEND);
 
 
 
@@ -549,6 +553,7 @@ void RegisterAllCommands() {
 
 	RegisterCommand("cpm", "", 3, 3);
 	RHs("a b c >> CopyItemAndModify(Target, a, b, c, TRUE);");
+	RAF(AMASK_GLOBAL_GM);
 
 	RegisterCommand("caq", "");
 	RHs(">> Clears the action queue.", 1);
