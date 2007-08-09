@@ -240,8 +240,13 @@ int CommandManageSetAdd(object oPC, int iMode) {
 		ToPC("No group set.");
 		return FAIL;
 	}
+	if (GetIsInSet(set, GetTarget(), oPC)) {
+		ToPC("groupadd: " + ObjectToString(GetTarget()) + " already in " + set);
+		return OK;
+	}
+
 	AddToSet(set, GetTarget(), oPC);
-	ToPC("groupadd: " + set + " -> " + GetName(GetTarget()));
+	ToPC("groupadd: " + set + " -> " + ObjectToString(GetTarget()) + " " + GetName(GetTarget()));
 	return OK;
 }
 
