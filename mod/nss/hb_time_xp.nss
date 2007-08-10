@@ -18,8 +18,8 @@ void main() {
 	location lPlayerLocation;
 
 	// Do not give XP for being alone. Hard but true.
-	if (0 == GetLocalInt(GetModule(), "time_xp_ovr") && nPlayerCount == 1)
-		return;
+	//if (0 == GetLocalInt(GetModule(), "time_xp_ovr") && nPlayerCount == 1)
+	//	return;
 
 	object oPC = GetFirstPC();
 	while (GetIsObjectValid(oPC)) {
