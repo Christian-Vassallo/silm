@@ -54,7 +54,7 @@ int amask(object oPC, int nAMask);
 
 int amask(object oPC, int nAMask) {
     // string sAcc = GetPCName(oPC);
-	int nCID = GetCharacterID(oPC);
+	int nCID = GetAccountID(oPC);
 
 
 //	if ( "" == sAcc )
@@ -66,7 +66,7 @@ int amask(object oPC, int nAMask) {
 	if (nCID == 0)
 		return 0;
 
-	pQ("select amask from characters where id = " + pSi(nCID));
+	pQ("select amask from accounts where id = " + pSi(nCID));
 	pF();
     int nMask = pGi(1);
 	//GetLocalInt(GetModule(), sAcc + "_amask");
