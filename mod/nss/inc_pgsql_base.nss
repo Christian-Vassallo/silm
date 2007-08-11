@@ -194,19 +194,23 @@ string pE(string str) {
 	return pSQLEscape(str);
 }
 string pSQLEscape(string str) {
-	if ( -1 == FindSubString(str, "'") )
+	if ( -1 == FindSubString(str, "'") && -1 == FindSubString(str, "\") )
 		return "'" + str + "'";
 
-	int i = 0, last = 0;
-	int count = 0;
+	int i = 0; //, last = 0;
+	//int count = 0;
 	string c = "", new = "'";
 	for ( i = 0; i < GetStringLength(str); i++ ) {
 		c = GetSubString(str, i, 1);
 
 		if ( c == "'" ) {
 			new += "'||chr(39)||'";
-			last = i + 1;
-			count += 1;
+			//last = i + 1;
+			//count += 1;
+		} else if (c == "\") {
+			new += "'||chr(92)||'";
+			//last = i + 1;
+			//count += 1;
 		} else
 			new += c;
 	}
