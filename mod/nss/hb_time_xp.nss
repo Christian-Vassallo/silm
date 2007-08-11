@@ -37,18 +37,13 @@ void main() {
 				(nTS - gvGetInt("time_xp_interval") <= nPlayerLastSaid) 
 			) {
 				SetLocalInt(oPC, "last_time_xp_given", nTS);
-				//if (
-				GiveTimeXP(oPC, gvGetInt("time_xp_amount"));
-				/*== 0) {
-					if (gvGetInt("time_xp_fills_combat_xp")) {
-						AddCombatXP(oPC, gvGetInt("time_xp_amount"), TRUE);
-						SetLocalInt(oPC, "last_time_xp_given", nTS);
-
-					}
-				}*/
+				if (GiveTimeXP(oPC, gvGetInt("time_xp_amount")) == 0 && gvGetInt("time_xp_fills_combat_xp")) {
+					AddCombatXP(oPC, gvGetInt("time_xp_amount"), TRUE);
+					SetLocalInt(oPC, "last_time_xp_given", nTS);
+				}
 			}
+		}
 
 		oPC = GetNextPC();
-		}
 	}
 }
