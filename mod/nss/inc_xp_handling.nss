@@ -30,7 +30,8 @@ void _AddNonGMXPDifference(object oPC, int nValue, int nType = 0);
 
 
 // Gives nAmount to oPC, but not above the CAP.
-void GiveTimeXP(object oPC, int nAmount);
+// Returns amout given.
+int GiveTimeXP(object oPC, int nAmount);
 
 // Returns how much XP this player has got THIS MONTH through Auto XP.
 int GetTimeXPForDay(object oPC, int nYear, int nMonth, int nDay);
@@ -264,13 +265,13 @@ void GiveKillXP() {
 
 
 
-void GiveTimeXP(object oPC, int nAmount) {
+int GiveTimeXP(object oPC, int nAmount) {
 	if ( GetIsDM(oPC) )
-		return;
+		return 0;
 	
 	struct RealTime r = GetRealTime();
 	if (r.error)
-		return;
+		return 0;
 
 	int iDay = r.day;
 	int iMonth = r.month; 
@@ -280,15 +281,17 @@ void GiveTimeXP(object oPC, int nAmount) {
 
 
 	if ( iXPForMonth > gvGetInt("time_xp_limit_month") )
-		return;
+		return 0;
 	
 	if ( iXPForDay > gvGetInt("time_xp_limit_day") )
-		return;
+		return 0;
 
 	if ( nAmount > 0 ) {
 		GiveXP(oPC, nAmount, FALSE);
 		SetCategoryXPForDay(oPC, "time", iXPForDay + nAmount, iYear, iMonth, iDay);
+		return nAmount;
 	}
+	return 0;
 }
 
 
