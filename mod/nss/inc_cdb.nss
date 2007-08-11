@@ -34,11 +34,55 @@ void CharacterError(object oPC, string sLog = "Character not found");
 int SaveCharacter(object oPC, int bIsLogin = FALSE);
 
 
-// Returns true if this char may join the fray.
-// Notifies the player too!
-// int GetMayPlay(object oPC);
+// Returns > 0 if oPC has nAMask, 0 otherwise
+// The special case DM/Non-DM for AMASK_GM
+// is handled here for convenience.
+// 
+// This means that
+//  * amask(oDM, AMASK_GLOBAL_GM) => 1
+//   if oDM has an amask of AMASK_GM only
+//
+//  * amask(oPC, AMASK_GLOBAL_GM) => 0
+//   if oPC has an amask of AMASK_GM only
+//
+//  * amask(oPC, AMASK_GLOBAL_GM) => 1
+//   if oPC has an amask of AMASK_GLOBAL_GM
+//
+int amask(object oPC, int nAMask);
 
-/* Implementation */
+/* implementation below */
+
+int amask(object oPC, int nAMask) {
+    // string sAcc = GetPCName(oPC);
+	int nCID = GetCharacterID(oPC);
+
+
+//	if ( "" == sAcc )
+//        return 0;
+
+	if (AMASK_ANY == nAMask)
+		return 1;
+	
+	if (nCID == 0)
+		return 0;
+
+	pQ("select amask from characters where id = " + pSi(nCID));
+	pF();
+    int nMask = pGi(1);
+	//GetLocalInt(GetModule(), sAcc + "_amask");
+
+	if (GetIsDM(oPC) && nMask & AMASK_GM && nAMask & AMASK_GLOBAL_GM)
+		return 1;
+	
+	if (!GetIsDM(oPC) && nMask & AMASK_GLOBAL_GM && nAMask & AMASK_GM)
+		return 1;
+
+    return
+           ( nMask & nAMask ) > 0;
+}
+
+
+
 
 void UpdateMessageCount(object oPC, int nMessages) {
 	int nCID = GetCharacterID(oPC);

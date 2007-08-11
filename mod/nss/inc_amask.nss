@@ -1,5 +1,3 @@
-#include "_gen"
-
 const int
 // Normal players
 AMASK_ANY = 0,
@@ -71,43 +69,4 @@ AMASK_CAN_EDIT_RIDEABLES = 4194304,
 // /rmnx
 // /sql
 AMASK_CAN_DO_BACKEND = 8589934592; // 2<<32
-
-// Returns > 0 if oPC has nAMask, 0 otherwise
-// The special case DM/Non-DM for AMASK_GM
-// is handled here for convenience.
-// 
-// This means that
-//  * amask(oDM, AMASK_GLOBAL_GM) => 1
-//   if oDM has an amask of AMASK_GM only
-//
-//  * amask(oPC, AMASK_GLOBAL_GM) => 0
-//   if oPC has an amask of AMASK_GM only
-//
-//  * amask(oPC, AMASK_GLOBAL_GM) => 1
-//   if oPC has an amask of AMASK_GLOBAL_GM
-//
-int amask(object oPC, int nAMask);
-
-/* implementation below */
-
-int amask(object oPC, int nAMask) {
-    string sAcc = GetPCName(oPC);
-
-	if ( "" == sAcc )
-        return 0;
-
-	if (AMASK_ANY == nAMask)
-		return 1;
-
-    int nMask = GetLocalInt(GetModule(), sAcc + "_amask");
-
-	if (GetIsDM(oPC) && nMask & AMASK_GM && nAMask & AMASK_GLOBAL_GM)
-		return 1;
-	
-	if (!GetIsDM(oPC) && nMask & AMASK_GLOBAL_GM && nAMask & AMASK_GM)
-		return 1;
-
-    return
-           ( nMask & nAMask ) > 0;
-}
 
