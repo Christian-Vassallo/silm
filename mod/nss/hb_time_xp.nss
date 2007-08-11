@@ -5,7 +5,6 @@
 */
 
 #include "_gen"
-#include "inc_mysql"
 #include "inc_xp_handling"
 
 
@@ -27,21 +26,26 @@ void main() {
 		// Do /*not*/ give XP for being AFK.
 		if (!GetIsDM(oPC) /*&& !GetLocalInt(oPC, "afk")*/) {
 			nLastForPlayer = GetLocalInt(oPC, "last_time_xp_given");
-			nPlayerLastSaid = gvGetInt("time_xp_max_message_time") == 0 ? nTS : GetLocalInt(oPC,"last_message");
+			// nPlayerLastSaid = gvGetInt("time_xp_max_message_time") == 0 ? nTS : GetLocalInt(oPC,"last_message");
 			/*lLastPlayerLocation = GetLocalLocation(oPC, "last_time_xp_location");
 			lPlayerPosition = GetLocation(oPC);*/
 			
 
 			if ( 
-				(nTS - gvGetInt("time_xp_interval") > nLastForPlayer) &&
-				(nTS - gvGetInt("time_xp_interval") <= nPlayerLastSaid) 
+				(nTS - gvGetInt("time_xp_interval") > nLastForPlayer) /*&&
+				(nTS - gvGetInt("time_xp_interval") <= nPlayerLastSaid) */
 			) {
+				
 				SetLocalInt(oPC, "last_time_xp_given", nTS);
-				if (GiveTimeXP(oPC, gvGetInt("time_xp_amount")) == 0 && gvGetInt("time_xp_fills_combat_xp")) {
+				
+				int nGiven = GiveTimeXP(oPC, gvGetInt("time_xp_amount"));
+
+				if (0 == nGiven && gvGetInt("time_xp_fills_combat_xp")) {
 					AddCombatXP(oPC, gvGetInt("time_xp_amount"), TRUE);
 					SetLocalInt(oPC, "last_time_xp_given", nTS);
 				}
 			}
+
 		}
 
 		oPC = GetNextPC();
