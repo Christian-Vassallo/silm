@@ -38,6 +38,12 @@ void main() {
 			) {
 				GiveTimeXP(oPC, gvGetInt("time_xp_amount"));
 				SetLocalInt(oPC, "last_time_xp_given", nTS);
+
+			} else if (gvGetInt("time_xp_fills_combat_xp")) {
+
+				GiveCombatXP(oPC, gvGetInt("time_xp_amount"), TRUE);
+				SetLocalInt(oPC, "last_time_xp_given", nTS);
+
 			}
 		}
 
