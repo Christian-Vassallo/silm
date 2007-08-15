@@ -146,7 +146,7 @@ int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
 			"" + pE(GetResRef(oP)) + ", " +
 			"" + FloatToString(v.x) + ", " + FloatToString(v.y) + ", " + FloatToString(v.z) + ", " +
 			"'" + FloatToString(f) + "', " +
-			"" + (GetLocked(oP) ? "t" : "f") + ", " + (nID == 0 ? "NULL" : IntToString(nID)) + "" +
+			"" + pSb(GetLocked(oP)) + ", " + pSi(nID, TRUE) + "" +
 			")");
 
 		pQ("select id from " + PLAC_TABLE + " order by id desc limit 1;");
