@@ -20,8 +20,8 @@ MODE_DM = 32,
 MODE_DM_MODE = 64,       // This will be passed through to commands, but use GetIsDM() instead.
 MODE_COMMAND = 128,     // this will NOT be filtered out either
 MODE_FORCETALK = 256,      // this will NOT be filtered out either
-MODE_TELEPATHICBOND = 512;
-
+MODE_TELEPATHICBOND = 512,
+MODE_QUICKJUMP = 1024;
 
 const int
 MSG_TARGET_GLOBAL = -1,

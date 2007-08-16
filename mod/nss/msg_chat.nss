@@ -114,7 +114,8 @@ void main() {
 		iMode |= MODE_FORCETALK;
 	if ( bIsTelepathicBond )
 		iMode |= MODE_TELEPATHICBOND;
-	
+	if ( bIsGo )
+		iMode |= MODE_QUICKJUMP;
 
 
 	if (
@@ -288,7 +289,11 @@ int OnPreText(object oPC, string sText, int iMode, object oTo = OBJECT_INVALID) 
 
 	// Chatlog the stuff
 	if ( GetIsPC(oPC)
-		&& !( iMode & MODE_COMMAND ) && !( iMode & MODE_FORCETALK ) && !( iMode & MODE_TELEPATHICBOND ) )
+		&& !( iMode & MODE_COMMAND ) 
+		&& !( iMode & MODE_FORCETALK ) 
+		&& !( iMode & MODE_TELEPATHICBOND )
+		&& !( iMode & MODE_QUICKJUMP )
+	)
 		ChatLog(oPC, iMode, sText, oTo);
 
 	SetLocalInt(oPC, "last_message", nTS);
@@ -300,7 +305,11 @@ int OnPreText(object oPC, string sText, int iMode, object oTo = OBJECT_INVALID) 
 	// Condition C: It was a channel that wants to be broadcasted
 
 	if ( ( iMode & MODE_TALK || iMode & MODE_WHISPER )
-		&& !( iMode & MODE_COMMAND ) && !( iMode & MODE_FORCETALK ) && !( iMode & MODE_TELEPATHICBOND ) ) {
+		&& !( iMode & MODE_COMMAND ) 
+		&& !( iMode & MODE_FORCETALK ) 
+		&& !( iMode & MODE_TELEPATHICBOND )
+		&& !( iMode & MODE_QUICKJUMP )
+	) {
 
 
 		// If it was ourselves and we are not possessing something, send message to all bond partners
