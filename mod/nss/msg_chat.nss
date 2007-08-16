@@ -103,7 +103,9 @@ void main() {
 
 	int bIsCommand = ( !( iMode & MODE_PRIVATE ) && ( GetStringLeft(sText, 1) == "/" ) );
 	int bIsForceTalk = ( !( iMode & MODE_PRIVATE )
-						&& ( GetStringLeft(sText, 1) == "." ) && ( GetStringLeft(sText, 2) != ".." ) );
+						&& ( ( GetStringLeft(sText, 1) == "." ) && ( GetStringLeft(sText, 2) != ".." ) )
+						|| ( ( GetStringLeft(sText, 2) == " ." ) && ( GetStringLeft(sText, 3) != " .." ) )
+	);
 	int bIsTelepathicBond = ( !( iMode & MODE_PRIVATE ) && GetStringLeft(sText, 1) == "$" );
 	int bIsGo = ( !( iMode & MODE_PRIVATE ) && ( GetStringLeft(sText, 1) == "," ) );
 	int bIsFamiliarSpeech = ( !(iMode & MODE_PRIVATE) && GetStringLeft(sText, 1) == ":" );
