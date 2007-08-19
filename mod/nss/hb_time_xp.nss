@@ -40,7 +40,7 @@ void main() {
 				
 				int nGiven = GiveTimeXP(oPC, gvGetInt("time_xp_amount"));
 
-				if (0 == nGiven && gvGetInt("time_xp_fills_combat_xp")) {
+				if (-2 == nGiven && gvGetInt("time_xp_fills_combat_xp")) {
 					AddCombatXP(oPC, gvGetInt("time_xp_amount"), TRUE);
 					SetLocalInt(oPC, "last_time_xp_given", nTS);
 				}
