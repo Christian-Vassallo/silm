@@ -197,7 +197,7 @@ void main() {
 		object oTarget = GetTarget(nTarget);
 
 		if ( nTarget < 1 || nTarget > TARGET_MAX || !GetIsObjectValid(oTarget) || (
-				!amask(oPC, AMASK_GLOBAL_GM) && ( GetIsPC(oTarget) || !GetIsCreature(oTarget) ) )
+				!amask(oPC, AMASK_CAN_DO_BACKEND) && ( GetIsPC(oTarget) || !GetIsCreature(oTarget) ) )
 		) {
 			ToPC("Kein gueltiges Ziel.");
 
