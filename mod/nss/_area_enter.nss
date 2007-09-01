@@ -30,6 +30,26 @@ void main() {
 
 	//if (!GetLocalInt(oArea, "NoExplore"))
 
+
+	if ( GetIsDM(oPC) 
+		&& (TestStringAgainstPattern( "** " + IntToString(GetAccountID(oPC)) + " **", 
+				GetLocalString(oArea, "forbidden_aid"))
+				|| TestStringAgainstPattern( "** " + IntToString(GetCharacterID(oPC)) + " **", 
+					GetLocalString(oArea, "forbidden_cid"))
+			)
+	) {
+		object ooc = GetObjectByTag(GetLocalString(oArea, "forbidden_target"));
+		if (GetIsObjectValid(ooc)) {
+			AssignCommand(oPC, ClearAllActions());
+			AssignCommand(oPC, JumpToObject(ooc));
+		} else {
+			SendMessageToAllDMs("Area " + GetName(oArea) + " has an invalid forbidden_target.");
+		}
+		return;
+	}
+
+
+
 	if ( GetIsPC(oPC) )
 		ExploreAreaForPlayer(oArea, oPC, TRUE);
 
