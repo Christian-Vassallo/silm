@@ -31,6 +31,9 @@ all: update-revision $(objects)
 
 scripts: $(objects)
 
+
+_buildutil.nss: update-revision
+
 update-revision:
 	@echo 'const string PROJECT = "Silbermarken";' > _buildinfo.nss
 	@echo 'const string REVISION = "$(revision)";' >>_buildinfo.nss
