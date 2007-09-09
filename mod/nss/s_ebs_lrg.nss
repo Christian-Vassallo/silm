@@ -35,7 +35,10 @@ void main() {
 
 	// Duration: 12h (IG time) = 3h RL time
 	// Value in seconds
-	int nExpireIn = ( ( 12 * 60 ) / GetMinutesPerHour() ) * 60;
+	//int nExpireIn = ( ( 12 * 60 ) / GetMinutesPerHour() ) * 60;
+	
+	// 12 hours
+	int nExpireIn = 12 * 3600;
 	DelayCommand(IntToFloat(nExpireIn), DestroyObject(oShield));
 
 	SetItemCursedFlag(oShield, TRUE);
