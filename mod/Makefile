@@ -66,11 +66,11 @@ clean-deploy:
 	rm -rf $(NWNHOME)/res/*
 
 lists: path
-	for i in $(LISTS); do ../buildutil/gen_resref.rb $${i}.marshal $${i}/*.$${i} && \
-		../buildutil/process_resref.rb $${i}.marshal $${i}.marshal.txt; \
+	for i in $(LISTS); do gen_resref.rb $${i}.marshal $${i}/*.$${i} && \
+		process_resref.rb $${i}.marshal $${i}.marshal.txt; \
 	done
-	../buildutil/gen_resref.rb are.marshal area/*.are && \
-		../buildutil/process_resref.rb are.marshal are.marshal.txt;
+	gen_resref.rb are.marshal area/*.are && \
+		process_resref.rb are.marshal are.marshal.txt;
 
 lists_install:
 	for i in $(LISTS); do \
@@ -80,7 +80,7 @@ lists_install:
 	
 
 unused-dlg:
-	../buildutil/find-unused-conversations.pl -v dlg/*.dlg nss/*.nss area/*.git utc/*.utc
+	find-unused-conversations.pl -v dlg/*.dlg nss/*.nss area/*.git utc/*.utc
 
 unused-nss:
 	$(MAKE) -C nss unused
@@ -112,18 +112,18 @@ clean-local:
 	rm $(NAME)-*-r*.tgz
 
 local: path
-	../buildutil/erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
+	erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
 
 dev-local: path
-	../buildutil/erfpack.pl -m -o $(NAME)-dev-r$(revision).mod $(VALIDEXTDEV)
+	erfpack.pl -m -o $(NAME)-dev-r$(revision).mod $(VALIDEXTDEV)
 
 player-local: path
-	../buildutil/erfpack.pl -m -o $(NAME)-player-r$(revision).mod $(VALIDEXTPLAYER)
+	erfpack.pl -m -o $(NAME)-player-r$(revision).mod $(VALIDEXTPLAYER)
 	tar -czf $(NAME)-player-r$(revision).tgz $(NAME)-player-r$(revision).mod
 	rm $(NAME)-player-r$(revision).mod
 
 builder-local: path
-	../buildutil/erfpack.pl -m -o $(NAME)-builder-r$(revision).mod $(VALIDEXTBUILDER)
+	erfpack.pl -m -o $(NAME)-builder-r$(revision).mod $(VALIDEXTBUILDER)
 	tar -czf $(NAME)-builder-r$(revision).tgz $(NAME)-builder-r$(revision).mod
 	rm $(NAME)-builder-r$(revision).mod
 
