@@ -107,4 +107,12 @@ void EventUseItem(object oPC, object oItem, object oTarget, location lTarget) {
 		ExecuteScript("ii_move_target_g", oPC);
 		BypassEvent();
 	}
+
+	// Subrace items that are event-executed
+
+	// Avariel!
+	if ("SR_SPA_2" == sTag) {
+		ExecuteScript("ii_subr_item", oPC);
+		BypassEvent();
+	}
 }
