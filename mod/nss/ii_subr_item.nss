@@ -11,6 +11,8 @@ void main() {
 	object oTarget = GetActionTarget();
 	vector vTarget = GetEventPosition();
 	location lTarget = Location(GetArea(oPC), vTarget, GetFacing(oPC));
+	
+	AssignCommand(oPC, ClearAllActions(TRUE));
 
 	ActivateSubraceItem(oPC, oItem, lTarget, oTarget);
 }
