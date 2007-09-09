@@ -12,7 +12,7 @@ VALIDEXT=area/\*.git area/\*.are \
 	`find uti -iname *.uti` \
  	nss/\*.ncs 
 
-VALIDEXTDEV=area/\*.git area/\*.are \
+VALIDEXTDEV=area/\*.git area/\*.gic area/\*.are \
 	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
 	utc/\*.utc utd/\*.utd ute/\*.ute \
 	`find uti -iname *.uti` \
@@ -20,12 +20,28 @@ VALIDEXTDEV=area/\*.git area/\*.are \
 	mod/\*.fac mod/\*.ifo mod/\*.jrl \
 	nss/\*.ncs nss/\*.nss
 
-VALIDEXTPLAYER=area/\*.git area/\*.are \
-	utp/\*.utp \
+
+VALIDEXTBUILDER=area/\*.git area/\*.gic area/\*.are \
+	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
+	utc/\*.utc utd/\*.utd ute/\*.ute \
+	`find uti -iname *.uti` \
 	itp/\*.itp ssf/\*.ssf \
 	mod/\*.fac mod/\*.ifo mod/\*.jrl 
 
+
+# only include placeables, and an empty starting area
+VALIDEXTPLAYER=utp/\*.utp \
+	itp/placeablepalcus.itp \
+	itp/doorpalcus.itp \
+	itp/soundpalcus.itp \
+	ssf/\*.ssf \
+	mod/\*.fac mod/\*.jrl \
+	override-player/\*
+
 LISTS=uti utp utc utm
+
+
+revision := $(shell svn info --non-interactive svn://cormanthor.swordcoast.net/silm_srv/ | grep Revision | cut -d " " -f 2)
 
 all: package install
 
@@ -90,13 +106,27 @@ clean:
 	$(MAKE) -C nss clean clean-backup
 	-rm *.mod
 
+# remove older packages
+clean-local:
+	rm $(NAME)-*-r[^$(revision)*.mod
+	rm $(NAME)-*-r*.tgz
 
 local: path
 	../buildutil/erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
+
 dev-local: path
-	../buildutil/erfpack.pl -m -o $(NAME).mod $(VALIDEXTDEV)
+	../buildutil/erfpack.pl -m -o $(NAME)-dev-r$(revision).mod $(VALIDEXTDEV)
+
 player-local: path
-	../buildutil/erfpack.pl -m -o $(NAME).mod $(VALIDEXTPLAYER)
+	../buildutil/erfpack.pl -m -o $(NAME)-player-r$(revision).mod $(VALIDEXTPLAYER)
+	tar -czf $(NAME)-player-r$(revision).tgz $(NAME)-player-r$(revision).mod
+	rm $(NAME)-player-r$(revision).mod
+
+builder-local: path
+	../buildutil/erfpack.pl -m -o $(NAME)-builder-r$(revision).mod $(VALIDEXTBUILDER)
+	tar -czf $(NAME)-builder-r$(revision).tgz $(NAME)-builder-r$(revision).mod
+	rm $(NAME)-builder-r$(revision).mod
+
 
 install: 
 	cp -v $(NAME).mod $(NWNHOME)/modules/
@@ -104,3 +134,5 @@ install:
 # generates a new package with the current revision
 package: path uti utp utc ifo itp scripts local
 dev-package: path uti utp utc ifo itp dev-local
+player-package: path uti utp utc ifo itp player-local
+builder-package: path uti utp utc ifo itp builder-local
