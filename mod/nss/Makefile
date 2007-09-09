@@ -20,9 +20,10 @@ objects  := $(filter-out $(includesncs), $(addsuffix .ncs, $(basename $(wildcard
 sources  := $(filter-out $(includesnss), $(wildcard *.nss))
 
 
-revision := $(shell svn info --non-interactive .. | grep Revision | cut -d " " -f 2)
-date := $(shell svn info --non-interactive .. | grep 'Last Changed Date' | cut -d " " -f 4-)
-root := $(shell svn info --non-interactive .. | grep 'Repository Root' | cut -d " " -f 3-)
+revision := $(shell svn info --non-interactive svn://cormanthor.swordcoast.net/silm_srv/ | grep Revision | cut -d " " -f 2)
+# date := $(shell echo "$(svninfo)" | grep 'Last Changed Date' | cut -d " " -f 4-)
+# root := $(shell echo "$(svninfo)" | grep 'Repository Root' | cut -d " " -f 3-)
+
 builddate := $(shell date "+%Y-%m-%d %X %z (%a, %d %b %Y)")
 
 depgrep = $(shell grep -E '^\#include ".+"' $(1) | sed 's/^\#include \"//g' | sed 's/\"$$//g')
@@ -37,8 +38,8 @@ _buildutil.nss: update-revision
 update-revision:
 	@echo 'const string PROJECT = "Silbermarken";' > _buildinfo.nss
 	@echo 'const string REVISION = "$(revision)";' >>_buildinfo.nss
-	@echo 'const string REPOSITORY = "$(root)";' >>_buildinfo.nss
-	@echo 'const string COMMIT_ON = "$(date)";' >>_buildinfo.nss
+	@echo 'const string REPOSITORY = "/";' >>_buildinfo.nss
+	@echo 'const string COMMIT_ON = "unknown";' >>_buildinfo.nss
 	@echo 'const string BUILD_ON = "$(builddate)";' >>_buildinfo.nss
 
 
