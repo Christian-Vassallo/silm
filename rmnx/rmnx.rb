@@ -170,10 +170,10 @@ module RMNX
 			loop do
 			r = @s.recvfrom(BUFSIZE)
 				
-				if r[1][3] != "127.0.0.1"
-					puts "Notice: Dropping data packet from #{r[1][3]} (not local)"
-					next
-				end
+				#if r[1][3] != "127.0.0.1"
+				#	puts "Notice: Dropping data packet from #{r[1][3]} (not local)"
+				#	next
+				#end
 
 				if r[1][1] != @peerport
 					@peerport, @peerhost = r[1][1], r[1][3]

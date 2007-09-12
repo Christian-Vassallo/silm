@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+
 require 'rubygems'
 require 'rmnx'
 
@@ -76,12 +77,12 @@ class TextHandler < RMNX::CommandSpace
 	def mnx_ontext t, mode
 		mode = mode.to_i
 
-		if mode & MODE_TALK == MODE_TALK || mode & MODE_WHISPER == MODE_WHISPER
-			REPLACE.each {|k,v|
-				t.gsub! k, v
-			}
-			return "a" + t
-		end
+		#if mode & MODE_TALK == MODE_TALK || mode & MODE_WHISPER == MODE_WHISPER
+		#	REPLACE.each {|k,v|
+		#		t.gsub! k, v
+		#	}
+		#	return "a" + t
+		#end
 
 		return "i" + t
 	end

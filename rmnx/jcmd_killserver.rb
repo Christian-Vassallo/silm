@@ -12,7 +12,7 @@ ret << "sending now: kill -15 #{pid}"
 system("kill -15 #{pid}")
 ret << "Now wait for nwserver to shutdown"
 
-#ret << "sending in 5: kill -9 #{pid}"
-#system("sleep 6 && kill -9 #{pid} &")
+ret << "sending in 20: kill -9 #{pid}"
+system("sleep 20 && kill -9 #{pid} &")
 
 msg(jid, ret.join("\n"))

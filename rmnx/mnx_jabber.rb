@@ -1,4 +1,6 @@
 require 'shellwords'
+
+
 require 'xmpp4r'
 require 'xmpp4r/roster/iq/roster'
 require 'xmpp4r/roster/helper/roster'
@@ -16,9 +18,6 @@ class MnxJabber < RMNX::CommandSpace
 	include RMNX::Config
 	#Jabber::debug = true
 
-	class OnlineUser < ActiveRecord::Base
-		set_table_name 'online'
-	end
 
 
 	class NWBridge
@@ -68,6 +67,7 @@ class MnxJabber < RMNX::CommandSpace
 			"/home/silm/run.log",
 			"/home/silm/nwserver/logs.0/nwnx2.txt",
 			"/home/silm/nwserver/logs.0/nwnx_odbc.txt",
+			"/home/silm/nwserver/logs.0/nwnx_pgsql.txt",
 		].freeze
 
 		connect
@@ -75,9 +75,9 @@ class MnxJabber < RMNX::CommandSpace
 		
 		@tail_t = Thread.new {_t_tail}
 
-		@nwbridge = NWBridge.new(
-			IO::read("/home/silm/config/nwbridgepass").strip
-		)
+		#@nwbridge = NWBridge.new(
+		#	IO::read("/home/silm/config/nwbridgepass").strip
+		#)
 	end
 
 	#def sql_connect
@@ -116,7 +116,7 @@ class MnxJabber < RMNX::CommandSpace
 			if dnsovr[ip]
 				host = dnsovr[ip]
 			else
-				host = Resolv::DNS.new.getname(ip).to_s if ip != ""
+				host = Resolv.getname(ip).to_s if ip != ""
 			end
 		rescue
 		end
@@ -373,6 +373,8 @@ class MnxJabber < RMNX::CommandSpace
 		jid = fs
 		yjcommands = gety("jcommands")
 		yjservices = gety("jservices")
+		
+		return if m.type != :chat && m.type != :normal
 
 		a = (m.body || "").split /\s+/
 		cmd = a[0].downcase
@@ -530,12 +532,15 @@ You are registered for the following services: #{yjservices.keys.reject {|key| !
 	end
 
 	def connect
+		Jabber::debug = $DEBUG
+		begin
 		if !@j
 			puts "Creating Jabber Object."
 			@j = Client.new(@jid)
 			@j.on_exception {|e, stream, symbol|
 				puts "exception at #{symbol}: #{e.to_s}"
 				puts e.backtrace.join("\n")
+				sleep 5.0
 				connect
 			}
 
@@ -546,7 +551,7 @@ You are registered for the following services: #{yjservices.keys.reject {|key| !
 		if !@j.is_connected?
 			puts "Re|Connecting to the durned jabberd"
 
-			@j.connect('127.0.0.1')
+			@j.connect('eiellur')
 			@j.auth(@pass)
 			@j.send(Presence.new.set_show(:dnd).set_status('Lurking.').set_priority(100))
 			
@@ -554,6 +559,10 @@ You are registered for the following services: #{yjservices.keys.reject {|key| !
 			puts "Adding roster hooks"
 			@r.add_subscription_callback(0, nil, &method(:j_roster_sub_req))
 			@r.add_subscription_request_callback(0, nil, &method(:j_roster_sub_req))
+		end
+		rescue Jabber::AuthenticationFailure => e
+			puts "Failed authenticating to jabber server. :("
+			return nil
 		end
 		@j
 	end

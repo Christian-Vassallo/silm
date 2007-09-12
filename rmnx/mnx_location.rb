@@ -13,37 +13,47 @@ class LocationService < RMNX::CommandSpace
 	def sql_connect
 		sql = gety("odbc")
 		ActiveRecord::Base.establish_connection(sql)
-		ActiveRecord::Base.connection.instance_eval {@connection.reconnect = true}
+		ActiveRecord::Base.table_name_prefix = "nwserver."
+		ActiveRecord::Base.connection.execute 'set client_encoding = \'iso-8859-15\';';
+		# ActiveRecord::Base.connection.instance_eval {@connection.reconnect = true}
 	end
 
 	def mnx_location_count a
-		online_charnames = gety("online").map {|x|
+		r = /#{Regexp.escape(a)}/i
+		ids = {}
+		online_charnames = gety("online").reject {|x|
+			x['cid'] == 0
+		}.map {|x|
+			ids[x['char']] = x['cid']
 			x['char']
 		}.reject {|x|
-			x !~ /#{ Regexp.escape(a).gsub('%', '.*') }/
+			x !~ r
 		}
-		
+
 		matches = Location::find(:all, :conditions => [
 			'name like ?', '%' + a + '%'
 		]).map {|x| x['name']}
 
 		matches = online_charnames.concat(matches)
-		
+
 		direct = Location::find(:first, :conditions => [
 			'name = ?', a
 		])
 
 		return "1##{a}" if direct
 	
-		return "%d#%s" % [matches.size, matches.join(", ").strip]
+		return "%d#%s" % [matches.size, matches.join(", ")]
 	end
 
 
 	def mnx_location a
+		r = /#{Regexp.escape(a)}/i
+		ids = {}
 		online_charnames = gety("online").map {|x| 
+			ids[x['char']] = x['cid']
 			x['char']
 		}.reject {|x|
-			x !~ /#{ Regexp.escape(a).gsub('%', '.*') }/
+			x !~ r
 		}
 		
 		matches = Location::find(:all, :conditions => [
@@ -62,7 +72,7 @@ class LocationService < RMNX::CommandSpace
 		m = direct || online_charnames[0] || matches[0]
 		
 		if m.is_a?(String)
-			return "p#{m}"
+			return "p#{ids[m]}"
 		else
 			return "l" + l2s(m["area"], m["x"], m["y"], m["z"] || 0.0, m["f"] || 1.0)
 		end

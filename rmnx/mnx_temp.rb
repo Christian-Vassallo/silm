@@ -165,6 +165,7 @@ class CommandTemperature < RMNX::CommandSpace
 
 
 	def get_override atype, year, month, day
+		return nil
 		force_connect	
 		d = WeatherOverride.find(:first, :conditions => [
 			'atype = ? and date("?-?-?") >= date(concat(ayear, "-", amonth, "-", aday)) and date("?-?-?") <= date(concat(zyear, "-", zmonth, "-", zday))',
@@ -179,14 +180,14 @@ class CommandTemperature < RMNX::CommandSpace
 	end
 
 	def set_override atype, ayear, amonth, aday, zyear, zmonth, zday, temp, wind, precip
-		force_connect	
-		return false if ayear > zyear ||
-			(ayear >= zyear && amonth > zmonth) ||
-			(ayear >= zyear && amonth >= zmonth && aday > zday)
-		d = WeatherOverride.new(:atype => atype, :ayear => ayear, :amonth => amonth,
-			:aday => aday, :zyear => zyear, :zmonth => zmonth, :zday => zday,
-			:temp => temp, :wind => wind, :prec => precip)
-		d.save
+		#force_connect	
+		#return false if ayear > zyear ||
+		#	(ayear >= zyear && amonth > zmonth) ||
+		#	(ayear >= zyear && amonth >= zmonth && aday > zday)
+		#d = WeatherOverride.new(:atype => atype, :ayear => ayear, :amonth => amonth,
+		#	:aday => aday, :zyear => zyear, :zmonth => zmonth, :zday => zday,
+		#	:temp => temp, :wind => wind, :prec => precip)
+		#d.save
 		true
 	end
 
@@ -299,6 +300,8 @@ class CommandTemperature < RMNX::CommandSpace
 
 
 	def mnx_getweather resref, tileset, mask, year, month, day, hour, minute
+		fogdata = gety("fogdata")
+
 		mask = mask.to_i; hour = hour.to_i; minute = minute.to_i
 		year = year.to_i; month = month.to_i; day = day.to_i
 		
@@ -347,31 +350,23 @@ class CommandTemperature < RMNX::CommandSpace
 			end
 		end
 
-		fog_sun_amount = 1
-		fog_moon_amount = 1
-		fog_sun_color = 0x000000
-		fog_moon_color = 0x000000
 		
-		if precip == P_HSNOW
-			fog_sun_amount = 40
-			fog_moon_amount = 60
-			fog_sun_color = 0xf3f3f3
-			fog_moon_color=0x666666
-		end
-		if precip == P_FOG 
-			fog_sun_amount  = 130
-			fog_moon_amount = 160
-			fog_sun_color =  0x777770
-			fog_moon_color = 0x202020
-			# c4c4c # 555555
-		end
-		if precip == P_DOWNPOUR
-			fog_sun_amount = 40
-			fog_moon_amount = 60
-			fog_sun_color = 0xa3a3ff
-			fog_moon_color=0x6666cc
+		preset = case precip
+			when P_HSNOW
+				:hsnow
+			when P_FOG
+				:fog
+			when P_DOWNPOUR
+				:downpour
+			else
+				:default
 		end
 
+		fog_sun_amount = fogdata[preset][:sun_amount]
+		fog_moon_amount = fogdata[preset][:moon_amount]
+		fog_sun_color = fogdata[preset][:sun_colour]
+		fog_moon_color = fogdata[preset][:moon_colour]
+		
 		temp_range = [0,0,0,0] if !temp_range
 		wind_range = [0,0,0,0] if !wind_range
 		

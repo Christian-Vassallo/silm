@@ -17,18 +17,20 @@ class LootAggregator < RMNX::CommandSpace
 	def sql_connect
 		sql = gety("odbc")
 		ActiveRecord::Base.establish_connection(sql)
-		ActiveRecord::Base.connection.instance_eval {@connection.reconnect = true}
+		ActiveRecord::Base.table_name_prefix = "nwserver."
+		ActiveRecord::Base.connection.execute 'set client_encoding = \'iso-8859-15\';';
+		# ActiveRecord::Base.connection.instance_eval {@connection.reconnect = true}
 	end
 
-	def mnx_getgemchainloot areatag, stonetag, aid, cid
+	def mnx_getgemloot stonetag, areatag, aid, cid
 		s = ''
 		a = []
 
-		loot = GemChain::find_by_sql(['select * from gem_chains where ' +
-				'rand() - chance <= 0 and ' +
+		loot = GemChain::find_by_sql(['select * from nwserver.gem_chains where ' +
+				'random() - chance <= 0 and ' +
 				'(area = \'\' or ? like area) and ' +
 				'(stone = \'\' or ? like stone) ' +
-				'order by area, stone `order` asc',
+				'order by area, stone, "order" asc',
 			areatag, stonetag
 		])
 		
@@ -39,21 +41,21 @@ class LootAggregator < RMNX::CommandSpace
 		s = ''
 		a = []
 
-		loot = LootChain::find_by_sql(['select * from loot_chains where ' +
-				'rand() - chance <= 0 and ' +
+		loot = LootChain::find_by_sql(['select * from nwserver.loot_chains where ' +
+				'random() - chance <= 0 and ' +
 				'(racial_type = -1 or racial_type = ?) and ' +
 				'(resref = \'\' or ? like resref) and ' +
 				'(tag = \'\' or ? like tag) and ' +
 				'(name = \'\' or ? like name) and ' +
 				'(lvar = \'\' or ? like lvar) ' +
-				'order by racial_type, tag, resref, `name`, `order` asc',
+				'order by racial_type, tag, resref, "name", "order" asc',
 			racial_type, resref, tag, name, lvar
 		])
 		
 		compact_and_prepare loot
 	end
 
-	def compact_and_prepare a
+	def compact_and_prepare loot
 		loop do
 			reduces = loot.map {|l| l.replace}.max
 			break if !reduces || reduces == 0
