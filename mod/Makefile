@@ -41,7 +41,7 @@ VALIDEXTPLAYER=utp/\*.utp \
 LISTS=uti utp utc utm
 
 
-revision := $(shell svn info --non-interactive svn://cormanthor.swordcoast.net/silm_srv/ | grep Revision | cut -d " " -f 2)
+revision := $(shell svn info --non-interactive . | grep Revision | cut -d " " -f 2)
 
 all: package install
 

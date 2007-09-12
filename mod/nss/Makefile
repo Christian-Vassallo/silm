@@ -20,7 +20,7 @@ objects  := $(filter-out $(includesncs), $(addsuffix .ncs, $(basename $(wildcard
 sources  := $(filter-out $(includesnss), $(wildcard *.nss))
 
 
-revision := $(shell svn info --non-interactive svn://cormanthor.swordcoast.net/silm_srv/ | grep Revision | cut -d " " -f 2)
+revision := $(shell svn info .. | grep Revision | cut -d " " -f 2)
 # date := $(shell echo "$(svninfo)" | grep 'Last Changed Date' | cut -d " " -f 4-)
 # root := $(shell echo "$(svninfo)" | grep 'Repository Root' | cut -d " " -f 3-)
 
