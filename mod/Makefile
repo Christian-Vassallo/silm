@@ -108,31 +108,38 @@ clean:
 
 # remove older packages
 clean-local:
-	rm $(NAME)-*-r[^$(revision)*.mod
-	rm $(NAME)-*-r*.tgz
+	-rm $(NAME)-{dev,builder,player}-r*.tgz
 
 local: path
 	erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
 
 dev-local: path
 	erfpack.pl -m -o $(NAME)-dev-r$(revision).mod $(VALIDEXTDEV)
+	tar -czf $(NAME)-dev-r$(revision).tgz $(NAME)-dev-r$(revision).mod && \
+		rm $(NAME)-dev-r$(revision).mod
 
 player-local: path
 	erfpack.pl -m -o $(NAME)-player-r$(revision).mod $(VALIDEXTPLAYER)
-	tar -czf $(NAME)-player-r$(revision).tgz $(NAME)-player-r$(revision).mod
-	rm $(NAME)-player-r$(revision).mod
+	tar -czf $(NAME)-player-r$(revision).tgz $(NAME)-player-r$(revision).mod && \
+		rm $(NAME)-player-r$(revision).mod
 
 builder-local: path
 	erfpack.pl -m -o $(NAME)-builder-r$(revision).mod $(VALIDEXTBUILDER)
-	tar -czf $(NAME)-builder-r$(revision).tgz $(NAME)-builder-r$(revision).mod
-	rm $(NAME)-builder-r$(revision).mod
+	tar -czf $(NAME)-builder-r$(revision).tgz $(NAME)-builder-r$(revision).mod && \
+		rm $(NAME)-builder-r$(revision).mod
 
 
-install: 
-	cp -v $(NAME).mod $(NWNHOME)/modules/
 
 # generates a new package with the current revision
 package: path uti utp utc ifo itp scripts local
 dev-package: path uti utp utc ifo itp dev-local
 player-package: path uti utp utc ifo itp player-local
 builder-package: path uti utp utc ifo itp builder-local
+
+# installs all packaged in the relevant directories
+install: 
+	cp -v $(NAME).mod $(NWNHOME)/modules/
+
+
+# the holy grail
+all: package dev-local player-local builder-local
