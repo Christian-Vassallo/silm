@@ -250,7 +250,6 @@ class CommandTemperature < RMNX::CommandSpace
 		temp = weather_array[0]
 		# Calculate the current temperature
 		temp_range = get_temp_range temp
-
 		# srand(@mod + year * 1000 + month * 15 + day)
 		diff = (hour<6||hour>18 ? 16 : 8)
 		srand(@key + year + month + day)
@@ -307,7 +306,7 @@ class CommandTemperature < RMNX::CommandSpace
 		
 		# save the current date for future reference
 		@year = year; @month = month; @day = day; @hour = hour; @minute = minute
-		dumpweather
+		#dumpweather
 
 		atype = get_area_type(resref, tileset, mask)
 		weather = nil
