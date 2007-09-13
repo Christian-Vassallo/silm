@@ -127,6 +127,7 @@ struct PlayerSkill {
 	int etheory;
 	int practical_xp;
 	int theory_xp;
+	int practical_highest_learn_border;
 };
 
 struct PlayerRecipeStat {
@@ -144,13 +145,3 @@ struct PlayerRecipeStat {
 	// reverse of above
 	int fail;
 };
-
-
-
-
-
-void RegisterCraftFailResRefMasking(string sRXSource, string sRXTarget);
-
-
-
-void RegisterCraftFailResRefMasking(string sRXSource, string sRXTarget) {}

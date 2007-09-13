@@ -326,7 +326,7 @@ void UpdateCraftStat(object oPC, struct Recipe r, int bSetLast = 0, int bIncreme
 	if ( bSetLast ) {
 		pQ("update " +
 			TABLE_STAT +
-			" set last=unix_timestamp() where character = " +
+			" set last = unixts() where character = " +
 			sID + " and recipe = " + IntToString(r.id) + ";");
 	}
 }
@@ -653,7 +653,7 @@ struct PlayerSkill GetPlayerSkill(object oPC, int nCSkill) {
 		int nID = GetCharacterID(oPC);
 		string sID = IntToString(nID);
 		pQ(
-			"select skill_theory, skill_theory_xp, skill_practical, skill_practical_xp, id, skill_practical_effective, skill_theory_effective from "
+			"select skill_theory, skill_theory_xp, skill_practical, skill_practical_xp, id, skill_practical_effective, skill_theory_effective, skill_practical_highest_learn_border from "
 			+
 			TABLE_SKILLMAP +
 			" where character = " + sID + " and cskill = " + IntToString(nCSkill) + " limit 1;");
@@ -667,6 +667,7 @@ struct PlayerSkill GetPlayerSkill(object oPC, int nCSkill) {
 			s.id = pGi(5);
 			s.epractical = pGi(6);
 			s.etheory = pGi(7);
+			s.practical_highest_learn_border = pGi(8);
 
 		} else {
 			pQ("insert into " +
