@@ -250,33 +250,33 @@ int OnOpen(object oPC, object oWorkPlace) {
 	object oCrafter = GetCurrentCrafter(oWorkPlace);
 
 	if ( GetIsObjectValid(oCrafter) && oCrafter != oPC ) {
+		Notify(MSG_CRAFT_INUSE, oPC);
 		AssignCommand(oPC, ClearAllActions());
 		AssignCommand(oPC, ActionMoveAwayFromObject(oWorkPlace, 1, 5.0));
-		Notify(MSG_CRAFT_INUSE, oPC);
 		return 0;
 
 	} else {
 		if ( !GetIsDM(oPC) && !GetCharacterID(oPC) ) {
+			Notify("Bug! Keine Char-ID gefunden!", oPC);
 			AssignCommand(oPC, ClearAllActions());
 			AssignCommand(oPC, ActionMoveAwayFromObject(oWorkPlace, 1, 5.0));
-			Notify("Bug! Keine Char-ID gefunden!", oPC);
 			return 0;
 		}
 
 		struct Recipe r = GetSelectedCraftRecipe(oPC);
 
 		if ( !GetIsRecipeValid(r) ) {
+			Notify(MSG_CRAFT_PLAN_NOTFOUND, oPC);
 			AssignCommand(oPC, ClearAllActions());
 			AssignCommand(oPC, ActionMoveAwayFromObject(oWorkPlace, 1, 5.0));
-			Notify(MSG_CRAFT_PLAN_NOTFOUND, oPC);
 			return 0;
 		}
 
 		// Check if we are at the right workplace.
 		if ( r.workplace != GetTag(oWorkPlace) ) {
+			Notify(MSG_CRAFT_WRONG_WORKPLACE, oPC);
 			AssignCommand(oPC, ClearAllActions());
 			AssignCommand(oPC, ActionMoveAwayFromObject(oWorkPlace, 1, 5.0));
-			Notify(MSG_CRAFT_WRONG_WORKPLACE, oPC);
 			return 0;
 		}
 
