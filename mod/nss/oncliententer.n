@@ -1,12 +1,10 @@
-#include "inc_cdb"
-#include "inc_chat"
-#include "_gen"
-#include "inc_mnx"
-#include "inc_limbo"
-#include "inc_audit"
-#include "inc_currency"
-
-#include "_buildinfo"
+__sp_extern("inc_cdb")
+__sp_extern("inc_chat")
+__sp_extern("_gen")
+__sp_extern("inc_mnx")
+__sp_extern("inc_limbo")
+__sp_extern("inc_audit")
+__sp_extern("inc_currency")
 
 void MnxNotify(object oPC);
 
@@ -22,14 +20,14 @@ void main() {
 
 	SetLocalString(oPC, "player_name", GetPCPlayerName(oPC));
 
-	SendMessageToPC(oPC, "Repository: " + REPOSITORY);
-	SendMessageToPC(oPC, "Revision: " + REVISION);
-	SendMessageToPC(oPC, "Commited on: " + COMMIT_ON);
-	SendMessageToPC(oPC, "Built on: " + BUILD_ON);
+	SendMessageToPC(oPC, "Repository: " + SVN_REPOSITORY);
+	SendMessageToPC(oPC, "Revision: " + SVN_REVISION_S);
+	SendMessageToPC(oPC, "Commited on: " + SVN_COMMIT_ON);
+	SendMessageToPC(oPC, "Built on: " + SVN_BUILD_ON);
 
-	struct mnxRet r = mnxRun(oPC, "uptime");
+	/*struct mnxRet r = mnxRun(oPC, "uptime");
 	if (!r.error)
-		SendMessageToPC(oPC, "Uptime: " + r.ret);
+		SendMessageToPC(oPC, "Uptime: " + r.ret);*/
 	// SendMessageToPC(oPC, "");
 
 
@@ -125,15 +123,13 @@ void MnxNotify(object oPC) {
 	int nCID = GetCharacterID(oPC);
 	string bIsDM = BoolToString(GetIsDM(oPC));
 
-	struct mnxRet ret = mnxCmd("cliententer", sAccountName, sCharName, IntToString(nAID), IntToString(nCID),
-							bIsDM, GetPCIPAddress(oPC), GetPCPublicCDKey(oPC));
-	if ( ret.error )
-		return;
+	struct mnxRet ret = mnx_synchronous_command(mnx_prepare_command("cliententer", sAccountName, sCharName, IntToString(nAID), IntToString(nCID),
+							bIsDM, GetPCIPAddress(oPC), GetPCPublicCDKey(oPC)));
 
 	string
-	sIP = GetPCIPAddress(oPC),
-	sHost = ret.ret,
-	sKey = GetPCPublicCDKey(oPC);
+		sIP = GetPCIPAddress(oPC),
+		sHost = ret.ret,
+		sKey = GetPCPublicCDKey(oPC);
 
 	SendMessageToAllDMs("enter: '" +
 		sAccountName +

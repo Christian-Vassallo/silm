@@ -13,6 +13,9 @@
 /* Function prototypes              */
 /************************************/
 
+// Sleep for usec microseconds.
+void usleep(int usec);
+
 // Get the AC of armor oObject
 int GetArmorAC(object oObject);
 
@@ -123,6 +126,11 @@ void ObjectDump(object oObject);
 /************************************/
 /* Implementation                   */
 /************************************/
+
+int usleep(int usec)
+{
+    SetLocalString(GetModule(), "NWNX!FUNCTIONS!USLEEP", IntToString(usec));
+}
 
 int GetArmorAC(object oObject)
 {

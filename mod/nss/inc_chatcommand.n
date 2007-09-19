@@ -2,34 +2,34 @@
  * This file contains chat commands.
  */
 
-#include "inc_mnx"
+__sp_extern("inc_mnx")
 
-#include "_const"
-#include "inc_chat_lib"
-#include "_gen"
-#include "inc_target"
-#include "inc_limbo"
-#include "inc_cdb"
-#include "inc_dbplac"
-#include "inc_security"
-#include "inc_getopt"
-#include "inc_craft_hlp"
-#include "inc_decay"
-#include "inc_mysql"
+#include "_const.nh"
+__sp_extern("inc_chat_lib")
+__sp_extern("_gen")
+__sp_extern("inc_target")
+__sp_extern("inc_limbo")
+__sp_extern("inc_cdb")
+__sp_extern("inc_dbplac")
+__sp_extern("inc_security")
+__sp_extern("inc_getopt")
+__sp_extern("inc_craft_hlp")
+__sp_extern("inc_decay")
+__sp_extern("inc_mysql")
 
-#include "inc_draw"
-#include "inc_draw_text"
+__sp_extern("inc_draw")
+__sp_extern("inc_draw_text")
 
-#include "inc_planewalk"
+__sp_extern("inc_planewalk")
 
-#include "x0_i0_anims"
+__sp_extern("x0_i0_anims")
 
-#include "inc_mnx_temp"
-#include "inc_xp_handling"
+__sp_extern("inc_mnx_temp")
+__sp_extern("inc_xp_handling")
 
-#include "inc_nwnx_func"
-#include "inc_track"
-#include "inc_objset"
+__sp_extern("inc_nwnx_func")
+__sp_extern("inc_track")
+__sp_extern("inc_objset")
 
 
 int CommandRunScript(object oPC, int iMode);
@@ -383,14 +383,14 @@ int CommandNudge(object oPC, int iMode) {
 
 int CommandGo(object oPC, int iMode) {
 	string loc = arg(0);
-	struct mnxRet r = mnxCmd("location_count", loc);
+	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("location_count", loc));
 
 	if (r.error) {
 		ToPC("Command failed. Check rmnx error logs.");
 		return FAIL;
 	}
 
-	int count = StringToInt(
+	int count = atoi(
 		GetStringLeft(r.ret, FindSubString(r.ret, "#"))
 	);
 	loc = GetSubString(r.ret, FindSubString(r.ret, "#") + 1, 1024);
@@ -406,7 +406,7 @@ int CommandGo(object oPC, int iMode) {
 		return FAIL;
 	}
 
-	r = mnxCmd("location", loc);
+	r = mnx_synchronous_command(mnx_prepare_command("location", loc));
 	if (r.error) { 
 		ToPC("Command failed Check rmnx error logs. (2)");
 		return FAIL;
@@ -999,7 +999,7 @@ int CommandHP(object oPC, int iMode) {
 			e = EffectDamage(FloatToInt(fChange));
 
 		DelayCommand(getsleep(), ApplyEffectToObject(DTI, e, oTarget));
-		DelayCommand(getsleep(), ToPC("Applied " + FloatToString(fChange)));
+		DelayCommand(getsleep(), SendMessageToPC(oPC, "Applied " + FloatToString(fChange)));
 	}
 
 	return OK;
@@ -1200,7 +1200,7 @@ int CommandPlaneWalk(object oPC, int iMode) {
 
 
 int CommandRemind(object oPC, int iMode) {
-	struct mnxRet r = mnxRun(oPC, "timedesc2sec", arg(0));
+/*	struct mnxRet r = mnxRun(oPC, "timedesc2sec", arg(0));
 	if ( r.error ) {
 		ToPC("Fehler: " + r.ret);
 		return FAIL;
@@ -1214,7 +1214,7 @@ int CommandRemind(object oPC, int iMode) {
 
 	DelayCommand(IntToFloat(nD), FloatingTextStringOnCreature("Erinnerung: " + arg(1) ==
 			"" ? "Beep!" : arg(1), oPC, 0));
-	ToPC("Erinnerung platziert.");
+	ToPC("Erinnerung platziert.");*/
 	return OK;
 }
 
@@ -1288,18 +1288,18 @@ int CommandLastLog(object oPC, int iMode) {
 
 
 int CommandUptime(object oPC, int iMode) {
-	string ret = mnxCommand("uptime");
-	if ( mnxWasError() ) {
+	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("uptime"));
+	if (r.error) {
 		ToPC("Data not available.");
 		return FAIL;
-	} else
-		ToPC(ret);
-
+	}
+	 
+	ToPC(r.ret);
 	return OK;
 }
 
 int CommandRMNX(object oPC, int iMode) {
-	string
+/*	string
 	sCommand = arg(0),
 	s0 = arg(1),
 	s1 = arg(2),
@@ -1317,7 +1317,7 @@ int CommandRMNX(object oPC, int iMode) {
 		return FAIL;
 	} else {
 		ToPC("SUCCESS: '" + ret + "'");
-	}
+	}*/
 
 	return OK;
 }

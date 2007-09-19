@@ -6,11 +6,11 @@
  * This code is licenced under the
  *  GNU/GPLv2 General Public Licence.
  */
-#include "inc_events"
-#include "inc_cleaningcrew"
-#include "inc_dbplac"
-#include "_gen"
-#include "inc_mnx"
+__sp_extern("inc_events")
+__sp_extern("inc_cleaningcrew")
+__sp_extern("inc_dbplac")
+__sp_extern("_gen")
+__sp_extern("inc_mnx")
 
 
 /*
@@ -29,7 +29,7 @@ void main() {
 		int nAID = GetAccountID(oPC);
 		int nCID = GetCharacterID(oPC);
 
-		mnxCommand("arealeave", sAccountName, sCharName, IntToString(nAID), IntToString(nCID));
+		mnx_asynchronous_command_noreply(mnx_prepare_command("arealeave", sAccountName, sCharName, IntToString(nAID), IntToString(nCID)));
 	}
 
 	/*int bEmpty = !GetAreaHasPlayers(oA);

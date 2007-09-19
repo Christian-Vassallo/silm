@@ -1,5 +1,5 @@
-#include "inc_mnx"
-#include "_gen"
+__sp_extern("inc_mnx")
+__sp_extern("_gen")
 
 
 
@@ -33,7 +33,7 @@ string getoptarga(object oPC = OBJECT_SELF);
 
 
 string getoptargs(object oPC = OBJECT_SELF) {
-	struct mnxRet r = mnxCmd("getoptargs");
+	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getoptargs"));
 
 	if ( r.error ) {
 		ToPC("There was an error processing your request: " + r.ret);
@@ -44,7 +44,7 @@ string getoptargs(object oPC = OBJECT_SELF) {
 }
 
 string getoptarga(object oPC = OBJECT_SELF) {
-	struct mnxRet r = mnxCmd("getoptarga");
+	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getoptarga"));
 
 	if ( r.error ) {
 		ToPC("There was an error processing your request: " + r.ret);
@@ -56,7 +56,7 @@ string getoptarga(object oPC = OBJECT_SELF) {
 
 
 int getopt(string str, string opts = "", object oPC = OBJECT_SELF) {
-	struct mnxRet r = mnxRun(oPC, "getopt", opts, str);
+	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getopt", opts, str));
 
 	if ( r.error )
 		ToPC("There was an error processing your request: " + r.ret);
@@ -71,7 +71,7 @@ int argc(object oPC = OBJECT_SELF) {
 	// if (getoptvalid(oPC) && GetLocalInt(oPC, "go_argc"))
 	//    return GetLocalInt(oPC, "go_argc");
 
-	struct mnxRet r = mnxCmd("getoptc");
+	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getoptc"));
 	if ( r.error ) {
 		ToPC("There was an error processing your request: " + r.ret);
 		return 0;
@@ -86,7 +86,7 @@ string arg(int n, object oPC = OBJECT_SELF) {
 	//if (getoptvalid(oPC) && "" != GetLocalString(oPC, "go_arg_" + IntToString(n)))
 	//    return GetLocalString(oPC, "go_arg_" + IntToString(n));
 
-	struct mnxRet r = mnxCmd("getopta", IntToString(n));
+	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getopta", IntToString(n)));
 
 	if ( r.error ) {
 		ToPC("There was an error processing your request: " + r.ret);
@@ -103,7 +103,7 @@ int opt(string n, object oPC = OBJECT_SELF) {
 	//if (getoptvalid(oPC) && GetLocalInt(oPC, "go_opt_" + n))
 	//    return GetLocalInt(oPC, "go_opt_" + n);
 
-	struct mnxRet r = mnxCmd("getopti", n);
+	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getopti", n));
 
 	if ( r.error ) {
 		ToPC("There was an error processing your request: " + r.ret);
@@ -120,7 +120,7 @@ string optv(string n, object oPC = OBJECT_SELF) {
 	//    return GetLocalString(oPC, "go_opt_" + n);
 
 
-	struct mnxRet r = mnxCmd("getoptv", n);
+	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getoptv", n));
 	if ( r.error ) {
 		ToPC("There was an error processing your request: " + r.ret);
 		return "";
@@ -136,7 +136,7 @@ string optv(string n, object oPC = OBJECT_SELF) {
 int getoptreset(object oPC = OBJECT_SELF) {
 	// SetLocalInt(oPC, "go_iteration", 0);
 
-	struct mnxRet r = mnxCmd("getoptreset");
+	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getoptreset"));
 	if ( r.error ) {
 		ToPC("There was an error processing your request: " + r.ret);
 		return 0;

@@ -68,6 +68,8 @@ protected:
 	void DebugMe(char* value);
 	void ObjDump(char* value);
 
+	void USleep(char* value);
+
 	//unsigned long GetObjectByID();
 	unsigned long GetFirstArea();
 	unsigned long GetNextArea();
