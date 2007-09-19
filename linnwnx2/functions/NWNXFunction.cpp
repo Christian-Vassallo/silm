@@ -39,6 +39,17 @@ CNWNXFunction::~CNWNXFunction()
 {
 }
 
+void CNWNXFunction::USleep(char* value)
+{
+	int amount = atoi(value);
+	if (amount < 1)
+		amount = 1;
+	if (amount > 5000)
+		amount = 5000;
+
+	usleep(amount);
+}
+
 void CNWNXFunction::SetGoldPieceValue(char* value)
 {
 	if (*(pGameObject+0x4) == 0x6) // object type item
@@ -607,7 +618,12 @@ char* CNWNXFunction::OnRequest (char *gameObject, char* Request, char* Parameter
 	Log(2,"Request: \"%s\"\n",Request);
 	Log(3,"Params:  \"%s\"\n",Parameters);
 
-	if (strncmp(Request, "SETGOLDPIECEVALUE", 17) == 0) 	
+	if (strncmp(Request, "USLEEP", 6) == 0) 	
+	{
+		USleep(Parameters);
+		return NULL;
+	}
+	else if (strncmp(Request, "SETGOLDPIECEVALUE", 17) == 0) 	
 	{
 		SetGoldPieceValue(Parameters);
 		return NULL;

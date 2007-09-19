@@ -1,19 +1,17 @@
-#include "inc_chat"
-#include "_gen"
-#include "inc_mnx"
-#include "inc_cdb"
-#include "inc_chat_lib"
-#include "inc_chat_run"
-#include "inc_chatlog"
-#include "inc_planewalk"
-#include "inc_telepathbond"
+__sp_extern("inc_chat")
+__sp_extern("_gen")
+__sp_extern("inc_mnx")
+__sp_extern("inc_cdb")
+__sp_extern("inc_chat_lib")
+__sp_extern("inc_chat_run")
+__sp_extern("inc_chatlog")
+__sp_extern("inc_planewalk")
+__sp_extern("inc_telepathbond")
 
 
 
-const string
-USE_SL_MESSAGE =
-	"Du darfst keine Nachrichten senden.  Benutze den SL-Channel, um diesen Sachverhalt zu klaeren.",
-IGNORE_PLAYER_MESSAGE = "Dieser Spieler ignoriert dich, und kann deshalb deine Nachricht nicht empfangen.";
+#define USE_SL_MESSAGE "Du darfst keine Nachrichten senden.  Benutze den SL-Channel, um diesen Sachverhalt zu klaeren."
+#define IGNORE_PLAYER_MESSAGE "Dieser Spieler ignoriert dich, und kann deshalb deine Nachricht nicht empfangen."
 
 
 /* Note:
@@ -266,18 +264,6 @@ void main() {
 int OnPreText(object oPC, string sText, int iMode, object oTo = OBJECT_INVALID) {
 	int nTS = GetUnixTimestamp();
 
-	string sReturn = mnxCommand("chat", GetPCName(oPC), GetName(oPC), IntToString(GetAccountID(oPC)),
-						 IntToString(GetCharacterID(oPC)), IntToString(iMode), sText);
-	int nReturn = StringToInt(sReturn);
-
-	if ( !GetIsDMOnline() ) {
-		if ( !GetIsDM(oPC) && iMode & MODE_DM && nReturn > 0 )
-			SendMessageToPC(oPC,
-				"Derzeit ist kein SL im Spiel online. Deine Nachricht wurde jedoch an SLs ausserhalb dem Spiele weitergeleitet.");
-		if ( !GetIsDM(oPC) && iMode & MODE_DM && nReturn == 0 )
-			SendMessageToPC(oPC,
-				"Derzeit ist kein SL im Spiel online, und es trat ein Fehler bei der Weiterleitung auf. Sende deine Nachricht ueber die Moeglichkeiten auf der Website.");
-	}
 
 
 	if ( GetIsPC(oPC) )
@@ -436,30 +422,14 @@ int OnPreDM(object oPC, string sText) {
 /* POST hooks below */
 
 int OnPostText(object oPC, string sText, int iMode, object oTo = OBJECT_INVALID) {
-	if ( !( iMode & MODE_PRIVATE ) && !( iMode & MODE_DM_MODE ) && !GetIsDM(oPC) ) {
-		struct mnxRet r = mnxCmd("ontext", sText, IntToString(iMode));
-		if ( !r.error ) {
-			string sR = GetStringLeft(r.ret, 1);
+	
+	if ( !GetIsDMOnline() ) {
+		if ( !GetIsDM(oPC) && iMode & MODE_DM ) {
+			mnx_asynchronous_command_noreply(mnx_prepare_command("ontext", GetPCName(oPC), GetName(oPC), IntToString(GetAccountID(oPC)),
+				IntToString(GetCharacterID(oPC)), IntToString(iMode), sText));
 
-			// Accept the text
-			if ( "a" == sR ) {
-				sText = r.ret;
-				sText = GetStringRight(sText, GetStringLength(sText) - 1);
-			}
-
-			// Drop the text completely
-			if ( "d" == sR ) {
-				return 1;
-			}
-
-			// Ignore
-			if ( "i" == sR ) {
-				// Do nothing
-			}
-
-
-		} else {
-			SendMessageToAllDMs("Error in chathook, not processing this one: " + r.ret);
+			SendMessageToPC(oPC,
+				"Derzeit ist kein SL im Spiel online. Deine Nachricht wurde jedoch an SLs ausserhalb dem Spiele weitergeleitet.");
 		}
 	}
 

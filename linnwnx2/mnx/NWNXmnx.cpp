@@ -171,7 +171,8 @@ char *CNWNXmnx::OnRequest(char *gameObject, char *Request, char* Parameters) {
 	if(strcmp("SEND",cmd)==0) {
 		SendMsg(cname,bang2,Parameters);
 	} else {
-		sprintf(mnx_buf, "[%s] bad command", cmd);
+		sprintf(mnx_buf, "5[%s] bad command", cmd);
+		strncpy(Parameters, mnx_buf, strlen(Parameters));
 		ParamLog(0,mnx_buf,Parameters);
 	}
 
@@ -188,16 +189,18 @@ bool CNWNXmnx::SendMsg(const char *cname, const char *Request, char *Parameters)
 
 	connectdict::iterator i;
 	if((i=Connections.find(cname))==Connections.end()) {
-		sprintf(mnx_buf,"[%s] has not been registerred.",cname);
+		sprintf(mnx_buf,"5[%s] has not been registered.",cname);
 		ParamLog(0,mnx_buf,Parameters);
+		strncpy(Parameters, mnx_buf, strlen(Parameters));
 		return false;
 	}
 
 	conn= &(*i).second;
 
 	if(conn->sd == -1) {
-		sprintf(mnx_buf,"[%s] *** no backend ***",cname);
+		sprintf(mnx_buf,"5[%s] *** no backend ***",cname);
 		ParamLog(0,mnx_buf,Parameters);
+		strncpy(Parameters, mnx_buf, strlen(Parameters));
 		return true;
 	}
 
@@ -212,9 +215,13 @@ bool CNWNXmnx::SendMsg(const char *cname, const char *Request, char *Parameters)
 				sizeof(conn->srvAddr));
 
 	if(rc<0) {
-		sprintf(mnx_buf,"[%s] *** backend send errored [%d]:%s ***",
+		sprintf(mnx_buf,"3[%s] *** backend send errored [%d]:%s ***",
 				cname,errno,strerror(errno));
 		ParamLog(0,mnx_buf,Parameters);
+			
+		strncpy(Parameters, mnx_buf, strlen(Parameters));
+		
+
 		// close(conn->sd);
 		// conn->sd = -1;
 		return true;
@@ -230,30 +237,30 @@ bool CNWNXmnx::SendMsg(const char *cname, const char *Request, char *Parameters)
 
 	if(select(conn->sd+1,&fds,NULL,NULL,&tv)!=0) {
 
-		memset(mnx_buf,0,2048);
-
+		memset(mnx_buf, 0, 2048);
+		strncpy(mnx_buf, "0", 1);
+	
 		/* get response */
-		rc = recvfrom(conn->sd, mnx_buf, 1024, 0, NULL,
+		rc = recvfrom(conn->sd, mnx_buf + 1, 1023 /*len-1 = return code*/, 0, NULL,
 					  &fromlen);
 
-		len= strlen(Parameters);
-		strncpy(Parameters,mnx_buf,len);
 
 		if(rc<0) {
-			sprintf(mnx_buf,"[%s] *** backend recv errored [%d]:%s ***",
+			sprintf(mnx_buf,"2[%s] *** backend recv errored [%d]:%s ***",
 					cname,errno,strerror(errno));
 			ParamLog(0,mnx_buf,Parameters);
-			// close(conn->sd);
-			// conn->sd = -1;
+
+			strncpy(Parameters, mnx_buf, strlen(Parameters));
 			return true;
 		}
-		// printf("msg: %s\n",Parameters);
+		
+		len = strlen(Parameters);
+		strncpy(Parameters, mnx_buf, len);
 
 	} else {
-		sprintf(mnx_buf,"[%s] *** backend timed-out ***",cname);
-		Log(0,mnx_buf,Parameters);
-		// close(conn->sd);
-		// conn->sd = -1;
+		sprintf(mnx_buf,"1[%s] *** backend timed-out ***",cname);
+		strncpy(Parameters, mnx_buf, strlen(Parameters));
+		Log(0, mnx_buf, Parameters);
 	}
   
 	return true;

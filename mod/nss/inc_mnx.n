@@ -1,60 +1,114 @@
-/*
- * By Bernard 'Elven' Stoeckner <elven@elven.de>
- * Licence: None/Private
- */
-#include "_gen"
+__sp_extern("inc_nwnx_func")
+__sp_extern("inc_setting")
 
-const string
-MNX_IP = "127.0.0.1",
-MNX_PORT = "2800",
-MNX_SEND_COMMAND = "NWNX!MNX!SEND!RMNX!";
+#define MNX_IP "127.0.0.1"
+#define MNX_PORT "2800"
+#define MNX_SEND_COMMAND "NWNX!MNX!SEND!RMNX!"
 
-const string
-MNX_BACKEND_ERROR =
-	"The backend that gets to do the cool stuff went away, lurking in the pool together with the PostgreSQL database.  Please do try again later.";
+// This is in usec
+#define MNX_SLEEP_STEP 110
+#define MNX_MAX_TRIES 7
 
-const int
-MNX_ERROR = 0,
-MNX_SUCCESS = 1;
+// This is in usec
+#define MNX_DEFAULT_TIMEOUT 920
 
-string
-mnxReplyString = "",
-mnxErrorString = "";
 
+#define MNX_SUCCESS 0
+// There was a timeout in the mnx core. Retry is advised.
+#define MNX_ERR_TIMEOUT 1
+// There was a temporary non-recoverable error. Throw an exception.
+#define MNX_ERR_FATAL 2
+
+// The backend spew an error message. This usually requires code fixing
+// and is not recoverable.
+#define MNX_ERR_BACKEND_ERROR 10
 
 struct mnxRet {
+	
+	/**
+	 * > 0 on error code,
+	 * 0 on success
+	 */
 	int error;
+
+	/*
+	 * How many requests were made for the command to succeed.
+	 */
+	int tries;
+
+	/**
+	 * How long did we wait for this one?
+	 */
+	int usec_slept;
+
+	/**
+	 * The sequence ID in this command.
+	 */
+	int serial;
+
 	string ret;
 };
 
-// Returns the result string on success, or
-// #ERR# on failure.
-// The error message can be retrieved via mnxGetError()
-string mnxCommand(string command, string param = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "",
-				  string param8 = "");
+/**
+ * Sends a synchronous command to the backend.
+ * Returns a valid mnxRet struct.
+ * Normally, you do not want to use this yourself, use
+ * the wrapper mnx_synchronous_command() instead.
+ */
+struct mnxRet mnx_synchronous_command_nowait(string command, int serial);
 
 
-// Use this.
-struct mnxRet mnxCmd(string command, string param = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "",
-					 string param8 = "");
+/**
+ * Sends a synchronous command to the backend,
+ * and returns the reply, or an error if uTimeout is exceeded.
+ * For a sane uTimeout value, use MNX_DEFAULT_TIMEOUT.
+ */
+struct mnxRet mnx_synchronous_command(string command, int uTimeout = MNX_DEFAULT_TIMEOUT);
 
-// Use this.
-struct mnxRet mnxRun(object oPC, string command, string param = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "",
-					 string param8 = "");
+/**
+ * This just sends out command.
+ * It does not ensure delivery, nor does handle errors.
+ * Use this for non-critical things whereever possible (eg status announcements).
+ * Always returns 0.
+ */
+int mnx_asynchronous_command(string command);
 
-// Returns true if the last transaction resulted in some error.
-int mnxWasError();
+int mnx_asynchronous_command_nowait(string command, int serial);
 
-// Sets a string.  Do not call this.
-string mnxGetString(string sKey);
+/**
+ * This just sends out command.
+ * It does not ensure delivery, nor does handle errors.
+ * Use this for non-critical things whereever possible (eg status announcements).
+ * Does not generate a new serial = Does not request a reply.
+ * Always returns 0.
+ */
+int mnx_asynchronous_command_noreply(string command);
 
-// Returns the state of the last transaction, which is
-// either "success" or a descriptive error message.
-string mnxGetError();
 
+// Escape all possibly dangerous chars in a string suitable for a mnx query.
+string mnx_escape(string sString);
+// Un-escape all possibly dangerous chars in a string suitable for a mnx query.
+string mnx_unescape(string sString);
 
-string mnxEscape(string sString);
-string mnxDescape(string sString);
+/**
+ * Prepares a mnx query string for delivery. You should use this to hand something to
+ * mnx_(a)synchronous_*. 
+ */
+string mnx_prepare_command(string command,
+		string param1 = "", string param2 = "", string param3 = "", string param4 = "",
+		string param5 = "", string param6 = "", string param7 = "", string param8 = "");
+
+/**
+ * Returns the next available Serial for this request.
+ * This is used internally. Do NOT use it in your scripts.
+ */
+int mnx_generate_serial();
+
+/**
+ * Called by the init scripts to set up buffers and such.
+ */
+void mnxInit();
+
 
 
 void mnxInit() {
@@ -63,61 +117,146 @@ void mnxInit() {
 
 	for ( i = 0; i < 16; i++ )
 		sMemory += "................................................................";
-	//SetLocalString(GetModule(), "NWNX!INIT", "1");
 
-	SetLocalString(GetModule(), "NWNX_buffer", sMemory);
+	SetLocalString(GetModule(), "MNX_buffer", sMemory);
 	SetLocalString(GetModule(), "NWNX!MNX!OPEN!RMNX!", MNX_IP +
 		":" + MNX_PORT + "                                ");
 }
 
-// Sends a Key or a Key/Value pair to the mNWNX plugin
-// If no value is specified, NWNX_buffer will be sent to
-// accept the value.
-// returns: MNX_SUCCESS
-//          MNX_ERROR
-int mnxSetString(string sKey, string sValue = "", string mnxbuffer = "NWNX_buffer") {
-	if ( sValue == "" ) {
-		SetLocalString(GetModule(), MNX_SEND_COMMAND + sKey, GetLocalString(GetModule(), mnxbuffer));
-	} else {
-		SetLocalString(GetModule(), "NWNX!MNX!CMD!" + sKey, sValue);
+
+
+int mnx_generate_serial() {
+	int last = GetLocalInt(GetModule(), "mnx_last_serial");
+
+	last++;
+
+	// Wrap around
+/*	if (last > MNX_SERIAL_MAX)
+		last = MNX_SERIAL_MIN;*/
+	// Dont wrap around for now.
+
+	SetLocalInt(GetModule(), "mnx_last_serial", last);
+
+	return last;
+}
+
+
+struct mnxRet mnx_synchronous_command_nowait(string command, int serial) {
+	struct mnxRet r;
+
+	_DEBUG("mnx", 1, "mnx_synchronous_command(" + command + ")");
+
+	SetLocalString(GetModule(), MNX_SEND_COMMAND + itoa(serial) + "!" + command, GetLocalString(GetModule(), "MNX_buffer"));
+	string reply = GetLocalString(GetModule(), MNX_SEND_COMMAND + itoa(serial) + "!" + command);
+	
+	int code = StringToInt(GetSubString(reply, 0, 1));
+	string message = GetSubString(reply, 1, GetStringLength(reply) - 1);
+	// strip the mnx retval
+	r.ret = message;
+
+	/*
+	 * possible retvals from nwnx_mnx
+	 * 0: success, rest is answer from backend
+	 * 1: select() timed out
+	 * 2: recvfrom() failed
+	 * 3: send() failed
+	 * 5: configuration error
+	 */
+
+	/*
+	 * possible retvals from rmnx
+	 * valid result
+	 * #ERR#message
+	 */
+
+
+	switch (code) {
+		case 0:
+			r.error = MNX_SUCCESS;
+			if ("#ERR#" == substr(r.ret, 0, 4)) {
+				r.ret = substr(r.ret, 4, strlen(r.ret));
+				r.error = MNX_ERR_BACKEND_ERROR;
+			}
+			break;
+
+		case 1:
+			r.error = MNX_ERR_TIMEOUT;
+			break;
+
+		case 2:
+		case 3:
+		case 5:
+			r.error = MNX_ERR_FATAL;
+			break;
 	}
-	return MNX_SUCCESS;
+
+	return r;
+}
+
+struct mnxRet mnx_synchronous_command(string command, int uTimeout = MNX_DEFAULT_TIMEOUT) {
+	struct mnxRet r;
+
+	int serial = mnx_generate_serial();
+
+	int tries = 1;
+	int slept = 0;
+
+	do {
+		r = mnx_synchronous_command_nowait(command, serial);
+		
+		// We got it. Yay.
+		if (MNX_SUCCESS == r.error)
+			break;
+
+	
+		// This totally borked up. Escalate.
+		if (MNX_ERR_FATAL == r.error)
+			break;
+
+		// Unknown error code? All other cases covered.
+		if (MNX_ERR_TIMEOUT != r.error) {
+			_FATAL("Unknown return value: " + IntToString(r.error) + ", message = " + r.ret);
+			break;
+		}
+		
+		// We're giving up now.
+		if (tries > MNX_MAX_TRIES || slept > uTimeout) {
+			r.error = MNX_ERR_FATAL;
+			r.ret = "permanent timeout while contacting backend";
+			break;
+		}
+
+		// else sleep and try again!
+		usleep(MNX_SLEEP_STEP);
+
+		tries++;
+		slept += MNX_SLEEP_STEP;
+
+	} while (true);
+	
+	r.tries = tries;
+	r.usec_slept = slept;
+	r.serial = serial;
+
+	return r;
 }
 
 
-string mnxGetString(string sKey) {
-	// query the plugin ...
-	if ( mnxSetString(sKey) == MNX_ERROR )
-		return "*** error ***";
-
-	// check the return
-	return GetLocalString(GetModule(), MNX_SEND_COMMAND + sKey);
+int mnx_asynchronous_command_nowait(string command, int serial) {
+	SetLocalString(GetModule(), MNX_SEND_COMMAND + itoa(serial) + "!" + command, GetLocalString(GetModule(), "MNX_buffer"));
+	return 0;
 }
 
-void mnxKillString(string sKey) {
-	// check the return
-	DeleteLocalString(GetModule(), MNX_SEND_COMMAND + sKey);
+int mnx_asynchronous_command_noreply(string command) {
+	return mnx_asynchronous_command_nowait(command, 0);
 }
 
-
-
-// Retrieves the answer.
-// Waits at most 300ms for the packet to arrive.
-void mnxGetAnswer(string receipt, int retriesLeft = 6, float delay = 0.1f) {
-	// Ask for the answer/result by sending the receipt
-	int bFound = 1;
-	mnxReplyString = mnxGetString("RECEIPT!" + receipt);
-	//        SendMessageToPC(GetFirstPC(), "mnxGetAnswer(): mnxReplyString = "+mnxReplyString);
-
-	if ( mnxReplyString == "UNAVAIL" ) {
-		//            SendMessageToPC(GetFirstPC(), "mnxGetAnswer(): retrying");
-		DelayCommand(delay, mnxGetAnswer(receipt, retriesLeft - 1, delay));
-		bFound = 0;
-	}
+int mnx_asynchronous_command(string command) {
+	return mnx_asynchronous_command_nowait(command, mnx_generate_serial());
 }
 
 
-string mnxEscape(string sString) {
+string mnx_escape(string sString) {
 	if ( FindSubString(sString, "!") == -1 )  // not found
 		return sString;
 
@@ -136,7 +275,7 @@ string mnxEscape(string sString) {
 	return sReturn;
 }
 
-string mnxDescape(string sString) {
+string mnx_unescape(string sString) {
 	if ( FindSubString(sString, "#EXCL#") == -1 ) {
 		// not found
 		//SendMessageToPC(GetFirstPC(), "Not descaped: "+sString);
@@ -160,80 +299,28 @@ string mnxDescape(string sString) {
 	return sReturn;
 }
 
-string mnxGetError() {
-	return mnxErrorString;
-}
 
+string mnx_prepare_command(string command,
+		string param1 = "", string param2 = "", string param3 = "", string param4 = "",
+		string param5 = "", string param6 = "", string param7 = "", string param8 = "") {
 
-int mnxWasError() {
-	return mnxErrorString != "success";
-}
-
-string mnxCommand(string command, string param = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "",
-				  string param8 = "") {
-	string str = mnxEscape(command);
-	if ( param != "" )
-		str += "!" + mnxEscape(param);
+	string str = mnx_escape(command);
+	if ( param1 != "" )
+		str += "!" + mnx_escape(param1);
 	if ( param2 != "" )
-		str += "!" + mnxEscape(param2);
+		str += "!" + mnx_escape(param2);
 	if ( param3 != "" )
-		str += "!" + mnxEscape(param3);
+		str += "!" + mnx_escape(param3);
 	if ( param4 != "" )
-		str += "!" + mnxEscape(param4);
+		str += "!" + mnx_escape(param4);
 	if ( param5 != "" )
-		str += "!" + mnxEscape(param5);
+		str += "!" + mnx_escape(param5);
 	if ( param6 != "" )
-		str += "!" + mnxEscape(param6);
+		str += "!" + mnx_escape(param6);
 	if ( param7 != "" )
-		str += "!" + mnxEscape(param7);
+		str += "!" + mnx_escape(param7);
 	if ( param8 != "" )
-		str += "!" + mnxEscape(param8);
+		str += "!" + mnx_escape(param8);
 
-	string rcp = mnxGetString(str);
-
-	mnxGetAnswer(rcp);
-
-	if ( GetSubString(mnxReplyString, 0, 5) == "#ERR#" ) {
-		mnxErrorString = GetSubString(mnxReplyString, 6, GetStringLength(mnxReplyString) - 5);
-		return "#ERR#";
-
-		// The backend's down
-	} else if ( GetSubString(mnxReplyString, 0, 20) == "...................." ) {
-		mnxErrorString = MNX_BACKEND_ERROR;
-		return "#ERR#";
-	} else {
-		mnxErrorString = "success";
-		//SendMessageToPC(GetFirstPC(), "Before descaping: "+mnxReplyString);
-		return mnxDescape(mnxReplyString);
-	}
-}
-
-
-struct mnxRet mnxCmd(string command, string param = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "",
-					 string param8 = "") {
-	struct mnxRet r;
-
-	r.ret = mnxCommand(command, param, param2, param3, param4, param5, param6, param7, param8);
-	r.error = mnxWasError();
-	if ( r.error )
-		r.ret = mnxGetError();
-
-	return r;
-}
-
-
-struct mnxRet mnxRun(object oPC, string command, string param = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "",
-					 string param8 = "") {
-	struct mnxRet r;
-
-	if ( GetIsPC(oPC) )
-		mnxCommand("setpc", GetPCName(oPC), GetName(oPC), IntToString(GetLocalInt(oPC, "aid")), IntToString(
-				GetLocalInt(oPC, "cid")));
-
-	r.ret = mnxCommand(command, param, param2, param3, param4, param5, param6, param7, param8);
-	r.error = mnxWasError();
-	if ( r.error )
-		r.ret = mnxGetError();
-
-	return r;
+	return str;
 }

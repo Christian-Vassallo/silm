@@ -14,6 +14,8 @@ module RMNX
 	# a command produced.
 	class Reply
 		attr_reader :code, :data
+		attr_accessor :serial
+
 		def initialize code, data = "", trace = []
 			@code = code.to_i
 			@data = data
@@ -95,13 +97,22 @@ module RMNX
 		end
 	end
 
+
 	# This is a server, which handles RMNX::Command
 	# requests by remote nwnds
 	class Server
+
 		# Increase this if you will send REALLY huge data.
 		BUFSIZE = 2 << 15
+		
+		# keep this many serial repsonses in memory
+		BACKDROP = 500
 
 		attr_reader :startup
+		
+		def queue
+			@rcp
+		end
 
 		def initialize(host, port) #, peerhost, peerport)
 			@host, @port = host, port
@@ -110,9 +121,11 @@ module RMNX
 			@c = nil
 			@s.bind(host, port)
 			@t = Thread.new { _t }
-			@rcp = {}
 			@commandspace = []
 			@startup = Time.now
+
+			@serials = {}
+			@last_serial = -1
 		end
 
 		def add_command_space(s)
@@ -154,27 +167,16 @@ module RMNX
 
 		private
 		
-		# 1h
-		PURGE_DELAY = 60 * 60
-
-		def purge
-			n = Time.now
-			@rcp.each do |k,v|
-				if ((n.to_i - v[2].to_i) > PURGE_DELAY)
-					@rcp.delete(k)
-				end
-			end
-		end
-
 		def _t
 			loop do
-			r = @s.recvfrom(BUFSIZE)
-				
+				r = @s.recvfrom(BUFSIZE)
+				$stderr.puts "-----" if $DEBUG
+
 				#if r[1][3] != "127.0.0.1"
 				#	puts "Notice: Dropping data packet from #{r[1][3]} (not local)"
 				#	next
 				#end
-
+				
 				if r[1][1] != @peerport
 					@peerport, @peerhost = r[1][1], r[1][3]
 					puts "Found remote endpoint at #{@peerhost}:#{@peerport}"
@@ -186,67 +188,89 @@ module RMNX
 					puts "Notice: Received data packet from unknown source: #{r[1].inspect}"
 					next
 				end
+				
 				d = r[0].gsub(/[\000\.]+$/, "")
-				cmd, *param = d.split("!")
+				# d = d.gsub(/!$/, "")
+
+				serial, cmd, *param = d.split("!")
+				if serial.to_i < 0
+					fail "Serial invalid: #{serial}. This version of rmnx is incompatible to your mnx API."
+					exit 1
+				end
+				serial = serial.to_i
 				for i in 0...param.size do
 					param[i].gsub!("#EXCL#", "!")
 				end
-				case cmd
-					when "RMNXD", "RECEIPT"
-						if cmd == "RMNXD"
-							puts "Received RMNXD-token:"
-							puts " " + param.join("\n ")
-							puts "Dropping it."
-							next
-						end
-						rcp = param[0]
-						if @rcp[rcp].nil?
-							$stderr.puts "WARNING: received unknown receipt-id #{rcp}"
-							next
-						end
-						cmd, param, time = @rcp[rcp]
-						if cmd.nil?
-							$stderr.puts "WARNING: nil-command"
-							next
-						end
-						reply = delegate cmd, param
-						if reply.code == REPLY_ERROR
-							$stderr.puts "ERROR: %s" % reply.data
-						end
-						p reply
-						send_reply reply
-						@rcp.delete rcp
-						next
-					when /^[A-Z_]+$/i
-						print(([cmd] + param).inspect + ": ")
-						a = aquire_receipt
-						@rcp[a.to_s] = [cmd.downcase, param, Time.new.to_i]
-						@c.send(a, 0)
-					else
-						$stderr.puts "WARNING: unknown packet received: #{d.inspect}"
-				end
+
 				
-				purge
+				# oneshot-request that does not request a reply, just process it.
+				if 0 == serial
+					delegate(cmd, param)
+					next
+				end
+
+
+			
+				# This was a previously requested serial
+				# Just send it out
+				if nil != @serials[serial]
+					tstamp, reply = *@serials[serial]
+					reply.serial = serial
+
+					send_reply(reply)
+
+				# Its a new request/unknown serial
+				else
+					reply = delegate cmd, param
+					reply.serial = serial
+
+
+					@serials[serial] = [Time.now, reply]
+					
+					send_reply(reply)
+				end
+
+					
+
+				if -1 == @last_serial
+					$stderr.puts "New startup: setting initial serial to #{serial}"
+				end
+
+				if serial -1 != @last_serial
+					$stderr.puts "Warning: We seem to have MISSED a serial: #{serial - 1}"
+				end
+			
+	
+				$stderr.puts "Serial is now: #{serial}" if $DEBUG
+				@last_serial = serial
+				
+				# XXX this needs optimisation
+				if @serials.size > BACKDROP * 2
+					@serials.sort {|a,b|
+						# sort by timestamp descending (b > a)
+						b[1][0] <=> a[1][0]
+					}[BACKDROP..-1].map{|x| x[0]}.each {|k|
+						@serials.delete(k)
+					}
+				end
 			end
 		end
 
 
 		def delegate cmd, param
 			return call_command(cmd,param) if has_command?(cmd)
-			return Reply.new(REPLY_NOTFOUND, "No command found to handle #{cmd}")
+			return Reply.new(REPLY_NOTFOUND, "No command found to handle #{cmd}.")
 		end
 
 		def send_reply rp
-			d = rp.data.to_s.gsub("!", "#EXCL#")
-			if rp.code > REPLY_OK
-				@c.send("#ERR# "+d, 0)
-			else
-				@c.send(d, 0)
-			end
-		end
+			
+			d = rp.serial + "!" + rp.data.to_s.gsub("!", "#EXCL#")
 
-		def aquire_receipt
-			return Time.new.usec.to_s + (rand() % 1000).to_s
+			if rp.code > REPLY_OK
+				@c.send("#ERR# " + d , 0)
+			else
+				@c.send(d , 0)
+			end
 		end
 
 	end

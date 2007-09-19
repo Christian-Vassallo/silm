@@ -1,10 +1,10 @@
-//#include "_map"
-#include "inc_chat"
-#include "inc_cdb"
-#include "_gen"
-#include "inc_audit"
-#include "inc_currency"
-#include "inc_mnx"
+//__sp_extern("_map")
+__sp_extern("inc_chat")
+__sp_extern("inc_cdb")
+__sp_extern("_gen")
+__sp_extern("inc_audit")
+__sp_extern("inc_currency")
+__sp_extern("inc_mnx")
 
 void main() {
 	object oPC = GetExitingObject();
@@ -28,7 +28,7 @@ void main() {
 	int nAID = GetAccountID(oPC);
 	int nCID = GetCharacterID(oPC);
 
-	mnxCommand("clientleave", sAccountName, sCharName, IntToString(nAID), IntToString(nCID));
+	mnx_asynchronous_command_noreply(mnx_prepare_command("clientleave", sAccountName, sCharName, IntToString(nAID), IntToString(nCID)));
 
 	ExecuteScript("logout_corpse", oPC);
 	ExecuteScript("logout_pcdata", oPC);

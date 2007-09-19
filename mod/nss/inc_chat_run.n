@@ -1,11 +1,11 @@
-#include "inc_chat"
-#include "_gen"
-#include "inc_target"
-#include "inc_chatcommand"
-#include "inc_getopt"
-#include "inc_chat_lib"
-#include "inc_mnx_lib"
-#include "inc_pgsql"
+__sp_extern("inc_chat")
+__sp_extern("_gen")
+__sp_extern("inc_target")
+__sp_extern("inc_chatcommand")
+__sp_extern("inc_getopt")
+__sp_extern("inc_chat_lib")
+__sp_extern("inc_mnx_lib")
+__sp_extern("inc_pgsql")
 
 const string
 COMMAND_SPLIT = "&&",
@@ -63,7 +63,7 @@ void RegisterAccessFlags(int nFlags);
 
 
 int RunCommand(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel) {
-	nRunModLevel = u(nRunModLevel);
+	nRunModLevel = unsigned(nRunModLevel);
 	string sCommand, sRest;
 
 	sText = GetStringTrim(sText);
@@ -134,7 +134,7 @@ int RunCommand(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias
 
 
 int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel) {
-	nRunModLevel = u(nRunModLevel);
+	nRunModLevel = unsigned(nRunModLevel);
 	int i = 0;
 	string sCmd = "";
 
@@ -566,7 +566,7 @@ void RegisterAllCommands() {
 
 
 int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro, int bRunAlias, int nRunModLevel) {
-	nRunModLevel = u(nRunModLevel);
+	nRunModLevel = unsigned(nRunModLevel);
 
 	// No need for that MODE flag, we know already it is a command.
 	if (iMode & MODE_COMMAND)
@@ -1247,19 +1247,17 @@ int CommandModArea(object oPC, int iMode, int nRunModLevel) {
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
 
-	object oLoop = GetFirstObjectInArea(GetArea(oPC));
-	while (GetIsObjectValid(oLoop)) {
-		if (GetObjectType(oLoop) == otype) {
-			SetTarget(oLoop);
+	iterate_area(GetArea(oPC),
+		if (GetObjectType(oIterate) == otype) {
+			SetTarget(oIterate);
 			if (!CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1)) {
 				if (gvGetInt("chat_debug"))
 					SendMessageToAllDMs("chat:mod:area> Eval() returned FALSE");
 				return FAIL;
 			}
 		}
+	);
 
-		oLoop = GetNextObjectInArea(GetArea(oPC));
-	}
 	SetDefaultSlot(nOldTarget);
 
 	return OK;
@@ -1279,13 +1277,11 @@ int CommandModOnline(object oPC, int iMode, int nRunModLevel) {
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
 
-	object oLoop = GetFirstPC();
-	while (GetIsObjectValid(oLoop)) {
-
-		SetTarget(oLoop);
+	iterate_players(
+		SetTarget(oIterate);
 		
 		if (gvGetInt("chat_debug")) {
-			SendMessageToAllDMs("chat:mod:online> " + sRest + ": " + GetName(oLoop));
+			SendMessageToAllDMs("chat:mod:online> " + sRest + ": " + GetName(oIterate));
 		}
 
 		if (!CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1)) {
@@ -1296,9 +1292,7 @@ int CommandModOnline(object oPC, int iMode, int nRunModLevel) {
 		
 		if (gvGetInt("chat_debug"))
 			SendMessageToAllDMs("chat:mod:online> continuing.");
-
-		oLoop = GetNextPC();
-	}
+	);
 
 	SetDefaultSlot(nOldTarget);
 

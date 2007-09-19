@@ -1,11 +1,11 @@
-#include "_gen"
-#include "inc_mnx"
+__sp_extern("_gen")
+__sp_extern("inc_mnx")
 
 void main() {
 	object oPC = OBJECT_SELF;
+	
 
-	struct mnxRet r = mnxRun(oPC, "slogan");
-
+	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("slogan"));
 	if ( !r.error )
 		DelayCommand(10.0, FloatingTextStringOnCreature(r.ret, oPC, FALSE));
 }
