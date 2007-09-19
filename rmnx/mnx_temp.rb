@@ -165,10 +165,10 @@ class CommandTemperature < RMNX::CommandSpace
 
 
 	def get_override atype, year, month, day
-		return nil
-		force_connect	
+		# return nil
+		force_connect
 		d = WeatherOverride.find(:first, :conditions => [
-			'atype = ? and date("?-?-?") >= date(concat(ayear, "-", amonth, "-", aday)) and date("?-?-?") <= date(concat(zyear, "-", zmonth, "-", zday))',
+			"atype = ? and \'?-?-?\'::timestamptz >= (ayear || '-' || amonth || '-' || aday)::timestamptz and \'?-?-?\'::timestamptz <= (zyear || '-' || zmonth || '-' || zday)::timestamptz",
 				atype, year, month, day, year, month, day
 			]
 		)
@@ -251,7 +251,7 @@ class CommandTemperature < RMNX::CommandSpace
 		# Calculate the current temperature
 		temp_range = get_temp_range temp
 		# srand(@mod + year * 1000 + month * 15 + day)
-		diff = (hour<6||hour>18 ? 16 : 8)
+		diff = (hour<6||hour>18 ? 7 : 3)
 		srand(@key + year + month + day)
 		mod = -diff + rand(diff * 2)
 		temp_range[0] -= mod.abs

@@ -1,7 +1,7 @@
-#include "inc_mnx"
-#include "inc_setting"
-#include "inc_cdb"
-#include "inc_audit"
+__sp_extern("inc_mnx")
+__sp_extern("inc_setting")
+__sp_extern("inc_cdb")
+__sp_extern("inc_audit")
 
 // Create treasure on an NPC.
 // This function will typically be called from within the
@@ -27,15 +27,15 @@ void GenerateGemChainTreasure(object oStone, object oPlayer) {
 	string sAID = IntToString(nAID);
 	string sCID = IntToString(nCID);
 
-	struct mnxRet r = mnxCmd("getgemloot",
+	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getgemloot",
 		sTag,
 		sAreaTag,
 		sAID,
 		sCID
-	);
+	));
 
 	if (r.error) {
-		SendMessageToAllDMs("Error generating loot for a stone: " + sTag + " (" + GetName(oPlayer) + ")");
+		_ERROR("Error generating loot for a stone: " + sTag + " (" + GetName(oPlayer) + "): " + r.ret);
 		return;
 	}
 
@@ -50,15 +50,16 @@ void GenerateGemChainTreasure(object oStone, object oPlayer) {
 
 
 void GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
-	struct mnxRet r = mnxCmd("getloot", 
+	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getloot", 
 		IntToString(GetRacialType(oNPC)), 
 		GetResRef(oNPC), 
 		GetTag(oNPC), 
 		GetName(oNPC),
-		GetLocalString(oNPC, "loot")
+		GetLocalString(oNPC, "loot"))
 	);	
+
 	if (r.error) {
-		SendMessageToAllDMs("Error generating loot for " + GetName(oNPC));
+		_ERROR("Error generating loot for " + GetName(oNPC) + ": " + r.ret);
 		return;
 	}
 	string loot = r.ret;

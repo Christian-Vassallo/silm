@@ -27,30 +27,24 @@ preprocessed := $(addsuffix .nss, $(basename $(wildcard *.n)))
 
 objects  := $(filter-out $(includesncs), $(addsuffix .ncs, $(basename $(wildcard *.n))))
 
-
-
-
-revision := $(shell svn info .. | grep Revision | cut -d " " -f 2)
-date := $(shell svn info .. | grep 'Last Changed Date' | cut -d " " -f 4-)
+commit := $(shell git log --decorate -n 1|head -1|cut -d' ' -f2-)
+commitdate := $(shell git log --decorate -n 1|grep Date|cut -f4- -d' ')
 builddate := $(shell date "+%Y-%m-%d %X %z (%a, %d %b %Y)")
 
 revupdate:
-	@echo "#define SVN_REVISION $(revision)"      > svn.h
-	@echo '#define SVN_REVISION_S "$(revision)"' >> svn.h
-	@echo '#define SVN_PROJECT "Silbermarken"'   >> svn.h
-	@echo '#define SVN_REPOSITORY "/"'           >> svn.h
-	@echo '#define SVN_COMMIT_ON "unknown"'      >> svn.h
-	@echo '#define SVN_BUILD_ON "$(builddate)"'  >> svn.h
+	@echo '#define GIT_COMMIT_ON "$(commitdate)"' > git.h
+	@echo '#define GIT_BUILD_ON "$(builddate)"'  >> git.h
+	@echo '#define GIT_COMMIT "$(commit)"'       >> git.h
 
 
 preprocess: $(preprocessed)
 compile: $(objects)
 
-$(preprocessed) : %.nss : %.nsc
-	@set -e; (gcc -undef -Wall -fextended-identifiers -P -E -nostdinc -I. -include stddef.h -x c -std=c99 $< |\
-		gpp +z -C +n --nostdinc -I. --include "gpp.h" > `basename $< .nsc`.nss)
+$(preprocessed) : %.nss : %.n
+	@set -e; (gcc -undef -Wall -fextended-identifiers -P -E -nostdinc -I. -Iglobal -include stddef.h -x c -std=c99 $< |\
+		gpp +z -C +n --nostdinc -I. -Iglobal --include "gpp.h" > `basename $< .n`.nss)
 
-$(objects) : %.ncs : %.nss 
+$(objects) : %.ncs : %.nss
 	$(NCC) $(NCCFLAGS) $(NWNHOME) $<
 
 

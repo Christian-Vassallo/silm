@@ -1,0 +1,38 @@
+#include "time.nh"
+
+__sp_extern("inc_pgsql")
+
+struct RealTime GetRealTime() {
+	struct RealTime r;
+	
+	pQ("select " +
+		"extract(seconds from now())::int, " +
+		"extract(minutes from now())::int, " +
+		"extract(hours from now())::int, " +
+		"extract(days from now())::int, " + 
+		"extract(months from now())::int, " +
+		"extract(years from now())::int, " +
+		"extract(weeks from now())::int, " +
+		"extract(dow from now())::int, " +
+		"unixts(), " +
+		"now()::varchar" +
+		";"
+	);
+	if (!pF()) {
+		r.error = 1;
+		dbg("GetRealTime() failed " + pSQLGetLastQuery(), 0);
+	} else {
+		r.second = pGi(1);
+		r.minute = pGi(2);
+		r.hour = pGi(3);
+		r.day = pGi(4);
+		r.month = pGi(5);
+		r.year = pGi(6);
+		r.week = pGi(7);
+		r.weekday = pGi(8);
+		r.ts = pGi(9);
+		r.timefmt = pGs(10);
+	}
+	return r;
+
+}

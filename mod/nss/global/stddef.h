@@ -97,7 +97,7 @@ int chatcommand_ command () {\
 	inline_code\
 }
 
-#include "svn.h"
+#include "git.h"
 
 #ifdef DEBUG
 #include "debug.h"

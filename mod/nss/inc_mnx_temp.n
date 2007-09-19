@@ -1,6 +1,6 @@
 /* New weather system */
-#include "_gen"
-#include "inc_mnx"
+__sp_extern("_gen")
+__sp_extern("inc_mnx")
 
 struct Weather {
 	string area_type; // one of (river, open, north)
@@ -107,10 +107,13 @@ struct Weather GetWeatherFor(object oArea, int nYear, int nMonth, int nDay, int 
 	if ( GetIsAreaInterior(oArea) )
 		nMask += A_INTERIOR;
 
-	struct mnxRet r = mnxCmd("getweather", sAreaResRef, sTilesetResRef,
-						  IntToString(nMask), IntToString(nYear), IntToString(nMonth), IntToString(nDay),
-						  IntToString(nHour), IntToString(nMinute)
-					  );
+	struct mnxRet r = mnx_synchronous_command(
+		mnx_prepare_command(
+			"getweather", sAreaResRef, sTilesetResRef,
+			IntToString(nMask), IntToString(nYear), IntToString(nMonth), IntToString(nDay),
+			IntToString(nHour), IntToString(nMinute)
+		)
+	);
 
 	if ( !r.error ) {
 		w = ParseWeatherString(w, r.ret);
