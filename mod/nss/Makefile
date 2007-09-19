@@ -1,5 +1,8 @@
 # inherits stuff
 
+all: revupdate preprocess compile
+
+
 NCC=nwnnsscomp
 NCCFLAGS=-g -c -q -o
 NSSVERIFYFLAGS=-g -o -q -t4
@@ -10,58 +13,50 @@ includes := _gen _buildinfo _const \
 	dmfi_dmwcs_inc dmfi_dmw_inc \
 	tms_inc_spawn \
 	_memleakfix \
+	c_db time x0_i0_walkway \
 	nw_i0_generic x0_i0_behavior x0_i0_spells x0_i0_treasure x2_inc_spellhook
 
 includesstart := $(filter inc_% %_inc_% %_i0_% funcs_% %inc, $(basename $(wildcard *.nss)))
 
 includesncs := $(addsuffix .ncs, $(includes) $(includesstart))
 includesnss := $(addsuffix .nss, $(includes) $(includesstart))
-objects  := $(filter-out $(includesncs), $(addsuffix .ncs, $(basename $(wildcard *.nss))))
 sources  := $(filter-out $(includesnss), $(wildcard *.nss))
+
+topreprocess := $(wildcard *.n)
+preprocessed := $(addsuffix .nss, $(basename $(wildcard *.n)))
+
+objects  := $(filter-out $(includesncs), $(addsuffix .ncs, $(basename $(wildcard *.n))))
+
+
 
 
 revision := $(shell svn info .. | grep Revision | cut -d " " -f 2)
-# date := $(shell echo "$(svninfo)" | grep 'Last Changed Date' | cut -d " " -f 4-)
-# root := $(shell echo "$(svninfo)" | grep 'Repository Root' | cut -d " " -f 3-)
-
+date := $(shell svn info .. | grep 'Last Changed Date' | cut -d " " -f 4-)
 builddate := $(shell date "+%Y-%m-%d %X %z (%a, %d %b %Y)")
 
-depgrep = $(shell grep -E '^\#include ".+"' $(1) | sed 's/^\#include \"//g' | sed 's/\"$$//g')
-
-all: update-revision $(objects)
-
-scripts: $(objects)
-
-
-_buildutil.nss: update-revision
-
-update-revision:
-	@echo 'const string PROJECT = "Silbermarken";' > _buildinfo.nss
-	@echo 'const string REVISION = "$(revision)";' >>_buildinfo.nss
-	@echo 'const string REPOSITORY = "/";' >>_buildinfo.nss
-	@echo 'const string COMMIT_ON = "unknown";' >>_buildinfo.nss
-	@echo 'const string BUILD_ON = "$(builddate)";' >>_buildinfo.nss
+revupdate:
+	@echo "#define SVN_REVISION $(revision)"      > svn.h
+	@echo '#define SVN_REVISION_S "$(revision)"' >> svn.h
+	@echo '#define SVN_PROJECT "Silbermarken"'   >> svn.h
+	@echo '#define SVN_REPOSITORY "/"'           >> svn.h
+	@echo '#define SVN_COMMIT_ON "unknown"'      >> svn.h
+	@echo '#define SVN_BUILD_ON "$(builddate)"'  >> svn.h
 
 
-$(sources) : $(includesnss)
+preprocess: $(preprocessed)
+compile: $(objects)
+
+$(preprocessed) : %.nss : %.nsc
+	@set -e; (gcc -undef -Wall -fextended-identifiers -P -E -nostdinc -I. -include stddef.h -x c -std=c99 $< |\
+		gpp +z -C +n --nostdinc -I. --include "gpp.h" > `basename $< .nsc`.nss)
 
 $(objects) : %.ncs : %.nss 
 	$(NCC) $(NCCFLAGS) $(NWNHOME) $<
 
-path:
-ifeq  "$(NWNHOME)" ""
-	@echo "env var NWNHOME not set."
-	exit 1
-endif
+
+
 
 clean:
-	-rm *.ncs *.ndb
+	-rm *.nss *.ncs *.ndb
 
-clean-backup:
-	-rm *.*~ *.out
 
-uncrustify:
-	uncrustify -L 2 -c ../conf/uncrustify.cfg --replace -l C *.nss
-
-deploy:
-	rsync -Pdu --include \*.ncs --delete-after --exclude \* . $(NWNHOME)/res
