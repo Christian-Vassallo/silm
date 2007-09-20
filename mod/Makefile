@@ -103,7 +103,7 @@ uncrustify:
 	$(MAKE) -C nss uncrustify
 
 clean:
-	$(MAKE) -C nss clean clean-backup
+	$(MAKE) -C nss clean 
 	-rm *.mod
 
 # remove older packages

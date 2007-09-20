@@ -170,7 +170,6 @@ module RMNX
 		def _t
 			loop do
 				r = @s.recvfrom(BUFSIZE)
-				$stderr.puts "-----" if $DEBUG
 
 				#if r[1][3] != "127.0.0.1"
 				#	puts "Notice: Dropping data packet from #{r[1][3]} (not local)"
@@ -201,7 +200,8 @@ module RMNX
 				for i in 0...param.size do
 					param[i].gsub!("#EXCL#", "!")
 				end
-
+				
+				$stderr.puts "#{serial}: #{cmd} <- #{param.inspect}"
 				
 				# oneshot-request that does not request a reply, just process it.
 				if 0 == serial
@@ -241,7 +241,6 @@ module RMNX
 				end
 			
 	
-				$stderr.puts "Serial is now: #{serial}" if $DEBUG
 				@last_serial = serial
 				
 				# XXX this needs optimisation
@@ -264,7 +263,9 @@ module RMNX
 
 		def send_reply rp
 			
-			d = rp.serial + "!" + rp.data.to_s.gsub("!", "#EXCL#")
+			d = rp.serial.to_s + "!" + rp.data.to_s.gsub("!", "#EXCL#")
+				
+			$stderr.puts "#{rp.serial.to_s}:   -> #{d.inspect}"
 
 			if rp.code > REPLY_OK
 				@c.send("#ERR# " + d , 0)
