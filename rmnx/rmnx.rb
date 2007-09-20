@@ -217,10 +217,21 @@ module RMNX
 					tstamp, reply = *@serials[serial]
 					reply.serial = serial
 
+					$stderr.puts "Warning: Previously requested serial re-requested. Sending old reply: #{serial - 1}"
+
 					send_reply(reply)
 
 				# Its a new request/unknown serial
 				else
+
+					# But its not the next in line! Erk.
+					# We can't do anything about that, though.
+					# Just blow it over.
+					if serial - 1 != @last_serial
+						$stderr.puts "Warning: We seem to have MISSED a serial: #{serial - 1}"
+					end
+
+
 					reply = delegate cmd, param
 					reply.serial = serial
 
@@ -228,6 +239,8 @@ module RMNX
 					@serials[serial] = [Time.now, reply]
 					
 					send_reply(reply)
+
+
 				end
 
 					
@@ -235,11 +248,6 @@ module RMNX
 				if -1 == @last_serial
 					$stderr.puts "New startup: setting initial serial to #{serial}"
 				end
-
-				if serial -1 != @last_serial
-					$stderr.puts "Warning: We seem to have MISSED a serial: #{serial - 1}"
-				end
-			
 	
 				@last_serial = serial
 				
@@ -263,9 +271,9 @@ module RMNX
 
 		def send_reply rp
 			
-			d = rp.serial.to_s + "!" + rp.data.to_s.gsub("!", "#EXCL#")
+			d = rp.data.to_s.gsub("!", "#EXCL#")
 				
-			$stderr.puts "#{rp.serial.to_s}:   -> #{d.inspect}"
+			$stderr.puts "  #{rp.serial.to_s}:   -> #{d.inspect}"
 
 			if rp.code > REPLY_OK
 				@c.send("#ERR# " + d , 0)
