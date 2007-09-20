@@ -179,6 +179,8 @@ struct mnxRet mnx_synchronous_command_nowait(string command, int serial, int res
 			if ("#ERR#" == substr(r.ret, 0, 4)) {
 				r.ret = substr(r.ret, 4, strlen(r.ret));
 				r.error = MNX_ERR_BACKEND_ERROR;
+			} else {
+				r.ret = mnx_unescape(r.ret);
 			}
 			break;
 
@@ -281,8 +283,6 @@ string mnx_escape(string sString) {
 
 string mnx_unescape(string sString) {
 	if ( FindSubString(sString, "#EXCL#") == -1 ) {
-		// not found
-		//SendMessageToPC(GetFirstPC(), "Not descaped: "+sString);
 		return sString;
 	}
 
@@ -299,7 +299,7 @@ string mnx_unescape(string sString) {
 		} else
 			sReturn += GetSubString(sString, i, 1);
 	}
-	//SendMessageToPC(GetFirstPC(), "Descaped to "+sReturn);
+
 	return sReturn;
 }
 
