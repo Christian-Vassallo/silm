@@ -6,11 +6,11 @@ __sp_extern("inc_setting")
 #define MNX_SEND_COMMAND "NWNX!MNX!SEND!RMNX!"
 
 // This is in usec
-#define MNX_SLEEP_STEP 110
-#define MNX_MAX_TRIES 7
+#define MNX_SLEEP_STEP 30
+#define MNX_MAX_TRIES 15
 
 // This is in usec
-#define MNX_DEFAULT_TIMEOUT 920
+#define MNX_DEFAULT_TIMEOUT 450
 
 
 #define MNX_SUCCESS 0
@@ -55,7 +55,7 @@ struct mnxRet {
  * Normally, you do not want to use this yourself, use
  * the wrapper mnx_synchronous_command() instead.
  */
-struct mnxRet mnx_synchronous_command_nowait(string command, int serial);
+struct mnxRet mnx_synchronous_command_nowait(string command, int serial, int resend);
 
 
 /**
@@ -141,12 +141,15 @@ int mnx_generate_serial() {
 }
 
 
-struct mnxRet mnx_synchronous_command_nowait(string command, int serial) {
+struct mnxRet mnx_synchronous_command_nowait(string command, int serial, int resend = true) {
 	struct mnxRet r;
 
 	_DEBUG("mnx", 1, "mnx_synchronous_command(" + command + ")");
 
-	SetLocalString(GetModule(), MNX_SEND_COMMAND + itoa(serial) + "!" + command, GetLocalString(GetModule(), "MNX_buffer"));
+	if (resend)
+		SetLocalString(GetModule(), MNX_SEND_COMMAND + itoa(serial) + "!" + command, GetLocalString(GetModule(), "MNX_buffer"));
+
+
 	string reply = GetLocalString(GetModule(), MNX_SEND_COMMAND + itoa(serial) + "!" + command);
 	
 	int code = StringToInt(GetSubString(reply, 0, 1));
@@ -202,7 +205,8 @@ struct mnxRet mnx_synchronous_command(string command, int uTimeout = MNX_DEFAULT
 	int slept = 0;
 
 	do {
-		r = mnx_synchronous_command_nowait(command, serial);
+		// only resend each third try to avoid backend spam
+		r = mnx_synchronous_command_nowait(command, serial, (tries > 0 && tries % 3 == 0));
 		
 		// We got it. Yay.
 		if (MNX_SUCCESS == r.error)
