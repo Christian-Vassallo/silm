@@ -41,9 +41,10 @@ VALIDEXTPLAYER=utp/\*.utp \
 LISTS=uti utp utc utm
 
 
-revision := $(shell svn info --non-interactive . | grep Revision | cut -d " " -f 2)
+commit := $(shell git log -n 1|head -1|cut -d' ' -f2-)
 
-all: package install
+# the holy grail
+all: package dev-local player-local builder-local
 
 path:
 ifeq  "$(NWNHOME)" ""
@@ -114,23 +115,23 @@ local: path
 	erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
 
 dev-local: path
-	erfpack.pl -m -o $(NAME)-dev-r$(revision).mod $(VALIDEXTDEV)
-	tar -czf $(NAME)-dev-r$(revision).tgz $(NAME)-dev-r$(revision).mod && \
-		rm $(NAME)-dev-r$(revision).mod
+	erfpack.pl -m -o $(NAME)-dev-r$(commit).mod $(VALIDEXTDEV)
+	tar -czf $(NAME)-dev-r$(commit).tgz $(NAME)-dev-r$(commit).mod && \
+		rm $(NAME)-dev-r$(commit).mod
 
 player-local: path
-	erfpack.pl -m -o $(NAME)-player-r$(revision).mod $(VALIDEXTPLAYER)
-	tar -czf $(NAME)-player-r$(revision).tgz $(NAME)-player-r$(revision).mod && \
-		rm $(NAME)-player-r$(revision).mod
+	erfpack.pl -m -o $(NAME)-player-r$(commit).mod $(VALIDEXTPLAYER)
+	tar -czf $(NAME)-player-r$(commit).tgz $(NAME)-player-r$(commit).mod && \
+		rm $(NAME)-player-r$(commit).mod
 
 builder-local: path
-	erfpack.pl -m -o $(NAME)-builder-r$(revision).mod $(VALIDEXTBUILDER)
-	tar -czf $(NAME)-builder-r$(revision).tgz $(NAME)-builder-r$(revision).mod && \
-		rm $(NAME)-builder-r$(revision).mod
+	erfpack.pl -m -o $(NAME)-builder-r$(commit).mod $(VALIDEXTBUILDER)
+	tar -czf $(NAME)-builder-r$(commit).tgz $(NAME)-builder-r$(commit).mod && \
+		rm $(NAME)-builder-r$(commit).mod
 
 
 
-# generates a new package with the current revision
+# generates a new package with the current commit
 package: path uti utp utc ifo itp scripts local
 dev-package: path uti utp utc ifo itp dev-local
 player-package: path uti utp utc ifo itp player-local
@@ -141,5 +142,3 @@ install:
 	cp -v $(NAME).mod $(NWNHOME)/modules/
 
 
-# the holy grail
-all: package dev-local player-local builder-local
