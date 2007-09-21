@@ -13,13 +13,9 @@
 
 #define __EBLOCK(x) do { x } while(0)
 
-#define ftrace(x) __fp_trace("__FILE:__LINE: " + x)
-
-#define __fun_trace(name, message) fun_trace("__FILE:__LINE: " + message)
-
-#define __funroll(V,start,end) int V;for(V=start;V<end;V++)
-
 #define local(x) __EBLOCK(x)
+
+#define queue(obj,diff,action) AssignCommand(obj,DelayCommand(diff,action))
 
 #define iterate_valid_effect(effect,inline_code) \
 	while (GetIsEffectValid(effect)) { \
