@@ -152,25 +152,12 @@ struct mnxRet mnx_synchronous_command_nowait(string command, int serial, int res
 
 	string reply = GetLocalString(GetModule(), MNX_SEND_COMMAND + itoa(serial) + "!" + command);
 	
+	_DEBUG("mnx", 1, "mnx_synchronous_command(" + command + "): " + reply);
+
 	int code = StringToInt(GetSubString(reply, 0, 1));
 	string message = GetSubString(reply, 1, GetStringLength(reply) - 1);
 	// strip the mnx retval
 	r.ret = message;
-
-	// There is no serial!
-	int exclpos = strpos(r.ret, "!");
-	if (-1 == exclpos) {
-		r.error = MNX_ERR_BACKEND_ERROR;
-		r.ret = "The backend did not send back the serial ID.";
-		_FATAL("The backend did not send back the serial ID.");
-	} else {
-		int theirserial = atoi(substr(r.ret, 0, exclpos));
-		if (theirserial != serial) {
-			r.error = MNX_ERR_BACKEND_ERROR;
-			r.ret = "The backend did not send back the serial ID.";
-			_ERROR("The backend did not send back the serial ID.");
-		}
-	}
 
 	/*
 	 * possible retvals from nwnx_mnx
