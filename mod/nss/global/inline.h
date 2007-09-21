@@ -21,6 +21,6 @@
 #define itoa(i) IntToString(i)
 #define strlen(str) GetStringLength(str)
 #define substr(str,start,len) GetSubString(str,start,len)
-
+#define strpos(str,find) FindSubString(str,find)
 #endif
 
