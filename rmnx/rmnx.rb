@@ -271,7 +271,7 @@ module RMNX
 
 		def send_reply rp
 			
-			d = rp.data.to_s.gsub("!", "#EXCL#")
+			d = rp.serial.to_s + "!" + rp.data.to_s.gsub("!", "#EXCL#")
 				
 			$stderr.puts "  #{rp.serial.to_s}:   -> #{d.inspect}"
 
