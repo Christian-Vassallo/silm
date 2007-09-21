@@ -168,7 +168,7 @@ class CommandTemperature < RMNX::CommandSpace
 		# return nil
 		force_connect
 		d = WeatherOverride.find(:first, :conditions => [
-			"atype = ? and \'?-?-?\'::timestamptz >= (ayear || '-' || amonth || '-' || aday)::timestamptz and \'?-?-?\'::timestamptz <= (zyear || '-' || zmonth || '-' || zday)::timestamptz",
+			"atype = ? and \'?-?-?\' >= (ayear || '-' || amonth || '-' || aday) and \'?-?-?\' <= (zyear || '-' || zmonth || '-' || zday)",
 				atype, year, month, day, year, month, day
 			]
 		)
