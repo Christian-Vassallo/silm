@@ -26,5 +26,5 @@
 
 /* write an absolutely fatal error to the logfile. */
 #define _FATAL(message) \
-WriteTimestampedLogEntry("FATAL " + __FILE__ + ":" + xstr(__LINE__) + message);\
+WriteTimestampedLogEntry("FATAL " + __FILE__ + ":" + xstr(__LINE__) + ": " + message);\
 
