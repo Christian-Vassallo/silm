@@ -182,26 +182,6 @@ struct mnxRet mnx_synchronous_command_nowait(string command, int serial, int res
 				r.ret = substr(r.ret, 4, strlen(r.ret));
 				r.error = MNX_ERR_BACKEND_ERROR;
 			} else {
-
-				// There is a serial?
-				int exclpos = strpos(r.ret, "!");
-				if (-1 == exclpos) {
-					r.error = MNX_ERR_BACKEND_ERROR;
-					string msg = "The backend did not send back the serial for: " + r.ret;
-					r.ret = msg;
-					_FATAL(msg);
-				} else {
-					int theirserial = atoi(substr(r.ret, 0, exclpos));
-					_DEBUG("mnx", 2, "serial compare: (theirs) " + itoa(theirserial) + " vs (ours) " + itoa(serial));
-					if (theirserial != serial) {
-						r.error = MNX_ERR_BACKEND_ERROR;
-						string msg = "The backend did not send back the CORRECT serial for: " + r.ret;
-						r.ret = msg;
-						_ERROR(msg);
-					}
-				}
-
-
 				r.ret = mnx_unescape(r.ret);
 			}
 			break;
