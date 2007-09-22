@@ -1,6 +1,8 @@
 #ifndef INLINE_H
 #define INLINE_H
 
+#define MODULE GetModule()
+
 #define GetMinutesPerHour() MINUTES_PER_HOUR
 
 #define GetPCName(o) (GetPCPlayerName(o)==""?GetLocalString(o,"player_name"):GetPCPlayerName(o))
