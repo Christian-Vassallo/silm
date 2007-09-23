@@ -1,9 +1,9 @@
 /* print debug messages if debugging is enabled for that specific section. */
 #define _DEBUG(section,level,message) __EBLOCK(\
 	if (level <= gvGetInt(section + "_debug")){ \
-		string msg = __FILE__ + ":" + xstr(__LINE__) + "(" + section + "): " + message;\
-		WriteTimestampedLogEntry(msg);\
-		SendMessageToAllDMs(msg);\
+		string inline_message = "Debug: "+ __FILE__ + ":" + xstr(__LINE__) + "(" + section + "): " + message;\
+		WriteTimestampedLogEntry(inline_message);\
+		SendMessageToAllDMs(inline_message);\
 	}\
 )
 
@@ -15,16 +15,19 @@
 
 
 /* print a non-fatal warning message */
-#define _WARN(x)
+#define _WARN(x) __EBLOCK(\
+	string inline_message = "Warning: " + __FILE__ + ":" + xstr(__LINE__) + ": " + message;\
+	WriteTimestampedLogEntry(inline_message);\
+	SendMessageToAllDMs(inline_message);\
+)
 
 /* print a error message */
 #define _ERROR(x) __EBLOCK(\
-	string msg = __FILE__ + ":" + xstr(__LINE__) + ": " + x;\
-	WriteTimestampedLogEntry(msg);\
-	SendMessageToAllDMs(msg);\
+	string inline_message = "ERROR: " + __FILE__ + ":" + xstr(__LINE__) + ": " + x;\
+	WriteTimestampedLogEntry(inline_message);\
+	SendMessageToAllDMs(inline_message);\
 )
 
 /* write an absolutely fatal error to the logfile. */
 #define _FATAL(message) \
-WriteTimestampedLogEntry("FATAL " + __FILE__ + ":" + xstr(__LINE__) + ": " + message);\
-
+WriteTimestampedLogEntry("FATAL " + __FILE__ + ":" + xstr(__LINE__) + ": " + message);
