@@ -142,6 +142,9 @@ void PPISStorageHeartbeat(object oPC, object oChest) {
 
 	// And unlock the bleedin access point.
 	SetLocked(oChest, 0);
+	SetLockKeyTag(oChest, GetLocalString(oChest, "store_key_tag"));
+	SetLockLockable(oChest, GetLocalInt(oChest, "store_lockable"));
+	SetLockKeyRequired(oChest, GetLocalInt(oChest, "store_key_required"));
 	return;
 }
 
@@ -301,11 +304,17 @@ void main() {
 
 	SendMessageToPC(oPlayer,
 		"Dies ist ein persistenter Container.  Gegenstaende darin werden ueber Server-Neustarts aufbewahrt.   Achtung - jeder, der zum Container kommt, hat Zugriff darauf.");
+	
+
+	SetLocalString(OBJECT_SELF, "store_key_tag", GetLockKeyTag(OBJECT_SELF));
+	SetLocalInt(OBJECT_SELF, "store_lockable", GetLockLockable(OBJECT_SELF));
+	SetLocalInt(OBJECT_SELF, "store_key_required", GetLockKeyRequired(OBJECT_SELF));
 
 	// Lock the bleedin access point.
 	SetLockKeyRequired(OBJECT_SELF);
 	SetLockKeyTag(OBJECT_SELF, "invalid");
 	SetLockLockable(OBJECT_SELF);
+	
 	SetLocked(OBJECT_SELF, 1);
 
 	// See if the player already has an opened storage location.
