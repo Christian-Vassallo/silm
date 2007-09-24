@@ -104,7 +104,6 @@ struct Rideable SetRideable(struct Rideable r) {
 	if ( !GetIsValidRideable(r) )
 		return r;
 
-	pB();
 	pQ("select id from rideables where id = " + IntToString(r.id) + ";");
 	if ( pF() ) {
 		pQ("update rideables set " +
@@ -136,7 +135,6 @@ struct Rideable SetRideable(struct Rideable r) {
 		pF();
 		r.id = StringToInt(pG(1));
 	}
-	pC();
 
 	return r;
 }

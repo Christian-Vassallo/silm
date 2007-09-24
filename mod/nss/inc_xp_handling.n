@@ -90,7 +90,6 @@ int GetBaseXPForLevel(int iLevel) {
 
 //returns Combat EP
 int GetLegacyCombatXP(object oPC) {
-	pB();
 	int cid = GetCharacterID(oPC);
 	pQ("select xp_combat from characters where id = " + IntToString(cid) + ";");
 	if (!pF())
@@ -102,7 +101,6 @@ int GetLegacyCombatXP(object oPC) {
 		pQ("update characters set  xp_combat = " +
 			IntToString(nCap) + ", legacy_xp = 1 where id =" + IntToString(cid) + ";");
 	}
-	pC();
 	return nCap;
 }
 

@@ -30,7 +30,6 @@ void main() {
 
 	int nID = GetCharacterID(oKiller);
 	if (nID > 0) {
-		pB();
 		pQ("select id from monster_kills where killer_id = " + IntToString(nID) + " and resref = " + pE(GetResRef(oKilled)) + ";");
 		if (pF()) {
 			string sID = pG(1);
@@ -38,7 +37,6 @@ void main() {
 		} else {
 			pQ("insert into monster_kills (killer_id, resref) values(" + IntToString(nID) + ", " + pE(GetResRef(oKilled)) + ");");
 		}
-		pC();
 	}
 
 	WriteTimestampedLogEntry(GetName(oKiller) + " toetet " + GetName(OBJECT_SELF));

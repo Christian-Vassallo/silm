@@ -364,7 +364,6 @@ int ActivateMiscItem(object oPC, object oItem, location lTarget, object oTarget)
 			Notify(MSG_CRAFT_NEED_BOOK_TO_SCRIBE, oPC);
 		} else {
 
-			pB();
 			// Is it already in there?
 			pQ("select count(id) from " +
 				TABLE_RCPBOOK +
@@ -386,7 +385,6 @@ int ActivateMiscItem(object oPC, object oItem, location lTarget, object oTarget)
 				Notify(MSG_CRAFT_BOOK_RECIPE_ADDED, oPC);
 				DestroyObject(oItem);
 			}
-			pC();
 		}
 		return 1;
 	}
