@@ -36,6 +36,12 @@ void main() {
 		ExecuteScript("i__herb", oItem);
 		return;
 	}
+	
+	if ( TestStringAgainstPattern("drug**", sItem) ) {
+		ExecuteScript("i__drug", oItem);
+		return;
+	}
+
 
 	if ( TestStringAgainstPattern("c_**", sItem) ) {
 		ExecuteScript("i__craft", oItem);

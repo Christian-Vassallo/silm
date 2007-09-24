@@ -1,0 +1,121 @@
+__sp_extern("_gen")
+
+
+void SingleUse();
+
+// Returns true if used on himself
+int SelfOnly();
+
+
+void NotifyEat();
+
+void NothingHappens();
+
+// Allow only one item effect on oTarget at a time.
+// Returns true if the user is allowed to use this herb.
+int OneAtATime(object oTarget, float fDuration);
+
+void main() {
+	object
+	oPC = GetItemActivator(),
+	oDrug = OBJECT_SELF,
+	oTarget = GetItemActivatedTarget();
+	string
+	sTag = GetTag(oDrug);
+
+	location
+	lTarget = GetItemActivatedTargetLocation();
+
+
+	float fDuration = 5.0 * 30.0;
+	fDuration += ( -60.0 + IntToFloat(Random(120)) );
+
+	int nDrug = StringToInt(GetStringRight(sTag, 3));
+
+	switch ( nDrug ) {
+
+		case 1: // Hauspeir
+			if ( !SelfOnly() )
+				break;
+			NotifyEat();
+			SingleUse();
+			break;
+
+		case 2: // Jhuild
+			if ( !SelfOnly() )
+				break;
+			NotifyEat();
+			SingleUse();
+			break;
+
+		case 3: // Kammarth
+			if ( !SelfOnly() )
+				break;
+			NotifyEat();
+			SingleUse();
+			break;
+
+		case 4: // Traumnebel
+			if ( !SelfOnly() )
+				break;
+			NotifyEat();
+			SingleUse();
+			break;
+
+		default:
+			NothingHappens();
+			break;
+	}
+}
+
+
+
+void NotifyEat() {
+	object oDrug = OBJECT_SELF;
+	object oPC = GetItemActivator();
+	Floaty("Ihr nehmt " + GetName(oDrug) + " ..", oPC, 1);
+}
+
+
+void NothingHappens() {
+	object oPC = GetItemActivator();
+	Floaty("Nichts passiert.", oPC, 0);
+}
+
+
+int OneAtATime(object oTarget, float fDuration) {
+	object
+	oDrug = OBJECT_SELF;
+	string
+	sTag = GetTag(oDrug);
+
+	if ( GetLocalInt(oTarget, "f_" + sTag) )
+		return 0;
+	else {
+		SetLocalInt(oTarget, "f_" + sTag, 1);
+		DelayCommand(fDuration, DeleteLocalInt(oTarget, "f_" + sTag));
+		return 1;
+	}
+}
+
+
+void SingleUse() {
+	if ( GetItemStackSize(OBJECT_SELF) > 1 )
+		SetItemStackSize(OBJECT_SELF, GetItemStackSize(OBJECT_SELF) - 1);
+	else
+		DestroyObject(OBJECT_SELF);
+}
+
+
+int SelfOnly() {
+	object
+	oPC = GetItemActivator(),
+	oTarget = GetItemActivatedTarget();
+
+	if ( oTarget != oPC ) {
+		Floaty("Ihr koennt diese Droge nur selbst nehmen.", oPC);
+		return 0;
+	}
+
+	return 1;
+}
