@@ -1,3 +1,8 @@
+// All CIDs above this number will use the CID as their identifier.
+#define BUGBUG_CID_BORDER 859
+
+__sp_extern("inc_cdb")
+
 /*
  * Persistent Player Item Storage - using Bioware campaign database
  * by OldManWhistler
@@ -384,6 +389,14 @@ void PPISWaitUntilRetrieved(object oStorage, int iTry) {
 void main() {
 	object oPC = GetLastUsedBy();
 
+
+	int nCID = GetCharacterID(oPC);
+
+	if (!GetIsDM(oPC) && 0 == nCID) {
+		SendMessageToPC(oPC, "Du hast keine Char-ID, und kannst daher nicht auf deine Kiste zugreifen. Dies ist ein Bug.");
+		return;
+	}
+
 	string sOverrideName = GetLocalString(oPC, "omw_ovr_char");
 	string sOverrideAcc  = GetLocalString(oPC, "omw_ovr_acc");
 	SetLocalString(oPC, "omw_ovr_char", "");
@@ -421,13 +434,25 @@ void main() {
 		}
 	}
 	if ( !GetIsObjectValid(oStorage) ) {
-		// Player does not have an ID so create one.
-		// Database keys are limited to 32 characters. So do some magic to try
-		// to prevent overlaps.
-		int iLength = ( 32 - GetStringLength(PPIS_DB_UNIQUE) ) / 2;
-		if ( PPIS_STORAGE_TYPE == PPIS_STORAGE_TYPE_ITEMS ) iLength = iLength - 2; // Need to reserve 4 characters for the number of items.
-		string sID = PPIS_DB_UNIQUE +
-					 GetStringLeft(sOverrideAcc, iLength) + GetStringRight(sOverrideName, iLength);
+		
+		string sID;
+
+		if (nCID >= BUGBUG_CID_BORDER) {
+
+			sID = PPIS_DB_UNIQUE + itoa(nCID);	
+
+		} else {
+
+			// Player does not have an ID so create one.
+			// Database keys are limited to 32 characters. So do some magic to try
+			// to prevent overlaps.
+			int iLength = ( 32 - GetStringLength(PPIS_DB_UNIQUE) ) / 2;
+			if ( PPIS_STORAGE_TYPE == PPIS_STORAGE_TYPE_ITEMS ) iLength = iLength - 2; // Need to reserve 4 characters for the number of items.
+			sID = PPIS_DB_UNIQUE +
+						 GetStringLeft(sOverrideAcc, iLength) + GetStringRight(sOverrideName, iLength);
+		}
+
+
 		// This is the first time, create the storage object.
 		// Create the storage object underground so that it cannot accidently be clicked on by malicious players. (thanks Talmud)
 		vector vChest = GetPosition(OBJECT_SELF);
