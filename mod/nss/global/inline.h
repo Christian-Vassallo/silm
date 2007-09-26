@@ -21,6 +21,9 @@
 
 #define atoi(s) StringToInt(s)
 #define itoa(i) IntToString(i)
+#define ftoa(f) FloatToString(f)
+#define atof(s) StringToFloat(s)
+
 #define strlen(str) GetStringLength(str)
 #define substr(str,start,len) GetSubString(str,start,len)
 #define strpos(str,find) FindSubString(str,find)
