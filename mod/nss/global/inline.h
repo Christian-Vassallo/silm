@@ -15,7 +15,7 @@
 
 #define xch(t,x,y) __EBLOCK(t tmp; tmp=x; x=y; y=tmp;)
 
-#define clamp(n,min,max) n>max?max:(n<min:min?n)
+#define clamp(n,min,max) (n > max ? max : ( n < min ? min : n ))
 
 #define unsigned(i) i<0?0:i
 
