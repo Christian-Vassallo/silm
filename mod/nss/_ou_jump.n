@@ -7,28 +7,44 @@ __sp_extern("_gen")
 /*
  * 	Rules:
  * 		Climb Placies:
- * 		  Down->Up:  DC = Elevation
- * 		  Up->Down:  DC = 15.
- * 		  Rope Inv:  DC = DC - 10
+ *        DC = DC_CLIMB_UP/DOWN_ADJUST + Elevation in ft
  *
  * 		Jump Placies:
- * 		  DC = Distance + Elevation * 4
- * 		  Rope Inv:  No effect
+ * 		  DC = Distance + Elevation in ft * 4
  */
 
-const int
-BASE_DC_JUMP = 10;
+#define DC_SKILL SKILL_TUMBLE
+
+#define BASE_DC_JUMP 10
+#define BASE_DC_CLIMB 10
+
+#define DC_ROPE_ADJUST -3
+#define DC_ROPEHOOK_ADJUST -10
+
+#define DC_CLIMB_UP_ADJUST 1
+#define DC_CLIMB_DOWN_ADJUST -10
+
+#define DC_CLIMB_MIN 1
+#define DC_CLIMB_MAX 50
 
 
 void main() {
 	object oJumper = GetLastUsedBy();
 
 	string sTag = GetTag(OBJECT_SELF);
+	string name = GetName(OBJECT_SELF);
 
 	object oTarget = GetNearestObjectByTag(sTag);
 
+
+	int has_rope = GetIsObjectValid(GetItemPossessedBy(oJumper, "rope"));
+
+	int has_hook = GetIsObjectValid(GetItemPossessedBy(oJumper, "hook"));
+	
+
+
 	if ( !GetIsObjectValid(oTarget) ) {
-		SpeakString("No valid target nearby. Forget it.");
+		SpeakString("Kein Ziel-" + name + "punkt in der Naehe.");
 		return;
 	}
 
@@ -39,89 +55,55 @@ void main() {
 	int nDC = 0;
 
 	if ( "pjump" == sTag ) {
+		
+		nDC = BASE_DC_JUMP;
 
 		nDC += abs(FloatToInt(fDistance)) +
 			   FloatToInt(fElevation * 4); // can have neg values: jumping down is easier!
 
 	} else if ( "pclimb" == sTag ) {
+		
+		nDC = BASE_DC_CLIMB;
 
-		if ( GetIsObjectValid(GetItemPossessedBy(oJumper, "rope")) )
-			nDC -= 10;
+		if (has_rope && has_hook)
+			nDC += DC_ROPEHOOK_ADJUST;
+		else if (has_rope)
+			nDC += DC_ROPE_ADJUST;
+
 
 		if ( fElevation < 0.0 ) {
-			nDC += 10;
+			nDC += DC_CLIMB_DOWN_ADJUST;
 		} else {
-			nDC += 1 + FloatToInt(fElevation);
+			nDC += DC_CLIMB_UP_ADJUST + FloatToInt(fElevation);
 		}
 
-		if ( nDC > 30 )
-			nDC = 30;
-		if ( nDC < 1 )
-			nDC = 1;
-
+		nDC = clamp(nDC, DC_CLIMB_MIN, DC_CLIMB_MAX);
 
 	} else {
 		SpeakString("Unnown plasie, dis. Do no now wad do do! :(");
 		return;
 	}
+	
+	
+	SendMessageToPC(oJumper, "SG fuer diesen " + name + "punkt: " + itoa(nDC));
+	SendMessageToPC(oJumper, "Distanz (in Fuss): " + FloatToString(fDistance));
+	SendMessageToPC(oJumper, "Erhoehung (in Fuss): " + FloatToString(fElevation));
+
+	
+	int player_skill = GetSkillRank(DC_SKILL, oJumper);
+
+	// Jump/Climb not possible.
+	if (10 + player_skill < nDC) {
+		SendMessageToPC(oJumper, "Du schaffst dies niemals. (Take10 + " + itoa(player_skill) + " vs " + itoa(nDC) + ")");
+		return;
+	}
 
 
-	SendMessageToPC(oJumper, "Distance is: " + FloatToString(fDistance));
-	SendMessageToPC(oJumper, "Elevation is: " + FloatToString(fElevation));
-	SendMessageToPC(oJumper, "DC is: " + IntToString(nDC));
-
+	
 	// no aq exploits
 	AssignCommand(oJumper, ClearAllActions());
 
-	// He did it. Dont bother with anything else.
-	if ( MakeThrow(nDC, 20, 1, GetSkillRank(SKILL_TUMBLE, oJumper)) ) {
 
-		AssignCommand(oJumper, JumpToObject(oTarget));
-
-		// fall on face, take damage.
-	} else {
-
-		if ( "pjump" == sTag ) {
-			// he didnt make the jump.
-
-			// if its a deadly jump, oops?
-			if ( GetLocalInt(oTarget, "jump_deadly") || GetLocalInt(oTarget, "jump_deadly") ) {
-				// fall down ravine or sth.
-
-
-			} else {
-
-				if ( fElevation <= 0.0 ) {
-					// roll down hill/fall into water. see how it works out.
-					AssignCommand(oJumper, JumpToObject(oTarget));
-				}
-
-				// and fall on your nose, and be dazed
-				AssignCommand(oJumper, ActionPlayAnimation(ANIMATION_LOOPING_DEAD_FRONT, 1.0, 20.0));
-				ApplyEffectToObject(DTT, EffectDazed(), oJumper, 10.0);
-
-			}
-
-
-			// if its a climb
-		} else if ( "pclimb" == sTag ) {
-
-			// fall down
-			if ( fElevation < 0.0 ) {
-				AssignCommand(oJumper, JumpToObject(oTarget));
-			}
-
-			// else:
-			//  just fall _back_ down
-
-			AssignCommand(oJumper, ActionPlayAnimation(ANIMATION_LOOPING_DEAD_FRONT, 1.0, 20.0));
-			ApplyEffectToObject(DTT, EffectDazed(), oJumper, 10.0);
-
-		}
-
-		int nDamage = d6() + d3(FloatToInt(fElevation));
-
-		//ApplyEffectToObject(DTI, EffectDamage(nDamage, DAMAGE_TYPE_BLUDGEONING), oJumper);
-		SendMessageToPC(oJumper, "Damage would be: " + IntToString(nDamage));
-	}
+	SendMessageToPC(oJumper, name + "punkt Take10: Erfolg.");
+	AssignCommand(oJumper, JumpToObject(oTarget));
 }
