@@ -47,6 +47,13 @@ void main() {
     }*/
 
 	switch (nEventType) {
+		case EVENT_PICKPOCKET:
+			if (!GetIsPC(oTarget)) {
+				SendMessageToPC(oPC, "Taschendiebstahl an NSCs bitte ueber SLs regeln.");
+				BypassEvent();
+			}
+			break;
+
 		case EVENT_USE_ITEM:
 			EventUseItem(oPC, oItem, oTarget, lTarget);
 			break;
