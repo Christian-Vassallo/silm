@@ -226,6 +226,12 @@ bool CNWNXmnx::SendMsg(const char *cname, const char *Request, char *Parameters)
 		// conn->sd = -1;
 		return true;
 	}
+	
+	// Has no serial. Do not wait for reply.
+	if (strlen(mnx_buf) > 1 && mnx_buf[0] == '0' && mnx_buf[1] == '!') {
+		return true;
+	}
+
 
 	/* 250ms */
 	tv.tv_sec = 1;
