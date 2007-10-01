@@ -22,17 +22,20 @@ void main() {
 	
 	ExecuteScript("hb_time_xp", oMod);
 
-ExecuteScript("hb_xp_guard", oPC);
-
+	ExecuteScript("hb_xp_guard", oPC);
 
 	while ( GetIsObjectValid(oPC) ) {
+
 		if ( !GetIsDM(oPC) ) {
+
 			//Placeholder for player-specific scripts/routines which are to be
 			//executed every heartbeat
 			//ExecuteScript("hb_hunger",oPC);
-			ExecuteScript("hb_running", oPC);
+			//ExecuteScript("hb_running", oPC);
+
 			ExecuteScript("hb_persistency", oPC);
 		}
+
 		oPC = GetNextPC();
 	}
 
@@ -41,6 +44,7 @@ ExecuteScript("hb_xp_guard", oPC);
 
 	if ( iHour != GetLocalInt(oMod, "Module_Hour") ) {
 		_ClockFix();
+
 		SetLocalInt(oMod, "Module_Hour", iHour);
 
 		gvSetInt("t_year", GetCalendarYear());
