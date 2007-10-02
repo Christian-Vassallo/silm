@@ -27,7 +27,8 @@ preprocessed := $(addsuffix .nss, $(basename $(wildcard *.n)))
 
 objects  := $(filter-out $(includesncs), $(addsuffix .ncs, $(basename $(wildcard *.n))))
 
-commit := $(shell git log --decorate -n 1|head -1|cut -d' ' -f2-)
+commit := $(shell git-rev-parse --short --verify HEAD)
+fullcommit := $(shell git log --decorate -n 1|head -1|cut -d' ' -f2-)
 commitdate := $(shell git log --decorate -n 1|grep Date|cut -f4- -d' ')
 builddate := $(shell date "+%Y-%m-%d %X %z (%a, %d %b %Y)")
 

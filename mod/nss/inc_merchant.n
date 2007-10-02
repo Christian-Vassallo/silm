@@ -107,7 +107,9 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			if ( !GetIsObjectValid(oSell) )
 				oSell = CreateItemOnObject(sResRef, oMerc, 1, sResRef);
 
+			int identf = GetIdentified(oSell);
 			SetPlotFlag(oSell, FALSE);
+			SetIdentified(oSell, TRUE);
 
 			nPrice = FloatToInt(( 1.0 / fAppraiseMod ) *
 						 fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
@@ -123,6 +125,8 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 				SetListDisplayMode(oPC, TTT, DISPLAYMODE_GREEN);
 			else
 				SetListDisplayMode(oPC, TTT, DISPLAYMODE_RED);
+
+			SetIdentified(oSell, identf);
 
 			nFound += 1;
 		}
