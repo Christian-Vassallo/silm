@@ -16,7 +16,7 @@ __sp_extern("_gen")
 #define DC_SKILL SKILL_TUMBLE
 
 #define BASE_DC_JUMP 10
-#define BASE_DC_CLIMB 10
+#define BASE_DC_CLIMB 0
 
 #define DC_ROPE_ADJUST -3
 #define DC_ROPEHOOK_ADJUST -10
@@ -70,12 +70,7 @@ void main() {
 		else if (has_rope)
 			nDC += DC_ROPE_ADJUST;
 
-
-		if ( fElevation < 0.0 ) {
-			nDC += DC_CLIMB_DOWN_ADJUST;
-		} else {
-			nDC += DC_CLIMB_UP_ADJUST + FloatToInt(fElevation);
-		}
+		nDC += GetLocalInt(OBJECT_SELF, "dc");
 
 		nDC = clamp(nDC, DC_CLIMB_MIN, DC_CLIMB_MAX);
 
