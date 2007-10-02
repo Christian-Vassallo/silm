@@ -1,18 +1,18 @@
 #!/bin/sh
 
 AREAS=$(ls area/*.are | wc -l)
-SCRIPTS=$(ls nss/*.nss | wc -l)
+SCRIPTS=$(ls nss/*.n | wc -l)
 UTI=$(ls uti/*.uti | wc -l)
 UTC=$(ls utc/*.utc | wc -l)
 DLG=$(ls dlg/*.dlg | wc -l)
 
-SCRIPTLINES=$(wc -l nss/*.nss | grep total | cut -d" " -f3)
+SCRIPTLINES=$(wc -l nss/*.n | grep total | cut -d" " -f3)
 DIALOGUECHARS=$(gffprint.pl dlg/*.dlg | grep "Text/4" | wc -c)
 REPOSIZE=$(du -sch .|grep total | cut -f1)
 
-REV=$(svn info | grep Revision | cut -d" " -f2)
+REV=`git-rev-parse --short --verify HEAD`
 
-printf "Statistics for revision %d, created on\n" $REV
+printf "Statistics for commit %s, created on\n" $REV
 printf "  %s\n" "$(date)"
 printf "%-20s: %s\n" "Areas" $AREAS
 printf "%-20s: %s\n" "Scripts" $SCRIPTS

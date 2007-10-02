@@ -41,7 +41,7 @@ VALIDEXTPLAYER=utp/\*.utp \
 LISTS=uti utp utc utm
 
 
-commit := $(shell git log -n 1|head -1|cut -d' ' -f2-)
+commit := $(shell git-rev-parse --short --verify HEAD)
 
 # the holy grail
 all: package dev-local player-local builder-local
