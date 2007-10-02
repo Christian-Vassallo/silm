@@ -1,6 +1,6 @@
-__sp_extern("inc_mnx")
+__sp_extern("inc_2dacache")
 __sp_extern("inc_setting")
-__sp_extern("inc_cdb")
+__sp_extern("inc_pgsql_base")
 __sp_extern("inc_audit")
 
 // Create treasure on an NPC.
@@ -22,48 +22,49 @@ void GenerateGemChainTreasure(object oStone, object oPlayer) {
 
 	string sTag = GetTag(oStone);
 	string sAreaTag = GetTag(GetArea(oStone));
-	int nAID = GetAccountID(oPlayer);
-	int nCID = GetCharacterID(oPlayer);
-	string sAID = IntToString(nAID);
-	string sCID = IntToString(nCID);
 
-	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getgemloot",
-		sTag,
-		sAreaTag,
-		sAID,
-		sCID
-	));
+	pQ(
+		"select replace, loot from gem_chains where " +
+		pSs(sAreaTag) + " like area and " +
+		pSs(sTag) + " like stone;"
+	);
 
-	if (r.error) {
-		_ERROR("Error generating loot for a stone: " + sTag + " (" + GetName(oPlayer) + "): " + r.ret);
-		return;
+	string loot;
+	int replace;
+
+	string tocreate = "";
+
+	while (pF()) {
+		replace = pGi(1);
+		loot = pGs(2);
+		
+		// Skim off replaced loots before this one gets added.
+		while (replace > 0) {
+			int idx = strpos(tocreate, "#");
+			if (-1 == idx)
+				break;
+
+			tocreate = substr(tocreate, idx + 1, strlen(tocreate));
+		}
+
+		tocreate = loot + "#" + tocreate;
+	}
+	
+	// Skim off the last hash that gets invariably added.
+	tocreate = substr(tocreate, 0, strlen(tocreate) - 2);
+
+
+	if ("" != tocreate) {
+		audit("gemchain", oPlayer, audit_fields("loot", tocreate, "area", sAreaTag, "stone", sTag), "mining");
 	}
 
-	string loot = r.ret;
-
-	if ("" != loot) {
-		audit("gemchain", oPlayer, audit_fields("loot", loot, "area", sAreaTag, "stone", sTag), "mining");
-	}
-
-	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(loot, oPlayer));
+	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(tocreate, oPlayer));
 }
 
 
 void GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
-	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getloot", 
-		IntToString(GetRacialType(oNPC)), 
-		GetResRef(oNPC), 
-		GetTag(oNPC), 
-		GetName(oNPC),
-		GetLocalString(oNPC, "loot"))
-	);	
-
-	if (r.error) {
-		_ERROR("Error generating loot for " + GetName(oNPC) + ": " + r.ret);
-		return;
-	}
-	string loot = r.ret;
-
+	
+	// First, clean the inventory.
 	if (gvGetInt("treasure_clean_npcs")) {
 		object o = GetFirstItemInInventory(oNPC);
 		while (GetIsObjectValid(o)) {
@@ -74,8 +75,44 @@ void GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
 		}
 	}
 
-	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(loot, oNPC));
+	// Select all loot chains.
+	pQ(
+		"select replace, loot, racial_type, resref, tag, name from loot_aggregator where " +
+			"(racial_type = -1 or racial_type = " + pSi(GetRacialType(oNPC)) + ") and " +
+			pSs(GetResRef(oNPC)) + " like resref and " +
+			pSs(GetTag(oNPC)) + " like tag and " +
+			pSs(GetName(oNPC)) + " like name;"
+	);
+
+	string loot;
+	int replace;
+
+	string tocreate = "";
+
+	while (pF()) {
+		replace = pGi(1);
+		loot = pGs(2);
+		
+		// Skim off replaced loots before this one gets added.
+		while (replace > 0) {
+			int idx = strpos(tocreate, "#");
+			if (-1 == idx)
+				break;
+
+			tocreate = substr(tocreate, idx + 1, strlen(tocreate));
+		}
+
+		tocreate = loot + "#" + tocreate;
+	}
+	
+	// Skim off the last hash that gets invariably added.
+	tocreate = substr(tocreate, 0, strlen(tocreate) - 2);
+
+	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(tocreate, oNPC));
 }
+
+
+
 
 void CreateStackedItemsOnObject(string sResRef, object oCreateOn, int nCount) {
 	if (nCount < 1)
