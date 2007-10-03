@@ -32,10 +32,10 @@ __sp_extern("_gen")
 void main() {
 	object oJumper = GetLastUsedBy();
 
-	string sTag = GetTag(OBJECT_SELF);
+	string sResRef = GetResRef(OBJECT_SELF);
 	string name = GetName(OBJECT_SELF);
 
-	object oTarget = GetNearestObjectByTag(sTag);
+	object oTarget = GetNearestObjectByTag(sResRef);
 
 
 	int has_rope = GetIsObjectValid(GetItemPossessedBy(oJumper, "rope"));
@@ -98,7 +98,7 @@ void main() {
 
 	// Jump/Climb not possible.
 	if (10 + player_skill < nDC) {
-		SendMessageToPC(oJumper, name + " Take10: (" + itoa(player_skill) + " vs " + itoa(nDC) + "): Nope.");
+		SendMessageToPC(oJumper, name + " Take10: (10 + " + itoa(player_skill) + " vs " + itoa(nDC) + "): Nope.");
 		return;
 	}
 
