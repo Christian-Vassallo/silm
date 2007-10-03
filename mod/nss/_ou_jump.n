@@ -19,11 +19,11 @@ __sp_extern("_gen")
 #define BASE_DC_JUMP 10
 #define BASE_DC_CLIMB 0
 
-#define DC_ROPE_ADJUST -3
-#define DC_ROPEHOOK_ADJUST -10
+#define DC_ROPE_ADJUST -1
+#define DC_ROPEHOOK_ADJUST -2
 
-#define DC_CLIMB_UP_ADJUST 1
-#define DC_CLIMB_DOWN_ADJUST -10
+#define DC_CLIMB_UP_ADJUST 0
+#define DC_CLIMB_DOWN_ADJUST 0
 
 #define DC_CLIMB_MIN 1
 #define DC_CLIMB_MAX 50
@@ -39,7 +39,6 @@ void main() {
 
 
 	int has_rope = GetIsObjectValid(GetItemPossessedBy(oJumper, "rope"));
-
 	int has_hook = GetIsObjectValid(GetItemPossessedBy(oJumper, "hook"));
 	
 
@@ -52,6 +51,9 @@ void main() {
 	// 3.28: feet!
 	float fDistance = GetDistanceBetween(OBJECT_SELF, oTarget) * 3.28;
 	float fElevation = GetElevationBetween(OBJECT_SELF, oTarget) * 3.28;
+	
+	// 1 = up, 0 = down
+	int climbing_up = (fElevation > 0.0);
 
 	int nDC = 0;
 
@@ -65,6 +67,12 @@ void main() {
 	} else if ( "pclimb" == sTag ) {
 		
 		nDC = BASE_DC_CLIMB;
+
+		nDC += (climbing_up ? DC_CLIMB_UP_ADJUST : DC_CLIMB_DOWN_ADJUST);
+
+		// Racial Bonus.
+		if (RACIAL_TYPE_HALFLING == GetRacialType(oJumper))
+			nDC += 2;
 
 		if (has_rope && has_hook)
 			nDC += DC_ROPEHOOK_ADJUST;
@@ -90,7 +98,7 @@ void main() {
 
 	// Jump/Climb not possible.
 	if (10 + player_skill < nDC) {
-		SendMessageToPC(oJumper, "Du schaffst dies niemals. (Take10 + " + itoa(player_skill) + " vs " + itoa(nDC) + ")");
+		SendMessageToPC(oJumper, name + "punkt Take10: (" + itoa(player_skill) + " vs " + itoa(nDC) + "): Nope.");
 		return;
 	}
 
