@@ -56,6 +56,12 @@ void main() {
 	int climbing_up = (fElevation > 0.0);
 
 	int nDC = 0;
+	int player_skill = GetSkillRank(DC_SKILL, oJumper);
+
+	// Racial Bonus.
+	if (RACIAL_TYPE_HALFLING == GetRacialType(oJumper))
+		player_skill += 2;
+
 
 	if ( "pjump" == sTag ) {
 		
@@ -70,9 +76,6 @@ void main() {
 
 		nDC += (climbing_up ? DC_CLIMB_UP_ADJUST : DC_CLIMB_DOWN_ADJUST);
 
-		// Racial Bonus.
-		if (RACIAL_TYPE_HALFLING == GetRacialType(oJumper))
-			nDC += 2;
 
 		if (has_rope && has_hook)
 			nDC += DC_ROPEHOOK_ADJUST;
@@ -93,8 +96,6 @@ void main() {
 	SendMessageToPC(oJumper, "Distanz (in Fuss): " + FloatToString(fDistance));
 	SendMessageToPC(oJumper, "Erhoehung (in Fuss): " + FloatToString(fElevation));
 
-	
-	int player_skill = GetSkillRank(DC_SKILL, oJumper);
 
 	// Jump/Climb not possible.
 	if (10 + player_skill < nDC) {
