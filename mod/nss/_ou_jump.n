@@ -32,6 +32,7 @@ __sp_extern("_gen")
 void main() {
 	object oJumper = GetLastUsedBy();
 
+	string sTag = GetTag(OBJECT_SELF);
 	string sResRef = GetResRef(OBJECT_SELF);
 	string name = GetName(OBJECT_SELF);
 
@@ -47,6 +48,7 @@ void main() {
 		SpeakString("Kein Zielpunkt in der Naehe.");
 		return;
 	}
+
 
 	// 3.28: feet!
 	float fDistance = GetDistanceBetween(OBJECT_SELF, oTarget) * 3.28;
@@ -71,7 +73,7 @@ void main() {
 			   FloatToInt(fElevation * 4); // can have neg values: jumping down is easier!
 
 	} else if ( "pclimb" == sTag ) {
-		
+
 		nDC = BASE_DC_CLIMB;
 
 		nDC += (climbing_up ? DC_CLIMB_UP_ADJUST : DC_CLIMB_DOWN_ADJUST);
@@ -96,11 +98,25 @@ void main() {
 	SendMessageToPC(oJumper, "Distanz (in Fuss): " + FloatToString(fDistance));
 	SendMessageToPC(oJumper, "Erhoehung (in Fuss): " + FloatToString(fElevation));
 
+	
+	int success = false;
 
-	// Jump/Climb not possible.
-	if (10 + player_skill < nDC) {
-		SendMessageToPC(oJumper, name + " Take10: (10 + " + itoa(player_skill) + " vs " + itoa(nDC) + "): Nope.");
-		return;
+	// Take10?
+	if (10 + player_skill >= nDC) {
+		SendMessageToPC(oJumper, name + " Take10: Erfolg.");
+		success = true;
+	} else {
+		//MakeThrow(int nDC, int nDFaces, int nDCount, int nMod, int bDisplayToAll = FALSE);		
+		int throw = d20();
+	
+		if (throw + player_skill >= nDC) {
+			SendMessageToPC(oJumper, name + " 1d20: (" + itoa(throw) + " + " + itoa(player_skill) + " vs " + itoa(nDC) + "): Erfolg.");
+			success = true;
+		} else {
+			SendMessageToPC(oJumper, name + " 1d20: (" + itoa(throw) + " + " + itoa(player_skill) + " vs " + itoa(nDC) + "): Fehlschlag.");
+		}
+	
+
 	}
 
 
@@ -108,7 +124,26 @@ void main() {
 	// no aq exploits
 	AssignCommand(oJumper, ClearAllActions());
 
+	if (success) {
+		AssignCommand(oJumper, JumpToObject(oTarget));
+	} else {
+		// Fail and/or fall back down.
+		if (climbing_up) {
+			
+		} else {
+			AssignCommand(oJumper, JumpToObject(oTarget));
+		}
+		AssignCommand(oJumper, ActionPlayAnimation(ANIMATION_LOOPING_DEAD_FRONT, 1.0, 20.0));
+		
+		// Dazed for one round
+		ApplyEffectToObject(DTT, EffectDazed(), oJumper, 6.0);
+		
+		int damage = d3(ftoi(clamp(fElevation / 10.0, 1.0, 4.0)));
 
-	SendMessageToPC(oJumper, name + " Take10: Erfolg.");
-	AssignCommand(oJumper, JumpToObject(oTarget));
+		// Dont hurt to kill.
+		damage = clamp(damage, 1, GetCurrentHitPoints(oJumper) - 1);
+	
+		ApplyEffectToObject(DTI, EffectDamage(damage), oJumper);
+
+	}
 }
