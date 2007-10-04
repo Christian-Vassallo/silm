@@ -23,6 +23,8 @@
 #define itoa(i) IntToString(i)
 #define ftoa(f) FloatToString(f)
 #define atof(s) StringToFloat(s)
+#define ftoi(f) FloatToInt(f)
+#define itof(i) IntToFloat(i)
 
 #define strlen(str) GetStringLength(str)
 #define substr(str,start,len) GetSubString(str,start,len)
