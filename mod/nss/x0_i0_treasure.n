@@ -19,6 +19,8 @@ void CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn);
 void GenerateGemChainTreasure(object oStone, object oPlayer) {
 	if (!GetIsPC(oPlayer))
 		return;
+	
+	_DEBUG("gemchain", 1, "getfor: " + GetName(oPlayer) + " -> " + GetTag(oStone));
 
 	string sTag = GetTag(oStone);
 	string sAreaTag = GetTag(GetArea(oStone));
@@ -38,13 +40,19 @@ void GenerateGemChainTreasure(object oStone, object oPlayer) {
 		replace = pGi(1);
 		loot = pGs(2);
 		
+		_DEBUG("gemchain", 1, "result[]: " + loot + " << " + itoa(replace) + " -> '" + tocreate + "'");
+		
 		// Skim off replaced loots before this one gets added.
 		while (replace > 0) {
 			int idx = strpos(tocreate, "#");
 			if (-1 == idx)
 				break;
 
+			_DEBUG("gemchain", 1, "replace <" + itoa(replace) + ">: " + substr(tocreate, 0, idx));
 			tocreate = substr(tocreate, idx + 1, strlen(tocreate));
+			_DEBUG("gemchain", 1, "isnow: " + tocreate);
+			
+			replace--;
 		}
 
 		tocreate = loot + "#" + tocreate;
@@ -63,6 +71,7 @@ void GenerateGemChainTreasure(object oStone, object oPlayer) {
 
 
 void GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
+	_DEBUG("lootchain", 1, "getfor: " + GetName(oNPC) + " -> " + GetTag(oNPC) + ":" + GetResRef(oNPC));
 	
 	// First, clean the inventory.
 	if (gvGetInt("treasure_clean_npcs")) {
@@ -92,14 +101,20 @@ void GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
 	while (pF()) {
 		replace = pGi(1);
 		loot = pGs(2);
-		
+
+		_DEBUG("lootchain", 1, "result[]: " + loot + " << " + itoa(replace) + " -> '" + tocreate + "'");
+
 		// Skim off replaced loots before this one gets added.
 		while (replace > 0) {
 			int idx = strpos(tocreate, "#");
 			if (-1 == idx)
 				break;
 
+			_DEBUG("lootchain", 1, "replace <" + itoa(replace) + ">: " + substr(tocreate, 0, idx));
 			tocreate = substr(tocreate, idx + 1, strlen(tocreate));
+			_DEBUG("lootchain", 1, "isnow: " + tocreate);
+
+			replace--;
 		}
 
 		tocreate = loot + "#" + tocreate;
