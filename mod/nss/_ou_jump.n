@@ -50,6 +50,12 @@ void main() {
 	}
 
 
+	if (GetMaxHitPoints(oJumper) > 1 && GetCurrentHitPoints(oJumper) < 2) {
+		SendMessageToPC(oJumper, "Du kannst in dieser Verfassung unmoeglich springen oder klettern.");
+		return;
+	}
+
+
 	// 3.28: feet!
 	float fDistance = GetDistanceBetween(OBJECT_SELF, oTarget) * 3.28;
 	float fElevation = GetElevationBetween(OBJECT_SELF, oTarget) * 3.28;
