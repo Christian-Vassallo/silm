@@ -137,13 +137,14 @@ void main() {
 		
 		// Dazed for one round
 		ApplyEffectToObject(DTT, EffectDazed(), oJumper, 6.0);
-		
-		int damage = d3(ftoi(clamp(fElevation / 10.0, 1.0, 4.0)));
+	
+		int ielevation = ftoi(fElevation /= 10.0);
+		int damage = d3(clamp(ielevation, 1, 4));
 
 		// Dont hurt to kill.
-		damage = clamp(damage, 1, GetCurrentHitPoints(oJumper) - 1);
+		damage = clamp(damage, 0, GetCurrentHitPoints(oJumper) - 1);
 	
-		ApplyEffectToObject(DTI, EffectDamage(damage), oJumper);
+		ApplyEffectToObject(DTI, EffectDamage(damage, DAMAGE_TYPE_BLUDGEONING), oJumper);
 
 	}
 }
