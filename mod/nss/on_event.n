@@ -51,6 +51,7 @@ void main() {
 			if (!GetIsPC(oTarget)) {
 				SendMessageToPC(oPC, "Taschendiebstahl an NSCs bitte ueber SLs regeln.");
 				BypassEvent();
+				AssignCommand(oPC, ClearAllActions(true));
 			}
 			break;
 
