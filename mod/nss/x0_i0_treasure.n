@@ -1,3 +1,4 @@
+__sp_extern("_gen")
 __sp_extern("inc_2dacache")
 __sp_extern("inc_setting")
 __sp_extern("inc_pgsql_base")
@@ -86,7 +87,7 @@ void GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
 
 	// Select all loot chains.
 	pQ(
-		"select replace, loot, racial_type, resref, tag, name from loot_aggregator where " +
+		"select replace, loot, uniq, log from loot_aggregator where " +
 			"(racial_type = -1 or racial_type = " + pSi(GetRacialType(oNPC)) + ") and " +
 			pSs(GetResRef(oNPC)) + " like resref and " +
 			pSs(GetTag(oNPC)) + " like tag and " +
@@ -94,13 +95,19 @@ void GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
 	);
 
 	string loot;
-	int replace;
+	int replace, uniq, log;
 
 	string tocreate = "";
 
 	while (pF()) {
 		replace = pGi(1);
 		loot = pGs(2);
+		uniq = pGb(3);
+		log  = pGb(4);
+
+		// it is unique. Do not spawn, do not do the replacing, because the player already has one.
+		if (uniq && GetIsObjectValid(GetItemResRefPossessedBy(oPlayer, loot)))
+			continue;
 
 		_DEBUG("lootchain", 1, "result[]: " + loot + " << " + itoa(replace) + " -> '" + tocreate + "'");
 
@@ -117,11 +124,18 @@ void GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
 			replace--;
 		}
 
+		if (log) {
+			audit("loot", oPlayer, audit_fields("resref", loot), "loot_chains");
+			WriteTimestampedLogEntry("lootchain: Spawning '" + loot + "' for " + GetName(oPlayer));
+		}
+
 		tocreate = loot + "#" + tocreate;
 	}
 	
 	// Skim off the last hash that gets invariably added.
 	tocreate = substr(tocreate, 0, strlen(tocreate) - 2);
+	
+	_DEBUG("lootchain", 1, "isnow at end: " + tocreate);
 
 	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(tocreate, oNPC));
 }
