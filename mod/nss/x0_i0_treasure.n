@@ -1,6 +1,7 @@
-__sp_extern("inc_mnx")
+__sp_extern("_gen")
+__sp_extern("inc_2dacache")
 __sp_extern("inc_setting")
-__sp_extern("inc_cdb")
+__sp_extern("inc_pgsql_base")
 __sp_extern("inc_audit")
 
 // Create treasure on an NPC.
@@ -19,51 +20,63 @@ void CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn);
 void GenerateGemChainTreasure(object oStone, object oPlayer) {
 	if (!GetIsPC(oPlayer))
 		return;
+	
+	_DEBUG("gemchain", 1, "getfor: " + GetName(oPlayer) + " -> " + GetTag(oStone));
 
 	string sTag = GetTag(oStone);
 	string sAreaTag = GetTag(GetArea(oStone));
-	int nAID = GetAccountID(oPlayer);
-	int nCID = GetCharacterID(oPlayer);
-	string sAID = IntToString(nAID);
-	string sCID = IntToString(nCID);
 
-	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getgemloot",
-		sTag,
-		sAreaTag,
-		sAID,
-		sCID
-	));
+	pQ(
+		"select replace, loot from gem_chains where " +
+		pSs(sAreaTag) + " like area and " +
+		pSs(sTag) + " like stone;"
+	);
 
-	if (r.error) {
-		_ERROR("Error generating loot for a stone: " + sTag + " (" + GetName(oPlayer) + "): " + r.ret);
-		return;
+	string loot;
+	int replace;
+
+	string tocreate = "";
+
+	while (pF()) {
+		replace = pGi(1);
+		loot = pGs(2);
+		
+		_DEBUG("gemchain", 1, "result[]: " + loot + " << " + itoa(replace) + " -> '" + tocreate + "'");
+		
+		// Skim off replaced loots before this one gets added.
+		while (replace > 0) {
+			int idx = strpos(tocreate, "#");
+			if (-1 == idx)
+				break;
+
+			_DEBUG("gemchain", 1, "replace <" + itoa(replace) + ">: " + substr(tocreate, 0, idx));
+			tocreate = substr(tocreate, idx + 1, strlen(tocreate));
+			_DEBUG("gemchain", 1, "isnow: " + tocreate);
+			
+			replace--;
+		}
+
+		tocreate = loot + "#" + tocreate;
+	}
+	
+	// Skim off the last hash that gets invariably added.
+	tocreate = substr(tocreate, 0, strlen(tocreate) - 1);
+
+
+	if ("" != tocreate) {
+		audit("gemchain", oPlayer, audit_fields("loot", tocreate, "area", sAreaTag, "stone", sTag), "mining");
 	}
 
-	string loot = r.ret;
-
-	if ("" != loot) {
-		audit("gemchain", oPlayer, audit_fields("loot", loot, "area", sAreaTag, "stone", sTag), "mining");
-	}
-
-	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(loot, oPlayer));
+	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(tocreate, oPlayer));
 }
 
 
 void GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
-	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getloot", 
-		IntToString(GetRacialType(oNPC)), 
-		GetResRef(oNPC), 
-		GetTag(oNPC), 
-		GetName(oNPC),
-		GetLocalString(oNPC, "loot"))
-	);	
+	_DEBUG("lootchain", 1, "getfor: " + GetName(oNPC) + " -> " + GetTag(oNPC) + ":" + GetResRef(oNPC));
 
-	if (r.error) {
-		_ERROR("Error generating loot for " + GetName(oNPC) + ": " + r.ret);
-		return;
-	}
-	string loot = r.ret;
+	object oPlayer = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC, oNPC);
 
+	// First, clean the inventory.
 	if (gvGetInt("treasure_clean_npcs")) {
 		object o = GetFirstItemInInventory(oNPC);
 		while (GetIsObjectValid(o)) {
@@ -74,8 +87,63 @@ void GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
 		}
 	}
 
-	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(loot, oNPC));
+	// Select all loot chains.
+	pQ(
+		"select replace, loot, uniq, log from loot_aggregator where " +
+			"(racial_type = -1 or racial_type = " + pSi(GetRacialType(oNPC)) + ") and " +
+			pSs(GetResRef(oNPC)) + " like resref and " +
+			pSs(GetTag(oNPC)) + " like tag and " +
+			pSs(GetName(oNPC)) + " like name;"
+	);
+
+	string loot;
+	int replace, uniq, log;
+
+	string tocreate = "";
+
+	while (pF()) {
+		replace = pGi(1);
+		loot = pGs(2);
+		uniq = pGb(3);
+		log  = pGb(4);
+
+		// it is unique. Do not spawn, do not do the replacing, because the player already has one.
+		if (uniq && GetIsObjectValid(GetItemResRefPossessedBy(oPlayer, loot)))
+			continue;
+
+		_DEBUG("lootchain", 1, "result[]: " + loot + " << " + itoa(replace) + " -> '" + tocreate + "'");
+
+		// Skim off replaced loots before this one gets added.
+		while (replace > 0) {
+			int idx = strpos(tocreate, "#");
+			if (-1 == idx)
+				break;
+
+			_DEBUG("lootchain", 1, "replace <" + itoa(replace) + ">: " + substr(tocreate, 0, idx));
+			tocreate = substr(tocreate, idx + 1, strlen(tocreate));
+			_DEBUG("lootchain", 1, "isnow: " + tocreate);
+
+			replace--;
+		}
+
+		if (log) {
+			audit("loot", oPlayer, audit_fields("resref", loot), "loot_chains");
+			WriteTimestampedLogEntry("lootchain: Spawning '" + loot + "' for " + GetName(oPlayer));
+		}
+
+		tocreate = loot + "#" + tocreate;
+	}
+	
+	// Skim off the last hash that gets invariably added.
+	tocreate = substr(tocreate, 0, strlen(tocreate) - 1);
+	
+	_DEBUG("lootchain", 1, "isnow at end: " + tocreate);
+
+	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(tocreate, oNPC));
 }
+
+
+
 
 void CreateStackedItemsOnObject(string sResRef, object oCreateOn, int nCount) {
 	if (nCount < 1)
