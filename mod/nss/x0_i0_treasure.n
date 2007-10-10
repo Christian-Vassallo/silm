@@ -60,7 +60,7 @@ void GenerateGemChainTreasure(object oStone, object oPlayer) {
 	}
 	
 	// Skim off the last hash that gets invariably added.
-	tocreate = substr(tocreate, 0, strlen(tocreate) - 2);
+	tocreate = substr(tocreate, 0, strlen(tocreate) - 1);
 
 
 	if ("" != tocreate) {
@@ -73,7 +73,9 @@ void GenerateGemChainTreasure(object oStone, object oPlayer) {
 
 void GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
 	_DEBUG("lootchain", 1, "getfor: " + GetName(oNPC) + " -> " + GetTag(oNPC) + ":" + GetResRef(oNPC));
-	
+
+	object oPlayer = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC, oNPC);
+
 	// First, clean the inventory.
 	if (gvGetInt("treasure_clean_npcs")) {
 		object o = GetFirstItemInInventory(oNPC);
@@ -133,7 +135,7 @@ void GenerateNPCTreasure(object oNPC = OBJECT_SELF) {
 	}
 	
 	// Skim off the last hash that gets invariably added.
-	tocreate = substr(tocreate, 0, strlen(tocreate) - 2);
+	tocreate = substr(tocreate, 0, strlen(tocreate) - 1);
 	
 	_DEBUG("lootchain", 1, "isnow at end: " + tocreate);
 
