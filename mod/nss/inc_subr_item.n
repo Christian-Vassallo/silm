@@ -34,7 +34,9 @@ void ApplySubraceItems(object oPC) {
 			SetLocalInt(oSRItem, "SR_Item_Rev", nRevision);
 		}
 
-		AssignCommand(oPC, ActionEquipItem(oSRItem, INVENTORY_SLOT_CARMOUR));
+		if (GetItemInSlot(INVENTORY_SLOT_CARMOUR, oPC) != oSRItem) {
+			AssignCommand(oPC, ActionEquipItem(oSRItem, INVENTORY_SLOT_CARMOUR));
+		}
 	}
 }
 
