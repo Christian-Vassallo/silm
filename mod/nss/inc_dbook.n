@@ -36,7 +36,7 @@ void DBook_MakeDialog(object oPC) {
 		return;
 	}
 
-	int nID = 0, nCount = 0;
+	int nID = 0, nCount = 0, cancraft = 0;
 	string sName, sDesc;
 	string sRecipeText;
 
@@ -49,16 +49,30 @@ void DBook_MakeDialog(object oPC) {
 				IntToString(nCSkill) + " order by name asc;");
 		else
 			pQ(
-				"select id, name from craft_recipes where id = (select recipe from craft_rcpbook where craft_recipes.id = craft_rcpbook.recipe and character = "
-				+ IntToString(nCID) +
-				" and cskill = " + IntToString(nCSkill) + " limit 1) and active = 't' order by name asc;");
+				"select " + 
+					"id, name, " + 
+					"(cskill_min <= (select skill_practical from craft_skill where cskill = " + pSi(nCSkill) + " and character = " + pSi(nCID) + ")) as cancraft " +
+				
+				"from craft_recipes where cskill = " + pSi(nCSkill) + " and (" + 
+
+					// Its a automatically received recipe
+					"( automatic = true and cskill_min <= 10 + (select skill_practical from craft_skill where cskill = " + pSi(nCSkill) + " and character = " + pSi(nCID) + ") ) " +
+						" or " +
+					// Its in the players recipe book
+					"( id = (select recipe from craft_rcpbook where craft_recipes.id = craft_rcpbook.recipe and character = " + pSi(nCID) + " and cskill = " + pSi(nCSkill) +")  ) " + 
+
+				// Also, it HAS to be active for it to show up (killswitch)
+				") and active = true order by name asc;"
+			);
 
 		while ( pF() ) {
 			nID = pGi(1);
 			sName = pG(2);
+			cancraft = pGb(3);
 
 			AddListItem(oPC, "rcp", sName);
 			SetListInt(oPC, "rcp", nID);
+			SetListDisplayMode(oPC, "rcp", cancraft ? 1 : -1);
 
 			nCount += 1;
 		}
