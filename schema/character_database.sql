@@ -25,7 +25,7 @@ CREATE UNIQUE INDEX account_unique ON accounts USING btree (account);
 
 CREATE TABLE characters (
     id serial unique primary key not null,
-    account integer references accounts,
+    account integer references accounts not null,
     "character" character varying NOT NULL,
     race character varying,
     subrace character varying,
@@ -97,3 +97,14 @@ CREATE INDEX characters_idx ON characters USING btree ("character");
 
 CREATE VIEW character_map AS
     SELECT accounts.id AS account_id, accounts.account, characters.id AS character_id, characters."character", characters.xp FROM accounts, characters WHERE (accounts.id = characters.account) ORDER BY accounts.id;
+
+
+
+CREATE TABLE comments (
+    id serial unique primary key not null,
+    date timestamp with time zone DEFAULT now() NOT NULL,
+    status character varying DEFAULT 'private'::character varying NOT NULL,
+    "character" integer references characters not null,
+    body text not null,
+    account integer references accounts not null
+);
