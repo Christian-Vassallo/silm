@@ -24,8 +24,10 @@ void main() {
 		return;
 
 	} else if (!GetLocalInt(pen, "ticking") && d20() > 14) {
-		FloatingTextStringOnCreature("Der Kugelschreiber federt ans Kinn.", oPC, false);
+		FloatingTextStringOnCreature("Der Kugelschreiber federt Euch ans Kinn.", oPC, false);
 		ApplyEffectToObject(DTT, EffectKnockdown(), oPC, 3f);
+
+		return;
 	}
 
 	
@@ -75,6 +77,6 @@ void tick(object oPen) {
 	ticks++;
 	SetLocalInt(oPen, "ticks", ticks);
 
-	float fd = itof(Random(99) + 50);
+	float fd = itof(Random(25) + 9);
 	DelayCommand(fd, tick(oPen));
 }
