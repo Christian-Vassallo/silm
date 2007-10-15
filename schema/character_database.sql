@@ -93,3 +93,7 @@ CREATE TABLE characters (
 );
 
 CREATE INDEX characters_idx ON characters USING btree ("character");
+
+
+CREATE VIEW character_map AS
+    SELECT accounts.id AS account_id, accounts.account, characters.id AS character_id, characters."character", characters.xp FROM accounts, characters WHERE (accounts.id = characters.account) ORDER BY accounts.id;
