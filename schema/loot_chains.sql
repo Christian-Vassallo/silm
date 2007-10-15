@@ -16,7 +16,3 @@ CREATE TABLE loot_chains (
 
 CREATE VIEW loot_aggregator AS
     SELECT loot_chains.loot, loot_chains."replace", loot_chains.racial_type, loot_chains.resref, loot_chains.tag, loot_chains.name FROM loot_chains WHERE ((random() - loot_chains.chance) <= (0)::double precision) ORDER BY loot_chains.racial_type, loot_chains.tag, loot_chains.resref, loot_chains.name, loot_chains."order";
-
-
-CREATE VIEW loot_gem_aggregator AS
-    SELECT gem_chains.loot, gem_chains."replace", gem_chains.area, gem_chains.stone FROM gem_chains WHERE ((random() - gem_chains.chance) <= (0)::double precision) ORDER BY gem_chains.area, gem_chains.stone, gem_chains."order";
