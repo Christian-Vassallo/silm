@@ -29,5 +29,7 @@
 #define strlen(str) GetStringLength(str)
 #define substr(str,start,len) GetSubString(str,start,len)
 #define strpos(str,find) FindSubString(str,find)
+#define strlwr(s) GetStringLowerCase(s)
+#define strupper(s) GetStringUpperCase(s)
 #endif
 
