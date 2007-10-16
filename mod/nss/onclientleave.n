@@ -12,7 +12,7 @@ void main() {
 	int nMsgCount = GetLocalInt(oPC, "message_count");
 
 
-	int nGold = Money2Value(CountCreatureMoney(oPC, 0));
+	int nGold = Money2Value(CountInventoryMoney(oPC, 0));
 	audit("logout", oPC, audit_fields("xp", IntToString(GetXP(oPC)), "gold", IntToString(nGold), "messages", IntToString(nMsgCount)));
 
 	if (!GetIsDM(oPC))
