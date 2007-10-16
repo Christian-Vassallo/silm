@@ -349,7 +349,7 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 	string sDMFlag = GetIsDM(oPC) ? "dm_" : "";
 	SetLocalInt(GetModule(), GetPCName(oPC) + sDMFlag + "_cid", nCID);
 
-	int nGold = Money2Value(CountCreatureMoney(oPC, 0));
+	int nGold = Money2Value(CountInventoryMoney(oPC, 0));
 	// Update base data
 	pQ("update characters set " +
 		"race = " + pE(RaceToString(oPC)) + ", " +

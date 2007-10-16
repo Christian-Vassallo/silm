@@ -157,14 +157,14 @@ void StartGame() {
 		SetLocalObject(oCardStack, "cg_oPlayer" + IntToString(i), oPlayer);
 
 		/* Convert the money into the gold piece value */
-		GiveGoldToCreature(oPlayer, Money2Value(CountCreatureMoney(oPlayer, TRUE)));
+		GiveGoldToCreature(oPlayer, Money2Value(CountInventoryMoney(oPlayer, TRUE)));
 
 	}
 	iPlayerCount++;
 	oPlayer = OBJECT_SELF;
 	SetLocalInt(oPlayer, "cg_iCG", TRUE);
 	SetLocalObject(oCardStack, "cg_oPlayer" + IntToString(iPlayerCount), oPlayer);
-	GiveGoldToCreature(oPlayer, Money2Value(CountCreatureMoney(oPlayer, TRUE)));
+	GiveGoldToCreature(oPlayer, Money2Value(CountInventoryMoney(oPlayer, TRUE)));
 
 	SetLocalInt(oCardStack, "cg_iPlayerCount", iPlayerCount);
 	SetLocalInt(oCardStack, "cg_iGame", iGame);
