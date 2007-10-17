@@ -62,7 +62,7 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 	}
 
 
-	int nPCMoney = Money2Value(CountCreatureMoney(oPC, 0));
+	int nPCMoney = Money2Value(CountInventoryMoney(oPC, 0));
 
 
 	// Main menue.
@@ -167,7 +167,7 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 
 			nAvailable = 1;
 
-			oSell = GetItemResRefPossessedBy(oPC, sResRef);
+			oSell = GetItemResRefPossessedBy(oMerc, sResRef);
 
 			// Do not sell non-existant items
 			if ( nCount == 0 )

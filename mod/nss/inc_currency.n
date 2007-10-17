@@ -17,7 +17,9 @@ struct Money Value2Money(int iValue, int iBestCoinage = TRUE);
 
 int Money2Value(struct Money stCoins);
 
-struct Money CountCreatureMoney(object oPC, int iDestroy = FALSE);
+// Counts all ITEM money that is in oWithInventory
+// optionally destroying it along the way.
+struct Money CountInventoryMoney(object oWithInventory, int iDestroy = FALSE);
 
 void GiveValueToCreature(object oPC, int iValue, int iBestCoinage = TRUE);
 
@@ -135,12 +137,13 @@ int Money2Value(struct Money stCoins) {
 		   stCoins.copper;
 }
 
-struct Money CountCreatureMoney(object oPC, int iDestroy = FALSE) {
+struct Money CountInventoryMoney(object oWithInventory, int iDestroy = FALSE) {
 	struct Money stSum;
-	object oItem = GetFirstItemInInventory(oPC);
+	
+	object oItem = GetFirstItemInInventory(oWithInventory);
 
 	while ( GetIsObjectValid(oItem) ) {
-		string sTag = GetTag(oItem);
+		string sTag = strupper(GetTag(oItem));
 
 		if ( sTag == "COIN_1000" ) {
 			stSum.platinum += GetItemStackSize(oItem);
@@ -155,13 +158,14 @@ struct Money CountCreatureMoney(object oPC, int iDestroy = FALSE) {
 			stSum.copper += GetItemStackSize(oItem);
 			if ( iDestroy ) DestroyObject(oItem);
 		}
-		oItem = GetNextItemInInventory(oPC);
+		oItem = GetNextItemInInventory(oWithInventory);
 	}
+
 	return stSum;
 }
 
 int GetValue(object oPC) {
-	return Money2Value(CountCreatureMoney(oPC));
+	return Money2Value(CountInventoryMoney(oPC));
 }
 
 void GiveMoneyToCreature(object oPC, struct Money stCoins) {
@@ -218,7 +222,7 @@ void GiveValueToCreature(object oPC, int iValue, int iBestCoinage = TRUE) {
 }
 
 void TakeValueFromCreature(int iValue, object oPC, int bDestroy = FALSE) {
-	struct Money stDifference = CountCreatureMoney(oPC);
+	struct Money stDifference = CountInventoryMoney(oPC);
 
 	struct Money stAmount = stDifference;
 

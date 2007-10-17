@@ -13,7 +13,7 @@ void main() {
 
 	ChatPCin(oPC);
 
-	int nGold = Money2Value(CountCreatureMoney(oPC, 0));
+	int nGold = Money2Value(CountInventoryMoney(oPC, 0));
 
 	audit("login", oPC, audit_fields("key", GetPCPublicCDKey(oPC), "xp", IntToString(GetXP(oPC)), "gold",
 			IntToString(nGold)));
