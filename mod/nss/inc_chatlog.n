@@ -10,7 +10,7 @@ void ChatLog(object oPC, int nMode, string sMessage, object oTo) {
 	//     return;
 	// Log NPCs too.
 
-	int nDontLogForArea = GetLocalInt(GetArea(oPC), "dont_lastlog") == 1;
+	int nDontLogForArea = GetLocalInt(GetArea(oPC), "dont_log") == 1;
 
 	if ( nDontLogForArea )
 		return;

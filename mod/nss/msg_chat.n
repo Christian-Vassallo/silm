@@ -297,6 +297,7 @@ int OnPreText(object oPC, string sText, int iMode, object oTo = OBJECT_INVALID) 
 		&& !( iMode & MODE_FORCETALK ) 
 		&& !( iMode & MODE_TELEPATHICBOND )
 		&& !( iMode & MODE_QUICKJUMP )
+		&& !GetLocalInt(GetArea(oPC), "dont_log")
 	) {
 
 
@@ -517,29 +518,33 @@ int HandleDelegate(object oPC, string sText, int iMode, object oTo = OBJECT_INVA
 
 	string sOPCId = ObjectToString(oPC);
 
-	object o = GetFirstPC();
-	while ( GetIsObjectValid(o) ) {
+	if (!GetLocalInt(GetArea(oPC), "dont_log")) {
 
-		if ( oPC != o/* TODO && !GetHeard() */ ) {
-			// Dont delegate to ourselves, eh?
+		object o = GetFirstPC();
+		while ( GetIsObjectValid(o) ) {
 
-			if ( iMode & MODE_COMMAND ) {
-				if ( GetLocalInt(o, "d_" + IntToString(MODE_COMMAND)) || GetLocalInt(o, "d_" + sOPCId) ) {
-					c += 1;
-					SendMessageToPC(o, "D[" +
-						IntToString(MODE_COMMAND) + "/" + sMode + "] " + PCToString(oPC, 1) + ": " + sText);
-				}
-			} else {
-				if ( GetLocalInt(o, "d_all") || GetLocalInt(o, sChan) || GetLocalInt(o, "d_" + sOPCId) ) {
-					if ( !(GetIsDM(oPC) && iMode & MODE_DM) ) {
+			if ( oPC != o/* TODO && !GetHeard() */ ) {
+
+				// Dont delegate to ourselves, eh?
+
+				if ( iMode & MODE_COMMAND ) {
+					if ( GetLocalInt(o, "d_" + IntToString(MODE_COMMAND)) || GetLocalInt(o, "d_" + sOPCId) ) {
 						c += 1;
-						SendMessageToPC(o, "D[" + sMode + "] " + PCToString(oPC, 1) + ": " + sText);
+						SendMessageToPC(o, "D[" +
+							IntToString(MODE_COMMAND) + "/" + sMode + "] " + PCToString(oPC, 1) + ": " + sText);
+					}
+				} else {
+					if ( GetLocalInt(o, "d_all") || GetLocalInt(o, sChan) || GetLocalInt(o, "d_" + sOPCId) ) {
+						if ( !(GetIsDM(oPC) && iMode & MODE_DM) ) {
+							c += 1;
+							SendMessageToPC(o, "D[" + sMode + "] " + PCToString(oPC, 1) + ": " + sText);
+						}
 					}
 				}
 			}
-		}
 
-		o = GetNextPC();
+			o = GetNextPC();
+		}
 	}
 
 	return c;
