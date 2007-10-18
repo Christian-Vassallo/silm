@@ -3,6 +3,8 @@
 LISTHOME=$(HOME)
 NAME=www.silbermarken.de
 
+AREAS=$(shell ls area/*.git area/*.are area/*.gic | grep -v ooc_solace)
+
 # This gets packaged into your final module
 VALIDEXT=area/\*.git area/\*.are \
 	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
@@ -12,7 +14,7 @@ VALIDEXT=area/\*.git area/\*.are \
 	`find uti -iname *.uti` \
  	nss/\*.ncs 
 
-VALIDEXTDEV=area/\*.git area/\*.gic area/\*.are \
+VALIDEXTDEV=$(AREAS) \
 	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
 	utc/\*.utc utd/\*.utd ute/\*.ute \
 	`find uti -iname *.uti` \
@@ -21,7 +23,7 @@ VALIDEXTDEV=area/\*.git area/\*.gic area/\*.are \
 	nss/\*.ncs nss/\*.nss
 
 
-VALIDEXTBUILDER=area/\*.git area/\*.gic area/\*.are \
+VALIDEXTBUILDER=$(AREAS) \
 	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
 	utc/\*.utc utd/\*.utd ute/\*.ute \
 	`find uti -iname *.uti` \
