@@ -96,3 +96,8 @@ CREATE TABLE craft_stat (
     fail integer DEFAULT 0 NOT NULL,
     "last" integer DEFAULT 0 NOT NULL
 );
+
+
+create function recipe_to_name(int) returns varchar 
+	as 'select name from craft_recipes where id = $1;'
+	language sql stable;
