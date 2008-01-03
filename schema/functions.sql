@@ -24,3 +24,12 @@ CREATE FUNCTION unix_timestamp() RETURNS integer
 CREATE FUNCTION unixts() RETURNS integer
     AS $$select date_part('epoch', now())::int;$$
     LANGUAGE sql STABLE;
+
+CREATE FUNCTION aid_to_str(int) returns varchar
+	as 'select account from accounts where id = $1;'
+	language sql stable;
+
+create function cid_to_str(int) returns varchar
+	as 'select character from characters where id = $1;'
+	language sql stable;
+
