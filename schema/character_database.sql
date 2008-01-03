@@ -108,3 +108,12 @@ CREATE TABLE comments (
     body text not null,
     account integer references accounts not null
 );
+
+CREATE FUNCTION aid_to_str(int) returns varchar
+	as 'select account from accounts where id = $1;'
+	language sql stable;
+
+create function cid_to_str(int) returns varchar
+	as 'select character from characters where id = $1;'
+	language sql stable;
+
