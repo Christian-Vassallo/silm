@@ -101,3 +101,7 @@ CREATE TABLE craft_stat (
 create function recipe_to_name(int) returns varchar 
 	as 'select name from craft_recipes where id = $1;'
 	language sql stable;
+
+create or replace function cskill_to_name(int) returns varchar
+	as 'select coalesce( (select name from craft_crafts where id = $1), $1::varchar);'
+	language sql stable;
