@@ -27,6 +27,7 @@ CREATE TABLE characters (
     id serial unique primary key not null,
     account integer references accounts not null,
     "character" character varying NOT NULL,
+	portrait varchar default '' not null,
     race character varying,
     subrace character varying,
     sex character(1),

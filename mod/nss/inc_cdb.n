@@ -352,6 +352,7 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 	int nGold = Money2Value(CountInventoryMoney(oPC, 0));
 	// Update base data
 	pQ("update characters set " +
+		"portrait = " + pE(GetPortraitResRef(oPC)) + ", " +
 		"race = " + pE(RaceToString(oPC)) + ", " +
 		"subrace = " + pE(GetSubRace(oPC)) + ", " +
 		"alignment_moral = '" + IntToString(GetAlignmentGoodEvil(oPC)) + "', " +
