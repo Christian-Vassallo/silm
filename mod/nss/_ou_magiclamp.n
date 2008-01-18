@@ -1,4 +1,4 @@
-__sp_extern("_gen")
+__sp_extern("inc_magiclamp")
 /*
 	AssignCommand(oMyPlaceable, PlayAnimation(ANIMATION_PLACEABLE_DEACTIVATE));
 	DelayCommand(0.4, SetPlaceableIllumination(oMyPlaceable, FALSE));
@@ -6,42 +6,9 @@ __sp_extern("_gen")
 */
 
 
-void killvfx(object o) {
-	RemoveAllEffects(o);
-}
-
-
 void main() {
 	object oLamp = OBJECT_SELF;
 	object oPC = GetLastUsedBy();
 
-	int nActive = GetLocalInt(oLamp, "active");
-
-	if (!GetIsDM(oPC) &&
-		GetLevelByClass(CLASS_TYPE_WIZARD, oPC) < 1 &&
-		GetLevelByClass(CLASS_TYPE_BARD, oPC) < 1 &&
-		GetLevelByClass(CLASS_TYPE_SORCERER, oPC) < 1) {
-			
-			SendMessageToPC(oPC, "Du hast nicht magischen die Faehigkeiten, dieses Geraet zu bedienen.");
-			return;
-	}
-
-
-	if (nActive) {
-		nActive = false;
-		
-		AssignCommand(oLamp, PlayAnimation(ANIMATION_PLACEABLE_DEACTIVATE));
-		DelayCommand(3.0, killvfx(oLamp));
-
-	} else {
-		nActive = true;
-		
-		AssignCommand(oLamp, PlayAnimation(ANIMATION_PLACEABLE_ACTIVATE));
-		DelayCommand(1.0, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_DUR_LIGHT_BLUE_5)), oLamp));
-		DelayCommand(8.0, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_DUR_LIGHT_BLUE_20)), oLamp));
-	}
-		
-//	DelayCommand(8, RecomputeStaticLighting(GetArea(oLamp)));
-
-	SetLocalInt(oLamp, "active", nActive);
+	toggleMagicLamp(oLamp);
 }
