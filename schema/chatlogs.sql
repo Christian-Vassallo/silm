@@ -11,7 +11,10 @@ CREATE TABLE chatlogs (
     area character varying,
     ts timestamp with time zone DEFAULT now(),
     text text,
-    "mode" integer
+    "mode" integer,
+	heard_by int[] default '{}' not null
 );
 
 CREATE INDEX chatlog_ts_idx ON chatlogs USING btree (ts);
+create index chatlogs_heard_by_idx on chatlogs (heard_by);
+create index chatlogs_area_list_idx on chatlogs (area);
