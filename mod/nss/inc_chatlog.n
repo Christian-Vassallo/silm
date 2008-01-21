@@ -18,16 +18,16 @@ void ChatLog(object oPC, int nMode, string sMessage, object oTo) {
 
 
 	string sHeardBy;
-	int count = 0;
+	int heard_count = 0;
 	sHeardBy += "ARRAY[";
 	iterate_players(
 		if (oPC != oIterate && hears(oPC, oIterate, nMode & MODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER) && GetCharacterID(oIterate) > 0) {
-			count += 1;
+			heard_count += 1;
 			sHeardBy += itoa(GetCharacterID(oIterate));
 			sHeardBy += ",";
 		}
 	);
-	if (count > 0)
+	if (heard_count > 0)
 		sHeardBy = substr(sHeardBy, 0, strlen(sHeardBy) - 2);
 	sHeardBy += "]";
 
@@ -45,13 +45,24 @@ void ChatLog(object oPC, int nMode, string sMessage, object oTo) {
 	sAccTo = pE(GetPCPlayerName(oTo)),
 	sCharTo = pE(GetName(oTo));
 
-	pQ(
-		"insert into chatlogs (account,character,account_s,character_s,t_account,t_character,t_account_s,t_character_s,area,text,mode, heard_by) values("
-		+
-		IntToString(nAID) + ", " + IntToString(nCID) + ", " + sAccount + ", " + sChar + ", " +
-		IntToString(nTAID) + ", "  + IntToString(nTCID) + ", " + sAccTo + ", " + sCharTo + ", " +
-		sArea + ", " + sText + ", " + IntToString(nMode) + ", " + sHeardBy +
-		");");
+	if (heard_count > 0) {
+		pQ(
+			"insert into chatlogs (account,character,account_s,character_s,t_account,t_character,t_account_s,t_character_s,area,text,mode, heard_by) values("
+			+
+			IntToString(nAID) + ", " + IntToString(nCID) + ", " + sAccount + ", " + sChar + ", " +
+			IntToString(nTAID) + ", "  + IntToString(nTCID) + ", " + sAccTo + ", " + sCharTo + ", " +
+			sArea + ", " + sText + ", " + IntToString(nMode) + ", " + sHeardBy +
+			");");
+
+	} else {
+		pQ(
+			"insert into chatlogs (account,character,account_s,character_s,t_account,t_character,t_account_s,t_character_s,area,text,mode) values("
+			+
+			IntToString(nAID) + ", " + IntToString(nCID) + ", " + sAccount + ", " + sChar + ", " +
+			IntToString(nTAID) + ", "  + IntToString(nTCID) + ", " + sAccTo + ", " + sCharTo + ", " +
+			sArea + ", " + sText + ", " + IntToString(nMode) + 
+			");");
+	}
 
 	// SQLQuery("delete from chatlog order by timestamp asc limit 0,500;");
 
