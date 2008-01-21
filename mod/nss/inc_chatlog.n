@@ -15,6 +15,22 @@ void ChatLog(object oPC, int nMode, string sMessage, object oTo) {
 	if ( nDontLogForArea )
 		return;
 
+
+
+	string sHeardBy;
+	int count = 0;
+	sHeardBy += "ARRAY[";
+	iterate_players(
+		if (oPC != oIterate && hears(oPC, oIterate, nMode & MODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER) && GetCharacterID(oIterate) > 0) {
+			count += 1;
+			sHeardBy += itoa(GetCharacterID(oIterate));
+			sHeardBy += ",";
+		}
+	);
+	if (count > 0)
+		sHeardBy = substr(sHeardBy, 0, strlen(sHeardBy) - 2);
+	sHeardBy += "]";
+
 	int
 	nAID = GetAccountID(oPC),
 	nCID = GetCharacterID(oPC),
@@ -26,16 +42,15 @@ void ChatLog(object oPC, int nMode, string sMessage, object oTo) {
 	sChar = pE(GetName(oPC)),
 	sText = pE(sMessage),
 	sArea = pE(GetTag(GetArea(oPC))),
-
 	sAccTo = pE(GetPCPlayerName(oTo)),
 	sCharTo = pE(GetName(oTo));
 
 	pQ(
-		"insert into chatlogs (account,character,account_s,character_s,t_account,t_character,t_account_s,t_character_s,area,text,mode) values("
+		"insert into chatlogs (account,character,account_s,character_s,t_account,t_character,t_account_s,t_character_s,area,text,mode, heard_by) values("
 		+
 		IntToString(nAID) + ", " + IntToString(nCID) + ", " + sAccount + ", " + sChar + ", " +
 		IntToString(nTAID) + ", "  + IntToString(nTCID) + ", " + sAccTo + ", " + sCharTo + ", " +
-		sArea + ", " + sText + ", " + IntToString(nMode) +
+		sArea + ", " + sText + ", " + IntToString(nMode) + ", " + sHeardBy +
 		");");
 
 	// SQLQuery("delete from chatlog order by timestamp asc limit 0,500;");
