@@ -1,7 +1,6 @@
 __sp_extern("inc_events")
 __sp_extern("inc_cdb")
 __sp_extern("inc_spelltools")
-__sp_extern("inc_blackboard")
 #include "_const.nh"
 
 void OnActivate(object oItem, object oActivator);
@@ -34,8 +33,8 @@ void main() {
 void OnActivate(object oItem, object oActivator) {
 	object oTarget = GetItemActivatedTarget();
 
-	if ( oTarget != oActivator && !GetIsBlackBoard(oTarget) ) {
-		Floaty("Benutzt das Pergament auf Euch selbst, oder auf ein schwarzes Brett.", oActivator, 0);
+	if ( oTarget != oActivator ) {
+		Floaty("Benutzt das Pergament auf Euch selbst.", oActivator, 0);
 		return;
 	}
 
@@ -57,26 +56,6 @@ void OnActivate(object oItem, object oActivator) {
 			SetLocalInt(oItem, "paper_sigil_broken", 1);
 		}
 	}
-
-
-	if ( GetIsBlackBoard(oTarget) ) {
-		// Pin note to blackboard
-		struct BlackboardEntry bbE;
-		bbE.cid = GetLocalInt(oItem, "paper_cid_0");
-		bbE.title = GetStringLeft(GetLocalString(oItem, "paper_text_0"), 15);
-		bbE.text = GetAllText(oItem); // GetLocalString(oItem, "paper_text_1");
-		bbE.sigil = GetLocalInt(oItem, "paper_sigil");
-		bbE.sigil_text = GetLocalString(oItem, "paper_sigil_name");
-		bbE.sigil_label = GetLocalString(oItem, "paper_sigil_label");
-		bbE.explosive_runes = GetLocalInt(oItem, "explosive_runes_dc");
-		bbE.sepia_snake_sigil = GetLocalInt(oItem, "sepia_snake_sigil_dc");
-
-		Floaty(".. und haengt es an das schwarze Brett.", oActivator, 1);
-		AddBlackBoardEntry(oTarget, bbE);
-		DestroyObject(oItem);
-		return;
-	}
-
 
 
 	int nTotalSize = GetTotalTextLength(oItem);
