@@ -46,7 +46,7 @@ void LoadPlaciesForArea(object oA) {
 	pQ("select resref,x,y,z,f,name,id,locked from " +
 		PLAC_TABLE + " where area = " + sAreaTag + ";");
 
-	while ( SQL_SUCCESS == pF() ) {
+	while (pF()) {
 
 		sResRef = pG(1);
 		v.x = StringToFloat(pG(2));
