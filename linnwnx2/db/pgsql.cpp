@@ -70,7 +70,7 @@ BOOL CPgSQL::Connect (const char *server, const char *user, const char *pass, co
 		free(connstring);
 		return false;
 	}
-
+	
 	free(connstring);
 
 	return true;
@@ -99,16 +99,11 @@ BOOL CPgSQL::Execute (const uchar* query)
 	{
 		return false;
 	}
-
-	if (PQexec (pgsql, (const char *) query) != 0) {
-		return false;
-	}
-	else {
+	
 		// successfull retreived the results from the SELECT
 		NumCol = PQnfields (result);
-		// Set the CurCol cursor to 0
+		// Set the CurCol cursor to 0	 
 		CurRow = 0;
-	}
 	return true;
 }
 
@@ -125,12 +120,12 @@ uint CPgSQL::Fetch (char* buffer, uint size)
 	buffer[0] = '\0';
 
 	// walk through the resultset
-	if (result == NULL || PQresultStatus(result)) return (uint)-1;
+	if (result == NULL || PQresultStatus(result) == PGRES_FATAL_ERROR) return (uint)-1;
 
 	// Check for empty set
 	if (NumCol == 0) {
 	  return (uint)-1;
-	}
+	}  
 
 
 	if (PQntuples(result) > CurRow)
@@ -143,13 +138,13 @@ uint CPgSQL::Fetch (char* buffer, uint size)
 			if ((PQgetlength(result, CurRow, i) > 0) && (total < size))	{
 				memcpy (&buffer[totalbytes], PQgetvalue(result, CurRow, i), PQgetlength(result, CurRow, i));
 				totalbytes = total;
-		}
+	    	}
 
 			// add seperator as long we are not at last column
 			if ((i != NumCol - 1) && (totalbytes + 1 < size)) {
 				buffer[totalbytes] = '¬'; // ascii 170
 				totalbytes++;
-		}
+	    	}
 		}
 		buffer[totalbytes] = 0;
 	}
@@ -159,77 +154,71 @@ uint CPgSQL::Fetch (char* buffer, uint size)
 
 BOOL CPgSQL::WriteScorcoData(char* SQL, BYTE* pData, int Length)
 {
-/*	int res;
-	unsigned long len;
-	//char* Data = new char[Length * 2 + 1 + 2];
-	char *Data = NULL;
+	int res;
+	PGresult *sco_result;
+	unsigned int len;
+	char* Data = new char[Length * 2 + 1 + 2];
+	unsigned char *Data2 = NULL;
 	char* pSQL = new char[MAXSQL + Length * 2 + 1];
 
 	//len = mysql_real_escape_string (&mysql, Data + 1, (const char*)pData, Length);
-	Data = PQescapeByteaConn(pgsql, pData, Length, &len);
-
+	Data2 = PQescapeByteaConn(pgsql, pData, Length, &len);
+	
+	memcpy(Data + 1, Data2, len);
 	Data[0] = Data[len + 1] = 39; //'
-	Data[len + 2] = 0x0;
+	Data[len + 2] = 0x0; 
 	sprintf(pSQL, SQL, Data);
 
-	MYSQL_RES *result = mysql_store_result (&mysql);
-	res = mysql_query(&mysql, (const char *) pSQL);
+	sco_result = PQexec (pgsql, pSQL);
 
-	mysql_free_result(result);
+	if (sco_result == NULL || PQresultStatus(sco_result) == PGRES_FATAL_ERROR)
+		res = 0;
+	else
+		res = 1;
+
+	PQclear (sco_result);
+
 	delete[] pSQL;
 	delete[] Data;
+	PQfreemem(Data2);
 
 	if (res == 0)
 		return true;
-	else*/
+	else
 		return false;
 }
 
 BYTE* CPgSQL::ReadScorcoData(char* SQL, char *param, BOOL* pSqlError, int *size)
 {
-/*	MYSQL_RES *rcoresult;
+	PGresult *rcoresult;
 	if (strcmp(param, "FETCHMODE") != 0)
-	{
-		if (mysql_query(&mysql, (const char *) SQL) != 0)
+	{	
+		rcoresult = PQexec (pgsql, SQL);
+		if (rcoresult == NULL || PQresultStatus(rcoresult) == PGRES_FATAL_ERROR)
 		{
-			*pSqlError = true;
-			return NULL;
-		}
-
-		if (result)
-		{
-      mysql_free_result(result);
-      result = NULL;
-		}
-		rcoresult = mysql_store_result (&mysql);
-		if (!rcoresult)
-		{
+			PQclear (rcoresult);
 			*pSqlError = true;
 			return NULL;
 		}
 	}
 	else rcoresult=result;
 
-	MYSQL_ROW row;
-	*pSqlError = false;
-	row = mysql_fetch_row(rcoresult);
-	if (row)
+	if(PQntuples(rcoresult) > 0)
 	{
-		unsigned long* length = mysql_fetch_lengths(rcoresult);
-		// allocate buf for result!
-		char* buf = new char[*length];
+		unsigned long length = PQgetlength(rcoresult, 0, 0);
+		char *buf = new char[length];
 		if (!buf) return NULL;
 
-		memcpy(buf, row[0], length[0]);
-		*size = length[0];
-		mysql_free_result(rcoresult);
+		memcpy(buf, PQgetvalue(rcoresult, 0, 0), length);
+		*size = length;
+		PQclear (rcoresult);
 		return (BYTE*)buf;
 	}
 	else
 	{
-		mysql_free_result(rcoresult);
+		PQclear (rcoresult);
 		return NULL;
-	}*/
+	}
 	return NULL;
 }
 
