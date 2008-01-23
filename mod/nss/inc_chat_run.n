@@ -424,8 +424,6 @@ void RegisterAllCommands() {
 	RegisterCommand("rehash", "", 0, 0);
 	RAF(AMASK_CAN_EDIT_GV);
 
-	RegisterCommand("sql", "", 1, 1);
-	RAF(AMASK_CAN_DO_BACKEND);
 	RegisterCommand("psql", "", 1, 1);
 	RAF(AMASK_CAN_DO_BACKEND);
 
@@ -713,8 +711,6 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( "re" == sCommand )
 		ret = CommandGoReturn(oPC, iMode);
 	
-	if ( "sql" == sCommand )
-		ret = CommandSQL(oPC, iMode);
 	if ( "psql" == sCommand )
 		ret = CommandpSQL(oPC, iMode);
 	
