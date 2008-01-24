@@ -30,6 +30,8 @@ __sp_extern("inc_nwnx_func")
 __sp_extern("inc_track")
 __sp_extern("inc_objset")
 
+int CommandSCO(object oPC, int iMode);
+int CommandRCO(object oPC, int iMode);
 
 int CommandRunScript(object oPC, int iMode);
 
@@ -214,6 +216,25 @@ int CommandStub(object oPC, int iMode) {
 }
 
 
+int CommandSCO(object oPC, int iMode) {
+	string query = arg(0);
+	object o = GetTarget();
+
+	if (!GetIsObjectValid(o))
+		return NotifyBadTarget();
+
+	pSCO(query, o);
+
+	return OK;
+}
+
+int CommandRCO(object oPC, int iMode) {
+	string query = arg(0);
+
+	pRCO(query, oPC);
+
+	return OK;
+}
 
 int CommandRunScript(object oPC, int iMode) {
 	string s = arg(0);
