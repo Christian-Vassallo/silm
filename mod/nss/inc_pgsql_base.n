@@ -59,7 +59,7 @@ string pSf(float f, int b0isNULL = TRUE);
 string pSb(int b);
 
 // Stores object with query. Place %s where the object binary data shall go.
-void pSCO(string query, object object);
+void pSCO(string query, object obj);
 
 // Retrieves object with query. Query has to return exactly one value.
 object pRCO(string query, object owner = OBJECT_INVALID);
@@ -122,9 +122,9 @@ int pSQLFetch() {
 }
 
 
-void pSCO(string query, object object) {
+void pSCO(string query, object obj) {
 	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!SETSCORCOSQL", query);
-	StoreCampaignObject("NWNX", "-", object);
+	StoreCampaignObject("NWNX", "-", obj);
 }
 
 object pRCO(string query, object owner = OBJECT_INVALID) {
