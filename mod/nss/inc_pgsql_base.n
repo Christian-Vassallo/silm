@@ -1,3 +1,5 @@
+#define NWNX_TOKEN "ODBC2"
+
 // Run on module start
 void pSQLInit();
 
@@ -56,7 +58,11 @@ string pSf(float f, int b0isNULL = TRUE);
 // Return a bool formatted for insert or update (0 = false, rest = true)
 string pSb(int b);
 
+// Stores object with query. Place %s where the object binary data shall go.
+void pSCO(string query, object object);
 
+// Retrieves object with query. Query has to return exactly one value.
+object pRCO(string query, object owner = OBJECT_INVALID);
 
 /************************************/
 /* Implementation                   */
@@ -73,7 +79,7 @@ void pSQLInit() {
 	for ( i = 0; i < 8; i++ )  // reserve 8*128 bytes
 		sMemory +=
 			"................................................................................................................................";
-	SetLocalString(GetModule(), "NWNX!ODBC2!SPACER", sMemory);
+	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!SPACER", sMemory);
 //	pQ("set search_path = nwserver;");
 	pQ("set client_encoding = 'iso-8859-15';");
 }
@@ -89,7 +95,7 @@ void pQ(string sSQL) {
 
 void pSQLExecDirect(string sSQL) {
 	SetLocalString(GetModule(), "psql_last_query", sSQL);
-	SetLocalString(GetModule(), "NWNX!ODBC2!EXEC", sSQL);
+	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!EXEC", sSQL);
 }
 
 void pSQLQuery(string sSQL) {
@@ -104,8 +110,8 @@ int pSQLFetch() {
 	string sRow;
 	object oModule = GetModule();
 
-	SetLocalString(oModule, "NWNX!ODBC2!FETCH", GetLocalString(oModule, "NWNX!ODBC2!SPACER"));
-	sRow = GetLocalString(oModule, "NWNX!ODBC2!FETCH");
+	SetLocalString(oModule, "NWNX!" + NWNX_TOKEN + "!FETCH", GetLocalString(oModule, "NWNX!" + NWNX_TOKEN + "!SPACER"));
+	sRow = GetLocalString(oModule, "NWNX!" + NWNX_TOKEN + "!FETCH");
 	if ( GetStringLength(sRow) > 0 ) {
 		SetLocalString(oModule, "NWNX_PGSQL_CurrentRow", sRow);
 		return TRUE;
@@ -114,6 +120,18 @@ int pSQLFetch() {
 		return FALSE;
 	}
 }
+
+
+void pSCO(string query, object object) {
+	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!SETSCORCOSQL", query);
+	StoreCampaignObject("NWNX", "-", object);
+}
+
+object pRCO(string query, object owner = OBJECT_INVALID) {
+	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!SETSCORCOSQL", query);
+	return RetrieveCampaignObject("NWNX", "-", GetLocation(owner), owner);
+}
+
 
 void pB() {
 	pSQLQuery("BEGIN;");
