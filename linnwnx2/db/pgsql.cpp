@@ -123,7 +123,7 @@ uint CPgSQL::Fetch (char* buffer, uint size)
 	if (result == NULL || PQresultStatus(result) == PGRES_FATAL_ERROR) return (uint)-1;
 
 	// Check for empty set
-	if (NumCol == 0) {
+	if (NumCol == 0 || PQntuples(result) == 0) {
 	  return (uint)-1;
 	}  
 
@@ -175,7 +175,7 @@ BOOL CPgSQL::WriteScorcoData(char* SQL, BYTE* pData, int Length)
 		res = 0;
 	else
 		res = 1;
-
+	
 	PQclear (sco_result);
 
 	delete[] pSQL;
