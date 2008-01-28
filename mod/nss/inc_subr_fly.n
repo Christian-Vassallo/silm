@@ -4,11 +4,9 @@ __sp_extern("inc_subr_teff")
 void Fly_Effect(object oPC) {
 	object oEff1, oEff2;
 	location lLoc = GetLocation(oPC);
-
-	//oEff1 = CreateObject(OBJECT_TYPE_PLACEABLE,"plc_magicwhite",lLoc);
 	oEff2 = CreateObject(OBJECT_TYPE_PLACEABLE, "plc_dustplume", lLoc);
-	//DelayCommand(5.0f,DestroyObject(oEff1));
-	DelayCommand(4.0f, DestroyObject(oEff2));
+	DelayCommand(3.0f, DestroyObject(oEff2));
+	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DUST_EXPLOSION), lLoc);
 }
 
 int Fly_IsAirborne(object oPC) {

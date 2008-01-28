@@ -15,7 +15,6 @@ __sp_extern("inc_security")
 __sp_extern("inc_getopt")
 __sp_extern("inc_craft_hlp")
 __sp_extern("inc_decay")
-__sp_extern("inc_mysql")
 
 __sp_extern("inc_draw")
 __sp_extern("inc_draw_text")
@@ -31,6 +30,8 @@ __sp_extern("inc_nwnx_func")
 __sp_extern("inc_track")
 __sp_extern("inc_objset")
 
+int CommandSCO(object oPC, int iMode);
+int CommandRCO(object oPC, int iMode);
 
 int CommandRunScript(object oPC, int iMode);
 
@@ -215,6 +216,25 @@ int CommandStub(object oPC, int iMode) {
 }
 
 
+int CommandSCO(object oPC, int iMode) {
+	string query = arg(0);
+	object o = GetTarget();
+
+	if (!GetIsObjectValid(o))
+		return NotifyBadTarget();
+
+	pSCO(query, o);
+
+	return OK;
+}
+
+int CommandRCO(object oPC, int iMode) {
+	string query = arg(0);
+
+	pRCO(query, GetLocation(oPC), oPC);
+
+	return OK;
+}
 
 int CommandRunScript(object oPC, int iMode) {
 	string s = arg(0);
@@ -474,13 +494,6 @@ int CommandInspect(object oPC, int iMode) {
 }
 
 
-int CommandSQL(object oPC, int iMode) {
-	string query = arg(0);
-
-	SQLQuery(query);
-	
-	return OK;
-}
 
 int CommandpSQL(object oPC, int iMode) {
 	string query = arg(0);
@@ -806,18 +819,6 @@ int CommandPlaceable(object oPC, int iMode) {
 			}
 		}
 	}
-
-	/*
-	 * string sText = arg(0);
-	 * if ( nIsPersistent && GetStringLength(sText) > 0) {
-	 * 	ToPC("Setting Scene Text to: " + sText);
-	 * 	SQLQuery("delete from scene_descriptions where pid = " +
-	 * 		IntToString(GetPlaceableID(oTarget)));
-	 * 	SQLQuery("insert into scene_descriptions (pid, text) values(" +
-	 * 		IntToString(GetPlaceableID(oTarget)) + ", " + SQLEscape(sText) +
-	 * 		");");
-	 * 	ToPC("Done.");
-	 * }*/
 
 	ToPC("Open: " + IntToString(GetIsOpen(oTarget)));
 	ToPC("Useable: " + IntToString(GetUseableFlag(oTarget)));

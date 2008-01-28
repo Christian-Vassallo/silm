@@ -16,13 +16,13 @@ NWNXBASE=$(NWNXDIR)/NWNXBase.o $(NWNXDIR)/gline.o
 all: nwnx_odbc.so
 
 nwnx_odbc.so: HookSCORCO.o NWNXodmbc.o mysql.o pgsql.o plugin-odmbc.o $(NWNXBASE)
-        $(CXX) $(FLAGS) -o $@ $^ $(LIBS) $(DEFS)
+	$(CXX) $(FLAGS) -o $@ $^ $(LIBS) $(DEFS)
 
 clean:
-        /bin/rm -f *.o *.so
+	/bin/rm -f *.o *.so
 
 distclean: clean
-        /bin/rm -f Makefile
+	/bin/rm -f Makefile
 
 install: all
-        mkdir -p /home/dumbo/test/
+	mkdir -p /home/dumbo/test/

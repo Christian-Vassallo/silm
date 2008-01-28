@@ -1,6 +1,5 @@
 __sp_extern("inc_audit")
 __sp_extern("inc_debug")
-__sp_extern("inc_mysql")
 __sp_extern("inc_pgsql")
 __sp_extern("inc_nwnx_func")
 __sp_extern("inc_currency")
@@ -824,38 +823,6 @@ int GetIsDMOnline() {
 }
 
 
-
-
-/*int GetRLHour() {
- * 	string sSQL = "SELECT HOUR(CURTIME())";
- * 	SQLExecDirect(sSQL);
- * 	SQLFetch();
- * 	return StringToInt(SQLGetData(1));
- * }
- *
- * string getRLTime() {
- * 	string sSQL = "SELECT CURTIME()";
- * 	SQLExecDirect(sSQL);
- * 	SQLFetch();
- * 	return SQLGetData(1);
- * }
- *
- *
- * int getRLDaysInHBs(int nDays) {
- * 	return 14400*nDays;//60 Sekunden*60 Minuten*24 Stunden*nDays/6 Sekunden
- * }
- *
- * int getHBsInRLDays(int nHBs) {
- * 	return nHBs/14400;
- * }
- *
- * int getRLHoursInHBs(int nHours) {
- * 	return 600*nHours;
- * }
- *
- * int getHBsInRLHours(int nHBs) {
- * 	return nHBs/600;
- * } */
 
 
 void bug(string sMessage) {
