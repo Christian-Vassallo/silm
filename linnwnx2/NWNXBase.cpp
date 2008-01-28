@@ -81,7 +81,7 @@ void CNWNXBase::Log(int priority, const char *pcMsg, ...)
 		va_end(argList);
 
 		// log string in file
-		fprintf (m_fFile, acBuffer);
+		fputs (acBuffer, m_fFile);
 		fflush (m_fFile);
 	}
 }
