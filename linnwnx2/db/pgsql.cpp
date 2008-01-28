@@ -163,20 +163,21 @@ BOOL CPgSQL::WriteScorcoData(char* SQL, BYTE* pData, int Length)
 	//len = mysql_real_escape_string (&mysql, Data + 1, (const char*)pData, Length);
 	Data2 = PQescapeByteaConn(pgsql, pData, Length, &len);
 	
-	Data = new char[len + 1 + 2];
-	pSQL = new char[MAXSQL + len + 2];
+	Data = new char[len + 4];
+	pSQL = new char[MAXSQL + len + 3];
 
-	memcpy(Data + 1, Data2, len);
-	Data[0] = Data[len] = 39; //'
+	memcpy(Data + 2, Data2, len);
+	Data[0] = 'E';
+	Data[1] = Data[len+1] = 39; //'
 	Data[len + 2] = 0x0; 
 	sprintf(pSQL, SQL, Data);
 
 	sco_result = PQexec (pgsql, pSQL);
 
 	if (sco_result == NULL || PQresultStatus(sco_result) == PGRES_FATAL_ERROR)
-		res = 0;
-	else
 		res = 1;
+	else
+		res = 0;
 	
 	PQclear (sco_result);
 
@@ -205,14 +206,13 @@ BYTE* CPgSQL::ReadScorcoData(char* SQL, char *param, BOOL* pSqlError, int *size)
 	}
 	else rcoresult=result;
 
+	*pSqlError = false;
+
 	if(PQntuples(rcoresult) > 0)
 	{
-		unsigned long length = PQgetlength(rcoresult, 0, 0);
-		char *buf = new char[length];
+		unsigned char *buf = PQunescapeBytea((unsigned char *) PQgetvalue(rcoresult, 0, 0), (size_t *) size);
 		if (!buf) return NULL;
 
-		memcpy(buf, PQgetvalue(rcoresult, 0, 0), length);
-		*size = length;
 		PQclear (rcoresult);
 		return (BYTE*)buf;
 	}
