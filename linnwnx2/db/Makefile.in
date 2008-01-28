@@ -1,41 +1,28 @@
-CXX = @CXX@
-FLAGS = -w -fPIC -shared -W -Wall @LDFLAGS@
-DEFS = @DEFS@
+CXX = g++
+#LIBS = -L/usr/lib/mysql -Lsqlite -lmysqlclient -lz
+LIBS = -L/usr/lib/mysql -L/usr/local/pgsql/lib -lpq -lmysqlclient -lz
+FLAGS = -w -fPIC -shared -static -W -Wall -Llib/
+DEFS = -DHAVE_CONFIG_H
 
-###################################################
-# Note: If you're getting missing symbols like
-# compress, deflate, etc. add -lz to the end of
-# the next line and rerun configure
-LIBS = @LIBS@ -L/usr/lib/mysql -lmysqlclient -lpq -lz
-
-# TODO: snarf from configure somehow
-# the user should be able to specify NWNXDIR
-# if NWNXDIR is not specified, configure should
-# probe (.. ../linnwnx2) and die if not found.
-# NWNXDIR = @NWNXDIR@
 NWNXDIR = ..
 
-# CFLAGS = @CFLAGS@ -I$(NWNXDIR)
-# CXXFLAGS= @CXXFLAGS@ $(CFLAGS)
-CPPFLAGS = @CPPFLAGS@ -I$(NWNXDIR)
+# CFLAGS = -g -O2 -I$(NWNXDIR)
+# CXXFLAGS= -g -O2 $(CFLAGS)
+CPPFLAGS = -mcpu=i386 -I$(NWNXDIR)
 
-NWNXBASE=$(NWNXDIR)/NWNXBase.o $(NWNXDIR)/gline.o 
+NWNXBASE=$(NWNXDIR)/NWNXBase.o $(NWNXDIR)/gline.o
+# $(NWNXDIR)/db/data.o $(NWNXDIR)/db/dbmysql.o
 
-all: nwnx_odbc.so nwnx_pgsql.so
+all: nwnx_odbc.so
 
-# dbodbc.o
-nwnx_odbc.so: NWNXmysql.o plugin-mysql.o data.o dbmysql.o
-	$(CXX) $(FLAGS) -o $@ $^ $(LIBS) $(DEFS)
-# pgsql
-nwnx_pgsql.so: NWNXpgsql.o plugin-pgsql.o data.o dbpgsql.o
-	$(CXX) $(FLAGS) -o $@ $^ $(LIBS) $(DEFS)
+nwnx_odbc.so: HookSCORCO.o NWNXodmbc.o mysql.o pgsql.o plugin-odmbc.o $(NWNXBASE)
+        $(CXX) $(FLAGS) -o $@ $^ $(LIBS) $(DEFS)
 
 clean:
-	/bin/rm -f *.o *.so *~ plugin-t
+        /bin/rm -f *.o *.so
 
 distclean: clean
-	/bin/rm -f Makefile
+        /bin/rm -f Makefile
 
 install: all
-	mkdir -p @prefix@/ ; install nwnx_odbc.so @prefix@/
-	mkdir -p @prefix@/ ; install nwnx_pgsql.so @prefix@/
+        mkdir -p /home/dumbo/test/

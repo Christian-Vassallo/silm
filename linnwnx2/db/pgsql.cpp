@@ -1,7 +1,6 @@
 /***************************************************************************
-    CMySQL.cpp: implementation of the CMySQL class.
-    Copyright (C) 2004 Jeroen Broekhuizen (nwnx@jengine.nl)
-    copyright (c) 2006 dumbo (dumbo@nm.ru) & virusman (virusman@virusman.ru)
+    CPgSQL.cpp: implementation of the CPgSQL class.
+    copyright (c) 2008 virusman (virusman@virusman.ru)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -157,15 +156,18 @@ BOOL CPgSQL::WriteScorcoData(char* SQL, BYTE* pData, int Length)
 	int res;
 	PGresult *sco_result;
 	unsigned int len;
-	char* Data = new char[Length * 2 + 1 + 2];
+	char* Data = NULL;
 	unsigned char *Data2 = NULL;
-	char* pSQL = new char[MAXSQL + Length * 2 + 1];
+	char* pSQL = NULL;
 
 	//len = mysql_real_escape_string (&mysql, Data + 1, (const char*)pData, Length);
 	Data2 = PQescapeByteaConn(pgsql, pData, Length, &len);
 	
+	Data = new char[len + 1 + 2];
+	pSQL = new char[MAXSQL + len + 2];
+
 	memcpy(Data + 1, Data2, len);
-	Data[0] = Data[len + 1] = 39; //'
+	Data[0] = Data[len] = 39; //'
 	Data[len + 2] = 0x0; 
 	sprintf(pSQL, SQL, Data);
 
