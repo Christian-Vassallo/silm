@@ -41,13 +41,13 @@ CNWNXFunction::~CNWNXFunction()
 
 void CNWNXFunction::USleep(char* value)
 {
-	int amount = atoi(value);
-	if (amount < 1)
-		amount = 1;
-	if (amount > 5000)
-		amount = 5000;
+       int amount = atoi(value);
+       if (amount < 1)
+               amount = 1;
+       if (amount > 5000)
+               amount = 5000;
 
-	usleep(amount);
+       usleep(amount);
 }
 
 void CNWNXFunction::SetGoldPieceValue(char* value)
@@ -555,6 +555,65 @@ void CNWNXFunction::BootPC(char* value)
 	}
 }
 
+void CNWNXFunction::ActJumpToLimbo(char* value)
+{
+	if(!bHooked) return;
+	if (*(pGameObject+0x4) == 0x5) // object type creature
+	{
+		int nRetVal = JumpToLimbo(*(dword *)pGameObject);
+		Log(2, "Jump to limbo: %d\n", nRetVal);
+		if(strlen(value) >= 2) sprintf(value, "%d", nRetVal);
+	}
+}
+
+char *CNWNXFunction::GetFirstLocalVariable(char* value)
+{
+	nCurrentVarNum = -1;
+	return this->GetNextLocalVariable(value);
+}
+
+char *CNWNXFunction::GetNextLocalVariable(char* value)
+{
+	nCurrentVarNum++;
+	CNWSScriptVar *pVariable;
+	char *sOutput = NULL;
+	pVariable = GetLocalVarByPosition(pGameObject-0x4, nCurrentVarNum);
+	if(!pVariable || pVariable->VarType<1 || pVariable->VarType>5 || !pVariable->VarName.Text) return NULL;
+	//build output
+	switch (pVariable->VarType)
+	{
+	case VARIABLE_TYPE_INT:
+		sOutput = (char *) malloc(strlen(pVariable->VarName.Text) + 14);
+		sprintf(sOutput, "%s¬%d¬%d", pVariable->VarName.Text, VARIABLE_TYPE_INT, pVariable->VarValue);
+		break;
+	case VARIABLE_TYPE_FLOAT:
+		sOutput = (char *) malloc(strlen(pVariable->VarName.Text) + 4 + 18);
+		sprintf(sOutput, "%s¬%d¬%18.09f", pVariable->VarName.Text, VARIABLE_TYPE_FLOAT, *(float*)&pVariable->VarValue);
+		break;
+	case VARIABLE_TYPE_STRING:
+		if(pVariable->VarValue)
+		{
+			sOutput = (char *) malloc(strlen(pVariable->VarName.Text) + strlen(((CExoString *)pVariable->VarValue)->Text) + 4);
+			sprintf(sOutput, "%s¬%d¬%s", pVariable->VarName.Text, VARIABLE_TYPE_STRING, ((CExoString *)pVariable->VarValue)->Text);
+		}
+		else
+		{
+			sOutput = (char *) malloc(strlen(pVariable->VarName.Text) + 4);
+			sprintf(sOutput, "%s¬%d¬", pVariable->VarName.Text, VARIABLE_TYPE_STRING);
+		}
+		break;
+	case VARIABLE_TYPE_OBJECT:
+		sOutput = (char *) malloc(strlen(pVariable->VarName.Text) + 14);
+		sprintf(sOutput, "%s¬%d¬%d", pVariable->VarName.Text, VARIABLE_TYPE_OBJECT, pVariable->VarValue);
+		break;
+	case VARIABLE_TYPE_LOCATION:
+			sOutput = (char *) malloc(strlen(pVariable->VarName.Text) + 4);
+			sprintf(sOutput, "%s¬%d¬", pVariable->VarName.Text, VARIABLE_TYPE_LOCATION);
+		break;
+	}
+	return sOutput;
+}
+
 void CNWNXFunction::DebugMe(char* value)
 {	
 	
@@ -590,11 +649,11 @@ bool CNWNXFunction::OnCreate(gline *config, const char *LogDir)
 	// call the base class function
 	if (!CNWNXBase::OnCreate(config,log))
 		return false;
-	Log(0,"NWNX Functions V.1.8.5\n");
+	Log(0,"NWNX Functions V.1.8.6\n");
 	Log(0,"(c) 2004 by the APS/NWNX Linux Conversion Group\n");
 	Log(0,"Based on the Win32 version (c) 2003 by Ingmar Stieger (Papillon)\n");
 	Log(0,"(c) by virusman, 2006-2007\n");
-	Log(0,"visit us at http://www.avlis.org\n\n");
+	Log(0,"visit us at http://www.nwnx.org\n\n");
 	if (FindFunctions())
 	{
 		bHooked=1;
@@ -618,10 +677,10 @@ char* CNWNXFunction::OnRequest (char *gameObject, char* Request, char* Parameter
 	Log(2,"Request: \"%s\"\n",Request);
 	Log(3,"Params:  \"%s\"\n",Parameters);
 
-	if (strncmp(Request, "USLEEP", 6) == 0) 	
+	if (strncmp(Request, "USLEEP", 6) == 0)
 	{
-		USleep(Parameters);
-		return NULL;
+		   USleep(Parameters);
+		   return NULL;
 	}
 	else if (strncmp(Request, "SETGOLDPIECEVALUE", 17) == 0) 	
 	{
@@ -741,6 +800,19 @@ char* CNWNXFunction::OnRequest (char *gameObject, char* Request, char* Parameter
 	{
 		BootPC(Parameters);
 		return NULL;
+	}
+	else if (strncmp(Request, "JUMP_TO_LIMBO", 13) == 0) 	
+	{
+		ActJumpToLimbo(Parameters);
+		return NULL;
+	}
+	else if (strncmp(Request, "GET_FIRST_LOCALVAR", 18) == 0) 	
+	{
+		return GetFirstLocalVariable(Parameters);
+	}
+	else if (strncmp(Request, "GET_NEXT_LOCALVAR", 17) == 0) 	
+	{
+		return GetNextLocalVariable(Parameters);
 	}
 	else if (strncmp(Request, "DEBUGME", 7) == 0) 	
 	{

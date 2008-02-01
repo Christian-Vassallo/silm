@@ -22,6 +22,8 @@
 
 #include "typedefs.h"
 #include "C2DA.h"
+#include "CNWSScriptVarTable.h"
+
 
 long GetOIDByObj(void *pObject);
 int GetFaction(long ObjID,int *buf);
@@ -38,6 +40,9 @@ C2DA *Get2DARes(char *s2DA);
 void ActionUseItem(void *pCreature, dword oItem, dword oTarget, float X, float Y, float Z, dword nPropertyNum = 0);
 dword GetPlayerPort(dword nPlayerID);
 void DisconnectPlayer(dword nObjectID, dword nStringRef);
+int JumpToLimbo(dword nObjectID);
+CNWSScriptVar *GetLocalVarByPosition(void *pObject, int nNum);
+
 
 int FindFunctions();
 void InitConstants();

@@ -53,6 +53,8 @@ void (*pChangeBackgroundMusicForPlayer)(void *pServerMessage, dword nClientID, d
 void (*pSetMovementRate)(void *pCreatureInfoStruct, dword nMovementRateType);
 void (*pActionUseItem)(void *pCreature, dword nItemObjID, dword nPropertyNum, dword arg_C, dword nTargetObjID, float X, float Y, float Z, dword nAreaID);
 void (*pDisconnectPlayer)(void *pClientList, dword nPlayerID, dword nStringRef, dword arg_C);
+void (*pRemoveObjectFromLocation)(void *pObject, dword arg_4);
+void (*pAddObjectToLimboList)(void *pModule, dword nObjID);
 
 //Constants:
 
@@ -259,6 +261,40 @@ void DisconnectPlayer(dword nObjectID, dword nStringRef)
 	pDisconnectPlayer(pClientClass, nPlayerID, nStringRef, 1);
 }
 
+int JumpToLimbo(dword nObjectID)
+{
+	void *pCreature = GetObjectByID(nObjectID);
+	if(!pCreature) return 0;
+	dword nCreatureType = *(dword *)((char*)pCreature+0xB3C);
+	void *pCreatureInfoStruct = *(void **)((char*)pCreature+0xC64);
+	if(!pCreatureInfoStruct) return 0;
+	dword nIsPC = *(dword *)((char*)pCreatureInfoStruct+0x6C);
+	dword nIsDM = *(dword *)((char*)pCreatureInfoStruct+0x70);
+	if (nCreatureType == 7 || nCreatureType == 8 || nCreatureType == 3 ||
+		nIsPC || nIsDM)
+		return 0;
+
+	pRemoveObjectFromLocation(pCreature, 0);
+	void *pModule = GetModule();
+	if(!pModule) return 0;
+	pAddObjectToLimboList(pModule, nObjectID);
+	return 1;
+}
+
+CNWSScriptVar *GetLocalVarByPosition(void *pObject, int nNum)
+{
+	if(!pObject) return NULL;
+	char nObjectType = *((char*)pObject+0x8);
+	CNWSScriptVarTable *pVarList = NULL;
+	if(nObjectType == 4)
+		pVarList = (CNWSScriptVarTable *)((char*)pObject+0x114);
+	else if(nObjectType == 3)
+		pVarList = (CNWSScriptVarTable *)((char*)pObject+0x8C);
+	else
+		pVarList = (CNWSScriptVarTable *)((char*)pObject+0xDC);
+	return pVarList->GetVarByPosition(nNum);
+}
+
 int FindFunctions()
 {
 	//Version check
@@ -281,7 +317,7 @@ int FindFunctions()
 	//*(dword*)&pGetAreaByID =				0x080B03A8;  //0x080AEA1C
 	//*(dword*)&pGetIsWalkable =			0x080D427C;
 	*(dword*)&pGetObjByOID = asmhelp.FindFunctionBySignature("55 89 E5 8B 45 0C 56 53 89 C2 89 C3 C1 E8 1F 0F B7 C0 C1 E0 0C");
-	functions.Log(2, "GetPlayer: %08lX\n", pGetObjByOID);
+	functions.Log(2, "GetObjByOID: %08lX\n", pGetObjByOID);
 	*(dword*)&pGetPlayer = asmhelp.FindFunctionBySignature("55 89 E5 57 56 53 83 EC 0C 8B ** 0C 81 FF 00 00 00 7F");
 	functions.Log(2, "GetPlayer: %08lX\n", pGetPlayer);
 	*(dword*)&pGetFaction =	asmhelp.FindFunctionBySignature("55 89 E5 56 53 ** ** ** 8D 45 F4 50 8B 55 0C");
@@ -308,11 +344,15 @@ int FindFunctions()
 	functions.Log(2, "ActionUseSkill: %08lX\n", pActionUseItem);
 	*(dword*)&pDisconnectPlayer = asmhelp.FindFunctionBySignature("55 89 E5 83 EC 14 FF 75 14 6A 01 FF 75 10 FF 75 0C 8B 45 08 FF 30 E8");
 	functions.Log(2, "DisconnectPlayer: %08lX\n", pDisconnectPlayer);
+	*(dword*)&pRemoveObjectFromLocation = asmhelp.FindFunctionBySignature("55 89 E5 57 56 53 83 EC ** FF 75 08 E8 ** ** ** ** 83 C4 10 85 C0 74 1A");
+	functions.Log(2, "RemoveObjectFromLocation: %08lX\n", pRemoveObjectFromLocation);
+	*(dword*)&pAddObjectToLimboList = asmhelp.FindFunctionBySignature("55 89 E5 57 56 53 83 EC ** 8B 75 08 8D 86 10 02 00 00 31 DB 89 45 F0 3B 9E 14 02 00 00");
+	functions.Log(2, "AddObjectToLimboList: %08lX\n", pAddObjectToLimboList);
 
-	
 	if(!(pGetFaction && pGetFactionEntry && pChangeFaction && pGetObjectFactionEntry &&
 		pGetFactionLeader && pGetZCoordinate && pGetAreaByID && pGetIsWalkable && pGetModule &&
-		pGetPlayer && pSetMovementRate && pActionUseItem))
+		pGetPlayer && pSetMovementRate && pActionUseItem && pDisconnectPlayer &&
+		pRemoveObjectFromLocation && pAddObjectToLimboList))
 	{
 		functions.Log(2, "Some of the functions could not be found\n");
 		return false;

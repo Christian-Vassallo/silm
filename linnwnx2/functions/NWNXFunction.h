@@ -25,6 +25,7 @@
 #include "typedefs.h"
 #include "NWNStructures.h"
 #include "C2DA.h"
+#include "CNWSScriptVarTable.h"
 
 class CNWNXFunction : public CNWNXBase
 {
@@ -65,9 +66,11 @@ protected:
 	void ActUseItem(char* value);
 	void GetPCPort(char* value);
 	void BootPC(char* value);
+	void ActJumpToLimbo(char* value);
+	char *GetFirstLocalVariable(char* value);
+	char *GetNextLocalVariable(char* value);
 	void DebugMe(char* value);
 	void ObjDump(char* value);
-
 	void USleep(char* value);
 
 	//unsigned long GetObjectByID();
@@ -78,6 +81,7 @@ private:
 	char* pGameObject;
 	dword nCurrentAreaNum;
 	dword nTotalAreaCount;
+	int nCurrentVarNum;
 };
 
 #endif
