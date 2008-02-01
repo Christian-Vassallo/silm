@@ -73,6 +73,9 @@ void pSCOStore(object obj);
 // Don't load it twice, or you'll overwrite stuff.
 object pSCOLoad(int id, location where, object owner = OBJECT_INVALID);
 
+// Returns the last-inserted id.
+int pLastID(string table, string column = "id");
+
 /************************************/
 /* Implementation                   */
 /************************************/
@@ -306,3 +309,10 @@ string pSb(int b) {
 	return 0 == b ? "'f'" : "'t'";
 }
 
+int pLastID(string table, string column = "id") {
+	pQ("select id from " + table + " order by " + column + " desc limit 1");
+	if (!pF())
+		return 0;
+	else
+		return pGi(1);
+}
