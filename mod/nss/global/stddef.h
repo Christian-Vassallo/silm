@@ -5,6 +5,8 @@
 #define true TRUE
 #define false FALSE
 
+#define bool int
+
 #define xstr(s) str(s)
 #define str(s) #s
 

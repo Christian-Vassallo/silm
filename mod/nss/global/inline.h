@@ -26,6 +26,9 @@
 #define ftoi(f) FloatToInt(f)
 #define itof(i) IntToFloat(i)
 
+#define otoa(o) "#" + ObjectToString(o) + "{" + GetResRef(o) + "," + GetTag(o) + "," + GetName(o) + "}"
+
+
 #define strlen(str) GetStringLength(str)
 #define substr(str,start,len) GetSubString(str,start,len)
 #define strpos(str,find) FindSubString(str,find)
