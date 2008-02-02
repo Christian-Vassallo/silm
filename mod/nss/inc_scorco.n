@@ -160,7 +160,7 @@ int p_update_metadata(string table, object o = OBJECT_SELF) {
 			"y=" + pSf(p.y) + ", " +
 			"z=" + pSf(p.z) + ", " +
 			"f=" + pSf(f) +
-		"where id = " + pSi(id)
+		" where id = " + pSi(id)
 	);
 	
 	p_touch(id);
@@ -189,7 +189,7 @@ struct p_metadata p_get_metadata(int id) {
 	p_touch(id);
 
 	md.p_id = id;
-	pQ("select resref, tag, name, area, x, y, z, f from " + METADATA_SCHEMA + "." + METADATA_TABLE + "" + 
+	pQ("select resref, tag, name, area, x, y, z, f from " + METADATA_SCHEMA + "." + METADATA_TABLE + " " + 
 		"where id = " + pSi(id));
 	if (!pF()) {
 		_FATAL("cannot get metadata for " + itoa(id) + ", id set but no matching row");
