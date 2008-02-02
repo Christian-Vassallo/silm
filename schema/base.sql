@@ -7,3 +7,6 @@ create domain resref as varchar
 
 create domain tag as varchar
 	check (length(VALUE) > 0 and length(VALUE) <= 32);
+
+-- create domain objecttype as varchar
+--	check (VALUE = any(ARRAY['']));

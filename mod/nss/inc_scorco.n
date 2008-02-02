@@ -1,0 +1,244 @@
+__sp_extern("inc_pgsql_base")
+
+
+#define METADATA_SCHEMA "scocro"
+#define METADATA_TABLE "object_metadata"
+
+// Metadata
+// ----
+
+struct p_metadata {
+	int p_id;
+	string resref;
+	string tag;
+	string name;
+	string area;
+	float x, y, z, f;
+};
+
+// Returns p_id if this object has metadata,
+// otherwise false.
+int p_id(object o = OBJECT_SELF);
+
+// Saves the metadata for this object
+// and returns its id.
+int p_save_metadata(object o = OBJECT_SELF, string table = METADATA_TABLE);
+
+// Updates this objects metadata.
+// Returns p_id on success, otherwise false.
+int p_update_metadata(object o = OBJECT_SELF);
+
+// Saves the objects metadata only.
+// Returns p_id on success, otherwise false.
+int p_create_metadata(object o = OBJECT_SELF, string table = METADATA_TABLE);
+
+// Returns the metadata for this object.
+struct p_metadata p_get_metadata_for(object o = OBJECT_SELF);
+
+// Returns the metadata for this id.
+struct p_metadata p_get_metadata(int id);
+
+// Returns true if this object can be persisted.
+bool p_canpersist(object o = OBJECT_SELF);
+
+void p_touch(int id);
+
+// Object storage
+// ----
+
+// Loads the specified object where it ought to be.
+int p_load(struct p_metadata m);
+
+// Saves the object and returns its id
+int p_save(object o = OBJECT_SELF, string table = METADATA_TABLE);
+
+// Creates the object and returns its id
+int p_create(object o = OBJECT_SELF, string table = METADATA_TABLE);
+
+// Updates the object.
+// Does not touch metadata.
+// Returns p_id on success, otherwise false.
+int p_update(object o = OBJECT_SELF, string table = METADATA_TABLE);
+
+// Deletes this object from the database.
+// Destroys the objects metadata.
+// Does not touch the ingame instance.
+// Returns true on success, otherwise false.
+bool p_delete(object o = OBJECT_SELF, string table = METADATA_TABLE);
+
+// Destroys the given object completely.
+// Destroys the objects metadata.
+// Use this if you want to get rid of sth.
+// Returns true on success, otherwise false.
+bool p_destroy(object o = OBJECT_SELF, string table = METADATA_TABLE);
+
+
+// Implementation
+// ----
+
+
+int p_id(object o = OBJECT_SELF) {
+	return lv_i(o, "p_id");
+}
+
+void p_touch(int id) {
+	if (!id) {
+		_WARN("cannot touch non-persisted object " + itoa(id));
+		return;
+	}
+
+	pQ("select " + METADATA_SCHEMA + ".touch_object(" + pSi(id) + ");");	
+}
+
+bool p_canpersist(object o = OBJECT_SELF) {
+	return 
+		GetIsPC(o) || GetIsDM(o) ||
+		GetObjectType(o) == OBJECT_TYPE_ITEM ||
+		GetObjectType(o) == OBJECT_TYPE_CREATURE;
+}
+
+int p_save_metadata(object o = OBJECT_SELF, string table = METADATA_TABLE) {
+	if (p_id(o))
+		return p_update_metadata(o);
+	else
+		return p_create_metadata(o, table);
+}
+
+int p_create_metadata(object o = OBJECT_SELF, string table = METADATA_TABLE) {
+	if (!GetIsObjectValid(o)) {
+		_WARN("passed NULL object to p_create_metadata.");
+		return 0;
+	}
+	if (!p_canpersist(o)) {
+		_WARN("cannot create metadata for " + otoa(o));
+		return 0;
+	}
+
+	vector p = GetPosition(o);
+	float f = GetFacing(o);
+
+	pQ("insert into " + METADATA_SCHEMA + "." + METADATA_TABLE + " " +
+		"(resref, tag, name, area, x, y, z, f) values(" +
+		pSs(GetResRef(o)) + ", " +
+		pSs(GetTag(o)) + ", " +
+		pSs(GetName(o)) + ", " +
+		pSs(GetTag(GetArea(o))) + ", " +
+		pSf(p.x) + ", " +
+		pSf(p.y) + ", " +
+		pSf(p.z) + ", " +
+		pSf(f) +
+	")");
+	int id = pLastID(METADATA_TABLE);
+	
+	slv_i(o, "p_id", id);
+
+	return id;
+}
+
+int p_update_metadata(object o = OBJECT_SELF) {
+	if (!GetIsObjectValid(o)) {
+		_WARN("passed NULL object to p_update_metadata.");
+		return 0;
+	}
+	
+	int id = p_id(o);
+
+	if (!id) {
+		_FATAL("cannot update metadata for " + otoa(o));
+		return 0;
+	}
+	
+	vector p = GetPosition(o);
+	float f = GetFacing(o);
+	
+	pQ("update " + METADATA_SCHEMA + "." + METADATA_TABLE + " set " +
+			"resref=" + pSs(GetResRef(o)) + ", " +
+			"tag=" + pSs(GetTag(o)) + ", " +
+			"name=" + pSs(GetName(o)) + ", " +
+			"area=" + pSs(GetTag(GetArea(o))) + ", " +
+			"x=" + pSf(p.x) + ", " +
+			"y=" + pSf(p.y) + ", " +
+			"z=" + pSf(p.z) + ", " +
+			"f=" + pSf(f) +
+		"where id = " + pSi(id)
+	);
+	
+	p_touch(id);
+	return id;
+}
+
+struct p_metadata p_get_metadata_for(object o = OBJECT_SELF) {
+	struct p_metadata md;
+	if (!GetIsObjectValid(o)) {
+		_WARN("passed NULL object to p_get_metadata.");
+		return md;
+	}
+	int id = p_id(o);
+
+	return p_get_metadata(id);
+}
+
+struct p_metadata p_get_metadata(int id) {
+	struct p_metadata md;
+
+	if (!id) {
+		_FATAL("cannot get metadata for " + itoa(id));
+		return md;
+	}
+	
+	p_touch(id);
+
+	md.p_id = id;
+	pQ("select resref, tag, name, area, x, y, z, f from " + METADATA_SCHEMA + "." + METADATA_TABLE + "" + 
+		"where id = " + pSi(id));
+	if (!pF()) {
+		_FATAL("cannot get metadata for " + itoa(id) + ", id set but no matching row");
+	} else {
+		md.resref = pG(1);
+		md.tag = pG(2);
+		md.name = pG(3);
+		md.area = pG(4);
+		md.x = pGf(5);
+		md.y = pGf(6);
+		md.z = pGf(7);
+		md.f = pGf(8);
+	}
+	return md;
+}
+
+
+int p_load(struct p_metadata md) {
+	vector p = Vector(md.x, md.y, md.z);
+	location where = Location(GetObjectByTag(md.area), p, md.f);
+	
+	object o = pRCO("select data from " + METADATA_SCHEMA + "." + METADATA_TABLE + " where id = " + pSi(md.p_id), where);
+	
+	return GetIsObjectValid(o) && md.p_id;
+}
+
+
+int p_save(object o = OBJECT_SELF, string table = METADATA_TABLE) {
+	int id = p_save_metadata(o, table);
+	return p_update(o);
+}
+
+int p_update(object o = OBJECT_SELF, string table = METADATA_TABLE) {
+	p_touch(p_id(o));
+	pSCO("update " + METADATA_SCHEMA + "." + table + " set data = %s where id = " + pSi(p_id(o)), o);
+	return 0;
+}
+
+bool p_delete(object o = OBJECT_SELF, string table = METADATA_TABLE) {
+	if (!p_id(o)) {
+		_FATAL("cannot delete metadata for " + otoa(o) + ", not persistent");
+		return 0;
+	}
+	pSCO("delete from " + METADATA_SCHEMA + "." + table + " where id = " + pSi(p_id(o)), o);
+	return 1;
+}
+
+bool p_destroy(object o = OBJECT_SELF, string table = METADATA_TABLE) {
+	p_delete(o, table);
+	DestroyObject(o);
+	return 0;
+}

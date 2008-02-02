@@ -11,6 +11,8 @@ __sp_extern("_gen")
 __sp_extern("inc_events")
 __sp_extern("inc_dbplac")
 
+__sp_extern("inc_scorco")
+
 __sp_extern("inc_mnx")
 __sp_extern("inc_mnx_temp")
 
@@ -82,6 +84,16 @@ void main() {
 	}
 
 
+	if (gvGetInt("persist_dropped_items") && !lv_i(oArea, "dropped_items_loaded") && GetIsPC(oPC)) {
+
+		slv_i(oArea, "dropped_items_loaded", 1);
+
+		pQ("select id from dropped_items where area = " + pSs(GetResRef(oArea)));
+		while (pF()) {
+			struct p_metadata md = p_get_metadata(pGi(1));
+			p_load(md);
+		}
+	}
 
 
 	RunEventScript(OBJECT_SELF, EVENT_AREA_ENTER, EVENT_PREFIX_AREA);

@@ -1,6 +1,8 @@
 __sp_extern("inc_currency")
 __sp_extern("nw_i0_plotwizard")
 __sp_extern("inc_events")
+__sp_extern("inc_scorco")
+__sp_extern("inc_setting")
 
 
 // Returns the nearest herbal bag that still has capacity
@@ -41,6 +43,10 @@ void main() {
 		if ( GetIsObjectValid(oBag) ) {
 			AssignCommand(oPC, ActionGiveItem(oItem, oBag));
 		}
+	}
+
+	if (gvGetInt("persist_dropped_items") && GetIsObjectValid(oItem) && p_id(oItem)) {
+		p_delete(oItem, "dropped_items");
 	}
 
 	// Run the event script, if available.
