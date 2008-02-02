@@ -1185,9 +1185,9 @@ void spellApplyMindBlank(object oTarget, int nSpellId, float fDelay = 0.0) {
 	eLink = EffectLinkEffects(eLink, eDur);
 	effect eSearch = GetFirstEffect(oTarget);
 	int bValid;
-	int nDuration = GetCasterLevel(OBJECT_SELF);
+	int nDuration = 24; // GetCasterLevel(OBJECT_SELF);
+
 	int nMetaMagic = GetMetaMagicFeat();
-	//Enter Metamagic conditions
 	if ( nMetaMagic == METAMAGIC_EXTEND ) {
 		nDuration = nDuration * 2; //Duration is +100%
 	}
@@ -1227,7 +1227,7 @@ void spellApplyMindBlank(object oTarget, int nSpellId, float fDelay = 0.0) {
 	}
 
 	//After effects are removed we apply the immunity to mind spells to the target
-	DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, TurnsToSeconds(
+	DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, HoursToSeconds(
 				nDuration)));
 
 }
