@@ -34,9 +34,9 @@ void main() {
 		SetLocalInt(oInv, "placie_id", GetLocalInt(oO, "placie_id"));
 
 		// prevent this placeable from being respawned
-		pQ("update `" +
+		pQ("update " +
 			PLAC_TABLE +
-			"` set `area`='' where `id` = '" + IntToString(GetLocalInt(oO, "placie_id")) + "' limit 1;");
+			" set area='' where id = '" + IntToString(GetLocalInt(oO, "placie_id")) + "';");
 	}
 
 	DestroyObject(oO);
