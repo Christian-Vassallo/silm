@@ -1,7 +1,7 @@
 __sp_extern("inc_pgsql_base")
 
 
-#define METADATA_SCHEMA "scocro"
+#define METADATA_SCHEMA "scorco"
 #define METADATA_TABLE "object_metadata"
 
 // Metadata
@@ -128,7 +128,7 @@ int p_create_metadata(object o = OBJECT_SELF, string table = METADATA_TABLE) {
 		pSf(p.z) + ", " +
 		pSf(f) +
 	")");
-	int id = pLastID(METADATA_TABLE);
+	int id = pLastID(METADATA_SCHEMA + "." + METADATA_TABLE);
 	
 	slv_i(o, "p_id", id);
 
