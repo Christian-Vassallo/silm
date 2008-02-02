@@ -1177,12 +1177,8 @@ void spellsGenericAreaOfEffect(object oCaster, location lTargetLoc, int nShape, 
 //:: Created On:
 //:://////////////////////////////////////////////
 void spellApplyMindBlank(object oTarget, int nSpellId, float fDelay = 0.0) {
-	effect eImm1 = EffectImmunity(IMMUNITY_TYPE_MIND_SPELLS);
-	effect eVis = EffectVisualEffect(VFX_DUR_MIND_AFFECTING_POSITIVE);
-	effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
+	effect eLink = EffectImmunity(IMMUNITY_TYPE_MIND_SPELLS);
 
-	effect eLink = EffectLinkEffects(eImm1, eVis);
-	eLink = EffectLinkEffects(eLink, eDur);
 	effect eSearch = GetFirstEffect(oTarget);
 	int bValid;
 	int nDuration = 24; // GetCasterLevel(OBJECT_SELF);
