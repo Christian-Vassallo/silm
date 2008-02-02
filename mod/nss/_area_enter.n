@@ -88,7 +88,7 @@ void main() {
 
 		slv_i(oArea, "dropped_items_loaded", 1);
 
-		pQ("select id from dropped_items where area = " + pSs(GetResRef(oArea)));
+		pQ("select id from scorco.dropped_items where area = " + pSs(GetResRef(oArea)));
 		while (pF()) {
 			struct p_metadata md = p_get_metadata(pGi(1));
 			p_load(md);

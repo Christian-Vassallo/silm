@@ -22,15 +22,15 @@ int p_id(object o = OBJECT_SELF);
 
 // Saves the metadata for this object
 // and returns its id.
-int p_save_metadata(object o = OBJECT_SELF, string table = METADATA_TABLE);
+int p_save_metadata(string table, object o = OBJECT_SELF);
 
 // Updates this objects metadata.
 // Returns p_id on success, otherwise false.
-int p_update_metadata(object o = OBJECT_SELF);
+int p_update_metadata(string table, object o = OBJECT_SELF);
 
 // Saves the objects metadata only.
 // Returns p_id on success, otherwise false.
-int p_create_metadata(object o = OBJECT_SELF, string table = METADATA_TABLE);
+int p_create_metadata(string table, object o = OBJECT_SELF);
 
 // Returns the metadata for this object.
 struct p_metadata p_get_metadata_for(object o = OBJECT_SELF);
@@ -50,27 +50,27 @@ void p_touch(int id);
 int p_load(struct p_metadata m);
 
 // Saves the object and returns its id
-int p_save(object o = OBJECT_SELF, string table = METADATA_TABLE);
+int p_save(string table, object o = OBJECT_SELF);
 
 // Creates the object and returns its id
-int p_create(object o = OBJECT_SELF, string table = METADATA_TABLE);
+int p_create(string table, object o = OBJECT_SELF);
 
 // Updates the object.
 // Does not touch metadata.
 // Returns p_id on success, otherwise false.
-int p_update(object o = OBJECT_SELF, string table = METADATA_TABLE);
+int p_update(string table, object o = OBJECT_SELF);
 
 // Deletes this object from the database.
 // Destroys the objects metadata.
 // Does not touch the ingame instance.
 // Returns true on success, otherwise false.
-bool p_delete(object o = OBJECT_SELF, string table = METADATA_TABLE);
+bool p_delete(string table, object o = OBJECT_SELF);
 
 // Destroys the given object completely.
 // Destroys the objects metadata.
 // Use this if you want to get rid of sth.
 // Returns true on success, otherwise false.
-bool p_destroy(object o = OBJECT_SELF, string table = METADATA_TABLE);
+bool p_destroy(string table, object o = OBJECT_SELF);
 
 
 // Implementation
@@ -97,14 +97,14 @@ bool p_canpersist(object o = OBJECT_SELF) {
 		GetObjectType(o) == OBJECT_TYPE_CREATURE;
 }
 
-int p_save_metadata(object o = OBJECT_SELF, string table = METADATA_TABLE) {
+int p_save_metadata(string table, object o = OBJECT_SELF) {
 	if (p_id(o))
-		return p_update_metadata(o);
+		return p_update_metadata(table, o);
 	else
-		return p_create_metadata(o, table);
+		return p_create_metadata(table, o);
 }
 
-int p_create_metadata(object o = OBJECT_SELF, string table = METADATA_TABLE) {
+int p_create_metadata(string table, object o = OBJECT_SELF) {
 	if (!GetIsObjectValid(o)) {
 		_WARN("passed NULL object to p_create_metadata.");
 		return 0;
@@ -117,7 +117,7 @@ int p_create_metadata(object o = OBJECT_SELF, string table = METADATA_TABLE) {
 	vector p = GetPosition(o);
 	float f = GetFacing(o);
 
-	pQ("insert into " + METADATA_SCHEMA + "." + METADATA_TABLE + " " +
+	pQ("insert into " + METADATA_SCHEMA + "." + table + " " +
 		"(resref, tag, name, area, x, y, z, f) values(" +
 		pSs(GetResRef(o)) + ", " +
 		pSs(GetTag(o)) + ", " +
@@ -128,14 +128,14 @@ int p_create_metadata(object o = OBJECT_SELF, string table = METADATA_TABLE) {
 		pSf(p.z) + ", " +
 		pSf(f) +
 	")");
-	int id = pLastID(METADATA_SCHEMA + "." + METADATA_TABLE);
+	int id = pLastID(METADATA_SCHEMA + "." + table);
 	
 	slv_i(o, "p_id", id);
 
 	return id;
 }
 
-int p_update_metadata(object o = OBJECT_SELF) {
+int p_update_metadata(string table, object o = OBJECT_SELF) {
 	if (!GetIsObjectValid(o)) {
 		_WARN("passed NULL object to p_update_metadata.");
 		return 0;
@@ -151,7 +151,7 @@ int p_update_metadata(object o = OBJECT_SELF) {
 	vector p = GetPosition(o);
 	float f = GetFacing(o);
 	
-	pQ("update " + METADATA_SCHEMA + "." + METADATA_TABLE + " set " +
+	pQ("update " + METADATA_SCHEMA + "." + table + " set " +
 			"resref=" + pSs(GetResRef(o)) + ", " +
 			"tag=" + pSs(GetTag(o)) + ", " +
 			"name=" + pSs(GetName(o)) + ", " +
@@ -217,28 +217,30 @@ int p_load(struct p_metadata md) {
 }
 
 
-int p_save(object o = OBJECT_SELF, string table = METADATA_TABLE) {
-	int id = p_save_metadata(o, table);
-	return p_update(o);
+int p_save(string table, object o = OBJECT_SELF) {
+	int id = p_save_metadata(table, o);
+	return p_update(table, o);
 }
 
-int p_update(object o = OBJECT_SELF, string table = METADATA_TABLE) {
-	p_touch(p_id(o));
+int p_update(string table, object o = OBJECT_SELF) {
 	pSCO("update " + METADATA_SCHEMA + "." + table + " set data = %s where id = " + pSi(p_id(o)), o);
+	p_touch(p_id(o));
 	return 0;
 }
 
-bool p_delete(object o = OBJECT_SELF, string table = METADATA_TABLE) {
+bool p_delete(string table, object o = OBJECT_SELF) {
 	if (!p_id(o)) {
 		_FATAL("cannot delete metadata for " + otoa(o) + ", not persistent");
 		return 0;
 	}
 	pSCO("delete from " + METADATA_SCHEMA + "." + table + " where id = " + pSi(p_id(o)), o);
+
+	dlv_i(o, "p_id");
 	return 1;
 }
 
-bool p_destroy(object o = OBJECT_SELF, string table = METADATA_TABLE) {
-	p_delete(o, table);
+bool p_destroy(string table, object o = OBJECT_SELF) {
+	p_delete(table, o);
 	DestroyObject(o);
 	return 0;
 }

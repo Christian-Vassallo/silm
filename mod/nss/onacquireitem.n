@@ -46,7 +46,7 @@ void main() {
 	}
 
 	if (gvGetInt("persist_dropped_items") && GetIsObjectValid(oItem) && p_id(oItem)) {
-		p_delete(oItem, "dropped_items");
+		p_delete("dropped_items", oItem);
 	}
 
 	// Run the event script, if available.

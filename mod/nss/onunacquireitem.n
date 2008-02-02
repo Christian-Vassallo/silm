@@ -34,7 +34,7 @@ void main() {
 	}
 
 	if (gvGetInt("persist_dropped_items") && GetIsObjectValid(oItem) && p_canpersist(oItem) && GetIsObjectValid(GetAreaFromLocation(GetLocation(oItem)))) {
-		p_save(oItem, "dropped_items");
+		p_save("dropped_items", oItem);
 	}
 
 	// Run the event script, if available.
