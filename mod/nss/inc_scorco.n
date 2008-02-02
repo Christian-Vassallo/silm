@@ -189,8 +189,6 @@ struct p_metadata p_get_metadata(int id) {
 		return md;
 	}
 	
-	p_touch(id);
-
 	md.p_id = id;
 	pQ("select resref, tag, name, area_resref, area_tag, x, y, z, f from " + METADATA_SCHEMA + "." + METADATA_TABLE + " " + 
 		"where id = " + pSi(id));
@@ -243,14 +241,15 @@ bool p_delete(string table, object o = OBJECT_SELF) {
 		_FATAL("cannot delete metadata for " + otoa(o) + ", not persistent");
 		return 0;
 	}
-	pSCO("delete from " + METADATA_SCHEMA + "." + table + " where id = " + pSi(p_id(o)), o);
+	pQ("delete from " + METADATA_SCHEMA + "." + table + " where id = " + pSi(p_id(o)));
 
 	dlv_i(o, "p_id");
 	return 1;
 }
 
 bool p_destroy(string table, object o = OBJECT_SELF) {
-	p_delete(table, o);
+	if (!p_delete(table, o))
+		;
 	DestroyObject(o);
-	return 0;
+	return 1;
 }
