@@ -37,6 +37,7 @@
 
 #define lv_i(o,n) GetLocalInt(o,n)
 #define slv_i(o,n,v) SetLocalInt(o,n,v)
+#define dlv_i(o,n) DeleteLocalInt(o,n)
 
 #endif
 
