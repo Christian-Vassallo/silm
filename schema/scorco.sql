@@ -21,10 +21,11 @@ create table scorco.object_metadata (
 	x float,
 	y float,
 	z float,
+	f float,
 	
 	data bytea
 
-) inherits (object_ids);
+) inherits (scorco.object_ids);
 
 create function scorco.touch_object(int) returns int
 	as $$ update scorco.object_ids set last_access_on = now() where id = $1; select $1 $$
