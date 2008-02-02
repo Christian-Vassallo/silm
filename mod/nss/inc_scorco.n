@@ -12,7 +12,8 @@ struct p_metadata {
 	string resref;
 	string tag;
 	string name;
-	string area;
+	string area_resref;
+	string area_tag;
 	float x, y, z, f;
 };
 
@@ -118,11 +119,12 @@ int p_create_metadata(string table, object o = OBJECT_SELF) {
 	float f = GetFacing(o);
 
 	pQ("insert into " + METADATA_SCHEMA + "." + table + " " +
-		"(resref, tag, name, area, x, y, z, f) values(" +
+		"(resref, tag, name, area_resref, area_tag, x, y, z, f) values(" +
 		pSs(GetResRef(o)) + ", " +
 		pSs(GetTag(o)) + ", " +
 		pSs(GetName(o)) + ", " +
 		pSs(GetResRef(GetArea(o))) + ", " +
+		pSs(GetTag(GetArea(o))) + ", " +
 		pSf(p.x) + ", " +
 		pSf(p.y) + ", " +
 		pSf(p.z) + ", " +
@@ -155,7 +157,8 @@ int p_update_metadata(string table, object o = OBJECT_SELF) {
 			"resref=" + pSs(GetResRef(o)) + ", " +
 			"tag=" + pSs(GetTag(o)) + ", " +
 			"name=" + pSs(GetName(o)) + ", " +
-			"area=" + pSs(GetResRef(GetArea(o))) + ", " +
+			"area_resref=" + pSs(GetResRef(GetArea(o))) + ", " +
+			"area_tag=" + pSs(GetTag(GetArea(o))) + ", " +
 			"x=" + pSf(p.x) + ", " +
 			"y=" + pSf(p.y) + ", " +
 			"z=" + pSf(p.z) + ", " +
@@ -189,7 +192,7 @@ struct p_metadata p_get_metadata(int id) {
 	p_touch(id);
 
 	md.p_id = id;
-	pQ("select resref, tag, name, area, x, y, z, f from " + METADATA_SCHEMA + "." + METADATA_TABLE + " " + 
+	pQ("select resref, tag, name, area_resref, area_tag, x, y, z, f from " + METADATA_SCHEMA + "." + METADATA_TABLE + " " + 
 		"where id = " + pSi(id));
 	if (!pF()) {
 		_FATAL("cannot get metadata for " + itoa(id) + ", id set but no matching row");
@@ -197,11 +200,12 @@ struct p_metadata p_get_metadata(int id) {
 		md.resref = pG(1);
 		md.tag = pG(2);
 		md.name = pG(3);
-		md.area = pG(4);
-		md.x = pGf(5);
-		md.y = pGf(6);
-		md.z = pGf(7);
-		md.f = pGf(8);
+		md.area_resref = pG(4);
+		md.area_tag = pG(5);
+		md.x = pGf(6);
+		md.y = pGf(7);
+		md.z = pGf(8);
+		md.f = pGf(9);
 	}
 	return md;
 }
@@ -209,7 +213,13 @@ struct p_metadata p_get_metadata(int id) {
 
 int p_load(struct p_metadata md) {
 	vector p = Vector(md.x, md.y, md.z);
-	location where = Location(GetObjectByTag(md.area), p, md.f);
+
+	object area = GetObjectByTag(md.area_tag);
+	if (!GetIsObjectValid(area)) {
+		_WARN("trying to create object in non-existing area " + md.area_tag + "(resref = " + md.area_resref + ")");
+	}
+
+	location where = Location(area, p, md.f);
 	
 	object o = pRCO("select data from " + METADATA_SCHEMA + "." + METADATA_TABLE + " where id = " + pSi(md.p_id), where);
 	
