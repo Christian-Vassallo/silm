@@ -225,7 +225,7 @@ int p_load(struct p_metadata md) {
 
 	location where = Location(area, p, md.f);
 	
-	object o = pRCO("select data from " + METADATA_SCHEMA + "." + METADATA_TABLE + " where id = " + pSi(md.p_id), where);
+	object o = pRCO("select data from " + METADATA_SCHEMA + "." + METADATA_TABLE + " where id = " + pSi(md.p_id) + ";", where);
 	
 	return GetIsObjectValid(o) && md.p_id;
 }
@@ -237,7 +237,7 @@ int p_save(string table, object o = OBJECT_SELF) {
 }
 
 int p_update(string table, object o = OBJECT_SELF) {
-	pSCO("update " + METADATA_SCHEMA + "." + table + " set data = %s where id = " + pSi(p_id(o)), o);
+	pSCO("update " + METADATA_SCHEMA + "." + table + " set data = %s where id = " + pSi(p_id(o)) + ";", o);
 	p_touch(p_id(o));
 	return 0;
 }
@@ -247,7 +247,7 @@ bool p_delete(string table, object o = OBJECT_SELF) {
 		_FATAL("cannot delete metadata for " + otoa(o) + ", not persistent");
 		return 0;
 	}
-	pQ("delete from " + METADATA_SCHEMA + "." + table + " where id = " + pSi(p_id(o)));
+	pQ("delete from " + METADATA_SCHEMA + "." + table + " where id = " + pSi(p_id(o)) + ";");
 
 	dlv_i(o, "p_id");
 	return 1;
