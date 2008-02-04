@@ -104,5 +104,6 @@ int chatcommand_ command () {\
 #include "settings.h"
 #include "log.h"
 #include "inline.h"
+#include "mutex.h"
 
 #endif
