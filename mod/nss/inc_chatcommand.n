@@ -759,10 +759,12 @@ int CommandCreature(object oPC, int iMode) {
 	if ( -1 != phenotype )
 		SetPhenoType(phenotype, oTarget);
 
-	if ( -1 != persist )
-		if (!p_save("critters", oTarget)) {
+	if ( -1 != persist ) {
+		int vret = p_save("critters", oTarget);
+		if (vret) {
 			ToPC("Warnung: Konnte das ausgewaehlte Ziel nicht speichern.");
 		}
+	}
 
 	ToPC("Commandable: " + IntToString(GetCommandable(oTarget)));
 	ToPC("Plot: " + IntToString(GetPlotFlag(oTarget)));
