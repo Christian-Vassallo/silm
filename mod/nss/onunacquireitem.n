@@ -2,6 +2,7 @@ __sp_extern("inc_corpse_drop")
 __sp_extern("inc_events")
 __sp_extern("inc_scorco")
 __sp_extern("inc_setting")
+__sp_extern("_gen")
 
 
 
@@ -33,7 +34,7 @@ void main() {
 		return;
 	}
 
-	if (gvGetInt("persist_dropped_items") && GetIsObjectValid(oItem))
+	if (gvGetInt("persist_dropped_items") && GetIsObjectValid(oItem)) {
 		if (p_canpersist(oItem) && GetIsObjectValid(GetAreaFromLocation(GetLocation(oItem)))) {
 			p_save("dropped_items", oItem);
 		}
