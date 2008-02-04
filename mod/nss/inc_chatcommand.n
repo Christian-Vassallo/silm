@@ -3107,19 +3107,40 @@ int CommandKill(object oPC, int iMode) {
 
 
 int CommandGetVar(object oPC, int iMode) {
+	object oTarget = GetTarget();
+	if ( !GetIsObjectValid(oTarget) )
+		return NotifyBadTarget();
+
 	string
 	p0 = arg(0),
-	p1 = arg(1),
-	p2 = arg(2);
+	p1 = arg(1);
+
+	if (p0 == "all") {
+		// Dump all variables
+		struct scriptvar ssv;
+		ssv = GetFirstLocalVariable(oTarget);
+
+		while (GetIsVariableValid(ssv)) {
+			string tdef = "UKN";
+
+			switch (ssv.Type) {
+				case 1: tdef = "int"; break;
+				case 2: tdef = "flt"; break;
+				case 3: tdef = "str"; break;
+				case 4: tdef = "obj"; break;
+				case 5: tdef = "loc"; break;
+			}
+			ToPC(ssv.Name + " (" + tdef + "): " + ssv.Value);
+
+			ssv = GetNextLocalVariable(oTarget);
+		return OK;
+	}
 
 	int nType = ( p0 == "int" ? 1 : ( p0 == "str" ? 2 : ( p0 == "float" ? 3 : -1 ) ) );
 
 	if ( p1 == "" || nType == -1 )
 		return SYNTAX; // Syntax("type(int, str, float) key");
 
-	object oTarget = GetTarget();
-	if ( !GetIsObjectValid(oTarget) )
-		return NotifyBadTarget();
 
 
 	switch ( nType ) {
