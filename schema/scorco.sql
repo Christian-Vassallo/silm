@@ -17,6 +17,8 @@ create table scorco.object_metadata (
 
 	name varchar,
 
+	hitpoints int,
+
 	area_resref resref,
 	area_tag tag,
 	x float,
