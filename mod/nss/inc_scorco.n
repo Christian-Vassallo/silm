@@ -91,7 +91,7 @@ void p_touch(int id) {
 		return;
 	}
 
-	pQ("select " + METADATA_SCHEMA + ".touch_object(" + pSi(id) + ");");	
+	pQ("update " + METADATA_SCHEMA + "." + METADATA_TABLE + " set last_access_on = now() where id = " + pSi(id) + ";");	
 }
 
 bool p_canpersist(object o = OBJECT_SELF) {
