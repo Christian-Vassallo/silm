@@ -274,7 +274,7 @@ string pE(string str) {
 }
 string pSQLEscape(string str) {
 	if ( -1 == FindSubString(str, "'") && -1 == FindSubString(str, "\\") )
-		return "'" + str + "'";
+		return "E'" + str + "'";
 
 	int i = 0; 
 	string c = "", new = "'";
@@ -289,7 +289,7 @@ string pSQLEscape(string str) {
 			new += c;
 	}
 	new += "'";
-	return new;
+	return "E" + new;
 }
 
 
