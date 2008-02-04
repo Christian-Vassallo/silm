@@ -722,7 +722,11 @@ int CommandCreature(object oPC, int iMode) {
 	bPlot = -1,
 	race = -1,
 	faction = -1,
-	phenotype = -1;
+	phenotype = -1,
+	persist = -1;
+
+	if ( opt("persist") )
+		persist = atoi(optv("persist"));
 
 	if ( opt("plot") )
 		bPlot = StringToBool(optv("plot"));
@@ -741,6 +745,8 @@ int CommandCreature(object oPC, int iMode) {
 	if ( opt("phenotype") )
 		phenotype = atoi(optv("phenotype"));
 
+
+
 	if ( -1 != bImmortal )
 		SetImmortal(oTarget, bImmortal);
 	if ( -1 != bCommandable )
@@ -753,6 +759,11 @@ int CommandCreature(object oPC, int iMode) {
 	if ( -1 != phenotype )
 		SetPhenoType(phenotype, oTarget);
 
+	if ( -1 != persist )
+		if (!p_save("critters", oTarget)) {
+			ToPC("Warnung: Konnte das ausgewaehlte Ziel nicht speichern.");
+		}
+
 	ToPC("Commandable: " + IntToString(GetCommandable(oTarget)));
 	ToPC("Plot: " + IntToString(GetPlotFlag(oTarget)));
 	ToPC("Immortal: " + IntToString(GetImmortal(oTarget)));
@@ -760,6 +771,7 @@ int CommandCreature(object oPC, int iMode) {
 	ToPC("PhenoType: " + IntToString(GetPhenoType(oTarget)));
 	ToPC("Faction: " + IntToString(GetFactionID(oTarget)));
 	ToPC("Conversation: " + GetConversation(oTarget));
+	ToPC("p_id: " + itoa(p_id(oTarget)));
 
 	if ( opt("inv") )
 		OpenInventory(oTarget, oPC);
@@ -1248,11 +1260,11 @@ int CommandLastLog(object oPC, int iMode) {
 	if ( nCount < 1 || nCount > 200 )
 		nCount = 15;
 	
-	string cond = " (mode & " + itoa(MODE_PRIVAT) + " = 0 and mode & " + itoa(MODE_COMMAND) + " = 0) and " + 
+	string cond = " (mode & " + itoa(MODE_PRIVATE) + " = 0 and mode & " + itoa(MODE_COMMAND) + " = 0) and " + 
 		"area = " + pE(sArea) + " " + 
-		"and (character = " + pEi(GetCharacterID(oPC)) + " or character = any(heard_by)) ";
+		"and (character = " + pSi(GetCharacterID(oPC)) + " or character = any(heard_by)) ";
 
-	pQ("select ts,account_s,character_s,mode,text from chatlogs where "
+	pQ("select ts,account_s,character_s,mode,text from chatlogs where " +
 		" coalesce( " +
 			"(ts >= (select ts from chatlogs where " + cond + " order by ts desc offset " + IntToString(nCount) + " limit 1)) " +
 			"," + 
@@ -3133,6 +3145,7 @@ int CommandGetVar(object oPC, int iMode) {
 			ToPC(ssv.Name + " (" + tdef + "): " + ssv.Value);
 
 			ssv = GetNextLocalVariable(oTarget);
+		}
 		return OK;
 	}
 

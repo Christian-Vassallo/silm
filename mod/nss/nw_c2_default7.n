@@ -17,6 +17,8 @@ __sp_extern("inc_xp_handling")
 __sp_extern("inc_summon")
 __sp_extern("inc_pgsql")
 __sp_extern("inc_cdb")
+__sp_extern("inc_scorco")
+
 
 void _Respawn(int iObType, string sResRef, location lLocation) {
 	CreateObject(iObType, sResRef, lLocation);
@@ -27,6 +29,10 @@ void main() {
 	int nAlign = GetAlignmentGoodEvil(OBJECT_SELF);
 	object oKiller = GetLastKiller();
 	object oKilled =  OBJECT_SELF;
+	
+	if (!GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF) > 0) {
+		p_delete("critters", OBJECT_SELF);
+	}
 
 	int nID = GetCharacterID(oKiller);
 	if (nID > 0) {

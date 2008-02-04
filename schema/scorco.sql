@@ -43,3 +43,6 @@ create function scorco.touch_object(int) returns int
 
 create table scorco.dropped_items (
 ) inherits (scorco.object_metadata);
+
+create table scorco.critters (
+) inherits (scorco.object_metadata);

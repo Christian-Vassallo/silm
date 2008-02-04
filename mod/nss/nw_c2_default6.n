@@ -13,8 +13,15 @@
 
 __sp_extern("nw_i0_generic")
 __sp_extern("inc_summonai")
+__sp_extern("inc_scorco")
 
 void main() {
+	
+	if (!GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF)) {
+		p_update_metadata("critters", OBJECT_SELF);
+	}
+
+
 	if ( !GetShouldDefend() ) {
 		// We're supposed to stand there and take a beating
 	} else if ( GetFleeToExit() ) {

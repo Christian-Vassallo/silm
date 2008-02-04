@@ -19,10 +19,22 @@
 
 __sp_extern("nw_i0_generic")
 __sp_extern("inc_summonai")
+__sp_extern("inc_scorco")
 
 void main() {
 
-	//FIXME not the faintest why this doesnt work
+	if (!GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF)) {
+		// Only save every two minutes at most
+		if (lv_i(OBJECT_SELF, "p_hb_cycle") >= 20)
+			slv_i(OBJECT_SELF, "p_hb_cycle", 0);
+
+		if (lv_i(OBJECT_SELF, "p_hb_cycle") == 0)
+			p_update("critters", OBJECT_SELF);
+		
+		slv_i(OBJECT_SELF, "p_hb_cycle", lv_i(OBJECT_SELF, "p_hb_cycle") + 1);
+	}
+
+	//FIXME placeables spawned dynamically will not be available when the critter spawns
 	if ( GetLocalInt(OBJECT_SELF, "sit_nearest")
 		&& ( GetCurrentAction() != ACTION_SIT ) ) {
 		int n = 1;
