@@ -237,9 +237,10 @@ int p_save(string table, object o = OBJECT_SELF) {
 }
 
 int p_update(string table, object o = OBJECT_SELF) {
-	pSCO("update " + METADATA_SCHEMA + "." + table + " set data = %s where id = " + pSi(p_id(o)) + ";", o);
-	p_touch(p_id(o));
-	return 0;
+	int id = p_id(o);
+	pSCO("update " + METADATA_SCHEMA + "." + table + " set data = %s where id = " + pSi(id) + ";", o);
+	p_touch(id);
+	return id;
 }
 
 bool p_delete(string table, object o = OBJECT_SELF) {
@@ -254,8 +255,9 @@ bool p_delete(string table, object o = OBJECT_SELF) {
 }
 
 bool p_destroy(string table, object o = OBJECT_SELF) {
-	if (!p_delete(table, o))
-		;
+	if (!p_delete(table, o)) {
+		_WARN("cannot p_delete " + otoa(o) + ", destroying anyways (hehe).");
+	}
 	DestroyObject(o);
 	return 1;
 }
