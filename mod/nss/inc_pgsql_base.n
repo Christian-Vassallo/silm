@@ -310,7 +310,7 @@ string pSb(int b) {
 }
 
 int pLastID(string table, string column = "id") {
-	pQ("select id from " + table + " order by " + column + " desc limit 1");
+	pQ("select currval(pg_get_serial_sequence('" + table + "','" + column + "');");
 	if (!pF())
 		return 0;
 	else
