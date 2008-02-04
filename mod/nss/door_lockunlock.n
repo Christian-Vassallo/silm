@@ -13,12 +13,16 @@ void main() {
 	)
 		return;
 
-	if ( GetLocalInt(oDoor, "lockdoorlock") ) {
+
+	__mutex_transaction(oDoor, oOther, "lockdoorlock", 
+		SetLocked(oOther, GetLocked(oDoor));
+	);
+
+	/*if ( GetLocalInt(oDoor, "lockdoorlock") ) {
 		SetLocalInt(oDoor, "lockdoorlock", 0);
 		return;
 	}
 
-	SetLocalInt(oOther, "lockdoorlock", 1);
-	SetLocked(oOther, GetLocked(oDoor));
+	SetLocalInt(oOther, "lockdoorlock", 1);*/
 }
 
