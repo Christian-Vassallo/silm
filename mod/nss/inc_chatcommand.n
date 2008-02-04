@@ -1242,30 +1242,27 @@ int CommandLastLog(object oPC, int iMode) {
 	int nCount = 15;
 	string sArea = pE(GetTag(GetArea(oPC)));
 
-	if ( amask(oPC, AMASK_CAN_SEE_CHATLOGS) ) {
-		if ( opt("count") )
-			nCount = StringToInt(optv("count"));
+	if ( opt("count") )
+		nCount = StringToInt(optv("count"));
 
-		if ( nCount < 1 || nCount > 200 )
-			nCount = 15;
+	if ( nCount < 1 || nCount > 200 )
+		nCount = 15;
+	
+	string cond = " (mode & " + itoa(MODE_PRIVAT) + " = 0 and mode & " + itoa(MODE_COMMAND) + " = 0) and " + 
+		"area = " + pE(sArea) + " " + 
+		"and (character = " + pEi(GetCharacterID(oPC)) + " or character = any(heard_by)) ";
 
-		pQ("select ts,account_s,character_s,mode,text from chatlogs where area = "
-			+ sArea +
-			" and ts >= (select ts from chatlogs where area=" +
-			sArea + " order by ts desc offset " + IntToString(nCount) + " limit 1)" +
-			" order by ts asc;"
-		);
-
-	} else {
-/*		SQLQuery("select timestamp,`account_s`,`character_s`,`mode`,`text` from `chatlogs` where `area` = "
-			+ sArea +
-			" and `timestamp` >= (select `timestamp` from `chatlogs` where `area`=" +
-			sArea + " and `timestamp` >= substract(now(), interval 20 minute)" +
-			" order by `timestamp` desc limit " + IntToString(nCount) + ",1)" +
-			" order by `timestamp` asc;"
-		);*/
-		return FAIL;
-	}
+	pQ("select ts,account_s,character_s,mode,text from chatlogs where "
+		" coalesce( " +
+			"(ts >= (select ts from chatlogs where " + cond + " order by ts desc offset " + IntToString(nCount) + " limit 1)) " +
+			"," + 
+			"(ts >= (select ts from chatlogs where " + cond + " order by ts asc limit 1)) " +
+			"," + 
+			"(now() - interval '24 hour')" +
+		") " +
+		" and " + cond + 
+		" order by ts asc;"
+	);
 
 	while ( pF() ) {
 		string
@@ -1275,12 +1272,6 @@ int CommandLastLog(object oPC, int iMode) {
 		sMode = pG(4),
 		sText = pG(5);
 		int nMode = StringToInt(sMode);
-
-		if ( nMode & MODE_PRIVATE )
-			continue;
-
-		if ( nMode & MODE_COMMAND )
-			continue;
 
 		sMode = "";
 
@@ -1296,7 +1287,6 @@ int CommandLastLog(object oPC, int iMode) {
 
 		if ( nMode & MODE_DM_MODE )
 			sMode += " (DM)";
-
 
 		ToPC("[" + sTS + "]" + sMode + " " + sChar + ": " + sText);
 	}
