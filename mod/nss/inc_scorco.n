@@ -233,7 +233,7 @@ int p_save(string table, object o = OBJECT_SELF) {
 			"%s" + 
 		")", o);
 
-		id = pLastId(METADATA_SCHEMA + "." + table, "id");
+		id = pLastId(METADATA_SCHEMA + ".object_ids", "id");
 
 		SetLocalInt(o, "p_id", id);
 
