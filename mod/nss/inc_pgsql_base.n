@@ -14,16 +14,16 @@ string pSQLEscape(string str);
 // Begin transaction
 // Read the README accompanying the nwnx_pgsql package before
 // considering the use of transactions.
-void pB();
+void pBegin();
 
 // Commit transaction
-void pC();
+void pCommit();
 
 // Rollback transaction
-void pR();
+void pRollback(string to_savepoint = "");
 
-// Abort transaction
-void pA();
+// Sets a savepoint.
+void pSavepoint(string name);
 
 // Returns the last SQL query executed (globally!).
 string pSQLGetLastQuery();
@@ -34,8 +34,8 @@ int pSQLFetch();
 
 // Returns column n in the result set
 string pG(int n);
-string pGs(int n);
 string pSQLGetData(int iCol);
+string pGs(int n);
 
 // Returns column n in the result set as int
 int pGi(int n);
@@ -66,6 +66,16 @@ object pRCO(string query, location where, object owner = OBJECT_INVALID);
 
 // Returns the last-inserted id.
 int pLastID(string table, string column = "id");
+
+
+// A cursor-query.
+string pCursorQ(string query, bool with_hold = false, bool scroll = true, string cursorname = "");
+
+// Close the given cursor
+void pCursorClose(string cursor);
+
+// Fetch the given cursor
+bool pCursorF(string cursor, string cursor_direction = "next");
 
 /************************************/
 /* Implementation                   */
@@ -136,20 +146,26 @@ object pRCO(string query, location where, object owner = OBJECT_INVALID) {
 }
 
 
-void pB() {
+void pBegin() {
+	slv_i(MODULE, "psql_transaction", 1);
 	pSQLQuery("BEGIN;");
 }
 
-void pC() {
+void pCommit() {
 	pSQLQuery("COMMIT;");
+	slv_i(MODULE, "psql_transaction", 0);
 }
 
-void pR() {
-	pSQLQuery("ROLLBACK;");
+void pRollback(string to_savepoint = "") {
+	if (to_savepoint == "")
+		pSQLQuery("ROLLBACK;");
+	else
+		pSQLQuery("ROLLBACK to savepoint " + to_savepoint + ";");
+
 }
 
-void pA() {
-	pSQLQuery("ABORT;");
+void pSavepoint(string name) {
+	pSQLQuery("SAVEPOINT " + name);
 }
 
 string pG(int n) {
@@ -252,4 +268,38 @@ int pLastID(string table, string column = "id") {
 		return 0;
 	else
 		return pGi(1);
+}
+
+
+int get_next_cursor_serial() {
+	int last = lv_i(MODULE, "psql_cursor_serial");
+	last++;
+	slv_i(MODULE, "psql_cursor_serial", last);
+	return last;
+}
+
+
+// A cursor-query.
+string pCursorQ(string query, bool with_hold = false, bool scroll = true, string cursorname = "") {
+	if ("" == cursorname)
+		cursorname = "ps_" + itoa(get_next_cursor_serial());
+
+	pQ("declare " + cursorname + " " + 
+			(scroll ? "scroll" : "no scroll") + " " +
+		"cursor " +
+			(with_hold ? "with hold" : "without hold") + " " +
+		"for " + query);
+	
+	return cursorname;
+}
+
+// Close the given cursor
+void pCursorClose(string cursor) {
+	pQ("close " + cursor);
+}
+
+// Fetch the given cursor
+bool pCursorF(string cursor, string cursor_direction = "next") {
+	pQ("fetch " + cursor_direction + " from " + cursor);
+	return pF();
 }
