@@ -9,8 +9,8 @@ void onlineServerStart() {
 
 void onlinePlayerAreaEnter(object oPC, object oArea) {
 	pQ("update " + ONLINE_TABLE + " set " + 
-		"area = " + GetResRef(GetArea(oPC)) + ", " + 
-		"area_s = " + GetName(GetArea(oPC)) + " " + 
+		"area = " + pSs(GetResRef(GetArea(oPC))) + ", " + 
+		"area_s = " + pSs(GetName(GetArea(oPC))) + " " + 
 		"where aid = " + pSi(GetAccountID(oPC))
 	);
 }
@@ -23,7 +23,7 @@ void onlinePlayerEnter(object oPC) {
 	vector p = GetPosition(oPC);
 	float f = GetFacing(oPC);
 	
-	string qq = "(" +
+	q += "(" +
 		 pSi0(GetAccountID(oPC), TRUE) + "," +
 		 pSi0(GetCharacterID(oPC), TRUE) + "," +
 		 pSs(GetPCName(oPC)) + "," + 
