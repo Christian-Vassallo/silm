@@ -5,6 +5,7 @@ __sp_extern("inc_mnx")
 __sp_extern("inc_limbo")
 __sp_extern("inc_audit")
 __sp_extern("inc_currency")
+__sp_extern("inc_online")
 
 void MnxNotify(object oPC);
 
@@ -23,6 +24,8 @@ void main() {
 	SendMessageToPC(oPC, "Commit: " + GIT_COMMIT);
 	SendMessageToPC(oPC, "Commited on: " + GIT_COMMIT_ON);
 	SendMessageToPC(oPC, "Built on: " + GIT_BUILD_ON);
+
+	onlinePlayerEnter(oPC);
 
 	/*struct mnxRet r = mnxRun(oPC, "uptime");
 	if (!r.error)

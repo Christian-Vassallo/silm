@@ -7,6 +7,8 @@ __sp_extern("inc_chat")
 __sp_extern("inc_chat_run")
 __sp_extern("x2_inc_switches")
 __sp_extern("inc_setting")
+__sp_extern("inc_online")
+
 #include "inc_pgsql.nh"
 #include "git.h"
 
@@ -30,8 +32,7 @@ void main() {
 
 	ExecuteScript("_mod_load_cdb", GetModule());
 
-	pQ("truncate online;");
-
+	onlineServerStart();
 	
 	iYear = gvGetInt("t_year");
 	iMonth = gvGetInt("t_month");

@@ -19,7 +19,7 @@ __sp_extern("inc_scorco")
 __sp_extern("inc_mnx")
 __sp_extern("inc_mnx_temp")
 
-
+__sp_extern("inc_online")
 
 __sp_extern("inc_track")
 
@@ -96,6 +96,9 @@ void main() {
 		slv_i(oArea, "dropped_items_loaded", 1);
 	}
 
+
+	if (GetIsPC(oPC))
+		onlinePlayerAreaEnter(oPC, oArea);
 
 	RunEventScript(OBJECT_SELF, EVENT_AREA_ENTER, EVENT_PREFIX_AREA);
 

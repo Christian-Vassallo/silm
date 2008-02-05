@@ -5,6 +5,7 @@ __sp_extern("_gen")
 __sp_extern("inc_audit")
 __sp_extern("inc_currency")
 __sp_extern("inc_mnx")
+__sp_extern("inc_online")
 
 void main() {
 	object oPC = GetExitingObject();
@@ -33,6 +34,8 @@ void main() {
 	ExecuteScript("logout_corpse", oPC);
 	ExecuteScript("logout_pcdata", oPC);
 
+
+	onlinePlayerLeave(oPC);
 
 	ChatPCout(oPC);
 }
