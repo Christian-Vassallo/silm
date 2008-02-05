@@ -58,6 +58,12 @@ bool p_delete(string table, object o = OBJECT_SELF);
 // Returns true on success, otherwise false.
 bool p_destroy(string table, object o = OBJECT_SELF);
 
+// Restores all objects in table matching conditions
+// into the game world.
+// Returns the number of objects restored.
+int p_load_each(string table, string conditions);
+
+
 
 // Implementation
 // ----
@@ -126,39 +132,6 @@ struct p_metadata p_get_metadata(int id) {
 	return md;
 }
 
-/*int p_load_each(string table, string conditions) {
-    vector p; object area; int id; int total = 0;
-    pQ("select id, x, y, z, f, area_tag from " + METADATA_SCHEMA + "." + table + " where " + conditions);
-    while (pF()) {
-        id = pGi(1);
-        p = Vector(pGf(2), pGf(3), pGf(4));
-        area = by_tag(pGs(6));
-        if (!valid_obj(area)) {
-            _WARN("trying to create object in non-existing area " + pGs(6));
-        }
-        location where = Location(area, p, pGf(5));
-        pRCO("select data from " + METADATA_SCHEMA + "." + table + " where id = " + pSi(id) + ";", where);
-        total += 1;
-    }
-    return total;
-}*/
-
-
-
-/*int p_load_metadata_each(table, conditions) {
-	vector p; object area; int id;
-	pQ("select id, x, y, z, f, area_tag from " + METADATA_SCHEMA + "." + table + " where " + conditions);
-	while (pF()) {
-		id = pGi(1);
-		p = Vector(pGf(2), pGf(3), pGf(4));
-		area = by_tag(pGf(6));
-		if (!valid_obj(area)) {
-			_WARN("trying to create object in non-existing area " + pGf(6));
-		}
-		location where = Location(area, p, pGf(5));
-		pRCO("select data from " + METADATA_SCHEMA + "." + METADATA_TABLE + " where id = " + pSi(id) + ";", where);
-	}
-}*/
 
 int p_load(struct p_metadata md) {
 	vector p = Vector(md.x, md.y, md.z);
@@ -175,6 +148,55 @@ int p_load(struct p_metadata md) {
 	return GetIsObjectValid(o) && md.p_id;
 }
 
+
+int p_load_each(string table, string conditions) {
+    vector p;
+	object area;
+	int id;
+	int total = 0;
+    
+	pQ("select id, x, y, z, f, area_tag from " + METADATA_SCHEMA + "." + table + " where " + conditions);
+    while (pF()) {
+        id = pGi(1);
+        p = Vector(pGf(2), pGf(3), pGf(4));
+        area = GetObjectByTag(pGs(6));
+        if (!GetIsObjectValid(area)) {
+            _WARN("trying to create object in non-existing area " + pGs(6));
+			continue;
+        }
+
+        location where = Location(area, p, pGf(5));
+        pRCO("select data from " + METADATA_SCHEMA + "." + table + " where id = " + pSi(id) + ";", where);
+        total += 1;
+    }
+
+    return total;
+}
+
+
+
+void p_load_each_wrap(string table, string conditions) {
+	p_load_each(table, conditions);
+}
+
+
+int p_load_each_in_chunks(string table, string conditions) {
+	int chunksize = 50;
+	conditions += " order by id desc";
+	pQ("select count(id) from " + METADATA_SCHEMA + "." + table + " where " + conditions);
+	pF();
+	int count = pGi(1);
+	int iter = 0;
+	while (count > 0) {
+		DelayCommand(1.0 * iter, 
+			p_load_each_wrap(table, conditions + " offset " + itoa(iter * chunksize) + " limit " + itoa(chunksize))
+		);	
+		iter++;
+		count -= chunksize;
+	}
+
+	return count;
+}
 
 
 int p_save(string table, object o = OBJECT_SELF) {
@@ -224,8 +246,6 @@ int p_save(string table, object o = OBJECT_SELF) {
 
 	return id;
 }
-
-
 
 
 bool p_delete(string table, object o = OBJECT_SELF) {
