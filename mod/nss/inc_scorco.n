@@ -182,9 +182,10 @@ void p_load_each_wrap(string table, string conditions) {
 
 int p_load_each_in_chunks(string table, string conditions) {
 	int chunksize = 50;
-	conditions += " order by id desc";
 	pQ("select count(id) from " + METADATA_SCHEMA + "." + table + " where " + conditions);
 	pF();
+	
+	conditions += " order by id desc";
 	int count = pGi(1);
 	int iter = 0;
 	while (count > 0) {
