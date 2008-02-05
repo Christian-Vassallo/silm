@@ -1255,7 +1255,7 @@ int CommandRemind(object oPC, int iMode) {
 
 int CommandLastLog(object oPC, int iMode) {
 	int nCount = 15;
-	string sArea = pE(GetTag(GetArea(oPC)));
+	string sArea = GetTag(GetArea(oPC));
 
 	if ( opt("count") )
 		nCount = StringToInt(optv("count"));
