@@ -74,10 +74,10 @@ int pLastId(string table, string column = "id");
 // Returns a nwn-generated serial for the cursor functions.
 int pCursorGetNextSerial();
 
-// A cursor-query.
+// Declare a cursor.
 // Requires an active session.
-// Returns a unique cursor identifier.
-string pCursorQuery(string query, bool with_hold = false, bool scroll = true, string cursorname = "");
+// Returns a unique cursor identifier for use with pCursorFetch and pCursorClose.
+string pDeclare(string query, bool with_hold = false, bool scroll = true, string cursorname = "");
 
 // Close the given cursor.
 void pCursorClose(string cursor);
@@ -85,6 +85,14 @@ void pCursorClose(string cursor);
 // Fetch ONE item from the given cursor (default: next one).
 // There is no need to call pFetch()
 int pCursorFetch(string cursor, string cursor_direction = "next");
+
+// Prepare a named query.
+int pPrepare(string name, string query);
+
+// Execute a named query with the given parameters.
+int pExecute(string name, string p1 = "", string p2 = "", string p3 = "", string p4 = "",
+	string p5 = "", string p6 = "", string p7 = "", string p8 = "", string p9 = "");
+
 
 /************************************/
 /* Implementation                   */
@@ -106,7 +114,10 @@ void pInit() {
 int pQuery(string sSQL) {
 	SetLocalString(GetModule(), "psql_last_query", sSQL);
 	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!EXEC", sSQL);
-	return StringToInt(GetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!EXEC"));
+	int ret = StringToInt(GetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!EXEC"));
+	if (!ret)
+		_ERROR("Error in SQL query: " + sSQL);
+	return ret;
 }
 
 string pGetLastQuery() {
@@ -264,8 +275,7 @@ int pCursorGetNextSerial() {
 }
 
 
-// A cursor-query.
-string pCursorQuery(string query, bool with_hold = false, bool scroll = true, string cursorname = "") {
+string pDeclare(string query, bool with_hold = false, bool scroll = true, string cursorname = "") {
 	if ("" == cursorname)
 		cursorname = "ps_" + IntToString(pCursorGetNextSerial());
 
@@ -287,4 +297,29 @@ void pCursorClose(string cursor) {
 int pCursorFetch(string cursor, string cursor_direction = "next") {
 	pQuery("fetch " + cursor_direction + " from " + cursor);
 	return pFetch();
+}
+
+
+
+int pPrepare(string name, string query) {
+	return pQuery("prepare " + name + " as " + query);
+}
+
+int pExecute(string name, string p1 = "", string p2 = "", string p3 = "", string p4 = "",
+	string p5 = "", string p6 = "", string p7 = "", string p8 = "", string p9 = "") {
+
+	string qstr = "";
+	if (p1 != "") qstr += p1 + ",";
+	if (p2 != "") qstr += p2 + ",";
+	if (p3 != "") qstr += p3 + ",";
+	if (p4 != "") qstr += p4 + ",";
+	if (p5 != "") qstr += p5 + ",";
+	if (p6 != "") qstr += p6 + ",";
+	if (p7 != "") qstr += p7 + ",";
+	if (p8 != "") qstr += p8 + ",";
+	if (p9 != "") qstr += p9 + ",";
+	if (qstr != "")
+		qstr = GetSubString(qstr, 0, GetStringLength(qstr) - 1);
+
+	return pQuery("execute " + name + "(" + qstr + ")");
 }
