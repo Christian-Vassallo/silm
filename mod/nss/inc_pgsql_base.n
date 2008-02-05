@@ -258,7 +258,7 @@ string pEscapeBool(int b) {
 
 
 int pLastId(string table, string column = "id") {
-	pQuery("select currval(pg_get_serial_sequence('" + table + "','" + column + "');");
+	pQuery("select currval(pg_get_serial_sequence('" + table + "','" + column + "'));");
 	if (!pFetch())
 		return 0;
 	else
