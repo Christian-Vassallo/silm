@@ -64,15 +64,6 @@ void pSCO(string query, object obj);
 // Retrieves object with query. Query has to return exactly one value.
 object pRCO(string query, location where, object owner = OBJECT_INVALID);
 
-// Stores the object in the database. Creates a new record of no old was found,
-// or updates a old one. lvar _id is the serial in database after storage. Don't
-// delete it.
-void pSCOStore(object obj);
-
-// Loads the specified serial into the game.
-// Don't load it twice, or you'll overwrite stuff.
-object pSCOLoad(int id, location where, object owner = OBJECT_INVALID);
-
 // Returns the last-inserted id.
 int pLastID(string table, string column = "id");
 
@@ -133,60 +124,6 @@ int pSQLFetch() {
 	}
 }
 
-
-void pSCOStore(object obj) {
-	if (!GetIsObjectValid(obj))
-		return;
-
-	string
-		tag = GetTag(obj),
-		resref = GetResRef(obj),
-		name = GetName(obj),
-		area = GetResRef(GetArea(obj));
-
-	vector
-		pos = GetPosition(obj);
-	float
-		f = GetFacing(obj);
-	
-	string
-		table_name = "named_objects";
-	
-	if (GetObjectType(obj) == OBJECT_TYPE_ITEM)
-		table_name = "item_objects";
-	if (GetObjectType(obj) == OBJECT_TYPE_CREATURE)
-		table_name = "creature_objects";
-
-	if (GetIsPC(obj))
-		table_name = "player_objects";
-	if (GetIsDM(obj))
-		table_name = "dm_objects";
-
-	int id = GetLocalInt(obj, "_id");
-	if (id == 0)
-		pSCO("insert into " + table_name + " (resref, tag, name, area, x, y, z, f) values (" +
-				pSs(resref) + ", " + pSs(tag) + ", " + pSs(name) + ", " + pSs(area) + ", " +
-				pSf(pos.x) + ", " + pSf(pos.y) + ", " + pSf(pos.z) + ", " +pSf(f) +
-			");", obj
-		);
-	else
-		pSCO("update " + table_name + " set " +
-				"resref = " + pSs(resref) + ", " + 
-				"tag = " + pSs(tag) + ", " + 
-				"name = " + pSs(name) + ", " + 
-				"area = " + pSs(area) + ", " +
-				"x = " + pSf(pos.x) + ", " + 
-				"y = " + pSf(pos.y) + ", " + 
-				"z = " + pSf(pos.z) + ", " +
-				"f = " + pSf(f) +
-			" where id = " + pSi(id) + ";",
-			obj
-		);
-}
-
-object pSCOLoad(int id, location where, object owner = OBJECT_INVALID) {
-	return pRCO("select data from instance_objects where id = " + pSi(id), where, owner);
-}
 
 void pSCO(string query, object obj) {
 	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!SETSCORCOSQL", query);
