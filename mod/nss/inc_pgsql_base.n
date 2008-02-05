@@ -115,8 +115,8 @@ int pQuery(string sSQL) {
 	SetLocalString(GetModule(), "psql_last_query", sSQL);
 	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!EXEC", sSQL);
 	int ret = StringToInt(GetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!EXEC"));
-	if (!ret)
-		_ERROR("Error in SQL query: " + sSQL);
+	/*if (!ret)
+		_ERROR("Error in SQL query: " + sSQL);*/
 	return ret;
 }
 
