@@ -1,5 +1,6 @@
+#include "inc_pgsql.nh"
+
 __sp_extern("_gen")
-__sp_extern("inc_pgsql")
 __sp_extern("inc_cdb")
 // Databased placplacs
 
@@ -146,7 +147,7 @@ int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
 			"" + pE(GetResRef(oP)) + ", " +
 			"" + FloatToString(v.x) + ", " + FloatToString(v.y) + ", " + FloatToString(v.z) + ", " +
 			"'" + FloatToString(f) + "', " +
-			"" + pSb(GetLocked(oP)) + ", " + pSi(nID, TRUE) + "" +
+			"" + pSb(GetLocked(oP)) + ", " + pSi0(nID, TRUE) + "" +
 			")");
 
 		pQ("select id from " + PLAC_TABLE + " order by id desc limit 1;");

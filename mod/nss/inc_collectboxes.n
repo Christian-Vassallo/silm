@@ -1,6 +1,6 @@
 // A generic script to allow for money collection.
 
-__sp_extern("inc_pgsql")
+#include "inc_pgsql.nh"
 __sp_extern("_gen")
 
 
@@ -20,9 +20,7 @@ void OnCollectboxDisturb(object oGivenByPC, object oItem) {
 	}
 
 
-	ppP("select text, character from collectboxes where name = ?;");
-	ppSs(sName);
-	ppQ();
+	pQ("select text, character from collectboxes where name = " + pSs(sName) + ";");
 	if (!pF()) {
 		SendMessageToAllDMs("Collectbox has no database entry.");
 		ActionGiveItem(oItem, oGivenByPC);

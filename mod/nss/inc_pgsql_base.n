@@ -1,15 +1,22 @@
-#define NWNX_TOKEN "ODBC2"
+/*
+ * Licence header.
+ *
+ * Readme.
+ */
+
+const string PGSQL_NWNX_TOKEN = "ODBC2";
 
 // Run on module start
-void pSQLInit();
+void pInit();
 
-// Run a query
-void pQ(string sSQL);
-void pSQLQuery(string sSQL);
+// Run a query. Returns 1 on success, 0 on error.
+int pQuery(string sSQL);
+
+// Returns the last-run query.
+string pGetLastQuery();
 
 // Escape and return a string suitable for use in query concatenation
-string pE(string str);
-string pSQLEscape(string str);
+string pEscape(string str);
 
 // Begin transaction
 // Read the README accompanying the nwnx_pgsql package before
@@ -19,44 +26,41 @@ void pBegin();
 // Commit transaction
 void pCommit();
 
-// Rollback transaction
+// Rollback transaction, globally or to a specified savepoint.
 void pRollback(string to_savepoint = "");
 
 // Sets a savepoint.
 void pSavepoint(string name);
 
 // Returns the last SQL query executed (globally!).
-string pSQLGetLastQuery();
+string pGetLastQuery();
 
 // Fetch next row. Returns 1 on success, 0 on no more rows
-int pF();
-int pSQLFetch();
+int pFetch();
 
 // Returns column n in the result set
-string pG(int n);
-string pSQLGetData(int iCol);
-string pGs(int n);
+string pGetStr(int iCol);
 
 // Returns column n in the result set as int
-int pGi(int n);
+int pGetInt(int n);
 
 // Returns column n in the result set as float
-float pGf(int n);
+float pGetFloat(int n);
 
 // Returns column n in the result set as boolean (0 or 1)
-int pGb(int n);
+int pGetBool(int n);
 
 // Return a int formatted for insert or update
-string pSi(int n, int b0isNULL = TRUE);
+string pEscapeInt(int n, int b0isNULL = TRUE);
 
 // Return a string formatted for insert or update
-string pSs(string s, int bEmptyIsNULL = FALSE);
+string pEscapeStr(string s, int bEmptyIsNULL = FALSE);
 
 // Return a float formatted for insert or update
-string pSf(float f, int b0isNULL = TRUE);
+string pEscapeFloat(float f, int b0isNULL = TRUE);
 
 // Return a bool formatted for insert or update (0 = false, rest = true)
-string pSb(int b);
+string pEscapeBool(int b);
 
 // Stores object with query. Place %s where the object binary data shall go.
 void pSCO(string query, object obj);
@@ -65,17 +69,22 @@ void pSCO(string query, object obj);
 object pRCO(string query, location where, object owner = OBJECT_INVALID);
 
 // Returns the last-inserted id.
-int pLastID(string table, string column = "id");
+int pLastId(string table, string column = "id");
 
+// Returns a nwn-generated serial for the cursor functions.
+int pCursorGetNextSerial();
 
 // A cursor-query.
-string pCursorQ(string query, bool with_hold = false, bool scroll = true, string cursorname = "");
+// Requires an active session.
+// Returns a unique cursor identifier.
+string pCursorQuery(string query, bool with_hold = false, bool scroll = true, string cursorname = "");
 
-// Close the given cursor
+// Close the given cursor.
 void pCursorClose(string cursor);
 
-// Fetch the given cursor
-bool pCursorF(string cursor, string cursor_direction = "next");
+// Fetch ONE item from the given cursor (default: next one).
+// There is no need to call pFetch()
+int pCursorFetch(string cursor, string cursor_direction = "next");
 
 /************************************/
 /* Implementation                   */
@@ -83,48 +92,33 @@ bool pCursorF(string cursor, string cursor_direction = "next");
 
 // Functions for initializing APS and working with result sets
 
-void pSQLInit() {
+void pInit() {
 	int i;
-
-	// Placeholder for ODBC persistence
 	string sMemory;
-
 	for ( i = 0; i < 8; i++ )  // reserve 8*128 bytes
 		sMemory +=
 			"................................................................................................................................";
-	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!SPACER", sMemory);
+	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!SPACER", sMemory);
 //	pQ("set search_path = nwserver;");
-	pQ("set client_encoding = 'iso-8859-15';");
+	pQuery("set client_encoding = 'iso-8859-15';");
 }
 
-string pSQLGetLastQuery() {
+int pQuery(string sSQL) {
+	SetLocalString(GetModule(), "psql_last_query", sSQL);
+	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!EXEC", sSQL);
+	return StringToInt(GetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!EXEC"));
+}
+
+string pGetLastQuery() {
 	return GetLocalString(GetModule(), "psql_last_query");
 }
 
-void pQ(string sSQL) {
-	pSQLQuery(sSQL);
-}
-
-
-void pSQLExecDirect(string sSQL) {
-	SetLocalString(GetModule(), "psql_last_query", sSQL);
-	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!EXEC", sSQL);
-}
-
-void pSQLQuery(string sSQL) {
-	pSQLExecDirect(sSQL + ";");
-}
-
-int pF() {
-	return pSQLFetch();
-}
-
-int pSQLFetch() {
+int pFetch() {
 	string sRow;
 	object oModule = GetModule();
 
-	SetLocalString(oModule, "NWNX!" + NWNX_TOKEN + "!FETCH", GetLocalString(oModule, "NWNX!" + NWNX_TOKEN + "!SPACER"));
-	sRow = GetLocalString(oModule, "NWNX!" + NWNX_TOKEN + "!FETCH");
+	SetLocalString(oModule, "NWNX!" + PGSQL_NWNX_TOKEN + "!FETCH", GetLocalString(oModule, "NWNX!" + PGSQL_NWNX_TOKEN + "!SPACER"));
+	sRow = GetLocalString(oModule, "NWNX!" + PGSQL_NWNX_TOKEN + "!FETCH");
 	if ( GetStringLength(sRow) > 0 ) {
 		SetLocalString(oModule, "NWNX_PGSQL_CurrentRow", sRow);
 		return TRUE;
@@ -136,58 +130,40 @@ int pSQLFetch() {
 
 
 void pSCO(string query, object obj) {
-	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!SETSCORCOSQL", query);
+	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!SETSCORCOSQL", query);
 	StoreCampaignObject("NWNX", "-", obj);
 }
 
 object pRCO(string query, location where, object owner = OBJECT_INVALID) {
-	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!SETSCORCOSQL", query);
+	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!SETSCORCOSQL", query);
 	return RetrieveCampaignObject("NWNX", "-", where, owner);
 }
 
 
 void pBegin() {
 	slv_i(MODULE, "psql_transaction", 1);
-	pSQLQuery("BEGIN;");
+	pQuery("BEGIN;");
 }
 
 void pCommit() {
-	pSQLQuery("COMMIT;");
+	pQuery("COMMIT;");
 	slv_i(MODULE, "psql_transaction", 0);
 }
 
 void pRollback(string to_savepoint = "") {
 	if (to_savepoint == "")
-		pSQLQuery("ROLLBACK;");
+		pQuery("ROLLBACK;");
 	else
-		pSQLQuery("ROLLBACK to savepoint " + to_savepoint + ";");
+		pQuery("ROLLBACK to savepoint " + to_savepoint + ";");
 
 }
 
 void pSavepoint(string name) {
-	pSQLQuery("SAVEPOINT " + name);
+	pQuery("SAVEPOINT " + name);
 }
 
-string pG(int n) {
-	return pSQLGetData(n);
-}
-string pGs(int n) {
-	return pSQLGetData(n);
-}
 
-int pGi(int n) {
-	return StringToInt(pSQLGetData(n));
-}
-
-float pGf(int n) {
-	return StringToFloat(pSQLGetData(n));
-}
-
-int pGb(int n) {
-	return pSQLGetData(n) == "t";
-}
-
-string pSQLGetData(int iCol) {
+string pGetStr(int iCol) {
 	int iPos;
 	string sResultSet = GetLocalString(GetModule(), "NWNX_PGSQL_CurrentRow");
 
@@ -221,11 +197,20 @@ string pSQLGetData(int iCol) {
 
 	return sColValue;
 }
-
-string pE(string str) {
-	return pSQLEscape(str);
+float pGetFloat(int n) {
+	return StringToFloat(pGetStr(n));
 }
-string pSQLEscape(string str) {
+int pGetInt(int n) {
+	return StringToInt(pGetStr(n));
+}
+int pGetBool(int n) {
+	return pGetStr(n) == "t";
+}
+
+
+
+
+string pEscape(string str) {
 	if ( -1 == FindSubString(str, "'") && -1 == FindSubString(str, "\\") )
 		return "E'" + str + "'";
 
@@ -244,47 +229,47 @@ string pSQLEscape(string str) {
 	new += "'";
 	return "E" + new;
 }
-
-
-string pSi(int n, int b0isNULL = TRUE) {
+string pEscapeInt(int n, int b0isNULL = TRUE) {
 	return b0isNULL && 0 == n ? "NULL" : IntToString(n);
 }
 
-string pSs(string s, int bEmptyIsNULL = FALSE) {
-	return bEmptyIsNULL && "" == s ? "NULL" : pE(s);
+string pEscapeStr(string s, int bEmptyIsNULL = FALSE) {
+	return bEmptyIsNULL && "" == s ? "NULL" : pEscape(s);
 }
 
-string pSf(float f, int b0isNULL = TRUE) {
+string pEscapeFloat(float f, int b0isNULL = TRUE) {
 	return b0isNULL && 0.0 == f ? "NULL" : FloatToString(f);
 }
 
-string pSb(int b) {
+string pEscapeBool(int b) {
 	return 0 == b ? "'f'" : "'t'";
 }
 
-int pLastID(string table, string column = "id") {
-	pQ("select currval(pg_get_serial_sequence('" + table + "','" + column + "');");
-	if (!pF())
+
+int pLastId(string table, string column = "id") {
+	pQuery("select currval(pg_get_serial_sequence('" + table + "','" + column + "');");
+	if (!pFetch())
 		return 0;
 	else
-		return pGi(1);
+		return pGetInt(1);
 }
 
 
-int get_next_cursor_serial() {
-	int last = lv_i(MODULE, "psql_cursor_serial");
+
+int pCursorGetNextSerial() {
+	int last = GetLocalInt(GetModule(), "psql_cursor_serial");
 	last++;
-	slv_i(MODULE, "psql_cursor_serial", last);
+	SetLocalInt(GetModule(), "psql_cursor_serial", last);
 	return last;
 }
 
 
 // A cursor-query.
-string pCursorQ(string query, bool with_hold = false, bool scroll = true, string cursorname = "") {
+string pCursorQuery(string query, bool with_hold = false, bool scroll = true, string cursorname = "") {
 	if ("" == cursorname)
-		cursorname = "ps_" + itoa(get_next_cursor_serial());
+		cursorname = "ps_" + IntToString(pCursorGetNextSerial());
 
-	pQ("declare " + cursorname + " " + 
+	pQuery("declare " + cursorname + " " + 
 			(scroll ? "scroll" : "no scroll") + " " +
 		"cursor " +
 			(with_hold ? "with hold" : "without hold") + " " +
@@ -295,11 +280,11 @@ string pCursorQ(string query, bool with_hold = false, bool scroll = true, string
 
 // Close the given cursor
 void pCursorClose(string cursor) {
-	pQ("close " + cursor);
+	pQuery("close " + cursor);
 }
 
 // Fetch the given cursor
-bool pCursorF(string cursor, string cursor_direction = "next") {
-	pQ("fetch " + cursor_direction + " from " + cursor);
-	return pF();
+int pCursorFetch(string cursor, string cursor_direction = "next") {
+	pQuery("fetch " + cursor_direction + " from " + cursor);
+	return pFetch();
 }

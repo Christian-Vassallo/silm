@@ -1,6 +1,6 @@
 __sp_extern("_gen")
 __sp_extern("inc_cdb")
-__sp_extern("inc_pgsql")
+#include "inc_pgsql.nh"
 
 void main() {
 	object oPC = GetFirstPC();
@@ -20,17 +20,17 @@ void main() {
 		float f = GetFacing(oPC);
 		
 		string qq = "(" +
-			 pSi(GetAccountID(oPC), TRUE) + "," +
-			 pSi(GetCharacterID(oPC), TRUE) + "," +
+			 pSi0(GetAccountID(oPC), TRUE) + "," +
+			 pSi0(GetCharacterID(oPC), TRUE) + "," +
 			 pSs(GetPCName(oPC)) + "," + 
 			 pSs(GetName(oPC)) + "," + 
 			 pSb(GetIsDM(oPC)) + "," + 
 			 pSs(GetResRef(GetArea(oPC))) + "," + 
 			 pSs(GetName(GetArea(oPC))) + "," + 
-			 pSf(p.x, FALSE) + "," + 
-			 pSf(p.y, FALSE) + "," + 
-			 pSf(p.z, FALSE) + "," + 
-			 pSf(f, FALSE) + 
+			 pSf0(p.x, FALSE) + "," + 
+			 pSf0(p.y, FALSE) + "," + 
+			 pSf0(p.z, FALSE) + "," + 
+			 pSf0(f, FALSE) + 
 		")";
 
 		pQ(q + qq + ";");

@@ -1,13 +1,14 @@
 __sp_extern("inc_mnx")
 __sp_extern("_gen")
 __sp_extern("inc_nwnx")
-__sp_extern("inc_pgsql")
 __sp_extern("inc_persist")
 __sp_extern("inc_pc_data")
 __sp_extern("inc_chat")
 __sp_extern("inc_chat_run")
 __sp_extern("x2_inc_switches")
 __sp_extern("inc_setting")
+#include "inc_pgsql.nh"
+#include "git.h"
 
 void main() {
 	object oMod = GetModule();
@@ -21,7 +22,7 @@ void main() {
 	SetModuleSwitch(MODULE_SWITCH_ENABLE_CROSSAREA_WALKWAYPOINTS, TRUE);
 
 	InitNWNX();
-	pSQLInit();
+	pInit();
 	ChatInit();
 	mnxInit();
 
