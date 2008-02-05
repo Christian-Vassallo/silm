@@ -144,6 +144,8 @@ int p_load(struct p_metadata md) {
 	location where = Location(area, p, md.f);
 	
 	object o = pRCO("select data from " + METADATA_SCHEMA + "." + METADATA_TABLE + " where id = " + pSi(md.p_id) + ";", where);
+
+	SetLocalInt(o, "p_id", md.p_id);
 	
 	return GetIsObjectValid(o) && md.p_id;
 }
@@ -152,6 +154,7 @@ int p_load(struct p_metadata md) {
 int p_load_each(string table, string conditions) {
     vector p;
 	object area;
+	object o;
 	int id;
 	int total = 0;
     
@@ -166,7 +169,14 @@ int p_load_each(string table, string conditions) {
         }
 
         location where = Location(area, p, pGf(5));
-        pRCO("select data from " + METADATA_SCHEMA + "." + table + " where id = " + pSi(id) + ";", where);
+        
+		o = pRCO("select data from " + METADATA_SCHEMA + "." + table + " where id = " + pSi(id) + ";", where);
+		if (!GetIsObjectValid(o)) {
+			_WARN("Tried to load a object which did not instanciate: " + pSi(id));
+			continue;
+		}
+		SetLocalInt(o, "p_id", id);
+
         total += 1;
     }
 
@@ -223,7 +233,9 @@ int p_save(string table, object o = OBJECT_SELF) {
 			"%s" + 
 		")", o);
 
-		id = pLastId(table, "id");
+		id = pLastId(METADATA_SCHEMA + "." + table, "id");
+
+		SetLocalInt(o, "p_id", id);
 
 	} else {
 
@@ -244,6 +256,7 @@ int p_save(string table, object o = OBJECT_SELF) {
 			" where id = " + pSi(id)
 		, o);
 	}
+
 
 	return id;
 }
