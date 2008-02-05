@@ -1,0 +1,45 @@
+#include "inc_pgsql.nh"
+__sp_extern("inc_cdb")
+
+#define ONLINE_TABLE "online"
+
+void onlineServerStart() {
+	pQ("truncate " + ONLINE_TABLE);
+}
+
+void onlinePlayerAreaEnter(object oPC, object oArea) {
+	pQ("update " + ONLINE_TABLE + " set " + 
+		"area = " + pSs(GetResRef(GetArea(oPC))) + ", " + 
+		"area_s = " + pSs(GetName(GetArea(oPC))) + " " + 
+		"where aid = " + pSi(GetAccountID(oPC))
+	);
+}
+
+void onlinePlayerEnter(object oPC) {
+
+	string q =
+		"insert into " + ONLINE_TABLE + " (aid, cid, account, character, dm, area, area_s, x, y, z, f) values";
+
+	vector p = GetPosition(oPC);
+	float f = GetFacing(oPC);
+	
+	q += "(" +
+		 pSi0(GetAccountID(oPC), TRUE) + "," +
+		 pSi0(GetCharacterID(oPC), TRUE) + "," +
+		 pSs(GetPCName(oPC)) + "," + 
+		 pSs(GetName(oPC)) + "," + 
+		 pSb(GetIsDM(oPC)) + "," + 
+		 pSs(GetResRef(GetArea(oPC))) + "," + 
+		 pSs(GetName(GetArea(oPC))) + "," + 
+		 pSf0(p.x, FALSE) + "," + 
+		 pSf0(p.y, FALSE) + "," + 
+		 pSf0(p.z, FALSE) + "," + 
+		 pSf0(f, FALSE) + 
+	")";
+
+	pQ(q);
+}
+
+void onlinePlayerLeave(object oPC) {
+	pQ("delete from " + ONLINE_TABLE + " where aid = " + pSi(GetAccountID(oPC)));
+}

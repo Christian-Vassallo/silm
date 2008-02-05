@@ -1,5 +1,6 @@
 __sp_extern("_gen")
-__sp_extern("inc_pgsql")
+#include "inc_pgsql.nh"
+__sp_extern("inc_scorco")
 __sp_extern("inc_cdb")
 __sp_extern("inc_audit")
 __sp_extern("inc_char_rules")
@@ -100,7 +101,12 @@ void main() {
 		// SetCommandable(0, oPC);
 		bMayEnterGame = FALSE;
 	}
-
+	
+	
+	/*
+	if (nCID > 0)
+		pSCO("update characters set character_data = %s where id = " + pSi(nCID), oPC);
+	*/
 
 	SetLocalInt(oPC, "may_enter_game", bMayEnterGame || GetIsDM(oPC));
 }

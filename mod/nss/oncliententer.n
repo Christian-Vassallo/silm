@@ -2,9 +2,9 @@ __sp_extern("inc_cdb")
 __sp_extern("inc_chat")
 __sp_extern("_gen")
 __sp_extern("inc_mnx")
-__sp_extern("inc_limbo")
 __sp_extern("inc_audit")
 __sp_extern("inc_currency")
+__sp_extern("inc_online")
 
 void MnxNotify(object oPC);
 
@@ -23,6 +23,8 @@ void main() {
 	SendMessageToPC(oPC, "Commit: " + GIT_COMMIT);
 	SendMessageToPC(oPC, "Commited on: " + GIT_COMMIT_ON);
 	SendMessageToPC(oPC, "Built on: " + GIT_BUILD_ON);
+
+	onlinePlayerEnter(oPC);
 
 	/*struct mnxRet r = mnxRun(oPC, "uptime");
 	if (!r.error)
@@ -88,30 +90,6 @@ void main() {
 //    if (!GetIsObjectValid(GetItemPossessedBy(oPC, "pc_walkrun")))
 //        CreateItemOnObject("pc_walkrun", oPC, 1);
 	// DestroyObject(GetItemPossessedBy(oPC, "pc_walkrun"));
-
-	// Copy player to limbo, kthnx.
-	object oLimbo = GetObjectByTag(LIMBO_WAYPOINT);
-
-	if ( GetIsObjectValid(oLimbo) ) {
-		location lLimbo = GetLocation(oLimbo);
-		object o = GetFirstObjectInArea(GetArea(oLimbo));
-		int bFound = FALSE;
-
-		while ( GetIsObjectValid(o) ) {
-			if ( GetIsCreature(o) ) {
-				if ( GetName(o) == GetName(oPC) ) {
-					bFound = TRUE;
-					break;
-				}
-			}
-			o = GetNextObjectInArea(GetArea(oLimbo));
-		}
-
-		if ( !bFound ) {
-			object oNew = CopyObject(oPC, lLimbo);
-			ChangeToStandardFaction(oNew, STANDARD_FACTION_COMMONER);
-		}
-	}
 
 }
 

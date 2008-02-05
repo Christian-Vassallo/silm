@@ -6,6 +6,9 @@
  * This code is licenced under the
  *  GNU/GPLv2 General Public Licence.
  */
+
+#include "inc_pgsql.nh"
+
 __sp_extern("_gen")
 
 __sp_extern("inc_events")
@@ -16,7 +19,7 @@ __sp_extern("inc_scorco")
 __sp_extern("inc_mnx")
 __sp_extern("inc_mnx_temp")
 
-
+__sp_extern("inc_online")
 
 __sp_extern("inc_track")
 
@@ -85,16 +88,17 @@ void main() {
 
 
 	if (gvGetInt("persist_dropped_items") && !lv_i(oArea, "dropped_items_loaded") && GetIsPC(oPC)) {
+		
+		// pBegin();
+		p_load_each_in_chunks("dropped_items", "area_resref = " + pSs(GetResRef(oArea)));
+		// pCommit();
 
 		slv_i(oArea, "dropped_items_loaded", 1);
-
-		pQ("select id from scorco.dropped_items where area_resref = " + pSs(GetResRef(oArea)));
-		while (pF()) {
-			struct p_metadata md = p_get_metadata(pGi(1));
-			p_load(md);
-		}
 	}
 
+
+	if (GetIsPC(oPC))
+		onlinePlayerAreaEnter(oPC, oArea);
 
 	RunEventScript(OBJECT_SELF, EVENT_AREA_ENTER, EVENT_PREFIX_AREA);
 

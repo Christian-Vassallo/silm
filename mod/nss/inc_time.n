@@ -1,6 +1,25 @@
-#include "time.nh"
+#include "inc_pgsql.nh"
 
-__sp_extern("inc_pgsql")
+struct RealTime {
+	int ts;
+	int weekday;
+	int week;
+	int day;
+	int month;
+	int year;
+	int hour;
+	int minute;
+	int second;
+	string timefmt; // Formatted time by SQL, just for convenience
+	int error;
+};
+
+// Returns the walltime the database thinks is.
+struct RealTime GetRealTime();
+
+
+
+
 
 struct RealTime GetRealTime() {
 	struct RealTime r;
@@ -20,7 +39,7 @@ struct RealTime GetRealTime() {
 	);
 	if (!pF()) {
 		r.error = 1;
-		dbg("GetRealTime() failed " + pSQLGetLastQuery(), 0);
+		dbg("GetRealTime() failed " + pGetLastQuery(), 0);
 	} else {
 		r.second = pGi(1);
 		r.minute = pGi(2);

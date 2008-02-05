@@ -1,62 +1,66 @@
-#define NWNX_TOKEN "ODBC2"
+/*
+ * Licence header.
+ *
+ * Readme.
+ */
+
+const string PGSQL_NWNX_TOKEN = "ODBC2";
 
 // Run on module start
-void pSQLInit();
+void pInit();
 
-// Run a query
-void pQ(string sSQL);
-void pSQLQuery(string sSQL);
+// Run a query. Returns 1 on success, 0 on error.
+int pQuery(string sSQL);
+
+// Returns the last-run query.
+string pGetLastQuery();
 
 // Escape and return a string suitable for use in query concatenation
-string pE(string str);
-string pSQLEscape(string str);
+string pEscape(string str);
 
 // Begin transaction
 // Read the README accompanying the nwnx_pgsql package before
 // considering the use of transactions.
-void pB();
+void pBegin();
 
 // Commit transaction
-void pC();
+void pCommit();
 
-// Rollback transaction
-void pR();
+// Rollback transaction, globally or to a specified savepoint.
+void pRollback(string to_savepoint = "");
 
-// Abort transaction
-void pA();
+// Sets a savepoint.
+void pSavepoint(string name);
 
 // Returns the last SQL query executed (globally!).
-string pSQLGetLastQuery();
+string pGetLastQuery();
 
 // Fetch next row. Returns 1 on success, 0 on no more rows
-int pF();
-int pSQLFetch();
+int pFetch();
 
 // Returns column n in the result set
-string pG(int n);
-string pGs(int n);
-string pSQLGetData(int iCol);
+string pGetStr(int iCol);
 
 // Returns column n in the result set as int
-int pGi(int n);
+int pGetInt(int n);
 
 // Returns column n in the result set as float
-float pGf(int n);
+float pGetFloat(int n);
 
 // Returns column n in the result set as boolean (0 or 1)
-int pGb(int n);
+int pGetBool(int n);
 
 // Return a int formatted for insert or update
-string pSi(int n, int b0isNULL = TRUE);
+string pEscapeInt(int n, int b0isNULL = TRUE);
 
 // Return a string formatted for insert or update
-string pSs(string s, int bEmptyIsNULL = FALSE);
+string pEscapeStr(string s, int bEmptyIsNULL = FALSE);
 
 // Return a float formatted for insert or update
-string pSf(float f, int b0isNULL = TRUE);
+string pEscapeFloat(float f, int b0isNULL = TRUE);
 
 // Return a bool formatted for insert or update (0 = false, rest = true)
-string pSb(int b);
+string pEscapeBool(int b);
 
 // Stores object with query. Place %s where the object binary data shall go.
 void pSCO(string query, object obj);
@@ -64,17 +68,31 @@ void pSCO(string query, object obj);
 // Retrieves object with query. Query has to return exactly one value.
 object pRCO(string query, location where, object owner = OBJECT_INVALID);
 
-// Stores the object in the database. Creates a new record of no old was found,
-// or updates a old one. lvar _id is the serial in database after storage. Don't
-// delete it.
-void pSCOStore(object obj);
-
-// Loads the specified serial into the game.
-// Don't load it twice, or you'll overwrite stuff.
-object pSCOLoad(int id, location where, object owner = OBJECT_INVALID);
-
 // Returns the last-inserted id.
-int pLastID(string table, string column = "id");
+int pLastId(string table, string column = "id");
+
+// Returns a nwn-generated serial for the cursor functions.
+int pCursorGetNextSerial();
+
+// Declare a cursor.
+// Requires an active session.
+// Returns a unique cursor identifier for use with pCursorFetch and pCursorClose.
+string pDeclare(string query, bool with_hold = false, bool scroll = true, string cursorname = "");
+
+// Close the given cursor.
+void pCursorClose(string cursor);
+
+// Fetch ONE item from the given cursor (default: next one).
+// There is no need to call pFetch()
+int pCursorFetch(string cursor, string cursor_direction = "next");
+
+// Prepare a named query.
+int pPrepare(string name, string query);
+
+// Execute a named query with the given parameters.
+int pExecute(string name, string p1 = "", string p2 = "", string p3 = "", string p4 = "",
+	string p5 = "", string p6 = "", string p7 = "", string p8 = "", string p9 = "");
+
 
 /************************************/
 /* Implementation                   */
@@ -82,48 +100,36 @@ int pLastID(string table, string column = "id");
 
 // Functions for initializing APS and working with result sets
 
-void pSQLInit() {
+void pInit() {
 	int i;
-
-	// Placeholder for ODBC persistence
 	string sMemory;
-
 	for ( i = 0; i < 8; i++ )  // reserve 8*128 bytes
 		sMemory +=
 			"................................................................................................................................";
-	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!SPACER", sMemory);
+	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!SPACER", sMemory);
 //	pQ("set search_path = nwserver;");
-	pQ("set client_encoding = 'iso-8859-15';");
+	pQuery("set client_encoding = 'iso-8859-15';");
 }
 
-string pSQLGetLastQuery() {
+int pQuery(string sSQL) {
+	SetLocalString(GetModule(), "psql_last_query", sSQL);
+	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!EXEC", sSQL);
+	int ret = StringToInt(GetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!EXEC"));
+	/*if (!ret)
+		_ERROR("Error in SQL query: " + sSQL);*/
+	return ret;
+}
+
+string pGetLastQuery() {
 	return GetLocalString(GetModule(), "psql_last_query");
 }
 
-void pQ(string sSQL) {
-	pSQLQuery(sSQL);
-}
-
-
-void pSQLExecDirect(string sSQL) {
-	SetLocalString(GetModule(), "psql_last_query", sSQL);
-	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!EXEC", sSQL);
-}
-
-void pSQLQuery(string sSQL) {
-	pSQLExecDirect(sSQL + ";");
-}
-
-int pF() {
-	return pSQLFetch();
-}
-
-int pSQLFetch() {
+int pFetch() {
 	string sRow;
 	object oModule = GetModule();
 
-	SetLocalString(oModule, "NWNX!" + NWNX_TOKEN + "!FETCH", GetLocalString(oModule, "NWNX!" + NWNX_TOKEN + "!SPACER"));
-	sRow = GetLocalString(oModule, "NWNX!" + NWNX_TOKEN + "!FETCH");
+	SetLocalString(oModule, "NWNX!" + PGSQL_NWNX_TOKEN + "!FETCH", GetLocalString(oModule, "NWNX!" + PGSQL_NWNX_TOKEN + "!SPACER"));
+	sRow = GetLocalString(oModule, "NWNX!" + PGSQL_NWNX_TOKEN + "!FETCH");
 	if ( GetStringLength(sRow) > 0 ) {
 		SetLocalString(oModule, "NWNX_PGSQL_CurrentRow", sRow);
 		return TRUE;
@@ -134,107 +140,41 @@ int pSQLFetch() {
 }
 
 
-void pSCOStore(object obj) {
-	if (!GetIsObjectValid(obj))
-		return;
-
-	string
-		tag = GetTag(obj),
-		resref = GetResRef(obj),
-		name = GetName(obj),
-		area = GetResRef(GetArea(obj));
-
-	vector
-		pos = GetPosition(obj);
-	float
-		f = GetFacing(obj);
-	
-	string
-		table_name = "named_objects";
-	
-	if (GetObjectType(obj) == OBJECT_TYPE_ITEM)
-		table_name = "item_objects";
-	if (GetObjectType(obj) == OBJECT_TYPE_CREATURE)
-		table_name = "creature_objects";
-
-	if (GetIsPC(obj))
-		table_name = "player_objects";
-	if (GetIsDM(obj))
-		table_name = "dm_objects";
-
-	int id = GetLocalInt(obj, "_id");
-	if (id == 0)
-		pSCO("insert into " + table_name + " (resref, tag, name, area, x, y, z, f) values (" +
-				pSs(resref) + ", " + pSs(tag) + ", " + pSs(name) + ", " + pSs(area) + ", " +
-				pSf(pos.x) + ", " + pSf(pos.y) + ", " + pSf(pos.z) + ", " +pSf(f) +
-			");", obj
-		);
-	else
-		pSCO("update " + table_name + " set " +
-				"resref = " + pSs(resref) + ", " + 
-				"tag = " + pSs(tag) + ", " + 
-				"name = " + pSs(name) + ", " + 
-				"area = " + pSs(area) + ", " +
-				"x = " + pSf(pos.x) + ", " + 
-				"y = " + pSf(pos.y) + ", " + 
-				"z = " + pSf(pos.z) + ", " +
-				"f = " + pSf(f) +
-			" where id = " + pSi(id) + ";",
-			obj
-		);
-}
-
-object pSCOLoad(int id, location where, object owner = OBJECT_INVALID) {
-	return pRCO("select data from instance_objects where id = " + pSi(id), where, owner);
-}
-
 void pSCO(string query, object obj) {
-	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!SETSCORCOSQL", query);
+	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!SETSCORCOSQL", query);
 	StoreCampaignObject("NWNX", "-", obj);
 }
 
 object pRCO(string query, location where, object owner = OBJECT_INVALID) {
-	SetLocalString(GetModule(), "NWNX!" + NWNX_TOKEN + "!SETSCORCOSQL", query);
+	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!SETSCORCOSQL", query);
 	return RetrieveCampaignObject("NWNX", "-", where, owner);
 }
 
 
-void pB() {
-	pSQLQuery("BEGIN;");
+void pBegin() {
+	slv_i(MODULE, "psql_transaction", 1);
+	pQuery("BEGIN;");
 }
 
-void pC() {
-	pSQLQuery("COMMIT;");
+void pCommit() {
+	pQuery("COMMIT;");
+	slv_i(MODULE, "psql_transaction", 0);
 }
 
-void pR() {
-	pSQLQuery("ROLLBACK;");
+void pRollback(string to_savepoint = "") {
+	if (to_savepoint == "")
+		pQuery("ROLLBACK;");
+	else
+		pQuery("ROLLBACK to savepoint " + to_savepoint + ";");
+
 }
 
-void pA() {
-	pSQLQuery("ABORT;");
+void pSavepoint(string name) {
+	pQuery("SAVEPOINT " + name);
 }
 
-string pG(int n) {
-	return pSQLGetData(n);
-}
-string pGs(int n) {
-	return pSQLGetData(n);
-}
 
-int pGi(int n) {
-	return StringToInt(pSQLGetData(n));
-}
-
-float pGf(int n) {
-	return StringToFloat(pSQLGetData(n));
-}
-
-int pGb(int n) {
-	return pSQLGetData(n) == "t";
-}
-
-string pSQLGetData(int iCol) {
+string pGetStr(int iCol) {
 	int iPos;
 	string sResultSet = GetLocalString(GetModule(), "NWNX_PGSQL_CurrentRow");
 
@@ -268,11 +208,20 @@ string pSQLGetData(int iCol) {
 
 	return sColValue;
 }
-
-string pE(string str) {
-	return pSQLEscape(str);
+float pGetFloat(int n) {
+	return StringToFloat(pGetStr(n));
 }
-string pSQLEscape(string str) {
+int pGetInt(int n) {
+	return StringToInt(pGetStr(n));
+}
+int pGetBool(int n) {
+	return pGetStr(n) == "t";
+}
+
+
+
+
+string pEscape(string str) {
 	if ( -1 == FindSubString(str, "'") && -1 == FindSubString(str, "\\") )
 		return "E'" + str + "'";
 
@@ -291,28 +240,86 @@ string pSQLEscape(string str) {
 	new += "'";
 	return "E" + new;
 }
-
-
-string pSi(int n, int b0isNULL = TRUE) {
+string pEscapeInt(int n, int b0isNULL = TRUE) {
 	return b0isNULL && 0 == n ? "NULL" : IntToString(n);
 }
 
-string pSs(string s, int bEmptyIsNULL = FALSE) {
-	return bEmptyIsNULL && "" == s ? "NULL" : pE(s);
+string pEscapeStr(string s, int bEmptyIsNULL = FALSE) {
+	return bEmptyIsNULL && "" == s ? "NULL" : pEscape(s);
 }
 
-string pSf(float f, int b0isNULL = TRUE) {
+string pEscapeFloat(float f, int b0isNULL = TRUE) {
 	return b0isNULL && 0.0 == f ? "NULL" : FloatToString(f);
 }
 
-string pSb(int b) {
+string pEscapeBool(int b) {
 	return 0 == b ? "'f'" : "'t'";
 }
 
-int pLastID(string table, string column = "id") {
-	pQ("select currval(pg_get_serial_sequence('" + table + "','" + column + "');");
-	if (!pF())
+
+int pLastId(string table, string column = "id") {
+	pQuery("select currval(pg_get_serial_sequence('" + table + "','" + column + "'));");
+	if (!pFetch())
 		return 0;
 	else
-		return pGi(1);
+		return pGetInt(1);
+}
+
+
+
+int pCursorGetNextSerial() {
+	int last = GetLocalInt(GetModule(), "psql_cursor_serial");
+	last++;
+	SetLocalInt(GetModule(), "psql_cursor_serial", last);
+	return last;
+}
+
+
+string pDeclare(string query, bool with_hold = false, bool scroll = true, string cursorname = "") {
+	if ("" == cursorname)
+		cursorname = "ps_" + IntToString(pCursorGetNextSerial());
+
+	pQuery("declare " + cursorname + " " + 
+			(scroll ? "scroll" : "no scroll") + " " +
+		"cursor " +
+			(with_hold ? "with hold" : "without hold") + " " +
+		"for " + query);
+	
+	return cursorname;
+}
+
+// Close the given cursor
+void pCursorClose(string cursor) {
+	pQuery("close " + cursor);
+}
+
+// Fetch the given cursor
+int pCursorFetch(string cursor, string cursor_direction = "next") {
+	pQuery("fetch " + cursor_direction + " from " + cursor);
+	return pFetch();
+}
+
+
+
+int pPrepare(string name, string query) {
+	return pQuery("prepare " + name + " as " + query);
+}
+
+int pExecute(string name, string p1 = "", string p2 = "", string p3 = "", string p4 = "",
+	string p5 = "", string p6 = "", string p7 = "", string p8 = "", string p9 = "") {
+
+	string qstr = "";
+	if (p1 != "") qstr += p1 + ",";
+	if (p2 != "") qstr += p2 + ",";
+	if (p3 != "") qstr += p3 + ",";
+	if (p4 != "") qstr += p4 + ",";
+	if (p5 != "") qstr += p5 + ",";
+	if (p6 != "") qstr += p6 + ",";
+	if (p7 != "") qstr += p7 + ",";
+	if (p8 != "") qstr += p8 + ",";
+	if (p9 != "") qstr += p9 + ",";
+	if (qstr != "")
+		qstr = GetSubString(qstr, 0, GetStringLength(qstr) - 1);
+
+	return pQuery("execute " + name + "(" + qstr + ")");
 }

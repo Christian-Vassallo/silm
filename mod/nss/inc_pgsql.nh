@@ -1,0 +1,24 @@
+#ifndef PGSQL_H
+#define PGSQL_H
+
+#define pQ(s) pQuery(s)
+#define pE(s) pEscape(s)
+#define pF()  pFetch()
+#define pG(n)  pGetStr(n)
+#define pGs(n) pGetStr(n)
+#define pGi(n) pGetInt(n)
+#define pGf(n) pGetFloat(n)
+#define pGb(n) pGetBool(n)
+
+#define pSi(i) pEscapeInt(i)
+#define pSs(s) pEscapeStr(s)
+#define pSf(f) pEscapeFloat(f)
+#define pSb(b) pEscapeBool(b)
+#define pSi0(i,x) pEscapeInt(i,x)
+#define pSs0(s,x) pEscapeStr(s,x)
+#define pSf0(f,x) pEscapeFloat(f,x)
+#define pSb0(b,x) pEscapeBool(b,x)
+
+__sp_extern("inc_pgsql_base")
+
+#endif

@@ -1,4 +1,4 @@
-__sp_extern("inc_pgsql_base")
+#include "inc_pgsql.nh"
 
 
 #define METADATA_SCHEMA "scorco"
@@ -22,18 +22,6 @@ struct p_metadata {
 // otherwise false.
 int p_id(object o = OBJECT_SELF);
 
-// Saves the metadata for this object
-// and returns its id.
-int p_save_metadata(string table, object o = OBJECT_SELF);
-
-// Updates this objects metadata.
-// Returns p_id on success, otherwise false.
-int p_update_metadata(string table, object o = OBJECT_SELF);
-
-// Saves the objects metadata only.
-// Returns p_id on success, otherwise false.
-int p_create_metadata(string table, object o = OBJECT_SELF);
-
 // Returns the metadata for this object.
 struct p_metadata p_get_metadata_for(object o = OBJECT_SELF);
 
@@ -53,16 +41,10 @@ void p_touch(int id);
 // Loads the specified object where it ought to be.
 int p_load(struct p_metadata m);
 
-// Saves the object and returns its id
+// Saves the object and returns its id,
+// returns 0 if the object could not be saved,
+// or its id otherwise (be it insert or update).
 int p_save(string table, object o = OBJECT_SELF);
-
-// Creates the object and returns its id
-int p_create(string table, object o = OBJECT_SELF);
-
-// Updates the object.
-// Does not touch metadata.
-// Returns p_id on success, otherwise false.
-int p_update(string table, object o = OBJECT_SELF);
 
 // Deletes this object from the database.
 // Destroys the objects metadata.
@@ -75,6 +57,12 @@ bool p_delete(string table, object o = OBJECT_SELF);
 // Use this if you want to get rid of sth.
 // Returns true on success, otherwise false.
 bool p_destroy(string table, object o = OBJECT_SELF);
+
+// Restores all objects in table matching conditions
+// into the game world.
+// Returns the number of objects restored.
+int p_load_each(string table, string conditions);
+
 
 
 // Implementation
@@ -101,79 +89,8 @@ bool p_canpersist(object o = OBJECT_SELF) {
 		GetObjectType(o) == OBJECT_TYPE_CREATURE;
 }
 
-int p_save_metadata(string table, object o = OBJECT_SELF) {
-	if (p_id(o))
-		return p_update_metadata(table, o);
-	else
-		return p_create_metadata(table, o);
-}
 
-int p_create_metadata(string table, object o = OBJECT_SELF) {
-	if (!GetIsObjectValid(o)) {
-		_WARN("passed NULL object to p_create_metadata.");
-		return 0;
-	}
-	if (!p_canpersist(o)) {
-		_WARN("cannot create metadata for " + otoa(o));
-		return 0;
-	}
 
-	vector p = GetPosition(o);
-	float f = GetFacing(o);
-
-	pQ("insert into " + METADATA_SCHEMA + "." + table + " " +
-		"(resref, tag, name, area_resref, area_tag, hitpoints, x, y, z, f) values(" +
-		pSs(GetResRef(o)) + ", " +
-		pSs(GetTag(o)) + ", " +
-		pSs(GetName(o)) + ", " +
-		pSs(GetResRef(GetArea(o))) + ", " +
-		pSs(GetTag(GetArea(o))) + ", " +
-		pSi(GetCurrentHitPoints(o)) + ", " +
-		pSf(p.x) + ", " +
-		pSf(p.y) + ", " +
-		pSf(p.z) + ", " +
-		pSf(f) +
-	")");
-	int id = pLastID(METADATA_SCHEMA + "." + table);
-	
-	slv_i(o, "p_id", id);
-
-	return id;
-}
-
-int p_update_metadata(string table, object o = OBJECT_SELF) {
-	if (!GetIsObjectValid(o)) {
-		_WARN("passed NULL object to p_update_metadata.");
-		return 0;
-	}
-	
-	int id = p_id(o);
-
-	if (!id) {
-		_FATAL("cannot update metadata for " + otoa(o));
-		return 0;
-	}
-	
-	vector p = GetPosition(o);
-	float f = GetFacing(o);
-	
-	pQ("update " + METADATA_SCHEMA + "." + table + " set " +
-			"resref=" + pSs(GetResRef(o)) + ", " +
-			"tag=" + pSs(GetTag(o)) + ", " +
-			"name=" + pSs(GetName(o)) + ", " +
-			"area_resref=" + pSs(GetResRef(GetArea(o))) + ", " +
-			"area_tag=" + pSs(GetTag(GetArea(o))) + ", " +
-			"hitpoints=" + pSi(GetCurrentHitPoints(o)) + ", " +
-			"x=" + pSf(p.x) + ", " +
-			"y=" + pSf(p.y) + ", " +
-			"z=" + pSf(p.z) + ", " +
-			"f=" + pSf(f) +
-		" where id = " + pSi(id)
-	);
-	
-	p_touch(id);
-	return id;
-}
 
 struct p_metadata p_get_metadata_for(object o = OBJECT_SELF) {
 	struct p_metadata md;
@@ -185,6 +102,7 @@ struct p_metadata p_get_metadata_for(object o = OBJECT_SELF) {
 
 	return p_get_metadata(id);
 }
+
 
 struct p_metadata p_get_metadata(int id) {
 	struct p_metadata md;
@@ -226,22 +144,123 @@ int p_load(struct p_metadata md) {
 	location where = Location(area, p, md.f);
 	
 	object o = pRCO("select data from " + METADATA_SCHEMA + "." + METADATA_TABLE + " where id = " + pSi(md.p_id) + ";", where);
+
+	SetLocalInt(o, "p_id", md.p_id);
 	
 	return GetIsObjectValid(o) && md.p_id;
 }
 
 
-int p_save(string table, object o = OBJECT_SELF) {
-	int id = p_save_metadata(table, o);
-	return p_update(table, o);
+int p_load_each(string table, string conditions) {
+    vector p;
+	object area;
+	object o;
+	int id;
+	int total = 0;
+    
+	pQ("select id, x, y, z, f, area_tag from " + METADATA_SCHEMA + "." + table + " where " + conditions);
+    while (pF()) {
+        id = pGi(1);
+        p = Vector(pGf(2), pGf(3), pGf(4));
+        area = GetObjectByTag(pGs(6));
+        if (!GetIsObjectValid(area)) {
+            _WARN("trying to create object in non-existing area " + pGs(6));
+			continue;
+        }
+
+        location where = Location(area, p, pGf(5));
+        
+		o = pRCO("select data from " + METADATA_SCHEMA + "." + table + " where id = " + pSi(id) + ";", where);
+		if (!GetIsObjectValid(o)) {
+			_WARN("Tried to load a object which did not instanciate: " + pSi(id));
+			continue;
+		}
+		SetLocalInt(o, "p_id", id);
+
+        total += 1;
+    }
+
+    return total;
 }
 
-int p_update(string table, object o = OBJECT_SELF) {
+
+
+void p_load_each_wrap(string table, string conditions) {
+	p_load_each(table, conditions);
+}
+
+
+int p_load_each_in_chunks(string table, string conditions) {
+	int chunksize = 50;
+	pQ("select count(id) from " + METADATA_SCHEMA + "." + table + " where " + conditions);
+	pF();
+	
+	conditions += " order by id desc";
+	int count = pGi(1);
+	int iter = 0;
+	while (count > 0) {
+		DelayCommand(1.0 * iter, 
+			p_load_each_wrap(table, conditions + " offset " + itoa(iter * chunksize) + " limit " + itoa(chunksize))
+		);	
+		iter++;
+		count -= chunksize;
+	}
+
+	return count;
+}
+
+
+int p_save(string table, object o = OBJECT_SELF) {
 	int id = p_id(o);
-	pSCO("update " + METADATA_SCHEMA + "." + table + " set data = %s where id = " + pSi(id) + ";", o);
-	p_touch(id);
+	
+	vector p = GetPosition(o);
+	float f = GetFacing(o);
+
+	if (!id) {
+
+		pSCO("insert into " + METADATA_SCHEMA + "." + table + " " +
+			"(resref, tag, name, area_resref, area_tag, hitpoints, x, y, z, f, data) values(" +
+			pSs(GetResRef(o)) + ", " +
+			pSs(GetTag(o)) + ", " +
+			pSs(GetName(o)) + ", " +
+			pSs(GetResRef(GetArea(o))) + ", " +
+			pSs(GetTag(GetArea(o))) + ", " +
+			pSi(GetCurrentHitPoints(o)) + ", " +
+			pSf(p.x) + ", " +
+			pSf(p.y) + ", " +
+			pSf(p.z) + ", " +
+			pSf(f) + ", " + 
+			"%s" + 
+		")", o);
+
+		id = pLastId(METADATA_SCHEMA + ".object_ids", "id");
+
+		SetLocalInt(o, "p_id", id);
+
+	} else {
+
+		pSCO("update " + METADATA_SCHEMA + "." + table + " set " +
+			"last_access_on = now(), " +
+			"resref=" + pSs(GetResRef(o)) + ", " +
+			"tag=" + pSs(GetTag(o)) + ", " +
+			"name=" + pSs(GetName(o)) + ", " +
+			"area_resref=" + pSs(GetResRef(GetArea(o))) + ", " +
+			"area_tag=" + pSs(GetTag(GetArea(o))) + ", " +
+			"hitpoints=" + pSi(GetCurrentHitPoints(o)) + ", " +
+			"x=" + pSf(p.x) + ", " +
+			"y=" + pSf(p.y) + ", " +
+			"z=" + pSf(p.z) + ", " +
+			"f=" + pSf(f) +   ", " + 
+			"data = %s " +
+
+			" where id = " + pSi(id)
+		, o);
+	}
+
+
 	return id;
 }
+
 
 bool p_delete(string table, object o = OBJECT_SELF) {
 	if (!p_id(o)) {
