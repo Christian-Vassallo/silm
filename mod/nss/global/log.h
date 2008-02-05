@@ -23,7 +23,7 @@
 
 /* print a error message */
 #define _ERROR(message) __EBLOCK(\
-	string inline_message = "ERROR: " + __FILE__ + ":" + xstr(__LINE__) + ": " + x;\
+	string inline_message = "ERROR: " + __FILE__ + ":" + xstr(__LINE__) + ": " + message;\
 	WriteTimestampedLogEntry(inline_message);\
 	SendMessageToAllDMs(inline_message);\
 )
