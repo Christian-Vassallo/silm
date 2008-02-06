@@ -1018,6 +1018,7 @@ int CommandHP(object oPC, int iMode) {
 
 	string sHP = arg(0);
 
+
 	if ( sHP == "" ) {} else {
 		// parse percentage changes
 		float fChange = GetAbsoluteOrRelativeValue(sHP, IntToFloat(GetCurrentHitPoints(oTarget)), IntToFloat(
@@ -1044,14 +1045,22 @@ int CommandHP(object oPC, int iMode) {
 
 int CommandCreateKey(object oPC, int iMode) {
 	string
-	sTag = arg(0),
-	sName = arg(1);
+	sName = arg(0);
+
+	object oTarget = GetTarget();
+	if (GetObjectType(oTarget) != OBJECT_TYPE_DOOR)
+		return NotifyBadTarget("Target a door.");
+	
+	string sTag = GetLockKeyTag(oTarget);
+	if (sTag == "")
+		return NotifyBadTarget("This door does not lock with a key.");
 
 	int nApp = -1;
 	if ( opt("app") )
 		nApp = StringToInt(optv("app"));
 
 	object oKey = CreateItemOnObject("key_basic", oPC, 1, sTag);
+
 	if ( nApp > -1 ) {
 		object oKeyNew = CopyItemAndModify(oKey, ITEM_APPR_TYPE_SIMPLE_MODEL, 0, nApp, TRUE);
 		DestroyObject(oKey);
@@ -1060,6 +1069,8 @@ int CommandCreateKey(object oPC, int iMode) {
 
 	if ( sName != "" )
 		SetName(oKey, sName);
+	else
+		SetName(oKey, "Key for " + sTag);
 
 	ToPC("Done.");
 	return OK;

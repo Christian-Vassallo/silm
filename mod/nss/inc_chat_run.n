@@ -431,8 +431,8 @@ void RegisterAllCommands() {
 	RegisterCommand("_rco", "", 1, 1);
 	RAF(AMASK_CAN_DO_BACKEND);
 
-	RegisterCommand("createkey", "app=", 1, 2);
-	RHs("[--app=x] key_tag [name]", 0);
+	RegisterCommand("createkey", "app=", 0, 1);
+	RHs("[--app=x] [name]", 0);
 
 
 	RegisterCommand("lock", "lockable= locked= keytag= keyreq= lockdc= unlockdc=");
