@@ -12,7 +12,7 @@ if (GetLocalInt(obj,"mtx_" + name) > count) { \
 #define __mutex_single(obj,name,code) __mutex(obj,1,name,code)
 
 #define __mutex_transaction(obj,partner,name,code) \
-if (GetLocalInt(obj,"mtxt_" + name) > 1) { \
+if (GetLocalInt(obj,"mtxt_" + name) > 0) { \
 	SetLocalInt(obj,"mtxt_" + name,0); \
 } else { \
 	SetLocalInt(partner,"mtxt_" + name,1); \
