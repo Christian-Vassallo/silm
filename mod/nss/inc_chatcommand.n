@@ -1273,22 +1273,10 @@ int CommandLastLog(object oPC, int iMode) {
 
 	if ( nCount < 1 || nCount > 200 )
 		nCount = 15;
-	
-	string cond = " (mode & " + itoa(MODE_PRIVATE) + " = 0 and mode & " + itoa(MODE_COMMAND) + " = 0) and " + 
-		"area = " + pE(sArea) + " " + 
-		"and (character = " + pSi(GetCharacterID(oPC)) + " or character = any(heard_by)) ";
 
-	pQ("select ts,account_s,character_s,mode,text from chatlogs where " +
-		" coalesce( " +
-			"(ts >= (select ts from chatlogs where " + cond + " order by ts desc offset " + IntToString(nCount) + " limit 1)) " +
-			"," + 
-			"(ts >= (select ts from chatlogs where " + cond + " order by ts asc limit 1)) " +
-			"," + 
-			"(now() - interval '24 hour')" +
-		") " +
-		" and " + cond + 
-		" order by ts asc;"
-	);
+	pQ("select ts,account_s,character_s,mode,text from get_lastlog_for(" + 
+		pSi(GetCharacterID(oPC)) + "," + pSs(sArea) + "," +  itoa(nCount) + 
+	");");
 
 	while ( pF() ) {
 		string

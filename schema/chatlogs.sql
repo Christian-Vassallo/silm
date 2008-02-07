@@ -18,3 +18,16 @@ CREATE TABLE chatlogs (
 CREATE INDEX chatlog_ts_idx ON chatlogs USING btree (ts);
 create index chatlogs_heard_by_idx on chatlogs (heard_by);
 create index chatlogs_area_list_idx on chatlogs (area);
+
+create function get_lastlog_for(cid int,area varchar,lim int) returns setof chatlogs
+as $$
+        select * from chatlogs
+                where
+                (character = $1 or $1 = any(heard_by))
+                and
+                (mode & 1 > 0 or mode & 2 > 0 or mode & 4 > 0 or mode & 16 > 0)
+                and
+                area = $2
+                order by ts desc limit $3;
+
+$$ language sql stable;
