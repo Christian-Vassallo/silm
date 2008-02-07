@@ -19,6 +19,20 @@
 #define pSf0(f,x) pEscapeFloat(f,x)
 #define pSb0(b,x) pEscapeBool(b,x)
 
+#define ppP(s) ppPrepare(s)
+#define ppI(x) ppInsert(x)
+#define ppR() ppReset()
+#define ppQ() ppQuery()
+
+#define ppSi(i) ppInsert(pEscapeInt(i))
+#define ppSs(s) ppInsert(pEscapeStr(s))
+#define ppSf(f) ppInsert(pEscapeFloat(f))
+#define ppSb(b) ppInsert(pEscapeBool(b))
+#define ppSi0(i,x) ppInsert(pEscapeInt(i,x))
+#define ppSs0(s,x) ppInsert(pEscapeStr(s,x))
+#define ppSf0(f,x) ppInsert(pEscapeFloat(f,x))
+#define ppSb0(b,x) ppInsert(pEscapeBool(b,x))
+
 __sp_extern("inc_pgsql_base")
 
 #endif

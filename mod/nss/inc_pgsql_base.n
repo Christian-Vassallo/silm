@@ -93,6 +93,27 @@ int pPrepare(string name, string query);
 int pExecute(string name, string p1 = "", string p2 = "", string p3 = "", string p4 = "",
 	string p5 = "", string p6 = "", string p7 = "", string p8 = "", string p9 = "");
 
+// set a string for ? replacement and escaping
+void ppPrepare(string sQuery);
+
+// Send the properly escaped query
+void ppQuery();
+
+// Insert the given value as the next item in your query.
+void ppInsert(string value);
+
+// Reset query
+void ppReset();
+
+// Internal helper.
+string ppGetCurrentQuery();
+// Internal helper.
+void ppSetCurrentQuery(string sQuery);
+// Internal helper.
+int ppGetCurrentOffset();
+// Internal helper.
+string ppInsertIntoQueryAtNextPosition(string sQuery, string sToInsert);
+
 
 /************************************/
 /* Implementation                   */
@@ -322,4 +343,64 @@ int pExecute(string name, string p1 = "", string p2 = "", string p3 = "", string
 		qstr = GetSubString(qstr, 0, GetStringLength(qstr) - 1);
 
 	return pQuery("execute " + name + "(" + qstr + ")");
+}
+
+
+
+
+
+string ppGetCurrentQuery() {
+	return GetLocalString(GetModule(), "pp_cur_q");
+}
+
+void ppSetCurrentQuery(string sQuery) {
+	SetLocalString(GetModule(), "pp_cur_q", sQuery);
+}
+
+
+string ppInsertIntoQueryAtNextPosition(string sQuery, string sToInsert) {
+	int nOffset = GetLocalInt(GetModule(), "pp_cur_q_offset");
+	
+	string sPostOffset = GetSubString(sQuery, nOffset, 4096);
+	int nQPos = FindSubString(sPostOffset, "?");
+
+	if (-1 == nQPos) {
+		_WARN("Too few ? for query parameters.");
+		_WARN("Query: " + sQuery + ", ToInsert: " + sToInsert);
+		return sQuery;
+	}
+
+	nQPos += nOffset;
+
+	string sPre = GetSubString(sQuery, 0, nQPos);
+	string sPost = GetSubString(sQuery, nQPos + 1, 4096);
+
+	SetLocalInt(GetModule(), "pp_cur_q_offset", nOffset + 1 + GetStringLength(sToInsert));
+	return sPre + sToInsert + sPost;
+}
+
+void ppReset() {
+	SetLocalInt(GetModule(), "pp_cur_q_offset", 0);
+	SetLocalString(GetModule(), "pp_cur_q", "");
+}
+
+void ppPrepare(string sQuery) {
+	SetLocalInt(GetModule(), "pp_cur_q_offset", 0);
+	SetLocalString(GetModule(), "pp_cur_q", sQuery);
+}
+
+void ppQuery() {
+	string q = ppGetCurrentQuery();
+	if (-1 != FindSubString(q, "?")) {
+		_WARN("? in query left.");
+		_WARN("Query: " + q);
+	}
+
+	pQuery(q);
+}
+
+void ppInsert(string value) {
+	string q = ppGetCurrentQuery();
+	q = ppInsertIntoQueryAtNextPosition(q, value);
+	ppSetCurrentQuery(q);
 }
