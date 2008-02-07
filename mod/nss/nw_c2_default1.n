@@ -23,7 +23,7 @@ __sp_extern("inc_scorco")
 
 void main() {
 
-	if (!GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF)) {
+	if (gvGetInt("persist_critters") && !GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF)) {
 		// Only save every two minutes at most
 		if (lv_i(OBJECT_SELF, "p_hb_cycle") >= 20)
 			slv_i(OBJECT_SELF, "p_hb_cycle", 0);

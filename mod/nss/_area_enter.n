@@ -95,6 +95,11 @@ void main() {
 
 		slv_i(oArea, "dropped_items_loaded", 1);
 	}
+		
+	if (gvGetInt("persist_critters") && !lv_i(oArea, "critters_loaded") && GetIsPC(oPC)) {
+		p_load_each_in_chunks("critters", "area_resref = " + pSs(GetResRef(oArea)));
+		slv_i(oArea, "critters", 1);
+	}
 
 
 	if (GetIsPC(oPC))
