@@ -62,6 +62,15 @@ string pEscapeFloat(float f, int b0isNULL = TRUE);
 // Return a bool formatted for insert or update (0 = false, rest = true)
 string pEscapeBool(int b);
 
+// Return a proper typised location string for query insertion.
+string pEscapeLocation(location at);
+
+// Return a proper typised vector string for query insertion.
+string pEscapeVector(vector v);
+
+// Return a proper typised area string for query insertion.
+string pEscapeArea(object oArea);
+
 // Stores object with query. Place %s where the object binary data shall go.
 void pSCO(string query, object obj);
 
@@ -275,6 +284,21 @@ string pEscapeFloat(float f, int b0isNULL = TRUE) {
 
 string pEscapeBool(int b) {
 	return 0 == b ? "'f'" : "'t'";
+}
+
+string pEscapeVector(vector v) {
+	return "(" + pEscapeFloat(v.x) + "," + pEscapeFloat(v.y) + "," + pEscapeFloat(v.z) + ")";
+}
+
+string pEscapeArea(object oArea) {
+	return "(" + pEscapeStr(GetTag(oArea)) + "," + pEscapeStr(GetResRef(oArea)) + ")";
+}
+
+string pEscapeLocation(location at) {
+	vector v = GetPositionFromLocation(at);
+	object a = GetAreaFromLocation(at);
+	float f = GetFacingFromLocation(at);
+	return "(" + pEscapeArea(a) + "," + pEscapeVector(v) + "," + pEscapeFloat(f) + ")";
 }
 
 
