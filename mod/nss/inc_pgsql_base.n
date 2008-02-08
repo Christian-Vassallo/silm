@@ -287,7 +287,7 @@ string pEscapeBool(int b) {
 }
 
 string pEscapeVector(vector v) {
-	return "(" + pEscapeFloat(v.x) + "," + pEscapeFloat(v.y) + "," + pEscapeFloat(v.z) + ")";
+	return "(" + pEscapeFloat(v.x, 0) + "," + pEscapeFloat(v.y, 0) + "," + pEscapeFloat(v.z, 0) + ")";
 }
 
 string pEscapeArea(object oArea) {
@@ -298,7 +298,7 @@ string pEscapeLocation(location at) {
 	vector v = GetPositionFromLocation(at);
 	object a = GetAreaFromLocation(at);
 	float f = GetFacingFromLocation(at);
-	return "(" + pEscapeArea(a) + "," + pEscapeVector(v) + "," + pEscapeFloat(f) + ")";
+	return "(" + pEscapeArea(a) + "," + pEscapeVector(v) + "," + pEscapeFloat(f, 0) + ")";
 }
 
 

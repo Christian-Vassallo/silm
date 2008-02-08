@@ -8,9 +8,8 @@ void onlineServerStart() {
 }
 
 void onlinePlayerAreaEnter(object oPC, object oArea) {
-	pQ("update " + ONLINE_TABLE + " set " + 
-		"area = " + pSs(GetResRef(GetArea(oPC))) + ", " + 
-		"area_s = " + pSs(GetName(GetArea(oPC))) + " " + 
+	pQ("update " + ONLINE_TABLE + " set " +
+		"at = " + pEscapeLocation(GetLocation(oPC)) + ", " + 
 		"where aid = " + pSi(GetAccountID(oPC))
 	);
 }
@@ -18,23 +17,15 @@ void onlinePlayerAreaEnter(object oPC, object oArea) {
 void onlinePlayerEnter(object oPC) {
 
 	string q =
-		"insert into " + ONLINE_TABLE + " (aid, cid, account, character, dm, area, area_s, x, y, z, f) values";
+		"insert into " + ONLINE_TABLE + " (aid, cid, account, character, dm, at) values";
 
-	vector p = GetPosition(oPC);
-	float f = GetFacing(oPC);
-	
 	q += "(" +
 		 pSi0(GetAccountID(oPC), TRUE) + "," +
 		 pSi0(GetCharacterID(oPC), TRUE) + "," +
 		 pSs(GetPCName(oPC)) + "," + 
 		 pSs(GetName(oPC)) + "," + 
 		 pSb(GetIsDM(oPC)) + "," + 
-		 pSs(GetResRef(GetArea(oPC))) + "," + 
-		 pSs(GetName(GetArea(oPC))) + "," + 
-		 pSf0(p.x, FALSE) + "," + 
-		 pSf0(p.y, FALSE) + "," + 
-		 pSf0(p.z, FALSE) + "," + 
-		 pSf0(f, FALSE) + 
+		 pEscapeLocation(GetLocation(oPC)) + 
 	")";
 
 	pQ(q);
