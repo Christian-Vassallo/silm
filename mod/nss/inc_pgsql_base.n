@@ -57,7 +57,7 @@ string pEscapeInt(int n, int b0isNULL = TRUE);
 string pEscapeStr(string s, int bEmptyIsNULL = FALSE);
 
 // Return a float formatted for insert or update
-string pEscapeFloat(float f, int b0isNULL = TRUE);
+string pEscapeFloat(float f, int b0isNULL = FALSE);
 
 // Return a bool formatted for insert or update (0 = false, rest = true)
 string pEscapeBool(int b);
@@ -278,7 +278,7 @@ string pEscapeStr(string s, int bEmptyIsNULL = FALSE) {
 	return bEmptyIsNULL && "" == s ? "NULL" : pEscape(s);
 }
 
-string pEscapeFloat(float f, int b0isNULL = TRUE) {
+string pEscapeFloat(float f, int b0isNULL = FALSE) {
 	return b0isNULL && 0.0 == f ? "NULL" : FloatToString(f);
 }
 
