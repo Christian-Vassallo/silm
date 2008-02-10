@@ -61,6 +61,14 @@ bool p_destroy(string table, object o = OBJECT_SELF);
 // Returns the number of objects restored.
 int p_load_each(string table, string conditions);
 
+// A wrapper around p_load_each which loads via DelayCommand
+// in chunksizes of 100 objects per load.
+int p_load_each_in_chunks(string table, string conditions);
+
+// A wrapper around p_load_each which loads via DelayCommand
+// in chunksizes of 100 objects per load.
+int p_load_each_in_chunks_for_area(string table, object oArea);
+
 
 
 // Implementation
@@ -203,6 +211,9 @@ int p_load_each_in_chunks(string table, string conditions) {
 	return count;
 }
 
+int p_load_each_in_chunks_for_area(string table, object oArea) {
+	return p_load_each_in_chunks(table, "((at).area).resref = " + pEscapeStr(GetResRef(oArea)));
+}
 
 int p_save(string table, object o = OBJECT_SELF) {
 	int id = p_id(o);

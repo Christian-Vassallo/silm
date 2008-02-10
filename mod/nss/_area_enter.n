@@ -87,12 +87,12 @@ void main() {
 
 
 	if (gvGetInt("persist_dropped_items") && !lv_i(oArea, "dropped_items_loaded")) {
-		p_load_each_in_chunks("dropped_items", "area_resref = " + pSs(GetResRef(oArea)));
+		p_load_each_in_chunks_for_area("dropped_items", oArea);
 		slv_i(oArea, "dropped_items_loaded", 1);
 	}
 		
 	if (gvGetInt("persist_critters") && !lv_i(oArea, "critters_loaded")) {
-		p_load_each_in_chunks("critters", "area_resref = " + pSs(GetResRef(oArea)));
+		p_load_each_in_chunks_for_area("critters", oArea);
 		slv_i(oArea, "critters_loaded", 1);
 	}
 
