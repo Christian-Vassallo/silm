@@ -27,7 +27,7 @@ create table scorco.object_metadata (
 
 create view scorco.metadata_info as 
 	select
-		p.relname,id,create_on,last_access_on,resref,tag,name,area_resref,area_tag,x,y,z,f
+		p.relname,id,create_on,last_access_on,resref,tag,name,hitpoints,at,length(data) as size
 		from scorco.object_metadata c, pg_class p
 		where c.tableoid = p.oid;
 
