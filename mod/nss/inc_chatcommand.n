@@ -3090,6 +3090,11 @@ int CommandKill(object oPC, int iMode) {
 	}
 
 	int bUseDestroy = opt("d");
+	
+	if (bUseDestroy && GetIsPC(oTarget)) {
+		ToPC("BAD! Do NOT /kill -d PLAYER CHARACTERS.");
+		return FAIL;
+	}	
 
 	AssignCommand(oTarget, SetIsDestroyable(TRUE, FALSE, FALSE));
 
