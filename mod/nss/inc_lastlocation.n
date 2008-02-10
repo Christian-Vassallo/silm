@@ -41,12 +41,12 @@ void SetLastLocation(object oPC) {
 		"x = " + pSf(p.x) + ", " + 
 		"y = " + pSf(p.y) + ", " + 
 		"z = " + pSf(p.z) + ", " + 
-		"area = " + pSs(area) + " " + 
+		"area = " + pSs0(area, true) + " " + 
 		"where cid = " + IntToString(id) + ";");
 	} else {
 		pQ("insert into " + TABLE_LASTLOCATION + " (cid,area,x,y,z) values(" +
 			pSi(id) + ", " +
-			pSs(area) + ", " +
+			pSs0(area, true) + ", " +
 			pSf(p.x) + ", " + 
 			pSf(p.y) + ", " + 
 			pSf(p.z) + 
