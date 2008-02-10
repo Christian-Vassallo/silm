@@ -14,7 +14,7 @@ location GetLastLocationOnLogout(object oPC) {
 	if (!id)
 		return GetLocation(oPC);
 
-	pQ("select x,y,z,area from " + TABLE_LASTLOCATION + " where cid = " + IntToString(id) + ";");
+	pQ("select at.position.x,at.position.y,at.position.z,at.area.tag from " + TABLE_LASTLOCATION + " where cid = " + IntToString(id) + ";");
 	if (pF()) {
 		vector position = Vector(pGf(1), pGf(2), pGf(3));
 		object area = GetObjectByTag(pGs(5));
@@ -32,24 +32,15 @@ void SetLastLocation(object oPC) {
 	if (!id)
 		return;
 
-	string area = GetTag(GetArea(oPC));
-	vector p = GetPosition(oPC);
-
 	pQ("select id from " + TABLE_LASTLOCATION + " where cid = " + IntToString(id) + ";");
 	if (pF()) {
 		pQ("update " + TABLE_LASTLOCATION + " set " +
-		"x = " + pSf(p.x) + ", " + 
-		"y = " + pSf(p.y) + ", " + 
-		"z = " + pSf(p.z) + ", " + 
-		"area = " + pSs0(area, true) + " " + 
-		"where cid = " + IntToString(id) + ";");
+		" at = " + pEscapeLocation(GetLocation(oPC)) + 
+		" where cid = " + IntToString(id) + ";");
 	} else {
-		pQ("insert into " + TABLE_LASTLOCATION + " (cid,area,x,y,z) values(" +
+		pQ("insert into " + TABLE_LASTLOCATION + " (cid,at) values(" +
 			pSi(id) + ", " +
-			pSs0(area, true) + ", " +
-			pSf(p.x) + ", " + 
-			pSf(p.y) + ", " + 
-			pSf(p.z) + 
-		")");
+			pEscapeLocation(GetLocation(oPC)) + 
+		");");
 	}
 }
