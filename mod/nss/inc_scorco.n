@@ -112,7 +112,7 @@ struct p_metadata p_get_metadata(int id) {
 	
 	md.p_id = id;
 	pQ("select resref, tag, name, hitpoints, " + 
-		"at.location.tag, at.position.x, at.position.y, at.position.z, at.facing " + 
+		"((at).location).tag, ((at).position).x, ((at).position).y, ((at).position).z, (at).facing " + 
 		"from " + METADATA_SCHEMA + "." + METADATA_TABLE + " " + 
 		"where id = " + pSi(id));
 	if (!pF()) {
@@ -148,7 +148,7 @@ int p_load_each(string table, string conditions) {
 	int id;
 	int total = 0;
     
-	pQ("select id, at.position.x, at.position.y, at.position.z, at.facing, at.area.tag from " + METADATA_SCHEMA + "." + table + " where " + conditions);
+	pQ("select id, ((at).position).x, ((at).position).y, ((at).position).z, (at).facing, ((at).area).tag from " + METADATA_SCHEMA + "." + table + " where " + conditions);
     while (pF()) {
         id = pGi(1);
         p = Vector(pGf(2), pGf(3), pGf(4));
