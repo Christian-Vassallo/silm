@@ -51,13 +51,13 @@ float pGetFloat(int n);
 int pGetBool(int n);
 
 // Return a int formatted for insert or update
-string pEscapeInt(int n, int b0isNULL = TRUE);
+string pEscapeInt(int n, int b0isNULL = TRUE, string sNullStr = "NULL");
 
 // Return a string formatted for insert or update
-string pEscapeStr(string s, int bEmptyIsNULL = FALSE);
+string pEscapeStr(string s, int bEmptyIsNULL = FALSE, string sNullStr = "NULL");
 
 // Return a float formatted for insert or update
-string pEscapeFloat(float f, int b0isNULL = FALSE);
+string pEscapeFloat(float f, int b0isNULL = FALSE, string sNullStr = "NULL");
 
 // Return a bool formatted for insert or update (0 = false, rest = true)
 string pEscapeBool(int b);
@@ -270,16 +270,16 @@ string pEscape(string str) {
 	new += "'";
 	return "E" + new;
 }
-string pEscapeInt(int n, int b0isNULL = TRUE) {
-	return b0isNULL && 0 == n ? "NULL" : IntToString(n);
+string pEscapeInt(int n, int b0isNULL = TRUE, string sNullStr = "NULL") {
+	return b0isNULL && 0 == n ? sNullStr : IntToString(n);
 }
 
-string pEscapeStr(string s, int bEmptyIsNULL = FALSE) {
-	return bEmptyIsNULL && "" == s ? "NULL" : pEscape(s);
+string pEscapeStr(string s, int bEmptyIsNULL = FALSE, string sNullStr = "NULL") {
+	return bEmptyIsNULL && "" == s ? sNullStr : pEscape(s);
 }
 
-string pEscapeFloat(float f, int b0isNULL = FALSE) {
-	return b0isNULL && 0.0 == f ? "NULL" : FloatToString(f);
+string pEscapeFloat(float f, int b0isNULL = FALSE, string sNullStr = "NULL") {
+	return b0isNULL && 0.0 == f ? sNullStr : FloatToString(f);
 }
 
 string pEscapeBool(int b) {
@@ -291,14 +291,14 @@ string pEscapeVector(vector v) {
 }
 
 string pEscapeArea(object oArea) {
-	return "(" + pEscapeStr(GetTag(oArea)) + "," + pEscapeStr(GetResRef(oArea)) + ")";
+	return "(" + pEscapeStr(GetTag(oArea), true, "") + "," + pEscapeStr(GetResRef(oArea), true, "") + ")";
 }
 
 string pEscapeLocation(location at) {
 	vector v = GetPositionFromLocation(at);
 	object a = GetAreaFromLocation(at);
 	float f = GetFacingFromLocation(at);
-	return "(" + pEscapeArea(a) + "," + pEscapeVector(v) + "," + pEscapeFloat(f, 0) + ")";
+	return "(" + pEscapeArea(a) + "," + pEscapeVector(v) + "," + pEscapeFloat(f, false) + ")";
 }
 
 
