@@ -12,7 +12,7 @@ CREATE TABLE online (
 create view online_aggregator as
 	SELECT
 		online.id, online.aid, online.cid, online.account, online."character", 
-		online.dm, online.location, online.afk,
+		online.dm, online.at, online.afk,
 		characters.race, characters.subrace, characters.xp, characters.class1, 
 		characters.class1_level, characters.class2, characters.class2_level, 
 		characters.class3, characters.class3_level
