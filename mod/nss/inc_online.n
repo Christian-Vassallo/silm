@@ -7,9 +7,9 @@ void onlineServerStart() {
 	pQ("truncate " + ONLINE_TABLE);
 }
 
-void onlinePlayerAreaEnter(object oPC, object oArea) {
+void onlinePlayerUpdateLocation(object oPC) {
 	pQ("update " + ONLINE_TABLE + " set " +
-		"at = " + pEscapeLocation(GetLocation(oPC)) + ", " + 
+		"at = " + pEscapeLocation(GetLocation(oPC)) + " " + 
 		"where aid = " + pSi(GetAccountID(oPC))
 	);
 }
