@@ -19,12 +19,7 @@ create table scorco.object_metadata (
 
 	hitpoints int,
 
-	area_resref resref,
-	area_tag tag,
-	x float,
-	y float,
-	z float,
-	f float,
+	at location,
 	
 	data bytea
 
