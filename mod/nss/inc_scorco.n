@@ -1,5 +1,5 @@
 #include "inc_pgsql.nh"
-
+__sp_extern("inc_nwnx_func")
 
 #define METADATA_SCHEMA "scorco"
 #define METADATA_TABLE "object_metadata"
@@ -83,8 +83,12 @@ void p_touch(int id) {
 bool p_canpersist(object o = OBJECT_SELF) {
 	return 
 		GetIsPC(o) || GetIsDM(o) ||
-		GetObjectType(o) == OBJECT_TYPE_ITEM ||
-		GetObjectType(o) == OBJECT_TYPE_CREATURE;
+		GetObjectType(o) == OBJECT_TYPE_ITEM || (
+			GetObjectType(o) == OBJECT_TYPE_CREATURE && (
+				"2_def_ondeath"  == GetEventHandler(o, CREATURE_EVENT_DEATH) ||
+				"nw_c2_default7" == GetEventHandler(o, CREATURE_EVENT_DEATH)
+			)
+		);
 }
 
 

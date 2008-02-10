@@ -761,9 +761,15 @@ int CommandCreature(object oPC, int iMode) {
 		SetPhenoType(phenotype, oTarget);
 
 	if ( -1 != persist ) {
+		if (!p_canpersist(oTarget)) {
+			ToPC("Diese Kreatur kann nicht persistent gemacht werden!");
+			return FAIL;
+		}
+			
 		int vret = p_save("critters", oTarget);
-		if (vret) {
+		if (!vret) {
 			ToPC("Warnung: Konnte das ausgewaehlte Ziel nicht speichern.");
+			return FAIL;
 		}
 	}
 
