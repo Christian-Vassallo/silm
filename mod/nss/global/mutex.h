@@ -19,6 +19,16 @@ if (GetLocalInt(obj,"mtxt_" + name) > 0) { \
 	code; \
 }
 
+#define __nth(n,code) __EBLOCK(\
+string nthname = "__nth_" + __FILE__ + "_" + itoa( __LINE__ ); \
+if (GetLocalInt(GetModule(), nthname) >= n) { \
+	SetLocalInt(GetModule(), nthname, 0); \
+	code; \
+} else { \
+	SetLocalInt(GetModule(), nthname, GetLocalInt(GetModule(), nthname) + 1); \
+}\
+)
+
 
 
 #endif
