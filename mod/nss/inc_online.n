@@ -9,7 +9,8 @@ void onlineServerStart() {
 
 void onlinePlayerUpdateLocation(object oPC) {
 	pQ("update " + ONLINE_TABLE + " set " +
-		"at = " + pEscapeLocation(GetLocation(oPC)) + " " + 
+		"at = " + pEscapeLocation(GetLocation(oPC)) + ", " +
+		"afk = " + pEscapeBool(GetLocalInt(oPC, "afk")) + " " + 
 		"where aid = " + pSi(GetAccountID(oPC))
 	);
 }
@@ -17,7 +18,7 @@ void onlinePlayerUpdateLocation(object oPC) {
 void onlinePlayerEnter(object oPC) {
 
 	string q =
-		"insert into " + ONLINE_TABLE + " (aid, cid, account, character, dm, at) values";
+		"insert into " + ONLINE_TABLE + " (aid, cid, account, character, dm, at, afk) values";
 
 	q += "(" +
 		 pSi0(GetAccountID(oPC), TRUE) + "," +
@@ -25,7 +26,8 @@ void onlinePlayerEnter(object oPC) {
 		 pSs(GetPCName(oPC)) + "," + 
 		 pSs(GetName(oPC)) + "," + 
 		 pSb(GetIsDM(oPC)) + "," + 
-		 pEscapeLocation(GetLocation(oPC)) + 
+		 pEscapeLocation(GetLocation(oPC)) + "," + 
+		 pSb(GetLocalInt(oPC, "afk")) +
 	")";
 
 	pQ(q);
