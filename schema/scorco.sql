@@ -8,6 +8,9 @@ create table scorco.object_ids (
 	last_access_on timestamp default now() not null
 );
 
+create table scorco.object_data (
+	data bytea
+) inherits (scorco.object_ids);
 
 create table scorco.object_metadata (
 --	objtype objecttype not null,
@@ -21,9 +24,7 @@ create table scorco.object_metadata (
 
 	at location,
 	
-	data bytea
-
-) inherits (scorco.object_ids);
+) inherits (scorco.object_data);
 
 create view scorco.metadata_info as 
 	select
@@ -41,3 +42,9 @@ create table scorco.dropped_items (
 
 create table scorco.critters (
 ) inherits (scorco.object_metadata);
+
+
+create table scorco.character_data (
+	int aid references accounts not null,
+	int cid references characters
+) inherits (scorco.object_data);

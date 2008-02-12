@@ -1,8 +1,9 @@
 #include "inc_pgsql.nh"
 __sp_extern("inc_nwnx_func")
 
-#define METADATA_SCHEMA "scorco"
-#define METADATA_TABLE "object_metadata"
+#define SCORCO_SCHEMA "scorco"
+#define SCORCO_DATA "object_data"
+#define SCORCO_METADATA "object_metadata"
 
 // Metadata
 // ----
@@ -37,14 +38,17 @@ void p_touch(int id);
 // ----
 
 // Loads the specified object where it ought to be.
+// This requires metadata to be present.
 int p_load(int id);
 
 // Loads the specified object where it ought to be.
+// @@DEPRECATED@@
 int p_load_with_metadata(struct p_metadata m);
 
 // Saves the object and returns its id,
 // returns 0 if the object could not be saved,
 // or its id otherwise (be it insert or update).
+// This stores metadata along with it.
 int p_save(string table, object o = OBJECT_SELF);
 
 // Deletes this object from the database.
@@ -73,6 +77,13 @@ int p_load_each_in_chunks(string table, string conditions);
 int p_load_each_in_chunks_for_area(string table, object oArea);
 
 
+// Stores the plain data of this object and returns its id.
+// Does NOT store metadata.
+int p__save(string table, object o);
+
+// Loads the plain data of the given object id at location at.
+// Does NOT load metadata.
+object p__load(string table, int id, location at, object owner = OBJECT_INVALID);
 
 // Implementation
 // ----
@@ -88,7 +99,7 @@ void p_touch(int id) {
 		return;
 	}
 
-	pQ("update " + METADATA_SCHEMA + "." + METADATA_TABLE + " set last_access_on = now() where id = " + pSi(id) + ";");	
+	pQ("update " + SCORCO_SCHEMA + "." + SCORCO_METADATA + " set last_access_on = now() where id = " + pSi(id) + ";");	
 }
 
 bool p_canpersist(object o = OBJECT_SELF) {
@@ -128,7 +139,7 @@ struct p_metadata p_get_metadata(int id) {
 	md.p_id = id;
 	pQ("select resref, tag, name, hitpoints, " + 
 		"((at).location).tag, ((at).position).x, ((at).position).y, ((at).position).z, (at).facing " + 
-		"from " + METADATA_SCHEMA + "." + METADATA_TABLE + " " + 
+		"from " + SCORCO_SCHEMA + "." + SCORCO_METADATA + " " + 
 		"where id = " + pSi(id));
 	if (!pF()) {
 		_FATAL("cannot get metadata for " + itoa(id) + ", id set but no matching row");
@@ -153,7 +164,7 @@ int p_load_with_metadata(struct p_metadata md) {
 		_WARN("trying to create object in non-existing area: " + itoa(md.p_id));
 	}
 
-	object o = pRCO("select data from " + METADATA_SCHEMA + "." + METADATA_TABLE + " where id = " + pSi(md.p_id) + ";", md.at);
+	object o = pRCO("select data from " + SCORCO_SCHEMA + "." + SCORCO_METADATA + " where id = " + pSi(md.p_id) + ";", md.at);
 
 	SetLocalInt(o, "p_id", md.p_id);
 	
@@ -168,7 +179,7 @@ int p_load_each(string table, string conditions) {
 	int id;
 	int total = 0;
     
-	pQ("select id, ((at).position).x, ((at).position).y, ((at).position).z, (at).facing, ((at).area).tag from " + METADATA_SCHEMA + "." + table + " where " + conditions);
+	pQ("select id, ((at).position).x, ((at).position).y, ((at).position).z, (at).facing, ((at).area).tag from " + SCORCO_SCHEMA + "." + table + " where " + conditions);
     while (pF()) {
         id = pGi(1);
         p = Vector(pGf(2), pGf(3), pGf(4));
@@ -180,7 +191,7 @@ int p_load_each(string table, string conditions) {
 
         location where = Location(area, p, pGf(5));
         
-		o = pRCO("select data from " + METADATA_SCHEMA + "." + table + " where id = " + pSi(id) + ";", where);
+		o = pRCO("select data from " + SCORCO_SCHEMA + "." + table + " where id = " + pSi(id) + ";", where);
 		if (!GetIsObjectValid(o)) {
 			_WARN("Tried to load a object which did not instanciate: " + pSi(id));
 			continue;
@@ -202,7 +213,7 @@ void p_load_each_wrap(string table, string conditions) {
 
 int p_load_each_in_chunks(string table, string conditions) {
 	int chunksize = 50;
-	pQ("select count(id) from " + METADATA_SCHEMA + "." + table + " where " + conditions);
+	pQ("select count(id) from " + SCORCO_SCHEMA + "." + table + " where " + conditions);
 	pF();
 	
 	conditions += " order by id desc";
@@ -231,7 +242,7 @@ int p_save(string table, object o = OBJECT_SELF) {
 
 	if (!id) {
 
-		pSCO("insert into " + METADATA_SCHEMA + "." + table + " " +
+		pSCO("insert into " + SCORCO_SCHEMA + "." + table + " " +
 			"(resref, tag, name, hitpoints, at, data) values(" +
 			pSs(GetResRef(o)) + ", " +
 			pSs(GetTag(o)) + ", " +
@@ -241,13 +252,13 @@ int p_save(string table, object o = OBJECT_SELF) {
 			"%s" + 
 		")", o);
 
-		id = pLastId(METADATA_SCHEMA + ".object_ids", "id");
+		id = pLastId(SCORCO_SCHEMA + ".object_ids", "id");
 
 		SetLocalInt(o, "p_id", id);
 
 	} else {
 
-		pSCO("update " + METADATA_SCHEMA + "." + table + " set " +
+		pSCO("update " + SCORCO_SCHEMA + "." + table + " set " +
 			"last_access_on = now(), " +
 			"resref=" + pSs(GetResRef(o)) + ", " +
 			"tag=" + pSs(GetTag(o)) + ", " +
@@ -270,7 +281,7 @@ bool p_delete(string table, object o = OBJECT_SELF) {
 		_FATAL("cannot delete metadata for " + otoa(o) + ", not persistent");
 		return 0;
 	}
-	pQ("delete from " + METADATA_SCHEMA + "." + table + " where id = " + pSi(p_id(o)) + ";");
+	pQ("delete from " + SCORCO_SCHEMA + "." + table + " where id = " + pSi(p_id(o)) + ";");
 
 	dlv_i(o, "p_id");
 	return 1;
@@ -283,3 +294,40 @@ bool p_destroy(string table, object o = OBJECT_SELF) {
 	DestroyObject(o);
 	return 1;
 }
+
+// Stores the plain data of this object and returns its id.
+// Does NOT store metadata.
+int p__save(string table, object o) {
+	int id = p_id(o);
+	
+	vector p = GetPosition(o);
+	float f = GetFacing(o);
+
+	if (!id) {
+
+		pSCO("insert into " + SCORCO_SCHEMA + "." + table + " " +
+			"(data) values(%s);", o);
+
+		id = pLastId(SCORCO_SCHEMA + ".object_ids", "id");
+
+		SetLocalInt(o, "p_id", id);
+
+	} else {
+
+		pSCO("update " + SCORCO_SCHEMA + "." + table + " set " +
+			"last_access_on = now(), " +
+			"data = %s " +
+			" where id = " + pSi(id)
+		, o);
+	}
+
+	return id;
+}
+
+// Loads the plain data of the given object id at location at.
+// Does NOT load metadata.
+object p__load(string table, int id, location at, object owner = OBJECT_INVALID) {
+	object o = pRCO("select data from " + SCORCO_SCHEMA + "." + table + " where id = " + pSi(id) + ";", at, owner);
+	return o;
+}
+
