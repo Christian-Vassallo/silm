@@ -261,17 +261,9 @@ void main() {
 
 int OnPreText(object oPC, string sText, int iMode, object oTo = OBJECT_INVALID) {
 	int nTS = GetUnixTimestamp();
-
-
-
-	if ( GetIsPC(oPC) )
-		HandleDelegate(oPC, sText, iMode, oTo);
-
-
-	if ( GetIsPC(oPC) && GetLocalInt(oPC, "shunned") == 1 && !( iMode & MODE_DM ) ) {
-		SendMessageToPC(oPC, USE_SL_MESSAGE);
-		return 1;
-	}
+	SetLocalInt(oPC, "last_message", nTS);
+	int nTotal = GetLocalInt(oPC, "message_count");
+	SetLocalInt(oPC, "message_count", nTotal + 1);
 
 	// Chatlog the stuff
 	if ( GetIsPC(oPC)
@@ -282,14 +274,18 @@ int OnPreText(object oPC, string sText, int iMode, object oTo = OBJECT_INVALID) 
 	)
 		ChatLog(oPC, iMode, sText, oTo);
 
-	SetLocalInt(oPC, "last_message", nTS);
-	int nTotal = GetLocalInt(oPC, "message_count");
-	SetLocalInt(oPC, "message_count", nTotal + 1);
+	if ( GetIsPC(oPC) )
+		HandleDelegate(oPC, sText, iMode, oTo);
+
+	if ( GetIsPC(oPC) && GetLocalInt(oPC, "shunned") == 1 && !( iMode & MODE_DM ) ) {
+		SendMessageToPC(oPC, USE_SL_MESSAGE);
+		return 1;
+	}
+
 
 	// Condition A: It was a player who said something
 	// Condition B: It was a NPC who said something
 	// Condition C: It was a channel that wants to be broadcasted
-
 	if ( ( iMode & MODE_TALK || iMode & MODE_WHISPER )
 		&& !( iMode & MODE_COMMAND ) 
 		&& !( iMode & MODE_FORCETALK ) 
