@@ -399,12 +399,14 @@ void DoCraft(object oPC, object oWorkPlace) {
 	int nFailed = 0;
 	int nFailedMiserably = 0;
 
-
 	int nReturnStuff = 0;
 
 	string sComponents = GetCurrentCraftComponents(oWorkPlace);
+	_DEBUG("current components: " + sComponents, 1, "craft");
 
 	struct Recipe r = GetSelectedCraftRecipe(oPC);
+
+	_DEBUG("recipe_id = " + itoa(r.id) + ", components = " + r.components, 1, "craft");
 
 	// Did we find the bleedin recipe?
 	if ( !nFailed && !GetIsRecipeValid(r) ) {
@@ -413,7 +415,9 @@ void DoCraft(object oPC, object oWorkPlace) {
 		nFailed = 1;
 	}
 
+	_DEBUG("selected recipe is: " + r.name , 1, "craft");
 	if ( !TestComponents(r, sComponents) ) {
+		_DEBUG("WrongOrder", 1, "craft");
 		Notify(MSG_CRAFT_RECIPE_WRONGORDER, oPC);
 		nReturnStuff = 0;
 		nFailed = 1;

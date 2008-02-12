@@ -185,9 +185,12 @@ int ApplyAllRelevantItemProperties(object oWorkPlace, object oTargetItem) {
 
 int TestComponents(struct Recipe r, string sRecipeString) {
 	// TODO: components order needs fixink
-	if ( r.components_order == COMPONENTS_ORDER_FIXED )
+	_DEBUG("Comparing: '" + r.components + "' vs '" + sRecipeString, 2, "craft");
+	if ( r.components_order == COMPONENTS_ORDER_FIXED ) {
+		_DEBUG("in fixed order ..", 2, "craft");
 		return GetStringLowerCase(r.components) == GetStringLowerCase(sRecipeString);
-	else {
+	} else {
+		_DEBUG("in loose order ..", 2, "craft");
 		// Split by "#", and check if each component is present.
 		int iW = FindSubString(r.components, "#");
 		while ( -1 != iW ) {
