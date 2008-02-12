@@ -37,7 +37,10 @@ void p_touch(int id);
 // ----
 
 // Loads the specified object where it ought to be.
-int p_load(struct p_metadata m);
+int p_load(int id);
+
+// Loads the specified object where it ought to be.
+int p_load_with_metadata(struct p_metadata m);
 
 // Saves the object and returns its id,
 // returns 0 if the object could not be saved,
@@ -140,7 +143,12 @@ struct p_metadata p_get_metadata(int id) {
 }
 
 
-int p_load(struct p_metadata md) {
+int p_load(int id) {
+	struct p_metadata md = p_get_metadata(id);
+	return p_load_with_metadata(md);
+}
+
+int p_load_with_metadata(struct p_metadata md) {
 	if (!GetIsObjectValid(GetAreaFromLocation(md.at))) {
 		_WARN("trying to create object in non-existing area: " + itoa(md.p_id));
 	}
