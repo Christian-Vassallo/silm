@@ -1,5 +1,5 @@
 CREATE TABLE chess_games (
-    id serial unique primary key not null,
+    id serial primary key,
     start_ts timestamp with time zone,
     end_ts timestamp with time zone DEFAULT now(),
     black integer references accounts,

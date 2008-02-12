@@ -1,5 +1,5 @@
 CREATE TABLE chatlogs (
-    id serial unique primary key not null,
+    id serial primary key,
     account integer DEFAULT 0 NOT NULL,
     "character" integer DEFAULT 0 NOT NULL,
     account_s character varying,

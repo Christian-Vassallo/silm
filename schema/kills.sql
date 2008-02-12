@@ -1,5 +1,5 @@
 CREATE TABLE kills (
-    id serial unique primary key not null, 
+    id serial primary key, 
     ts timestamptz DEFAULT now() not null,
     killer_id integer references characters not null,
     area_resref character varying(32) not null

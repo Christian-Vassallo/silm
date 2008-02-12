@@ -1,5 +1,5 @@
 CREATE TABLE rideables (
-    id serial unique primary key not null,
+    id serial primary key,
     "character" integer references characters not null,
     "stable" character varying NOT NULL,
     "type" character varying not null,

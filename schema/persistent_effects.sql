@@ -1,5 +1,5 @@
 CREATE TABLE persistent_effects (
-	id serial unique primary key not null,
+	id serial primary key,
     "character" integer references characters not null,
 
 	-- TODO constrain this

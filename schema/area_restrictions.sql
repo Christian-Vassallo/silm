@@ -1,5 +1,5 @@
 create table area_access (
-	id serial unique primary key not null,
+	id serial primary key,
 
 	area_tag varchar not null,
 

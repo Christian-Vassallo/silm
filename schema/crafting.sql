@@ -1,5 +1,5 @@
 CREATE TABLE craft_crafts (
-    id serial unique primary key not null,
+    id serial primary key,
     cskill integer unique not null,
     tag character varying not null,
     name character varying not null,
@@ -7,7 +7,7 @@ CREATE TABLE craft_crafts (
 );
 
 CREATE TABLE craft_rcpbook (
-    id serial unique primary key not null,
+    id serial primary key,
     "character" integer references characters NOT NULL,
     cskill integer references craft_crafts(cskill) NOT NULL,
     recipe integer references craft_recipes NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE craft_rcpbook (
 );
 
 CREATE TABLE craft_recipes (
-    id serial unique primary key not null,
+    id serial primary key,
     active boolean DEFAULT false,
     "comment" text,
     name character varying,
@@ -56,7 +56,7 @@ CREATE TABLE craft_recipes (
 );
 
 CREATE TABLE craft_skill (
-    id serial unique primary key not null,
+    id serial primary key,
     "character" integer NOT NULL,
     cskill integer NOT NULL,
     skill_theory integer DEFAULT 0 NOT NULL,
@@ -89,7 +89,7 @@ CREATE VIEW craft_skillmap AS
 
 
 CREATE TABLE craft_stat (
-    id serial unique primary key not null,
+    id serial primary key,
     "character" integer references characters NOT NULL,
     recipe integer references craft_recipes NOT NULL,
     count integer DEFAULT 0 NOT NULL,

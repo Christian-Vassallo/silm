@@ -1,5 +1,5 @@
 CREATE TABLE mappins (
-    id serial unique primary key not null,
+    id serial primary key,
     "character" integer references characters not null,
     text text default '' not null,
     x double precision not null,

@@ -1,5 +1,5 @@
 CREATE TABLE loot_chains (
-	id serial unique primary key not null,
+	id serial primary key,
     racial_type integer DEFAULT -1 NOT NULL,
     resref character varying DEFAULT '%'::character varying NOT NULL,
     tag character varying DEFAULT '%'::character varying NOT NULL,

@@ -1,5 +1,5 @@
 CREATE TABLE online (
-    id serial unique primary key not null,
+    id serial primary key,
     aid integer references accounts not null,
     cid integer references characters,
     account character varying not null,

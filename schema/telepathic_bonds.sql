@@ -1,5 +1,5 @@
 CREATE TABLE telepathic_bonds (
-    id serial unique primary key not null,
+    id serial primary key,
     "character" integer references characters not null,
     t_character integer references characters not null,
     ts timestamp with time zone DEFAULT now(),

@@ -1,5 +1,5 @@
 CREATE TABLE weather_overrides (
-    id serial unique primary key not null,
+    id serial primary key,
     account integer references accounts NOT NULL,
     atype character varying NOT NULL,
     ayear integer NOT NULL,

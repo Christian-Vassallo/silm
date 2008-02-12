@@ -1,5 +1,5 @@
 CREATE TABLE tracks (
-    id serial unique primary key not null,
+    id serial primary key,
     "character" integer references characters not null,
     area character varying not null,
     x double precision not null,

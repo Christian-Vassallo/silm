@@ -1,5 +1,5 @@
 CREATE TABLE macro (
-	id serial unique primary key not null,
+	id serial primary key,
 
 	-- null = for all accounts
     account integer references accounts,

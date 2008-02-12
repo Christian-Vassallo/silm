@@ -1,7 +1,7 @@
 
 
 CREATE TABLE merchants (
-    id serial unique primary key not null,
+    id serial primary key,
     tag character varying(32) unique NOT NULL,
     money integer DEFAULT 400 NOT NULL,
     appraise_dc integer DEFAULT 10 NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE merchants (
 
 
 CREATE TABLE merchant_inventory (
-    id serial unique primary key not null,
+    id serial primary key,
     ts timestamp with time zone DEFAULT now() NOT NULL,
     merchant integer references merchants NOT NULL,
     resref character varying(32) NOT NULL,

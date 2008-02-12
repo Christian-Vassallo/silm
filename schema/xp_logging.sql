@@ -1,5 +1,5 @@
 CREATE TABLE xp (
-    id serial unique primary key not null,
+    id serial primary key,
     "character" integer references characters,
     xp integer default 0 not null,
     "year" integer not null,

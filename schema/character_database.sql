@@ -1,5 +1,5 @@
 CREATE TABLE accounts (
-    id serial unique primary key not null,
+    id serial primary key,
     account character varying,
     "password" character varying,
     display_name character varying,
@@ -24,7 +24,7 @@ CREATE UNIQUE INDEX account_unique ON accounts USING btree (account);
 
 
 CREATE TABLE characters (
-    id serial unique primary key not null,
+    id serial primary key,
     account integer references accounts not null,
     "character" character varying NOT NULL,
 	portrait varchar default '' not null,
@@ -102,7 +102,7 @@ CREATE VIEW character_map AS
 
 
 CREATE TABLE comments (
-    id serial unique primary key not null,
+    id serial primary key,
     date timestamp with time zone DEFAULT now() NOT NULL,
     status character varying DEFAULT 'private'::character varying NOT NULL,
     "character" integer references characters not null,

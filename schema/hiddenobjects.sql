@@ -1,5 +1,5 @@
 CREATE TABLE hiddenobject_resources (
-    id serial unique primary key not null,
+    id serial primary key,
     name character varying DEFAULT ''::character varying NOT NULL,
     typ character varying DEFAULT ''::character varying NOT NULL,
     resref character varying(16) DEFAULT ''::character varying NOT NULL,

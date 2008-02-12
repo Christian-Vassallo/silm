@@ -1,5 +1,5 @@
 CREATE TABLE audit (
-    id serial unique primary key not null,
+    id serial primary key,
     player character varying NOT NULL,
     "char" character varying NOT NULL,
     "location" character varying NOT NULL,

@@ -1,5 +1,5 @@
 CREATE TABLE mentors (
-    id serial unique primary key not null,
+    id serial primary key,
     id integer NOT NULL,
     account integer,
     charge integer DEFAULT 0,
@@ -11,7 +11,7 @@ CREATE TABLE mentors (
 );
 
 CREATE TABLE mentordata (
-    id serial unique primary key not null,
+    id serial primary key,
     ts timestamp with time zone DEFAULT now(),
     account integer unique references accounts not null,
     "character" integer references characters not null,

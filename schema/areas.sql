@@ -1,5 +1,5 @@
 create table areas (
-	id serial unique primary key not null,
+	id serial primary key,
 	resref varchar(16) unique not null,
 	name varchar not null
 );

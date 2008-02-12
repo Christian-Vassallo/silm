@@ -1,5 +1,5 @@
 CREATE TABLE locations (
-    id serial unique primary key not null,
+    id serial primary key,
     name character varying NOT NULL,
     area character varying NOT NULL,
     x double precision DEFAULT 0 NOT NULL,

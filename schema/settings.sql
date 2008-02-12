@@ -1,5 +1,5 @@
 CREATE TABLE gv (
-    id serial unique primary key not null,
+    id serial primary key,
     "key" character varying NOT NULL,
     "type" character varying DEFAULT 'int'::character varying,
     

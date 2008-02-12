@@ -1,5 +1,5 @@
 CREATE TABLE placeables (
-	id serial unique primary key not null,
+	id serial primary key,
     resref character varying NOT NULL,
     area character varying NOT NULL,
     x double precision NOT NULL,
@@ -19,7 +19,7 @@ CREATE INDEX placeables_area_idx ON placeables USING btree (area);
 
 
 CREATE TABLE scene_descriptions (
-	id serial unique primary key not null,
+	id serial primary key,
     pid integer NOT NULL,
     text text NOT NULL,
     "comment" text NOT NULL,
