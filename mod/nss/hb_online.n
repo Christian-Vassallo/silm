@@ -1,0 +1,14 @@
+__sp_extern("inc_online")
+
+
+void main() {
+	__nth(2,
+		object oPC = GetFirstPC();
+		pBegin();
+		while (GetIsObjectValid(oPC)) {
+			onlinePlayerUpdateLocation(oPC);
+			oPC = GetNextPC();
+		}
+		pCommit();
+	);
+}
