@@ -353,9 +353,13 @@ int AdvanceCraftSkill(object oPC, struct Recipe r, int nLearnMode) {
 	if ( nGvCLB )
 		nLearnBorder = nGvCLB;
 
+	int nGvCBM = gvGetInt("craft_border_multiplicator");
+	if (!nGvCBM)
+		nGvCBM = CRAFT_BORDER_MULTIPLICATOR;
+
 	// Increase for each level.
 	if ( s.practical > 10 )
-		nLearnBorder += CRAFT_BORDER_MULTIPLICATOR * ( s.practical - 10 );
+		nLearnBorder += nGvCBM * ( s.practical - 10 );
 
 	int nLearn = 0;
 	int nGotSkill = 0;
