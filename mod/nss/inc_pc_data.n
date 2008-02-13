@@ -2,7 +2,6 @@ __sp_extern("inc_cdb")
 __sp_extern("inc_xp_handling")
 //__sp_extern("_map")
 __sp_extern("_gen")
-__sp_extern("inc_lastlocation")
 
 void load_donequests(object oPC) {
 	int iQS;
@@ -115,8 +114,6 @@ void save_player(object oPC, int autosave = FALSE) {
 		ExportSingleCharacter(oPC);
 		SaveCharacter(oPC, 0);
 	}
-
-	SetLastLocation(oPC);
 
 	if ( autosave == TRUE )
 		DelayCommand(100.0, save_player(oPC, autosave));

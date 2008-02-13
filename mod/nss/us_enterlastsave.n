@@ -1,8 +1,12 @@
-__sp_extern("inc_lastlocation")
+__sp_extern("inc_online")
 
 void main() {
 	object oPC = GetLastUsedBy();
+	if (GetIsDM(oPC) || !GetIsPC(oPC)) {
+		SendMessageToPC(oPC, "Nur fuer Spielercharaktere.");
+		return;
+	}
 
-	location l = GetLastLocationOnLogout(oPC);
+	location l = GetLastLocation(oPC);
 	AssignCommand(oPC, ActionJumpToLocation(l));
 }

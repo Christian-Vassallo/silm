@@ -24,8 +24,6 @@ void main() {
 	SendMessageToPC(oPC, "Commited on: " + GIT_COMMIT_ON);
 	SendMessageToPC(oPC, "Built on: " + GIT_BUILD_ON);
 
-	onlinePlayerEnter(oPC);
-
 	/*struct mnxRet r = mnxRun(oPC, "uptime");
 	if (!r.error)
 		SendMessageToPC(oPC, "Uptime: " + r.ret);*/
@@ -43,6 +41,7 @@ void main() {
 
 
 	DelayCommand(1.0f, ExecuteScript("_mod_clenter_cdb", oPC));
+
 
 	// DelayCommand(1.2f, ExecuteScript("_mod_clenter_onl", oPC));
 

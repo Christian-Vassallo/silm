@@ -2,6 +2,7 @@
 __sp_extern("inc_cdb")
 
 #define ONLINE_TABLE "online"
+#define LASTLOCATION_TABLE "last_location"
 
 void onlineServerStart() {
 	pQ("truncate " + ONLINE_TABLE);
@@ -34,5 +35,36 @@ void onlinePlayerEnter(object oPC) {
 }
 
 void onlinePlayerLeave(object oPC) {
+	int id = GetCharacterID(oPC);
+	
+	if (!GetIsDM(oPC)) {
+		pQ("select id from " + LASTLOCATION_TABLE + " where cid = " + pSi(id) + ";");
+		if (pF()) {
+			pQ("update "  + LASTLOCATION_TABLE + " set at = online.at where " +  LASTLOCATION_TABLE + ".cid = " + pSi(id));
+		} else {
+			pQ("insert into " + LASTLOCATION_TABLE + " (cid,at) (select cid,at from online where cid = " + pSi(id) + ");");
+		}
+	}
+
 	pQ("delete from " + ONLINE_TABLE + " where aid = " + pSi(GetAccountID(oPC)));
+}
+
+
+location GetLastLocation(object oPC) {
+	int id = GetCharacterID(oPC);
+	location ret;
+
+	if (!id)
+		return GetLocation(oPC);
+
+	pQ("select ((at).position).x,((at).position).y,((at).position).z,((at).area).tag from " + LASTLOCATION_TABLE + " where cid = " + IntToString(id) + ";");
+	if (pF()) {
+		vector position = Vector(pGf(1), pGf(2), pGf(3));
+		object area = GetObjectByTag(pGs(5));
+		if (!GetIsObjectValid(area))
+			return GetLocation(oPC);
+		ret = Location(area, position, 0.0);
+	}
+
+	return ret;
 }

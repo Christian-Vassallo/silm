@@ -5,7 +5,7 @@ __sp_extern("inc_cdb")
 __sp_extern("inc_audit")
 __sp_extern("inc_char_rules")
 __sp_extern("inc_currency")
-
+__sp_extern("inc_online")
 
 /*
  * 	Warning: This table uses the new escape code that works flawlessly with special characters.
@@ -109,4 +109,6 @@ void main() {
 	*/
 
 	SetLocalInt(oPC, "may_enter_game", bMayEnterGame || GetIsDM(oPC));
+	
+	onlinePlayerEnter(oPC);
 }
