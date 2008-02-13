@@ -1,3 +1,4 @@
+begin;
 -- SCO/RCO support for psql_base
 
 create schema scorco;
@@ -9,6 +10,9 @@ create table scorco.object_ids (
 );
 
 create table scorco.object_data (
+	create_by_aid int references accounts not null,
+	create_by_cid int references characters,
+
 	data bytea
 ) inherits (scorco.object_ids);
 
@@ -22,8 +26,7 @@ create table scorco.object_metadata (
 
 	hitpoints int,
 
-	at location,
-	
+	at location
 ) inherits (scorco.object_data);
 
 create view scorco.metadata_info as 
@@ -45,6 +48,8 @@ create table scorco.critters (
 
 
 create table scorco.character_data (
-	int aid references accounts not null,
-	int cid references characters
+	aid int references accounts not null,
+	cid int references characters
 ) inherits (scorco.object_data);
+
+commit;

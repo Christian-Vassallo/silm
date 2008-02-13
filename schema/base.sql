@@ -8,9 +8,10 @@ create domain resref as varchar
 create domain tag as varchar
 	check (length(VALUE) > 0 and length(VALUE) <= 32);
 
+create type resdesc as (tag tag, resref resref);
+
 create type vector as (x float, y float, z float);
-create type area as (tag tag, resref resref);
-create type location as (area area, position vector, facing float);
+create type location as (area resdesc, position vector, facing float);
 
 -- create domain objecttype as varchar
 --	check (VALUE = any(ARRAY['']));
