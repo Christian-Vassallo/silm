@@ -40,7 +40,7 @@ void onlinePlayerLeave(object oPC) {
 	if (!GetIsDM(oPC)) {
 		pQ("select id from " + LASTLOCATION_TABLE + " where cid = " + pSi(id) + ";");
 		if (pF()) {
-			pQ("update "  + LASTLOCATION_TABLE + " set at = online.at where " +  LASTLOCATION_TABLE + ".cid = " + pSi(id));
+			pQ("update "  + LASTLOCATION_TABLE + " set at = online.at from online where " +  LASTLOCATION_TABLE + ".cid = " + pSi(id) + " and online.cid = " + pSi(id) + ";");
 		} else {
 			pQ("insert into " + LASTLOCATION_TABLE + " (cid,at) (select cid,at from online where cid = " + pSi(id) + ");");
 		}
