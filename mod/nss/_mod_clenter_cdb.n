@@ -50,6 +50,8 @@ void main() {
 	string sAcc = GetPCName(oPC);
 	if ( sAcc != "" )
 		SetLocalInt(GetModule(), sAcc + "_amask", namask);
+	
+	onlinePlayerEnter(oPC);
 
 	if ( GetIsDM(oPC) || nCID == 0 )
 		return;
@@ -109,6 +111,4 @@ void main() {
 	*/
 
 	SetLocalInt(oPC, "may_enter_game", bMayEnterGame || GetIsDM(oPC));
-	
-	onlinePlayerEnter(oPC);
 }
