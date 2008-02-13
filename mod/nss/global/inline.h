@@ -29,6 +29,9 @@
 #define otoa(o) "#" + ObjectToString(o) + "{" + GetResRef(o) + "," + GetTag(o) + "," + GetName(o) + "}"
 
 
+#define is_item(o) (GetObjectType(o) == OBJECT_TYPE_ITEM)
+#define is_creature(o) (GetObjectType(o) == OBJECT_TYPE_CREATURE)
+#define is_placeable(o) (GetObjectType(o) == OBJECT_TYPE_PLACEABLE)
 
 #define lv_i(o,n) GetLocalInt(o,n)
 #define slv_i(o,n,v) SetLocalInt(o,n,v)

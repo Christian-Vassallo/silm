@@ -31,7 +31,7 @@ void main() {
 	int nQueues = GetLocalInt(oItem, "current_target_queues") == 1;
 
 	if (GetIsObjectValid(oTarget)) {
-		if (!GetIsCreature(oTarget)) {
+		if (!is_creature(oTarget)) {
 			
 			if (oTarget == oItem) {
 				// toggle queueing

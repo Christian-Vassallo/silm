@@ -76,16 +76,6 @@ int GetIsPolymorphed(object oCreature);
 object FindPCByAccount(string sAccount, int bCheckNameToo = TRUE);
 
 
-// Returns TRUE if oO is a item.
-int GetIsItem(object oO);
-
-// Returns TRUE if oO is a critter of sorts.
-int GetIsCreature(object oO);
-
-// Returns TRUE if oO is a placeable.
-int GetIsPlaceable(object oO);
-
-
 // Returns the total level of oCreature (all class levels combined).
 // Returns 0 if not a creature.
 int GetTotalLevel(object oCreature);
@@ -473,19 +463,6 @@ string AreaToString(object oArea) {
 }
 
 
-int GetIsPlaceable(object oO) {
-	return GetObjectType(oO) == OBJECT_TYPE_PLACEABLE;
-}
-
-
-int GetIsItem(object oO) {
-	return GetObjectType(oO) == OBJECT_TYPE_ITEM;
-}
-
-int GetIsCreature(object oO) {
-	return GetObjectType(oO) == OBJECT_TYPE_CREATURE;
-}
-
 /*int IsDM(object oPC = OBJECT_SELF, int bAllowPossess = FALSE) {
  * 	if (GetIsDM(oPC))
  * 		return 1;
@@ -533,7 +510,7 @@ object FindPCByAccount(string sAccount, int bCheckNameToo = TRUE) {
 
 
 int GetTotalLevel(object oCreature) {
-	if ( !GetIsCreature(oCreature) )
+	if ( !is_creature(oCreature) )
 		return 0;
 
 	return

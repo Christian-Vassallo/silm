@@ -8,7 +8,7 @@ void ActionOpenTheDurnedDoor(object oDoor);
 
 void main() {
 	object oPC = GetClickingObject();
-	if ( !GetIsCreature(oPC) )
+	if ( !is_creature(oPC) )
 		return;
 
 	object oDoor = OBJECT_SELF;
@@ -23,7 +23,7 @@ void main() {
 		//    return;
 		//}
 
-		if ( !GetIsCreature(oWaechter) || GetDistanceBetween(oDoor, oWaechter) > 20.0 ) {
+		if ( !is_creature(oWaechter) || GetDistanceBetween(oDoor, oWaechter) > 20.0 ) {
 			ToPC("Es scheint kein Nachtwaechter da zu sein, der Euch die Tuere oeffnen kann.", oPC);
 			return;
 		}

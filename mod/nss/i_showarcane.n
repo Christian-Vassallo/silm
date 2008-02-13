@@ -10,7 +10,7 @@ void main() {
 	oPC = GetItemActivator(),
 	oTarget = GetItemActivatedTarget();
 
-	if ( !GetIsCreature(oTarget) )
+	if ( !is_creature(oTarget) )
 		return;
 
 	SendMessageToPC(oPC, "Active spells on " + GetName(oTarget) + ":");

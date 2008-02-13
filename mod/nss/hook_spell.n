@@ -46,7 +46,7 @@ void main() {
 
 	// The Event hook goes here
 
-	if ( GetIsItem(oTarget) ) {
+	if ( is_item(oTarget) ) {
 		int nResult = RunEventScript(oTarget, EVENT_ITEM_SPELLCAST_AT, EVENT_PREFIX_ITEM);
 
 		if ( EVENT_EXECUTE_SCRIPT_END == nResult ) {
@@ -64,7 +64,7 @@ void main() {
 
 	// Craft system
 
-	if ( GetIsPlaceable(oTarget) && GetStringLowerCase(GetStringLeft(GetTag(oTarget), 4)) == "hws_"
+	if ( is_placeable(oTarget) && GetStringLowerCase(GetStringLeft(GetTag(oTarget), 4)) == "hws_"
 		&& OnSpellCastAt(oPC, oTarget, nSpell, nMeta)
 	)
 		SetModuleOverrideSpellScriptFinished();

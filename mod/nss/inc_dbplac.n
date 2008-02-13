@@ -92,7 +92,7 @@ void SavePlaciesForArea(object oA) {
 	object oP = GetFirstObjectInArea(oA);
 
 	while ( GetIsObjectValid(oP) ) {
-		if ( GetIsPlaceable(oP) ) {
+		if ( is_placeable(oP) ) {
 			if ( GetLocalInt(oP, "placie_id") > 0 ) {
 				SavePlacie(oP);
 			}
@@ -114,7 +114,7 @@ void KillPlacies(object oA) {
 
 
 int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
-	if ( !GetIsPlaceable(oP) )
+	if ( !is_placeable(oP) )
 		return SAVE_ERROR;
 
 	string sAreaTag = GetResRef(GetArea(oP));

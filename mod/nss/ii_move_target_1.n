@@ -26,7 +26,7 @@ void main() {
 	int nQueues = GetLocalInt(oItem, "current_target_queues") == 1;
 
 	if (GetIsObjectValid(oTarget)) {
-		if (!GetIsCreature(oTarget)) {
+		if (!is_creature(oTarget)) {
 			
 			if (oTarget == oItem) {
 				// toggle queueing
@@ -44,7 +44,7 @@ void main() {
 			if (GetIsPC(oTarget)) {
 				// make him follow
 
-				if (GetIsObjectValid(oCurrentTarget) && GetIsCreature(oCurrentTarget)) {
+				if (GetIsObjectValid(oCurrentTarget) && is_creature(oCurrentTarget)) {
 					if (!nQueues)
 						AssignCommand(oCurrentTarget, ClearAllActions(TRUE));
 					AssignCommand(oCurrentTarget, ActionForceFollowObject(oTarget, 2.0f));

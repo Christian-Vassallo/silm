@@ -193,7 +193,7 @@ void main() {
 		object oTarget = GetTarget(nTarget);
 
 		if ( nTarget < 1 || nTarget > TARGET_MAX || !GetIsObjectValid(oTarget) || (
-				!amask(oPC, AMASK_CAN_DO_BACKEND) && ( GetIsPC(oTarget) || !GetIsCreature(oTarget) ) )
+				!amask(oPC, AMASK_CAN_DO_BACKEND) && ( GetIsPC(oTarget) || !is_creature(oTarget) ) )
 		) {
 			ToPC("Kein gueltiges Ziel.");
 
@@ -217,7 +217,7 @@ void main() {
 
 			// And make any active telepathic bonds manage the thing.
 			// Beware, bloody bleedin ugly hack :D
-			if ( !GetIsCreature(oTarget) && !GetLocalInt(GetModule(), "dont_use_tb_noncreature_echo") )
+			if ( !is_creature(oTarget) && !GetLocalInt(GetModule(), "dont_use_tb_noncreature_echo") )
 				OnPreText(oTarget, sText, nOurMode);
 		}
 

@@ -394,7 +394,7 @@ int CommandNudge(object oPC, int iMode) {
 	
 	loc = Location(area, pos, facing);
 
-	if (GetIsPlaceable(oTarget)) {
+	if (is_placeable(oTarget)) {
 		object oNew = CreateObject(OBJECT_TYPE_PLACEABLE, GetResRef(oTarget), loc, FALSE, GetTag(oTarget)); // CopyObject(oTarget, loc);
 		if (GetIsObjectValid(oNew)) {
 			ToPC("done, create/kill placeable.");
@@ -684,7 +684,7 @@ int CommandObject(object oPC, int iMode) {
 int CommandItem(object oPC, int iMode) {
 	
 	object oTarget = GetTarget();
-	if (!GetIsItem(oTarget))
+	if (!is_item(oTarget))
 		return NotifyBadTarget();
 
 	int weight = -1;
@@ -714,7 +714,7 @@ int CommandItem(object oPC, int iMode) {
 
 int CommandCreature(object oPC, int iMode) {
 	object oTarget = GetTarget();
-	if ( !GetIsCreature(oTarget) && !GetIsPC(oTarget) )
+	if ( !is_creature(oTarget) && !GetIsPC(oTarget) )
 		return NotifyBadTarget();
 
 	int
@@ -791,7 +791,7 @@ int CommandCreature(object oPC, int iMode) {
 
 int CommandPlaceable(object oPC, int iMode) {
 	object oTarget = GetTarget();
-	if ( !GetIsPlaceable(oTarget) )
+	if ( !is_placeable(oTarget) )
 		return NotifyBadTarget();
 
 	int nUseable = -1;
@@ -1440,7 +1440,7 @@ int CommandColour(object oPC, int iMode) {
 int CommandCharges(object oPC, int iMode) {
 
 	object oT = GetTarget();
-	if ( !GetIsItem(oT) )
+	if ( !is_item(oT) )
 		return NotifyBadTarget("Not some item");
 
 	if ( argc() == 0 ) {
@@ -1480,7 +1480,7 @@ int CommandOOC(object oPC, int iMode) {
 int CommandXP(object oPC, int iMode) {
 	object oT = GetTarget();
 
-	if ( !GetIsCreature(oT) )
+	if ( !is_creature(oT) )
 		return NotifyBadTarget("Has to be a creature.");
 
 	if ( ( argc() == 0 || arg(0) == "" ) ) {
@@ -1662,7 +1662,7 @@ int CommandEffect(object oPC, int iMode) {
 int CommandSubRace(object oPC, int iMode) {
 	object oT = GetTarget();
 
-	if ( !GetIsCreature(oT) )
+	if ( !is_creature(oT) )
 		return NotifyBadTarget("Not a creature.");
 
 	string sR = arg(0);
@@ -1791,7 +1791,7 @@ int CommandPassword(object oPC, int iMode) {
 int CommandBodyPart(object oPC, int iMode) {
 	object oTarget = GetTarget();
 
-	if ( !GetIsCreature(oTarget) )
+	if ( !is_creature(oTarget) )
 		return NotifyBadTarget("Must be a creature.");
 
 	if ( argc() == 1 ) {
@@ -1816,7 +1816,7 @@ int CommandBodyPart(object oPC, int iMode) {
 int CommandWing(object oPC, int iMode) {
 	object oTarget = GetTarget();
 
-	if ( !GetIsCreature(oTarget) )
+	if ( !is_creature(oTarget) )
 		return NotifyBadTarget("Must be a creature.");
 
 	if ( argc() == 0 ) {
@@ -1838,7 +1838,7 @@ int CommandWing(object oPC, int iMode) {
 int CommandTail(object oPC, int iMode) {
 	object oTarget = GetTarget();
 
-	if ( !GetIsCreature(oTarget) )
+	if ( !is_creature(oTarget) )
 		return NotifyBadTarget("Must be a creature.");
 
 	if ( argc() == 0 ) {
@@ -1887,7 +1887,7 @@ int CommandPortrait(object oPC, int iMode) {
 int CommandRandomWalk(object oPC, int iMode) {
 	object oT = GetTarget();
 
-	if ( !GetIsCreature(oT) )
+	if ( !is_creature(oT) )
 		return NotifyBadTarget("Not a creature.");
 
 //    AssignCommand(oT, ClearAllActions());
@@ -1901,7 +1901,7 @@ int CommandRandomWalk(object oPC, int iMode) {
 int CommandWWP(object oPC, int iMode) {
 	object o = GetTarget();
 
-	if ( !GetIsCreature(o) )
+	if ( !is_creature(o) )
 		return NotifyBadTarget("Not a creature.");
 
 	AssignCommand(o, WalkWayPoints());
@@ -1914,7 +1914,7 @@ int CommandWWP(object oPC, int iMode) {
 int CommandCAQ(object oPC, int iMode) {
 	object o = GetTarget();
 
-	if ( !GetIsCreature(o) )
+	if ( !is_creature(o) )
 		return NotifyBadTarget("Not a creature.");
 
 	AssignCommand(o, ClearAllActions(1));
@@ -2032,7 +2032,7 @@ int CommandCopyObject(object oPC, int iMode) {
 
 int CommandCopyMod(object oPC, int iMode) {
 	object oT = GetTarget();
-	if ( !GetIsItem(oT) )
+	if ( !is_item(oT) )
 		return NotifyBadTarget();
 
 	int nType = StringToInt(arg(0));
@@ -2080,10 +2080,10 @@ int CommandFetch(object oPC, int iMode) {
 	} else {
 		oTarget = GetTarget();
 
-		if ( GetIsItem(oTarget) ) {
+		if ( is_item(oTarget) ) {
 			CopyItem(oTarget, oPC, TRUE);
 			DestroyObject(oTarget);
-		} else if ( GetIsCreature(oTarget) ) {
+		} else if ( is_creature(oTarget) ) {
 //            DelayCommand(getsleep(), AssignCommand(oTarget, ClearAllActions()));
 			DelayCommand(getsleep(), AssignCommand(oTarget, JumpToObject(oPC)));
 
@@ -2405,7 +2405,7 @@ int CommandVoiceChat(object oPC, string sArg, int iMode) {
 
 	if ( ( sOpt == "target" || sOpt == "t" ) && amask(oPC, AMASK_GLOBAL_GM) ) {
 		object oTarget = GetTarget();
-		if ( !GetIsCreature(oTarget) )
+		if ( !is_creature(oTarget) )
 			return NotifyBadTarget();
 
 		DelayCommand(0.0, PlayVoiceChat(id, oTarget));
@@ -2689,7 +2689,7 @@ int CommandFixFactions(object oPC, int iMode) {
 		if ( t1 < 1 || t1 > TARGET_MAX || t2 < 1 || t2 > TARGET_MAX )
 			return NotifyBadTarget(); // Syntax("personal target_1 target_2");
 
-		if ( !GetIsCreature(o1) || !GetIsCreature(o2) )
+		if ( !is_creature(o1) || !is_creature(o2) )
 			return NotifyBadTarget();
 
 		ClearPersonalReputation(o1, o2);
@@ -2716,7 +2716,7 @@ int CommandGetTargetChooser(object oPC, int iMode) {
 
 int CommandRestore(object oPC, int iMode) {
 	object oTarget = GetTarget();
-	if ( !GetIsCreature(oTarget)  ) {
+	if ( !is_creature(oTarget)  ) {
 		return NotifyBadTarget();
 	}
 
@@ -3223,7 +3223,7 @@ int CommandSetVar(object oPC, int iMode) {
 
 int CommandSetAppearance(object oPC, int iMode) {
 	object oTarget = GetTarget();
-	if ( !GetIsCreature(oTarget) ) {
+	if ( !is_creature(oTarget) ) {
 		return NotifyBadTarget();
 	}
 
@@ -3254,7 +3254,7 @@ int CommandSetAppearance(object oPC, int iMode) {
 
 int CommandSetPhenotype(object oPC, int iMode) {
 	object oTarget = GetTarget();
-	if ( !GetIsCreature(oTarget) )
+	if ( !is_creature(oTarget) )
 		return NotifyBadTarget();
 
 	int iOld = GetPhenoType(oTarget);
