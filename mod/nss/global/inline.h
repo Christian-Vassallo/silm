@@ -29,11 +29,6 @@
 #define otoa(o) "#" + ObjectToString(o) + "{" + GetResRef(o) + "," + GetTag(o) + "," + GetName(o) + "}"
 
 
-#define strlen(str) GetStringLength(str)
-#define substr(str,start,len) GetSubString(str,start,len)
-#define strpos(str,find) FindSubString(str,find)
-#define strlwr(s) GetStringLowerCase(s)
-#define strupper(s) GetStringUpperCase(s)
 
 #define lv_i(o,n) GetLocalInt(o,n)
 #define slv_i(o,n,v) SetLocalInt(o,n,v)
