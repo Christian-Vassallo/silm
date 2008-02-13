@@ -13,14 +13,10 @@
 //:: VFX Pass By: Preston W, On: June 22, 2001
 
 __sp_extern("corpse_raise")
-__sp_extern("inc_gods")
 
 void main() {
 	//Get the spell target
 	object oHere = GetSpellTargetObject();
-	if ( !CheckResurrectAble(OBJECT_SELF) ) return;
-
-	if ( !Check_Resurrect(OBJECT_SELF, corpse_getconnectedbody(oHere)) ) return;
 
 	object oTarget = corpse_returnspirit(oHere);
 
