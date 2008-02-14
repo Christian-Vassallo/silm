@@ -70,7 +70,7 @@ void main() {
 	string sText = GetLocalString(oPC, "NWNX!CHAT!TEXT");
 
 	if ( sText == "" ) {
-		WriteTimestampedLogEntry("msg_chat: 1# no text.");
+		_FATAL("No text.");
 		return;
 	}
 
@@ -80,9 +80,12 @@ void main() {
 	if ( nDM )
 		iMode -= MSG_MODE_DM;
 
-	iMode = ChatMsgToMode(iMode);
-	if ( iMode == 0 )
+	int iModeNew = ChatMsgToMode(iMode);
+	if ( iModeNew == 0 ) {
+		_WARN("Chat text yielded no usable mode, mode was: " + itoa(iMode) +", text was: " + sText);
 		return;
+	}
+	iMode = iModeNew;
 
 
 	//if (nDM)
@@ -95,7 +98,7 @@ void main() {
 	sText = GetSubString(sText, 12, GetStringLength(sText));
 
 	if ( sText == "" ) {
-		WriteTimestampedLogEntry("msg_chat: 2# no text.");
+		_FATAL("No text.");
 		return;
 	}
 
@@ -115,6 +118,7 @@ void main() {
 	if ( bIsGo )
 		iMode |= MODE_QUICKJUMP;
 
+	_DEBUG("mode after parsing: " + itoa(iMode), 2, "chat");
 
 	if (
 		OnPreText(oPC, sText, iMode, oTo)
