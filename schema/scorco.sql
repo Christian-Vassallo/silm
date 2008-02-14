@@ -35,6 +35,13 @@ create view scorco.metadata_info as
 		from scorco.object_metadata c, pg_class p
 		where c.tableoid = p.oid;
 
+create view scorco.metadata_size_info as 
+	select 
+		((at).area).tag, count(id), sum(size) as bytes, avg(size)::int as avgbytes 
+		from scorco.metadata_info 
+		group by ((at).area).tag 
+		order by count(id) desc;
+
 create function scorco.touch_object(int) returns int
 	as $$ update scorco.object_ids set last_access_on = now() where id = $1; select $1 $$
 	language sql;
