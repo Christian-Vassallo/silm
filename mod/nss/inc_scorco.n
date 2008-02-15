@@ -133,7 +133,7 @@ bool p_delete(string table, object o) {
 		return 0;
 	}
 
-	pQ("delete from " + SCORCO_SCHEMA + ".object_data where id = " + pSi(p_id(o)) + " CASCADE;");
+	pQ("delete from " + SCORCO_SCHEMA + ".object_data where id = " + pSi(p_id(o)) + ";");
 		/* cascade-delete the metadata as well .. */
 
 	dlv_i(o, "p_id");
