@@ -37,6 +37,9 @@ void main() {
 	if (gvGetInt("persist_dropped_items") && GetIsObjectValid(oItem)) {
 		if (p_canpersist(oItem) && GetIsObjectValid(GetAreaFromLocation(GetLocation(oItem)))) {
 			p_save("dropped_items", oItem);
+			p_save_attr_metadata(oItem);
+			p_save_location_metadata(oItem);
+			p_save_item_metadata(oItem);
 		}
 	}
 	if (!p_id(oItem)) {

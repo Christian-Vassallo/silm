@@ -1,62 +1,81 @@
-begin;
 -- SCO/RCO support for psql_base
+
+-- use cases:
+--  * plain storage, no data
+--  * item in container
+--  * item in area
+--  * creature in area
 
 create schema scorco;
 
-create table scorco.object_ids (
-	id serial primary key,
-	create_on timestamp default now() not null,
-	last_access_on timestamp default now() not null
-);
+-- Object data
 
 create table scorco.object_data (
-	create_by_aid int references accounts not null,
-	create_by_cid int references characters,
-
+	id serial8 primary key,
+	create_on timestamp default now() not null,
+	access_on timestamp default now() not null,
 	data bytea
-) inherits (scorco.object_ids);
+);
+
+-- Metadata
 
 create table scorco.object_metadata (
---	objtype objecttype not null,
+	metadata_id serial8 primary key
+	-- object_data_id int references scorco.object_data not null
+);
 
+create table scorco.object_attr_metadata (
 	resref resref not null,
 	tag tag not null,
-
 	name varchar,
+	hitpoints_current int,
+	hitpoints_max int,
+	plot boolean,
+	weight int
+) inherits (scorco.object_metadata);
 
-	hitpoints int,
+create table scorco.object_creature_metadata (
+	creature_appearance int
+) inherits (scorco.object_metadata);
 
+create table scorco.object_item_metadata (
+	item_ac int,
+	item_base_type int,
+	item_charges int default 0
+) inherits (scorco.object_metadata);
+
+create table scorco.object_location_metadata (
 	at location
-) inherits (scorco.object_data);
-
-create view scorco.metadata_info as 
-	select
-		p.relname,id,create_on,last_access_on,resref,tag,name,hitpoints,at,length(data) as size
-		from scorco.object_metadata c, pg_class p
-		where c.tableoid = p.oid;
-
-create view scorco.metadata_size_info as 
-	select 
-		((at).area).tag, count(id), sum(size) as bytes, avg(size)::int as avgbytes 
-		from scorco.metadata_info 
-		group by ((at).area).tag 
-		order by count(id) desc;
-
-create function scorco.touch_object(int) returns int
-	as $$ update scorco.object_ids set last_access_on = now() where id = $1; select $1 $$
-	language sql;
+) inherits (scorco.object_metadata);
 
 
+-- --
+-- Implementation below
+
+-- Items on the ground
 create table scorco.dropped_items (
-) inherits (scorco.object_metadata);
+) inherits (scorco.object_data, scorco.object_attr_metadata, scorco.object_item_metadata, scorco.object_location_metadata);
 
+-- Items in a public container
+create table scorco.public_container_contents (
+	pid int references placeables not null
+) inherits (scorco.object_data, scorco.object_attr_metadata, scorco.object_item_metadata);
+
+-- Items in a private container.
+create table scorco.personal_container_contents (
+	cid int references characters not null
+) inherits (scorco.object_data, scorco.object_attr_metadata, scorco.object_item_metadata);
+
+
+-- Creatures on the ground somewhere
 create table scorco.critters (
-) inherits (scorco.object_metadata);
+) inherits (scorco.object_data, scorco.object_attr_metadata, scorco.object_location_metadata);
 
-
-create table scorco.character_data (
-	aid int references accounts not null,
-	cid int references characters
+-- Copies of logged-in characters
+create table scorco.player_copies (
+	cid int references characters not null
 ) inherits (scorco.object_data);
 
-commit;
+-- Information only:
+
+-- TODO: select ((at).area).tag, count(id), sum(length(data)) as bytes from scorco.dropped_items group by ((at).area).tag;

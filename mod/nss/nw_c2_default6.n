@@ -19,6 +19,9 @@ void main() {
 	
 	if (gvGetInt("persist_critters") && !GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF)) {
 		p_save("critters", OBJECT_SELF);
+		p_save_attr_metadata(OBJECT_SELF);
+		p_save_location_metadata(OBJECT_SELF);
+		p_save_creature_metadata(OBJECT_SELF);
 	}
 
 
