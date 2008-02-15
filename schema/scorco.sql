@@ -20,13 +20,13 @@ create table scorco.object_data (
 -- Metadata
 
 create table scorco.object_metadata (
-	metadata_id serial8 primary key
+-- 	metadata_id serial8 primary key
 	-- object_data_id int references scorco.object_data not null
-);
+) inherits (scorco.object_data);
 
 create table scorco.object_attr_metadata (
-	resref resref not null,
-	tag tag not null,
+	resref resref,
+	tag tag,
 	name varchar,
 	hitpoints_current int,
 	hitpoints_max int,
@@ -54,27 +54,27 @@ create table scorco.object_location_metadata (
 
 -- Items on the ground
 create table scorco.dropped_items (
-) inherits (scorco.object_data, scorco.object_attr_metadata, scorco.object_item_metadata, scorco.object_location_metadata);
+) inherits (scorco.object_attr_metadata, scorco.object_item_metadata, scorco.object_location_metadata);
 
 -- Items in a public container
 create table scorco.public_container_contents (
 	pid int references placeables not null
-) inherits (scorco.object_data, scorco.object_attr_metadata, scorco.object_item_metadata);
+) inherits (scorco.object_attr_metadata, scorco.object_item_metadata);
 
 -- Items in a private container.
 create table scorco.personal_container_contents (
 	cid int references characters not null
-) inherits (scorco.object_data, scorco.object_attr_metadata, scorco.object_item_metadata);
+) inherits (scorco.object_attr_metadata, scorco.object_item_metadata);
 
 
 -- Creatures on the ground somewhere
 create table scorco.critters (
-) inherits (scorco.object_data, scorco.object_attr_metadata, scorco.object_location_metadata);
+) inherits (scorco.object_attr_metadata, scorco.object_location_metadata);
 
 -- Copies of logged-in characters
 create table scorco.player_copies (
 	cid int references characters not null
-) inherits (scorco.object_data);
+) inherits (scorco.object_metadata);
 
 -- Information only:
 
