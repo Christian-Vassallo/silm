@@ -1,9 +1,10 @@
-/* inc item size */
-
 __sp_extern("inc_2dacache")
 
 
-
+// Returns the number of items in this containers inventory.
+// Loops through sub-containers and counts those as well,
+// including the subcontainer itself.
+int GetInventoryItemCount(object oInv);
 
 
 // Returns the item size of the given object in inventory tiles.
@@ -33,6 +34,15 @@ int GetItemSize(object oItem) {
 
 
 
+int GetInventoryItemCount(object oInv) {
+	int total = 0;
+	object o = GetFirstItemInInventory(oInv);
+	while ( GetIsObjectValid(o) ) {
+		total += 1;
+		o = GetNextItemInInventory(oInv);
+	}
+	return total;
+}
 
 
 int GetTotalContainerItemSizeSum(object oInv) {
