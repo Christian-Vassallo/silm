@@ -48,23 +48,33 @@ create table scorco.object_location_metadata (
 	at location
 ) inherits (scorco.object_metadata);
 
+create table scorco.object_placeable_metadata (
+	pid int references placeables
+) inherits (scorco.object_metadata);
+
+create table scorco.object_account_metadata (
+	cid int references characters
+) inherits (scorco.object_metadata);
+
+create table scorco.object_character_metadata (
+	cid int references characters
+) inherits (scorco.object_metadata);
+
 
 -- --
 -- Implementation below
 
 -- Items on the ground
 create table scorco.dropped_items (
-) inherits (scorco.object_attr_metadata, scorco.object_item_metadata, scorco.object_location_metadata);
+) inherits (scorco.object_attr_metadata, scorco.object_item_metadata, scorco.object_location_metadata, scorco.object_character_metadata);
 
 -- Items in a public container
 create table scorco.public_container_contents (
-	pid int references placeables not null
-) inherits (scorco.object_attr_metadata, scorco.object_item_metadata);
+) inherits (scorco.object_attr_metadata, scorco.object_item_metadata, scorco.object_placeable_metadata);
 
 -- Items in a private container.
 create table scorco.personal_container_contents (
-	cid int references characters not null
-) inherits (scorco.object_attr_metadata, scorco.object_item_metadata);
+) inherits (scorco.object_attr_metadata, scorco.object_item_metadata, scorco.object_placeable_metadata);
 
 
 -- Creatures on the ground somewhere
@@ -73,8 +83,7 @@ create table scorco.critters (
 
 -- Copies of logged-in characters
 create table scorco.player_copies (
-	cid int references characters not null
-) inherits (scorco.object_metadata);
+) inherits (scorco.object_metadata, scorco.object_character_metadata);
 
 -- Information only:
 
