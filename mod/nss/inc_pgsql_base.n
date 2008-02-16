@@ -12,6 +12,9 @@ void pInit();
 // Run a query. Returns 1 on success, 0 on error.
 int pQuery(string sSQL);
 
+// Returns the last occured error as a string.
+string pErrStr();
+
 // Returns the last-run query.
 string pGetLastQuery();
 
@@ -133,7 +136,7 @@ string ppInsertIntoQueryAtNextPosition(string sQuery, string sToInsert);
 void pInit() {
 	int i;
 	string sMemory;
-	for ( i = 0; i < 8; i++ )  // reserve 8*128 bytes
+	for ( i = 0; i < 128; i++ )  // reserve 128*128 bytes = 16kb
 		sMemory +=
 			"................................................................................................................................";
 	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!SPACER", sMemory);
@@ -145,9 +148,15 @@ int pQuery(string sSQL) {
 	SetLocalString(GetModule(), "psql_last_query", sSQL);
 	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!EXEC", sSQL);
 	int ret = StringToInt(GetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!EXEC"));
-	/*if (!ret)
-		_ERROR("Error in SQL query: " + sSQL);*/
 	return ret;
+}
+
+string pErrStr() {
+	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!GETERRORMSG", 
+		GetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!SPACER")
+	);
+	string msg = GetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!GETERRORMSG");
+	return msg;
 }
 
 string pGetLastQuery() {
@@ -253,7 +262,7 @@ int pGetBool(int n) {
 
 string pEscape(string str) {
 	if ( -1 == FindSubString(str, "'") && -1 == FindSubString(str, "\\") )
-		return "E'" + str + "'";
+		return "'" + str + "'";
 
 	int i = 0; 
 	string c = "", new = "'";
@@ -268,7 +277,7 @@ string pEscape(string str) {
 			new += c;
 	}
 	new += "'";
-	return "E" + new;
+	return new;
 }
 string pEscapeInt(int n, int b0isNULL = TRUE, string sNullStr = "NULL") {
 	return b0isNULL && 0 == n ? sNullStr : IntToString(n);
