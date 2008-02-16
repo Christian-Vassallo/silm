@@ -262,7 +262,7 @@ int pGetBool(int n) {
 
 string pEscape(string str) {
 	if ( -1 == FindSubString(str, "'") && -1 == FindSubString(str, "\\") )
-		return "E'" + str + "'";
+		return "'" + str + "'";
 
 	int i = 0; 
 	string c = "", new = "'";
@@ -277,7 +277,7 @@ string pEscape(string str) {
 			new += c;
 	}
 	new += "'";
-	return "E" + new;
+	return new;
 }
 string pEscapeInt(int n, int b0isNULL = TRUE, string sNullStr = "NULL") {
 	return b0isNULL && 0 == n ? sNullStr : IntToString(n);
