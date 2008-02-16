@@ -60,17 +60,21 @@ create table scorco.object_character_metadata (
 	cid int references characters
 ) inherits (scorco.object_metadata);
 
+create table scorco.object_last_access_by_metadata (
+	aid int references accounts,
+	cid int references characters
+) inherits (scorco.object_metadata);
 
 -- --
 -- Implementation below
 
 -- Items on the ground
 create table scorco.dropped_items (
-) inherits (scorco.object_attr_metadata, scorco.object_item_metadata, scorco.object_location_metadata, scorco.object_character_metadata);
+) inherits (scorco.object_attr_metadata, scorco.object_item_metadata, scorco.object_location_metadata, scorco.object_last_access_by_metadata);
 
 -- Items in a public container
 create table scorco.public_container_contents (
-) inherits (scorco.object_attr_metadata, scorco.object_item_metadata, scorco.object_placeable_metadata);
+) inherits (scorco.object_attr_metadata, scorco.object_item_metadata, scorco.object_placeable_metadata, scorco.object_last_access_by_metadata);
 
 -- Items in a private container.
 create table scorco.personal_container_contents (
