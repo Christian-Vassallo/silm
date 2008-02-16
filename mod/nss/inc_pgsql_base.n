@@ -12,6 +12,9 @@ void pInit();
 // Run a query. Returns 1 on success, 0 on error.
 int pQuery(string sSQL);
 
+// Returns the last occured error as a string.
+string pErrStr();
+
 // Returns the last-run query.
 string pGetLastQuery();
 
@@ -148,6 +151,14 @@ int pQuery(string sSQL) {
 	/*if (!ret)
 		_ERROR("Error in SQL query: " + sSQL);*/
 	return ret;
+}
+
+string pErrStr() {
+	SetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!GETERRORMSG", 
+		GetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!SPACER")
+	);
+	string msg = GetLocalString(GetModule(), "NWNX!" + PGSQL_NWNX_TOKEN + "!GETERRORMSG");
+	return msg;
 }
 
 string pGetLastQuery() {

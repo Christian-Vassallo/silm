@@ -140,19 +140,28 @@ char* CNWNXodmbc::OnRequest (char* gameObject, char* Request, char* Parameters)
 		Fetch (Parameters, strlen (Parameters));
 	else if (strncmp(Request, "SETSCORCOSQL", 12) == 0)
 		SetScorcoSQL(Parameters);
-
+	else if (strncmp(Request, "GETERRORMSG", 11) == 0)
+		GetErrorMessage(Parameters);
 	return NULL;
 }
 
 //============================================================================================================================
-void CNWNXodmbc::Execute(const char *request)
+void CNWNXodmbc::GetErrorMessage(char *buffer) {
+	memcpy(buffer, db->GetErrorMessage(), strlen(db->GetErrorMessage()) + 1);
+}
+
+//============================================================================================================================
+void CNWNXodmbc::Execute(char *request)
 {
   Log (2, "o Got request: %s\n", request);
 	request_counter++;
-
+	
 	// try to execute the SQL query
-	if (!db->Execute((const uchar*)request))
+	BOOL ret = db->Execute((const uchar*)request);
+	if (!ret)
 		Log (1, "! SQL Error: %s\n", db->GetErrorMessage ());
+
+	sprintf(request, "%d", ret);
 }
 
 //============================================================================================================================
@@ -173,7 +182,7 @@ void CNWNXodmbc::Fetch(char *buffer, unsigned int buffersize)
 void CNWNXodmbc::SetScorcoSQL(char *request)
 {
 	memcpy(scorcoSQL, request, strlen(request) + 1);
-  Log (2, "o Got request (scorco): %s\n", scorcoSQL);
+	Log (2, "o Got request (scorco): %s\n", scorcoSQL);
 }
 
 //============================================================================================================================

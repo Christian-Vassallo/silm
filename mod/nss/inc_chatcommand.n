@@ -509,7 +509,9 @@ int CommandInspect(object oPC, int iMode) {
 int CommandpSQL(object oPC, int iMode) {
 	string query = arg(0);
 
-	pQ(query);
+	int ret = pQ(query);
+	ToPC("pQ result: " + itoa(ret));
+	ToPC("pError: " + pErrStr());
 	
 	return OK;
 }
