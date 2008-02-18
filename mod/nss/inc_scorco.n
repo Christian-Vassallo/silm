@@ -1,5 +1,6 @@
 #include "inc_pgsql.nh"
 __sp_extern("inc_nwnx_func")
+__sp_extern("inc_cdb")
 
 #define SCORCO_SCHEMA "scorco"
 #define SCORCO_DATA "object_data"
@@ -8,6 +9,8 @@ __sp_extern("inc_nwnx_func")
 #define SCORCO_CREATURE_METADATA "object_creature_metadata"
 #define SCORCO_ITEM_METADATA "object_item_metadata"
 #define SCORCO_LOCATION_METADATA "object_location_metadata"
+#define SCORCO_PLACEABLE_METADATA "object_placeable_metadata"
+#define SCORCO_LASTACCESSBY_METADATA "object_last_access_by_metadata"
 // Metadata
 // ----
 
@@ -36,10 +39,22 @@ struct p_creature_metadata {
 	int appearance;
 };
 
+struct p_placeable_metadata {
+	int pid;
+};
+
+struct p_last_access_by_metadata {
+	int aid;
+	int cid;
+};
+
 
 // Returns this objects' id if it is persistent,
 // false otherwise.
 int p_id(object o);
+
+int p_set_p_id(object o, int id);
+int p_get_p_id(object o);
 
 // load the specified ID at a location.
 // Returns the object loaded, or O_I.
@@ -68,6 +83,11 @@ int p_save_item_metadata(object o);
 struct p_creature_metadata p_get_creature_metadata(int id);
 int p_save_creature_metadata(object o);
 
+struct p_placeable_metadata p_get_placeable_metadata(int id);
+int p_save_placeable_metadata(object o, int pid);
+
+struct p_last_access_by_metadata p_get_last_access_by_metadata(int id);
+int p_save_last_access_by_metadata(object o, object pc);
 
 // Loads all objects stored in table matching conditions to
 // the stored location metadata.
@@ -90,6 +110,17 @@ int p_load_to_inventory(string table, string conditions, object inventory);
 bool p_canpersist(object o);
 
 
+int p_set_p_id(object o, int id) {
+	string ident = ObjectToString(o);
+	SetLocalInt(GetModule(), "p_id_" + ident, id);
+	SetLocalInt(o, "p_id", id);
+	return id;
+}
+
+int p_get_p_id(object o) {
+	string ident = ObjectToString(o);
+	return GetLocalInt(GetModule(), "p_id_" + ident);
+}
 
 
 bool p_canpersist(object o) {
@@ -104,12 +135,12 @@ bool p_canpersist(object o) {
 }
 
 int p_id(object o) {
-	return lv_i(o, "p_id");
+	return p_get_p_id(o); // lv_i(o, "p_id");
 }
 
 object p_load(int id, location at, object owner = OBJECT_INVALID) {
 	object o = pRCO("select data from " + SCORCO_SCHEMA + ".object_data where id = " + pSi(id), at, owner);
-	SetLocalInt(o, "p_id", id);
+	p_set_p_id(o, id);
 	return o;
 }
 
@@ -118,7 +149,7 @@ int p_save(string table, object o) {
 	if (!id) {
 		pSCO("insert into " + SCORCO_SCHEMA + "." + table + " (data) values(%s);", o);
 		id = pLastId(SCORCO_SCHEMA + ".object_data", "id");
-		SetLocalInt(o, "p_id", id);
+		p_set_p_id(o, id);
 
 	} else {
 		pSCO("update " + SCORCO_SCHEMA + "." + table + " set access_on = now(), data = %s where id = " + pSi(id) + ";", o);
@@ -136,7 +167,7 @@ bool p_delete(string table, object o) {
 	pQ("delete from " + SCORCO_SCHEMA + ".object_data where id = " + pSi(p_id(o)) + ";");
 		/* cascade-delete the metadata as well .. */
 
-	dlv_i(o, "p_id");
+	p_set_p_id(o, 0);
 	return 1;
 }
 
@@ -176,7 +207,7 @@ int p_load_to_location_metadata(string table, string conditions) {
 			_WARN("Tried to load a object which did not instanciate: " + pSi(id));
 			continue;
 		}
-		SetLocalInt(o, "p_id", id);
+		p_set_p_id(o, id);
 
         total += 1;
     }
@@ -213,7 +244,26 @@ int p_load_to_location_metadata_in_chunks_for_area(string table, object area, in
 
 
 int p_load_to_inventory(string table, string conditions, object inventory) {
-	return 0;
+	object o;
+	int id;
+	int total = 0;
+    
+	pQ("select id  from " + SCORCO_SCHEMA + "." + table + " where " + conditions);
+    while (pF()) {
+        id = pGi(1);
+        
+		o = pRCO("select data from " + SCORCO_SCHEMA + "." + table + " where id = " + pSi(id) + ";", GetLocation(inventory), inventory);
+
+		if (!GetIsObjectValid(o)) {
+			_WARN("Tried to load a object which did not instanciate: " + pSi(id));
+			continue;
+		}
+		p_set_p_id(o, id);
+
+        total += 1;
+    }
+
+    return total;
 }
 
 
@@ -370,4 +420,68 @@ int p_save_item_metadata(object o) {
 	return 1;
 }
 
+/* placeable metadata */
 
+struct p_placeable_metadata p_get_placeable_metadata(int id) {
+	struct p_placeable_metadata md;
+	
+	pQ("select " +
+		"pid " +
+		"from " + SCORCO_SCHEMA + "." + SCORCO_PLACEABLE_METADATA + " " + 
+		"where id = " + pSi(id));
+	if (!pF()) {
+		_FATAL("cannot get metadata for " + itoa(id) + ", id set but no matching row");
+	} else {
+		md.pid = pGi(1);
+	}
+	return md;
+}
+
+int p_save_placeable_metadata(object o, int pid) {
+	int id = p_id(o);
+	
+	if (!id) {
+		_FATAL("cannot save placeable metadata for " + otoa(o) + ", object is not persisted");
+		return 0;
+	}
+
+	pQ("update " + SCORCO_SCHEMA + "." + SCORCO_PLACEABLE_METADATA + 
+		" set pid = " + pSi(pid) + " " + 
+	" where id = " + pSi(id));
+
+	return 1;
+}
+
+
+/* last_access_by metadata */
+
+struct p_last_access_by_metadata p_get_last_access_by_metadata(int id) {
+	struct p_last_access_by_metadata md;
+	
+	pQ("select " +
+		"aid, cid " +
+		"from " + SCORCO_SCHEMA + "." + SCORCO_LASTACCESSBY_METADATA + " " + 
+		"where id = " + pSi(id));
+	if (!pF()) {
+		_FATAL("cannot get metadata for " + itoa(id) + ", id set but no matching row");
+	} else {
+		md.aid = pGi(1);
+		md.cid = pGi(2);
+	}
+	return md;
+}
+
+int p_save_last_access_by_metadata(object o, object pc) {
+	int id = p_id(o);
+	
+	if (!id) {
+		_FATAL("cannot save last_access_by metadata for " + otoa(o) + ", object is not persisted");
+		return 0;
+	}
+
+	pQ("update " + SCORCO_SCHEMA + "." + SCORCO_LASTACCESSBY_METADATA + 
+		" set aid = " + pSi(GetAccountID(pc)) + ", cid = " + pSi(GetCharacterID(pc)) + " " + 
+	" where id = " + pSi(id));
+
+	return 1;
+}

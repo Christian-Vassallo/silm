@@ -10,6 +10,9 @@ void AddGMXP(object oPlayer, string sGMs, int nAmount) {
 	int nCID = GetCharacterID(oPlayer);
 	if (!nCID)
 		return;
+	
+	if (!nAmount)
+		return;
 
 	pQ("insert into gm_xp (character,account_gms,xp) values( " + IntToString(nCID) + 
 		", '{ " + sGMs + 
@@ -18,27 +21,38 @@ void AddGMXP(object oPlayer, string sGMs, int nAmount) {
 }
 
 void CheckXP(object oPC, string sGMsOnline) {
-	int nLastCheckedXP = GetLocalInt(oPC, "xpg_last_xp");
-	
-	int nOtherXPDifference = GetLocalInt(oPC, "xpg_other_xp");
-
 	int nCurrentXP = GetXP(oPC);
-	
+	int nLastCheckedXP = GetLocalInt(oPC, "xpg_last_xp");
 	SetLocalInt(oPC, "xpg_last_xp", nCurrentXP);
-	SetLocalInt(oPC, "xpg_other_xp", 0);
 
 	// Player is newly joined
 	if (0 == nLastCheckedXP)
 		nLastCheckedXP = nCurrentXP;
-
 	
-	int nUnaccountedDifference = (nCurrentXP - nLastCheckedXP - nOtherXPDifference);
+	int nXPByScript = GetLocalInt(oPC, "xpg_other_xp");
+	SetLocalInt(oPC, "xpg_other_xp", 0);
 
-	// Nothing to be done for now
-	if (0 == nUnaccountedDifference || -3 == nUnaccountedDifference || -6 == nUnaccountedDifference)
+	/* Example:
+	 *  scripts give = 50
+	 *  sl give = 20
+	 *
+	 *  last check = 1000
+	 *  current = 1070
+	 *
+	 *  diff = (current - last - scripts) = 20
+	 */
+	int diff = nCurrentXP - nLastCheckedXP - nXPByScript;
+	
+	_DEBUG("checkxp for " + itoa(GetCharacterID(oPC)) + 
+		" -> current = " + itoa(nCurrentXP) + " - last = " + itoa(nLastCheckedXP) + 
+		" - scripts = " + itoa(nXPByScript) + " = " + itoa(diff), 2, "xp"
+	);
+
+	if (0 == diff)
 		return;
 
-	AddGMXP(oPC, sGMsOnline, nUnaccountedDifference);
+
+	AddGMXP(oPC, sGMsOnline, diff);
 }
 
 void main() {

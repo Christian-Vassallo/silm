@@ -64,10 +64,11 @@ int GiveXP(object oPlayer, int nXP, int bMultiClassPenalties = TRUE) {
 	else
 		SetXP(oPlayer, now + nXP);
 
-	now = GetXP(oPlayer) - now;
-	
-	_AddNonGMXPDifference(oPlayer, now);
-	return now;
+	int after = GetXP(oPlayer);
+	int diff = after - now;
+
+	_AddNonGMXPDifference(oPlayer, diff);
+	return diff;
 }
 
 //Get the ECL of the character
@@ -369,4 +370,5 @@ void AddCombatXP(object oPC, int nValue, int bNoWarn = FALSE) {
 void _AddNonGMXPDifference(object oPC, int nValue, int nType = 0) {
 	int nVal = GetLocalInt(oPC, "xpg_other_xp");
 	SetLocalInt(oPC, "xpg_other_xp", nVal + nValue);
+	_DEBUG("_AddNonGMXPDifference(.., " + itoa(nValue) + ", ..) -> " + itoa(GetLocalInt(oPC, "xpg_other_xp")), 2, "xp");
 }
