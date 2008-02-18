@@ -2,6 +2,7 @@
 # NWNHOME=/home/elven/nwn
 LISTHOME=$(HOME)
 NAME=www.silbermarken.de
+BRANCH=$(shell git branch 2>&1| grep "*" | cut -d " " -f 2)
 
 AREAS=$(shell ls area/*.git area/*.are area/*.gic | grep -v ooc_solace)
 
@@ -111,26 +112,25 @@ clean:
 
 # remove older packages
 clean-local:
-	-rm $(NAME)-{dev,builder,player}-r*.tgz
+	-rm $(NAME)-$(BRANCH)-{dev,builder,player}-r*.tgz
 
 local: path
-	erfpack.pl -m -o $(NAME).mod $(VALIDEXT)
+	erfpack.pl -m -o $(NAME)-$(BRANCH).mod $(VALIDEXT)
 
 dev-local: path
-	erfpack.pl -m -o $(NAME)-dev-r$(commit).mod $(VALIDEXTDEV)
-	tar -czf $(NAME)-dev-r$(commit).tgz $(NAME)-dev-r$(commit).mod && \
+	erfpack.pl -m -o $(NAME)-$(BRANCH)-dev-r$(commit).mod $(VALIDEXTDEV)
+	tar -czf $(NAME)-$(BRANCH)-dev-r$(commit).tgz $(NAME)-dev-r$(commit).mod && \
 		rm $(NAME)-dev-r$(commit).mod
 
 player-local: path
-	erfpack.pl -m -o $(NAME)-player-r$(commit).mod $(VALIDEXTPLAYER)
-	tar -czf $(NAME)-player-r$(commit).tgz $(NAME)-player-r$(commit).mod && \
-		rm $(NAME)-player-r$(commit).mod
+	erfpack.pl -m -o $(NAME)-$(BRANCH)-player-r$(commit).mod $(VALIDEXTPLAYER)
+	tar -czf $(NAME)-$(BRANCH)-player-r$(commit).tgz $(NAME)-player-r$(commit).mod && \
+		rm $(NAME)-$(BRANCH)-player-r$(commit).mod
 
 builder-local: path
-	erfpack.pl -m -o $(NAME)-builder-r$(commit).mod $(VALIDEXTBUILDER)
-	tar -czf $(NAME)-builder-r$(commit).tgz $(NAME)-builder-r$(commit).mod && \
-		rm $(NAME)-builder-r$(commit).mod
-
+	erfpack.pl -m -o $(NAME)-$(BRANCH)-builder-r$(commit).mod $(VALIDEXTBUILDER)
+	tar -czf $(NAME)-$(BRANCH)-builder-r$(commit).tgz $(NAME)-builder-r$(commit).mod && \
+		rm $(NAME)-$(BRANCH)-builder-r$(commit).mod
 
 
 # generates a new package with the current commit
@@ -141,6 +141,6 @@ builder-package: path uti utp utc ifo itp builder-local
 
 # installs all packaged in the relevant directories
 install: 
-	cp -v $(NAME).mod $(NWNHOME)/modules/
+	cp -v $(NAME)-$(BRANCH).mod $(NWNHOME)/modules/
 
 
