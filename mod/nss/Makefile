@@ -49,7 +49,8 @@ $(objects) : %.ncs : %.nss
 	$(NCC) $(NCCFLAGS) $(NWNHOME) $<
 
 
-
+tags:
+	@ctags --language-force=c --totals --fields=fksmnSzt  global/*.h *.{n,nh,h} $(NWNHOME)/original_resources/nss/*.nss
 
 clean:
 	-rm *.nss *.ncs *.ndb
