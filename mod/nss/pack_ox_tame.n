@@ -1,5 +1,12 @@
+__sp_extern("inc_scorco")
+
 void main() {
 	SetLocalObject(OBJECT_SELF, "PACK_OWNER", GetPCSpeaker());
 	SetLocalInt(OBJECT_SELF, "PACK_MODE", 1); // Follow
 	ActionForceFollowObject(GetLocalObject(OBJECT_SELF, "PACK_OWNER"), 3.0);
+	if (!p_id(OBJECT_SELF)) {
+		p_save("critters", OBJECT_SELF);
+		p_save_creature_metadata(OBJECT_SELF);
+		p_save_last_access_by_metadata(OBJECT_SELF, GetPCSpeaker());
+	}
 }

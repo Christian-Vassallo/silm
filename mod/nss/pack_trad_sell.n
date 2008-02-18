@@ -1,4 +1,5 @@
 __sp_extern("inc_currency")
+__sp_extern("inc_scorco")
 
 void main() {
 	object oPC     = GetPCSpeaker();
@@ -14,4 +15,6 @@ void main() {
 	DeleteLocalInt(oPackOx, "PACK_MODE");
 
 	AssignCommand(oPackOx, ClearAllActions(TRUE));
+
+	p_delete("critters", oPackOx);
 }
