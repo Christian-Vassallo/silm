@@ -65,6 +65,12 @@ create table scorco.object_last_access_by_metadata (
 	cid int references characters
 ) inherits (scorco.object_metadata);
 
+
+create function scorco.touch_object(int) returns void as $_$
+	update scorco.object_ids set last_access_on = now() where id = $1 
+$_$ language sql;
+
+
 -- --
 -- Implementation below
 
