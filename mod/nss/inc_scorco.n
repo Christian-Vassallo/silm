@@ -385,7 +385,7 @@ int p_save_creature_metadata(object o) {
 	}
 
 	pQ("update " + SCORCO_SCHEMA + "." + SCORCO_CREATURE_METADATA + 
-		" set appearance = " + pSi(GetAppearanceType(o)) +
+		" set creature_appearance = " + pSi(GetAppearanceType(o)) +
 		" where id = " + pSi(id));
 
 	return 1;
