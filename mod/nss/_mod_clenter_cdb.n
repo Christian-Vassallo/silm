@@ -1,6 +1,5 @@
 __sp_extern("_gen")
 #include "inc_pgsql.nh"
-__sp_extern("inc_scorco")
 __sp_extern("inc_cdb")
 __sp_extern("inc_audit")
 __sp_extern("inc_char_rules")
@@ -104,8 +103,11 @@ void main() {
 		bMayEnterGame = FALSE;
 	}
 	
-	p_save("player_copies", oPC);
-	p_save_character_metadata(oPC);
+	
+	/*
+	if (nCID > 0)
+		pSCO("update characters set character_data = %s where id = " + pSi(nCID), oPC);
+	*/
 
 	SetLocalInt(oPC, "may_enter_game", bMayEnterGame || GetIsDM(oPC));
 }
