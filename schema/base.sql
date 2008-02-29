@@ -10,10 +10,12 @@ create domain tag as varchar
 
 create type resdesc as (tag tag, resref resref);
 
-create type restype as enum('are','git','gic','uti','utc','utm','utp','ute','utd','uts','itp','utw','dlg','utt','ncs');
+create type restype as enum('bic','are','git','gic','uti','utc','utm','utp','ute','utd','uts','itp','utw','dlg','utt','ncs');
 
 create type vector as (x float, y float, z float);
 create type location as (area resdesc, position vector, facing float);
+
+create type racetype as enum('dwarf', 'elf', 'gnome', 'halfling', 'halfelf', 'halforc', 'human');
 
 -- create domain objecttype as varchar
 --	check (VALUE = any(ARRAY['']));
