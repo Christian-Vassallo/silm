@@ -68,3 +68,6 @@ create function gff.toxml(gff gff) returns xml as $_$select gff.gfftotext(gff.va
 create function gff.togff(xml,compression boolean) returns gff as 'select gff.texttogff($1::varchar, $2)::gff;' language sql;
 create function gff.togff(xml) returns gff as 'select gff.texttogff($1::varchar, false)::gff;' language sql;
 
+create function gff.x_el(varchar,xml) returns xml as $_$
+	select (xpath('/gff/struct/element[@name="' || $1 || '"]/@value', $2))[1];
+$_$ language sql;
