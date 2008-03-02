@@ -5,6 +5,7 @@ __sp_extern("inc_audit")
 __sp_extern("inc_char_rules")
 __sp_extern("inc_currency")
 __sp_extern("inc_online")
+__sp_extern("inc_scorco")
 
 /*
  * 	Warning: This table uses the new escape code that works flawlessly with special characters.
@@ -104,10 +105,13 @@ void main() {
 	}
 	
 	
-	/*
-	if (nCID > 0)
-		pSCO("update characters set character_data = %s where id = " + pSi(nCID), oPC);
-	*/
+	pQ("select id from " + p_normalize_table("characters") + " where character_id = " + pSi(nCID));
+	if (pF()) {
+		int id = pGi(1);
+		pSCO("update " + p_normalize_table("characters") + " set data = %s where id = " + pSi(id), oPC);
+	} else {
+		pSCO("insert into " + p_normalize_table("characters") + " (character_id, data) values(" + pSi(nCID) + ", %s);", oPC);
+	}
 
 	SetLocalInt(oPC, "may_enter_game", bMayEnterGame || GetIsDM(oPC));
 }
