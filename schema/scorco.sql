@@ -11,7 +11,7 @@ create schema objects;
 create function objects.objects_update_md() returns trigger as $_$
 begin
 	if (TG_OP = 'UPDATE') then
-		if (OLD.data != NEW.data) then
+		if (OLD.data::varchar != NEW.data::varchar) then
 			NEW.type := substring(lower(((xpath('/gff/@type', NEW.data))[1])::text) from 1 for 3)::restype;
 			NEW.update_on := now();
 		end if;
@@ -47,7 +47,7 @@ create trigger objects_direct_access_warn
 	execute procedure objects.objects_warn();
 
 create view objects.objects_gff as
-	select id,create_on,update_on,at,gff.togff(data) as data from objects.objects;
+	select id,create_on,update_on,at,type,gff.togff(data) as data from objects.objects;
 
 	create rule _delete as on delete to 
 			objects.objects_gff
@@ -70,7 +70,7 @@ create trigger objects_update_md
 	execute procedure objects.objects_update_md();
 
 create view objects.dropped_items_gff as
-	select id,create_on,update_on,at,gff.togff(data) as data from objects.dropped_items;
+	select id,create_on,update_on,at,dropped_by_aid,dropped_by_cid,gff.togff(data) as data from objects.dropped_items;
 
 	create rule _insert as on insert to
 			objects.dropped_items_gff
@@ -82,7 +82,7 @@ create view objects.dropped_items_gff as
 			objects.dropped_items_gff
 		do instead update
 			objects.dropped_items
-		set at = NEW.at, data = gff.toxml(NEW.data) where OLD.id = NEW.id;
+		set at = NEW.at, data = gff.toxml(NEW.data) where id = NEW.id;
 
 	create rule _delete as on delete to 
 			objects.dropped_items_gff
@@ -112,13 +112,14 @@ create view objects.critters_gff as
 			objects.critters_gff
 		do instead update
 			objects.critters
-		set at = NEW.at, data = gff.toxml(NEW.data) where OLD.id = NEW.id;
+		set at = NEW.at, data = gff.toxml(NEW.data) where id = NEW.id;
 
 	create rule _delete as on delete to 
 			objects.critters_gff
 		do instead delete from
 			objects.critters
 		where id = OLD.id;
+
 
 
 
