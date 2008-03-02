@@ -12,6 +12,9 @@ __sp_extern("inc_cdb")
 // false otherwise.
 int p_id(object o);
 
+string p_normalize_table(string table);
+
+
 int p_set_p_id(object o, int id);
 int p_get_p_id(object o);
 
@@ -49,6 +52,9 @@ int p_load_to_inventory(string table, string conditions, object inventory);
 // sense.
 bool p_canpersist(object o);
 
+string p_normalize_table(string table) {
+	return normalize_table(table);
+}
 
 int p_set_p_id(object o, int id) {
 	string ident = ObjectToString(o);
