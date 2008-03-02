@@ -26,7 +26,7 @@
 #define ftoi(f) FloatToInt(f)
 #define itof(i) IntToFloat(i)
 
-#define otoa(o) "#" + ObjectToString(o) + "{" + GetResRef(o) + "," + GetTag(o) + "," + GetName(o) + "}"
+#define otoa(o) "#" + ObjectToString(o) + "{" + GetResRef(o) + "," + GetTag(o) + "[" + itoa(p_get_p_id(o)) + "]," + GetName(o) + "}"
 
 
 #define is_item(o) (GetObjectType(o) == OBJECT_TYPE_ITEM)
