@@ -120,8 +120,66 @@ create view objects.critters_gff as
 			objects.critters
 		where id = OLD.id;
 
+-- Creatures on the ground somewhere
+create table objects.characters (
+	character_id int references characters not null
+) inherits (objects.objects);
+create trigger objects_update_md
+	before insert or update
+	on objects.characters for each row 
+	execute procedure objects.objects_update_md();
+
+create view objects.characters_gff as
+	select id,create_on,update_on,at,character_id,gff.togff(data) as data from objects.characters;
+
+	create rule _insert as on insert to
+			objects.characters_gff
+		do instead insert into
+			objects.characters
+		(at, data) values (NEW.at, gff.toxml(NEW.data));
+
+	create rule _update as on update to
+			objects.characters_gff
+		do instead update
+			objects.characters
+		set at = NEW.at, data = gff.toxml(NEW.data) where id = NEW.id;
+
+	create rule _delete as on delete to 
+			objects.characters_gff
+		do instead delete from
+			objects.characters
+		where id = OLD.id;
 
 
+-- Audit trail objects
+create table objects.audit (
+	audit_id int references audit
+) inherits (objects.objects);
+create trigger objects_update_md
+	before insert or update
+	on objects.audit for each row 
+	execute procedure objects.objects_update_md();
+
+create view objects.audit_gff as
+	select id,create_on,update_on,at,gff.togff(data) as data from objects.audit;
+
+	create rule _insert as on insert to
+			objects.audit_gff
+		do instead insert into
+			objects.audit
+		(at, data) values (NEW.at, gff.toxml(NEW.data));
+
+	create rule _update as on update to
+			objects.audit_gff
+		do instead update
+			objects.audit
+		set at = NEW.at, data = gff.toxml(NEW.data) where id = NEW.id;
+
+	create rule _delete as on delete to 
+			objects.audit_gff
+		do instead delete from
+			objects.audit
+		where id = OLD.id;
 
 
 
