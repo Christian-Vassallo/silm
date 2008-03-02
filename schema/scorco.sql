@@ -136,13 +136,13 @@ create view objects.characters_gff as
 			objects.characters_gff
 		do instead insert into
 			objects.characters
-		(at, data) values (NEW.at, gff.toxml(NEW.data));
+		(at, character_id, data) values (NEW.at, NEW.character_id, gff.toxml(NEW.data));
 
 	create rule _update as on update to
 			objects.characters_gff
 		do instead update
 			objects.characters
-		set at = NEW.at, data = gff.toxml(NEW.data) where id = NEW.id;
+		set at = NEW.at, character_id = NEW.character_id, data = gff.toxml(NEW.data) where id = NEW.id;
 
 	create rule _delete as on delete to 
 			objects.characters_gff
