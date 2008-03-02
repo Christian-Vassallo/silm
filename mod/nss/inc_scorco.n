@@ -109,9 +109,9 @@ int p_save(string table, object o, string additional_updates = "") {
 	} else {
 		string q;
 		if ("" != additional_updates) 
-			q = "update " + normalize_table(table) + " set access_on = now(), data = %s, " + additional_updates + " where id = " + pSi(id) + ";";
+			q = "update " + normalize_table(table) + " set data = %s, " + additional_updates + " where id = " + pSi(id) + ";";
 		else
-			q = "update " + normalize_table(table) + " set access_on = now(), data = %s where id = " + pSi(id) + ";";
+			q = "update " + normalize_table(table) + " set data = %s where id = " + pSi(id) + ";";
 
 		pSCO(q, o);
 	}
