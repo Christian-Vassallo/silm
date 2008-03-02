@@ -2,57 +2,11 @@
 __sp_extern("inc_nwnx_func")
 __sp_extern("inc_cdb")
 
-#define SCORCO_SCHEMA "scorco"
-#define SCORCO_DATA "object_data"
-#define SCORCO_METADATA "object_metadata"
-#define SCORCO_ATTR_METADATA "object_attr_metadata"
-#define SCORCO_CREATURE_METADATA "object_creature_metadata"
-#define SCORCO_ITEM_METADATA "object_item_metadata"
-#define SCORCO_LOCATION_METADATA "object_location_metadata"
-#define SCORCO_PLACEABLE_METADATA "object_placeable_metadata"
-#define SCORCO_LASTACCESSBY_METADATA "object_last_access_by_metadata"
-#define SCORCO_CHARACTER_METADATA "object_character_metadata"
-// Metadata
-// ----
+#define SCORCO_SCHEMA "objects"
+#define SCORCO_TABLE_PREFIX ""
+#define SCORCO_TABLE_POSTFIX "_gff"
 
-// from: scorco.object_*_metadata
-struct p_attr_metadata {
-	string resref;
-	string tag;
-	string name;
-	int hitpoints_current;
-	int hitpoints_max;
-	bool plot;
-	int weight;
-}; 
-
-struct p_location_metadata {
-	location at;
-};
-
-struct p_item_metadata {
-	int ac;
-	int base_type;
-	int charges;
-};
-
-struct p_creature_metadata {
-	int appearance;
-};
-
-struct p_placeable_metadata {
-	int pid;
-};
-
-struct p_last_access_by_metadata {
-	int aid;
-	int cid;
-};
-
-struct p_character_metadata {
-	int cid;
-};
-
+#define normalize_table(table) (SCORCO_SCHEMA + "." + SCORCO_TABLE_PREFIX + table + SCORCO_TABLE_POSTFIX)
 
 // Returns this objects' id if it is persistent,
 // false otherwise.
@@ -66,7 +20,7 @@ int p_get_p_id(object o);
 object p_load(int id, location at, object owner = OBJECT_INVALID);
 
 // Saves the specified object to the specified table. Does not save metadata.
-int p_save(string table, object o);
+int p_save(string table, object o, string additional_updates = "");
 
 // Deletes the referenced object.
 int p_delete(string table, object o);
@@ -74,28 +28,6 @@ int p_delete(string table, object o);
 // Deletes the referenced object and destroys the in-game instance.
 bool p_destroy(string table, object o);
 
-
-struct p_attr_metadata p_get_attr_metadata(int id);
-int p_save_attr_metadata(object o);
-
-struct p_location_metadata p_get_location_metadata(int id);
-int p_save_location_metadata(object o);
-
-
-struct p_item_metadata p_get_item_metadata(int id);
-int p_save_item_metadata(object o);
-
-struct p_creature_metadata p_get_creature_metadata(int id);
-int p_save_creature_metadata(object o);
-
-struct p_placeable_metadata p_get_placeable_metadata(int id);
-int p_save_placeable_metadata(object o, int pid);
-
-struct p_last_access_by_metadata p_get_last_access_by_metadata(int id);
-int p_save_last_access_by_metadata(object o, object pc);
-
-struct p_character_metadata p_get_character_metadata(int id);
-int p_save_character_metadata(object o);
 
 // Loads all objects stored in table matching conditions to
 // the stored location metadata.
@@ -147,20 +79,35 @@ int p_id(object o) {
 }
 
 object p_load(int id, location at, object owner = OBJECT_INVALID) {
-	object o = pRCO("select data from " + SCORCO_SCHEMA + ".object_data where id = " + pSi(id), at, owner);
+	object o = pRCO("select data from " + normalize_table("objects") + " where id = " + pSi(id), at, owner);
 	p_set_p_id(o, id);
 	return o;
 }
 
-int p_save(string table, object o) {
+int p_save(string table, object o, string additional_updates = "") {
 	int id = p_id(o);
+	location at = GetLocation(o);
 	if (!id) {
-		pSCO("insert into " + SCORCO_SCHEMA + "." + table + " (data) values(%s);", o);
-		id = pLastId(SCORCO_SCHEMA + ".object_data", "id");
+		pSCO("insert into " + normalize_table(table) + " (at,data) values(" + pEscapeLocation(at) + ", %s);", o);
+		id = pLastId(SCORCO_SCHEMA + ".objects", "id");
+
+		if (!id) {
+			_FATAL("Cannot retrieve newly-persisted ID for object " + otoa(o) + " to table " + normalize_table(table) + ". INVESTIGATE.");
+		} else {
+			if ("" != additional_updates)
+				pQuery("update " + normalize_table(table) + " set " + additional_updates + " where id = " + pSi(id));
+		}
+
 		p_set_p_id(o, id);
 
 	} else {
-		pSCO("update " + SCORCO_SCHEMA + "." + table + " set access_on = now(), data = %s where id = " + pSi(id) + ";", o);
+		string q;
+		if ("" != additional_updates) 
+			q = "update " + normalize_table(table) + " set access_on = now(), data = %s, " + additional_updates + " where id = " + pSi(id) + ";";
+		else
+			q = "update " + normalize_table(table) + " set access_on = now(), data = %s where id = " + pSi(id) + ";";
+
+		pSCO(q, o);
 	}
 	return id;
 }
@@ -168,11 +115,11 @@ int p_save(string table, object o) {
 
 bool p_delete(string table, object o) {
 	if (!p_id(o)) {
-		_FATAL("cannot delete metadata for " + otoa(o) + ", not persistent");
+		_FATAL("cannot p_delete " + otoa(o) + ", not persistent");
 		return 0;
 	}
 
-	pQ("delete from " + SCORCO_SCHEMA + ".object_data where id = " + pSi(p_id(o)) + ";");
+	pQ("delete from " + normalize_table(table) + " where id = " + pSi(p_id(o)) + ";");
 		/* cascade-delete the metadata as well .. */
 
 	p_set_p_id(o, 0);
@@ -198,7 +145,7 @@ int p_load_to_location_metadata(string table, string conditions) {
 	int id;
 	int total = 0;
     
-	pQ("select id, ((at).position).x, ((at).position).y, ((at).position).z, (at).facing, ((at).area).tag from " + SCORCO_SCHEMA + "." + table + " where " + conditions);
+	pQ("select id, ((at).position).x, ((at).position).y, ((at).position).z, (at).facing, ((at).area).tag from " + normalize_table("objects") + " where " + conditions);
     while (pF()) {
         id = pGi(1);
         p = Vector(pGf(2), pGf(3), pGf(4));
@@ -210,7 +157,7 @@ int p_load_to_location_metadata(string table, string conditions) {
 
         location where = Location(area, p, pGf(5));
         
-		o = pRCO("select data from " + SCORCO_SCHEMA + "." + table + " where id = " + pSi(id) + ";", where);
+		o = pRCO("select data from " + normalize_table(table) + " where id = " + pSi(id) + ";", where);
 		if (!GetIsObjectValid(o)) {
 			_WARN("Tried to load a object which did not instanciate: " + pSi(id));
 			continue;
@@ -228,7 +175,7 @@ void p_load_to_location_metadata_void(string table, string conditions) {
 }
 
 int p_load_to_location_metadata_in_chunks(string table, string conditions, int chunksize = 100) {
-	pQ("select count(id) from " + SCORCO_SCHEMA + "." + table + " where " + conditions);
+	pQ("select count(id) from " + normalize_table(table) + " where " + conditions);
 	pF();
 	
 	conditions += " order by id desc";
@@ -256,11 +203,11 @@ int p_load_to_inventory(string table, string conditions, object inventory) {
 	int id;
 	int total = 0;
     
-	pQ("select id  from " + SCORCO_SCHEMA + "." + table + " where " + conditions);
+	pQ("select id  from " + normalize_table(table) + " where " + conditions);
     while (pF()) {
         id = pGi(1);
         
-		o = pRCO("select data from " + SCORCO_SCHEMA + "." + table + " where id = " + pSi(id) + ";", GetLocation(inventory), inventory);
+		o = pRCO("select data from " + normalize_table(table) + " where id = " + pSi(id) + ";", GetLocation(inventory), inventory);
 
 		if (!GetIsObjectValid(o)) {
 			_WARN("Tried to load a object which did not instanciate: " + pSi(id));
@@ -272,258 +219,4 @@ int p_load_to_inventory(string table, string conditions, object inventory) {
     }
 
     return total;
-}
-
-
-/* location metadata */
-
-struct p_location_metadata p_get_location_metadata(int id) {
-	struct p_location_metadata md;
-	
-	pQ("select " +
-		"((at).location).tag, ((at).position).x, ((at).position).y, ((at).position).z, (at).facing " + 
-		"from " + SCORCO_SCHEMA + "." + SCORCO_LOCATION_METADATA + " " + 
-		"where id = " + pSi(id));
-	if (!pF()) {
-		_FATAL("cannot get metadata for " + itoa(id) + ", id set but no matching row");
-	} else {
-		md.at = Location(GetObjectByTag(pG(1)), Vector(pGf(2), pGf(3), pGf(4)), pGf(5));
-
-		if (!GetIsObjectValid(GetAreaFromLocation(md.at)))
-			_WARN("Loaded metadata has invalid area: " + itoa(id));
-	}
-	return md;
-}
-
-int p_save_location_metadata(object o) {
-	int id = p_id(o);
-	
-	if (!id) {
-		_FATAL("cannot save location metadata for " + otoa(o) + ", object is not persisted");
-		return 0;
-	}
-
-	pQ("update " + SCORCO_SCHEMA + "." + SCORCO_LOCATION_METADATA + 
-		" set at = " + pEscapeLocation(GetLocation(o)) + 
-		" where id = " + pSi(id));
-
-	return 1;
-}
-
-
-
-/* attr metadata */
-
-struct p_attr_metadata p_get_attr_metadata(int id) {
-	struct p_attr_metadata md;
-	
-	pQ("select " +
-		"resref, tag, name, hitpoints_current, hitpoints_max, plot, weight " + 
-		"from " + SCORCO_SCHEMA + "." + SCORCO_ATTR_METADATA + " " + 
-		"where id = " + pSi(id));
-	if (!pF()) {
-		_FATAL("cannot get metadata for " + itoa(id) + ", id set but no matching row");
-	} else {
-		md.resref = pGs(1);
-		md.tag = pGs(2);
-		md.name = pGs(3);
-		md.hitpoints_current = pGi(4);
-		md.hitpoints_max = pGi(5);
-		md.plot = pGb(6);
-		md.weight = pGi(7);
-	}
-	return md;
-}
-
-int p_save_attr_metadata(object o) {
-	int id = p_id(o);
-	
-	if (!id) {
-		_FATAL("cannot save creature metadata for " + otoa(o) + ", object is not persisted");
-		return 0;
-	}
-
-	pQ("update " + SCORCO_SCHEMA + "." + SCORCO_ATTR_METADATA + " set " +
-		" resref = " + pSs(GetResRef(o)) + ", " + 
-		" tag = " + pSs(GetTag(o)) + ", " + 
-		" name = " + pSs(GetName(o)) + ", " + 
-		" hitpoints_current = " + pSi(GetCurrentHitPoints(o)) + ", " + 
-		" hitpoints_max = " + pSi(GetMaxHitPoints(o)) + ", " + 
-		" plot = " + pSb(GetPlotFlag(o)) + ", " + 
-		" weight = " + pSi(GetWeight(o)) + " " + 
-		" where id = " + pSi(id)
-	);
-
-	return 1;
-}
-
-
-
-/* creature metadata */
-
-struct p_creature_metadata p_get_creature_metadata(int id) {
-	struct p_creature_metadata md;
-
-	pQ("select " +
-		"creature_appearance " + 
-		"from " + SCORCO_SCHEMA + "." + SCORCO_CREATURE_METADATA + " " + 
-		"where id = " + pSi(id));
-	if (!pF()) {
-		_FATAL("cannot get metadata for " + itoa(id) + ", id set but no matching row");
-	} else {
-		md.appearance = pGi(1);
-	}
-	return md;
-}
-
-int p_save_creature_metadata(object o) {
-	int id = p_id(o);
-	
-	if (!id) {
-		_FATAL("cannot save creature metadata for " + otoa(o) + ", object is not persisted");
-		return 0;
-	}
-
-	pQ("update " + SCORCO_SCHEMA + "." + SCORCO_CREATURE_METADATA + 
-		" set creature_appearance = " + pSi(GetAppearanceType(o)) +
-		" where id = " + pSi(id));
-
-	return 1;
-}
-
-
-/* item metadata */
-
-struct p_item_metadata p_get_item_metadata(int id) {
-	struct p_item_metadata md;
-	
-	pQ("select " +
-		"item_ac, item_base_type, item_charges " +
-		"from " + SCORCO_SCHEMA + "." + SCORCO_ITEM_METADATA + " " + 
-		"where id = " + pSi(id));
-	if (!pF()) {
-		_FATAL("cannot get metadata for " + itoa(id) + ", id set but no matching row");
-	} else {
-		md.ac = pGi(1);
-		md.base_type = pGi(2);
-		md.charges = pGi(3);
-	}
-	return md;
-}
-
-int p_save_item_metadata(object o) {
-	int id = p_id(o);
-	
-	if (!id) {
-		_FATAL("cannot save item metadata for " + otoa(o) + ", object is not persisted");
-		return 0;
-	}
-
-	pQ("update " + SCORCO_SCHEMA + "." + SCORCO_ITEM_METADATA + 
-		" set item_ac = " + pSi(GetItemACValue(o)) + ", " + 
-		" item_base_type = " + pSi(GetBaseItemType(o)) + ", " +
-		" item_charges = " + pSi(GetItemCharges(o)) + " " +
-	" where id = " + pSi(id));
-
-	return 1;
-}
-
-/* placeable metadata */
-
-struct p_placeable_metadata p_get_placeable_metadata(int id) {
-	struct p_placeable_metadata md;
-	
-	pQ("select " +
-		"pid " +
-		"from " + SCORCO_SCHEMA + "." + SCORCO_PLACEABLE_METADATA + " " + 
-		"where id = " + pSi(id));
-	if (!pF()) {
-		_FATAL("cannot get metadata for " + itoa(id) + ", id set but no matching row");
-	} else {
-		md.pid = pGi(1);
-	}
-	return md;
-}
-
-int p_save_placeable_metadata(object o, int pid) {
-	int id = p_id(o);
-	
-	if (!id) {
-		_FATAL("cannot save placeable metadata for " + otoa(o) + ", object is not persisted");
-		return 0;
-	}
-
-	pQ("update " + SCORCO_SCHEMA + "." + SCORCO_PLACEABLE_METADATA + 
-		" set pid = " + pSi(pid) + " " + 
-	" where id = " + pSi(id));
-
-	return 1;
-}
-
-
-/* last_access_by metadata */
-
-struct p_last_access_by_metadata p_get_last_access_by_metadata(int id) {
-	struct p_last_access_by_metadata md;
-	
-	pQ("select " +
-		"aid, cid " +
-		"from " + SCORCO_SCHEMA + "." + SCORCO_LASTACCESSBY_METADATA + " " + 
-		"where id = " + pSi(id));
-	if (!pF()) {
-		_FATAL("cannot get metadata for " + itoa(id) + ", id set but no matching row");
-	} else {
-		md.aid = pGi(1);
-		md.cid = pGi(2);
-	}
-	return md;
-}
-
-int p_save_last_access_by_metadata(object o, object pc) {
-	int id = p_id(o);
-	
-	if (!id) {
-		_FATAL("cannot save last_access_by metadata for " + otoa(o) + ", object is not persisted");
-		return 0;
-	}
-
-	pQ("update " + SCORCO_SCHEMA + "." + SCORCO_LASTACCESSBY_METADATA + 
-		" set aid = " + pSi(GetAccountID(pc)) + ", cid = " + pSi(GetCharacterID(pc)) + " " + 
-	" where id = " + pSi(id));
-
-	return 1;
-}
-
-
-
-/* character metadata */
-
-struct p_character_metadata p_get_character_metadata(int id) {
-	struct p_character_metadata md;
-	
-	pQ("select " +
-		"cid " +
-		"from " + SCORCO_SCHEMA + "." + SCORCO_CHARACTER_METADATA + " " + 
-		"where id = " + pSi(id));
-	if (!pF()) {
-		_FATAL("cannot get metadata for " + itoa(id) + ", id set but no matching row");
-	} else {
-		md.cid = pGi(1);
-	}
-	return md;
-}
-
-int p_save_character_metadata(object o) {
-	int id = p_id(o);
-	
-	if (!id) {
-		_FATAL("cannot save character metadata for " + otoa(o) + ", object is not persisted");
-		return 0;
-	}
-
-	pQ("update " + SCORCO_SCHEMA + "." + SCORCO_CHARACTER_METADATA + 
-		" set cid = " + pSi(GetCharacterID(o)) + " " + 
-	" where id = " + pSi(id));
-
-	return 1;
 }

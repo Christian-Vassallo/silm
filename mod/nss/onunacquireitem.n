@@ -3,7 +3,7 @@ __sp_extern("inc_events")
 __sp_extern("inc_scorco")
 __sp_extern("inc_setting")
 __sp_extern("_gen")
-
+#include "inc_pgsql.nh"
 
 
 void main() {
@@ -36,11 +36,7 @@ void main() {
 
 	if (gvGetInt("persist_dropped_items") && GetIsObjectValid(oItem)) {
 		if (p_canpersist(oItem) && GetIsObjectValid(GetAreaFromLocation(GetLocation(oItem)))) {
-			p_save("dropped_items", oItem);
-			p_save_attr_metadata(oItem);
-			p_save_location_metadata(oItem);
-			p_save_item_metadata(oItem);
-			p_save_last_access_by_metadata(oItem, oPC);
+			p_save("dropped_items", oItem, "dropped_by_cid = " + pSi(GetCharacterID(oPC)) + ", dropped_by_aid = " + pSi(GetAccountID(oPC)));
 		}
 	}
 	if (!p_id(oItem)) {
