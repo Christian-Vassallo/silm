@@ -32,6 +32,7 @@
 #define is_item(o) (GetObjectType(o) == OBJECT_TYPE_ITEM)
 #define is_creature(o) (GetObjectType(o) == OBJECT_TYPE_CREATURE)
 #define is_placeable(o) (GetObjectType(o) == OBJECT_TYPE_PLACEABLE)
+#define is_trigger(o) (GetObjectType(o) == OBJECT_TYPE_TRIGGER)
 
 #define lv_i(o,n) GetLocalInt(o,n)
 #define slv_i(o,n,v) SetLocalInt(o,n,v)

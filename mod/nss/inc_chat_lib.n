@@ -42,7 +42,10 @@ float getsleep() {
 }
 
 
-void SpeakToMode(object oPC, string sText, int iMode);
+// Makes oObject speak sText with the given iMode.
+// Tries really hard that some text appears for clients;
+// e.g. if its an inventory item, the container speaks.
+void SpeakToMode(object oObject, string sText, int iMode);
 
 void FixFactionsForObject(object oO, object oPC = OBJECT_SELF);
 
@@ -163,28 +166,43 @@ string ColourisePlayerText(object oPC, int nMode, string sText, struct Colour cT
 
 
 
-void SpeakToMode(object oPC, string sText, int iMode) {
+void SpeakToMode(object oObject, string sText, int iMode) {
 	if ( "" == sText )
 		return; // SIGSEGV :D
 
+	object speaker = oObject;
+	string prefix = "";
+
+	// If its owned by a inventory, use THAT to speak.
+	if (GetIsObjectValid(GetItemPossessor(speaker))) {
+		speaker = GetItemPossessor(speaker);
+		prefix = "(" + GetName(oObject) + ") ";
+	}
+	
+	// If its a trigger, then we need to spawn some invisible wobbit to do the talking.
+	if (is_trigger(speaker)) {
+		object oinvis = CreateObject(OBJECT_TYPE_PLACEABLE, "invisobj", GetLocation(speaker));
+		speaker = oinvis;
+		DelayCommand(4.0f, DestroyObject(oinvis));
+	}
+
+	sText = prefix + sText;
+
 	switch ( iMode ) {
 		case MODE_TALK:
-			//ChatLock(oPC);
-			AssignCommand(oPC, SpeakString(sText, TALKVOLUME_TALK));
+			AssignCommand(speaker, SpeakString(sText, TALKVOLUME_TALK));
 			break;
 		case MODE_WHISPER:
-			//ChatLock(oPC);
-			AssignCommand(oPC, SpeakString(sText, TALKVOLUME_WHISPER));
+			AssignCommand(speaker, SpeakString(sText, TALKVOLUME_WHISPER));
 			break;
 		case MODE_SHOUT:
-			//ChatLock(oPC);
-			AssignCommand(oPC, SpeakString(sText, TALKVOLUME_SHOUT));
+			AssignCommand(speaker, SpeakString(sText, TALKVOLUME_SHOUT));
 			break;
 		case MODE_DM:
-			SendMessageToAllDMs(GetName(oPC) + ": " + sText);
+			SendMessageToAllDMs(GetName(oObject) + ": " + sText);
 			break;
 		default:
-			SendMessageToPC(oPC, "Invalid channel: " + IntToString(iMode));
+			_WARN("Invalid call to SpeakToMode with mode " + itoa(iMode) + ", text was: " + sText);
 			break;
 	}
 }
