@@ -1,6 +1,8 @@
 __sp_extern("inc_2dacache")
 
 
+void InventorySpeakString(object oCreature, object oItem, string str, int talkvol = TALKVOLUME_TALK);
+
 // Returns the number of items in this containers inventory.
 // Loops through sub-containers and counts those as well,
 // including the subcontainer itself.
@@ -53,4 +55,10 @@ int GetTotalContainerItemSizeSum(object oInv) {
 		o = GetNextItemInInventory(oInv);
 	}
 	return total;
+}
+
+
+void InventorySpeakString(object oCreature, object oItem, string str, int talkvol = TALKVOLUME_TALK) {
+	string prefix = GetName(oItem) + ": ";
+	AssignCommand(oCreature, SpeakString(str, talkvol));
 }
