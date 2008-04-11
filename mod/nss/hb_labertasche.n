@@ -1,10 +1,11 @@
 __sp_extern("_gen")
+__sp_extern("inventory")
 
 /* The labertasche is a variant of the Ledertasche; same thing, but magically
  * imbued to be a nuisance when a living creature is near.
  */
 
-void SpeakRandomInsult();
+void SpeakRandomInsult(object pc, object oinv);
 
 void main() {
 	object pc = GetFirstPC();
@@ -14,51 +15,51 @@ void main() {
 		if (GetIsObjectValid(t)) {
 			object near = GetNearestCreature(CREATURE_TYPE_IS_ALIVE, TRUE);
 			if (hears(near, pc, TALKVOLUME_TALK))
-				AssignCommand(t, SpeakRandomInsult());
+				SpeakRandomInsult(pc, t);
 		}
 		pc = GetNextPC();
 	}
 }
 
 
-void SpeakRandomInsult() {
+void SpeakRandomInsult(object pc, object oinv) {
 	if (Random(3) > 1) {
 		return;
 	}
 
 	switch(Random(10)) {
 		case 0:
-			SpeakString("Dolle naa lost!");
+			InventorySpeakString(pc, oinv, "Dolle naa lost!");
 			break;
 		case 1:
-			SpeakString("Lle holma ve' edan!");
+			InventorySpeakString(pc, oinv, "Lle holma ve' edan!");
 			break;
 		case 2:
-			SpeakString("Amin feuya ten' lle!");
+			InventorySpeakString(pc, oinv, "Amin feuya ten' lle!");
 			break;
 		case 3:
-			SpeakString("Llie n'vanima ar' lle atara lanneina!");
+			InventorySpeakString(pc, oinv, "Llie n'vanima ar' lle atara lanneina!");
 			break;
 		case 4:
-			SpeakString("Lle naa haran e' nausalle!");
+			InventorySpeakString(pc, oinv, "Lle naa haran e' nausalle!");
 			break;
 		case 5:
-			SpeakString("Utinu en lokirim!");
+			InventorySpeakString(pc, oinv, "Utinu en lokirim!");
 			break;
 		case 6:
-			SpeakString("Antolle ulua sulrim!");
+			InventorySpeakString(pc, oinv, "Antolle ulua sulrim!");
 			break;
 		case 7:
-			SpeakString("Lasta lalaithamin!");
+			InventorySpeakString(pc, oinv, "Lasta lalaithamin!");
 			break;
 		case 8:
-			SpeakString("Amin delotha lle!");
+			InventorySpeakString(pc, oinv, "Amin delotha lle!");
 			break;
 		case 9:
-			SpeakString("Auta miqula orqu!");
+			InventorySpeakString(pc, oinv, "Auta miqula orqu!");
 			break;
 		case 10:
-			SpeakString("Nadorhuan!");
+			InventorySpeakString(pc, oinv, "Nadorhuan!");
 			break;
 	}
 }
