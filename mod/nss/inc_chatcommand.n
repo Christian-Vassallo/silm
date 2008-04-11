@@ -2734,9 +2734,11 @@ int CommandRestore(object oPC, int iMode) {
 		int nEffectID = StringToInt(optv("e"));
 		effect e = GetFirstEffect(oTarget);
 		while ( GetIsEffectValid(e) ) {
-			if ( nEffectID == 0
-				|| ( nEffectID > 0 && GetEffectType(e) == nEffectID )
-				&& GetEffectSubType(e) != SUBTYPE_SUPERNATURAL )
+			if ( ( nEffectID == 0
+					|| ( nEffectID > 0 && GetEffectType(e) == nEffectID )
+					)
+					&& GetEffectSubType(e) != SUBTYPE_SUPERNATURAL
+				)
 				DelayCommand(getsleep(), RemoveEffect(oTarget, e));
 			e = GetNextEffect(oTarget);
 		}
