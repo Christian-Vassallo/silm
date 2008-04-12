@@ -14,7 +14,7 @@ void main() {
 		t = GetItemPossessedBy(pc, "labertasche");
 		if (GetIsObjectValid(t)) {
 			object near = GetNearestCreature(CREATURE_TYPE_IS_ALIVE, TRUE);
-			if (hears(near, pc, TALKVOLUME_TALK))
+			if (GetDistanceBetween(pc, near) <= 42.0 && Random(6) > 4)
 				SpeakRandomInsult(pc, t);
 		}
 		pc = GetNextPC();
@@ -23,10 +23,6 @@ void main() {
 
 
 void SpeakRandomInsult(object pc, object oinv) {
-	if (Random(3) > 1) {
-		return;
-	}
-
 	switch(Random(10)) {
 		case 0:
 			InventorySpeakString(pc, oinv, "Dolle naa lost!");
