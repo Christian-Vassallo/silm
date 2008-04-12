@@ -37,11 +37,18 @@
 	"}") \
 : "OBJECT_INVALID")
 
-
+#define is_valid(o) GetIsObjectValid(o)
 #define is_item(o) (GetObjectType(o) == OBJECT_TYPE_ITEM)
 #define is_creature(o) (GetObjectType(o) == OBJECT_TYPE_CREATURE)
 #define is_placeable(o) (GetObjectType(o) == OBJECT_TYPE_PLACEABLE)
+#define is_door(o) (GetObjectType(o) == OBJECT_TYPE_DOOR)
 #define is_trigger(o) (GetObjectType(o) == OBJECT_TYPE_TRIGGER)
+#define is_encounter(o) (GetObjectType(o) == OBJECT_TYPE_ENCOUNTER)
+#define is_store(o) (GetObjectType(o) == OBJECT_TYPE_STORE)
+#define is_waypoint(o) (GetObjectType(o) == OBJECT_TYPE_WAYPOINT)
+#define is_aoe(o) (GetObjectType(o) == OBJECT_TYPE_AREA_OF_EFFECT)
+#define is_area(o) (is_valid(o) && GetObjectType(o) == OBJECT_TYPE_ALL)
+
 
 #define lv_i(o,n) GetLocalInt(o,n)
 #define slv_i(o,n,v) SetLocalInt(o,n,v)
