@@ -26,7 +26,16 @@
 #define ftoi(f) FloatToInt(f)
 #define itof(i) IntToFloat(i)
 
-#define otoa(o) "#" + ObjectToString(o) + "{" + GetResRef(o) + "," + GetTag(o) + "[" + itoa(p_get_p_id(o)) + "]," + GetName(o) + "}"
+#define otoa(o) (GetIsObjectValid(o) ? ("#" + \
+	ObjectToString(o) + \
+	"{" + \
+		IntToString(GetObjectType(o)) + "," + \
+		GetResRef(o) + "," + \
+		GetTag(o) + \
+		"[" + itoa(p_get_p_id(o)) + "]," + \
+		GetName(o) + \
+	"}") \
+: "OBJECT_INVALID")
 
 
 #define is_item(o) (GetObjectType(o) == OBJECT_TYPE_ITEM)
