@@ -3,7 +3,7 @@ __sp_extern("inc_chat")
 __sp_extern("inc_target")
 __sp_extern("inc_colours")
 __sp_extern("inc_limbo")
-
+__sp_extern("inc_scorco")
 
 
 const int
@@ -170,17 +170,22 @@ void SpeakToMode(object oObject, string sText, int iMode) {
 	if ( "" == sText )
 		return; // SIGSEGV :D
 
+	_DEBUG("chat", 2, "speaktomode(" + otoa(oObject) + ", " + itoa(iMode) + "): enter");
+
 	object speaker = oObject;
 	string prefix = "";
 
+	_DEBUG("chat", 2, "speaktomode():itempossessor(speaker)? " + otoa(GetItemPossessor(speaker)));
 	// If its owned by a inventory, use THAT to speak.
-	if (GetIsObjectValid(GetItemPossessor(speaker))) {
+	if (is_item(speaker) && GetIsObjectValid(GetItemPossessor(speaker))) {
 		speaker = GetItemPossessor(speaker);
+		_DEBUG("chat", 2, "speaktomode():itemposessor -> yes");
 		prefix = "(" + GetName(oObject) + ") ";
 	}
 	
 	// If its a trigger, then we need to spawn some invisible wobbit to do the talking.
 	if (is_trigger(speaker)) {
+		_DEBUG("chat", 2, "speaktomode():is_trigger");
 		object oinvis = CreateObject(OBJECT_TYPE_PLACEABLE, "invisobj", GetLocation(speaker));
 		speaker = oinvis;
 		DelayCommand(4.0f, DestroyObject(oinvis));
