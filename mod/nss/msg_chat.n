@@ -80,6 +80,10 @@ void main() {
 	if ( nDM )
 		iMode -= MSG_MODE_DM;
 
+	// Dont handle silent shouts!
+	if ( MSG_SILENT_SHOUT == iMode && !GetIsPC(oPC) )
+		return;
+
 	int iModeNew = ChatMsgToMode(iMode);
 	if ( iModeNew == 0 ) {
 		_WARN("Chat text yielded no usable mode, mode was: " + itoa(iMode) +", text was: " + sText);
