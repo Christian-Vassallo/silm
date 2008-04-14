@@ -1,6 +1,5 @@
-__sp_extern("inc_mnx")
 __sp_extern("_gen")
-
+#include "inc_pgsql.nh"
 
 
 // Get options
@@ -25,123 +24,59 @@ string optv(string n, object oPC = OBJECT_SELF);
 string getoptargs(object oPC = OBJECT_SELF);
 
 // Returns the complete, unparsed string, excluding all options.
-string getoptarga(object oPC = OBJECT_SELF);
+// string getoptarga(object oPC = OBJECT_SELF);
 
 
 //
 
 
-
 string getoptargs(object oPC = OBJECT_SELF) {
-	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getoptargs"));
-
-	if ( r.error ) {
-		ToPC("There was an error processing your request: " + r.ret);
-		return "";
-	}
-
-	return r.ret;
+	return GetLocalString(MODULE, "getopt_argstr");
 }
-
-string getoptarga(object oPC = OBJECT_SELF) {
-	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getoptarga"));
-
-	if ( r.error ) {
-		ToPC("There was an error processing your request: " + r.ret);
-		return "";
-	}
-
-	return r.ret;
-}
-
 
 int getopt(string str, string opts = "", object oPC = OBJECT_SELF) {
-	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getopt", opts, str));
-
-	if ( r.error )
-		ToPC("There was an error processing your request: " + r.ret);
-
-	//SetLocalInt(oPC, "go_iteration", GetLocalInt(oPC, "go_iteration") + 1);
-
-	return !r.error;
+	SetLocalString(MODULE, "getopt_argstr", str);
+	int ret = pQ("select getopt.init(" + pSs(str) + ", " + pSs(opts) + ");");
+	if (!ret)
+		_WARN("getopt.init failed!");
+	return ret;
 }
 
 
 int argc(object oPC = OBJECT_SELF) {
-	// if (getoptvalid(oPC) && GetLocalInt(oPC, "go_argc"))
-	//    return GetLocalInt(oPC, "go_argc");
-
-	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getoptc"));
-	if ( r.error ) {
-		ToPC("There was an error processing your request: " + r.ret);
+	pQ("select getopt.argc();");
+	if (pF()) 
+		return pGi(1);
+	else
 		return 0;
-	}
-
-	// SetLocalInt(oPC, "go_argc", StringToInt(r.ret));
-
-	return StringToInt(r.ret);
 }
 
 string arg(int n, object oPC = OBJECT_SELF) {
-	//if (getoptvalid(oPC) && "" != GetLocalString(oPC, "go_arg_" + IntToString(n)))
-	//    return GetLocalString(oPC, "go_arg_" + IntToString(n));
-
-	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getopta", IntToString(n)));
-
-	if ( r.error ) {
-		ToPC("There was an error processing your request: " + r.ret);
+	pQ("select getopt.arg(" + pSi0(n, false) + ");");
+	if (!pF())
 		return "";
-	}
-
-	//SetLocalString(oPC, "go_arg_" + IntToString(n), r.ret);
-
-	return r.ret;
+	return pGs(1);
 }
 
 
 int opt(string n, object oPC = OBJECT_SELF) {
-	//if (getoptvalid(oPC) && GetLocalInt(oPC, "go_opt_" + n))
-	//    return GetLocalInt(oPC, "go_opt_" + n);
-
-	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getopti", n));
-
-	if ( r.error ) {
-		ToPC("There was an error processing your request: " + r.ret);
+	pQ("select getopt.opt(" + pSs(n) + ");");
+	if (!pF())
 		return 0;
-	}
-
-	//SetLocalInt("go_opt_" + n, StringToInt(r.ret == 1));
-
-	return StringToInt(r.ret) == 1;
+	return pGi(1);
 }
 
 string optv(string n, object oPC = OBJECT_SELF) {
-	//if (getoptvalid(oPC) && "" != GetLocalString(oPC, "go_opt_" + n))
-	//    return GetLocalString(oPC, "go_opt_" + n);
-
-
-	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getoptv", n));
-	if ( r.error ) {
-		ToPC("There was an error processing your request: " + r.ret);
+	pQ("select getopt.optv(" + pSs(n) + ");");
+	if (!pF())
 		return "";
-	}
-
-	//SetLocalString(oPC, "go_opt_" + n, r.ret);
-
-	return r.ret;
+	return pGs(1);
 }
 
 
 
 int getoptreset(object oPC = OBJECT_SELF) {
-	// SetLocalInt(oPC, "go_iteration", 0);
-
-	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("getoptreset"));
-	if ( r.error ) {
-		ToPC("There was an error processing your request: " + r.ret);
-		return 0;
-	}
-
-
-	return 1;
+	SetLocalString(MODULE, "getopt_argstr", "");
+	int ret = pQ("select getopt.reset();");
+	return ret;
 }
