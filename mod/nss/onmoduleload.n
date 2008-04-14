@@ -42,12 +42,6 @@ void main() {
 	if ( !iYear )
 		WriteTimestampedLogEntry("No time entry, starting with preset module time");
 	else {
-		WriteTimestampedLogEntry("Module time: " +
-			IntToString(GetCalendarDay()) +
-			". " + IntToString(GetCalendarMonth()) + ". " + IntToString(GetCalendarYear()));
-		WriteTimestampedLogEntry("Restoring Date & Time: " +
-			IntToString(iDay) + ". " + IntToString(iMonth) + ". " + IntToString(iYear) +
-			" " + IntToString(iHour) + ":00");
 		SetTime(iHour, 0, 0, 0);
 		SetCalendar(iYear, 1, 1);
 		if ( iMonth > 1 ) SetCalendar(iYear, iMonth, 1);
@@ -62,19 +56,14 @@ void main() {
 	//weather_update();
 
 	ExecuteScript("reg_subraces", OBJECT_SELF);
-	WriteTimestampedLogEntry("Subraces initialized");
 	ExecuteScript("reg_dispenser", OBJECT_SELF);
-	WriteTimestampedLogEntry("Dispensers initialized");
 	ExecuteScript("reg_spawn", OBJECT_SELF);
-	WriteTimestampedLogEntry("Spawn system initialization in progress");
 
 	ExecuteScript("_events_register", OBJECT_SELF);
 
 	SetLocalInt(oMod, "tracking", 1);
 
 	SetLocalInt(oMod, "startup_ts", GetUnixTimestamp());
-
-	WriteTimestampedLogEntry("Module initialization done.");
 
 	mnx_asynchronous_command_noreply(mnx_prepare_command("startup", GIT_COMMIT));
 }
