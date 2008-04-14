@@ -1641,7 +1641,14 @@ int CommandEffect(object oPC, int iMode) {
 		e = EffectSkillDecrease(StringToInt(s1), StringToInt(s2));
 	else if ( "cutsceneghost" == sE )
 		e = EffectCutsceneGhost();
-
+	else if ( "dr" == sE && argc() == 4 )
+		e = EffectDamageReduction(StringToInt(s1), StringToInt(s2), StringToInt(s3));
+	else if ( "immunity" == sE && argc() == 2)
+		e = EffectImmunity(StringToInt(s1));
+	else if ( "spellimmunity" == sE && argc() == 2)
+		e = EffectSpellImmunity(StringToInt(s1));
+	else if ( "paralyze" == sE )
+		e = EffectParalyze();
 	else {
 		SendMessageToPC(oPC, "Unknown effect or wrong parameter count.");
 		return FAIL;
