@@ -97,6 +97,56 @@ $_$ language sql;
 
 
 
+create table getopt.commands (
+	position int not null unique,
+	value varchar
+);
+
+create function getopt.commandsplit(text varchar, splitat varchar) returns int as
+$_$
+	require 'shellwords'
+	PL.exec("truncate getopt.commands;")
+	cmdx = []
+	sw = Shellwords.shellwords(text)
+	cmd = []
+	sw.each do |n|
+		if n == splitat
+			cmdx << cmd if cmd.size > 0
+			cmd = []
+			next
+		end
+		cmd << n
+	end
+	cmdx << cmd if cmd.size > 0
+	cmdx.map! {|cmd|
+		ret = " "
+		cmd.each do |param|
+			if param.index(" ").nil?
+				ret << param + " "
+			else
+				ret << '"' + param + '" '
+			end
+		end
+		ret.strip
+	}
+	cmdx.flatten!
+	pln = PL::Plan.new("insert into getopt.commands (position, value) values($1, $2);", ['int4', 'varchar'])
+	cmdx.each_with_index {|c, i|
+		pln.exec([i, c])
+	}
+	return cmdx.size
+$_$ language 'plruby';
+
+create function getopt.commandget(int) returns varchar as
+$_$
+	select value from getopt.commands c where c.position = $1;
+$_$ language sql;
+
+create function getopt.commandc() returns int as
+$_$
+	select count(*)::int from getopt.commands;
+$_$ language sql;
+
 create function getopt.shellwords_as_array(varchar) returns varchar[] as
 $_$
 	line = args[0].lstrip
@@ -137,12 +187,3 @@ $_$
 	vl
 $_$
 language 'plruby';
-
---select getopt.shellwords_as_array('wrod1 wq "asqd " asd');
---select getopt.init('this be a test string with --option --blah=key2', 'option blah=');
---select * from getopt.arguments;
---select * from getopt.options;
---select getopt.argc();
---select getopt.reset();
---select getopt.opt('test');
---select getopt.opt('blah');

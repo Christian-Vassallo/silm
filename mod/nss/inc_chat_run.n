@@ -138,7 +138,7 @@ int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlia
 	int i = 0;
 	string sCmd = "";
 
-	int nCommandCount = mCommandSplit(sText, COMMAND_SPLIT);
+	int nCommandCount = commandsplit(sText, COMMAND_SPLIT);
 
 	if (gvGetInt("chat_debug")) {
 		SendMessageToAllDMs("chat> CommandEval(): '" + sText + "'::" + IntToString(iMode) + "::" + 
@@ -147,7 +147,7 @@ int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlia
 	}
 
 	for ( i = 0; i < nCommandCount; i++ ) {
-		sCmd = mCommandSplitGet(i);
+		sCmd = commandget(i);
 		if ( !RunCommand(oPC, iMode, sCmd, bRunMacro, bRunAlias, nRunModLevel) )
 			return FALSE;
 	}

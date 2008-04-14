@@ -27,7 +27,28 @@ string getoptargs(object oPC = OBJECT_SELF);
 // string getoptarga(object oPC = OBJECT_SELF);
 
 
+int commandsplit(string sText, string sSplitAt);
+
+string commandget(int index);
+
 //
+
+
+int commandsplit(string sText, string sSplitAt) {
+	pQ("select getopt.commandsplit(" + pSs(sText) + ", " + pSs(sSplitAt) + ")");
+	if (pF())
+		return pGi(1);
+	else
+		return 0;
+}
+
+string commandget(int index) {
+	pQ("select getopt.commandget(" + pSi0(index, false) +");");
+	if (pF())
+		return pGs(1);
+	else
+		return "";
+}
 
 
 string getoptargs(object oPC = OBJECT_SELF) {
