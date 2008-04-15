@@ -21,10 +21,7 @@ ACCESS = 4;
 struct Colour
 cEmote = cOrange,
 cNPCEmote = cDarkMagenta,
-cHighLight = cYellow,
-cOOC = cLightGrey,
-cLanguage = cLightBlue;
-
+cOOC = cLightGrey;
 
 
 
@@ -70,8 +67,10 @@ string ColourisePlayerText(object oPC, int nMode, string sText, struct Colour cT
 	string r = "", c = "";
 
 	int bInEmote = 0; // .. *emote* ..
-	int bInLB = 0; // .. _hilight_ ..
-	int bInLang = 0; // .. #language text# ..
+	int bInYellow = 0; // .. _hilight_ ..
+	int bInBlue = 0; // .. #language text# ..
+	int bInGreen = 0; // .. &green& ..
+
 	int bInOOC = 0; // (ooc) is gray ..
 
 	if ( nMode & MODE_WHISPER )
@@ -103,10 +102,12 @@ string ColourisePlayerText(object oPC, int nMode, string sText, struct Colour cT
 				continue;
 			} else {
 				bInEmote = 0;
-				if ( bInLB )
-					r += "*" + ColourTag(cHighLight);
-				else if ( bInLang )
-					r += "*" + ColourTag(cLanguage);
+				if ( bInYellow )
+					r += "*" + ColourTag(cYellow);
+				else if ( bInBlue )
+					r += "*" + ColourTag(cLightBlue);
+				else if ( bInGreen )
+					r += "*" + ColourTag(cGreen);
 				else
 					r += "*" + ColourTag(cTextColour);
 				continue;
@@ -114,35 +115,58 @@ string ColourisePlayerText(object oPC, int nMode, string sText, struct Colour cT
 		}
 
 		if ( "_" == c ) {
-			if ( bInLB == 0 ) {
-				r += ColourTag(cHighLight);
-				bInLB = 1;
+			if ( bInYellow == 0 ) {
+				r += ColourTag(cYellow);
+				bInYellow = 1;
 				continue;
 			} else {
 				if ( bInEmote )
 					r += ColourTag(cPEmote);
-				else if ( bInLang )
-					r += ColourTag(cLanguage);
+				else if ( bInBlue )
+					r += ColourTag(cLightBlue);
+				else if ( bInGreen )
+					r += ColourTag(cGreen);
 				else
 					r += ColourTag(cTextColour);
-				bInLB = 0;
+				bInYellow = 0;
 				continue;
 			}
 		}
 
 		if ( "#" == c ) {
-			if ( bInLang == 0 ) {
-				r += ColourTag(cLanguage);
-				bInLang = 1;
+			if ( bInBlue == 0 ) {
+				r += ColourTag(cLightBlue);
+				bInBlue = 1;
 				continue;
 			} else {
-				if ( bInLB )
-					r += ColourTag(cHighLight);
+				if ( bInYellow )
+					r += ColourTag(cYellow);
+				else if ( bInGreen )
+					r += ColourTag(cGreen);
 				else if ( bInEmote )
 					r += ColourTag(cPEmote);
 				else
 					r += ColourTag(cTextColour);
-				bInLang = 0;
+				bInBlue = 0;
+				continue;
+			}
+		}
+
+		if ( "&" == c ) {
+			if ( bInGreen == 0 ) {
+				r += ColourTag(cGreen);
+				bInGreen = 1;
+				continue;
+			} else {
+				if ( bInYellow )
+					r += ColourTag(cYellow);
+				else if ( bInBlue )
+					r += ColourTag(cLightBlue);
+				else if ( bInEmote )
+					r += ColourTag(cPEmote);
+				else
+					r += ColourTag(cTextColour);
+				bInGreen = 0;
 				continue;
 			}
 		}
@@ -156,8 +180,8 @@ string ColourisePlayerText(object oPC, int nMode, string sText, struct Colour cT
 		 * if (")" == c && bInOOC) {
 		 * 	r += ColourTagClose();
 		 * 	bInOOC = 0;
-		 * 	if (bInLB)
-		 * 		r += ColourTag(cHighLight);
+		 * 	if (bInYellow)
+		 * 		r += ColourTag(cYellow);
 		 * 	else if (bInEmote)
 		 * 			r += ColourTag(cPEmote);
 		 * 	continue;
