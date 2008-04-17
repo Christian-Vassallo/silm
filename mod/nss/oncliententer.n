@@ -5,6 +5,7 @@ __sp_extern("inc_mnx")
 __sp_extern("inc_audit")
 __sp_extern("inc_currency")
 __sp_extern("inc_online")
+#include "inc_pgsql.nh"
 
 void MnxNotify(object oPC);
 
@@ -99,18 +100,21 @@ void MnxNotify(object oPC) {
 	int nCID = GetCharacterID(oPC);
 	string bIsDM = BoolToString(GetIsDM(oPC));
 
-	struct mnxRet ret = mnx_synchronous_command(mnx_prepare_command("cliententer", sAccountName, sCharName, IntToString(nAID), IntToString(nCID),
+	mnx_asynchronous_command(mnx_prepare_command("cliententer", sAccountName, sCharName, IntToString(nAID), IntToString(nCID),
 							bIsDM, GetPCIPAddress(oPC), GetPCPublicCDKey(oPC)));
+	string host = GetPCIPAddress(oPC);
+	pQ("select dns.getname(" + pSs(host) + ");");
+	if (pF())
+		host = pGs(1);
 
 	string
 		sIP = GetPCIPAddress(oPC),
-		sHost = ret.ret,
 		sKey = GetPCPublicCDKey(oPC);
 
 	SendMessageToAllDMs("enter: '" +
 		sAccountName +
 		"'(" +
 		IntToString(nAID) +
-		") '" + sCharName + "'(" + IntToString(nCID) + "), " + sIP + " -> " + sHost + "/" + sKey);
+		") '" + sCharName + "'(" + IntToString(nCID) + "), " + sIP + " -> " + host + "/" + sKey);
 }
 

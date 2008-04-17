@@ -109,7 +109,7 @@ class MnxJabber < RMNX::CommandSpace
 		return 0
 	end
 
-        def mnx_cliententer account, char, aid, cid, isdm, ip, key
+	def mnx_cliententer account, char, aid, cid, isdm, ip, key
 		host = ""
 		dnsovr = gety("dnsovr", {})
 		begin
@@ -140,17 +140,17 @@ class MnxJabber < RMNX::CommandSpace
 		jnotify('dnotify', "enter %s(%s): %s(%s) dm: %s, %s/%s/%s" % [account, aid, char, cid, isdm, ip, host, key], aid.to_i)
 
 		return (host == "" ? ip : host).strip
-        end
+	end
 
-        def mnx_clientleave account, char, aid, cid
+	def mnx_clientleave account, char, aid, cid
 		savey("online", gety("online").reject {|i| i['account'] == account }) 
 		account = h account
 		char = h char
                 jnotify('cnotify', "%s leaves" % [char], aid.to_i)
                 jnotify('dnotify', "leave %s(%s): %s(%s)" % [account, aid.to_s, char, cid.to_s], aid.to_i)
-        end
+	end
 
-        def mnx_areaenter account, char, aid, cid, resref = "", tag = "", name = ""
+	def mnx_areaenter account, char, aid, cid, resref = "", tag = "", name = ""
 		return if resref == ""
 
 		savey("online", gety("online").map {|pl|
@@ -181,13 +181,13 @@ class MnxJabber < RMNX::CommandSpace
 			end
 		}
 		""
-        end
+	end
 
-        def mnx_arealeave account, char, aid, cid
+	def mnx_arealeave account, char, aid, cid
 		account = account
 		char = char
                 #jnotify("area_leave %s(%s): %s(%s)" % [account, aid, char, cid])
-        end
+	end
 
 	private
 
