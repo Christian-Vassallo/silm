@@ -8,52 +8,28 @@
 
 create schema objects;
 
-create function objects.objects_update_md() returns trigger as $_$
+create or replace function objects.objects_update_md() returns trigger as $_$
 begin
 	if (TG_OP = 'UPDATE') then
-		if (OLD.data::varchar != NEW.data::varchar) then
-			NEW.type := substring(lower(((xpath('/gff/@type', NEW.data))[1])::text) from 1 for 3)::restype;
-			NEW.update_on := now();
-		end if;
+		NEW.update_on := now();
 	end if;
-	if (TG_OP = 'INSERT') then
-		NEW.type := substring(lower(((xpath('/gff/@type', NEW.data))[1])::text) from 1 for 3)::restype;
-	end if;
+--	if (TG_OP = 'INSERT') then
+--		NEW.type := substring(lower(((xpath('/gff/@type', NEW.data))[1])::text) from 1 for 3)::restype;
+--	end if;
 	return NEW;
 end;
 $_$ language 'plpgsql';
-
-create function objects.objects_warn() returns trigger as $_$
-begin
-	raise warning 'Do not access the objects table itself directly, use paritioned tables inheriting it.';
-end;
-$_$ language 'plpgsql';
-
 
 -- Object data
 create table objects.objects (
 	id serial8 primary key,
 	create_on timestamp default now() not null,
-	update_on timestamp default now() not null,
+	update_on timestamp,
 	
-	data xml,
-	type restype,
+	at location,
 
-	at location
+	data gff
 );
-create trigger objects_direct_access_warn
-	before insert or update or delete
-	on objects.objects for each row 
-	execute procedure objects.objects_warn();
-
-create view objects.objects_gff as
-	select id,create_on,update_on,at,type,gff.togff(data) as data from objects.objects;
-
-	create rule _delete as on delete to 
-			objects.objects_gff
-		do instead delete from
-			objects.objects
-		where id = OLD.id;
 
 
 -- --
@@ -69,28 +45,6 @@ create trigger objects_update_md
 	on objects.dropped_items for each row 
 	execute procedure objects.objects_update_md();
 
-create view objects.dropped_items_gff as
-	select id,create_on,update_on,at,dropped_by_aid,dropped_by_cid,gff.togff(data) as data from objects.dropped_items;
-
-	create rule _insert as on insert to
-			objects.dropped_items_gff
-		do instead insert into
-			objects.dropped_items
-		(at, data) values (NEW.at, gff.toxml(NEW.data));
-
-	create rule _update as on update to
-			objects.dropped_items_gff
-		do instead update
-			objects.dropped_items
-		set at = NEW.at, data = gff.toxml(NEW.data) where id = NEW.id;
-
-	create rule _delete as on delete to 
-			objects.dropped_items_gff
-		do instead delete from
-			objects.dropped_items
-		where id = OLD.id;
-
-
 -- Creatures on the ground somewhere
 create table objects.critters (
 ) inherits (objects.objects);
@@ -99,28 +53,7 @@ create trigger objects_update_md
 	on objects.critters for each row 
 	execute procedure objects.objects_update_md();
 
-create view objects.critters_gff as
-	select id,create_on,update_on,at,gff.togff(data) as data from objects.critters;
-
-	create rule _insert as on insert to
-			objects.critters_gff
-		do instead insert into
-			objects.critters
-		(at, data) values (NEW.at, gff.toxml(NEW.data));
-
-	create rule _update as on update to
-			objects.critters_gff
-		do instead update
-			objects.critters
-		set at = NEW.at, data = gff.toxml(NEW.data) where id = NEW.id;
-
-	create rule _delete as on delete to 
-			objects.critters_gff
-		do instead delete from
-			objects.critters
-		where id = OLD.id;
-
--- Creatures on the ground somewhere
+-- Character data
 create table objects.characters (
 	character_id int references characters not null
 ) inherits (objects.objects);
@@ -128,27 +61,6 @@ create trigger objects_update_md
 	before insert or update
 	on objects.characters for each row 
 	execute procedure objects.objects_update_md();
-
-create view objects.characters_gff as
-	select id,create_on,update_on,at,character_id,gff.togff(data) as data from objects.characters;
-
-	create rule _insert as on insert to
-			objects.characters_gff
-		do instead insert into
-			objects.characters
-		(at, character_id, data) values (NEW.at, NEW.character_id, gff.toxml(NEW.data));
-
-	create rule _update as on update to
-			objects.characters_gff
-		do instead update
-			objects.characters
-		set at = NEW.at, character_id = NEW.character_id, data = gff.toxml(NEW.data) where id = NEW.id;
-
-	create rule _delete as on delete to 
-			objects.characters_gff
-		do instead delete from
-			objects.characters
-		where id = OLD.id;
 
 
 -- Audit trail objects
@@ -160,26 +72,6 @@ create trigger objects_update_md
 	on objects.audit for each row 
 	execute procedure objects.objects_update_md();
 
-create view objects.audit_gff as
-	select id,create_on,update_on,at,gff.togff(data) as data from objects.audit;
-
-	create rule _insert as on insert to
-			objects.audit_gff
-		do instead insert into
-			objects.audit
-		(at, data) values (NEW.at, gff.toxml(NEW.data));
-
-	create rule _update as on update to
-			objects.audit_gff
-		do instead update
-			objects.audit
-		set at = NEW.at, data = gff.toxml(NEW.data) where id = NEW.id;
-
-	create rule _delete as on delete to 
-			objects.audit_gff
-		do instead delete from
-			objects.audit
-		where id = OLD.id;
 
 
 
