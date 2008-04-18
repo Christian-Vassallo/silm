@@ -21,7 +21,7 @@ import org.progeeks.nwn.io.gff.GffWriter;
 import org.progeeks.nwn.io.xml.GffXmlReader;
 import org.progeeks.nwn.io.xml.GffXmlWriter;
 
-public class ConvertShit {
+public class Convert {
 	
 	static String gffToXml(String name, byte[] gff) throws IOException {
 		InputStream is = new ByteArrayInputStream(gff);
