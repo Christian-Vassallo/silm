@@ -1,0 +1,14 @@
+__sp_extern("inc_events")
+__sp_extern("inc_scorco")
+
+void main() {
+	if (GetEvent() != EVENT_ITEM_ACTIVATE)
+		return;
+
+	object item = OBJECT_SELF;
+	object player = GetItemActivator();
+
+	SetLocalObject(player, "SR_IAct_Obj", GetItemActivatedTarget());
+	SetLocalLocation(player, "SR_IAct_Loc", GetItemActivatedTargetLocation());
+	ExecuteScript("sri_act_fly", player);
+}
