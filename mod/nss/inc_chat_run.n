@@ -220,68 +220,121 @@ void RegisterAccessFlags(int nFlags) {
 
 void RegisterAllCommands() {
 	/* modifiers */
+	
+	// Chatcommand: g
 	RegisterCommand("g", "");
 
+	
+	// Chatcommand: here
 	RegisterCommand("here", "");
 	
+	
+	// Chatcommand: self
 	RegisterCommand("self", "");
 
+	
+	// Chatcommand: online
 	RegisterCommand("online", "dms");
 	RAF(AMASK_CAN_DO_BACKEND);
 
+	
+	// Chatcommand: area
 	RegisterCommand("area", "type=");
 	
+	
+	// Chatcommand: rect
 	RegisterCommand("rect", "x= y= type=");
 
+	
+	// Chatcommand: radius
 	RegisterCommand("radius", "r= type=");
 	
+	
+	// Chatcommand: line
 	RegisterCommand("line", "c=");
 	
+	
+	// Chatcommand: server
 	RegisterCommand("server", "type=");
 	RAF(AMASK_CAN_DO_BACKEND);
 	
+	
+	// Chatcommand: run
 	RegisterCommand("run", "", 1, 1);
 	RAF(AMASK_CAN_DO_BACKEND);
 
 
 	/* public commands */
+
+	// Chatcommand: m
+	// Creates/Executes macros.
 	RegisterCommand("m", "i d l", 1, 2);
 	RHs("MacroName [MacroCode] >> Creates and executes macros");
 	RHs("-l >> List all your macros");
 	RHs("-d MacroName >> Delete a macro");
 	RHs("-i MacroName >> Create a macroitem");
 
+	// Chatcommand: afk
+	// Sets/unsets AFK status.
 	RegisterCommand("afk", "");
 	RHs(">> Sets/unsets AFK mode (with flashy visuals!).");
 	RAF(AMASK_ANY);
 
+	// Chatcommand: write
+	// Writes text onto parchment.
 	RegisterCommand("write", "");
 	RHs("text to write >> Writes text onto any parchment.");
 	RAF(AMASK_ANY);
+
+	// Chatcommand: password
+	// Sets a new password for the current account.
 	RegisterCommand("password", "");
 	RHs("password >> Sets a new password.");
 	RAF(AMASK_ANY);
+
+	// Chatcommand: status
+	// Shows server-related information.
+	
+	// Chatcommand: status
 	RegisterCommand("status", "");
 	RH("Shows various server-related information.");
 	RAF(AMASK_ANY);
+
+	// Chatcommand: ignore
+	
+	// Chatcommand: ignore
 	RegisterCommand("ignore", "", 1, 1);
 	RAF(AMASK_ANY);
+
+	// Chatcommand: unignore
+	
+	// Chatcommand: unignore
 	RegisterCommand("unignore", "", 1, 1);
 	RAF(AMASK_ANY);
+	
+	// Chatcommand: dice
 	RegisterCommand("dice", "", 1, 1);
 	RHs("<Anzahl Wuerfel> <Augenzahl Wuerfel> ( Beispiel: /d 3 6 = > 3d6 )");
 	RAF(AMASK_ANY);
 
+	
+	// Chatcommand: uptime
 	RegisterCommand("uptime", "");
 	RAF(AMASK_ANY);
 
+	
+	// Chatcommand: weather
 	RegisterCommand("weather", "", 0, 0);
 	RHs("Shows the current weather.");
 	RAF(AMASK_ANY);
 
+	
+	// Chatcommand: v
 	RegisterCommand("v", "");
 	RAF(AMASK_ANY);
 
+	
+	// Chatcommand: a
 	RegisterCommand("a", "");
 	RA("sit", "a sit");
 	RA("sitcross", "a sitcross");
@@ -290,12 +343,16 @@ void RegisterAllCommands() {
 	RA("kneel", "a kneel");
 	RAF(AMASK_ANY);
 
+	
+	// Chatcommand: rt
 	RegisterCommand("rt", "");
 	RHs("Reads tracks.");
 	RAF(AMASK_ANY);
 
 	/* public-GM hybrids */
 
+	
+	// Chatcommand: follow
 	RegisterCommand("follow", "");
 	RH("Follow the PC standing next to you.", AMASK_ANY);
 	RHs("[target_0] [target_1]", AMASK_GM);
@@ -304,6 +361,8 @@ void RegisterAllCommands() {
 	RHe("[target_0] [target_1] >> Make t_0 follow t_1", AMASK_GM);
 	RAF(AMASK_ANY);
 
+	
+	// Chatcommand: lastlog
 	RegisterCommand("lastlog", "count=");
 	RHs("Zeigt die letzten Zeilen des Gebietschats an, soweit sie dich betreffen.", AMASK_ANY);
 	RHs("[-count=20] >> Retrieves the last 15 lines of text spoken.", AMASK_GM);
@@ -311,74 +370,128 @@ void RegisterAllCommands() {
 
 	/* GM commands */
 
+	
+	// Chatcommand: gi
 	RegisterCommand("gi", "", 1, 1);
 	RHs("setname >> create item for setname");
 
+	
+	// Chatcommand: gs
 	RegisterCommand("gs", "", 0, 1);
 	RHs("[setname] >> get/set current set");
 
+	
+	// Chatcommand: ga
 	RegisterCommand("ga", "s=", 0, 0);
 	RHs("[-s=setname] >> add target to current/setname set");
 
+	
+	// Chatcommand: gc
 	RegisterCommand("gc", "s=", 0, 0);
 	RHs("[-s=setname] >> clear current/setname set");
 
+	
+	// Chatcommand: n
 	RegisterCommand("n", "x= y= z=", 0, 0);
 	RHs("[-x=float] [-y=float] [-z=float] >> nudge current target in direction");
 
 
+	
+	// Chatcommand: go
 	RegisterCommand("go", "", 1, 1);
 	RHs("loc >> Go to location.");
+	
+	// Chatcommand: re
 	RegisterCommand("re", "", 0, 0);
 	RHs("Return to from whence you came.");
 
+	
+	// Chatcommand: shun
 	RegisterCommand("shun", "");
+	
+	// Chatcommand: unshun
 	RegisterCommand("unshun", "");
 
+	
+	// Chatcommand: fix
 	RegisterCommand("fix", "", 1, 1);
 	RHs("Fixes things.");
 
+	
+	// Chatcommand: obj
 	RegisterCommand("obj", "plot= destroyable=");
 
+	
+	// Chatcommand: tag
 	RegisterCommand("tag", "", 0, 1);
+	
+	// Chatcommand: description
 	RegisterCommand("description", "", 0, 1);
 
+	
+	// Chatcommand: it
 	RegisterCommand("it", "charges=");
 
+	
+	// Chatcommand: charges
 	RegisterCommand("charges", "", 0, 1);
 	RHs("Gets/Sets the charges of the current item", 1);
 
 
+	
+	// Chatcommand: cr
 	RegisterCommand("cr", "i= c= a= phenotype= subrace= wings= tail= bp= portrait= race= faction= persist= inv", 0, 0);
 	RH("ToDo.");
 
+	
+	// Chatcommand: app
 	RegisterCommand("app", "", 0, 1);
+	
+	// Chatcommand: pht
 	RegisterCommand("pht", "", 0, 1);
+	
+	// Chatcommand: subrace
 	RegisterCommand("subrace", "d", 0, 1);
 	RHs("[-d] [subr] >> Gets/Sets the subrace", 1);
+	
+	// Chatcommand: bp
 	RegisterCommand("bp", "", 1, 2);
 	RHs("creature_part_const [newvalue] >> Sets a bodypart on the selected target", 1);
 	RH("Check /showconst creature for a list of CREATURE_PARTs");
 
+	
+	// Chatcommand: wings
 	RegisterCommand("wings", "", 0, 1);
 	RHs("[wing_type] >> Gets/Sets the wings on the selected target", 1);
 
+	
+	// Chatcommand: tail
 	RegisterCommand("tail", "", 0, 1);
 	RHs("[tail_type] >> Gets/Sets the tail on the selected target", 1);
+	
+	// Chatcommand: portrait
 	RegisterCommand("portrait", "", 0, 1);
 	RHs("[new_portrait_resref] >> Gets/Sets the portrait", 1);
 
+	
+	// Chatcommand: it
 	RegisterCommand("it", "droppable= weight= value=", 0, 0);
 	RH("Shows/sets various item related things.");
 	RHs("[--droppable=bool] [--weight=int] [--value=int]");
 
+	
+	// Chatcommand: pl
 	RegisterCommand("pl", "useable= persist= plot=", 0, 1);
 	RH("Shows/sets various placeable related things.");
 	RHs("[--persist=bool] [--useable=bool] [--plot=bool] [placeable scene text]");
 
+	
+	// Chatcommand: rotate
 	RegisterCommand("rotate", "", 0, 1);
 	RHs("[deg] >> Sets gets the rotation either as relative or absolute value.", 1);
 
+	
+	// Chatcommand: castspell
 	RegisterCommand("castspell", "c f m= c i loc", 1, 1);
 	RH("Casts a spell on the current target");
 	RHs("[--caster=TARGET (omit for self)] [--fake] [--meta=METAMAGIC] [-c] [-i] [--loc] SpellID", 1);
@@ -388,23 +501,35 @@ void RegisterAllCommands() {
 	RHs("--loc >> Cast spell on location instead of target");
 	RAF(AMASK_CAN_DO_BACKEND);
 
+	
+	// Chatcommand: getdyepot
 	RegisterCommand("getdyepot", "", 1, 2);
 
+	
+	// Chatcommand: bloodyhell
 	RegisterCommand("bloodyhell", "", 0, 0);
 	RH("For escapism");
 	RAF(AMASK_CAN_DO_BACKEND);
 
 
 
+	
+	// Chatcommand: hp
 	RegisterCommand("hp", "", 0, 1);
 	RHs("[hp] >> Gets/Sets HP.", 1);
 
-//	RegisterCommand("stat", "", 1, 1);
+//	
+	// Chatcommand: stat
+	RegisterCommand("stat", "", 1, 1);
 //	RHs("type >> type of (mentor, xp_dist)", 0);
 //	RAF(AMASK_AUDIT);
 
+	
+	// Chatcommand: say
 	RegisterCommand("say", "");
 
+	
+	// Chatcommand: ta
 	RegisterCommand("ta", "n= tag= area= f= d l m=", 0, 1);
 	RHs("[-f 1.." +
 		IntToString(TARGET_MAX) +
@@ -418,59 +543,89 @@ void RegisterAllCommands() {
 	RHs("-l >> List all currently selected targets");
 	RAF(AMASK_GM);
 
+	
+	// Chatcommand: time
 	RegisterCommand("time", "yr= mo= dy= hr= mn= sc=");
 	RAF(AMASK_CAN_DO_BACKEND);
 
+	
+	// Chatcommand: rehash
 	RegisterCommand("rehash", "", 0, 0);
 	RAF(AMASK_CAN_EDIT_GV);
 
+	
+	// Chatcommand: psql
 	RegisterCommand("psql", "", 1, 1);
 	RAF(AMASK_CAN_DO_BACKEND);
+	
+	// Chatcommand: _sco
 	RegisterCommand("_sco", "", 1, 1);
 	RAF(AMASK_CAN_DO_BACKEND);
+	
+	// Chatcommand: _rco
 	RegisterCommand("_rco", "", 1, 1);
 	RAF(AMASK_CAN_DO_BACKEND);
 
+	
+	// Chatcommand: createkey
 	RegisterCommand("createkey", "app=", 0, 1);
 	RHs("[--app=x] [name]", 0);
 
 
+	
+	// Chatcommand: lock
 	RegisterCommand("lock", "lockable= locked= keytag= keyreq= lockdc= unlockdc=");
 	RHs(
 		"[--locked bool] [--lockable bool] [--keytag tag] [--keyreq bool] [--lockdc n] [--unlockdc n] >> Shows/sets options on a lock.",
 		1);
 
+	
+	// Chatcommand: planewalk
 	RegisterCommand("planewalk", "plane= duration=");
 	RHs(
 		"[--duration f] [--plane plane] >> Makes the current target planewalk a random plane, or 'plane' for duration seconds, or 120.",
 		1);
 
 
+	
+	// Chatcommand: help
 	RegisterCommand("help", "");
 	RAF(AMASK_ANY);
 
+	
+	// Chatcommand: getrecipe
 	RegisterCommand("getrecipe", "", 1, 1);
 	RHs("id >> Returns recipe with id", 0);
 	RAF(AMASK_GLOBAL_GM);
 
+	
+	// Chatcommand: event
 	RegisterCommand("event", "", 0, 2);
 	RH("Shows/sets event handlers.");
 	RHs(">> Shows events.");
 	RHs("eventname script >> Sets script for eventname.");
 	RAF(AMASK_CAN_DO_BACKEND);
 
+	
+	// Chatcommand: rmnx
 	RegisterCommand("rmnx", "", 1);
 	RAF(AMASK_CAN_DO_BACKEND);
 
+	
+	// Chatcommand: remind
 	RegisterCommand("remind", "");
 	RAF(AMASK_CAN_DO_BACKEND);
 
 
 
+	
+	// Chatcommand: ooc
 	RegisterCommand("ooc", "");
 	RHs("Gibt einen Text in OOC-Farbe aus.");
 	RAF(AMASK_ANY);
 
+	
+	// Chatcommand: effect
 	RegisterCommand("effect", "durtype= duration= loc e s r", 1, 50);
 	RHs("[-durtype=] [-duration=] [-l] effectname >> Applys a effect on the selected target", 1);
 	RHs(
@@ -494,38 +649,64 @@ void RegisterAllCommands() {
 		"paralyze()"
 	);
 
+	
+	// Chatcommand: _xp
 	RegisterCommand("_xp", "levelup cap");
 	RAF(AMASK_CAN_DO_BACKEND);
 
+	
+	// Chatcommand: info
 	RegisterCommand("info", "");
 
 
+	
+	// Chatcommand: ar
 	RegisterCommand("ar", "rsl tli= tsi= explore");
 	RHs("-rsl >> RecomputeStaticLighting() for the current area.");
 	RHs("-explore >> Explores the area for the current target.");
 	RHs("-tli [new_colour_1] [new_colour_2] >> Gets/Sets MainLight colour for the current tile.");
 	RHs("-tsi [new_colour_1] [new_colour_2] >> Gets/Sets SourceLight colour for the current tile.");
 
+	
+	// Chatcommand: inspect
 	RegisterCommand("inspect", "pl", 0, 0);
 	RHs("-pl >> Show persistent placeables.");
 	RAF(AMASK_CAN_SET_PERSISTENCY);
 
 
+	
+	// Chatcommand: so
 	RegisterCommand("so", "type= m=");
+	
+	// Chatcommand: ko
 	RegisterCommand("ko", "type= m=");
 
+	
+	// Chatcommand: setname
 	RegisterCommand("setname", "");
 
+	
+	// Chatcommand: f2s
 	RegisterCommand("f2s", "");
 
+	
+	// Chatcommand: s2f
 	RegisterCommand("s2f", "");
 
+	
+	// Chatcommand: fixfactions
 	RegisterCommand("fixfactions", "");
 
+	
+	// Chatcommand: limbo
 	RegisterCommand("limbo", "");
 
+	
+	// Chatcommand: gettargetchooser
 	RegisterCommand("gettargetchooser", "");
 
+	
+	// Chatcommand: restore
 	RegisterCommand("restore", "s e? l r");
 	RHs("[-e? ID] [-l] -[r] >> Restores a creature to working condition", 1);
 	RHs("-r >> Allow immediate resting", 1);
@@ -533,37 +714,65 @@ void RegisterAllCommands() {
 	RHs("-e [ID] >> Remove all effects, or effects of type ID", 1);
 	RHs("-s >> Removes all effects, including supernatural effects.", 1);
 
+	
+	// Chatcommand: set
 	RegisterCommand("set", "");
+	
+	// Chatcommand: get
 	RegisterCommand("get", "");
 
+	
+	// Chatcommand: showconst
 	RegisterCommand("showconst", "");
 	RHs(
 		"type >> type of (mode, object, phenotype, creature, tail, wing, weather, polymorph, disease, class, duration, damage)");
 
+	
+	// Chatcommand: kill
 	RegisterCommand("kill", "d");
+	
+	// Chatcommand: create
 	RegisterCommand("create", "");
 
+	
+	// Chatcommand: kick
 	RegisterCommand("kick", "");
 	RAF(AMASK_GLOBAL_GM);
 
+	
+	// Chatcommand: vfx
 	RegisterCommand("vfx", "x= y= z=");
 
 
+	
+	// Chatcommand: fetch
 	RegisterCommand("fetch", "");
 	RHs("[t1] [t2] [tn] >> Fetch those target slots, or fetch the current target to your location.");
+	
+	// Chatcommand: jump
 	RegisterCommand("jump", "loc");
 	RHs("[--loc] >> Jumps to target object or location", 1);
+	
+	// Chatcommand: cp
 	RegisterCommand("cp", "limbo newslot=");
 	RHs("[-newslot=slot] [-limbo]", 1);
 
+	
+	// Chatcommand: cpm
 	RegisterCommand("cpm", "", 3, 3);
 	RHs("a b c >> CopyItemAndModify(Target, a, b, c, TRUE);");
 	RAF(AMASK_GLOBAL_GM);
 
+	
+	// Chatcommand: caq
 	RegisterCommand("caq", "");
 	RHs(">> Clears the action queue.", 1);
+	
+	// Chatcommand: wwp
 	RegisterCommand("wwp", "");
 	RHs(">> Makes a creature walk its designated day/night waypoints, or none if none were placed.", 1);
+	
+	// Chatcommand: rwalk
 	RegisterCommand("rwalk", "");
 	RHs(">> Makes a creature walk randomly.", 1);
 }
