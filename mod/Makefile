@@ -139,6 +139,11 @@ dev-package: path uti utp utc ifo itp dev-local
 player-package: path uti utp utc ifo itp player-local
 builder-package: path uti utp utc ifo itp builder-local
 
+documentation:
+	rm -rf naturaldocs-project/Data/*
+	rm -rf doc/*
+	naturaldocs -o html doc -i nss -p naturaldocs-project
+
 # installs all packaged in the relevant directories
 install: 
 	cp -v $(NAME)-$(BRANCH).mod $(NWNHOME)/modules/
