@@ -1,3 +1,4 @@
+// File: inc_craft_hlp.n
 // lean mean crafting system
 // copyleft 2006 Bernhard 'elven' Stoeckner
 // ideas by Torsten Sens.
@@ -22,46 +23,78 @@ TABLE_RCPBOOK = "craft_rcpbook";
 
 
 
+// Function: ApplyAllRelevantItemProperties 
+// 
 // Copies all permanent item-properties on all items on oWorkPlace over to oTargetItem.
 int ApplyAllRelevantItemProperties(object oWorkPlace, object oTargetItem);
 
+// Function: TestComponents 
+// 
 // Checks if all works out.
 int TestComponents(struct Recipe r, string sRecipeString);
 
+// Function: GetCraftTagByCraftSkill 
+// 
 string GetCraftTagByCraftSkill(int nCSkill);
+// Function: GetCraftNameByCraftSkill 
+// 
 string GetCraftNameByCraftSkill(int nCSkill);
 
+// Function: GetCraftSkillByTag 
+// 
 int GetCraftSkillByTag(string sCraftTag);
 
 
+// Function: ThrowCraftCheck 
+// 
 int ThrowCraftCheck(object oPC, object oWorkSpace, int nMod, int nDC, string sMessage = "");
 
+// Function: GetThrowCraftWasNaturalFail 
+// 
 int GetThrowCraftWasNaturalFail(object oWorkPlace);
+// Function: GetThrowCraftWasNaturalSuccess 
+// 
 int GetThrowCraftWasNaturalSuccess(object oWorkPlace);
 
 
+// Function: GetIsRecipeValid 
+// 
 int GetIsRecipeValid(struct Recipe r);
 
+// Function: GetIsPlayerSkillValid 
+// 
 int GetIsPlayerSkillValid(struct PlayerSkill s);
 
+// Function: Notify 
+// 
 // Prints some notification text.
 void Notify(string sMessage, object oPC);
 
+// Function: AddCraftComponent 
+// 
 // Add a crafting component to the set.
 void AddCraftComponent(object oWorkPlace, object oItem);
 
 
+// Function: CleanupWorkplace 
+// 
 // Removes all stateful info from oWorkPlace.
 // to allow for a new crafting process.
 // Removes all items except those flagged to keep
 // and those that are tools (Plot-Items).
 void CleanupWorkplace(object oWorkPlace);
 
+// Function: CleanupSpell 
+// 
 // Removes the spell charge from oWorkPlace
 void CleanupSpell(object oWorkPlace);
 
+// Function: GetIsCraftTool 
+// 
 int GetIsCraftTool(object oItem);
 
+// Function: TransferAllItems 
+// 
 // Transfers all Items, including tools (Plot)
 void TransferAllItems(object oSource, object oTarget);
 
@@ -71,86 +104,130 @@ void TransferAllItems(object oSource, object oTarget);
 // Returns how many tools have been destroyed.
 //int ReturnAllTools(object oSource, object oTarget, int nDoToolWear = FALSE);
 
+// Function: GetCurrentCrafter 
+// 
 // Returns the current crafter, or OBJECT_INVALID if
 // oWorkPlace is not in use currently.
 object GetCurrentCrafter(object oWorkPlace);
 
 
+// Function: GetCurrentCraftComponents 
+// 
 // Returns the currently added components to oWorkPlace
 string GetCurrentCraftComponents(object oWorkPlace);
 
+// Function: GetSelectedCraftRecipe 
+// 
 // Returns the recipe oPC has currently set as active.
 struct Recipe GetSelectedCraftRecipe(object oPC);
 
+// Function: VirginiseWorkplace 
+// 
 // Sweep it shiny-new clean.
 // As with the rest, does not remove the spell.
 void VirginiseWorkplace(object oWorkPlace);
 
 
+// Function: GetNextCraftLevelXPCAP 
+// 
 // Returns at what CAP nPractical Level is.
 int GetNextCraftLevelXPCAP(int nPracticalLevel);
 
 
+// Function: GetHasNecessarySkill 
+// 
 // Checks if oPC has enough PRACTICAL skill to produce r.
 int GetHasNecessarySkill(object oPC, struct Recipe r);
 
+// Function: FindRecipeByPlanOrComponents 
+// 
 // Tries to find a unique recipe.
 // bails out if not unique.
 // Alternatively get by ID directly.
 struct Recipe FindRecipeByPlanOrComponents(string sPlan, string sComponents, int nID = 0);
 
+// Function: GetPlayerSkill 
+// 
 // Returns the skill struct for oPC in a certain craft.
 struct PlayerSkill GetPlayerSkill(object oPC, int nCSKill);
 
+// Function: SetPlayerSkill 
+// 
 // Updates the skill struct for oPC in a certain craft.
 // Bails out if no initial record exists yet.
 void SetPlayerSkill(object oPC, struct PlayerSkill s);
 
 
+// Function: GetPlayerRecipeStat 
+// 
 struct PlayerRecipeStat GetPlayerRecipeStat(object oPC, struct Recipe r);
 
+// Function: SetPlayerRecipeStat 
+// 
 void SetPlayerRecipeStat(object oPC, struct PlayerRecipeStat t);
 
+// Function: AdvanceCraftSkill 
+// 
 // Advances oPCs crafting skill after a successfull craft.
 // Returns if the player advanced one skill point.
 int AdvanceCraftSkill(object oPC, struct Recipe r, int nLearnMode);
 
+// Function: GetCanLearnInCraftSkill 
+// 
 // Returns true if oPC can still learn something
 // when creating r.
 int GetCanLearnInCraftSkill(object oPC, struct Recipe r);
 
+// Function: DoCraftLearnBasicStuff 
+// 
 // Creates a basic record for OPC in CSKill.
 // Theory = 10.
 // Used for books or teachers to learn the basics.
 int DoCraftLearnBasicStuff(object oPC, int nCSKill);
 
+// Function: GetIsCraftValidSpell 
+// 
 // Returns true if nSpell is a valid craft-component.
 // Checks the database if any recipe allows for this.
 int GetIsCraftValidSpell(int nCSkill, int nSpell, int nMetaMagic = METAMAGIC_NONE);
 
+// Function: GetCraftSpellCaster 
+// 
 // Returns the char which cast the spell on that workplace.
 object GetCraftSpellCaster(object oWorkPlace);
 
+// Function: GetCraftMetaMagic 
+// 
 // Returns the workplaces metamagic, if any
 int GetCraftMetaMagic(object oWorkPlace);
 
+// Function: GetMayCraftDiff 
+// 
 // May this player craft this today according to the
 // limits specified?
 int GetMayCraftDiff(object oPC, struct Recipe r);
 
+// Function: UpdateCraftStat 
+// 
 // Update crafting statistics.  Sets last.
 void UpdateCraftStat(object oPC, struct Recipe r, int bSetLast = 0, int bIncrementCount = 0,
 					 int bIncrementFail = 0);
 
+// Function: CreateItemOnObjectByResRefString 
+// 
 // magic
 int CreateItemOnObjectByResRefString(string sResRefStr, object oCreateOn, int nStackSizeMin, int nStackSizeMax, string sDelimiter = "#", string sLocal = "",
 									 int sLocalVal = 0);
 
 
+// Function: GetCraftCount 
+// 
 // Returns the number of crafts oPC has skill points in.
 int GetCraftCount(object oPC);
 
 
+// Function: RunCraftScript 
+// 
 int RunCraftScript(string sScriptName, object oWorkPlace, object oPC, int nType);
 
 // impl

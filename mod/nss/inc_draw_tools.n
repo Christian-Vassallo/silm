@@ -20,28 +20,42 @@
  * GROUP* FUNCTIONS DECLARATIONS
  * =============================================
  */
+// Function: GroupSetPlotFlag 
+// 
 // Set oData's group of objects plot status
 void GroupSetPlotFlag(object oData, int bPlotFlag);
 
+// Function: GroupDestroyObject 
+// 
 // Destroy oData and oData's group of objects (irrevocably) over fOvertime seconds
 void GroupDestroyObject(object oData, float fDelay = 0.0f, float fOvertime = 3.0f, int bReverseOrder = FALSE);
 
+// Function: GroupApplyEffectToObject 
+// 
 // Apply eEffect to oData's group of objects over fOvertime seconds
 void GroupApplyEffectToObject(int nDurationType, effect eEffect, object oData, float fDuration = 0.0f, float fOvertime = 3.0f,
 							  int bReverseOrder = FALSE);
 
+// Function: GroupExecuteScript 
+// 
 // Make oData's group of objects run sScript over fOvertime seconds and then return execution to the calling script
 void GroupExecuteScript(string sScript, object oData, float fOvertime = 3.0f, int bReverseOrder = FALSE);
 
+// Function: GroupSetFacing 
+// 
 // Cause oData's group of objects to face fDirection / rotate fDirection
 // bRelative - FALSE for absolute face fDirection
 //           - TRUE for rotate fDirection degrees (DEFAULT : TRUE)
 void GroupSetFacing(float fDirection, object oData, int bRelative = TRUE, float fOvertime = 3.0f,
 					int bReverseOrder = FALSE);
 
+// Function: GroupSetFacingPoint 
+// 
 // Cause oData's group of objects to face vTarget
 void GroupSetFacingPoint(vector vTarget, object oData, float fOvertime = 3.0f, int bReverseOrder = FALSE);
 
+// Function: GroupPlayAnimation 
+// 
 // Make oData's group of objects play nAnimation over fOvertime seconds
 // nAnimation: ANIMATION_PLACEABLE_* only
 void GroupPlayAnimation(int nAnimation, object oData, float fSpeed = 1.0f, float fOvertime = 3.0f,

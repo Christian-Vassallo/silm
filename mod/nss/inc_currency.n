@@ -1,3 +1,4 @@
+// Struct: Money
 struct Money {
 	int copper;
 	int silver;
@@ -6,26 +7,43 @@ struct Money {
 };
 
 
+// Function: MoneyToString 
+// Converts the given struct to "xx Platin xx Gold xx Silber xx Kupfer"-format
 string MoneyToString(struct Money m);
 
 
+// Function: GetMoneyBag 
+// Returns the money bag of the given creature, or the creature itself.
 object GetMoneyBag(object oPC);
 
+// Function: AdjustCreatureMoney 
+// Adjust this creatures money by the given amount.
 void AdjustCreatureMoney(object oPC, struct Money stDifference);
 
+// Function Value2Money
+// Converts the given integer (in copper coins) to a Money struct.
 struct Money Value2Money(int iValue, int iBestCoinage = TRUE);
 
+// Function: Money2Value 
+// Converts the given Money struct to int (in copper coins)
 int Money2Value(struct Money stCoins);
 
+// Function: CountInventoryMoney
 // Counts all ITEM money that is in oWithInventory
 // optionally destroying it along the way.
 struct Money CountInventoryMoney(object oWithInventory, int iDestroy = FALSE);
 
+// Function: GiveValueToCreature 
+// Gives money (in coin items) to a creature.
 void GiveValueToCreature(object oPC, int iValue, int iBestCoinage = TRUE);
 
+// Function: TakeValueFromCreature 
+// Takes money from a creature.
 void TakeValueFromCreature(int iValue, object oPC, int bDestroy = FALSE);
 
 
+// Function: GiveMoneyToCreature 
+// Gives money (in coin items) to a creature.
 void GiveMoneyToCreature(object oPC, struct Money stCoins);
 
 //

@@ -1,5 +1,5 @@
 /*
- * File: _events
+ * File: inc_events.n
  * A tag-execution based event system.
  * Designed to surpass nw_*_switches.
  * Copyright Bernard 'elven' Stoeckner.
@@ -95,20 +95,28 @@ const int EVENT_SCRIPT_LENGTH = 16;
 //  EVENT_EXECUTE_SCRIPT_END
 //    - designating the current script to end
 //
+// Function: RunEventScript 
+// 
 // This functions adheres to global prefix constants,
 // and checks for maximum length.
 int RunEventScript(object oObject, int iEvent, string sPrefix, string sScript = "", object oActor = OBJECT_INVALID,
 				   object oActedOn = OBJECT_INVALID);
 
+// Function: SetEvent 
+// 
 // Set the active User Defined Event
 void SetEvent(object oObject, int nEvent);
 
 // Get the active User Defined Event
 int GetEvent();
 
+// Function: ExecuteScriptInt 
+// 
 // * Execute sScript on oTarget returning an integer.
 int ExecuteScriptInt(string sScript, object oTarget);
 
+// Function: SetEventScriptReturnValue 
+// 
 // * Sets the return value for scripts called via ExecuteScriptAndReturnInt
 // * valid values are
 // * EVENT_EXECUTE_SCRIPT_CONTINUE - continue calling script after executed scriptis done
@@ -124,8 +132,12 @@ object GetEventActor();
 // Returns OBJECT_INVALID when not in event script.
 object GetEventActedOn();
 
+// Function: RegisterPlayerEventScript 
+// 
 void RegisterPlayerEventScript(string sName);
 
+// Function: RunPCEventScript 
+// 
 void RunPCEventScript(object oActor, object oActedOn, int iEvent);
 
 /* implementation */

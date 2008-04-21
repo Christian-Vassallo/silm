@@ -294,20 +294,14 @@ void RegisterAllCommands() {
 
 	// Chatcommand: status
 	// Shows server-related information.
-	
-	// Chatcommand: status
 	RegisterCommand("status", "");
 	RH("Shows various server-related information.");
 	RAF(AMASK_ANY);
 
 	// Chatcommand: ignore
-	
-	// Chatcommand: ignore
 	RegisterCommand("ignore", "", 1, 1);
 	RAF(AMASK_ANY);
 
-	// Chatcommand: unignore
-	
 	// Chatcommand: unignore
 	RegisterCommand("unignore", "", 1, 1);
 	RAF(AMASK_ANY);
@@ -317,24 +311,23 @@ void RegisterAllCommands() {
 	RHs("<Anzahl Wuerfel> <Augenzahl Wuerfel> ( Beispiel: /d 3 6 = > 3d6 )");
 	RAF(AMASK_ANY);
 
-	
 	// Chatcommand: uptime
 	RegisterCommand("uptime", "");
 	RAF(AMASK_ANY);
 
-	
 	// Chatcommand: weather
 	RegisterCommand("weather", "", 0, 0);
 	RHs("Shows the current weather.");
 	RAF(AMASK_ANY);
 
-	
 	// Chatcommand: v
+	// Play voice-chat.
 	RegisterCommand("v", "");
 	RAF(AMASK_ANY);
 
 	
 	// Chatcommand: a
+	// Play animations.
 	RegisterCommand("a", "");
 	RA("sit", "a sit");
 	RA("sitcross", "a sitcross");
@@ -345,6 +338,7 @@ void RegisterAllCommands() {
 
 	
 	// Chatcommand: rt
+	// Toggle track-reading.
 	RegisterCommand("rt", "");
 	RHs("Reads tracks.");
 	RAF(AMASK_ANY);
@@ -353,6 +347,7 @@ void RegisterAllCommands() {
 
 	
 	// Chatcommand: follow
+	// Follow the nearest character.
 	RegisterCommand("follow", "");
 	RH("Follow the PC standing next to you.", AMASK_ANY);
 	RHs("[target_0] [target_1]", AMASK_GM);
@@ -363,6 +358,7 @@ void RegisterAllCommands() {
 
 	
 	// Chatcommand: lastlog
+	// Show the last-said chat concerning you.
 	RegisterCommand("lastlog", "count=");
 	RHs("Zeigt die letzten Zeilen des Gebietschats an, soweit sie dich betreffen.", AMASK_ANY);
 	RHs("[-count=20] >> Retrieves the last 15 lines of text spoken.", AMASK_GM);
