@@ -36,6 +36,8 @@ void Fly_TakeOff(object oPC) {
 	eEff1 = EffectLinkEffects(eEff2, eEff1);
 	eEff2 = EffectVisualEffect(VFX_DUR_GHOSTLY_VISAGE);
 	eEff1 = EffectLinkEffects(eEff2, eEff1);
+	eEff2 = EffectImmunity(IMMUNITY_TYPE_CRITICAL_HIT);
+	eEff1 = EffectLinkEffects(eEff2, eEff1);
 
 
 	Fly_Effect(oPC);
