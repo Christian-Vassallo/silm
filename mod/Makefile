@@ -140,7 +140,7 @@ player-package: path uti utp utc ifo itp player-local
 builder-package: path uti utp utc ifo itp builder-local
 
 documentation:
-	naturaldocs -o html doc -i nss -p naturaldocs-project
+	naturaldocs -o html ../doc -i nss -p naturaldocs-project
 
 # installs all packaged in the relevant directories
 install: 
