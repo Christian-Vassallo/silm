@@ -120,7 +120,7 @@ int CommandTail(object oPC, int iMode);
 
 int CommandLimbo(object oPC, int iMode);
 
-int CommandColour(object oPC, int iMode);
+int CommandColor(object oPC, int iMode);
 
 
 int CommandCopyMod(object oPC, int iMode);
@@ -894,17 +894,17 @@ int CommandTag(object oPC, int iMode) {
 
 
 int CommandGetDyePot(object oPC, int iMode) {
-	int nColour = StringToInt(arg(0));
+	int nColor = StringToInt(arg(0));
 	string sName = arg(1);
 
-	if ( nColour < 1 || nColour > 175 )
+	if ( nColor < 1 || nColor > 175 )
 		return FAIL;
 
-	string sColour = IntToString(nColour);
-	while ( GetStringLength(sColour) < 3 )
-		sColour = "0" + sColour;
+	string sColor = IntToString(nColor);
+	while ( GetStringLength(sColor) < 3 )
+		sColor = "0" + sColor;
 
-	string sTag = "x2_it_dye" + sColour;
+	string sTag = "x2_it_dye" + sColor;
 
 
 	string sNewName = "Farbe";
@@ -1412,8 +1412,8 @@ int CommandGetRecipe(object oPC, int iMode) {
 
 }
 
-int CommandColour(object oPC, int iMode) {
-	struct Colour c;
+int CommandColor(object oPC, int iMode) {
+	struct Color c;
 
 	string sSet = arg(0);
 	if ( sSet == "orange" )
@@ -1433,7 +1433,7 @@ int CommandColour(object oPC, int iMode) {
 		return SYNTAX;
 	}
 
-	SetLocalColour(oPC, "emote_colour", c);
+	SetLocalColor(oPC, "emote_color", c);
 	ToPC("Gesetzt.");
 
 	return OK;
@@ -1474,7 +1474,7 @@ int CommandLimbo(object oPC, int iMode) {
 
 int CommandOOC(object oPC, int iMode) {
 	string sText = getoptargs();
-	SpeakString(ColourTag(cOOC) + sText + ColourTagClose());
+	SpeakString(ColorTag(cOOC) + sText + ColorTagClose());
 	return OK;
 }
 

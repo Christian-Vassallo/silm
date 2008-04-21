@@ -1,7 +1,7 @@
 __sp_extern("_gen")
 __sp_extern("inc_chat")
 __sp_extern("inc_target")
-__sp_extern("inc_colours")
+__sp_extern("inc_colors")
 __sp_extern("inc_limbo")
 __sp_extern("inc_scorco")
 
@@ -18,7 +18,7 @@ ACCESS = 4;
 
 
 
-struct Colour
+struct Color
 cEmote = cOrange,
 cNPCEmote = cDarkMagenta,
 cOOC = cLightGrey;
@@ -58,17 +58,17 @@ void ChatHookAudit(object oPC = OBJECT_SELF, int bSuppress = TRUE, string sData 
 
 
 
-// Function: ColourisePlayerText
-// Applies emote colours to the given text.
+// Function: ColorisePlayerText
+// Applies emote colors to the given text.
 // Parses:
 //    *..* - cOrange
 //    _.._ - cLightBlue
-string ColourisePlayerText(object oPC, int nMode, string sText, struct Colour cTextColour);
+string ColorisePlayerText(object oPC, int nMode, string sText, struct Color cTextColor);
 
 
 /* implementation! */
 
-string ColourisePlayerText(object oPC, int nMode, string sText, struct Colour cTextColour) {
+string ColorisePlayerText(object oPC, int nMode, string sText, struct Color cTextColor) {
 	int i = 0;
 	string r = "", c = "";
 
@@ -80,60 +80,60 @@ string ColourisePlayerText(object oPC, int nMode, string sText, struct Colour cT
 	int bInOOC = 0; // (ooc) is gray ..
 
 	if ( nMode & MODE_WHISPER )
-		cTextColour = cDarkGrey;
+		cTextColor = cDarkGrey;
 
 	//if ( GetSubString(sText, 0, 1) == "(" ) {
-	//	return ColourTag(cOOC) + /*GetStringTrim(sText, "(", ")")*/ sText + ColourTagClose();
+	//	return ColorTag(cOOC) + /*GetStringTrim(sText, "(", ")")*/ sText + ColorTagClose();
 	//}
 
-	struct Colour cPEmote = cEmote;
+	struct Color cPEmote = cEmote;
 
 	//if (!GetIsPC(oPC))
 	//    cPEmote = cNPCEmote;
 
 	if ( nMode & MODE_WHISPER ) {
 		cPEmote = Darken(cPEmote, 50);
-		// darken the other colours, too?
+		// darken the other colors, too?
 	}
 
-	r += ColourTagClose() + ColourTag(cTextColour);
+	r += ColorTagClose() + ColorTag(cTextColor);
 
 	for ( i = 0; i < GetStringLength(sText); i++ ) {
 		c = GetSubString(sText, i, 1);
 
 		if ( "*" == c ) {
 			if ( bInEmote == 0 ) {
-				r += ColourTag(cPEmote) + c;
+				r += ColorTag(cPEmote) + c;
 				bInEmote = 1;
 				continue;
 			} else {
 				bInEmote = 0;
 				if ( bInYellow )
-					r += "*" + ColourTag(cYellow);
+					r += "*" + ColorTag(cYellow);
 				else if ( bInBlue )
-					r += "*" + ColourTag(cLightBlue);
+					r += "*" + ColorTag(cLightBlue);
 				else if ( bInGreen )
-					r += "*" + ColourTag(cGreen);
+					r += "*" + ColorTag(cGreen);
 				else
-					r += "*" + ColourTag(cTextColour);
+					r += "*" + ColorTag(cTextColor);
 				continue;
 			}
 		}
 
 		if ( "_" == c ) {
 			if ( bInYellow == 0 ) {
-				r += ColourTag(cYellow);
+				r += ColorTag(cYellow);
 				bInYellow = 1;
 				continue;
 			} else {
 				if ( bInEmote )
-					r += ColourTag(cPEmote);
+					r += ColorTag(cPEmote);
 				else if ( bInBlue )
-					r += ColourTag(cLightBlue);
+					r += ColorTag(cLightBlue);
 				else if ( bInGreen )
-					r += ColourTag(cGreen);
+					r += ColorTag(cGreen);
 				else
-					r += ColourTag(cTextColour);
+					r += ColorTag(cTextColor);
 				bInYellow = 0;
 				continue;
 			}
@@ -141,18 +141,18 @@ string ColourisePlayerText(object oPC, int nMode, string sText, struct Colour cT
 
 		if ( "#" == c ) {
 			if ( bInBlue == 0 ) {
-				r += ColourTag(cLightBlue);
+				r += ColorTag(cLightBlue);
 				bInBlue = 1;
 				continue;
 			} else {
 				if ( bInYellow )
-					r += ColourTag(cYellow);
+					r += ColorTag(cYellow);
 				else if ( bInGreen )
-					r += ColourTag(cGreen);
+					r += ColorTag(cGreen);
 				else if ( bInEmote )
-					r += ColourTag(cPEmote);
+					r += ColorTag(cPEmote);
 				else
-					r += ColourTag(cTextColour);
+					r += ColorTag(cTextColor);
 				bInBlue = 0;
 				continue;
 			}
@@ -160,42 +160,42 @@ string ColourisePlayerText(object oPC, int nMode, string sText, struct Colour cT
 
 		if ( "&" == c ) {
 			if ( bInGreen == 0 ) {
-				r += ColourTag(cGreen);
+				r += ColorTag(cGreen);
 				bInGreen = 1;
 				continue;
 			} else {
 				if ( bInYellow )
-					r += ColourTag(cYellow);
+					r += ColorTag(cYellow);
 				else if ( bInBlue )
-					r += ColourTag(cLightBlue);
+					r += ColorTag(cLightBlue);
 				else if ( bInEmote )
-					r += ColourTag(cPEmote);
+					r += ColorTag(cPEmote);
 				else
-					r += ColourTag(cTextColour);
+					r += ColorTag(cTextColor);
 				bInGreen = 0;
 				continue;
 			}
 		}
 
 		/*if ("(" == c && !bInOOC) {
-		 * 	r += ColourTag(cOOC);
+		 * 	r += ColorTag(cOOC);
 		 * 	bInOOC = 1;
 		 * 	continue;
 		 * }
 		 *
 		 * if (")" == c && bInOOC) {
-		 * 	r += ColourTagClose();
+		 * 	r += ColorTagClose();
 		 * 	bInOOC = 0;
 		 * 	if (bInYellow)
-		 * 		r += ColourTag(cYellow);
+		 * 		r += ColorTag(cYellow);
 		 * 	else if (bInEmote)
-		 * 			r += ColourTag(cPEmote);
+		 * 			r += ColorTag(cPEmote);
 		 * 	continue;
 		 * } */
 
 		r += c;
 	}
-	r += ColourTagClose();
+	r += ColorTagClose();
 
 	return r;
 }

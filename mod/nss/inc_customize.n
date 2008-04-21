@@ -3,7 +3,7 @@ __sp_extern("inc_2dacache")
 
 
 const int
-MAX_COLOUR = 175,
+MAX_COLOR = 175,
 CUST_TYPE_CLOAK = 3,
 CUST_TYPE_WEAPON = 2,
 CUST_TYPE_ARMOR = 1;
@@ -188,8 +188,8 @@ void PerformModifyArmorCol(object oPC, int iDelta) {
 	int iCurrentCol = GetItemAppearance(oArmor, ITEM_APPR_TYPE_ARMOR_COLOR, iColSlot);
 
 	iCurrentCol += iDelta;
-	if ( iCurrentCol < 0 ) iCurrentCol = MAX_COLOUR;
-	if ( iCurrentCol > MAX_COLOUR ) iCurrentCol = 0;
+	if ( iCurrentCol < 0 ) iCurrentCol = MAX_COLOR;
+	if ( iCurrentCol > MAX_COLOR ) iCurrentCol = 0;
 
 	oNew = CopyItemAndModify(oArmor, ITEM_APPR_TYPE_ARMOR_COLOR, iColSlot, iCurrentCol, TRUE);
 	if ( GetIsObjectValid(oNew) ) {
@@ -281,8 +281,8 @@ void PerformModifyCloakCol(object oPC, int iDelta) {
 	int iCurrentCol = GetItemAppearance(oArmor, ITEM_APPR_TYPE_ARMOR_COLOR, iColSlot);
 
 	iCurrentCol += iDelta;
-	if ( iCurrentCol < 0 ) iCurrentCol = MAX_COLOUR;
-	if ( iCurrentCol > MAX_COLOUR ) iCurrentCol = 0;
+	if ( iCurrentCol < 0 ) iCurrentCol = MAX_COLOR;
+	if ( iCurrentCol > MAX_COLOR ) iCurrentCol = 0;
 
 	oNew = CopyItemAndModify(oArmor, ITEM_APPR_TYPE_ARMOR_COLOR, iColSlot, iCurrentCol, TRUE);
 	if ( GetIsObjectValid(oNew) ) {

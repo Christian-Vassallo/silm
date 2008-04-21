@@ -6,7 +6,7 @@
 #include "inc_pgsql.nh"
 __sp_extern("inc_cdb")
 __sp_extern("_gen")
-__sp_extern("inc_colours")
+__sp_extern("inc_colors")
 __sp_extern("inc_craft_data")
 __sp_extern("inc_2dacache")
 __sp_extern("inc_setting")
@@ -512,7 +512,7 @@ void Notify(string sMessage, object oPC) {
 	if ( GetIsPC(oPC) )
 		FloatingTextStringOnCreature(sMessage, oPC, TRUE);
 	else
-		AssignCommand(oPC, SpeakString(ColourTag(cTeal) + sMessage + ColourTagClose()));
+		AssignCommand(oPC, SpeakString(ColorTag(cTeal) + sMessage + ColorTagClose()));
 }
 
 void AddCraftComponent(object oWorkPlace, object oItem) {
