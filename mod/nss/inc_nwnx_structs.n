@@ -1,4 +1,6 @@
-/* CalculateStructs duration basis. This must be called with a PC or creature
+/* Function: CalculateStructDurationBasis
+ *
+ * CalculateStructs duration basis. This must be called with a PC or creature
  * as a target before any calls to GetEffectDurationRemaining() or
  * GetItemPropertyDurationRemaining().
  *
@@ -10,52 +12,74 @@
  * needs to be done to see if the basis drifts. */
 void CalculateStructDurationBasis(object oTarget);
 
-/* Returns the duration specified at ApplyEffectToObject() time for
+/* Function: GetEffectDuration
+ *
+ * Returns the duration specified at ApplyEffectToObject() time for
  * the effect. The value of this is undefined for effects which are
  * not of DURATION_TYPE_TEMPORARY. */
 float GetEffectDuration(effect eEffect);
 
-/* Returns the remaining duration of the specified effect. The value
+/* Function: GetEffectDurationRemaining
+ *
+ * Returns the remaining duration of the specified effect. The value
  * of this is undefined for effects which are not of
  * DURATION_TYPE_TEMPORARY. */
 float GetEffectDurationRemaining(effect eEffect);
 
-/* Returns the internal effect integer at the index specified. The index
+/* Function: GetEffectInteger
+ *
+ * Returns the internal effect integer at the index specified. The index
  * is limited to being between 0 and 15, and which index contains what
  * value depends entirely on the type of effect. */
 int GetEffectInteger(effect eEffect, int nIndex);
 
-/* Sets the internal effect integer at the specified index to the
+/* Function: SetEffectInteger
+ *
+ * Sets the internal effect integer at the specified index to the
  * value specified. */
 void SetEffectInteger(effect eEffect, int nIndex, int nValue);
 
-/* Sets the effect's spell id as specified, which will later be returned
+/* Function: SetEffectSpellId
+ *
+ * Sets the effect's spell id as specified, which will later be returned
  * with GetEffectSpellId(). */
 void SetEffectSpellId(effect eEffect, int nSpellId);
 
-/* Returns the duration specified at AddItemProperty() time for
+/* Function: GetItemPropertyDuration
+ *
+ * Returns the duration specified at AddItemProperty() time for
  * the item property. The value of this is undefined for properties
  * which are not of DURATION_TYPE_TEMPORARY. */
 float GetItemPropertyDuration(itemproperty ipProp);
 
-/* Returns the remaining duration of the specified item property. The
+/* Function: GetItemPropertyDurationRemaining
+ *
+ * Returns the remaining duration of the specified item property. The
  * value of this is undefined for effects which are not of
  * DURATION_TYPE_TEMPORARY. */
 float GetItemPropertyDurationRemaining(itemproperty ipProp);
 
-/* Returns the internal item property integer at the index specified.
+/* Function: GetItemPropertyInteger
+ *
+ * Returns the internal item property integer at the index specified.
  * The index is limited to being between 0 and 15, and which index
  * contains what * value depends entirely on the type of property. */
 int GetItemPropertyInteger(itemproperty ipProp, int nIndex);
 
-/* Sets the internal item property integer at the specified index to the
+/* Function: SetItemPropertyInteger
+ *
+ * Sets the internal item property integer at the specified index to the
  * value specified. */
 void SetItemPropertyInteger(itemproperty ipProp, int nIndex, int nValue);
 
-/* Returns the spell id that created the item property. */
+/* Function: GetItemPropertySpellId
+ *
+ * Returns the spell id that created the item property. */
 int GetItemPropertySpellId(itemproperty ipProp);
 
-/* Sets the item property's spell id as specified, which will later be
+/* Function: SetItemPropertySpellId
+ *
+ * Sets the item property's spell id as specified, which will later be
  * returned with GetItemPropertySpellId(). */
 void SetItemPropertySpellId(itemproperty ipProp, int nSpellId);
 

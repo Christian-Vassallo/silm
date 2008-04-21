@@ -79,20 +79,30 @@ CRAFT_SAVE_COMPONENTS_DC = 14,
 SPELL_BORDER = 2048;
 
 
+// Function: OnOpen 
+// 
 // When someone opens up a WorkPlace.
 int OnOpen(object oPC, object oWorkPlace);
 
+// Function: OnSpellCastAt 
+// 
 // When someone casts a spell at a workplace.
 int OnSpellCastAt(object oPC, object oWorkPlace, int nSpell, int nMetaMagic);
 
+// Function: OnDisturb 
+// 
 // When someone puts something into the workplaces
 // inventory.
 int OnDisturb(object oPC, object oWorkPlace, object oItem, int nDisturbType);
 
+// Function: OnClose 
+// 
 // Starts the crafting process.
 // Wrapper for DoCraft
 int OnClose(object oPC, object oWorkPlace);
 
+// Function: DoCraft 
+// 
 // The final step in the crafting process.
 // Do the crafting when the workplace
 // inventory is being closed.
@@ -100,6 +110,8 @@ int OnClose(object oPC, object oWorkPlace);
 void DoCraft(object oPC, object oWorkPlace);
 
 
+// Function: FinishDoCraft 
+// 
 // Do not call, internal use only.
 void FinishDoCraft(object oPC, object oWorkPlace, struct Recipe r, int nStackMin, int nStackMax);
 

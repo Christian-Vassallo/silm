@@ -12,113 +12,143 @@
 /************************************/
 __sp_extern("inc_nwnx_const")
 
+// Function: usleep
 void usleep(int usec);
 
+// Function: GetArmorAC
 // Get the AC of armor oObject
 int GetArmorAC(object oObject);
 
+// Function: SetArmorAC
 // Set the AC of armor oObject
 void SetArmorAC(object oObject, int iAC);
 
+// Function: SetGoldPieceValue
 // Set the gold piece value of oObject
 void SetGoldPieceValue(object oObject, int iValue);
 
+// Function: SetTag
 // Set tag of oObject to sValue
 void SetTag(object oObject, string sValue);
 
+// Function: SetRacialType
 // Set the racial type of oObject
 // - nRacialType: RACIAL_TYPE_*
 void SetRacialType(object oObject, int nRacialType);
 
+// Function: GetDescriptionLength
 // Get the length of oObject's description
 // Works with items, placeables, doors and creatures
 int GetDescriptionLength(object oObject);
 
+// Function: GetDescription
 // Get description of oObject
 // Works with items, placeables, doors and creatures
 string GetDescription(object oObject);
 
+// Function: SetDescription
 // Set description of oObject
 // Works with items, placeables, doors and creatures
 void SetDescription(object oObject, string sNewDescription);
 
+// Function: GetConversation
 // Get NPC's conversation resource name
 string GetConversation(object oObject);
 
+// Function: GetUndroppableFlag
 // Returns TRUE if the item is undroppable
 int GetUndroppableFlag(object oItem);
 
+// Function: SetUndroppableFlag
 // Set the Droppable flag on an item
 // - oItem: the item to change
 // - bUndroppable: TRUE or FALSE, whether the item is undroppable
 void SetUndroppableFlag(object oItem, int bUndroppable);
 
+// Function: GetItemWeight
 // Get the weight of an item in tenths of pounds
 int GetItemWeight(object oObject);
 
+// Function: SetItemWeight
 // Set item weight
 // - oObject: the item to change
 // - nWeight: new weight in tenths of pounds
 // NOTE: Weight is recalculated from baseitems.2da on every player login
 void SetItemWeight(object oObject, int nWeight);
 
+// Function: GetEventHandler
 // Get event handler for a creature
 // - oObject: the target creature
 // - nEventId: CREATURE_EVENT_* (see nwnx_functions_h)
 string GetEventHandler(object oObject, int nEventId);
 
+// Function: SetEventHandler
 // Set event handler for a creature
 // - oObject: the target creature
 // - nEventId: CREATURE_EVENT_* (see nwnx_functions_h)
 // - sScript: script file name
 void SetEventHandler(object oObject, int nEventId, string sScript);
 
+// Function: GetFactionID
 // Get Faction ID of an object
 int GetFactionID(object oObject);
 
+// Function: SetFactionID
 // Set Faction ID of an object
 void SetFactionID(object oObject, int nFaction);
 
+// Function: GetGroundHeight
 //Returns ground height of the location
 float GetGroundHeight(location lLocation);
 
+// Function: GetIsWalkable
 //Returns TRUE if the position is walkable
 int GetIsWalkable(location lLocation);
 
 object GetFirstArea();
 object GetNextArea();
 
+// Function: Set2DAString
 // This function doesn't write to a file!!
 // It changes a value in memory, so Get2DAString will return old value
 void Set2DAString(string s2DA, string sColumn, int nRow, string sValue);
 
+// Function: SetMovementRate
 // Set oCreature's movement rate
 // - nMovementRate: MOVEMENT_RATE_*
 //   (see creaturespeed.2da)
 void SetMovementRate(object oCreature, int nMovementRate = MOVEMENT_RATE_DEFAULT);
 
+// Function: ActionUseItemOnObject
 // Use item on object
 void ActionUseItemOnObject(object oItem, object oTarget, int nPropertyNum = 0);
 
+// Function: ActionUseItemAtLocation
 // Use item at location
 void ActionUseItemAtLocation(object oItem, location lLocation, int nPropertyNum = 0);
 
+// Function: GetPCPort
 // Get the IP port from which oPlayer has connected.
 int GetPCPort(object oPlayer);
 
+// Function: BootPCWithMessage
 // Disconnect oPC from the server with custom message
 void BootPCWithMessage(object oPC, int nStrRef);
 
+// Function: JumpToLimbo
 // Jump to Limbo.
 // Object can be returned from Limbo with JumpToLocation/JumpToObject
 int JumpToLimbo(object oObject);
 
+// Function: GetIsVariableValid
 // Returns TRUE of svVariable is a valid scriptvar structure
 int GetIsVariableValid(struct scriptvar svVariable);
 
+// Function: GetFirstLocalVariable
 // Get first local variable on oObject
 struct scriptvar GetFirstLocalVariable(object oObject);
 
+// Function: GetNextLocalVariable
 // Get next local variable on oObject
 struct scriptvar GetNextLocalVariable(object oObject);
 
@@ -127,9 +157,11 @@ struct scriptvar GetNextLocalVariable(object oObject);
 //Works only with NWNX Reset Plugin installed
 void RestartServer();
 
+// Function: DebugMe
 //For development purposes
 void DebugMe(object oObject);
 
+// Function: ObjectDump
 // Dump oObject
 // Developers use only
 void ObjectDump(object oObject);
@@ -151,7 +183,8 @@ int GetArmorAC(object oObject)
     SetLocalString(oObject, "NWNX!FUNCTIONS!GETARMORAC", "      ");
     sAC = GetLocalString(oObject, "NWNX!FUNCTIONS!GETARMORAC");
     DeleteLocalString(oObject, "NWNX!FUNCTIONS!GETARMORAC");
-    return StringToInt(sAC);
+    // Function: StringToInt
+return StringToInt(sAC);
 }
 
 void SetArmorAC(object oObject, int iAC)
@@ -217,7 +250,8 @@ int GetUndroppableFlag(object oItem)
     SetLocalString(oItem, "NWNX!FUNCTIONS!GETUNDROPPABLE", "      ");
     sUndroppable = GetLocalString(oItem, "NWNX!FUNCTIONS!GETUNDROPPABLE");
     DeleteLocalString(oItem, "NWNX!FUNCTIONS!GETUNDROPPABLE");
-    return StringToInt(sUndroppable);
+    // Function: StringToInt
+return StringToInt(sUndroppable);
 }
 
 void SetUndroppableFlag(object oItem, int bUndroppable)
@@ -232,7 +266,8 @@ int GetItemWeight(object oObject)
     SetLocalString(oObject, "NWNX!FUNCTIONS!GETITEMWEIGHT", "      ");
     sWeight = GetLocalString(oObject, "NWNX!FUNCTIONS!GETITEMWEIGHT");
     DeleteLocalString(oObject, "NWNX!FUNCTIONS!GETITEMWEIGHT");
-    return StringToInt(sWeight);
+    // Function: StringToInt
+return StringToInt(sWeight);
 }
 
 void SetItemWeight(object oObject, int nWeight)

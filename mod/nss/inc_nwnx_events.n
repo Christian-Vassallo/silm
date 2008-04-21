@@ -18,20 +18,36 @@ const int LANGUAGE_CHINESE_TRADITIONAL  = 129;
 const int LANGUAGE_CHINESE_SIMPLIFIED   = 130;
 const int LANGUAGE_JAPANESE             = 131;
 
+// Function: GetEventType
 int GetEventType();
+// Function: GetActionTarget
 object GetActionTarget();
+// Function: GetActionItem
 object GetActionItem();
+// Function: GetEventPosition
 vector GetEventPosition();
+// Function: BypassEvent
 void BypassEvent();
 
+// Function: GetCurrentNodeType
 int GetCurrentNodeType();
+// Function: GetCurrentNodeID
 int GetCurrentNodeID();
+// Function: GetCurrentAbsoluteNodeID
 int GetCurrentAbsoluteNodeID();
+// Function: GetCurrentNodeText
 string GetCurrentNodeText(int nLangID = LANGUAGE_ENGLISH, int nGender = GENDER_MALE);
+// Function: SetCurrentNodeText
 void SetCurrentNodeText(string sText, int nLangID = LANGUAGE_ENGLISH, int nGender = GENDER_MALE);
+// Function: GetSelectedNodeID
 int GetSelectedNodeID();
+// Function: GetSelectedAbsoluteNodeID
 int GetSelectedAbsoluteNodeID();
+// Function: GetSelectedNodeText
 string GetSelectedNodeText(int nLangID = LANGUAGE_ENGLISH, int nGender = GENDER_MALE);
+
+
+
 
 int GetEventType() {
     SetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_ID", "      ");
@@ -53,13 +69,15 @@ vector GetEventPosition() {
 
     //Get X
     int nPos = FindSubString(sVector, "¬");
-    if(nPos == -1) return Vector();
+    if(nPos == -1) 
+return Vector();
     x = StringToFloat(GetStringLeft(sVector, nPos));
     sVector = GetStringRight(sVector, GetStringLength(sVector) - nPos - 1);
 
     //Get Y
     nPos = FindSubString(sVector, "¬");
-    if(nPos == -1) return Vector();
+    if(nPos == -1) 
+return Vector();
     y = StringToFloat(GetStringLeft(sVector, nPos));
     sVector = GetStringRight(sVector, GetStringLength(sVector) - nPos - 1);
 
@@ -69,8 +87,9 @@ vector GetEventPosition() {
     {
         z = StringToFloat(sVector);
     }
-    else return Vector();
-    return Vector(x, y, z);
+    else 
+	return Vector();
+return Vector(x, y, z);
 }
 
 void BypassEvent()

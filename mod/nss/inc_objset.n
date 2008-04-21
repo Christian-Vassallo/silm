@@ -1,19 +1,29 @@
+/* File: inc_objset.n
+ * Object-Sets are collections of objects that can be easily iterated.
+ */
 
-
+// Function: AddToSet
 void AddToSet(string sSetName, object oObj, object oPC = OBJECT_SELF);
 
+// Function: GetFromSet
 object GetFromSet(string sSetName, int nIndex, object oPC = OBJECT_SELF);
 
+// Function: GetSetSize
 int GetSetSize(string sSetName, object oPC = OBJECT_SELF);
 
+// Function: ClearSet
 void ClearSet(string sSetName, object oPC = OBJECT_SELF);
 
 // Removes nIndex from set sSetName, shuffling all following
-//int RemoveFromSet(string sSetName, int nIndex);
+//// Function: RemoveFromSet
+int RemoveFromSet(string sSetName, int nIndex);
 
+// Function: GetCurrentSet
 string GetCurrentSet(object oPC = OBJECT_SELF);
+// Function: SetCurrentSet
 void SetCurrentSet(string sSetName, object oPC = OBJECT_SELF);
 
+// Function: GetIsInSet
 int GetIsInSet(string sSetName, object oTest, object oPC = OBJECT_SELF);
 
 
