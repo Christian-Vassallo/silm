@@ -25,8 +25,10 @@ cOOC = cLightGrey;
 
 
 
+// Function: setsleep
 void setsleep(float fWait);
 
+// Function: getsleep
 float getsleep();
 
 
@@ -39,20 +41,24 @@ float getsleep() {
 }
 
 
+// Function: SpeakToMode
 // Makes oObject speak sText with the given iMode.
 // Tries really hard that some text appears for clients;
 // e.g. if its an inventory item, the container speaks.
 void SpeakToMode(object oObject, string sText, int iMode);
 
+// Function: FixFactionsForObject
 void FixFactionsForObject(object oO, object oPC = OBJECT_SELF);
 
 
+// Function: ChatHookAudit
 void ChatHookAudit(object oPC = OBJECT_SELF, int bSuppress = TRUE, string sData = "");
 
 
 
 
 
+// Function: ColourisePlayerText
 // Applies emote colours to the given text.
 // Parses:
 //    *..* - cOrange

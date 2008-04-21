@@ -1,3 +1,8 @@
+/*
+  File: inc_colours.n
+  A compatible color library.
+
+*/
 const string
 COL255 =
 	" !#$%&'()*+,-./MIN123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ¡¢£¤¥§¨©ª«¬­®¯°±²³´µ¶·¸¸º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïñòóôõö÷øùúûüýþ";
@@ -10,30 +15,48 @@ LO = 80,
 MIN = 1,
 MAX = 210;
 
+// Struct: Colour 
+// Contains the R, G, B components as ints.
 struct Colour {
 	int r;
 	int g;
 	int b;
 };
 
+// Function: CS
+// Returns struct Colour.
 struct Colour CS(int r, int g, int b);
+// Function: CSRand
+// Returns a randomized color.
 struct Colour CSRand();
 
+// Function: Lighten
+// Lightens the given color by the given amount.
 struct Colour Lighten(struct Colour c, int nAmount);
+// Function: Darken
+// Darkens the given color by the given amount.
 struct Colour Darken(struct Colour c, int nAmount);
 
+// Function: RainbowText
 // Returns sText rainbowified.
 // Warning, long text and low step size will
 // produce obscene amounts of traffic.
 string RainbowText(string sText, int nStepSize = 2, int bCheatCloseTags = TRUE);
 
+// Function: C
 // Returns a colourised version of text.
 string C(string text, struct Colour c);
 
+// Function: ColourTagClose
+// Returns a close-tag.
 string ColourTagClose();
+// Function: ColourTag
+// Returns a color-tag for the given color.
 string ColourTag(struct Colour c);
 
+// Function: GetLocalColour
 struct Colour GetLocalColour(object oPC, string sName);
+// Function: SetLocalColour
 void SetLocalColour(object oPC, string sName, struct Colour cC);
 
 /* predefined colours */
@@ -83,7 +106,8 @@ void SetLocalColour(object oPC, string sName, struct Colour cC) {
 string IntToChar(int i) {
 	if ( i >= GetStringLength(COL255) )
 		i = GetStringLength(COL255) - 1;
-	return GetSubString(COL255, i, 1);
+	// Function: GetSubString
+return GetSubString(COL255, i, 1);
 }
 
 

@@ -33,21 +33,26 @@ LIST_ITEM_NAME = "chatPC_",
 PC_ID_NAME = "chatID";
 
 
+// Function: SpeakToChannel
 // Makes oSender speak to oRecipient on nChannel = MSG_*.
 void SpeakToChannel(object oSender, int nChannel, string sMessage, object oRecipient = OBJECT_INVALID);
 
 
+// Function: GetPC
 // Returns the PC with the given player ID, or OBJECT_INVALID if invalid ..
 object GetPC(int nID);
 
+// Function: Suppress
 // Suppress the last chat message. ONLY usable
 // in the chat script.
 void Suppress(object oPC = OBJECT_SELF);
 
+// Function: ChatLock
 // Do not process the next incoming text message for object.
 // = increment the chatlock counter for object.
 int ChatLock(object oPC = OBJECT_SELF);
 
+// Function: ChatLockCheck
 // Decremet the chatlock counter for oPC
 int ChatLockCheck(object oPC = OBJECT_SELF);
 

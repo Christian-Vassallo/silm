@@ -1,20 +1,26 @@
+/*
+  File: x0_i0_treasure.n
+*/
 __sp_extern("_gen")
 __sp_extern("inc_2dacache")
 __sp_extern("inc_setting")
 __sp_extern("inc_audit")
 #include "inc_pgsql.nh"
 
+// Function: GenerateNPCTreasure
 // Create treasure on an NPC.
 // This function will typically be called from within the
 // NPC's OnSpawn handler.
 void GenerateNPCTreasure(object oNPC = OBJECT_SELF);
 
 
+// Function: GenerateGemChainTreasure
 // Generates loot on a player as he hits a stone.
 // Gets called on EACH hit.
 void GenerateGemChainTreasure(object oStone, object oPlayer);
 
 
+// Function: CreateChainedOnObjectByResRefString
 void CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn);
 
 void GenerateGemChainTreasure(object oStone, object oPlayer) {

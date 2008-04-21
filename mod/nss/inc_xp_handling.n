@@ -1,3 +1,7 @@
+/*
+  File: inc_xp_handling.n
+*/
+
 __sp_extern("_gen")
 __sp_extern("inc_decay")
 __sp_extern("inc_cdb")
@@ -5,13 +9,16 @@ __sp_extern("inc_persist")
 __sp_extern("inc_setting")
 #include "inc_pgsql.nh"
 
+// Function: AddCombatXP
 // Gives oPC nValue EP
 void AddCombatXP(object oPC, int nValue, int bNoWarn = FALSE);
 
+// Function: GetKillXP
 // Returns how much EP oKiller Gets for oDead
 int GetKillXP(object oDead, object oKiller);
 
 
+// Function: GiveXP
 // Gives nXP to oPlayer, returning the
 // given value (minus penalties).
 // Sets various other variables, including
@@ -20,34 +27,44 @@ int GetKillXP(object oDead, object oKiller);
 int GiveXP(object oPlayer, int nXP, int bMultiClassPenalties = TRUE);
 
 
+// Function: GiveKillXP
 // Returns how much EP
 void GiveKillXP();
 
 
+// Function: _AddNonGMXPDifference
 // Used by hb_xp_guard to differentiate between GM given XP
 // and script given XP
 void _AddNonGMXPDifference(object oPC, int nValue, int nType = 0);
 
 
+// Function: GiveTimeXP
 // Gives nAmount to oPC, but not above the CAP.
 // Returns amout given.
 int GiveTimeXP(object oPC, int nAmount);
 
+// Function: GetTimeXPForDay
 // Returns how much XP this player has got THIS MONTH through Auto XP.
 int GetTimeXPForDay(object oPC, int nYear, int nMonth, int nDay);
+// Function: SetTimeXPForDay
 // ..
 void SetTimeXPForDay(object oPC, int nXP, int nYear, int nMonth, int nDay);
 
+// Function: GetCombatXP
 // Returns CombatEP
 int GetCombatXP(object oPC);
 
+// Function: SetCombatXP
 void SetCombatXP(object oPC, int nXP);
 
+// Function: GetTimedXPCap
 //returns CAP
 int GetTimedXPCap(object oPC);
 
+// Function: GetCombatXPForMonth
 int GetCombatXPForMonth(object oPC, int nYear, int nMonth);
 
+// Function: SetCombatXPForMonth
 // This requires an unique key on xp, year, month or your database
 // will be littered with stray inserts
 void SetCombatXPForMonth(object oPC, int nXP, int nYear, int nMonth);
@@ -61,7 +78,8 @@ int GiveXP(object oPlayer, int nXP, int bMultiClassPenalties = TRUE) {
 	int now = GetXP(oPlayer);
 	if (bMultiClassPenalties)
 		GiveXPToCreature(oPlayer, nXP);
-	else
+	// Function: SetXP
+else
 		SetXP(oPlayer, now + nXP);
 
 	int after = GetXP(oPlayer);

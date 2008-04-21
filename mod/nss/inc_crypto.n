@@ -1,13 +1,13 @@
-/*
- * 	Really Simple(tm) crypto stuff.
+/* File: inc_crypto.n
+ * Really Simple(tm) crypto stuff.
  *
- * 	Licenced under the GNU GPLv2.
+ * Licenced under the GNU GPLv2.
  *
- * 	Copyleft 2006
- * 		Bernhard 'elven' Stoeckner.
+ * Copyleft 2006
+ *  Bernhard 'elven' Stoeckner.
  *
- * 	See http://www.gnu.org/licenses/gpl.txt
- * 	for more information.
+ * See http://www.gnu.org/licenses/gpl.txt
+ * for more information.
  */
 
 
@@ -61,13 +61,13 @@ CRYPTO_DEFAULT_DELIM = "|";
 
 
 
-
+// Function: CryptoMonoalphabeticSubstitution
 // Implement a general monoalphabetic substitution cipther.
 // The default is set to do ROT13.
 string CryptoMonoalphabeticSubstitution(string sInStr, string sLexIn = "abcdefghijklmnopqrstuvwxyz", string sLexOut = "nopqrstuvwxyzabcdefghijklm",
 										int nBehaviour = CRYPTO_BEHAVIOUR_DEFAULTFLAG);
 
-
+// Function: CryptoHomophonicSubstitution
 // Implement a general polyalphabetic substitution cipther.
 // The default is set to do ROT13.
 // Syntax for the output lex is: field1|field2|field3|field4

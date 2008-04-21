@@ -1,7 +1,8 @@
 #ifndef MUTEX_H
 #define MUTEX_H
 
-
+// Macro: __mutex(obj,count,name,code)
+// Creates a local named muted on obj** and runs *code* *count* times.
 #define __mutex(obj,count,name,code) \
 if (GetLocalInt(obj,"mtx_" + name) > count) { \
 	SetLocalInt(obj,"mtx_" + name,GetLocalInt(obj,"mtx_" + name)+1);\
@@ -9,8 +10,13 @@ if (GetLocalInt(obj,"mtx_" + name) > count) { \
 	SetLocalInt(obj,"mtx_" + name,GetLocalInt(obj,"mtx_" + name)-1);\
 }
 
+// Macro: __mutex_single(obj,name,code)
+// Creates a single-run delayed named mutex
+// Shorthand for __mutex(obj, 1, name, code)
 #define __mutex_single(obj,name,code) __mutex(obj,1,name,code)
 
+// Macro: __mutex_transaction(obj,partner,name,code)
+// Creates a mutually exclusive transaction with a *parter* object
 #define __mutex_transaction(obj,partner,name,code) \
 if (GetLocalInt(obj,"mtxt_" + name) > 0) { \
 	SetLocalInt(obj,"mtxt_" + name,0); \
@@ -19,6 +25,8 @@ if (GetLocalInt(obj,"mtxt_" + name) > 0) { \
 	code; \
 }
 
+// Macro: __nth(n,code)
+// Run *code* only each *n*th evaluation
 #define __nth(n,code) __EBLOCK(\
 string nthname = "__nth_" + __FILE__ + "_" + itoa( __LINE__ ); \
 if (GetLocalInt(GetModule(), nthname) >= n) { \
@@ -28,7 +36,5 @@ if (GetLocalInt(GetModule(), nthname) >= n) { \
 	SetLocalInt(GetModule(), nthname, GetLocalInt(GetModule(), nthname) + 1); \
 }\
 )
-
-
 
 #endif

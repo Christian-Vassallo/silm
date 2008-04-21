@@ -1,31 +1,47 @@
-/*
+/* File: _ou_jump.n
  * This script allows jumping from one jump target to the next,
  * making appropriate DCs and appropriate results on failure.
- */
-__sp_extern("_gen")
-
-/*
- * 	Rules:
- * 		Climb Placies:
- *        DC = DC_CLIMB_UP/DOWN_ADJUST +
- *               specified as by DM (through placeable)
  *
- * 		Jump Placies:
- * 		  DC = Distance + Elevation in ft * 4
+ * Rules for Calculation:
+ *  - Climb Placies:
+ *     DC = DC_CLIMB_UP/DOWN_ADJUST +
+ *            specified as by DM (through placeable)
+ *  - Jump Placies:
+ *     DC = Distance + Elevation in ft * 4
  */
+
+__sp_extern("_gen")
 
 #define DC_SKILL SKILL_TUMBLE
 
+// Constant: BASE_DC_JUMP
+// 10
 #define BASE_DC_JUMP 10
+// Constant: BASE_DC_CLIMB
+// 0
 #define BASE_DC_CLIMB 0
 
+// Constant: DC_ROPE_ADJUST
+// -1
 #define DC_ROPE_ADJUST -1
+
+// Constant: DC_ROPEHOOK_ADJUST
+// -2
 #define DC_ROPEHOOK_ADJUST -2
 
+// Constant: DC_CLIMB_UP_ADJUST
+// 0
 #define DC_CLIMB_UP_ADJUST 0
+
+// Constant: DC_CLIMB_DOWN_ADJUST
+// 0
 #define DC_CLIMB_DOWN_ADJUST 0
 
+// Constant: DC_CLIMB_MIN
+// 1
 #define DC_CLIMB_MIN 1
+// Constant: DC_CLIMB_MAX
+// 50
 #define DC_CLIMB_MAX 50
 
 
