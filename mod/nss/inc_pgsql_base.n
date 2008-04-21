@@ -9,6 +9,8 @@ const string PGSQL_NWNX_TOKEN = "ODBC2";
 // Run on module start
 void pInit();
 
+// Function: pQuery 
+// 
 // Run a query. Returns 1 on success, 0 on error.
 int pQuery(string sSQL);
 
@@ -18,6 +20,8 @@ string pErrStr();
 // Returns the last-run query.
 string pGetLastQuery();
 
+// Function: pEscape 
+// 
 // Escape and return a string suitable for use in query concatenation
 string pEscape(string str);
 
@@ -29,9 +33,13 @@ void pBegin();
 // Commit transaction
 void pCommit();
 
+// Function: pRollback 
+// 
 // Rollback transaction, globally or to a specified savepoint.
 void pRollback(string to_savepoint = "");
 
+// Function: pSavepoint 
+// 
 // Sets a savepoint.
 void pSavepoint(string name);
 
@@ -41,76 +49,118 @@ string pGetLastQuery();
 // Fetch next row. Returns 1 on success, 0 on no more rows
 int pFetch();
 
+// Function: pGetStr 
+// 
 // Returns column n in the result set
 string pGetStr(int iCol);
 
+// Function: pGetInt 
+// 
 // Returns column n in the result set as int
 int pGetInt(int n);
 
+// Function: pGetFloat 
+// 
 // Returns column n in the result set as float
 float pGetFloat(int n);
 
+// Function: pGetBool 
+// 
 // Returns column n in the result set as boolean (0 or 1)
 int pGetBool(int n);
 
+// Function: pEscapeInt 
+// 
 // Return a int formatted for insert or update
 string pEscapeInt(int n, int b0isNULL = TRUE, string sNullStr = "NULL");
 
+// Function: pEscapeStr 
+// 
 // Return a string formatted for insert or update
 string pEscapeStr(string s, int bEmptyIsNULL = FALSE, string sNullStr = "NULL");
 
+// Function: pEscapeFloat 
+// 
 // Return a float formatted for insert or update
 string pEscapeFloat(float f, int b0isNULL = FALSE, string sNullStr = "NULL");
 
+// Function: pEscapeBool 
+// 
 // Return a bool formatted for insert or update (0 = false, rest = true)
 string pEscapeBool(int b);
 
+// Function: pEscapeLocation 
+// 
 // Return a proper typised location string for query insertion.
 string pEscapeLocation(location at);
 
+// Function: pEscapeVector 
+// 
 // Return a proper typised vector string for query insertion.
 string pEscapeVector(vector v);
 
+// Function: pEscapeArea 
+// 
 // Return a proper typised area string for query insertion.
 string pEscapeArea(object oArea);
 
+// Function: pSCO 
+// 
 // Stores object with query. Place %s where the object binary data shall go.
 void pSCO(string query, object obj);
 
+// Function: pRCO 
+// 
 // Retrieves object with query. Query has to return exactly one value.
 object pRCO(string query, location where, object owner = OBJECT_INVALID);
 
+// Function: pLastId 
+// 
 // Returns the last-inserted id.
 int pLastId(string table, string column = "id");
 
 // Returns a nwn-generated serial for the cursor functions.
 int pCursorGetNextSerial();
 
+// Function: pDeclare 
+// 
 // Declare a cursor.
 // Requires an active session.
 // Returns a unique cursor identifier for use with pCursorFetch and pCursorClose.
 string pDeclare(string query, bool with_hold = false, bool scroll = true, string cursorname = "");
 
+// Function: pCursorClose 
+// 
 // Close the given cursor.
 void pCursorClose(string cursor);
 
+// Function: pCursorFetch 
+// 
 // Fetch ONE item from the given cursor (default: next one).
 // There is no need to call pFetch()
 int pCursorFetch(string cursor, string cursor_direction = "next");
 
+// Function: pPrepare 
+// 
 // Prepare a named query.
 int pPrepare(string name, string query);
 
+// Function: pExecute 
+// 
 // Execute a named query with the given parameters.
 int pExecute(string name, string p1 = "", string p2 = "", string p3 = "", string p4 = "",
 	string p5 = "", string p6 = "", string p7 = "", string p8 = "", string p9 = "");
 
+// Function: ppPrepare 
+// 
 // set a string for ? replacement and escaping
 void ppPrepare(string sQuery);
 
 // Send the properly escaped query
 void ppQuery();
 
+// Function: ppInsert 
+// 
 // Insert the given value as the next item in your query.
 void ppInsert(string value);
 
@@ -119,10 +169,14 @@ void ppReset();
 
 // Internal helper.
 string ppGetCurrentQuery();
+// Function: ppSetCurrentQuery 
+// 
 // Internal helper.
 void ppSetCurrentQuery(string sQuery);
 // Internal helper.
 int ppGetCurrentOffset();
+// Function: ppInsertIntoQueryAtNextPosition 
+// 
 // Internal helper.
 string ppInsertIntoQueryAtNextPosition(string sQuery, string sToInsert);
 
