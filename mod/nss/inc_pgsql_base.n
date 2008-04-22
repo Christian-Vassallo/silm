@@ -245,13 +245,13 @@ object pRCO(string query, location where, object owner = OBJECT_INVALID) {
 
 
 void pBegin() {
-	slv_i(MODULE, "psql_transaction", 1);
+	SetLocalInt(GetModule(), "psql_transaction", 1);
 	pQuery("BEGIN;");
 }
 
 void pCommit() {
 	pQuery("COMMIT;");
-	slv_i(MODULE, "psql_transaction", 0);
+	SetLocalInt(GetModule(), "psql_transaction", 0);
 }
 
 void pRollback(string to_savepoint = "") {
