@@ -1,0 +1,11 @@
+/*
+  File: _ou_sittable.n
+  Allows sitting on placeables. Just add this script as the
+  "OnUsed"-event to a useable placeable, and creatures using
+  the placeable will sit on it.
+*/
+
+void main() {
+	object oChair = OBJECT_SELF;
+	AssignCommand(GetLastUsedBy(), ActionSit(oChair));
+}
