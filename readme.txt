@@ -3,27 +3,27 @@ File: README
 Sternenfall Setup Instructions:
 
 1) Run requirements:
-- Linux or BSD (it will NOT run on Wintendo)
-- NWN 1.68
-- PostgreSQL 8.1 or higher (8.1 is recommended, for now)
-- nwnx2.7-b2
+- a recent *32bit* Linux distribution (it will not run on Windows)
+- NWN 1.69
+- PostgreSQL 8.3 or higher (8.3 stable is recommended, for now)
+- nwnx2.7-b3
 - the following nwnx2 plugins and versions:
-- nwnx-functions >=
-- nwnx-hashset >=
-- nwnx-chat >=
-- odbc2-pgsql >=
+- nwnx-functions >= (not released yet)
+- nwnx-hashset >= (not released yet)
+- nwnx-chat >= (not released yet)
+- odbc2-pgsql >= (not released yet)
 
 2) Build requirements:
 - GNU make
-- GNU gcc and the required header files
-- GNU gpp
-- perl5.6 or higher
-- git >= 1.5.*
-- Java Runtimes >= 1.5
-- some time.
+- GNU gpp ("general preprocessor")
+- perl5.6 or higher (optional, recommended)
+- git >= 1.5.* (mandatory for building)
+- Java Runtimes >= 1.5 (for the xml conversion, optional)
+- some time. (mandatory)
 
-To apply developer patches sent to the list, you will also need
+To apply developer patches sent to the list, you will also need:
 - xmldiff, xmlmerge, xmlpatch
+
 And the following is highly recommended, but not a requirement:
 - xmlstarlet
 
