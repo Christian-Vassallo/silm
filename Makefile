@@ -8,4 +8,4 @@ documentation:
 		-xi generated-doc \
 		-xi naturaldocs-project \
 		-xi build \
-	-p naturaldocs-project
+	-s sternenfall -p naturaldocs-project
