@@ -1,5 +1,42 @@
+// File: inc_pgsql.nh
+// pglib header file. Just include this.
+
 #ifndef PGSQL_H
 #define PGSQL_H
+
+/* Macros: Shorthands for functions in inc_pgsql_base.n
+  pQ(s) - pQuery(s)
+  pE(s) - pEscape(s)
+  pF() -  pFetch()
+  pG(n) -  pGetStr(n)
+  pGs(n) - pGetStr(n)
+  pGi(n) - pGetInt(n)
+  pGf(n) - pGetFloat(n)
+  pGb(n) - pGetBool(n)
+
+  pSi(i) - pEscapeInt(i)
+  pSs(s) - pEscapeStr(s)
+  pSf(f) - pEscapeFloat(f)
+  pSb(b) - pEscapeBool(b)
+  pSi0(i,x) - pEscapeInt(i,x)
+  pSs0(s,x) - pEscapeStr(s,x)
+  pSf0(f,x) - pEscapeFloat(f,x)
+  pSb0(b,x) - pEscapeBool(b,x)
+
+  ppP(s) - ppPrepare(s)
+  ppI(x) - ppInsert(x)
+  ppR() - ppReset()
+  ppQ() - ppQuery()
+
+  ppSi(i) - ppInsert(pEscapeInt(i))
+  ppSs(s) - ppInsert(pEscapeStr(s))
+  ppSf(f) - ppInsert(pEscapeFloat(f))
+  ppSb(b) - ppInsert(pEscapeBool(b))
+  ppSi0(i,x) - ppInsert(pEscapeInt(i,x))
+  ppSs0(s,x) - ppInsert(pEscapeStr(s,x))
+  ppSf0(f,x) - ppInsert(pEscapeFloat(f,x))
+  ppSb0(b,x) - ppInsert(pEscapeBool(b,x))
+*/
 
 #define pQ(s) pQuery(s)
 #define pE(s) pEscape(s)
