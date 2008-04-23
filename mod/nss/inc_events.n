@@ -213,18 +213,18 @@ void RegisterEventScript(string sScript, int nEventType, int nEventMask, int bRe
 // Runs all scripts that are registered for nEventMask
 // Returns:
 // - The number of scripts ran
-int RunEventScriptsFor(int nEventType, int nEventMask, object oRunnable, object oActor, object oActedOn);
+int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn);
 
 // Function: RunEventScript 
 //
 // Runs the named event script on oRunnable
-int RunEventScript(string sScript, int nEventType, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
+int RunEventScript(string sScript, int nEventType, int nEvent, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
 	object oActedOn = OBJECT_INVALID);
 
 // Function: RunEventScriptAsync
 //
 // Wrapper around RunEventScript, for delayed execution
-void RunEventScriptAsync(string sScript, int nEventType, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
+void RunEventScriptAsync(string sScript, int nEventType, int nEvent, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
 	object oActedOn = OBJECT_INVALID);
 
 // Function: SetEventType
@@ -242,8 +242,12 @@ void SetEventMask(object oObject, int nEventMask);
 // Gets the EVENT_TYPE_*
 int GetEventType();
 
-// Function: GetEventMask
+// Function: GetEvent
 // Gets the EVENT_*_*
+int GetEvent();
+
+// Function: GetEventMask
+// Gets the mask the current script registered for
 int GetEventMask();
 
 // Function: ExecuteScriptInt 
@@ -282,13 +286,13 @@ Script file named 'e_test':
 :
 : void main() {
 :   int type = GetEventType();
-:	int mask = GetEventMask();
+:	int event = GetEvent();
 :   object runnable = OBJECT_SELF;
 :	object actor = GetEventActor();
 :	object actedon = GetEventActedOn();
 :
 :   if (EVENT_TYPE_AREA == type) {
-:	   if (mask & EVENT_AREA_ENTER) {
+:	   if (EVENT_AREA_ENTER == event) {
 :	       // Player enters area, tell them where they are:
 :		    if (GetIsPC(actor))
 :			    SendMessageToPC(actor, "You are now in " + GetName(actedon));
@@ -298,14 +302,14 @@ Script file named 'e_test':
 :   }
 :
 :   if (EVENT_TYPE_ITEM == type) {
-:		if (mask & EVENT_ITEM_ACTIVATE) {
+:		if (EVENT_ITEM_ACTIVATE == event) {
 :			// Code when an item gets activated.
 :			// actor is the creature that did the activating
 :	        // actedon is the item
 :		    // Do not use GetItemActivator(), GetItemActivated(), and so on, in asynchronous scripts.
 :		}
 :
-:		if (mask & EVENT_ITEM_UNEQUIP) {
+:		if (EVENT_ITEM_UNEQUIP == event) {
 :			// Destroy all items that players unequip. Yay.
 :			DestroyObject(runnable);
 :			SendMessageToPC(actor, "<Nelson> Haa haa!");
@@ -339,7 +343,7 @@ void UnregisterEventScript(string sScript = "", int nEventMask = EVENT_ANY) {
 	// Not implemented
 }
 
-int RunEventScriptsFor(int nEventType, int nEventMask, object oRunnable, object oActor, object oActedOn) {
+int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn) {
 	int count = GetLocalInt(GetModule(), "inc_events_last");
 	int i, type, mask, sync, ret;
 	string si, script, tag, ref;
@@ -372,9 +376,9 @@ int RunEventScriptsFor(int nEventType, int nEventMask, object oRunnable, object 
 		ret = EVENT_EXECUTE_SCRIPT_FAILED;
 
 		if (sync)
-			ret = RunEventScript(script, nEventType, nEventMask, oRunnable, oActor, oActedOn);
+			ret = RunEventScript(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn);
 		else
-			DelayCommand(0.0, RunEventScriptAsync(script, nEventType, nEventMask, oRunnable, oActor, oActedOn));
+			DelayCommand(0.0, RunEventScriptAsync(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn));
 
 		if (EVENT_EXECUTE_SCRIPT_END == ret || EVENT_EXECUTE_SCRIPT_ABORT == ret)
 			break;
@@ -382,17 +386,18 @@ int RunEventScriptsFor(int nEventType, int nEventMask, object oRunnable, object 
 	return i;
 }
 
-void RunEventScriptAsync(string sScript, int nEventType, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
+void RunEventScriptAsync(string sScript, int nEventType, int nEvent, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
 		object oActedOn = OBJECT_INVALID) {
-	RunEventScript(sScript, nEventType, nEventMask, oRunnable, oActor, oActedOn);
+	RunEventScript(sScript, nEventType, nEvent, nEventMask, oRunnable, oActor, oActedOn);
 }
 
-int RunEventScript(string sScript, int nEventType, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
+int RunEventScript(string sScript, int nEventType, int nEvent, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
 		object oActedOn = OBJECT_INVALID) {
 	if ( !GetIsObjectValid(oRunnable) )
 		return EVENT_EXECUTE_SCRIPT_FAILED;
 
 	SetEventType(oRunnable, nEventType);
+	SetEvent(oRunnable, nEvent);
 	SetEventMask(oRunnable, nEventMask);
 	if ( GetIsObjectValid(oActor) )
 		SetLocalObject(GetModule(), "EVENT_LAST_ACTOR", oActor);
@@ -412,13 +417,23 @@ void SetEventType(object oObject, int nEventType) {
 }
 
 // Get the current UserDefined Item Event Number
-int GetEventMask() {
+int GetEvent() {
 	return GetLocalInt(GetModule(), "EVENT_LAST_EVENT");
+}
+
+// Get the current UserDefined Item Event Number
+int GetEventMask() {
+	return GetLocalInt(GetModule(), "EVENT_LAST_EVENTMASK");
+}
+
+// Set the current UserDefined Event
+void SetEvent(object oObject, int nEvent) {
+	SetLocalInt(GetModule(), "EVENT_LAST_EVENT", nEvent);
 }
 
 // Set the current UserDefined Event
 void SetEventMask(object oObject, int nEvent) {
-	SetLocalInt(GetModule(), "EVENT_LAST_EVENT", nEvent);
+	SetLocalInt(GetModule(), "EVENT_LAST_EVENTMASK", nEvent);
 }
 
 // Wrapper for Execute Script to execute a script and get an integer
