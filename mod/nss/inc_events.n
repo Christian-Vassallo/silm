@@ -1,0 +1,255 @@
+/*
+  File: inc_events.n
+
+  A event system.
+  Designed to replace and surpass nw_*_switches.
+  Copyright Bernard 'elven' Stoeckner.
+
+  This code is licenced under the
+  GNU/GPLv2 General Public Licence.
+*/
+
+/*
+Consts: Script Return Codes
+EVENT_EXECUTE_SCRIPT_FAILED     - Script failed to run
+EVENT_EXECUTE_SCRIPT_CONTINUE   - Script ran and execution continues
+EVENT_EXECUTE_SCRIPT_END        - Script ran and execution of further events stops
+EVENT_EXECUTE_SCRIPT_ABORT      - Script ran and requested termination/cancellation of the event
+
+Const: Misc Events
+EVENT_SERVER_START              - on server start
+EVENT_MODULE_LOAD               - after all module initialisation is done
+EVENT_ANY                       - match any event
+
+Consts: Item Events
+EVENT_ITEM_ACTIVATE             - Creature activates item
+EVENT_ITEM_EQUIP                - Creature equips item
+EVENT_ITEM_UNEQUIP              - Creature unequips item
+EVENT_ITEM_ONHITCAST            - Item gets hit physically
+EVENT_ITEM_ACQUIRE              - Creature gains item
+EVENT_ITEM_UNACQUIRE            - Creature loses item (puts on ground, into container)
+EVENT_ITEM_SPELLCAST_AT         - Item targeted by a spell
+
+Consts: Player Events
+EVENT_PC_LOGIN                  - Player logs in
+EVENT_PC_LOGOUT                 - Player logs out
+EVENT_PC_LEVELUP                - Character gains a level
+
+Consts: Creature Events (including players)
+EVENT_CREATURE_SPAWN            - A creature spawns
+EVENT_CREATURE_DIE              - A creature dies
+
+EVENT_SPELL_CAST                - A spell gets cast
+
+Consts: Placeable Events
+EVENT_PLACEABLE_CLICK           - When a creature clicks on a placeable
+EVENT_PLACEABLE_USE             - When a creature uses a placeable
+
+
+Consts: Area Events
+EVENT_AREA_ENTER                - Creature enters an area
+EVENT_AREA_EXIT                 - Creature leaves an area
+EVENT_AREA_UDEF                 - unused
+EVENT_AREA_HB                   - Heartbeat for area
+*/
+
+
+const int EVENT_SCRIPT_LENGTH = 16;
+
+const int EVENT_ANY = 0;
+
+const int EVENT_ITEM_ACTIVATE = 1 << 0;
+const int EVENT_ITEM_EQUIP = 1 << 1;
+const int EVENT_ITEM_UNEQUIP = 1 << 2;
+const int EVENT_ITEM_ONHITCAST = 1 << 3;
+const int EVENT_ITEM_ACQUIRE = 1 << 4;
+const int EVENT_ITEM_UNACQUIRE = 1 << 5;
+const int EVENT_ITEM_SPELLCAST_AT = 1 << 6;
+const int EVENT_ITEM_UDEF = 1 << 7;
+
+const int EVENT_AREA_ENTER = 1 << 8;
+const int EVENT_AREA_EXIT = 1 << 9;
+const int EVENT_AREA_UDEF = 1 << 10;
+const int EVENT_AREA_HB = 1 << 11;
+
+
+const int EVENT_PC_LOGIN = 1 << 12;
+const int EVENT_PC_LOGOUT = 1 << 13;
+const int EVENT_PC_LEVELUP = 1 << 14;
+
+const int EVENT_EXECUTE_SCRIPT_CONTINUE = 1 << 0;
+const int EVENT_EXECUTE_SCRIPT_FAILED = 1 << 1;
+const int EVENT_EXECUTE_SCRIPT_ABORT = 1 << 2;
+const int EVENT_EXECUTE_SCRIPT_END = 1 << 3;
+
+
+
+// Function: RegisterEventScript
+//
+// Registers a script to be included in the global event list.
+// Each script registered for this will be called for each event that matches.
+void RegisterEventScript(string sScript, int nEventMask, string sTagMask = "**", string sResRefMask = "**");
+
+// Function: UnregisterEventScript
+//
+// Unregisters all event scripts that match the given criteria NOT IMPLEMENTED.
+//
+// Clears the list, by default.
+void UnregisterEventScript(sScript = "", int nEventMask = EVENT_ANY);
+
+// Function: RunAllEventScriptsFor
+// 
+// Runs all scripts that are registered for nEventMask
+// Returns:
+// - The number of scripts ran
+int RunEventScriptsFor(int nEventMask, object oRunnable, object oActor, object oActedOn);
+
+// Function: RunEventScript 
+//
+// Runs the named event script on oRunnable
+int RunEventScript(string sScript, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
+	object oActedOn = OBJECT_INVALID);
+
+// Function: SetEventMask
+// 
+// Set the active User Defined Event
+void SetEventMask(object oObject, int nEventMask);
+
+// Function: GetEventMask
+// Get the active User Defined Event
+int GetEventMask();
+
+// Function: ExecuteScriptInt 
+// 
+// * Execute sScript on oTarget returning an integer.
+int ExecuteScriptInt(string sScript, object oTarget);
+
+// Function: SetEventScriptReturnValue 
+// 
+// Sets the return value for scripts.
+//
+// Valid values are
+// - EVENT_EXECUTE_SCRIPT_CONTINUE - continue calling script after executed script is done
+// - EVENT_EXECUTE_SCRIPT_END - end calling script after executed script is done
+void SetEventScriptReturnValue(int nValue = EVENT_EXECUTE_SCRIPT_END);
+
+// Function: GetEventActor
+//
+// Returns the object that caused the event.
+// Not necessarily OBJECT_SELF.
+// Returns OBJECT_INVALID when not in event script.
+object GetEventActor();
+
+// Function: GetEventActedOn
+//
+// Returns the object Actor worked with.
+// Returns OBJECT_INVALID when not in event script.
+object GetEventActedOn();
+
+/* implementation */
+
+void RegisterEventScript(string sScript, int nEventMask, string sTagMask = "**", string sResRefMask = "**") {
+	int last = GetLocalInt(GetModule(), "inc_events_last");
+	string slast = IntToString(last);
+	
+	SetLocalString(GetModule(), "inc_events_" + slast + "_script", sScript);
+	SetLocalInt(GetModule(), "inc_events_" + slast + "_eventmask", nEventMask);
+	SetLocalString(GetModule(), "inc_events_" + slast + "_tagmask", sTagMask);
+	SetLocalString(GetModule(), "inc_events_" + slast + "_refmask", sResRefMask);
+
+	last++;
+	SetLocalInt(GetModule(), "inc_events_last", last);
+}
+
+void UnregisterEventScript(sScript = "", int nEventMask = EVENT_ANY) {
+	// Not implemented
+}
+
+int RunEventScriptsFor(int nEventMask, object oRunnable, object oActor, object oActedOn) {
+	int count = GetLocalInt(GetModule(), "inc_events_last");
+	int i, mask, ret;
+	string si, script, tag, ref;
+	for (i = 0; i < count; i++) {
+		si = IntToString(i);
+
+		mask = GetLocalInt(GetModule(), "inc_events_" + si + "_eventmask");
+		if (nEventMask != mask & nEventMask)
+			continue;
+
+		tag = GetLocalString(GetModule(), "inc_events_" + si + "_tagmask");
+		if (!GetStringPatternMatches( ... ))
+			continue;
+
+		ref = GetLocalString(GetModule(), "inc_events_" + si + "_refmask");
+		if (!GetStringPatternMatches( ... ))
+			continue;
+
+		script = GetLocalString(GetModule(), "inc_events_" + si + "_script");
+
+		ret = RunEventScript(script, nEventMask, oRunnable, oActor, oActedOn);
+
+		if (EVENT_EXECUTE_SCRIPT_END == ret || EVENT_EXECUTE_SCRIPT_FAILED == ret)
+			break;
+	}
+	return i;
+}
+
+
+int RunEventScript(string sScript, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
+		object oActedOn = OBJECT_INVALID) {
+	if ( !GetIsObjectValid(oRunnable) )
+		return EVENT_EXECUTE_SCRIPT_FAILED;
+
+	SetEventMask(oObject, iEvent);
+	if ( GetIsObjectValid(oActor) )
+		SetLocalObject(GetModule(), "EVENT_LAST_ACTOR", oActor);
+	if ( GetIsObjectValid(oActedOn) )
+		SetLocalObject(GetModule(), "EVENT_LAST_ACTEDON", oActedOn);
+	return ExecuteScriptInt(sScript, oRunnable);
+}
+
+
+// Get the current UserDefined Item Event Number
+int GetEventMask() {
+	return GetLocalInt(GetModule(), "EVENT_LAST_EVENT");
+}
+
+// Set the current UserDefined Event
+void SetEventMask(object oObject, int nEvent) {
+	SetLocalInt(GetModule(), "EVENT_LAST_EVENT", nEvent);
+}
+
+// Wrapper for Execute Script to execute a script and get an integer
+// return value. Do not nest this function!
+int ExecuteScriptInt(string sScript, object oTarget) {
+	DeleteLocalInt(GetModule(), "EVENT_LAST_RETVAR");
+	ExecuteScript(sScript, oTarget);
+	int nRet = GetLocalInt(GetModule(), "EVENT_LAST_RETVAR");
+	DeleteLocalInt(GetModule(), "EVENT_LAST_RETVAR");
+	DeleteLocalObject(GetModule(), "EVENT_LAST_ACTOR");
+	DeleteLocalObject(GetModule(), "EVENT_LAST_ACTEDON");
+	return nRet;
+}
+
+//----------------------------------------------------------------------------
+// Helper function for ExecuteScriptAndReturnInt
+//----------------------------------------------------------------------------
+void SetEventScriptReturnValue(int nValue = EVENT_EXECUTE_SCRIPT_CONTINUE) {
+	SetLocalInt(GetModule(), "EVENT_L_LAST_RETVAR", nValue);
+}
+
+
+object GetEventActor() {
+	return GetLocalObject(GetModule(), "EVENT_LAST_ACTOR");
+}
+object GetEventActedOn() {
+	return GetLocalObject(GetModule(), "EVENT_LAST_ACTEDON");
+}
+
+
+void RegisterPlayerEventScript(string sName) {
+	string old = GetLocalString(GetModule(), "EVENTS_PC");
+	if ( old != "" )
+		old += ",";
+	SetLocalString(GetModule(), "EVENTS_PC", old + sName);
+}
