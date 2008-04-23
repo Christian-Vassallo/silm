@@ -1,0 +1,53 @@
+// Name     : NWNX functions
+// Purpose  : Various new functions for items
+// Author   : Ingmar Stieger (Papillon)
+
+// This file is licensed under the terms of the
+// GNU GENERAL PUBLIC LICENSE (GPL) Version 2
+
+// Function: InitNWNX
+// Initialization
+void InitNWNX();
+
+// Function: NWNX_Initialized
+// Returns TRUE if NWNX is running.
+int NWNX_Initialized();
+
+
+/************************************/
+/* Implementation                   */
+/************************************/
+
+
+
+void InitNWNX() {
+	int i;
+	string sMemory = ".";
+	object oMod = GetModule();
+	SetLocalString(oMod, "NWNX!INIT", "1");
+	GetLocalObject(oMod, "NWNX!INIT");
+
+	//NWNX changes the value on its own.
+	if ( GetLocalString(oMod, "NWNX!INIT") == "0" ) {
+		WriteTimestampedLogEntry("NWNX subsystem initialized.");
+		SetLocalInt(oMod, "NWNX_Init", 1);
+	} else {
+		WriteTimestampedLogEntry("No NWNX subsystem found.");
+		return;
+	}
+
+	// allocate a 1k buffer to pass to the NWNX plugin
+	for ( i = 0; i < 5; i++ )
+		sMemory = sMemory + sMemory + sMemory + sMemory;
+	// only use the NWNX! prefix if it's meant to be
+	// processed by the plugin
+	SetLocalString(oMod, "NWNX_buffer", sMemory);
+
+	// connect to localhost:2182
+	SetLocalString(oMod, "NWNX!MNX!OPEN!DATE!", "localhost:2182");
+	WriteTimestampedLogEntry("MNX communication established.");
+}
+
+int NWNX_Initialized() {
+	return GetLocalInt(GetModule(), "NWNX_Init");
+}
