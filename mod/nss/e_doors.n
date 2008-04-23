@@ -1,0 +1,32 @@
+/*
+Event Script: e_doors.n
+
+Provides all the default functionality one expects from a working, sane door.
+*/
+
+extern("inc_events")
+
+void main() {
+	int type = GetEventType();
+	int event = GetEvent();
+
+	object door = OBJECT_SELF;
+	object actor = GetEventActor();
+	object other_door = GetTransitionTarget(door);
+
+	if (EVENT_TYPE_DOOR != type)
+		return;
+
+	if (EVENT_DOOR_CLICK == event) {
+		AssignCommand(actor, ActionUseObject(door));
+	}
+
+	if (EVENT_DOOR_LOCK == event || EVENT_DOOR_UNLOCK == event) {
+		if (!GetLockLockable(other_door) || !GetLockLockable(door))
+			return;
+
+		__mutex_transaction(door, other_door, "lockunlockdoor",
+			SetLocked(other_door, GetLocked(door));
+		);
+	}
+}
