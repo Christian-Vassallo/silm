@@ -1,0 +1,27 @@
+/*
+Event Script: debug
+
+This event script prints out ALL events received to the server log.
+*/
+
+extern("inc_events")
+
+int p_get_p_id(object o) {
+	return 0;
+}
+
+void main() {
+	int type = GetEventType();
+	int mask = GetEventMask();
+	object runnable = OBJECT_SELF;
+	object actor = GetEventActor();
+	object actedon = GetEventActedOn();
+
+
+	WriteTimestampedLogEntry("Received event:");
+	WriteTimestampedLogEntry(" type = " + itoa(type));
+	WriteTimestampedLogEntry(" mask = " + itoa(mask));
+	WriteTimestampedLogEntry(" runnable = " + otoa(runnable));
+	WriteTimestampedLogEntry(" actor = " + otoa(actor));
+	WriteTimestampedLogEntry(" actedon = " + otoa(actedon));
+}

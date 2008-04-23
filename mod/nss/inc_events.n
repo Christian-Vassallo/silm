@@ -9,48 +9,95 @@
   GNU/GPLv2 General Public Licence.
 */
 
+/* Note: nwns int overflows at 1 << 31, so 1 << 30 is the highest usable bitmask */
+
 /*
 Consts: Script Return Codes
+return codes for event scripts
+
 EVENT_EXECUTE_SCRIPT_FAILED     - Script failed to run
 EVENT_EXECUTE_SCRIPT_CONTINUE   - Script ran and execution continues
 EVENT_EXECUTE_SCRIPT_END        - Script ran and execution of further events stops
 EVENT_EXECUTE_SCRIPT_ABORT      - Script ran and requested termination/cancellation of the event
 
+Const: Event Types
+EVENT_TYPE_GLOBAL               - Global and misc. events
+EVENT_TYPE_ITEM                 - Item events
+EVENT_TYPE_CREATURE             - Creature events
+EVENT_TYPE_PLACEABLE            - Placeable events
+EVENT_TYPE_AREA                 - Area events
+
+
 Const: Misc Events
-EVENT_SERVER_START              - on server start
-EVENT_MODULE_LOAD               - after all module initialisation is done
 EVENT_ANY                       - match any event
+EVENT_MODULE_LOAD               - after all module initialisation is done (actor: n/a)
+EVENT_SPELL                     - a spell gets cast
 
 Consts: Item Events
-EVENT_ITEM_ACTIVATE             - Creature activates item
-EVENT_ITEM_EQUIP                - Creature equips item
-EVENT_ITEM_UNEQUIP              - Creature unequips item
-EVENT_ITEM_ONHITCAST            - Item gets hit physically
-EVENT_ITEM_ACQUIRE              - Creature gains item
-EVENT_ITEM_UNACQUIRE            - Creature loses item (puts on ground, into container)
-EVENT_ITEM_SPELLCAST_AT         - Item targeted by a spell
+runnable: the item object, actor: creature involved
+
+EVENT_ITEM_ACTIVATE             - Creature activates item (actor: activator)
+EVENT_ITEM_EQUIP                - Creature equips item (actor: equipper)
+EVENT_ITEM_UNEQUIP              - Creature unequips item (actor: unequipper)
+EVENT_ITEM_ONHITCAST            - Item gets hit physically (actor: damager)
+EVENT_ITEM_ACQUIRE              - Creature gains item (actor: receiver)
+EVENT_ITEM_UNACQUIRE            - Creature loses item (actor: creature losing item)
+EVENT_ITEM_SPELLCAST            - Item targeted by a spell (actor: caster)
 
 Consts: Player Events
+runnable: the player object
+
 EVENT_PC_LOGIN                  - Player logs in
 EVENT_PC_LOGOUT                 - Player logs out
-EVENT_PC_LEVELUP                - Character gains a level
+EVENT_PC_LEVELUP                - Player gains a level
+EVENT_PC_REST                   - Player rests, also fires EVENT_CREATURE_REST
+EVENT_PC_DYING                  - Player is dying, also fires EVENT_CREATURE_DYING
+EVENT_PC_DEATH                  - Player died, also fires EVENT_CREATURE_DEATH
+EVENT_PC_REPAWN                 - Player respawns
+EVENT_PC_CUTSCENE_ABRT          - Cutscene got aborted
 
-Consts: Creature Events (including players)
-EVENT_CREATURE_SPAWN            - A creature spawns
-EVENT_CREATURE_DIE              - A creature dies
 
-EVENT_SPELL_CAST                - A spell gets cast
+Consts: Creature Events
+runnable: the creature object
+
+EVENT_CREATURE_ATTACK           - A creature gets attacked
+EVENT_CREATURE_DAMAGE           - A creature gets damaged
+EVENT_CREATURE_DYING            - A creature is about to die
+EVENT_CREATURE_DEATH            - A creature dies (actor: killer)
+EVENT_CREATURE_DIALOGUE         - A creature wants to talk
+EVENT_CREATURE_DISTURB          - A creature gets disturbed
+EVENT_CREATURE_ENDROUND         - A creature ends it round
+EVENT_CREATURE_HB               - Creature heartbeat
+EVENT_CREATURE_BLOCK            - A creature is blocked and cannot pathfind
+EVENT_CREATURE_NOTICE           - ? wot does dis doo.
+EVENT_CREATURE_REST             - A creature rests
+EVENT_CREATURE_SPAWN            - A creature spawns (actor: module)
+EVENT_CREATURE_SPELLCAST        - A creature gets a spell cast at
 
 Consts: Placeable Events
-EVENT_PLACEABLE_CLICK           - When a creature clicks on a placeable
-EVENT_PLACEABLE_USE             - When a creature uses a placeable
+runnable: the placeable, actor: creature
 
+EVENT_PLACEABLE_CLICK           - When a creature clicks on a placeable
+EVENT_PLACEABLE_CLOSE           - Container gets closed
+EVENT_PLACEABLE_DAMAGE          - Placeable gets damaged
+EVENT_PLACEABLE_DEATH           - Placeable gets destroyed
+EVENT_PLACEABLE_DISARM          - Placeable gets disarmed
+EVENT_PLACEABLE_HB              - Heartbeat (actor: n/a)
+EVENT_PLACEABLE_INVDIST         - Container gains item/loses item/item gets stolen out of (actedon: item)
+EVENT_PLACEABLE_LOCK            - Placeable gets locked
+EVENT_PLACEABLE_MELEEATTACK     - Placeable gets bashed
+EVENT_PLACEABLE_OPEN            - Container gets opened
+EVENT_PLACEABLE_SPELLCAST       - Placeable gets spell cast at
+EVENT_PLACEABLE_TRAPTRIG        - Placeable trap gets triggered
+EVENT_PLACEABLE_UNLOCK          - Placeable gets unlocked
+EVENT_PLACEABLE_USE             - Placeable gets used
 
 Consts: Area Events
-EVENT_AREA_ENTER                - Creature enters an area
-EVENT_AREA_EXIT                 - Creature leaves an area
-EVENT_AREA_UDEF                 - unused
-EVENT_AREA_HB                   - Heartbeat for area
+runnable: the area
+
+EVENT_AREA_ENTER                - Creature enters an area (actor: creature)
+EVENT_AREA_EXIT                 - Creature leaves an area (actor: creature)
+EVENT_AREA_HB                   - Heartbeat for area (actor: n/a)
 */
 
 
@@ -58,29 +105,56 @@ const int EVENT_SCRIPT_LENGTH = 16;
 
 const int EVENT_ANY = 0;
 
+const int EVENT_EXECUTE_SCRIPT_CONTINUE = 1 << 0;
+const int EVENT_EXECUTE_SCRIPT_FAILED = 1 << 1;
+const int EVENT_EXECUTE_SCRIPT_ABORT = 1 << 2;
+const int EVENT_EXECUTE_SCRIPT_END = 1 << 3;
+
+/* This was autogenerated with rebuild_events.rb */
 const int EVENT_ITEM_ACTIVATE = 1 << 0;
 const int EVENT_ITEM_EQUIP = 1 << 1;
 const int EVENT_ITEM_UNEQUIP = 1 << 2;
 const int EVENT_ITEM_ONHITCAST = 1 << 3;
 const int EVENT_ITEM_ACQUIRE = 1 << 4;
 const int EVENT_ITEM_UNACQUIRE = 1 << 5;
-const int EVENT_ITEM_SPELLCAST_AT = 1 << 6;
-const int EVENT_ITEM_UDEF = 1 << 7;
-
-const int EVENT_AREA_ENTER = 1 << 8;
-const int EVENT_AREA_EXIT = 1 << 9;
-const int EVENT_AREA_UDEF = 1 << 10;
-const int EVENT_AREA_HB = 1 << 11;
-
-
-const int EVENT_PC_LOGIN = 1 << 12;
-const int EVENT_PC_LOGOUT = 1 << 13;
-const int EVENT_PC_LEVELUP = 1 << 14;
-
-const int EVENT_EXECUTE_SCRIPT_CONTINUE = 1 << 0;
-const int EVENT_EXECUTE_SCRIPT_FAILED = 1 << 1;
-const int EVENT_EXECUTE_SCRIPT_ABORT = 1 << 2;
-const int EVENT_EXECUTE_SCRIPT_END = 1 << 3;
+const int EVENT_ITEM_SPELLCAST = 1 << 6;
+const int EVENT_PC_LOGIN = 1 << 0;
+const int EVENT_PC_LOGOUT = 1 << 1;
+const int EVENT_PC_LEVELUP = 1 << 2;
+const int EVENT_PC_REST = 1 << 3;
+const int EVENT_PC_DYING = 1 << 4;
+const int EVENT_PC_DEATH = 1 << 5;
+const int EVENT_PC_REPAWN = 1 << 6;
+const int EVENT_CREATURE_ATTACK = 1 << 0;
+const int EVENT_CREATURE_DAMAGE = 1 << 1;
+const int EVENT_CREATURE_DYING = 1 << 2;
+const int EVENT_CREATURE_DEATH = 1 << 3;
+const int EVENT_CREATURE_DIALOGUE = 1 << 4;
+const int EVENT_CREATURE_DISTURB = 1 << 5;
+const int EVENT_CREATURE_ENDROUND = 1 << 6;
+const int EVENT_CREATURE_HB = 1 << 7;
+const int EVENT_CREATURE_BLOCK = 1 << 8;
+const int EVENT_CREATURE_NOTICE = 1 << 9;
+const int EVENT_CREATURE_REST = 1 << 10;
+const int EVENT_CREATURE_SPAWN = 1 << 11;
+const int EVENT_CREATURE_SPELLCAST = 1 << 12;
+const int EVENT_PLACEABLE_CLICK = 1 << 0;
+const int EVENT_PLACEABLE_CLOSE = 1 << 1;
+const int EVENT_PLACEABLE_DAMAGE = 1 << 2;
+const int EVENT_PLACEABLE_DEATH = 1 << 3;
+const int EVENT_PLACEABLE_DISARM = 1 << 4;
+const int EVENT_PLACEABLE_HB = 1 << 5;
+const int EVENT_PLACEABLE_INVDIST = 1 << 6;
+const int EVENT_PLACEABLE_LOCK = 1 << 7;
+const int EVENT_PLACEABLE_MELEEATTACK = 1 << 8;
+const int EVENT_PLACEABLE_OPEN = 1 << 9;
+const int EVENT_PLACEABLE_SPELLCAST = 1 << 10;
+const int EVENT_PLACEABLE_TRAPTRIG = 1 << 11;
+const int EVENT_PLACEABLE_UNLOCK = 1 << 12;
+const int EVENT_PLACEABLE_USE = 1 << 13;
+const int EVENT_AREA_ENTER = 1 << 0;
+const int EVENT_AREA_EXIT = 1 << 1;
+const int EVENT_AREA_HB = 1 << 2;
 
 
 
@@ -88,35 +162,59 @@ const int EVENT_EXECUTE_SCRIPT_END = 1 << 3;
 //
 // Registers a script to be included in the global event list.
 // Each script registered for this will be called for each event that matches.
-void RegisterEventScript(string sScript, int nEventMask, string sTagMask = "**", string sResRefMask = "**");
+// Parameters:
+// - sScript - the full script name, without extension
+// - nEventType - EVENT_TYPE_*
+// - nEventMask - Bitmask of EVENT_(nEventType)_*
+// - bRequireSynchronousRun - require this event to be ran before any other events may take place; set to true to enable event aborting.
+//   It is recommended NOT to activate this unless really needed.
+// - sTagMask - a mask the tag of runnable must match; default is all objects
+// - sResRefMask - a mask the resref of runnable must match; default is all objects
+void RegisterEventScript(string sScript, int nEventType, int nEventMask, int bRequireSynchronousRun = false, string sTagMask = "**", string sResRefMask = "**");
 
 // Function: UnregisterEventScript
 //
 // Unregisters all event scripts that match the given criteria NOT IMPLEMENTED.
 //
 // Clears the list, by default.
-void UnregisterEventScript(string sScript = "", int nEventMask = EVENT_ANY);
+// void UnregisterEventScript(string sScript = "", int nEventMask = EVENT_ANY);
 
 // Function: RunAllEventScriptsFor
 // 
 // Runs all scripts that are registered for nEventMask
 // Returns:
 // - The number of scripts ran
-int RunEventScriptsFor(int nEventMask, object oRunnable, object oActor, object oActedOn);
+int RunEventScriptsFor(int nEventType, int nEventMask, object oRunnable, object oActor, object oActedOn);
 
 // Function: RunEventScript 
 //
 // Runs the named event script on oRunnable
-int RunEventScript(string sScript, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
+int RunEventScript(string sScript, int nEventType, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
 	object oActedOn = OBJECT_INVALID);
+
+// Function: RunEventScriptAsync
+//
+// Wrapper around RunEventScript, for delayed execution
+void RunEventScriptAsync(string sScript, int nEventType, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
+	object oActedOn = OBJECT_INVALID);
+
+// Function: SetEventType
+//
+// Set the current event type. Used internally.
+void SetEventType(object oObject, int nEventType);
 
 // Function: SetEventMask
 // 
-// Set the active User Defined Event
+// Set the current event. Used internally.
 void SetEventMask(object oObject, int nEventMask);
 
+// Function: GetEventType
+//
+// Gets the EVENT_TYPE_*
+int GetEventType();
+
 // Function: GetEventMask
-// Get the active User Defined Event
+// Gets the EVENT_*_*
 int GetEventMask();
 
 // Function: ExecuteScriptInt 
@@ -146,14 +244,61 @@ object GetEventActor();
 // Returns OBJECT_INVALID when not in event script.
 object GetEventActedOn();
 
+
+/*
+Section: A demonstration script showing usage
+
+Script file named 'e_test':
+: extern("inc_events") // Default include
+:
+: void main() {
+:   int type = GetEventType();
+:	int mask = GetEventMask();
+:   object runnable = OBJECT_SELF;
+:	object actor = GetEventActor();
+:	object actedon = GetEventActedOn();
+:
+:   if (EVENT_TYPE_AREA == type) {
+:	   if (mask & EVENT_AREA_ENTER) {
+:	       // Player enters area, tell them where they are:
+:		    if (GetIsPC(actor))
+:			    SendMessageToPC(actor, "You are now in " + GetName(actedon));
+:	       // For a reference as to what runnable, actor and actedon are, see the constants
+:		    // documentation above
+:		}
+:   }
+:
+:   if (EVENT_TYPE_ITEM == type) {
+:		if (mask & EVENT_ITEM_ACTIVATE) {
+:			// Code when an item gets activated.
+:			// actor is the creature that did the activating
+:	        // actedon is the item
+:		    // Do not use GetItemActivator(), GetItemActivated(), and so on, in asynchronous scripts.
+:		}
+:
+:		if (mask & EVENT_ITEM_UNEQUIP) {
+:			// Destroy all items that players unequip. Yay.
+:			DestroyObject(runnable);
+:			SendMessageToPC(actor, "<Nelson> Haa haa!");
+:		}
+:	}
+:}
+
+In your module initialisation:
+: RegisterEventScript('e_test', EVENT_TYPE_ITEM, EVENT_ITEM_ACTIVATE | EVENT_ITEM_UNEQUIP | EVENT_AREA_ENTER, false);
+: RegisterEventScript('e_test', EVENT_TYPE_AREA, EVENT_AREA_ENTER, false);
+*/
+
 /* implementation */
 
-void RegisterEventScript(string sScript, int nEventMask, string sTagMask = "**", string sResRefMask = "**") {
+void RegisterEventScript(string sScript, int nEventType, int nEventMask, int bRequireSynchronousRun = false, string sTagMask = "**", string sResRefMask = "**") {
 	int last = GetLocalInt(GetModule(), "inc_events_last");
 	string slast = IntToString(last);
 	
 	SetLocalString(GetModule(), "inc_events_" + slast + "_script", sScript);
+	SetLocalInt(GetModule(), "inc_events_" + slast + "_eventtype", nEventType);
 	SetLocalInt(GetModule(), "inc_events_" + slast + "_eventmask", nEventMask);
+	SetLocalInt(GetModule(), "inc_events_" + slast + "_eventsync", bRequireSynchronousRun);
 	SetLocalString(GetModule(), "inc_events_" + slast + "_tagmask", sTagMask);
 	SetLocalString(GetModule(), "inc_events_" + slast + "_refmask", sResRefMask);
 
@@ -165,41 +310,60 @@ void UnregisterEventScript(string sScript = "", int nEventMask = EVENT_ANY) {
 	// Not implemented
 }
 
-int RunEventScriptsFor(int nEventMask, object oRunnable, object oActor, object oActedOn) {
+int RunEventScriptsFor(int nEventType, int nEventMask, object oRunnable, object oActor, object oActedOn) {
 	int count = GetLocalInt(GetModule(), "inc_events_last");
-	int i, mask, ret;
+	int i, type, mask, sync, ret;
 	string si, script, tag, ref;
 	for (i = 0; i < count; i++) {
 		si = IntToString(i);
+		
+		type = GetLocalInt(GetModule(), "inc_events_" + si + "_eventtype");
+		if (nEventType != type)
+			continue;
 
 		mask = GetLocalInt(GetModule(), "inc_events_" + si + "_eventmask");
 		if (nEventMask != mask & nEventMask)
 			continue;
 
 		tag = GetLocalString(GetModule(), "inc_events_" + si + "_tagmask");
-		if (tag != "" && tag != "**" && !TestStringAgainstPattern(tag, GetTag(oActedOn)))
+		if (tag != "" && tag != "**" && !TestStringAgainstPattern(GetStringLowerCase(tag), GetStringLowerCase(GetTag(oRunnable))))
 			continue;
 
 		ref = GetLocalString(GetModule(), "inc_events_" + si + "_refmask");
-		if (ref != "" && ref != "**" && !TestStringAgainstPattern(ref, GetResRef(oActedOn)))
+		if (ref != "" && ref != "**" && !TestStringAgainstPattern(GetStringLowerCase(ref), GetStringLowerCase(GetResRef(oRunnable))))
 			continue;
-
+		
 		script = GetLocalString(GetModule(), "inc_events_" + si + "_script");
 
-		ret = RunEventScript(script, nEventMask, oRunnable, oActor, oActedOn);
+		if (script == "")
+			continue;
 
-		if (EVENT_EXECUTE_SCRIPT_END == ret || EVENT_EXECUTE_SCRIPT_FAILED == ret)
+		sync = GetLocalInt(GetModule(), "inc_events_" + si + "_eventsync");
+		
+		ret = EVENT_EXECUTE_SCRIPT_FAILED;
+
+		if (sync)
+			ret = RunEventScript(script, nEventType, nEventMask, oRunnable, oActor, oActedOn);
+		else
+			DelayCommand(0.0, RunEventScriptAsync(script, nEventType, nEventMask, oRunnable, oActor, oActedOn));
+
+		if (EVENT_EXECUTE_SCRIPT_END == ret || EVENT_EXECUTE_SCRIPT_ABORT == ret)
 			break;
 	}
 	return i;
 }
 
+void RunEventScriptAsync(string sScript, int nEventType, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
+		object oActedOn = OBJECT_INVALID) {
+	RunEventScript(sScript, nEventType, nEventMask, oRunnable, oActor, oActedOn);
+}
 
-int RunEventScript(string sScript, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
+int RunEventScript(string sScript, int nEventType, int nEventMask, object oRunnable, object oActor = OBJECT_INVALID,
 		object oActedOn = OBJECT_INVALID) {
 	if ( !GetIsObjectValid(oRunnable) )
 		return EVENT_EXECUTE_SCRIPT_FAILED;
 
+	SetEventType(oRunnable, nEventType);
 	SetEventMask(oRunnable, nEventMask);
 	if ( GetIsObjectValid(oActor) )
 		SetLocalObject(GetModule(), "EVENT_LAST_ACTOR", oActor);
@@ -208,6 +372,15 @@ int RunEventScript(string sScript, int nEventMask, object oRunnable, object oAct
 	return ExecuteScriptInt(sScript, oRunnable);
 }
 
+// Get the current UserDefined Item Event Number
+int GetEventType() {
+	return GetLocalInt(GetModule(), "EVENT_LAST_EVENT_TYPE");
+}
+
+// Set the current UserDefined Event
+void SetEventType(object oObject, int nEventType) {
+	SetLocalInt(GetModule(), "EVENT_LAST_EVENT_TYPE", nEventType);
+}
 
 // Get the current UserDefined Item Event Number
 int GetEventMask() {
