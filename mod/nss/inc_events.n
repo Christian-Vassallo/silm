@@ -95,7 +95,7 @@ void RegisterEventScript(string sScript, int nEventMask, string sTagMask = "**",
 // Unregisters all event scripts that match the given criteria NOT IMPLEMENTED.
 //
 // Clears the list, by default.
-void UnregisterEventScript(sScript = "", int nEventMask = EVENT_ANY);
+void UnregisterEventScript(string sScript = "", int nEventMask = EVENT_ANY);
 
 // Function: RunAllEventScriptsFor
 // 
@@ -161,7 +161,7 @@ void RegisterEventScript(string sScript, int nEventMask, string sTagMask = "**",
 	SetLocalInt(GetModule(), "inc_events_last", last);
 }
 
-void UnregisterEventScript(sScript = "", int nEventMask = EVENT_ANY) {
+void UnregisterEventScript(string sScript = "", int nEventMask = EVENT_ANY) {
 	// Not implemented
 }
 
@@ -177,11 +177,11 @@ int RunEventScriptsFor(int nEventMask, object oRunnable, object oActor, object o
 			continue;
 
 		tag = GetLocalString(GetModule(), "inc_events_" + si + "_tagmask");
-		if (!GetStringPatternMatches( ... ))
+		if (tag != "" && tag != "**" && !TestStringAgainstPattern(tag, GetTag(oActedOn)))
 			continue;
 
 		ref = GetLocalString(GetModule(), "inc_events_" + si + "_refmask");
-		if (!GetStringPatternMatches( ... ))
+		if (ref != "" && ref != "**" && !TestStringAgainstPattern(ref, GetResRef(oActedOn)))
 			continue;
 
 		script = GetLocalString(GetModule(), "inc_events_" + si + "_script");
@@ -200,7 +200,7 @@ int RunEventScript(string sScript, int nEventMask, object oRunnable, object oAct
 	if ( !GetIsObjectValid(oRunnable) )
 		return EVENT_EXECUTE_SCRIPT_FAILED;
 
-	SetEventMask(oObject, iEvent);
+	SetEventMask(oRunnable, nEventMask);
 	if ( GetIsObjectValid(oActor) )
 		SetLocalObject(GetModule(), "EVENT_LAST_ACTOR", oActor);
 	if ( GetIsObjectValid(oActedOn) )
@@ -244,12 +244,4 @@ object GetEventActor() {
 }
 object GetEventActedOn() {
 	return GetLocalObject(GetModule(), "EVENT_LAST_ACTEDON");
-}
-
-
-void RegisterPlayerEventScript(string sName) {
-	string old = GetLocalString(GetModule(), "EVENTS_PC");
-	if ( old != "" )
-		old += ",";
-	SetLocalString(GetModule(), "EVENTS_PC", old + sName);
 }
