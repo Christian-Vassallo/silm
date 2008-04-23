@@ -4,7 +4,9 @@ extern("inc_nwnx_func")
 extern("inc_currency")
 extern("inc_2dacache")
 extern("inc_time")
+
 extern("inc_spells")
+extern("inc_numeric")
 
 #include "inc_pgsql.nh"
 
@@ -43,10 +45,6 @@ int MakeThrow(int nDC, int nDFaces, int nDCount, int nMod, int bDisplayToAll = F
 // Returns the height difference between oA and oB.
 // oB.z - oA.z = fElevation
 float GetElevationBetween(object oA, object oB);
-
-// Function: GetAbsoluteOrRelativeValue
-// xx
-float GetAbsoluteOrRelativeValue(string sParseMe, float fCurrentValue, float fAbsoluteValue);
 
 // Function: EffectUnconscious
 // A simulated concussion.
@@ -712,52 +710,6 @@ string SecondsToTimeDesc(int nSeconds) {
 	return sRet;
 }
 
-
-
-
-float GetAbsoluteOrRelativeValue(string sParseMe, float fCurrentValue,  float fAbsoluteValue) {
-	// +5.x
-	// -2.4
-	// 20
-
-	int bPercent = FALSE;
-	int bRelativeAdd = FALSE;
-	int bRelativeSub = FALSE;
-
-	if ( GetStringLeft(sParseMe, 1) == "+" ) {
-		sParseMe = GetStringRight(sParseMe, GetStringLength(sParseMe) - 1);
-		bRelativeAdd = TRUE;
-	} else if ( GetStringLeft(sParseMe, 1) == "-" ) {
-		sParseMe = GetStringRight(sParseMe, GetStringLength(sParseMe) - 1);
-		bRelativeSub = TRUE;
-	}
-
-	if ( GetStringRight(sParseMe, 1) == "%" ) {
-		sParseMe = GetStringLeft(sParseMe, GetStringLength(sParseMe) - 1);
-		bPercent = TRUE;
-	}
-
-	float fRet = fCurrentValue;
-
-	float fChange = StringToFloat(sParseMe);
-
-	if ( 0.0 == fChange )
-		return fRet;
-
-	if ( bRelativeAdd && !bPercent )
-		fRet += fChange;
-	else if ( bRelativeAdd && bPercent )
-		// Add fChange percent of fAbs to fRet
-		fRet += ( fAbsoluteValue / 100.0 ) * fChange;
-	else if ( bRelativeSub && !bPercent )
-		fRet -= fChange;
-	// sub fChange to fRet
-	else if ( bRelativeSub && bPercent )
-		fRet -= ( fAbsoluteValue / 100.0 ) * fChange;
-	// sub fChange percent of fAbs to fRet
-
-	return fRet;
-}
 
 
 
