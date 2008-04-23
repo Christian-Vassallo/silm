@@ -1,0 +1,67 @@
+/*
+File: inc_numeric.n
+
+Various number-related utilities.
+*/
+
+
+// Function: GetAbsoluteOrRelativeValue
+//
+// Modifies a float based on a string.
+// sParseMe should be of the following format:
+// - +25: Add 25 to fCurrentValue
+// - -12: Substract 12 from fCurrentValue
+// - +30%: Add 30% of fCurrentValue to fCurrentValue
+// - -20%: Substract 20% of fCurrentValue
+// - 80%: Return 80% of fCurrentValue
+float GetAbsoluteOrRelativeValue(string sParseMe, float fCurrentValue);
+
+
+
+float GetAbsoluteOrRelativeValue(string sParseMe, float fCurrentValue) {
+	int bPercent = FALSE;
+	int bRelativeAdd = FALSE;
+	int bRelativeSub = FALSE;
+
+	if ( GetStringLeft(sParseMe, 1) == "+" ) {
+		sParseMe = GetStringRight(sParseMe, GetStringLength(sParseMe) - 1);
+		bRelativeAdd = TRUE;
+	} else if ( GetStringLeft(sParseMe, 1) == "-" ) {
+		sParseMe = GetStringRight(sParseMe, GetStringLength(sParseMe) - 1);
+		bRelativeSub = TRUE;
+	}
+
+	if ( GetStringRight(sParseMe, 1) == "%" ) {
+		sParseMe = GetStringLeft(sParseMe, GetStringLength(sParseMe) - 1);
+		bPercent = TRUE;
+	}
+
+	float fChange = StringToFloat(sParseMe);
+
+	if ( 0.0 == fChange )
+		return fCurrentValue;
+
+
+	if (bRelativeAdd) {
+		if (bPercent)
+			return fCurrentValue + (fCurrentValue / 100f * fChange);
+		else
+			return fCurrentValue + fChange;
+
+	} else if (bRelativeSub) {
+		if (bPercent)
+			return fCurrentValue - (fCurrentValue / 100f * fChange);
+		else
+			return fCurrentValue - fChange;
+
+	} else /* no +/- */ {
+		if (bPercent) {
+			return (fCurrentValue / 100f) * fChange;
+		} else {
+			// not reached
+		}
+	}
+
+	// not reached
+	return fCurrentValue;
+}
