@@ -1,0 +1,66 @@
+/*
+File: inc_time.n
+
+Functions and data structures centered around time handling and manipulation.
+
+*/
+#include "inc_pgsql.nh"
+
+// Struct: Realtime
+struct RealTime {
+	int ts;
+	int weekday;
+	int week;
+	int day;
+	int month;
+	int year;
+	int hour;
+	int minute;
+	int second;
+	string timefmt; // Formatted time by SQL, just for convenience
+	int error;
+};
+
+// Function: GetRealTime
+//
+// Returns the current walltime.
+struct RealTime GetRealTime();
+
+
+
+
+
+struct RealTime GetRealTime() {
+	struct RealTime r;
+	
+	pQ("select " +
+		"extract(seconds from now())::int, " +
+		"extract(minutes from now())::int, " +
+		"extract(hours from now())::int, " +
+		"extract(days from now())::int, " + 
+		"extract(months from now())::int, " +
+		"extract(years from now())::int, " +
+		"extract(weeks from now())::int, " +
+		"extract(dow from now())::int, " +
+		"unixts(), " +
+		"now()::varchar" +
+		";"
+	);
+	if (!pF()) {
+		r.error = 1;
+		_FATAL("GetRealTime() failed.");
+	} else {
+		r.second = pGi(1);
+		r.minute = pGi(2);
+		r.hour = pGi(3);
+		r.day = pGi(4);
+		r.month = pGi(5);
+		r.year = pGi(6);
+		r.week = pGi(7);
+		r.weekday = pGi(8);
+		r.ts = pGi(9);
+		r.timefmt = pGs(10);
+	}
+	return r;
+
+}
