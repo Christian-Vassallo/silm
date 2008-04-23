@@ -1,10 +1,13 @@
 # inherits stuff
 
-all: revupdate preprocess compile
+all: preprocess-sternenfall revupdate preprocess compile
 
+
+preprocess-sternenfall:
+	make -C $(STERNENFALL)/mod/nss/ preprocess
 
 NCC=nwnnsscomp
-NCCFLAGS=-g -c -q -o
+NCCFLAGS=-g -c -q -o -i $(STERNENFALL)/mod/nss
 NSSVERIFYFLAGS=-g -o -q -t4
 
 includes := _gen _buildinfo _const \
@@ -42,8 +45,8 @@ preprocess: $(preprocessed)
 compile: $(objects)
 
 $(preprocessed) : %.nss : %.n
-	@set -e; (gcc -undef -Wall -fextended-identifiers -P -E -nostdinc -I. -Iglobal -include stddef.h -x c -std=c99 $< |\
-		gpp +z -C +n --nostdinc -I. -Iglobal --include "gpp.h" > `basename $< .n`.nss)
+	@set -e; (gcc -undef -Wall -fextended-identifiers -P -E -nostdinc -I$(STERNENFALL)/mod/nss -I$(STERNENFALL)/mod/nss/global -include stddef.h -I . -x c -std=c99 $< |\
+		gpp +z -C +n --nostdinc -I$(STERNENFALL)/mod/nss -I$(STERNENFALL)/mod/nss/global -I. -Iglobal --include "gpp.h" > `basename $< .n`.nss)
 
 $(objects) : %.ncs : %.nss
 	$(NCC) $(NCCFLAGS) $(NWNHOME) $<
