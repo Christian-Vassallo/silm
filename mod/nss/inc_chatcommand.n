@@ -1008,7 +1008,7 @@ int CommandRotate(object oPC, int iMode) {
 	if ( s == "" ) {
 		ToPC("Rotation is: " + FloatToString(GetFacing(oTarget)));
 	} else {
-		float fRotation = GetAbsoluteOrRelativeValue(s, GetFacing(oTarget), 360.0);
+		float fRotation = GetAbsoluteOrRelativeValue(s, GetFacing(oTarget));
 		DelayCommand(getsleep(), AssignCommand(oTarget, SetFacing(fRotation)));
 		ToPC("Done, rotating to " + FloatToString(fRotation));
 	}
@@ -1029,8 +1029,7 @@ int CommandHP(object oPC, int iMode) {
 
 	if ( sHP == "" ) {} else {
 		// parse percentage changes
-		float fChange = GetAbsoluteOrRelativeValue(sHP, IntToFloat(GetCurrentHitPoints(oTarget)), IntToFloat(
-								GetMaxHitPoints(oTarget)));
+		float fChange = GetAbsoluteOrRelativeValue(sHP, IntToFloat(GetCurrentHitPoints(oTarget)));
 		if ( fChange == 0.0 ) {
 			ToPC("No change.");
 			return OK;
