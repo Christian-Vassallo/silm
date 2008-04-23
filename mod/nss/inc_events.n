@@ -26,7 +26,7 @@ EVENT_TYPE_ITEM                 - Item events
 EVENT_TYPE_CREATURE             - Creature events
 EVENT_TYPE_PLACEABLE            - Placeable events
 EVENT_TYPE_AREA                 - Area events
-
+EVENT_TYPE_DOOR                 - Door events
 
 Const: Misc Events
 EVENT_ANY                       - match any event
@@ -98,6 +98,23 @@ runnable: the area
 EVENT_AREA_ENTER                - Creature enters an area (actor: creature)
 EVENT_AREA_EXIT                 - Creature leaves an area (actor: creature)
 EVENT_AREA_HB                   - Heartbeat for area (actor: n/a)
+
+Consts: Door Events
+runnable: the door, actor: creature
+EVENT_DOOR_CLICK                - Door gets glicked
+EVENT_DOOR_DAMAGE               - Door gets damaged
+EVENT_DOOR_DEATH                - Door gets destroyed
+EVENT_DOOR_DISARM               - Door (trap) gets disarmed
+EVENT_DOOR_HB                   - Door heartbeat
+EVENT_DOOR_LOCK                 - Door gets locked
+EVENT_DOOR_UNLOCK               - Door gets unlocked
+EVENT_DOOR_MELEEATTACK          - Door gets physically attacked
+EVENT_DOOR_SPELLCAST            - Door gets spell cast at
+EVENT_DOOR_TRAPTRIG             - Door trap gets triggered
+EVENT_DOOR_OPEN                 - Creature opens a door
+EVENT_DOOR_FAILTOOPEN           - Door fails to open
+EVENT_DOOR_CLOSE                - Creature closes a door
+
 */
 
 
@@ -155,7 +172,19 @@ const int EVENT_PLACEABLE_USE = 1 << 13;
 const int EVENT_AREA_ENTER = 1 << 0;
 const int EVENT_AREA_EXIT = 1 << 1;
 const int EVENT_AREA_HB = 1 << 2;
-
+const int EVENT_DOOR_CLICK = 1 << 0;
+const int EVENT_DOOR_DAMAGE = 1 << 1;
+const int EVENT_DOOR_DEATH = 1 << 2;
+const int EVENT_DOOR_DISARM = 1 << 3;
+const int EVENT_DOOR_HB = 1 << 4;
+const int EVENT_DOOR_LOCK = 1 << 5;
+const int EVENT_DOOR_UNLOCK = 1 << 6;
+const int EVENT_DOOR_MELEEATTACK = 1 << 7;
+const int EVENT_DOOR_SPELLCAST = 1 << 8;
+const int EVENT_DOOR_TRAPTRIG = 1 << 9;
+const int EVENT_DOOR_OPEN = 1 << 10;
+const int EVENT_DOOR_FAILTOOPEN = 1 << 11;
+const int EVENT_DOOR_CLOSE = 1 << 12;
 
 
 // Function: RegisterEventScript
