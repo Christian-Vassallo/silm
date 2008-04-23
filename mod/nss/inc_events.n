@@ -322,7 +322,7 @@ int RunEventScriptsFor(int nEventType, int nEventMask, object oRunnable, object 
 			continue;
 
 		mask = GetLocalInt(GetModule(), "inc_events_" + si + "_eventmask");
-		if (nEventMask != mask & nEventMask)
+		if (mask != EVENT_ANY && nEventMask != mask & nEventMask)
 			continue;
 
 		tag = GetLocalString(GetModule(), "inc_events_" + si + "_tagmask");
