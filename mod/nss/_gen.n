@@ -4,6 +4,7 @@ extern("inc_nwnx_func")
 extern("inc_currency")
 extern("inc_2dacache")
 extern("inc_time")
+extern("inc_spells")
 
 #include "inc_pgsql.nh"
 
@@ -42,10 +43,6 @@ int MakeThrow(int nDC, int nDFaces, int nDCount, int nMod, int bDisplayToAll = F
 // Returns the height difference between oA and oB.
 // oB.z - oA.z = fElevation
 float GetElevationBetween(object oA, object oB);
-
-// Function: GetSpellName
-// Returns the spell name as found in the serverside 2da/tlk.
-string GetSpellName(int nSpellID);
 
 // Function: GetAbsoluteOrRelativeValue
 // xx
@@ -772,15 +769,6 @@ effect EffectUnconscious(int bConceal = FALSE) {
 		e = EffectLinkEffects(EffectConcealment(100), e);
 	return e;
 }
-
-string GetSpellName(int nSpellID) {
-	int nRes = StringToInt(Get2DACached("spells", "Name", nSpellID));
-	if ( nRes == 0 )
-		return "UNBEKANNTER ZAUBER (nicht in 2da)";
-
-	return GetStringByStrRef(nRes);
-}
-
 
 effect StringToEffect(string sE) {
 	effect e;
