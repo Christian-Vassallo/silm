@@ -8,7 +8,7 @@ extern("inc_events")
 
 void main() {
 	int type = GetEventType();
-	int event = GetEvent();
+	int eevent = GetEvent();
 
 	object door = OBJECT_SELF;
 	object actor = GetEventActor();
@@ -17,11 +17,14 @@ void main() {
 	if (EVENT_TYPE_DOOR != type)
 		return;
 
-	if (EVENT_DOOR_CLICK == event) {
-		AssignCommand(actor, ActionUseObject(door));
+	if (EVENT_DOOR_CLICK == eevent) {
+		if (GetIsOpen(door))
+			AssignCommand(actor, ActionCloseDoor(door));
+		else
+			AssignCommand(actor, ActionOpenDoor(door));
 	}
 
-	if (EVENT_DOOR_LOCK == event || EVENT_DOOR_UNLOCK == event) {
+	if (EVENT_DOOR_LOCK == eevent || EVENT_DOOR_UNLOCK == eevent) {
 		if (!GetLockLockable(other_door) || !GetLockLockable(door))
 			return;
 
