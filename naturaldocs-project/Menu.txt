@@ -112,7 +112,6 @@ Group: Core  {
 
       Group: Module  {
 
-         File: _ou_sittable.n  (mod/nss/_ou_sittable.n)
          File: mod_acquire.n  (mod/nss/mod_acquire.n)
          File: mod_activate.n  (mod/nss/mod_activate.n)
          File: mod_cliententer.n  (mod/nss/mod_cliententer.n)
@@ -124,39 +123,26 @@ Group: Core  {
          File: mod_playerrest.n  (mod/nss/mod_playerrest.n)
          File: mod_unacquire.n  (mod/nss/mod_unacquire.n)
          File: mod_unequip.n  (mod/nss/mod_unequip.n)
+         File: p_sittable.n  (mod/nss/e_sittable.n)
          }  # Group: Module
 
       }  # Group: Events
 
    }  # Group: Core
 
-Group: Game Logic  {
-
-   Group: Events  {
-
-      Group: Doors  {
-
-         File: e_doors.n  (mod/nss/e_doors.n)
-         }  # Group: Doors
-
-      Group: Placeables  {
-
-         File: p_sittable.n  (mod/nss/p_sittable.n)
-         }  # Group: Placeables
-
-      }  # Group: Events
-
-   }  # Group: Game Logic
-
 Group: Database Definitions  {
 
    File: base.sql  (schema/base.sql)
+   File: events.sql  (schema/events.sql)
    File: getopt.sql  (schema/getopt.sql)
    File: getoptlong_inline.rb  (schema/getoptlong_inline.rb)
    File: scorco.sql  (schema/scorco.sql)
    }  # Group: Database Definitions
 
-File: Selectors  (concepts/selectors.txt)
+Group: Doors  {
+
+   File: e_doors.n  (mod/nss/e_doors.n)
+   }  # Group: Doors
 
 Group: Indexes  {
 
