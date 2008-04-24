@@ -67,5 +67,8 @@ void main() {
 	SetLocalInt(oMod, "startup_ts", GetUnixTimestamp());
 
 	mnx_asynchronous_command_noreply(mnx_prepare_command("startup", GIT_COMMIT));
+
+	RehashEventScripts();
+
 	RunEventScriptsFor(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_MODULE_LOAD, OBJECT_SELF, OBJECT_SELF, OBJECT_SELF, GetLocation(OBJECT_SELF));
 }
