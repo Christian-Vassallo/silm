@@ -1,0 +1,23 @@
+extern("inc_events")
+extern("inc_healerkit")
+extern("inc_scorco")
+
+void main() {
+	int type = GetEventType();
+	int ev = GetEvent();
+	object item = GetRunnable();
+	object player = GetEventActor();
+	object target = GetEventActedOn();
+	string ref = GetResRef(item);
+
+	if (type != EVENT_TYPE_ITEM || ev != EVENT_ITEM_ACTIVATE)
+		return;
+
+	if ("bandage" == ref) {
+		AddBandage(player, target, item);
+	} else if ("healerkit" == ref) {
+		UseHealerKit(player, target, item);
+	} else if ("medicine" == ref) {
+		AddMedicine(player, target, item);
+	}
+}
