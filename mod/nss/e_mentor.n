@@ -1,18 +1,19 @@
 extern("_gen")
-extern("inc_old_events")
+extern("inc_events")
 extern("inc_cdb")
 extern("inc_ms")
 
 void main() {
+	int ev = GetEvent();
+	int ty = GetEventType();
+	object item = GetEventRunnable();
 
-
-	if ( GetEvent() != EVENT_ITEM_ACTIVATE )
+	if (ev != EVENT_ITEM_ACTIVATE || ty != EVENT_TYPE_ITEM || GetTag(item) != "mentor")
 		return;
 
 	object
-	oItem = GetItemActivated(),
-	oPC = GetItemActivator(),
-	oTarget = GetItemActivatedTarget();
+	oPC = GetEventActor(),
+	oTarget = GetEventActedOn();
 
 	if ( GetIsInCombat(oPC) || GetIsInCombat(oTarget) ) {
 		FloatingTextStringOnCreature("Das wird nix waehrend Gegner in der Naehe sind.", oPC, 0);
@@ -27,5 +28,5 @@ void main() {
 
 	SetLocalObject(oPC, "mentor_target", oTarget);
 
-	MS_Start(oPC, oItem);
+	MS_Start(oPC, item);
 }
