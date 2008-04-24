@@ -308,10 +308,10 @@ int ExecuteScriptInt(string sScript, object oTarget);
 // - EVENT_EXECUTE_SCRIPT_END - end calling script after executed script is done
 void SetEventScriptReturnValue(int nValue = EVENT_EXECUTE_SCRIPT_END);
 
-// Function: GetRunnable
+// Function: GetEventRunnable
 //
 // Returns the runnable object (usually equal to OBJECT_SELF)
-object GetRunnable();
+object GetEventRunnable();
 
 // Function: GetEventActor
 //
@@ -548,7 +548,7 @@ void SetEventScriptReturnValue(int nValue = EVENT_EXECUTE_SCRIPT_CONTINUE) {
 	SetLocalInt(GetModule(), "EVENT_L_LAST_RETVAR", nValue);
 }
 
-object GetRunnable() {
+object GetEventRunnable() {
 	return OBJECT_SELF;
 }
 object GetEventActor() {
