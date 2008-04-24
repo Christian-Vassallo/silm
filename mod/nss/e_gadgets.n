@@ -1,0 +1,125 @@
+extern("_gen")
+extern("inc_events")
+
+void main() {
+	int ev = GetEvent();
+	int type = GetEventType();
+
+	if (ev != EVENT_ITEM_ACTIVATE || type != EVENT_TYPE_ITEM)
+		return;
+	object oPC = GetEventActor();
+	object oA = GetArea(oPC);
+	string tag = GetTag(GetEventRunnable());
+
+	if ("thermometer" == tag) {
+
+		// -1      = bloody freezin cold. quicksilver freezes.
+		// 0 = 0/4
+		// 1 = 1/4 = fruehling, dungeons.  5-10 grad
+		// 2 = 2/4
+		// 3 = 3/4
+		// 4 = 4/4 = summer = hot, hotter, hottest
+		// 5       = glass bursts.
+
+		int nFill = -2;
+
+		// Fruehling: 3 - 4
+		// Sommer: 5 - 8
+		// Herbst: 9 - 10
+		// Winter: 11 - 2
+
+
+		switch ( GetCalendarMonth() ) {
+
+			// spaeter Fruehling
+			case 3: case 4:
+				nFill = 2;
+				break;
+
+				// Sommer
+			case 5: case 6: case 7: case 8:
+				nFill = 4;
+				break;
+
+			case 9: case 10:
+				nFill = 2;
+				break;
+
+			case 11:
+				nFill = 1;
+				break;
+
+			case 12: case 1: case 2:
+				nFill = 0;
+				break;
+
+		}
+
+
+		if ( GetTilesetResRef(oA) == TILESET_RESREF_DESERT ) {
+			if ( GetIsDay() )
+				nFill = 4;
+			else
+				nFill = 0;
+
+		} else if ( GetTilesetResRef(oA) == TILESET_RESREF_FROZEN_WASTES ) {
+			nFill = -1;
+
+		} else if ( GetTilesetResRef(oA) == TILESET_RESREF_DUNGEON ) {
+			nFill = 1;
+		}
+
+
+		if ( GetIsAreaInterior(oA) )
+			nFill = 2;
+
+		if ( GetIsNight() && nFill >= 1 )
+			nFill -= 1;
+
+		string sText = "";
+		// -1      = bloody freezin cold. stuff freezes.
+		// 0 = 0/4
+		// 1 = 1/4 = fruehling, dungeons.  5-10 grad
+		// 2 = 2/4
+		// 3 = 3/4
+		// 4 = 4/4 = summer = hot, hotter, hottest
+		// 5       = glass bursts.
+
+		switch ( nFill ) {
+			case - 1:
+				sText =
+					"Die Temperaturkugel ist mit kratzigem, frostigem Eis ueberzogen.  Die darin enthaltene Fluessigkeit ist gefroren.";
+				break;
+			case 0:
+				sText =
+					"Die Temperaturkugel ist eiskalt zu eurer Beruehrung.  Die Fluessigkeit schwappt zaeh am Boden herum.";
+				break;
+			case 1:
+				sText =
+					"Die Fluessigkeit fuellt in etwa ein Viertel der Kugel.  Sie fuehlt sich kuehl an, und euch froestelt leicht.";
+				break;
+			case 2:
+				sText =
+					"Die Temperaturkugel sieht sehr unentschlossen aus.  Ist es nun warm, oder nicht?  Ungefaehr die Haelfte des Glases ist gefuellt.";
+				break;
+			case 3:
+				sText = "Die Fluessigkeit fuellt in etwa drei Viertel der Glaskugel.  Sie ist handwarm.";
+				break;
+			case 4:
+				sText =
+					"Die Kugel ist gesamt mit der silbernen Fluessigkeit gefuellt, und das Glas ist sehr, sehr warm.";
+				break;
+			case 5:
+				sText =
+					"Die Temperaturkugel ist kaum anzufassen, so heiss ist sie.  Die Fluessigkeit glaenzt und schillert in fast selbstbewusster Aktivitaet; sie fuellt die ganze Kugel.";
+				break;
+			default:
+				sText =
+					"Die Temperaturkugel zeigt keinen lesbaren Stand.  Wenn ihr genau hinseht, so entdeckt ihr ein kleines, grinsendes Gesicht in der silbernen Masse.";
+				break;
+		}
+
+		FloatingTextStringOnCreature("Ihr rubbelt an der Temperaturkugel ..", oPC, FALSE);
+		DelayCommand(2.0f, FloatingTextStringOnCreature(sText, oPC, FALSE));
+	}
+}
