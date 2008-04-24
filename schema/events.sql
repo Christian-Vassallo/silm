@@ -8,8 +8,8 @@ create schema events;
 create table events.events (
 	id serial8 primary key not null,
 	script varchar(16) not null,
-	eventtype int not null default 0,
-	eventmask int not null default 0,
+	eventtype int,
+	eventmask int,
 	sync boolean not null default false,
 	runnable_tagmask varchar(32),
 	runnable_refmask varchar(16),
