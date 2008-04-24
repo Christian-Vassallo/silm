@@ -5,33 +5,28 @@
 extern("inc_mnx")
 
 #include "_const.nh"
-extern("inc_chat_lib")
 extern("_gen")
-extern("inc_target")
-extern("inc_limbo")
 extern("inc_cdb")
-extern("inc_dbplac")
-extern("inc_security")
-extern("inc_getopt")
+extern("inc_chat_lib")
 extern("inc_craft_hlp")
+extern("inc_dbplac")
 extern("inc_decay")
-
 extern("inc_draw")
 extern("inc_draw_text")
-
-extern("inc_planewalk")
-
-extern("x0_i0_anims")
-
+extern("inc_events")
+extern("inc_getopt")
+extern("inc_limbo")
 extern("inc_mnx_temp")
-extern("inc_xp_handling")
-
 extern("inc_nwnx_func")
-extern("inc_track")
 extern("inc_objset")
-
-#include "inc_pgsql.nh"
+extern("inc_planewalk")
 extern("inc_scorco")
+extern("inc_security")
+extern("inc_target")
+extern("inc_track")
+extern("inc_xp_handling")
+extern("x0_i0_anims")
+#include "inc_pgsql.nh"
 
 int CommandSCO(object oPC, int iMode);
 int CommandRCO(object oPC, int iMode);
@@ -528,6 +523,9 @@ int CommandRehash(object oPC, int iMode) {
 		SetLocalString(GetModule(), cacheKey, pG(3));
 	}
 	ToDMs("Rehashed " + IntToString(c) + " gvs.");
+
+	c = RehashEventScripts();
+	ToDMs("Rehashed " + IntToString(c) + " event scripts.");
 	return OK;
 }
 
