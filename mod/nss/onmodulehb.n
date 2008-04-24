@@ -1,6 +1,7 @@
 extern("inc_decay")
 extern("inc_persist")
 extern("inc_setting")
+extern("inc_events")
 
 //Workaround for Time-Stop-Bug: Resync clocks with core clock
 //Once every game hour is said to be enough
@@ -39,6 +40,9 @@ void main() {
 
 		oPC = GetNextPC();
 	}
+
+
+	RunEventScriptsFor(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_HB, oMod, oMod, oMod, GetLocation(OBJECT_INVALID));
 
 	//Placeholder for module-wide scripts/routines which are to be
 	//executed every heartbeat
