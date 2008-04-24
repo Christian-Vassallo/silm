@@ -52,8 +52,8 @@ $(objects) : %.ncs : %.nss
 	$(NCC) $(NCCFLAGS) $(NWNHOME) $<
 
 
-tags:
-	@ctags --language-force=c --totals --fields=fksmnSzt  global/*.h *.{n,nh,h} $(NWNHOME)/original_resources/nss/*.nss
+etags:
+	@ctags --language-force=c --totals --fields=fksmnSzt  global/*.h *.{n,nh,h} $(NWNHOME)/original_resources/nss/*.nss $(STERNENFALL)/mod/nss/* $(STERNENFALL)/mod/nss/global/*
 
 clean:
 	-rm *.nss *.ncs *.ndb
