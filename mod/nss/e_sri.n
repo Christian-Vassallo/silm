@@ -1,0 +1,20 @@
+extern("inc_events")
+extern("inc_scorco")
+
+void main() {
+	int ev = GetEvent();
+	int type = GetEventType();
+	if (ev != EVENT_ITEM_ACTIVATE || type != EVENT_TYPE_ITEM)
+		return;
+
+	object item = GetEventRunnable();
+	object player = GetEventActor();
+	string tag = GetTag(item);
+
+	if ("sri_act_fly" == tag) {
+
+		SetLocalObject(player, "SR_IAct_Obj", GetEventActedOn());
+		SetLocalLocation(player, "SR_IAct_Loc", GetEventActedAt());
+		ExecuteScript("sri_act_fly", player);
+	}
+}
