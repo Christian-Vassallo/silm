@@ -1,7 +1,7 @@
 extern("inc_subr_item")
 extern("inc_miscitm")
 extern("inc_summon")
-extern("inc_old_events")
+extern("inc_events")
 extern("inc_cdb")
 
 
@@ -49,5 +49,5 @@ void main() {
 
 
 	// Run the event script, if available.
-	RunEventScript(oItem, EVENT_ITEM_ACTIVATE, EVENT_PREFIX_ITEM);
+	RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_ACTIVATE, oItem, oPC, oTarget, lTarget);
 }

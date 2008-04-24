@@ -2,6 +2,7 @@ extern("_gen")
 extern("inc_horse")
 extern("inc_torches")
 extern("inc_clothing")
+extern("inc_events")
 
 void ClothEquip();
 
@@ -138,4 +139,5 @@ void ClothEquip() {
 	}
 
 	//DelayCommand(COMMANDABLEFUDGE, SetCommandable(TRUE, oPC));
+	RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_EQUIP, oItem, oPC, oPC, GetLocation(oPC));
 }

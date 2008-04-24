@@ -1,5 +1,5 @@
 extern("inc_corpse_drop")
-extern("inc_old_events")
+extern("inc_events")
 extern("inc_scorco")
 extern("inc_setting")
 extern("inc_cdb")
@@ -46,7 +46,7 @@ void main() {
 
 
 	// Run the event script, if available.
-	RunEventScript(oItem, EVENT_ITEM_UNACQUIRE, EVENT_PREFIX_ITEM);
+	RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_UNACQUIRE, oItem, oPC, oPC, GetLocation(oPC));
 }
 
 

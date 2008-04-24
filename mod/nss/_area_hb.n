@@ -5,7 +5,7 @@
  * This code is licenced under the
  *  GNU/GPLv2 General Public Licence.
  */
-extern("inc_old_events")
+extern("inc_events")
 
 /*
  * This is a generic event distribution
@@ -13,5 +13,5 @@ extern("inc_old_events")
  */
 
 void main() {
-	RunEventScript(OBJECT_SELF, EVENT_AREA_HB, EVENT_PREFIX_AREA);
+	RunEventScriptsFor(EVENT_TYPE_AREA, EVENT_AREA_HB, OBJECT_SELF, OBJECT_INVALID, OBJECT_INVALID, GetLocation(OBJECT_SELF));
 }

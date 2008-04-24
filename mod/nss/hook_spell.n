@@ -1,7 +1,7 @@
 extern("x2_inc_switches")
 extern("_gen")
 extern("inc_draw")
-extern("inc_old_events")
+extern("inc_events")
 
 extern("inc_planewalk")
 extern("inc_craft")
@@ -47,7 +47,7 @@ void main() {
 	// The Event hook goes here
 
 	if ( is_item(oTarget) ) {
-		int nResult = RunEventScript(oTarget, EVENT_ITEM_SPELLCAST_AT, EVENT_PREFIX_ITEM);
+		int nResult = RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_SPELLCAST, oPC, oPC, oTarget, lTarget); //oTarget, EVENT_ITEM_SPELLCAST_AT, EVENT_PREFIX_ITEM);
 
 		if ( EVENT_EXECUTE_SCRIPT_END == nResult ) {
 			// Do not continue.

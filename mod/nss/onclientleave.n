@@ -6,6 +6,7 @@ extern("inc_audit")
 extern("inc_currency")
 extern("inc_mnx")
 extern("inc_online")
+extern("inc_events")
 
 void main() {
 	object oPC = GetExitingObject();
@@ -37,4 +38,5 @@ void main() {
 	onlinePlayerLeave(oPC);
 
 	ChatPCout(oPC);
+	RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_LOGOUT, oPC, oPC, oPC, GetLocation(oPC));
 }

@@ -5,7 +5,7 @@
  * This code is licenced under the
  *  GNU/GPLv2 General Public Licence.
  */
-extern("inc_old_events")
+extern("inc_events")
 extern("inc_cleaningcrew")
 extern("inc_dbplac")
 extern("_gen")
@@ -19,8 +19,9 @@ extern("inc_mnx")
 
 void main() {
 	object oPC = GetExitingObject();
+	object oArea = GetArea(oPC);
 
-	RunEventScript(OBJECT_SELF, EVENT_AREA_EXIT, EVENT_PREFIX_AREA);
+	RunEventScriptsFor(EVENT_TYPE_AREA, EVENT_AREA_EXIT, oArea, oPC, OBJECT_INVALID, GetLocation(oPC));
 
 	if ( GetIsPC(oPC) ) {
 		string sCharName = GetName(oPC);

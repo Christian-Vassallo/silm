@@ -1,6 +1,6 @@
 extern("inc_currency")
 extern("nw_i0_plotwizard")
-extern("inc_old_events")
+extern("inc_events")
 extern("inc_scorco")
 extern("inc_setting")
 
@@ -50,5 +50,5 @@ void main() {
 	}
 
 	// Run the event script, if available.
-	RunEventScript(oItem, EVENT_ITEM_ACQUIRE, EVENT_PREFIX_ITEM);
+	RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_ACQUIRE, oItem, oPC, oFrom, GetLocation(oPC));
 }

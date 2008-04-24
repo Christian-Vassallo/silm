@@ -10,7 +10,7 @@
 
 extern("_gen")
 
-extern("inc_old_events")
+extern("inc_events")
 extern("inc_dbplac")
 
 extern("inc_scorco")
@@ -95,10 +95,9 @@ void main() {
 		slv_i(oArea, "critters_loaded", 1);
 	}
 
-
 	onlinePlayerUpdateLocation(oPC);
-
-	RunEventScript(OBJECT_SELF, EVENT_AREA_ENTER, EVENT_PREFIX_AREA);
+	
+	RunEventScriptsFor(EVENT_TYPE_AREA, EVENT_AREA_ENTER, oArea, oPC, OBJECT_INVALID, GetLocation(oPC));
 }
 
 

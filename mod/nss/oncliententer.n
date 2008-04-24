@@ -5,6 +5,7 @@ extern("inc_mnx")
 extern("inc_audit")
 extern("inc_currency")
 extern("inc_online")
+extern("inc_events")
 #include "inc_pgsql.nh"
 
 void MnxNotify(object oPC);
@@ -90,6 +91,8 @@ void main() {
 //    if (!GetIsObjectValid(GetItemPossessedBy(oPC, "pc_walkrun")))
 //        CreateItemOnObject("pc_walkrun", oPC, 1);
 	// DestroyObject(GetItemPossessedBy(oPC, "pc_walkrun"));
+
+	RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_LOGIN, oPC, oPC, oPC, GetLocation(oPC));
 
 }
 
