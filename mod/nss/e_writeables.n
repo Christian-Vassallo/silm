@@ -1,0 +1,313 @@
+extern("_gen")
+extern("inc_events")
+extern("inc_cdb")
+extern("inc_spelltools")
+
+
+// Function: AddText
+// Adds a line of text to a piece of paper.
+void AddText(object oWriter, object oPaper, string sText);
+
+
+void OnPaperActivate(object oItem, object oActivator);
+
+int OnPaperSpellCastAt(object oItem, object oSpellCaster);
+
+void main() {
+	int ev = GetEvent();
+	int type = GetEventType();
+	
+	if (EVENT_TYPE_ITEM != type || EVENT_ITEM_ACTIVATE != ev)
+		return;
+	
+	string tag = GetTag(GetEventRunnable());
+	
+	if ("tool_pen" == tag) {
+
+
+		object
+		oPen = GetEventRunnable(),
+		oPC = GetEventActor(),
+		oPaper = GetEventActedOn();
+
+
+		string sText = GetLocalString(oPC, "paper_text_to_write");
+
+		if ( sText == "" ) {
+			FloatingTextStringOnCreature(
+				"Setzt zuerst einen Text, den Ihr schreiben wollt;  indem ihr '/write Hier den Text' eingebt..",
+				oPC,
+				0);
+			SetItemCharges(oPen, GetItemCharges(oPen) + 1);
+			return;
+		}
+
+		if ( "c_paper" != GetTag(oPaper) ) {
+			FloatingTextStringOnCreature("Ihr koennt nur auf Pergament schreiben.", oPC, 0);
+			SetItemCharges(oPen, GetItemCharges(oPen) + 1);
+			return;
+		}
+
+
+		FloatingTextStringOnCreature("Ihr rollt das Pergament auf ..", oPC, 0);
+
+		if ( DoExplosiveRunes(oPaper, oPC) )
+			return;
+
+		if ( DoSepiaSnakeSigil(oPaper, oPC) )
+			return;
+
+		int nSigil = GetLocalInt(oPaper, "paper_sigil");
+		int nSigilBroken = GetLocalInt(oPaper, "paper_sigil_broken");
+
+		if ( !GetIsDM(oPC) ) {
+			if ( nSigil && !nSigilBroken ) {
+				Floaty(".. dabei brecht Ihr das Siegel ..", oPC, 0);
+				SetLocalInt(oPaper, "paper_sigil_broken", 1);
+			}
+		}
+
+		int nWriteCycle = GetLocalInt(oPaper, "paper_writecycles");
+		int nTotalLength = GetTotalTextLength(oPaper);
+
+		int
+		nEstimate = GetStringLength(sText) + nTotalLength,
+		nEstimateRemaining = nEstimate - PAPER_MAX_LENGTH;
+
+		if ( nEstimate > PAPER_MAX_LENGTH ) {
+			FloatingTextStringOnCreature("Soviel passt nicht mehr auf dieses Pergament.", oPC, 0);
+			FloatingTextStringOnCreature("Ihr schaetzt, dass Ihr noch " +
+				IntToString(nEstimateRemaining) + " Buchstaben unterbringt.", oPC, 0);
+			SetItemCharges(oPen, GetItemCharges(oPen) + 1);
+			return;
+		}
+
+		AddText(oPC, oPaper, sText);
+		SetLocalString(oPC, "paper_text_to_write", "");
+
+		FloatingTextStringOnCreature("Ihr schreibt Euren Text nun auf dieses Pergament.", oPC, 0);
+		FixPergamentName(oPaper);
+	}
+
+	if ("tool_sigilwax" == tag) {
+		object oWax = GetEventRunnable();
+		object oTarget = GetEventActedOn();
+		object oPC = GetEventActor();
+
+
+		if ( GetTag(oTarget) != "c_paper" ) {
+			Floaty("Siegelwachs kann nur auf Pergament angewendet werden.", oPC, 0);
+			return;
+		}
+
+		int
+		nSigil = GetLocalInt(oTarget, "paper_sigil"),
+		nSigilBroken = GetLocalInt(oTarget, "paper_sigil_broken");
+		string
+		sSigil = GetLocalString(oTarget, "paper_sigil_name");
+
+
+		if ( nSigil && !nSigilBroken ) {
+			Floaty("Dieses Pergament ist bereits versiegelt.  Brecht das Siegel zuerst, um es zu entfernen.", oPC,
+				0);
+			SetItemCharges(oWax, GetItemCharges(oWax) + 1);
+			return;
+		}
+
+	/*    if (nSigil && nSigilBroken) {
+	 * 		// try to fix
+	 * 		return;
+	 * 	}*/
+
+
+		if ( nSigil && nSigilBroken ) {
+			SetLocalInt(oTarget, "paper_sigil", 0);
+			SetLocalInt(oTarget, "paper_sigil_broken", 0);
+			SetLocalString(oTarget, "paper_sigil_label", "");
+			Floaty(".. Ihr entfernt das alte Siegel ..", oPC, 0);
+			FixPergamentName(oTarget);
+			return;
+		}
+
+		string sAddText = GetLocalString(oPC, "paper_text_to_write");
+		sAddText = GetStringLeft(sAddText, 64);
+		SetLocalString(oTarget, "paper_sigil_label", sAddText);
+		SetLocalString(oPC, "paper_text_to_write", "");
+
+		SetLocalInt(oTarget, "paper_sigil", 1);
+		SetLocalInt(oTarget, "paper_sigil_broken", 0);
+		SetLocalString(oTarget, "paper_sigil_name", GetName(oPC));
+		SetLocalInt(oTarget, "paper_sigil_cid", GetCharacterID(oPC));
+
+		Floaty("Ihr versiegelt das Pergament mit Eurem Namen.", oPC, 1);
+
+		FixPergamentName(oTarget);
+	}
+
+	if ("c_paper" == tag) {
+		if (EVENT_ITEM_ACTIVATE == ev) {
+			FloatingTextStringOnCreature("Ihr rollt das Pergament auf ..", GetItemActivator(), 1);
+			AssignCommand(GetItemActivator(), PlayAnimation(ANIMATION_FIREFORGET_READ));
+
+			DelayCommand(2.0, OnPaperActivate(GetItemActivated(), GetItemActivator()));
+		}
+		if (EVENT_ITEM_SPELLCAST == ev) {
+			if ( OnPaperSpellCastAt(GetSpellTargetObject(), GetLastSpellCaster()) ) {
+				SetEventScriptReturnValue();
+			}
+		}
+	}
+}
+
+
+void AddText(object oWriter, object oPaper, string sText) {
+	int nWriteCycle = GetLocalInt(oPaper, "paper_writecycles");
+
+	SetLocalInt(oPaper, "paper_cid_" + IntToString(nWriteCycle), GetCharacterID(oWriter));
+	SetLocalString(oPaper, "paper_text_" + IntToString(nWriteCycle), sText);
+	SetLocalString(oPaper, "paper_name_" + IntToString(nWriteCycle), GetName(oWriter));
+
+	nWriteCycle++;
+	SetLocalInt(oPaper, "paper_writecycles", nWriteCycle);
+}
+
+
+
+
+
+
+void OnPaperActivate(object oItem, object oActivator) {
+	object oTarget = GetItemActivatedTarget();
+
+	if ( oTarget != oActivator ) {
+		Floaty("Benutzt das Pergament auf Euch selbst.", oActivator, 0);
+		return;
+	}
+
+
+	int nSave = d20() + GetReflexSavingThrow(oActivator);
+
+
+	// Check if something is written on it
+	int nWriteCycles = GetLocalInt(oItem, "paper_writecycles");
+	string sText;
+	int nWriter = 0, nOldWriter = 0;
+
+	int nSigil = GetLocalInt(oItem, "paper_sigil");
+	int nSigilBroken = GetLocalInt(oItem, "paper_sigil_broken");
+
+	if ( !GetIsDM(oActivator) ) {
+		if ( nSigil && !nSigilBroken ) {
+			Floaty(".. dabei brecht Ihr das Siegel ..", oActivator, 1);
+			SetLocalInt(oItem, "paper_sigil_broken", 1);
+		}
+	}
+
+
+	int nTotalSize = GetTotalTextLength(oItem);
+	int nPrint = nTotalSize;
+	// Print 1/3rd of the Letters
+
+	if ( HasExplosiveRunes(oItem) )
+		nPrint /= 2;
+
+	int nPrinted = 0;
+
+
+	if ( 0 == nWriteCycles ) {
+		FloatingTextStringOnCreature("Das Pergament ist leer.", oActivator, 0);
+
+	} else {
+
+		int i = 0;
+		for ( i = 0; i < nWriteCycles; i++ ) {
+			sText = GetLocalString(oItem, "paper_text_" + IntToString(i));
+			nWriter = GetLocalInt(oItem, "paper_cid_" + IntToString(i));
+
+			if ( 0 == i ) {
+				FloatingTextStringOnCreature("Es steht geschrieben: ", oActivator, 0);
+			} else {
+				if ( nWriter != nOldWriter )
+					FloatingTextStringOnCreature("Spaeter fuegte eine andere Handschrift hinzu:", oActivator,
+						0);
+
+			}
+
+			int nDiff = ( GetStringLength(sText) + nPrinted - nPrint );
+
+			if ( nDiff > 0 )
+				sText = GetStringLeft(sText, GetStringLength(sText) - nDiff);
+
+			if ( nDiff > 0 && HasExplosiveRunes(oItem) )
+				sText += " Explosive Runen Explosive Runen Explosive Runen.";
+
+			FloatingTextStringOnCreature(sText, oActivator, 0);
+
+			if ( nDiff > 0 )
+				break;
+
+			nPrinted += GetStringLength(sText);
+
+
+			nOldWriter = nWriter;
+		}
+	}
+
+	if ( DoExplosiveRunes(oItem, oActivator) )
+		return;
+
+	if ( nSave < 15 ) {
+		if ( DoSepiaSnakeSigil(oItem, oActivator) )
+			return;
+	}
+
+
+	FixPergamentName(oItem);
+}
+
+
+
+
+int OnPaperSpellCastAt(object oItem, object oSpellCaster) {
+	// If spell = explosive runes - add it.
+	int nSpell = GetSpellId(); // returns the SPELL_* constant of the spell cast
+	int nClass = GetLastSpellCastClass(); // gets the class the PC cast the spell as
+	int nDC = GetSpellSaveDC(); // gets the DC required to save against the effects of the spell
+	int nLevel = GetCasterLevel(oSpellCaster); // gets the level the PC cast the spell as
+
+	if ( SPELL_DISPEL_MAGIC == nSpell
+		|| SPELL_MORDENKAINENS_DISJUNCTION == nSpell || SPELL_GREATER_DISPELLING == nSpell ) {
+		// Allow dispel of runes if DC works out
+		if ( HasExplosiveRunes(oItem) ) {
+			int nRunesDC = GetLocalInt(oItem, "explosive_runes_dc");
+			// Make some throw
+			int nThrow = d20();
+			if ( nRunesDC > nThrow + nDC ) {
+				DoExplosiveRunes(oItem, oSpellCaster);
+			} else {
+				FloatingTextStringOnCreature("Ihr entfernt die Explosiven Runen auf diesem Pergament.",
+					oSpellCaster, 0);
+				RemoveExplosiveRunes(oItem);
+			}
+
+		}
+
+		if ( HasSepiaSnakeSigil(oItem) ) {
+			int nRunesDC = GetLocalInt(oItem, "sepia_snake_sigil_dc");
+			// Make some throw
+			int nThrow = d20();
+			if ( nRunesDC > nThrow + nDC ) {
+				DoSepiaSnakeSigil(oItem, oSpellCaster);
+			} else {
+				FloatingTextStringOnCreature("Ihr entfernt das Sepia-Schlangensiegel auf diesem Pergament.",
+					oSpellCaster, 0);
+				RemoveSepiaSnakeSigil(oItem);
+			}
+
+		}
+
+		return 0;
+	}
+
+	return 0;
+}

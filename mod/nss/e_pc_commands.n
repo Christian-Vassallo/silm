@@ -1,0 +1,31 @@
+extern("inc_events")
+extern("inc_killarcane")
+
+void main() {
+	int type = GetEventType();
+	int ev = GetEvent();
+
+	if (type != EVENT_TYPE_ITEM || ev != EVENT_ITEM_ACTIVATE)
+		return;
+
+	object item = OBJECT_SELF;
+	object player = GetEventActor();
+	object target = GetItemActivatedTarget();
+
+	string tag = GetTag(item);
+
+	if ("pc_follow" == tag) {
+		if ( !is_creature(target) || GetIsInCombat(player) || player == target )
+			return;
+
+		AssignCommand(player, ActionForceFollowObject(target, 2.0f));
+		FloatingTextStringOnCreature("Folge: " + GetName(target), player, FALSE);
+	}
+
+	if ("killarcane" == tag) {
+		KillArcane_BuildDialog(player);
+		AssignCommand(player, ActionStartConversation(player, "list_select", TRUE, TRUE));
+
+	}
+
+}
