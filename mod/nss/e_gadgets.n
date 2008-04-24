@@ -1,5 +1,11 @@
 extern("_gen")
 extern("inc_events")
+extern("inc_dbplac")
+
+
+string get_random_feather();
+string get_random_bird();
+string get_random_tree();
 
 void main() {
 	int ev = GetEvent();
@@ -122,4 +128,108 @@ void main() {
 		FloatingTextStringOnCreature("Ihr rubbelt an der Temperaturkugel ..", oPC, FALSE);
 		DelayCommand(2.0f, FloatingTextStringOnCreature(sText, oPC, FALSE));
 	}
+
+
+	if ("feathertok" == tag) {
+
+		object item = GetEventRunnable();
+		object player = GetEventActor();
+		location where = GetEventActedAt();
+
+		string resref = GetResRef(item);
+		string ref;
+
+		if ("feathertok_bag" == resref || "feathertok_bagi" /* infinite uses/day version */ == resref) {
+			ref = get_random_feather();
+			object feather = CreateItemOnObject("feathertok_" + ref, player);
+			SetPlotFlag(feather, true);
+			FloatingTextStringOnCreature("Ihr zieht eine Feder aus dem Beutel.", player, false);
+			return;
+
+		} else if ("feathertok_tree" == resref) {
+			FloatingTextStringOnCreature("Ihr werft die Feder ..", player, false);
+			ref = get_random_tree();
+
+			ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_CHARM), where);
+			ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_NATURES_BALANCE), where);
+			object tree = CreateObject(OBJECT_TYPE_PLACEABLE, ref, where);
+			FloatingTextStringOnCreature("Ein Baum schiesst, laut raschelnd, aus dem Boden heraus, dort wo die Feder landete.", player, true);
+
+		} else if ("feathertok_bird" == resref) {
+			FloatingTextStringOnCreature("Ihr werft die Feder ..", player, false);
+			ref = get_random_bird();
+			
+			object bird = CreateObject(OBJECT_TYPE_CREATURE, ref, where);
+			ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_CHARM), where);
+			ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_NATURES_BALANCE), where);
+
+			FloatingTextStringOnCreature("Ein Vogel implodiert aus der Feder heraus; er sieht sich skeptisch um, und fliegt hinfort.", player, true);
+
+			AssignCommand(bird, ActionRandomWalk());
+			// SetCommandable(false, bird);
+
+		} else if ("feathertok_flwr" == resref) {
+			FloatingTextStringOnCreature("Ihr werft die Feder ..", player, false);
+			
+			ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_CHARM), where);
+			ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_NATURES_BALANCE), where);
+			
+			int i;
+			// Create some flowers.
+			for (i = 0; i < 2; i++) {
+				string s = itoa(Random(13) + 1);
+				while (strlen(s) < 3)
+					s = "0" + s;
+				CreateObject(OBJECT_TYPE_PLACEABLE, "wildflowers" + s, where);
+			}
+			CreateObject(OBJECT_TYPE_PLACEABLE, "verschiedenes112", where);
+		
+
+		} else {
+			ToPC("Unknown resref. Not doing anything.");
+			return;
+		}
+
+
+		if (GetItemStackSize(item) > 1)
+			SetItemStackSize(item, GetItemStackSize(item)-1);
+		else
+			DestroyObject(item);
+	}
+
+}
+
+
+string get_random_feather() {
+	switch (Random(4)) {
+		case 0: return "bird";
+		case 1: return "tree";
+		case 2: return "flwr";
+		case 3: return "tree";
+	}
+	return "";
+}
+
+string get_random_bird() {
+	switch (Random(4)) {
+		case 0: return "falke";
+		case 1: return "adler";
+		case 2: return "rabe";
+		case 3: return "eule";
+	}
+	return "";
+}
+
+string get_random_tree() {
+	switch (Random(8)) {
+		case 0: return "parksundnatur144";
+		case 1: return "parksundnatur167";
+		case 2: return "x0_treepine2";
+		case 3: return "parksundnatur150";
+		case 4: return "parksundnatur151";
+		case 5: return "parksundnatur152";
+		case 6: return "parksundnatur153";
+		case 7: return "parksundnatur155";
+	}
+	return "";
 }
