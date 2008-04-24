@@ -13,7 +13,7 @@ VALIDEXT=area/\*.git area/\*.are \
 	itp/\*.itp ssf/\*.ssf \
 	mod/\*.fac mod/\*.ifo mod/\*.jrl \
 	`find uti -iname *.uti` \
- 	nss/\*.ncs 
+ 	nss/\*.ncs $(STERNENFALL)/mod/nss/\*.ncs
 
 VALIDEXTDEV=$(AREAS) \
 	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
