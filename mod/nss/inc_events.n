@@ -13,7 +13,30 @@
 /* Note: nwns int overflows at 1 << 31, so 1 << 30 is the highest usable bitmask */
 
 /*
-Consts: Script Return Codes
+
+Section: Events
+
+Each event constant has zero or more of the following modifiers in paren postfixed:
+- defer - Event always runs deferred (scripts registered for sync execution will *NOT RUN*), always implies *no abort*
+- sync - Event always runs synchronously (scripts registered for deferred execution will be forced to run sync)
+- abort - Event can be aborted by returning EVENT_EXECUTE_SCRIPT_ABORT if the script is running sync
+- runnable: object - what object the event will run on
+- actor: object - what object the actor will be
+- actedon: object - what object the actedon will be
+- actedat: location - what location actedat will be
+
+sync, abort, defer:
+- Event scripts can be run either in *sync* or in *defer* mode.
+- sync mode has the advantage of allowing event cancellation, but *will block* (and possibly run against TMI).
+- defer mode will be queued for execution after the current script, and *order of events is not guaranteed*.
+Also, event-specific native functions that return event-related data are *not guaranteed to be consistent*.
+Do NOT use them, use the provided objects (actor, actedon, actedat) by the event system instead. If you
+require any other event-related information, use sync mode.
+- If possible, choose defer mode for performance and stability.
+- Some events are forced to run in sync mode for technical reasons.
+- Some events are forced to run in defer mode (since there would be no advantage running them in sync mode, or the overhead would be too great).
+
+Const: Script Return Codes
 return codes for event scripts
 
 EVENT_EXECUTE_SCRIPT_FAILED     - Script failed to run
@@ -21,9 +44,16 @@ EVENT_EXECUTE_SCRIPT_CONTINUE   - Script ran and execution continues
 EVENT_EXECUTE_SCRIPT_END        - Script ran and execution of further events stops
 EVENT_EXECUTE_SCRIPT_ABORT      - Script ran and requested termination/cancellation of the event
 
+Const: Event Modes
+
+EVENT_MODE_ANY                  - allow any mode (default)
+EVENT_MODE_SYNC                 - sync mode
+EVENT_MODE_DEFER                - defer mode
+
 Const: Event Types
+
 EVENT_TYPE_GLOBAL               - Global and misc. events
-EVENT_TYPE_PC                   - Player-related events
+EVENT_TYPE_PC                   - Player-related events (both DMs and normal players)
 EVENT_TYPE_ITEM                 - Item events
 EVENT_TYPE_CREATURE             - Creature events
 EVENT_TYPE_PLACEABLE            - Placeable events
@@ -31,35 +61,43 @@ EVENT_TYPE_AREA                 - Area events
 EVENT_TYPE_DOOR                 - Door events
 
 Const: Misc Events
-EVENT_ANY                       - match any event
-EVENT_GLOBAL_MODULE_LOAD        - after all module initialisation is done (actor: n/a)
-EVENT_GLOBAL_SPELL              - a spell gets cast
-EVENT_GLOBAL_HB                 - global module heartbeat
+
+EVENT_ANY                       - match any event that appears (mixed)
+EVENT_GLOBAL_MODULE_LOAD        - after all module initialisation is done (defer)
+EVENT_GLOBAL_HB                 - global module heartbeat (defer)
+EVENT_GLOBAL_SPELL              - a spell gets cast (abort through spellhook)
 
 Consts: Item Events
 runnable: the item object, actor: creature involved
 
-EVENT_ITEM_FREEACTIVATE         - Creature activates item as a free action (action: clicker/activator)
+EVENT_ITEM_FREEACTIVATE         - Creature activates item as a free action (action: activator, actedon/at: target, sync, abort)
 EVENT_ITEM_ACTIVATE             - Creature activates item (actor: activator)
 EVENT_ITEM_EQUIP                - Creature equips item (actor: equipper)
 EVENT_ITEM_UNEQUIP              - Creature unequips item (actor: unequipper)
 EVENT_ITEM_ONHITCAST            - Item gets hit physically (actor: damager)
 EVENT_ITEM_ACQUIRE              - Creature gains item (actor: receiver)
 EVENT_ITEM_UNACQUIRE            - Creature loses item (actor: creature losing item)
-EVENT_ITEM_SPELLCAST            - Item targeted by a spell (actor: caster)
+EVENT_ITEM_SPELLCAST            - Item targeted by a spell (actor: caster, abort through spellhook)
 
 Consts: Player Events
 runnable: the player object
 
-EVENT_PC_LOGIN                  - Player logs in
-EVENT_PC_LOGOUT                 - Player logs out
-EVENT_PC_LEVELUP                - Player gains a level
-EVENT_PC_REST                   - Player rests, also fires EVENT_CREATURE_REST
+EVENT_PC_LOGIN                  - Player logs in (defer)
+EVENT_PC_LOGOUT                 - Player logs out (defer)
+EVENT_PC_LEVELUP                - Player gains a level (defer)
+EVENT_PC_REST                   - Player rests, also fires EVENT_CREATURE_REST (abort)
 EVENT_PC_DYING                  - Player is dying, also fires EVENT_CREATURE_DYING
 EVENT_PC_DEATH                  - Player died, also fires EVENT_CREATURE_DEATH
 EVENT_PC_REPAWN                 - Player respawns
-EVENT_PC_CUTSCENE_ABRT          - Cutscene got aborted
-
+EVENT_PC_CUTSCENEABRT           - Cutscene got aborted (defer, no abort)
+EVENT_PC_USEFEAT                - Player uses a feat (sync, abort)
+EVENT_PC_USESKILL               - Player uses a feat (sync, abort)
+EVENT_PC_TOGGLEMODE             - Player toggles one of ACTION_MODE_* (sync, abort)
+EVENT_PC_EXAMINE                - Player uses Examine (sync, abort)
+EVENT_PC_ATTACK                 - Player attacks something (actor: attacker, actedon: attackee, sync, abort)
+EVENT_PC_PICKPOCKET             - Player pickpockets someone (sync, abort)
+EVENT_PC_SAVE                   - Player character gets saved
+EVENT_PC_QUICKCHAT              - Player uses quickchat
 
 Consts: Creature Events
 runnable: the creature object
@@ -123,14 +161,31 @@ EVENT_DOOR_CLOSE                - Creature closes a door
 */
 
 
-const int EVENT_SCRIPT_LENGTH = 16;
+struct EventInfo {
+	int mode;
+	int type;
+	int ev;
 
-const int EVENT_ANY = 0;
+	float defer_time;
+
+	int event_mask;
+
+	object runnable;
+	object actor;
+	object actedon;
+	location actedat;
+};
+
+const int EVENT_SCRIPT_LENGTH = 16;
 
 const int EVENT_EXECUTE_SCRIPT_CONTINUE = 1 << 0;
 const int EVENT_EXECUTE_SCRIPT_FAILED = 1 << 1;
 const int EVENT_EXECUTE_SCRIPT_ABORT = 1 << 2;
 const int EVENT_EXECUTE_SCRIPT_END = 1 << 3;
+
+const int EVENT_MODE_ANY = 1 << 0;
+const int EVENT_MODE_SYNC = 1 << 1;
+const int EVENT_MODE_DEFER = 1 << 2;
 
 const int EVENT_TYPE_GLOBAL = 0;
 const int EVENT_TYPE_PC = 1;
@@ -141,12 +196,14 @@ const int EVENT_TYPE_AREA = 5;
 const int EVENT_TYPE_DOOR = 6;
 
 
+const int EVENT_ANY = 0;
+
 /* This was autogenerated with rebuild_events.rb */
 const int EVENT_GLOBAL_MODULE_LOAD = 1 << 0;
-const int EVENT_GLOBAL_SPELL = 1 << 1;
-const int EVENT_GLOBAL_HB = 1 << 2;
-const int EVENT_ITEM_ACTIVATE = 1 << 0;
-const int EVENT_ITEM_FREEACTIVATE = 1 << 1;
+const int EVENT_GLOBAL_HB = 1 << 1;
+const int EVENT_GLOBAL_SPELL = 1 << 2;
+const int EVENT_ITEM_FREEACTIVATE = 1 << 0;
+const int EVENT_ITEM_ACTIVATE = 1 << 1;
 const int EVENT_ITEM_EQUIP = 1 << 2;
 const int EVENT_ITEM_UNEQUIP = 1 << 3;
 const int EVENT_ITEM_ONHITCAST = 1 << 4;
@@ -160,6 +217,15 @@ const int EVENT_PC_REST = 1 << 3;
 const int EVENT_PC_DYING = 1 << 4;
 const int EVENT_PC_DEATH = 1 << 5;
 const int EVENT_PC_REPAWN = 1 << 6;
+const int EVENT_PC_CUTSCENEABRT = 1 << 7;
+const int EVENT_PC_USEFEAT = 1 << 8;
+const int EVENT_PC_USESKILL = 1 << 9;
+const int EVENT_PC_TOGGLEMODE = 1 << 10;
+const int EVENT_PC_EXAMINE = 1 << 11;
+const int EVENT_PC_ATTACK = 1 << 12;
+const int EVENT_PC_PICKPOCKET = 1 << 13;
+const int EVENT_PC_SAVE = 1 << 14;
+const int EVENT_PC_QUICKCHAT = 1 << 15;
 const int EVENT_CREATURE_ATTACK = 1 << 0;
 const int EVENT_CREATURE_DAMAGE = 1 << 1;
 const int EVENT_CREATURE_DYING = 1 << 2;
@@ -204,22 +270,6 @@ const int EVENT_DOOR_OPEN = 1 << 10;
 const int EVENT_DOOR_FAILTOOPEN = 1 << 11;
 const int EVENT_DOOR_CLOSE = 1 << 12;
 
-// Struct: Event
-//
-// Unused, for now.
-struct Event {
-	int type;
-	int ev;
-	int mask;
-	bool sync;
-	bool defer;
-	
-	object runnable;
-	object actor;
-	object actedon;
-	location actedat;
-};
-
 
 // Function: RehashEventScripts
 //
@@ -233,12 +283,7 @@ int RehashEventScripts();
 // Runs all scripts that are registered for nEvent
 // Returns:
 // - EVENT_EXECUTE_SCRIPT_*
-int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt, int bRequireSync = false);
-
-// Function: RunEventScriptsForSQL
-// Returns:
-// - EVENT_EXECUTE_SCRIPT_*
-int RunEventScriptsForSQL(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt, int bRequireSync = false);
+int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt, int bRequireMode = EVENT_MODE_ANY);
 
 // Function: RunEventScript
 //
@@ -279,13 +324,23 @@ int GetEvent();
 // Gets the mask the current script registered for
 int GetEventMask();
 
-// Function: GetEventIsSync
-// Returns true if the current event is running synchronously.
-int GetEventIsSync();
+// Function: GetEventMode
+// Returns EVENT_MODE_*
+int GetEventMode();
 
-// Function: SetEventIsSync
-// Sets the current event running in sync mode. Used internally.
-void SetEventIsSync(object oObject, int bSync);
+// Function GetEventInfo
+// Returns EventInfo
+struct EventInfo getEventInfo();
+
+// Function: SetEventMode
+// Sets the current event mode. Used internally.
+void SetEventMode(object oObject, int nMode);
+
+// Function: GetEventDeferTime
+float GetEventDeferTime();
+
+// Function: SetEventDeferTime
+void SetEventDeferTime(object oObject, float fDefer);
 
 // Function: ExecuteScriptInt 
 // 
@@ -368,48 +423,12 @@ In your module initialisation:
 
 /* implementation */
 
-int RunEventScriptsForFromSQL(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt, int bRequireSync = false) {
-	int i;
-	pQ("select script, sync, eventmask from events.events where " +
-		"enabled = true and " + 
-		"(eventtype is null or eventtype = " + pSi(nEventType) + ") and " + 
-		"(eventmask is null or eventmask & " + pSi(nEvent) + " = eventmask) and " + 
-		"(runnable_tagmask is null or " + pSs(GetTag(oRunnable)) + " like runnable_tagmask) and " +
-		"(runnable_refmask is null or " + pSs(GetTag(oRunnable)) + " like runnable_refmask) and " +
-		"(actor_tagmask is null or " + pSs(GetTag(oActor)) + " like actor_tagmask) and " +
-		"(actor_refmask is null or " + pSs(GetTag(oActor)) + " like actor_refmask) and " +
-		"(actedon_tagmask is null or " + pSs(GetTag(oActedOn)) + " like actedon_tagmask) and " +
-		"(actedon_refmask is null or " + pSs(GetTag(oActedOn)) + " like actedon_refmask) " +
-	"order by ordering desc;");
-
-	string script;
-	int sync, mask, ret;
-	while (pF()) {
-		script = pGs(1);
-		sync = pGb(2);
-		mask = pGi(3);
-
-		ret = EVENT_EXECUTE_SCRIPT_FAILED;
-		
-		SetEventIsSync(oRunnable, bRequireSync || sync);
-
-		if (bRequireSync || sync)
-			ret = RunEventScript(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt);
-		else
-			DelayCommand(0f, RunEventScriptAsync(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt));
-			
-		if (EVENT_EXECUTE_SCRIPT_END == ret || EVENT_EXECUTE_SCRIPT_ABORT == ret)
-			return ret;
-
-		i++;
-	}
-	return EVENT_EXECUTE_SCRIPT_CONTINUE;
-}
-
-int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt, int bRequireSync = false) {
+int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt, int bRequireMode = EVENT_MODE_ANY) {
 	int count = GetLocalInt(GetModule(), "inc_events_last");
 	int i, type, mask, sync, ret;
 	string si, script, tag, ref;
+	float defer_time = 0.0;
+
 	for (i = 0; i < count; i++) {
 		si = IntToString(i);
 		
@@ -449,16 +468,39 @@ int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oAct
 			continue;
 
 		sync = GetLocalInt(GetModule(), "inc_events_" + si + "_eventsync");
+	
 		
+		int runmode = EVENT_MODE_ANY;
+
+		if (runmode != bRequireMode)
+			runmode = bRequireMode;
+
+		// Script wants sync mode, but we are forced to defer. Skip.
+		if (sync && runmode == EVENT_MODE_DEFER)
+			continue;
+
+		// Script wants to defer, but we are forced to sync. Continue.
+		// if (!sync && rummode == EVENT_MODE_SYNC)
+		//	;
+		
+		// Scripts wants sync mode, and we dont care. Use sync.
+		if (sync && runmode == EVENT_MODE_ANY)
+			runmode = sync;
+
 		ret = EVENT_EXECUTE_SCRIPT_FAILED;
 
-		SetEventIsSync(oRunnable, bRequireSync || sync);
+		SetEventMode(oRunnable, runmode);
 
-		if (bRequireSync || sync)
+		// xxx: untested: delay scripts for later use ..
+		//if (defer_time != count / 20f)
+		//	defer_time += 0.1;
+
+		if (EVENT_MODE_SYNC == runmode)
 			ret = RunEventScript(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt);
-		else
-			DelayCommand(0.0, RunEventScriptAsync(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt));
-
+		else {
+			SetEventDeferTime(oRunnable, defer_time);
+			DelayCommand(defer_time, RunEventScriptAsync(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt));
+		}
 		if (EVENT_EXECUTE_SCRIPT_END == ret || EVENT_EXECUTE_SCRIPT_ABORT == ret) 
 			return ret;
 	}
@@ -510,7 +552,7 @@ int RehashEventScripts() {
 }
 
 void RunEventScriptAsync(string sScript, int nEventType, int nEvent, int nEventMask, object oRunnable, object oActor, object oActedOn, location lActedAt) {
-	SetEventIsSync(oRunnable, false);
+	SetEventMode(oRunnable, EVENT_MODE_DEFER);
 	RunEventScript(sScript, nEventType, nEvent, nEventMask, oRunnable, oActor, oActedOn, lActedAt);
 }
 
@@ -546,7 +588,7 @@ int GetEvent() {
 
 // Get the current UserDefined Item Event Number
 int GetEventMask() {
-	return GetLocalInt(GetModule(), "EVENT_LAST_EVENTMASK");
+	return GetLocalInt(GetModule(), "EVENT_LAST_MASK");
 }
 
 // Set the current UserDefined Event
@@ -556,15 +598,15 @@ void SetEvent(object oObject, int nEvent) {
 
 // Set the current UserDefined Event
 void SetEventMask(object oObject, int nEvent) {
-	SetLocalInt(GetModule(), "EVENT_LAST_EVENTMASK", nEvent);
+	SetLocalInt(GetModule(), "EVENT_LAST_MASK", nEvent);
 }
 
-int GetEventIsSync() {
-	return GetLocalInt(GetModule(), "EVENT_LAST_EVENTSYNC");
+int GetEventMode() {
+	return GetLocalInt(GetModule(), "EVENT_LAST_MODE");
 }
 
-void SetEventIsSync(object oObject, int bSync) {
-	SetLocalInt(GetModule(), "EVENT_LAST_EVENTSYNC", bSync);
+void SetEventMode(object oObject, int nMode) {
+	SetLocalInt(GetModule(), "EVENT_LAST_MODE", nMode);
 }
 
 
@@ -575,9 +617,12 @@ int ExecuteScriptInt(string sScript, object oTarget) {
 	ExecuteScript(sScript, oTarget);
 	int nRet = GetLocalInt(GetModule(), "EVENT_LAST_RETVAR");
 	DeleteLocalInt(GetModule(), "EVENT_LAST_RETVAR");
+	DeleteLocalInt(GetModule(), "EVENT_LAST_MODE");
+	DeleteLocalInt(GetModule(), "EVENT_LAST_MASK");
 	DeleteLocalObject(GetModule(), "EVENT_LAST_ACTOR");
 	DeleteLocalObject(GetModule(), "EVENT_LAST_ACTEDON");
 	DeleteLocalLocation(GetModule(), "EVENT_LAST_ACTEDAT");
+	DeleteLocalFloat(GetModule(), "EVENT_LAST_DEFER");
 	return nRet;
 }
 
@@ -599,4 +644,24 @@ object GetEventActedOn() {
 }
 location GetEventActedAt() {
 	return GetLocalLocation(GetModule(), "EVENT_LAST_ACTEDAT");
+}
+
+float GetEventDeferTime() {
+	return GetLocalFloat(GetModule(), "EVENT_LAST_DEFER");
+}
+void SetEventDeferTime(object oObject, float fDefer){
+	SetLocalFloat(GetModule(), "EVENT_LAST_DEFER", fDefer);
+}
+
+struct EventInfo getEventInfo() {
+	struct EventInfo r;
+	r.mode = GetEventMode();
+	r.type = GetEventType();
+	r.ev = GetEvent();
+	r.runnable = GetEventRunnable();
+	r.actor = GetEventActor();
+	r.actedon = GetEventActedOn();
+	r.actedat = GetEventActedAt();
+	r.defer_time = GetEventDeferTime();
+	return r;
 }
