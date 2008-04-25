@@ -276,6 +276,14 @@ int GetEvent();
 // Gets the mask the current script registered for
 int GetEventMask();
 
+// Function: GetEventIsSync
+// Returns true if the current event is running synchronously.
+int GetEventIsSync();
+
+// Function: SetEventIsSync
+// Sets the current event running in sync mode. Used internally.
+void SetEventIsSync(object oObject, int bSync);
+
 // Function: ExecuteScriptInt 
 // 
 // * Execute sScript on oTarget returning an integer.
@@ -379,6 +387,8 @@ int RunEventScriptsForFromSQL(int nEventType, int nEvent, object oRunnable, obje
 		mask = pGi(3);
 
 		ret = EVENT_EXECUTE_SCRIPT_FAILED;
+		
+		SetEventIsSync(oRunnable, bRequireSync || sync);
 
 		if (bRequireSync || sync)
 			ret = RunEventScript(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt);
@@ -439,6 +449,8 @@ int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oAct
 		
 		ret = EVENT_EXECUTE_SCRIPT_FAILED;
 
+		SetEventIsSync(oRunnable, bRequireSync || sync);
+
 		if (bRequireSync || sync)
 			ret = RunEventScript(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt);
 		else
@@ -494,6 +506,7 @@ int RehashEventScripts() {
 }
 
 void RunEventScriptAsync(string sScript, int nEventType, int nEvent, int nEventMask, object oRunnable, object oActor, object oActedOn, location lActedAt) {
+	SetEventIsSync(oRunnable, false);
 	RunEventScript(sScript, nEventType, nEvent, nEventMask, oRunnable, oActor, oActedOn, lActedAt);
 }
 
@@ -541,6 +554,15 @@ void SetEvent(object oObject, int nEvent) {
 void SetEventMask(object oObject, int nEvent) {
 	SetLocalInt(GetModule(), "EVENT_LAST_EVENTMASK", nEvent);
 }
+
+int GetEventIsSync() {
+	return GetLocalInt(GetModule(), "EVENT_LAST_EVENTSYNC");
+}
+
+void SetEventIsSync(object oObject, int bSync) {
+	SetLocalInt(GetModule(), "EVENT_LAST_EVENTSYNC", bSync);
+}
+
 
 // Wrapper for Execute Script to execute a script and get an integer
 // return value. Do not nest this function!
