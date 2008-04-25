@@ -49,7 +49,7 @@ void main() {
 	if ( is_item(oTarget) ) {
 		int nResult = RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_SPELLCAST, oPC, oPC, oTarget, lTarget); //oTarget, EVENT_ITEM_SPELLCAST_AT, EVENT_PREFIX_ITEM);
 
-		if ( EVENT_EXECUTE_SCRIPT_END == nResult ) {
+		if ( EVENT_EXECUTE_SCRIPT_ABORT == nResult ) {
 			// Do not continue.
 			SetModuleOverrideSpellScriptFinished();
 			SendMessageToAllDMs("Spellhook terminated by Item SpellCastAt-Script: " + GetTag(oTarget));

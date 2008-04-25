@@ -3,62 +3,87 @@ extern("inc_cdb")
 extern("inc_target")
 extern("inc_events")
 
+/*
+const int NWNXEVENT_SAVE_CHAR = 1;
+const int NWNXEVENT_PICKPOCKET = 2;
+const int NWNXEVENT_ATTACK = 3;
+const int NWNXEVENT_USE_ITEM = 4;
+const int NWNXEVENT_QUICKCHAT = 5;
+const int NWNXEVENT_EXAMINE = 6;
+const int NWNXEVENT_USE_SKILL = 7;
+const int NWNXEVENT_USE_FEAT = 8;
+const int NWNXEVENT_TOGGLE_MODE = 9;
+*/
+
 void EventUseItem(object oPC, object oItem, object oTarget, location lTarget);
 
 void main() {
     int nEventType = NWNXGetEventType();
-	
+	int nEventSubType = NWNXGetEventSubType();
+	int nEventItemRadial = NWNXGetEventItemRadial();
+
 	object oPC = OBJECT_SELF;
 	object oItem = NWNXGetEventItem();
 	object oTarget = NWNXGetActionTarget();
 	vector vTarget = NWNXGetEventPosition();
 	location lTarget = Location(GetArea(oPC), vTarget, GetFacing(oPC));
-    
-	// WriteTimestampedLogEntry("NWNX Event fired: "+IntToString(nEventType)+", '"+GetName(OBJECT_SELF)+"'");
-/*
-    switch(nEventType) {
-        case EVENT_PICKPOCKET:
-            oPC = OBJECT_SELF;
-            oTarget = GetActionTarget();
-            WriteTimestampedLogEntry(GetName(oPC)+" tried to steal from "+GetName(oTarget));
-            FloatingTextStringOnCreature("You're trying to steal from "+GetName(oTarget), oPC, FALSE);
-            break;
-
-        case EVENT_ATTACK:
-            oPC = OBJECT_SELF;
-            oTarget = GetActionTarget();
-            WriteTimestampedLogEntry(GetName(oPC)+" attacked "+GetName(oTarget));
-            FloatingTextStringOnCreature("Attacking "+GetName(oTarget), oPC, FALSE);
-            break;
-
-        case EVENT_USE_ITEM:
-            oPC = OBJECT_SELF;
-            oTarget = GetActionTarget();
-            oItem = GetEventItem();
-            vector vTarget = GetEventPosition();
-            WriteTimestampedLogEntry(GetName(oPC)+" used item '"+GetName(oItem)+"' on "+GetName(oTarget));
-            FloatingTextStringOnCreature("Using item '"+GetName(oItem)+"' on "+GetName(oTarget), oPC, FALSE);
-            SendMessageToPC(oPC, "Location: "+FloatToString(vTarget.x)+"/"+FloatToString(vTarget.y)+"/"+FloatToString(vTarget.z));
-            if(d2()==1) {
-                BypassEvent();
-                WriteTimestampedLogEntry("The action was cancelled");
-                FloatingTextStringOnCreature("The action was cancelled", oPC, FALSE);
-            }
-            break;
-    }*/
 
 	switch (nEventType) {
-		case NWNXEVENT_PICKPOCKET:
-			if (!GetIsPC(oTarget)) {
-				SendMessageToPC(oPC, "Taschendiebstahl an NSCs bitte ueber SLs regeln.");
+		case NWNXEVENT_SAVE_CHAR:
+			RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_SAVE, oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_DEFER);
+			break;
+
+		case NWNXEVENT_ATTACK:
+			if (EVENT_EXECUTE_SCRIPT_ABORT == RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_ATTACK, oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
 				NWNXBypassEvent();
-				AssignCommand(oPC, ClearAllActions(true));
+			break;
+
+		case NWNXEVENT_QUICKCHAT:
+			// nEventSubType = quickchat_phrse # ..
+			if (EVENT_EXECUTE_SCRIPT_ABORT == RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_QUICKCHAT, oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_SYNC))
+				NWNXBypassEvent();
+			break;
+
+		case NWNXEVENT_EXAMINE:
+			if (EVENT_EXECUTE_SCRIPT_ABORT == RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_EXAMINE, oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
+				NWNXBypassEvent();
+			break;
+
+		case NWNXEVENT_USE_SKILL:
+			// nEventSubType = SKILL_
+			if (EVENT_EXECUTE_SCRIPT_ABORT == RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_USESKILL, oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
+				NWNXBypassEvent();
+			break;
+
+		case NWNXEVENT_USE_FEAT:
+			// nEventSubType = FEAT_
+			if (EVENT_EXECUTE_SCRIPT_ABORT == RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_USEFEAT, oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
+				NWNXBypassEvent();
+			break;
+
+		case NWNXEVENT_TOGGLE_MODE:
+			// nEventSubType = ACTION_MODE_
+			if (EVENT_EXECUTE_SCRIPT_ABORT == RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_TOGGLEMODE, oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_SYNC))
+				NWNXBypassEvent();
+			break;
+
+		case NWNXEVENT_PICKPOCKET:
+			if (EVENT_TYPE_CREATURE == RunEventScriptsFor(EVENT_TYPE_CREATURE, EVENT_PC_PICKPOCKET, oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
+				NWNXBypassEvent();
+			else  {
+				if (!GetIsPC(oTarget)) {
+					SendMessageToPC(oPC, "Taschendiebstahl an NSCs bitte ueber SLs regeln.");
+					NWNXBypassEvent();
+					AssignCommand(oPC, ClearAllActions(true));
+				}
 			}
 			break;
 
 		case NWNXEVENT_USE_ITEM:
-			RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_FREEACTIVATE, oItem, oPC, oTarget, lTarget, true);
-			EventUseItem(oPC, oItem, oTarget, lTarget);
+			if (EVENT_EXECUTE_SCRIPT_ABORT == RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_FREEACTIVATE, oItem, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
+				NWNXBypassEvent();
+			else
+				EventUseItem(oPC, oItem, oTarget, lTarget);
 			break;
 	}
 }
