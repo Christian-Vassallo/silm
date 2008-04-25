@@ -1,0 +1,27 @@
+extern("inc_events")
+
+#undef DestroyObject
+void Hook_DestroyObject(object oObject, float fDelay = 0.0) {
+	RunEventScriptsFor(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_OBJECT_DESTROY, 
+		oObject, oObject, OBJECT_INVALID, GetLocation(oObject), EVENT_MODE_SYNC);
+	DestroyObject(oObject, fDelay);
+}
+
+#undef CreateObject
+object Hook_CreateObject(int nObjectType, string sTemplate, location lLocation,
+		int bUseAppearAnimation = FALSE, string sNewTag = "") {
+	
+	object o = CreateObject(nObjectType, sTemplate, lLocation,
+		bUseAppearAnimation, sNewTag);
+
+	if (is_valid(o)) {
+		int ret = RunEventScriptsFor(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_OBJECT_CREATE,
+			o, o, OBJECT_INVALID, GetLocation(o), EVENT_MODE_SYNC);
+		if (EVENT_EXECUTE_SCRIPT_ABORT == ret) 
+			DestroyObject(o);
+	}
+
+	return o;
+}
+
+
