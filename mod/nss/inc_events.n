@@ -232,16 +232,19 @@ int RehashEventScripts();
 // 
 // Runs all scripts that are registered for nEvent
 // Returns:
-// - The number of scripts ran
+// - EVENT_EXECUTE_SCRIPT_*
 int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt, int bRequireSync = false);
 
 // Function: RunEventScriptsForSQL
-//
+// Returns:
+// - EVENT_EXECUTE_SCRIPT_*
 int RunEventScriptsForSQL(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt, int bRequireSync = false);
 
 // Function: RunEventScript
 //
 // Runs the named event script on oRunnable
+// Returns:
+// - EVENT_EXECUTE_SCRIPT_*
 int RunEventScript(string sScript, int nEventType, int nEvent, int nEventMask, object oRunnable, object oActor, object oActedOn, location lActedAt);
 
 // Function: RunEventScriptAsync
@@ -396,11 +399,11 @@ int RunEventScriptsForFromSQL(int nEventType, int nEvent, object oRunnable, obje
 			DelayCommand(0f, RunEventScriptAsync(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt));
 			
 		if (EVENT_EXECUTE_SCRIPT_END == ret || EVENT_EXECUTE_SCRIPT_ABORT == ret)
-			break;
+			return ret;
 
 		i++;
 	}
-	return i;
+	return EVENT_EXECUTE_SCRIPT_CONTINUE;
 }
 
 int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt, int bRequireSync = false) {
@@ -456,10 +459,11 @@ int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oAct
 		else
 			DelayCommand(0.0, RunEventScriptAsync(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt));
 
-		if (EVENT_EXECUTE_SCRIPT_END == ret || EVENT_EXECUTE_SCRIPT_ABORT == ret)
-			break;
+		if (EVENT_EXECUTE_SCRIPT_END == ret || EVENT_EXECUTE_SCRIPT_ABORT == ret) 
+			return ret;
 	}
-	return i;
+
+	return EVENT_EXECUTE_SCRIPT_CONTINUE;
 }
 
 
