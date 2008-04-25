@@ -230,14 +230,14 @@ int RehashEventScripts();
 
 // Function: RunEventScriptsFor
 // 
-// Runs all scripts that are registered for nEventMask
+// Runs all scripts that are registered for nEvent
 // Returns:
 // - The number of scripts ran
-int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt);
+int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt, int bRequireSync = false);
 
 // Function: RunEventScriptsForSQL
 //
-int RunEventScriptsForSQL(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt);
+int RunEventScriptsForSQL(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt, int bRequireSync = false);
 
 // Function: RunEventScript
 //
@@ -357,7 +357,7 @@ In your module initialisation:
 
 /* implementation */
 
-int RunEventScriptsForFromSQL(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt) {
+int RunEventScriptsForFromSQL(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt, int bRequireSync = false) {
 	int i;
 	pQ("select script, sync, eventmask from events.events where " +
 		"enabled = true and " + 
@@ -380,7 +380,7 @@ int RunEventScriptsForFromSQL(int nEventType, int nEvent, object oRunnable, obje
 
 		ret = EVENT_EXECUTE_SCRIPT_FAILED;
 
-		if (sync)
+		if (bRequireSync || sync)
 			ret = RunEventScript(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt);
 		else
 			DelayCommand(0f, RunEventScriptAsync(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt));
@@ -393,7 +393,7 @@ int RunEventScriptsForFromSQL(int nEventType, int nEvent, object oRunnable, obje
 	return i;
 }
 
-int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt) {
+int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn, location lActedAt, int bRequireSync = false) {
 	int count = GetLocalInt(GetModule(), "inc_events_last");
 	int i, type, mask, sync, ret;
 	string si, script, tag, ref;
@@ -439,7 +439,7 @@ int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oAct
 		
 		ret = EVENT_EXECUTE_SCRIPT_FAILED;
 
-		if (sync)
+		if (bRequireSync || sync)
 			ret = RunEventScript(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt);
 		else
 			DelayCommand(0.0, RunEventScriptAsync(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt));
