@@ -2,10 +2,15 @@ const int NWNXEVENT_SAVE_CHAR = 1;
 const int NWNXEVENT_PICKPOCKET = 2;
 const int NWNXEVENT_ATTACK = 3;
 const int NWNXEVENT_USE_ITEM = 4;
+const int NWNXEVENT_QUICKCHAT = 5;
+const int NWNXEVENT_EXAMINE = 6;
+const int NWNXEVENT_USE_SKILL = 7;
+const int NWNXEVENT_USE_FEAT = 8;
+const int NWNXEVENT_TOGGLE_MODE = 9;
 
-const int NWNXNODE_TYPE_STARTING_NODE = 0;
-const int NWNXNODE_TYPE_ENTRY_NODE    = 1;
-const int NWNXNODE_TYPE_REPLY_NODE    = 2;
+const int NWNX_CONV_NODE_TYPE_STARTING_NODE = 0;
+const int NWNX_CONV_NODE_TYPE_ENTRY_NODE    = 1;
+const int NWNX_CONV_NODE_TYPE_REPLY_NODE    = 2;
 
 const int LANGUAGE_ENGLISH              = 0;
 const int LANGUAGE_FRENCH               = 1;
@@ -20,12 +25,16 @@ const int LANGUAGE_JAPANESE             = 131;
 
 // Function: GetEventType
 int NWNXGetEventType();
+// Function GetEventSubType
+int NWNXGetEventSubType();
 // Function: GetActionTarget
 object NWNXGetActionTarget();
 // Function: GetActionItem
 object NWNXGetActionItem();
 // Function: GetEventPosition
 vector NWNXGetEventPosition();
+// Function: GetEventItemRadial
+int NWNXGetEventItemRadial();
 // Function: BypassEvent
 void NWNXBypassEvent();
 
@@ -54,12 +63,23 @@ int NWNXGetEventType() {
     return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_ID"));
 }
 
+int NWNXGetEventSubType() {
+    SetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_SUBID", "      ");
+    return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_SUBID"));
+}
+
+
 object NWNXGetActionTarget() {
     return GetLocalObject(GetModule(), "NWNX!EVENTS!TARGET");
 }
 
 object NWNXGetEventItem() {
     return GetLocalObject(GetModule(), "NWNX!EVENTS!ITEM");
+}
+
+int NWNXGetEventItemRadial() {
+    SetLocalString(GetModule(), "NWNX!EVENTS!GET_ITEM_RADIAL", "      ");
+    return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_ITEM_RADIAL"));
 }
 
 vector NWNXGetEventPosition() {
