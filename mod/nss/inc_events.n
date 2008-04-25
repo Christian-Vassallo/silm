@@ -203,11 +203,11 @@ int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, obj
 		si = IntToString(i);
 		
 		type = GetLocalInt(GetModule(), "inc_events_" + si + "_eventtype");
-		if (nEventType != type)
+		if (type != EVENT_ANY && (nEventType != type))
 			continue;
 
 		mask = GetLocalInt(GetModule(), "inc_events_" + si + "_eventmask");
-		if (mask != EVENT_ANY && nEvent != mask & nEvent)
+		if (mask != EVENT_ANY && (nEvent != mask & nEvent))
 			continue;
 
 
