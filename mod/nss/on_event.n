@@ -1,16 +1,17 @@
 extern("inc_nwnx_events")
 extern("inc_cdb")
 extern("inc_target")
+extern("inc_events")
 
 void EventUseItem(object oPC, object oItem, object oTarget, location lTarget);
 
 void main() {
-    int nEventType = GetEventType();
+    int nEventType = NWNXGetEventType();
 	
 	object oPC = OBJECT_SELF;
-	object oItem = GetEventItem();
-	object oTarget = GetActionTarget();
-	vector vTarget = GetEventPosition();
+	object oItem = NWNXGetEventItem();
+	object oTarget = NWNXGetActionTarget();
+	vector vTarget = NWNXGetEventPosition();
 	location lTarget = Location(GetArea(oPC), vTarget, GetFacing(oPC));
     
 	// WriteTimestampedLogEntry("NWNX Event fired: "+IntToString(nEventType)+", '"+GetName(OBJECT_SELF)+"'");
@@ -47,15 +48,16 @@ void main() {
     }*/
 
 	switch (nEventType) {
-		case EVENT_PICKPOCKET:
+		case NWNXEVENT_PICKPOCKET:
 			if (!GetIsPC(oTarget)) {
 				SendMessageToPC(oPC, "Taschendiebstahl an NSCs bitte ueber SLs regeln.");
-				BypassEvent();
+				NWNXBypassEvent();
 				AssignCommand(oPC, ClearAllActions(true));
 			}
 			break;
 
-		case EVENT_USE_ITEM:
+		case NWNXEVENT_USE_ITEM:
+			RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_FREEACTIVATE, oItem, oPC, oTarget, lTarget, true);
 			EventUseItem(oPC, oItem, oTarget, lTarget);
 			break;
 	}
@@ -104,16 +106,16 @@ void EventUseItem(object oPC, object oItem, object oTarget, location lTarget) {
 			SetTargetLocation(lTarget, nSlot, oPC);
 		}
 
-		BypassEvent();
+		NWNXBypassEvent();
 	}
 
 	if ("move_target_1" == sTag) {
 		ExecuteScript("ii_move_target_1", oPC);
-		BypassEvent();
+		NWNXBypassEvent();
 	}
 	if ("move_target_g" == sTag) {
 		ExecuteScript("ii_move_target_g", oPC);
-		BypassEvent();
+		NWNXBypassEvent();
 	}
 
 	// Subrace items that are event-executed
@@ -121,6 +123,6 @@ void EventUseItem(object oPC, object oItem, object oTarget, location lTarget) {
 	// Avariel!
 	if ("SR_SPA_2" == sTag) {
 		ExecuteScript("ii_subr_item", oPC);
-		BypassEvent();
+		NWNXBypassEvent();
 	}
 }

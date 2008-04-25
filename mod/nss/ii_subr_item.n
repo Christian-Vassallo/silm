@@ -7,9 +7,9 @@ extern("inc_nwnx_events")
 
 void main() {
     object oPC = OBJECT_SELF;
-	object oItem = GetEventItem();
-	object oTarget = GetActionTarget();
-	vector vTarget = GetEventPosition();
+	object oItem = NWNXGetEventItem();
+	object oTarget = NWNXGetActionTarget();
+	vector vTarget = NWNXGetEventPosition();
 	location lTarget = Location(GetArea(oPC), vTarget, GetFacing(oPC));
 	
 	AssignCommand(oPC, ClearAllActions(TRUE));

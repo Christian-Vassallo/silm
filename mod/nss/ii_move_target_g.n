@@ -6,9 +6,9 @@ extern("inc_objset")
 void main() {
 	
 	object oPC = OBJECT_SELF;
-	object oItem = GetEventItem();
-	object oTarget = GetActionTarget();
-	vector vTarget = GetEventPosition();
+	object oItem = NWNXGetEventItem();
+	object oTarget = NWNXGetActionTarget();
+	vector vTarget = NWNXGetEventPosition();
 	location lTarget = Location(GetArea(oPC), vTarget, GetFacing(oPC));
 	int i;
 
