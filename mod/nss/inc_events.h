@@ -35,6 +35,8 @@ in an event script to indicate certain conditions.
 
 	Const: EVENT_RESULT_STOP
 		Per-event special stop.
+	
+	Const: EVENT_RESULT_SUPPRESS
 
 Section: Event Modes
 
@@ -472,6 +474,7 @@ const int EVENT_SCRIPT_LENGTH = 16;
 const int EVENT_RESULT_FAIL = 1 << 0;
 const int EVENT_RESULT_END = 1 << 1;
 const int EVENT_RESULT_STOP  = 1 << 2;
+const int EVENT_RESULT_SUPPRESS = 1 << 3;
 
 const int EVENT_MODE_ANY = 1 << 0;
 const int EVENT_MODE_SYNC = 1 << 1;

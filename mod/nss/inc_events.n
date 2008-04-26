@@ -254,7 +254,7 @@ int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, obj
 		
 		// Scripts wants sync mode, and we dont care. Use sync.
 		if (sync && runmode == EVENT_MODE_ANY)
-			runmode = sync;
+			runmode = EVENT_MODE_SYNC;
 
 		ret = 0;
 
@@ -274,6 +274,9 @@ int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, obj
 		
 		if (ret & EVENT_RESULT_STOP)
 			total_ret |= EVENT_RESULT_STOP;
+		
+		if (ret & EVENT_RESULT_SUPPRESS)
+			total_ret |= EVENT_RESULT_SUPPRESS;
 		
 		if (ret & EVENT_RESULT_FAIL) {
 			_WARN("event script " + script + " indicated failure on " + itoa(nEventType) + ":" + itoa(nEvent));
@@ -418,8 +421,8 @@ int ExecuteScriptInt(string sScript, object oTarget) {
 // Helper function for ExecuteScriptAndReturnInt
 //----------------------------------------------------------------------------
 void SetEventScriptReturnValue(int nValue, string sStatus = "") {
-	SetLocalInt(GetModule(), "EVENT_L_LAST_RETVAR", nValue);
-	SetLocalString(GetModule(), "EVENT_L_LAST_RETVAR", sStatus);
+	SetLocalInt(GetModule(), "EVENT_LAST_RETVAR", nValue);
+	SetLocalString(GetModule(), "EVENT_LAST_RETVAR", sStatus);
 }
 
 object GetEventRunnable() {
