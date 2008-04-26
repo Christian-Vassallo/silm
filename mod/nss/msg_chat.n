@@ -114,7 +114,7 @@ void main() {
 	struct EventArguments evarg;
 	evarg.a0 = sText; evarg.i0 = iMode;
 	int _evret = RunEventScriptsForWithArgv(EVENT_TYPE_CHAT, EVENT_CHAT_PREFILTER, oPC, oPC, OBJECT_INVALID, GetLocation(oPC), evarg);
-	if (EVENT_EXECUTE_SCRIPT_ABORT == _evret) {
+	if (_evret & EVENT_RESULT_STOP) {
 		Suppress();
 		return;
 	}
