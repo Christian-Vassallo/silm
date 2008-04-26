@@ -383,6 +383,21 @@ runnable: the door, actor: creature
 	Const: EVENT_DOOR_CLOSE
 		Creature closes a door
 
+Section: Chat Events
+runnable: player/creature/undefined
+
+	Const: EVENT_CHAT_PREFILTER
+		Before processing a chat message.
+		- abort
+		- a0: the full string
+		- i0: the MSG_ mode
+
+	Const: EVENT_CHAT_COMMAND
+		A parsed chat-command. Sent by e_chatcmd.n
+		- abort
+		- a0: the command
+		- a1: the full argument string, unparsed
+		- i0: the chat mode it was sent in (MSG_*)
 
 */
 // Struct: EventInfo
@@ -465,6 +480,7 @@ const int EVENT_TYPE_CREATURE = 3;
 const int EVENT_TYPE_PLACEABLE = 4;
 const int EVENT_TYPE_AREA = 5;
 const int EVENT_TYPE_DOOR = 6;
+const int EVENT_TYPE_CHAT = 7;
 
 
 const int EVENT_ANY = 0;
@@ -545,3 +561,5 @@ const int EVENT_DOOR_OPEN = 1 << 10;
 const int EVENT_DOOR_FAILTOOPEN = 1 << 11;
 const int EVENT_DOOR_CLOSE = 1 << 12;
 
+const int EVENT_CHAT_PREFILTER = 1 << 0;
+const int EVENT_CHAT_COMMAND = 1 << 1;
