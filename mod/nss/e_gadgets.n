@@ -8,14 +8,13 @@ string get_random_bird();
 string get_random_tree();
 
 void main() {
-	int ev = GetEvent();
-	int type = GetEventType();
+	struct EventInfo e = GetEventInfo();
 
-	if (ev != EVENT_ITEM_ACTIVATE || type != EVENT_TYPE_ITEM)
+	if (e.ev != EVENT_ITEM_ACTIVATE || e.type != EVENT_TYPE_ITEM)
 		return;
-	object oPC = GetEventActor();
+	object oPC = e.actor;
 	object oA = GetArea(oPC);
-	string tag = GetTag(GetEventRunnable());
+	string tag = GetTag(e.runnable);
 
 	if ("thermometer" == tag) {
 
@@ -132,9 +131,9 @@ void main() {
 
 	if ("feathertok" == tag) {
 
-		object item = GetEventRunnable();
-		object player = GetEventActor();
-		location where = GetEventActedAt();
+		object item = e.runnable;
+		object player = e.actor;
+		location where = e.actedat;
 
 		string resref = GetResRef(item);
 		string ref;

@@ -2,19 +2,19 @@ extern("inc_events")
 extern("inc_scorco")
 
 void main() {
-	int ev = GetEvent();
-	int type = GetEventType();
-	if (ev != EVENT_ITEM_ACTIVATE || type != EVENT_TYPE_ITEM)
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev != EVENT_ITEM_ACTIVATE || e.type != EVENT_TYPE_ITEM)
 		return;
 
-	object item = GetEventRunnable();
-	object player = GetEventActor();
+	object item = e.runnable;
+	object player = e.actor;
 	string tag = GetTag(item);
 
 	if ("sri_act_fly" == tag) {
 
-		SetLocalObject(player, "SR_IAct_Obj", GetEventActedOn());
-		SetLocalLocation(player, "SR_IAct_Loc", GetEventActedAt());
+		SetLocalObject(player, "SR_IAct_Obj", e.actedon);
+		SetLocalLocation(player, "SR_IAct_Loc", e.actedat);
 		ExecuteScript("sri_act_fly", player);
 	}
 }

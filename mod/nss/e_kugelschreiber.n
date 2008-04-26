@@ -4,16 +4,15 @@ extern("inc_events")
 void tick(object oPen);
 
 void main() {
-	int ev = GetEvent();
-	int type = GetEventType();
+	struct EventInfo e = GetEventInfo();
 
-	if (ev != EVENT_ITEM_ACTIVATE || type != EVENT_TYPE_ITEM)
+	if (e.ev != EVENT_ITEM_ACTIVATE || e.type != EVENT_TYPE_ITEM)
 		return;
 
 	object
-		pen = GetEventRunnable(),
-		oPC = GetEventActor(),
-		oTarget = GetEventActedOn();
+		pen = e.runnable,
+		oPC = e.actor,
+		oTarget = e.actedon;
 
 	FloatingTextStringOnCreature("Ihr drueckt auf den Kugelschreiber.", oPC, false);
 

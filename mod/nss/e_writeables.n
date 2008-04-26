@@ -14,21 +14,20 @@ void OnPaperActivate(object oItem, object oActivator);
 int OnPaperSpellCastAt(object oItem, object oSpellCaster);
 
 void main() {
-	int ev = GetEvent();
-	int type = GetEventType();
+	struct EventInfo e = GetEventInfo();
 	
-	if (EVENT_TYPE_ITEM != type || EVENT_ITEM_ACTIVATE != ev)
+	if (EVENT_TYPE_ITEM != e.type || EVENT_ITEM_ACTIVATE != e.ev)
 		return;
 	
-	string tag = GetTag(GetEventRunnable());
+	string tag = GetTag(e.runnable);
 	
 	if ("tool_pen" == tag) {
 
 
 		object
-		oPen = GetEventRunnable(),
-		oPC = GetEventActor(),
-		oPaper = GetEventActedOn();
+		oPen = e.runnable,
+		oPC = e.actor,
+		oPaper = e.actedon;
 
 
 		string sText = GetLocalString(oPC, "paper_text_to_write");
@@ -90,9 +89,9 @@ void main() {
 	}
 
 	if ("tool_sigilwax" == tag) {
-		object oWax = GetEventRunnable();
-		object oTarget = GetEventActedOn();
-		object oPC = GetEventActor();
+		object oWax = e.runnable;
+		object oTarget = e.actedon;
+		object oPC = e.actor;
 
 
 		if ( GetTag(oTarget) != "c_paper" ) {
@@ -145,13 +144,13 @@ void main() {
 	}
 
 	if ("c_paper" == tag) {
-		if (EVENT_ITEM_ACTIVATE == ev) {
+		if (EVENT_ITEM_ACTIVATE == e.ev) {
 			FloatingTextStringOnCreature("Ihr rollt das Pergament auf ..", GetItemActivator(), 1);
 			AssignCommand(GetItemActivator(), PlayAnimation(ANIMATION_FIREFORGET_READ));
 
 			DelayCommand(2.0, OnPaperActivate(GetItemActivated(), GetItemActivator()));
 		}
-		if (EVENT_ITEM_SPELLCAST == ev) {
+		if (EVENT_ITEM_SPELLCAST == e.ev) {
 			if ( OnPaperSpellCastAt(GetSpellTargetObject(), GetLastSpellCaster()) ) {
 				SetEventScriptReturnValue(EVENT_RESULT_FAIL);
 			}

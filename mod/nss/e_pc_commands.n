@@ -2,15 +2,14 @@ extern("inc_events")
 extern("inc_killarcane")
 
 void main() {
-	int type = GetEventType();
-	int ev = GetEvent();
+	struct EventInfo e = GetEventInfo();
 
-	if (type != EVENT_TYPE_ITEM || ev != EVENT_ITEM_ACTIVATE)
+	if (e.type != EVENT_TYPE_ITEM || e.ev != EVENT_ITEM_ACTIVATE)
 		return;
 
-	object item = OBJECT_SELF;
-	object player = GetEventActor();
-	object target = GetItemActivatedTarget();
+	object item = e.runnable;
+	object player = e.actor;
+	object target = e.actedon;
 
 	string tag = GetTag(item);
 

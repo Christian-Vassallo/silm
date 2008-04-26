@@ -3,21 +3,18 @@ extern("inc_healerkit")
 extern("inc_scorco")
 
 void main() {
-	int type = GetEventType();
-	int ev = GetEvent();
-	object item = GetEventRunnable();
-	object player = GetEventActor();
-	object target = GetEventActedOn();
-	string ref = GetResRef(item);
+	struct EventInfo e = GetEventInfo();
 
-	if (type != EVENT_TYPE_ITEM || ev != EVENT_ITEM_ACTIVATE)
+	if (e.type != EVENT_TYPE_ITEM || e.ev != EVENT_ITEM_ACTIVATE)
 		return;
 
+	string ref = GetResRef(e.runnable);
+
 	if ("bandage" == ref) {
-		AddBandage(player, target, item);
+		AddBandage(e.actor, e.actedon, e.runnable);
 	} else if ("healerkit" == ref) {
-		UseHealerKit(player, target, item);
+		UseHealerKit(e.actor, e.actedon, e.runnable);
 	} else if ("medicine" == ref) {
-		AddMedicine(player, target, item);
+		AddMedicine(e.actor, e.actedon, e.runnable);
 	}
 }
