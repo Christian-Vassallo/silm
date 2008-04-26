@@ -21,7 +21,7 @@ void main() {
 	object oPC = GetExitingObject();
 	object oArea = GetArea(oPC);
 
-	RunEventScriptsFor(EVENT_TYPE_AREA, EVENT_AREA_EXIT, oArea, oPC, OBJECT_INVALID, GetLocation(oPC));
+	RunEventScriptsFor(EVENT_TYPE_AREA, EVENT_AREA_EXIT, oPC, oPC, oArea, GetLocation(oPC));
 
 	if ( GetIsPC(oPC) ) {
 		string sCharName = GetName(oPC);
