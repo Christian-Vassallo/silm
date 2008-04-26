@@ -114,10 +114,13 @@ void main() {
 	struct EventArguments evarg;
 	evarg.a0 = sText; evarg.i0 = iMode;
 	int _evret = RunEventScriptsForWithArgv(EVENT_TYPE_CHAT, EVENT_CHAT_PREFILTER, oPC, oPC, OBJECT_INVALID, GetLocation(oPC), evarg);
-	if (_evret & EVENT_RESULT_STOP) {
+	evarg = GetEventArguments();
+	sText = evarg.a0; iMode = evarg.i0;
+
+	if (_evret & EVENT_RESULT_SUPPRESS)
 		Suppress();
+	if (_evret & EVENT_RESULT_STOP)
 		return;
-	}
 
 	int bIsCommand   = ( !( iMode & MODE_PRIVATE ) && ( GetStringLeft(sText, 1) == "/" ) );
 	int bIsForceTalk = ( !( iMode & MODE_PRIVATE ) && ( GetStringLeft(sText, 1) == "." && GetStringLeft(sText, 2) != ".." ) );
