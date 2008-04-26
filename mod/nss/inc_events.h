@@ -6,7 +6,8 @@ Section: Events
 	Each event constant has zero or more of the following modifiers  Const: 
 	- defer - Event always runs deferred (scripts registered for sync execution will *NOT RUN*), always implies *no abort*
 	- sync - Event always runs synchronously (scripts registered for deferred execution will be forced to run sync)
-	- abort - Event can be aborted by returning EVENT_EXECUTE_SCRIPT_ABORT if the script is running sync
+	- stop - Event can be stopped by returning EVENT_RESULT_STOP, if the script is running sync
+	- suppress - Event can be suppressed by returning EVENT_RESULT_SUPPRESS, if the script is running sync
 	- runnable: object - what object the event will run on
 	- actor: object - what object the actor will be
 	- actedon: object - what object the actedon will be
@@ -34,9 +35,10 @@ in an event script to indicate certain conditions.
 		Request termination of other after this one. Only works reliably when in sync mode.
 
 	Const: EVENT_RESULT_STOP
-		Per-event special stop.
+		Per-event special stop. This stops the event from being handled in the core script.
 	
 	Const: EVENT_RESULT_SUPPRESS
+		Per-event special suppress. This suppresses the event (described per event).
 
 Section: Event Modes
 
@@ -90,31 +92,31 @@ Section: Global Events
 
 	Const: EVENT_GLOBAL_SPELL
 		a spell gets cast
-		- abort (through spellhook)
+		- stop (through spellhook)
 
 
 	Const: EVENT_GLOBAL_OBJECT_CREATE
 		Any object gets created through CreateObject
 		- sync
-		- abort
+		- stop
 
 
 	const: EVENT_GLOBAL_OBJECT_DESTROY
 		Any object gets destroyed through DestroyObject
 		- sync
-		- abort
+		- stop
 
 
 	const: EVENT_GLOBAL_XP_SET
 		A player object changes experience through SetXP
 		- sync
-		- abort
+		- stop
 		- i0: nXpAmount
 
 	const: EVENT_GLOBAL_XP_GIVE
 		A player object gains experience through GiveXPToCreature
 		- sync
-		- abort
+		- stop
 		- i0: nXpAmount
 
 Section: Item Events
@@ -123,7 +125,7 @@ runnable: the item object, actor: creature involved
 	Const: EVENT_ITEM_FREEACTIVATE
 		Creature activates item as a free action
 		- sync
-		- abort
+		- stop
 		- actedon/at: target object/location
 
 
@@ -147,7 +149,7 @@ runnable: the item object, actor: creature involved
 
 	Const: EVENT_ITEM_SPELLCAST
 		Item targeted by a spell
-		- abort (through spellhook)
+		- stop (through spellhook)
 
 
 Section: Player Events
@@ -170,7 +172,7 @@ runnable: the player object
 
 	Const: EVENT_PC_REST
 		Player rests, also fires EVENT_CREATURE_REST
-		- abort
+		- stop
 
 
 	Const: EVENT_PC_DYING
@@ -190,31 +192,31 @@ runnable: the player object
 	Const: EVENT_PC_USEFEAT
 		Player uses a feat
 		- sync
-		- abort
+		- stop
 
 
 	Const: EVENT_PC_USESKILL
 		Player uses a feat
 		- sync
-		- abort
+		- stop
 
 
 	Const: EVENT_PC_TOGGLEMODE
 		Player toggles one of ACTION_MODE_*
 		- sync
-		- abort
+		- stop
 
 
 	Const: EVENT_PC_EXAMINE
 		Player uses Examine
 		- sync
-		- abort
+		- stop
 
 
 	Const: EVENT_PC_ATTACK
 		Player attacks something
 		- sync
-		- abort
+		- stop
 		- actor: attacker
 		- actedon: attackee
 
@@ -222,7 +224,7 @@ runnable: the player object
 	Const: EVENT_PC_PICKPOCKET
 		Player pickpockets someone
 		- sync
-		- abort
+		- stop
 		- actor: pickpocket
 		- actedon: pickpocket target
 
@@ -387,13 +389,14 @@ runnable: player/creature/undefined
 
 	Const: EVENT_CHAT_PREFILTER
 		Before processing a chat message.
-		- abort
+		- stop
+		- suppress: Do not send the text to players
 		- a0: the full string
 		- i0: the MSG_ mode
 
 	Const: EVENT_CHAT_COMMAND
 		A parsed chat-command. Sent by e_chatcmd.n
-		- abort
+		- stop
 		- a0: the command
 		- a1: the full argument string, unparsed
 		- i0: the chat mode it was sent in (MSG_*)
