@@ -424,7 +424,7 @@ struct EventInfo {
 	float defer_time;
 
 	// Var: event_mask
-	int event_mask;
+	int mask;
 
 	// Var: r_pos
 	// The position in the run queue.
