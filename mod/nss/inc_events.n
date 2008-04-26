@@ -110,7 +110,7 @@ int ExecuteScriptInt(string sScript, object oTarget);
 // 
 // Sets the return value for scripts.
 // - mask of EVENT_RESULT_*
-void SetEventScriptReturnValue(int nValue);
+void SetEventScriptReturnValue(int nValue, string sStatus = "");
 
 // Function: GetEventRunnable
 //
@@ -202,7 +202,7 @@ int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, obj
 		si = IntToString(i);
 		
 		type = GetLocalInt(GetModule(), "inc_events_" + si + "_eventtype");
-		if (type != EVENT_ANY && (nEventType != type))
+		if (type != EVENT_TYPE_ANY && (nEventType != type))
 			continue;
 
 		mask = GetLocalInt(GetModule(), "inc_events_" + si + "_eventmask");
@@ -259,6 +259,7 @@ int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, obj
 		ret = 0;
 
 		SetEventMode(oRunnable, runmode);
+		// TODO: SetEventRunPos(oRunnable, i, count);
 
 		// xxx: untested: delay scripts for later use ..
 		//if (defer_time != count / 20f)
@@ -342,8 +343,10 @@ void RunEventScriptAsync(string sScript, int nEventType, int nEvent, int nEventM
 int RunEventScript(string sScript, int nEventType, int nEvent, int nEventMask, object oRunnable,
 		object oActor, object oActedOn, location lActedAt) {
 
-	if ( !GetIsObjectValid(oRunnable) )
+	if ( !GetIsObjectValid(oRunnable) ) {
+		_WARN("script " + sScript + " tried to run on non-runnable for " + itoa(nEventType) + ":" + itoa(nEvent));
 		return EVENT_RESULT_FAIL;
+	}
 
 	SetEventType(oRunnable, nEventType);
 	SetEvent(oRunnable, nEvent);
@@ -414,8 +417,9 @@ int ExecuteScriptInt(string sScript, object oTarget) {
 //----------------------------------------------------------------------------
 // Helper function for ExecuteScriptAndReturnInt
 //----------------------------------------------------------------------------
-void SetEventScriptReturnValue(int nValue) {
+void SetEventScriptReturnValue(int nValue, string sStatus = "") {
 	SetLocalInt(GetModule(), "EVENT_L_LAST_RETVAR", nValue);
+	SetLocalString(GetModule(), "EVENT_L_LAST_RETVAR", sStatus);
 }
 
 object GetEventRunnable() {

@@ -421,6 +421,14 @@ struct EventInfo {
 	// Var: event_mask
 	int event_mask;
 
+	// Var: r_pos
+	// The position in the run queue.
+	int r_pos;
+
+	// Var: r_total
+	// The number of scripts scheduled to run in total.
+	int r_total;
+
 	// Var: runnable
 	// The object this event runs on, usually OBJECT_SELF
 	object runnable;
@@ -469,14 +477,15 @@ const int EVENT_MODE_ANY = 1 << 0;
 const int EVENT_MODE_SYNC = 1 << 1;
 const int EVENT_MODE_DEFER = 1 << 2;
 
-const int EVENT_TYPE_GLOBAL = 0;
-const int EVENT_TYPE_PC = 1;
-const int EVENT_TYPE_ITEM = 2;
-const int EVENT_TYPE_CREATURE = 3;
-const int EVENT_TYPE_PLACEABLE = 4;
-const int EVENT_TYPE_AREA = 5;
-const int EVENT_TYPE_DOOR = 6;
-const int EVENT_TYPE_CHAT = 7;
+const int EVENT_TYPE_ANY = 0;
+const int EVENT_TYPE_GLOBAL = 1;
+const int EVENT_TYPE_PC = 2;
+const int EVENT_TYPE_ITEM = 3;
+const int EVENT_TYPE_CREATURE = 4;
+const int EVENT_TYPE_PLACEABLE = 5;
+const int EVENT_TYPE_AREA = 6;
+const int EVENT_TYPE_DOOR = 7;
+const int EVENT_TYPE_CHAT = 8;
 
 
 const int EVENT_ANY = 0;
