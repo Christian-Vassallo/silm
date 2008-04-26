@@ -24,20 +24,17 @@ Section: Events
 	- Some events are forced to run in defer mode (since there would be no advantage running them in sync mode, or the overhead would be too great).
 
 Section: Script Return Codes
-return codes for event scripts
+return codes for event scripts. You can return these through SetEventScriptReturnValue()
+in an event script to indicate certain conditions.
 
-	Const: EVENT_EXECUTE_SCRIPT_FAILED
-		Script failed to run
+	Const: EVENT_RESULT_FAIL
+		Event script failed to execute. Indicate this to handle error conditions.
 
-	Const: EVENT_EXECUTE_SCRIPT_CONTINUE
-		Script ran and execution continues
+	Const: EVENT_RESULT_END
+		Request termination of other after this one. Only works reliably when in sync mode.
 
-	Const: EVENT_EXECUTE_SCRIPT_END
-		Script ran and execution of further events stops
-
-	Const: EVENT_EXECUTE_SCRIPT_ABORT
-		Script ran and requested termination/cancellation of the event
-
+	Const: EVENT_RESULT_STOP
+		Per-event special stop.
 
 Section: Event Modes
 
@@ -464,10 +461,9 @@ struct EventArguments {
 
 const int EVENT_SCRIPT_LENGTH = 16;
 
-const int EVENT_EXECUTE_SCRIPT_CONTINUE = 1 << 0;
-const int EVENT_EXECUTE_SCRIPT_FAILED = 1 << 1;
-const int EVENT_EXECUTE_SCRIPT_ABORT = 1 << 2;
-const int EVENT_EXECUTE_SCRIPT_END = 1 << 3;
+const int EVENT_RESULT_FAIL = 1 << 0;
+const int EVENT_RESULT_END = 1 << 1;
+const int EVENT_RESULT_STOP  = 1 << 2;
 
 const int EVENT_MODE_ANY = 1 << 0;
 const int EVENT_MODE_SYNC = 1 << 1;

@@ -17,7 +17,7 @@ object Hook_CreateObject(int nObjectType, string sTemplate, location lLocation,
 	if (is_valid(o)) {
 		int ret = RunEventScriptsFor(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_OBJECT_CREATE,
 			o, o, OBJECT_INVALID, GetLocation(o), EVENT_MODE_SYNC);
-		if (EVENT_EXECUTE_SCRIPT_ABORT == ret) 
+		if (EVENT_RESULT_STOP & ret) 
 			DestroyObject(o);
 	}
 

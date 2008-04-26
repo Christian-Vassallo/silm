@@ -22,7 +22,7 @@ int RehashEventScripts();
 // 
 // Runs all scripts that are registered for nEvent
 // Returns:
-// - EVENT_EXECUTE_SCRIPT_*
+// - mask of EVENT_RESULT_*
 int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn,
 	location lActedAt, int nRequireMode = EVENT_MODE_ANY);
 
@@ -30,7 +30,7 @@ int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oAct
 // 
 // Runs all scripts that are registered for nEvent
 // Returns:
-// - EVENT_EXECUTE_SCRIPT_*
+// - mask of EVENT_RESULT_*
 int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, object oActor, object oActedOn,
 	location lActedAt, struct EventArguments evArgs, int nRequireMode = EVENT_MODE_ANY);
 
@@ -38,7 +38,7 @@ int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, obj
 //
 // Runs the named event script on oRunnable
 // Returns:
-// - EVENT_EXECUTE_SCRIPT_*
+// - mask of EVENT_RESULT_*
 int RunEventScript(string sScript, int nEventType, int nEvent, int nEventMask, object oRunnable,
 	object oActor, object oActedOn, location lActedAt);
 
@@ -109,11 +109,8 @@ int ExecuteScriptInt(string sScript, object oTarget);
 // Function: SetEventScriptReturnValue 
 // 
 // Sets the return value for scripts.
-//
-// Valid values are
-// - EVENT_EXECUTE_SCRIPT_CONTINUE - continue calling script after executed script is done
-// - EVENT_EXECUTE_SCRIPT_END - end calling script after executed script is done
-void SetEventScriptReturnValue(int nValue = EVENT_EXECUTE_SCRIPT_END);
+// - mask of EVENT_RESULT_*
+void SetEventScriptReturnValue(int nValue);
 
 // Function: GetEventRunnable
 //
@@ -199,6 +196,8 @@ int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, obj
 
 	SetEventArguments(args);
 
+	int total_ret = 0;
+
 	for (i = 0; i < count; i++) {
 		si = IntToString(i);
 		
@@ -257,7 +256,7 @@ int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, obj
 		if (sync && runmode == EVENT_MODE_ANY)
 			runmode = sync;
 
-		ret = EVENT_EXECUTE_SCRIPT_FAILED;
+		ret = 0;
 
 		SetEventMode(oRunnable, runmode);
 
@@ -271,11 +270,24 @@ int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, obj
 			SetEventDeferTime(oRunnable, defer_time);
 			DelayCommand(defer_time, RunEventScriptAsync(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt));
 		}
-		if (EVENT_EXECUTE_SCRIPT_END == ret || EVENT_EXECUTE_SCRIPT_ABORT == ret) 
-			return ret;
+		
+		if (ret & EVENT_RESULT_STOP)
+			total_ret |= EVENT_RESULT_STOP;
+		
+		if (ret & EVENT_RESULT_FAIL) {
+			_WARN("event script " + script + " indicated failure on " + itoa(nEventType) + ":" + itoa(nEvent));
+			total_ret |= EVENT_RESULT_FAIL;
+		}
+
+		if (ret & EVENT_RESULT_END) {
+			total_ret |= EVENT_RESULT_END;
+			break;
+		}
+
+
 	}
 
-	return EVENT_EXECUTE_SCRIPT_CONTINUE;
+	return total_ret;
 }
 
 
@@ -331,7 +343,7 @@ int RunEventScript(string sScript, int nEventType, int nEvent, int nEventMask, o
 		object oActor, object oActedOn, location lActedAt) {
 
 	if ( !GetIsObjectValid(oRunnable) )
-		return EVENT_EXECUTE_SCRIPT_FAILED;
+		return EVENT_RESULT_FAIL;
 
 	SetEventType(oRunnable, nEventType);
 	SetEvent(oRunnable, nEvent);
@@ -402,7 +414,7 @@ int ExecuteScriptInt(string sScript, object oTarget) {
 //----------------------------------------------------------------------------
 // Helper function for ExecuteScriptAndReturnInt
 //----------------------------------------------------------------------------
-void SetEventScriptReturnValue(int nValue = EVENT_EXECUTE_SCRIPT_CONTINUE) {
+void SetEventScriptReturnValue(int nValue) {
 	SetLocalInt(GetModule(), "EVENT_L_LAST_RETVAR", nValue);
 }
 
