@@ -39,14 +39,14 @@ int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, obj
 // Runs the named event script on oRunnable
 // Returns:
 // - mask of EVENT_RESULT_*
-int RunEventScript(string sScript, int nEventType, int nEvent, int nEventMask, object oRunnable,
-	object oActor, object oActedOn, location lActedAt);
+int RunEventScript(string sScript, int nEventMode, int nEventType, int nEvent, int nEventMask, object oRunnable,
+	object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime);
 
 // Function: RunEventScriptAsync
 //
 // Wrapper around RunEventScript, for delayed execution
-void RunEventScriptAsync(string sScript, int nEventType, int nEvent, int nEventMask, object oRunnable,
-	object oActor, object oActedOn, location lActedAt);
+void RunEventScriptAsync(string sScript, int nEventMode, int nEventType, int nEvent, int nEventMask, object oRunnable,
+	object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime);
 
 // Function: SetEventType
 //
@@ -86,6 +86,10 @@ struct EventInfo GetEventInfo();
 // Function: SetEventMode
 // Sets the current event mode. Used internally.
 void SetEventMode(object oObject, int nMode);
+
+// Function: SetEventRunPos
+// Used internally.
+void SetEventRunPos(object oObject, int nCur, int nMax);
 
 // Function: GetEventDeferTime
 float GetEventDeferTime();
@@ -258,18 +262,10 @@ int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, obj
 
 		ret = 0;
 
-		SetEventMode(oRunnable, runmode);
-		// TODO: SetEventRunPos(oRunnable, i, count);
-
-		// xxx: untested: delay scripts for later use ..
-		//if (defer_time != count / 20f)
-		//	defer_time += 0.1;
-
 		if (EVENT_MODE_SYNC == runmode)
-			ret = RunEventScript(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt);
+			ret = RunEventScript(script, runmode, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt, i, count, defer_time);
 		else {
-			SetEventDeferTime(oRunnable, defer_time);
-			DelayCommand(defer_time, RunEventScriptAsync(script, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt));
+			DelayCommand(defer_time, RunEventScriptAsync(script, runmode, nEventType, nEvent, mask, oRunnable, oActor, oActedOn, lActedAt, i, count, defer_time));
 		}
 		
 		if (ret & EVENT_RESULT_STOP)
@@ -287,8 +283,8 @@ int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, obj
 			total_ret |= EVENT_RESULT_END;
 			break;
 		}
-
-
+		// Make sure they get queued in the right order.
+		defer_time += 0.01;
 	}
 
 	return total_ret;
@@ -300,7 +296,7 @@ int RehashEventScripts() {
 		"runnable_tagmask, runnable_refmask, " + 
 		"actor_tagmask, actor_refmask, actedon_tagmask, actedon_refmask from " +
 		"events.events where " +
-		"enabled = true order by ordering desc;");
+		"enabled = true order by ordering asc;");
 
 	string script;
 	int et, em, sync;
@@ -337,23 +333,26 @@ int RehashEventScripts() {
 	return i;
 }
 
-void RunEventScriptAsync(string sScript, int nEventType, int nEvent, int nEventMask, object oRunnable,
-		object oActor, object oActedOn, location lActedAt) {
-	SetEventMode(oRunnable, EVENT_MODE_DEFER);
-	RunEventScript(sScript, nEventType, nEvent, nEventMask, oRunnable, oActor, oActedOn, lActedAt);
+void RunEventScriptAsync(string sScript, int nEventMode, int nEventType, int nEvent, int nEventMask, object oRunnable,
+		object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime) {
+	RunEventScript(sScript, nEventMode, nEventType, nEvent, nEventMask, oRunnable, oActor, oActedOn, lActedAt, nCurPos, nMaxPos, fDeferTime);
 }
 
-int RunEventScript(string sScript, int nEventType, int nEvent, int nEventMask, object oRunnable,
-		object oActor, object oActedOn, location lActedAt) {
+int RunEventScript(string sScript, int nEventMode, int nEventType, int nEvent, int nEventMask, object oRunnable,
+		object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime) {
 
 	if ( !GetIsObjectValid(oRunnable) ) {
 		_WARN("script " + sScript + " tried to run on non-runnable for " + itoa(nEventType) + ":" + itoa(nEvent));
 		return EVENT_RESULT_FAIL;
 	}
 
+	SetEventMode(oRunnable, nEventMode);
 	SetEventType(oRunnable, nEventType);
 	SetEvent(oRunnable, nEvent);
 	SetEventMask(oRunnable, nEventMask);
+	SetEventRunPos(oRunnable, nCurPos, nMaxPos);
+	SetEventDeferTime(oRunnable, fDeferTime);
+
 	if ( GetIsObjectValid(oActor) )
 		SetLocalObject(GetModule(), "EVENT_LAST_ACTOR", oActor);
 	if ( GetIsObjectValid(oActedOn) )
@@ -455,6 +454,8 @@ struct EventInfo GetEventInfo() {
 	r.actedon = GetEventActedOn();
 	r.actedat = GetEventActedAt();
 	r.defer_time = GetEventDeferTime();
+	r.r_pos = GetLocalInt(GetModule(), "EVENT_LAST_RPOS_CUR");
+	r.r_total = GetLocalInt(GetModule(), "EVENT_LAST_RPOS_MAX");
 	return r;
 }
 
@@ -495,4 +496,10 @@ void SetEventArguments(struct EventArguments ea) {
 	SetLocalLocation(GetModule(), "EVENT_LAST_ARG_l0", ea.l0);
 	SetLocalLocation(GetModule(), "EVENT_LAST_ARG_l1", ea.l1);
 	SetLocalLocation(GetModule(), "EVENT_LAST_ARG_l2", ea.l2);
+}
+
+
+void SetEventRunPos(object oObject, int nCur, int nMax) {
+	SetLocalInt(GetModule(), "EVENT_LAST_RPOS_CUR", nCur);
+	SetLocalInt(GetModule(), "EVENT_LAST_RPOS_MAX", nMax);
 }
