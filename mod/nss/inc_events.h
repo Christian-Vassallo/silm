@@ -401,6 +401,11 @@ runnable: player/creature/undefined
 		- a1: the full argument string, unparsed
 		- i0: the chat mode it was sent in (MSG_*)
 
+	Const:EVENT_CHAT_SERVER
+		Before processing a server message. ("You enter a non-pvp area")
+		- stop
+		- a0: the message
+
 */
 // Struct: EventInfo
 // A struct containing various information
@@ -574,3 +579,4 @@ const int EVENT_DOOR_CLOSE = 1 << 12;
 
 const int EVENT_CHAT_PREFILTER = 1 << 0;
 const int EVENT_CHAT_COMMAND = 1 << 1;
+const int EVENT_CHAT_SERVER = 1 << 2;
