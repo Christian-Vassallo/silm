@@ -1,31 +1,21 @@
 extern("inc_chat")
-
-/* Note:
- * 	This code needs to be rock_bloody_stable.
- * 	Do NOT change unless you really, really
- * 	know what you are doing.
- * 	Bad Things will happen if you mess up.
- * 	Im serious. -- Elven
- */
+extern("inc_events")
 
 void main() {
-	// Don't do anything for now.
+	object o = GetModule();
+	SetLocalString(o, "NWNX!CHAT!TEXT", ChatGetSpacer());
+	string sText = GetLocalString(o, "NWNX!CHAT!TEXT");
 
-	/*object o = GetModule();
-	 * SetLocalString(o, "NWNX!CHAT!TEXT", ChatGetSpacer());
-	 * string sText = GetLocalString(o, "NWNX!CHAT!TEXT");
-	 *
-	 * // remove garbage
-	 * DeleteLocalString(o, "NWNX!CHAT!TEXT");
-	 * DeleteLocalString(o, "NWNX!CHAT!SUPRESS");*/
+	// remove garbage
+	DeleteLocalString(o, "NWNX!CHAT!TEXT");
+	DeleteLocalString(o, "NWNX!CHAT!SUPRESS");
 
-	/*
-	 * 	What we could do here:
-	 * 	Hide join/part messages of players.
-	 * 	[..]
-	 */
+	struct EventArguments ea;
+	ea.a0 = sText;
+	int ret = RunEventScriptsForWithArgv(EVENT_TYPE_CHAT, EVENT_CHAT_SERVER, o, o, OBJECT_INVALID, GetLocation(o), ea);
+	if (ret & EVENT_RESULT_SUPPRESS)
+		Suppress();
 
-	//WriteTimestampedLogEntry("Server Message!");
+	if (ret & EVENT_RESULT_STOP)
+		return;
 }
-
-
