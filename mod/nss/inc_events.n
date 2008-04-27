@@ -128,6 +128,12 @@ int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oAct
 
 int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, object oActor,
 		object oActedOn, location lActedAt, struct EventArguments args, int nRequireMode = EVENT_MODE_ANY) {
+
+	if (!is_valid(oRunnable)) {
+		_ERROR("oRunnable == OBJECT_INVALID for " + itoa(nEventType) + ":" + itoa(nEvent) + " in mode " + itoa(nRequireMode));
+		return EVENT_RESULT_FAIL;
+	}
+
 	int count = GetLocalInt(GetModule(), "inc_events_last");
 	int i, type, mask, sync, ret;
 	string si, script, tag, ref;
