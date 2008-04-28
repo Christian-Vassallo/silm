@@ -158,11 +158,13 @@ runnable: the player object
 	Const: EVENT_PC_LOGIN
 		Player logs in
 		- defer
+		- actor: player object
 
 
 	Const: EVENT_PC_LOGOUT
 		Player logs out
 		- defer
+		- actor: player object
 
 
 	Const: EVENT_PC_LEVELUP
@@ -332,11 +334,11 @@ runnable: the area
 
 	Const: EVENT_AREA_ENTER
 		Creature enters an area
-		- actedon: creature
+		- actor: creature entering the area
 
 	Const: EVENT_AREA_EXIT
 		Creature leaves an area
-		- actedon: creature
+		- actor: creature leaving the area
 
 	Const: EVENT_AREA_HB
 		Heartbeat for area (actor: n/a)
@@ -389,10 +391,10 @@ runnable: player/creature/undefined
 
 	Const: EVENT_CHAT_PREFILTER
 		Before processing a chat message.
-		- stop
 		- suppress: Do not send the text to players
 		- a0: the full string
-		- i0: the MSG_ mode
+		- i0: the MSG_ mode, with MSG_MODE_DM removed
+		- i1: boolean: message was flagged as MSG_MODE_DM?
 
 	Const: EVENT_CHAT_COMMAND
 		A parsed chat-command. Sent by e_chatcmd.n
