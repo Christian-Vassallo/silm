@@ -13,7 +13,7 @@ void MnxNotify(object oPC);
 void main() {
 	object oPC = GetEnteringObject();
 
-	ChatPCin(oPC);
+	NWNXChatPCin(oPC);
 
 	int nGold = Money2Value(CountInventoryMoney(oPC, 0));
 
@@ -92,7 +92,7 @@ void main() {
 //        CreateItemOnObject("pc_walkrun", oPC, 1);
 	// DestroyObject(GetItemPossessedBy(oPC, "pc_walkrun"));
 
-	RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_LOGIN, oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_DEFER);
+	RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_LOGIN, oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID), EVENT_MODE_DEFER);
 
 }
 

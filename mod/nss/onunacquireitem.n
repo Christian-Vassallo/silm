@@ -46,7 +46,8 @@ void main() {
 
 
 	// Run the event script, if available.
-	RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_UNACQUIRE, oItem, oPC, oPC, GetLocation(oPC));
+	if (is_valid(oItem))
+		RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_UNACQUIRE, GetModule(), oPC, oItem, GetLocation(oPC));
 }
 
 

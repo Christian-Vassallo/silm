@@ -26,6 +26,7 @@ Die meisten Befehle arbeiten mit einem Ziel. Dieses kann durch die Zielwahl (ein
 */
 extern("inc_chat")
 extern("_gen")
+extern("inc_events")
 extern("inc_target")
 extern("inc_chatcommand")
 extern("inc_getopt")
@@ -990,10 +991,6 @@ void RegisterAllCommands() {
 
 int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro, int bRunAlias, int nRunModLevel) {
 	nRunModLevel = unsigned(nRunModLevel);
-
-	// No need for that MODE flag, we know already it is a command.
-	if (iMode & MODE_COMMAND)
-		iMode -= MODE_COMMAND;
 
 	if (gvGetInt("chat_debug")) {
 		SendMessageToAllDMs("chat> run: '" + sCommand + "':'" + sArg + "'::" + IntToString(iMode) + "::" + 

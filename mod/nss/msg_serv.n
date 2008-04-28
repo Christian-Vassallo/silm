@@ -3,7 +3,7 @@ extern("inc_events")
 
 void main() {
 	object o = GetModule();
-	SetLocalString(o, "NWNX!CHAT!TEXT", ChatGetSpacer());
+	SetLocalString(o, "NWNX!CHAT!TEXT", NWNXChatGetSpacer());
 	string sText = GetLocalString(o, "NWNX!CHAT!TEXT");
 
 	// remove garbage
@@ -14,7 +14,7 @@ void main() {
 	ea.a0 = sText;
 	int ret = RunEventScriptsForWithArgv(EVENT_TYPE_CHAT, EVENT_CHAT_SERVER, o, o, OBJECT_INVALID, GetLocation(o), ea);
 	if (ret & EVENT_RESULT_SUPPRESS)
-		Suppress();
+		NWNXChatSuppress();
 
 	if (ret & EVENT_RESULT_STOP)
 		return;

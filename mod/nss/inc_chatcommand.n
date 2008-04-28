@@ -1294,17 +1294,17 @@ int CommandLastLog(object oPC, int iMode) {
 
 		sMode = "";
 
-		if ( nMode & MODE_PARTY )
+		if ( nMode & CHATMODE_PARTY )
 			sMode += " [Party]";
 
-		if ( nMode & MODE_SHOUT )
+		if ( nMode & CHATMODE_SHOUT )
 			sMode += " [Shout]";
 
-		if ( nMode & MODE_WHISPER )
+		if ( nMode & CHATMODE_WHISPER )
 			sMode += " [Whisper]";
 
 
-		if ( nMode & MODE_DM_MODE )
+		if ( nMode & CHATMODE_DM_MODE )
 			sMode += " (DM)";
 
 		ToPC("[" + sTS + "]" + sMode + " " + sChar + ": " + sText);
@@ -3293,14 +3293,13 @@ int CommandShowConst(object oPC, int iMode) {
 	string sArg = arg(0);
 
 	if ( sArg == "mode" ) {
-		SendMessageToPC(oPC, " MODE_TALK: " + IntToString(MODE_TALK));
-		SendMessageToPC(oPC, " MODE_SHOUT: " + IntToString(MODE_SHOUT));
-		SendMessageToPC(oPC, " MODE_WHISPER: " + IntToString(MODE_WHISPER));
-		SendMessageToPC(oPC, " MODE_PRIVATE: " + IntToString(MODE_PRIVATE));
-		SendMessageToPC(oPC, " MODE_PARTY: " + IntToString(MODE_PARTY));
-		SendMessageToPC(oPC, " MODE_DM: " + IntToString(MODE_DM));
-		SendMessageToPC(oPC, " MODE_DM_MODE: " + IntToString(MODE_DM_MODE));
-		SendMessageToPC(oPC, " MODE_COMMAND: " + IntToString(MODE_COMMAND));
+		SendMessageToPC(oPC, " CHATMODE_TALK: " + IntToString(CHATMODE_TALK));
+		SendMessageToPC(oPC, " CHATMODE_SHOUT: " + IntToString(CHATMODE_SHOUT));
+		SendMessageToPC(oPC, " CHATMODE_WHISPER: " + IntToString(CHATMODE_WHISPER));
+		SendMessageToPC(oPC, " CHATMODE_PRIVATE: " + IntToString(CHATMODE_PRIVATE));
+		SendMessageToPC(oPC, " CHATMODE_PARTY: " + IntToString(CHATMODE_PARTY));
+		SendMessageToPC(oPC, " CHATMODE_DM: " + IntToString(CHATMODE_DM));
+		SendMessageToPC(oPC, " CHATMODE_DM_MODE: " + IntToString(CHATMODE_DM_MODE));
 	}
 
 	if ( sArg == "object" ) {

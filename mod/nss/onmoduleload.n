@@ -4,11 +4,11 @@ extern("inc_nwnx")
 extern("inc_persist")
 extern("inc_pc_data")
 extern("inc_chat")
-extern("inc_chat_run")
 extern("x2_inc_switches")
 extern("inc_setting")
 extern("inc_online")
 extern("inc_events")
+extern("inc_chat_run")
 
 #include "inc_pgsql.nh"
 #include "git.h"
@@ -26,12 +26,12 @@ void main() {
 
 	InitNWNX();
 	pInit();
-	ChatInit();
+	NWNXChatInit();
 	mnxInit();
 
-	RegisterAllCommands();
-
 	ExecuteScript("_mod_load_cdb", GetModule());
+	
+	RegisterAllCommands();
 
 	onlineServerStart();
 	

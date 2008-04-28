@@ -79,7 +79,7 @@ string ColorisePlayerText(object oPC, int nMode, string sText, struct Color cTex
 
 	int bInOOC = 0; // (ooc) is gray ..
 
-	if ( nMode & MODE_WHISPER )
+	if ( nMode & CHATMODE_WHISPER )
 		cTextColor = cDarkGrey;
 
 	//if ( GetSubString(sText, 0, 1) == "(" ) {
@@ -91,7 +91,7 @@ string ColorisePlayerText(object oPC, int nMode, string sText, struct Color cTex
 	//if (!GetIsPC(oPC))
 	//    cPEmote = cNPCEmote;
 
-	if ( nMode & MODE_WHISPER ) {
+	if ( nMode & CHATMODE_WHISPER ) {
 		cPEmote = Darken(cPEmote, 50);
 		// darken the other colors, too?
 	}
@@ -230,16 +230,16 @@ void SpeakToMode(object oObject, string sText, int iMode) {
 	sText = prefix + sText;
 
 	switch ( iMode ) {
-		case MODE_TALK:
+		case CHATMODE_TALK:
 			AssignCommand(speaker, SpeakString(sText, TALKVOLUME_TALK));
 			break;
-		case MODE_WHISPER:
+		case CHATMODE_WHISPER:
 			AssignCommand(speaker, SpeakString(sText, TALKVOLUME_WHISPER));
 			break;
-		case MODE_SHOUT:
+		case CHATMODE_SHOUT:
 			AssignCommand(speaker, SpeakString(sText, TALKVOLUME_SHOUT));
 			break;
-		case MODE_DM:
+		case CHATMODE_DM:
 			SendMessageToAllDMs(GetName(oObject) + ": " + sText);
 			break;
 		default:
