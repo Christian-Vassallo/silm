@@ -1,0 +1,81 @@
+extern("inc_events")
+extern("inc_chat_lib")
+extern("inc_chat_run")
+extern("inc_setting")
+
+
+
+
+
+void main() {
+	struct EventInfo ei = GetEventInfo();
+	struct EventArguments ea = GetEventArguments();
+
+
+	if (ei.ev != EVENT_CHAT_PREFILTER || ei.type != EVENT_TYPE_CHAT)
+		return;
+
+
+	string first = substr(ea.a0, 0, 1);
+	string rest = substr(ea.a0, 1, 1024);
+	
+	// Now do alias shit ..
+	if ("," == first) {
+		first = "/";
+		rest = "go " + rest;
+	}
+
+	if ("/" != first)
+		return;
+
+	int handled_by_new = false;
+
+	rest = GetStringTrim(rest);
+
+	int nCommandCount = commandsplit(rest, "&&");
+	string sCurrentCommand;
+
+	int i;
+	for ( i = 0; i < nCommandCount; i++ ) {
+		sCurrentCommand = commandget(i);
+		
+		string sCommand, sRest;
+
+		struct EventArguments cmdea;
+
+		// Now split up between command and the sCurrentCommand of arguments
+		int iWhite = FindSubString(sCurrentCommand, " ");
+
+		if ( iWhite > -1 ) {
+			sCommand = GetStringLowerCase(GetSubString(sCurrentCommand, 0, iWhite));
+
+			int i = 1;
+			while ( GetSubString(sCurrentCommand, iWhite + i, 1) == " " )
+				i++;
+
+			sRest = GetSubString(sCurrentCommand, iWhite + i, GetStringLength(sCurrentCommand));
+
+		} else {
+
+			sCommand = GetStringLowerCase(GetSubString(sCurrentCommand, 0, 1024));
+			sRest = "";
+
+		}
+
+		cmdea.a0 = GetStringTrim(sCommand);
+		cmdea.a1 = GetStringTrim(sRest);
+		int ret = RunEventScriptsForWithArgv(EVENT_TYPE_CHAT, EVENT_CHAT_COMMAND, ei.runnable, ei.actor, ei.actedon, ei.actedat, cmdea, EVENT_MODE_SYNC);
+		if (ret & EVENT_RESULT_STOP) {
+			// A plugin said its parsing it, stop it.
+			handled_by_new = true;
+			break;
+		}
+	}
+
+	
+
+	if (!handled_by_new)
+		CommandEval(ei.runnable, ea.i0, rest, true, true, gvGetInt("s_modlevel"));
+
+	SetEventScriptReturnValue(EVENT_RESULT_STOP | EVENT_RESULT_END | EVENT_RESULT_SUPPRESS);
+}
