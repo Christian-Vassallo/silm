@@ -1,0 +1,23 @@
+/*
+Event: e_chat_end
+*/
+
+extern("inc_events")
+extern("inc_colors")
+extern("inc_chat")
+extern("inc_chat_lib")
+
+void main() {
+	struct EventInfo ei = GetEventInfo();
+	struct EventArguments ea = GetEventArguments();
+
+	if (ei.type != EVENT_TYPE_CHAT || ei.ev != EVENT_CHAT_PREFILTER)
+		return;
+	
+	if (ea.i1 != 0) {
+		if (ea.i0 & CHATMODE_TALK | ea.i0 & CHATMODE_WHISPER) {
+			NWNXChatSpeakToChannel(ei.actor, ChatModeToMsg(ea.i0), ea.a0);
+			SetEventScriptReturnValue(EVENT_RESULT_END | EVENT_RESULT_STOP | EVENT_RESULT_SUPPRESS);
+		}
+	}
+}
