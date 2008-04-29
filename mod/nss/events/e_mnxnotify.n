@@ -11,9 +11,6 @@ void main() {
 		}
 	}
 
-	if (!GetIsPC(ei.actor))
-		return;
-
 	string sCharName = GetName(ei.actor);
 	string sAccountName = GetPCName(ei.actor);
 	int nAID = GetAccountID(ei.actor);
@@ -21,7 +18,7 @@ void main() {
 	string bIsDM = BoolToString(GetIsDM(ei.actor));
 	object oArea = ei.runnable;
 
-	if (EVENT_TYPE_AREA == ei.type) {
+	if (GetIsPC(ei.actor) && EVENT_TYPE_AREA == ei.type) {
 		if (EVENT_AREA_ENTER == ei.ev) {
 			mnx_asynchronous_command_noreply(mnx_prepare_command("areaenter", sAccountName, sCharName, IntToString(nAID), IntToString(nCID), GetResRef(
 					oArea), GetTag(oArea), GetName(oArea)));
