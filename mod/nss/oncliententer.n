@@ -7,8 +7,6 @@ extern("inc_currency")
 extern("inc_events")
 #include "inc_pgsql.nh"
 
-void MnxNotify(object oPC);
-
 void main() {
 	object oPC = GetEnteringObject();
 
@@ -38,10 +36,6 @@ void main() {
 	ExecuteScript("login_corpse", oPC);
 	ExecuteScript("login_effects", oPC);
 
-
-	DelayCommand(1.0f, MnxNotify(oPC));
-
-
 	// XXX hotfix
 	SetLocalInt(oPC, "bandage", 0);
 	SetLocalInt(oPC, "medicine", 0);
@@ -50,30 +44,5 @@ void main() {
 
 	RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_LOGIN, oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID), EVENT_MODE_DEFER);
 
-}
-
-void MnxNotify(object oPC) {
-	string sCharName = GetName(oPC);
-	string sAccountName = GetPCName(oPC);
-	int nAID = GetAccountID(oPC);
-	int nCID = GetCharacterID(oPC);
-	string bIsDM = BoolToString(GetIsDM(oPC));
-
-	mnx_asynchronous_command(mnx_prepare_command("cliententer", sAccountName, sCharName, IntToString(nAID), IntToString(nCID),
-							bIsDM, GetPCIPAddress(oPC), GetPCPublicCDKey(oPC)));
-	string host = GetPCIPAddress(oPC);
-	pQ("select dns.getname(" + pSs(host) + ");");
-	if (pF())
-		host = pGs(1);
-
-	string
-		sIP = GetPCIPAddress(oPC),
-		sKey = GetPCPublicCDKey(oPC);
-
-	SendMessageToAllDMs("enter: '" +
-		sAccountName +
-		"'(" +
-		IntToString(nAID) +
-		") '" + sCharName + "'(" + IntToString(nCID) + "), " + sIP + " -> " + host + "/" + sKey);
 }
 

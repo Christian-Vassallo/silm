@@ -1,0 +1,46 @@
+extern("inc_events")
+extern("inc_cdb")
+extern("inc_mnx")
+
+void main() {
+	struct EventInfo ei = GetEventInfo();
+
+	if (EVENT_TYPE_GLOBAL == ei.type) {
+		if (EVENT_GLOBAL_MODULE_LOAD == ei.ev) {
+			mnx_asynchronous_command_noreply(mnx_prepare_command("startup", GIT_COMMIT));
+		}
+	}
+
+	if (!GetIsPC(ei.actor))
+		return;
+
+	string sCharName = GetName(ei.actor);
+	string sAccountName = GetPCName(ei.actor);
+	int nAID = GetAccountID(ei.actor);
+	int nCID = GetCharacterID(ei.actor);
+	string bIsDM = BoolToString(GetIsDM(ei.actor));
+	object oArea = ei.runnable;
+
+	if (EVENT_TYPE_AREA == ei.type) {
+		if (EVENT_AREA_ENTER == ei.ev) {
+			mnx_asynchronous_command_noreply(mnx_prepare_command("areaenter", sAccountName, sCharName, IntToString(nAID), IntToString(nCID), GetResRef(
+					oArea), GetTag(oArea), GetName(oArea)));
+		}
+		
+		if (EVENT_AREA_EXIT == ei.ev) {
+			mnx_asynchronous_command_noreply(mnx_prepare_command("arealeave", sAccountName, sCharName, IntToString(nAID), IntToString(nCID)));
+		}
+	}
+
+	if (EVENT_TYPE_PC == ei.type) {
+		if (EVENT_PC_LOGIN == ei.ev) {
+			mnx_asynchronous_command(mnx_prepare_command("cliententer", sAccountName, sCharName, IntToString(nAID), IntToString(nCID),
+				bIsDM, GetPCIPAddress(ei.actor), GetPCPublicCDKey(ei.actor)));
+		}
+		
+		if (EVENT_PC_LOGOUT == ei.ev) {
+			mnx_asynchronous_command_noreply(mnx_prepare_command("clientleave", sAccountName, sCharName, IntToString(nAID), IntToString(nCID)));
+		}
+	}
+
+}

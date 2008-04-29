@@ -74,15 +74,6 @@ void main() {
 		}
 	}
 
-	string sCharName = GetName(oPC);
-	string sAccountName = GetPCName(oPC);
-	int nAID = GetAccountID(oPC);
-	int nCID = GetCharacterID(oPC);
-
-	mnx_asynchronous_command_noreply(mnx_prepare_command("areaenter", sAccountName, sCharName, IntToString(nAID), IntToString(nCID), GetResRef(
-			oArea), GetTag(oArea), GetName(oArea)));
-
-
 	if (gvGetInt("persist_dropped_items") && !lv_i(oArea, "dropped_items_loaded")) {
 		p_load_to_location_metadata_in_chunks_for_area("dropped_items", oArea);
 		slv_i(oArea, "dropped_items_loaded", 1);

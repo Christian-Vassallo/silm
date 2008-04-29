@@ -6,9 +6,6 @@
  *  GNU/GPLv2 General Public Licence.
  */
 extern("inc_events")
-extern("inc_cleaningcrew")
-extern("inc_dbplac")
-extern("_gen")
 extern("inc_mnx")
 
 
@@ -22,20 +19,4 @@ void main() {
 	object oArea = GetArea(oPC);
 
 	RunEventScriptsFor(EVENT_TYPE_AREA, EVENT_AREA_EXIT, oArea, oPC, oArea, GetLocation(oPC));
-
-	if ( GetIsPC(oPC) ) {
-		string sCharName = GetName(oPC);
-		string sAccountName = GetPCName(oPC);
-		int nAID = GetAccountID(oPC);
-		int nCID = GetCharacterID(oPC);
-
-		mnx_asynchronous_command_noreply(mnx_prepare_command("arealeave", sAccountName, sCharName, IntToString(nAID), IntToString(nCID)));
-	}
-
-	/*int bEmpty = !GetAreaHasPlayers(oA);
-	 *
-	 *
-	 * if (bEmpty) {
-	 * 	CleanAreaForItems(oA);
-	 * }*/
 }

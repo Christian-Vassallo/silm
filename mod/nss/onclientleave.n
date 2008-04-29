@@ -24,16 +24,9 @@ void main() {
 
 	//SaveMapPinsForPlayer(oPC);
 
-	string sCharName = GetName(oPC);
-	string sAccountName = GetPCName(oPC);
-	int nAID = GetAccountID(oPC);
-	int nCID = GetCharacterID(oPC);
-
-	mnx_asynchronous_command_noreply(mnx_prepare_command("clientleave", sAccountName, sCharName, IntToString(nAID), IntToString(nCID)));
-
 	ExecuteScript("logout_corpse", oPC);
 	ExecuteScript("logout_pcdata", oPC);
 
-	NWNXChatPCout(oPC);
 	RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_LOGOUT, oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID), EVENT_MODE_DEFER);
+	NWNXChatPCout(oPC);
 }
