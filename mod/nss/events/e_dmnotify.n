@@ -1,0 +1,42 @@
+extern("inc_events")
+extern("inc_cdb")
+#include "inc_pgsql.nh"
+
+void main() {
+	struct EventInfo ei = GetEventInfo();
+
+	string sCharName = GetName(ei.actor);
+	string sAccountName = GetPCName(ei.actor);
+	int nAID = GetAccountID(ei.actor);
+	int nCID = GetCharacterID(ei.actor);
+
+	if ("pc_login" == ei.ev) {
+
+		string host = GetPCIPAddress(ei.actor);
+		pQ("select dns.getname(" + pSs(host) + ");");
+		if (pF())
+			host = pGs(1);
+
+		string
+			sIP = GetPCIPAddress(ei.actor),
+			sKey = GetPCPublicCDKey(ei.actor);
+
+		SendMessageToAllDMs("enter: '" +
+			sAccountName +
+			"'(" +
+			IntToString(nAID) +
+			") '" + sCharName + "'(" + IntToString(nCID) + "), " + sIP + " -> " + host + "/" + sKey
+		);
+
+	}
+
+	if ("pc_logout" == ei.ev) {
+		SendMessageToAllDMs("leave: '" + sAccountName +
+			"'(" +
+			IntToString(nAID) +
+			") '" + sCharName + "'(" + IntToString(nCID) + ")"
+		);
+
+	}
+
+}

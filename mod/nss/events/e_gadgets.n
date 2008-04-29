@@ -10,8 +10,9 @@ string get_random_tree();
 void main() {
 	struct EventInfo e = GetEventInfo();
 
-	if (e.ev != EVENT_ITEM_ACTIVATE || e.type != EVENT_TYPE_ITEM)
+	if (e.ev != "item_activate")
 		return;
+
 	object oPC = e.actor;
 	object oA = GetArea(oPC);
 	string tag = GetTag(e.runnable);

@@ -16,7 +16,7 @@ int OnPaperSpellCastAt(object oItem, object oSpellCaster);
 void main() {
 	struct EventInfo e = GetEventInfo();
 	
-	if (EVENT_TYPE_ITEM != e.type || EVENT_ITEM_ACTIVATE != e.ev)
+	if (e.ev != "item_activate")
 		return;
 	
 	string tag = GetTag(e.runnable);
@@ -144,15 +144,15 @@ void main() {
 	}
 
 	if ("c_paper" == tag) {
-		if (EVENT_ITEM_ACTIVATE == e.ev) {
+		if ("item_activate" == e.ev) {
 			FloatingTextStringOnCreature("Ihr rollt das Pergament auf ..", GetItemActivator(), 1);
 			AssignCommand(GetItemActivator(), PlayAnimation(ANIMATION_FIREFORGET_READ));
 
 			DelayCommand(2.0, OnPaperActivate(GetItemActivated(), GetItemActivator()));
 		}
-		if (EVENT_ITEM_SPELLCAST == e.ev) {
+		if ("item_spellcast" == e.ev) {
 			if ( OnPaperSpellCastAt(GetSpellTargetObject(), GetLastSpellCaster()) ) {
-				SetEventScriptReturnValue(EVENT_RESULT_FAIL);
+				SetEventResult(EVENT_RESULT_FAIL);
 			}
 		}
 	}

@@ -4,26 +4,20 @@ extern("inc_online")
 void main() {
 	struct EventInfo ei = GetEventInfo();
 
-	if (EVENT_TYPE_GLOBAL == ei.type) {
-
-		if (EVENT_GLOBAL_MODULE_LOAD == ei.ev) {
-			onlineServerStart();
-		}
-
-		if (EVENT_GLOBAL_HB == ei.ev) {
-			onlinePlayerUpdateLocation(ei.actor);
-		}
+	if ("module_load" == ei.ev) {
+		onlineServerStart();
 	}
 
-	if (EVENT_TYPE_PC == ei.type) {
+	if ("module_hb" == ei.ev) {
+		onlinePlayerUpdateLocation(ei.actor);
+	}
 
-		if (EVENT_PC_LOGIN == ei.ev) {
-			onlinePlayerEnter(ei.actor);
-		}
-		
-		if (EVENT_PC_LOGOUT == ei.ev) {
-			onlinePlayerLeave(ei.actor);
-		}
+	if ("pc_login" == ei.ev) {
+		onlinePlayerEnter(ei.actor);
+	}
+	
+	if ("pc_logout" == ei.ev) {
+		onlinePlayerLeave(ei.actor);
 	}
 
 }

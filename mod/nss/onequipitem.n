@@ -139,5 +139,5 @@ void ClothEquip() {
 	}
 
 	//DelayCommand(COMMANDABLEFUDGE, SetCommandable(TRUE, oPC));
-	RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_EQUIP, oItem, oPC, oPC, GetLocation(oPC));
+	RunEventScriptsFor(GetEventSerial(), "item_equip", oItem, oPC, oPC, GetLocation(oPC));
 }

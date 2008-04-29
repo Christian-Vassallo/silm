@@ -9,10 +9,10 @@ extern("inc_setting")
 
 void main() {
 	struct EventInfo ei = GetEventInfo();
-	struct EventArguments ea = GetEventArguments();
+	struct EventArguments ea = GetEventArguments(ei.serial);
 
 
-	if (ei.ev != EVENT_CHAT_PREFILTER || ei.type != EVENT_TYPE_CHAT)
+	if (ei.ev != "chat_prefilter")
 		return;
 
 
@@ -64,7 +64,10 @@ void main() {
 
 		cmdea.a0 = GetStringTrim(sCommand);
 		cmdea.a1 = GetStringTrim(sRest);
-		int ret = RunEventScriptsForWithArgv(EVENT_TYPE_CHAT, EVENT_CHAT_COMMAND, ei.runnable, ei.actor, ei.actedon, ei.actedat, cmdea, EVENT_MODE_SYNC);
+		int serial = GetEventSerial();
+		int ret = RunEventScriptsForWithArgv(serial, "chat_command", ei.runnable, ei.actor, ei.actedon, ei.actedat, cmdea, EVENT_MODE_SYNC);
+		DeleteEventArguments(serial);
+
 		if (ret & EVENT_RESULT_STOP) {
 			// A plugin said its parsing it, stop it.
 			handled_by_new = true;
@@ -77,5 +80,5 @@ void main() {
 	if (!handled_by_new)
 		CommandEval(ei.runnable, ea.i0, rest, true, true, gvGetInt("s_modlevel"));
 
-	SetEventScriptReturnValue(EVENT_RESULT_STOP | EVENT_RESULT_END | EVENT_RESULT_SUPPRESS);
+	SetEventResult(EVENT_RESULT_STOP | EVENT_RESULT_END | EVENT_RESULT_SUPPRESS);
 }

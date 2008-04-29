@@ -26,7 +26,7 @@ void main() {
 	if ( GetTag(oItem) == "NW_IT_TORCH001" )
 		UnequippedTorch(oPC, oItem);
 
-	RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_UNEQUIP, oItem, oPC, oPC, GetLocation(oPC));
+	RunEventScriptsFor(GetEventSerial(), "item_unequip", oItem, oPC, oPC, GetLocation(oPC));
 
 	ClothUnequip();
 }

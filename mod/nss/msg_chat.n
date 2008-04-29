@@ -38,7 +38,9 @@ void main() {
 
 	struct EventArguments evarg;
 	evarg.a0 = sText; evarg.i0 = iMode;
-	int _evret = RunEventScriptsForWithArgv(EVENT_TYPE_CHAT, EVENT_CHAT_PREFILTER, oSpeaker, oSpeaker, oTo, GetLocation(oSpeaker), evarg);
+	int serial = GetEventSerial();
+	int _evret = RunEventScriptsForWithArgv(serial, "chat_prefilter", oSpeaker, oSpeaker, oTo, GetLocation(oSpeaker), evarg);
+	DeleteEventArguments(serial);
 
 	if (_evret & EVENT_RESULT_SUPPRESS)
 		NWNXChatSuppress();

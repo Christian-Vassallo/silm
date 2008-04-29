@@ -30,45 +30,45 @@ void main() {
 
 	switch (nEventType) {
 		case NWNXEVENT_SAVE_CHAR:
-			RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_SAVE, oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_DEFER);
+			RunEventScriptsFor(GetEventSerial(), "pc_save", oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_DEFER);
 			break;
 
 		case NWNXEVENT_ATTACK:
-			if (EVENT_RESULT_STOP & RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_ATTACK, oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
+			if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "pc_attack", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
 				NWNXBypassEvent();
 			break;
 
 		case NWNXEVENT_QUICKCHAT:
 			// nEventSubType = quickchat_phrse # ..
-			if (EVENT_RESULT_STOP & RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_QUICKCHAT, oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_SYNC))
+			if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "pc_quickchat", oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_SYNC))
 				NWNXBypassEvent();
 			break;
 
 		case NWNXEVENT_EXAMINE:
-			if (EVENT_RESULT_STOP & RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_EXAMINE, oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
+			if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "pc_examine", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
 				NWNXBypassEvent();
 			break;
 
 		case NWNXEVENT_USE_SKILL:
 			// nEventSubType = SKILL_
-			if (EVENT_RESULT_STOP & RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_USESKILL, oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
+			if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "pc_useskill", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
 				NWNXBypassEvent();
 			break;
 
 		case NWNXEVENT_USE_FEAT:
 			// nEventSubType = FEAT_
-			if (EVENT_RESULT_STOP & RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_USEFEAT, oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
+			if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "pc_usefeat", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
 				NWNXBypassEvent();
 			break;
 
 		case NWNXEVENT_TOGGLE_MODE:
 			// nEventSubType = ACTION_MODE_
-			if (EVENT_RESULT_STOP & RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_TOGGLEMODE, oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_SYNC))
+			if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "pc_togglemode", oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_SYNC))
 				NWNXBypassEvent();
 			break;
 
 		case NWNXEVENT_PICKPOCKET:
-			if (EVENT_RESULT_STOP & RunEventScriptsFor(EVENT_TYPE_CREATURE, EVENT_PC_PICKPOCKET, oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
+			if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "pc_pickpocket", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
 				NWNXBypassEvent();
 			else  {
 				if (!GetIsPC(oTarget)) {
@@ -80,7 +80,7 @@ void main() {
 			break;
 
 		case NWNXEVENT_USE_ITEM:
-			if (EVENT_RESULT_STOP & RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_FREEACTIVATE, oItem, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
+			if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "item_freeactivate", oItem, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
 				NWNXBypassEvent();
 			else
 				EventUseItem(oPC, oItem, oTarget, lTarget);

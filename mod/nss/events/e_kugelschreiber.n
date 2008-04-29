@@ -6,13 +6,16 @@ void tick(object oPen);
 void main() {
 	struct EventInfo e = GetEventInfo();
 
-	if (e.ev != EVENT_ITEM_ACTIVATE || e.type != EVENT_TYPE_ITEM)
+	if (e.ev != "item_activate")
 		return;
 
 	object
 		pen = e.runnable,
 		oPC = e.actor,
 		oTarget = e.actedon;
+
+	if (GetTag(pen) != "kugelschreiber")
+		return;
 
 	FloatingTextStringOnCreature("Ihr drueckt auf den Kugelschreiber.", oPC, false);
 

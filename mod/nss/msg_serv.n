@@ -12,7 +12,10 @@ void main() {
 
 	struct EventArguments ea;
 	ea.a0 = sText;
-	int ret = RunEventScriptsForWithArgv(EVENT_TYPE_CHAT, EVENT_CHAT_SERVER, o, o, OBJECT_INVALID, GetLocation(o), ea);
+	int serial = GetEventSerial();
+	int ret = RunEventScriptsForWithArgv(serial, "chat_server", o, o, OBJECT_INVALID, GetLocation(o), ea);
+	DeleteEventArguments(serial);
+
 	if (ret & EVENT_RESULT_SUPPRESS)
 		NWNXChatSuppress();
 

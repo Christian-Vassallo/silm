@@ -42,7 +42,6 @@ void main() {
 
 	SetLocalInt(oPC, "message_count", 0);
 
-	RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_LOGIN, oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
-
+	RunEventScriptsFor(GetEventSerial(), "pc_login", oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
 }
 

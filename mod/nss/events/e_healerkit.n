@@ -5,7 +5,7 @@ extern("inc_scorco")
 void main() {
 	struct EventInfo e = GetEventInfo();
 
-	if (e.type != EVENT_TYPE_ITEM || e.ev != EVENT_ITEM_ACTIVATE)
+	if (e.ev != "item_activate")
 		return;
 
 	string ref = GetResRef(e.runnable);

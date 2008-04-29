@@ -18,5 +18,5 @@ void main() {
 	object oPC = GetExitingObject();
 	object oArea = GetArea(oPC);
 
-	RunEventScriptsFor(EVENT_TYPE_AREA, EVENT_AREA_EXIT, oArea, oPC, oArea, GetLocation(oPC));
+	RunEventScriptsFor(GetEventSerial(), "area_leave", oArea, oPC, oArea, GetLocation(oPC));
 }

@@ -6,7 +6,7 @@ extern("inc_ms")
 void main() {
 	struct EventInfo e = GetEventInfo();
 
-	if (e.ev != EVENT_ITEM_ACTIVATE || e.type != EVENT_TYPE_ITEM || GetTag(e.runnable) != "mentor")
+	if (e.ev != "item_activate" || GetTag(e.runnable) != "mentor")
 		return;
 
 	object

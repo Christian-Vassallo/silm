@@ -47,7 +47,7 @@ void main() {
 	// The Event hook goes here
 
 	if ( is_item(oTarget) ) {
-		int nResult = RunEventScriptsFor(EVENT_TYPE_ITEM, EVENT_ITEM_SPELLCAST, oPC, oPC, oTarget, lTarget); //oTarget, EVENT_ITEM_SPELLCAST_AT, EVENT_PREFIX_ITEM);
+		int nResult = RunEventScriptsFor(GetEventSerial(), "item_spellcast", oPC, oPC, oTarget, lTarget); //oTarget, EVENT_ITEM_SPELLCAST_AT, EVENT_PREFIX_ITEM);
 
 		if ( nResult & EVENT_RESULT_STOP ) {
 			// Do not continue.

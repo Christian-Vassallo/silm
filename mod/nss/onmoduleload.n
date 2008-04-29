@@ -65,5 +65,5 @@ void main() {
 
 	RehashEventScripts();
 
-	RunEventScriptsFor(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_MODULE_LOAD, OBJECT_SELF, OBJECT_SELF, OBJECT_SELF, GetLocation(OBJECT_SELF), EVENT_MODE_DEFER);
+	RunEventScriptsFor(GetEventSerial(), "module_load", OBJECT_SELF, OBJECT_SELF, OBJECT_SELF, GetLocation(OBJECT_SELF), EVENT_MODE_DEFER);
 }

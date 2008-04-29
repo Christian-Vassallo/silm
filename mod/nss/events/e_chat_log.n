@@ -3,9 +3,9 @@ extern("inc_chatlog")
 
 void main() {
 	struct EventInfo ei = GetEventInfo();
-	struct EventArguments ea = GetEventArguments();
+	struct EventArguments ea = GetEventArguments(ei.serial);
 
-	if (ei.type != EVENT_TYPE_CHAT || ei.ev != EVENT_CHAT_PREFILTER)
+	if (ei.ev != "chat_prefilter")
 		return;
 
 	if (ea.i0 & CHATMODE_DM_MODE)
