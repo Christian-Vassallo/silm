@@ -25,43 +25,21 @@ void main() {
 	SendMessageToPC(oPC, "Commited on: " + GIT_COMMIT_ON);
 	SendMessageToPC(oPC, "Built on: " + GIT_BUILD_ON);
 
-	/*struct mnxRet r = mnxRun(oPC, "uptime");
-	if (!r.error)
-		SendMessageToPC(oPC, "Uptime: " + r.ret);*/
-	// SendMessageToPC(oPC, "");
-
-
-	// Check the bleedin cd key
-//    SQLQuery("
-	//if (GetIsDM(oPC) && !GetIsDMAllowed(oPC)) {
-	// DelayCommand(10.0, BootPC(oPC));
-	//return;
-	//    SendMessageToPC(oPC, "Dieser Account wurde nicht fuer den DM-Zugang freigeschalten. (Debugnachricht, bitte Elven melden)");
-	//}
-
-
 
 	DelayCommand(1.0f, ExecuteScript("_mod_clenter_cdb", oPC));
 
-
-	// DelayCommand(1.2f, ExecuteScript("_mod_clenter_onl", oPC));
 
 	//Must come first!!!
 	ExecuteScript("login_1stenter", oPC);
 	ExecuteScript("login_subrace", oPC);
 	ExecuteScript("login_pcdata", oPC);
-	ExecuteScript("login_craftsys", oPC);
 	ExecuteScript("login_misc", oPC);
 	ExecuteScript("login_update", oPC);
 	ExecuteScript("login_corpse", oPC);
-	ExecuteScript("login_bodyparts", oPC);
-
 	ExecuteScript("login_effects", oPC);
 
 
 	DelayCommand(1.0f, MnxNotify(oPC));
-
-
 
 
 	// XXX hotfix
@@ -69,22 +47,6 @@ void main() {
 	SetLocalInt(oPC, "medicine", 0);
 
 	SetLocalInt(oPC, "message_count", 0);
-
-	// Remove the language tokens.
-	int i;
-	for ( i = 0; i < 30; i++ )
-		DestroyObject(GetItemPossessedBy(oPC, "lang_" + IntToString(i + 1)));
-	/* Mappins */
-	/*int count = RestoreMapPinsForPlayer(oPC);
-	 * if (count)
-	 * 	SendMessageToPC(oPC, IntToString(count) + " Map-Pins geladen und platziert.");*/
-
-	if ( !GetIsDM(oPC) && !GetIsObjectValid(GetItemPossessedBy(oPC, "pc_follow")) )
-		CreateItemOnObject("pc_follow", oPC, 1);
-
-//    if (!GetIsObjectValid(GetItemPossessedBy(oPC, "pc_walkrun")))
-//        CreateItemOnObject("pc_walkrun", oPC, 1);
-	// DestroyObject(GetItemPossessedBy(oPC, "pc_walkrun"));
 
 	RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_LOGIN, oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID), EVENT_MODE_DEFER);
 
