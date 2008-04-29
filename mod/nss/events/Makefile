@@ -1,6 +1,6 @@
 # inherits stuff
 
-all: clean preprocess-sternenfall preprocess compile inst
+all: preprocess-sternenfall preprocess compile 
 
 inst:
 	cp -v *.ncs ~/nwserver/res/
