@@ -129,11 +129,6 @@ int RunEventScriptsFor(int nEventType, int nEvent, object oRunnable, object oAct
 int RunEventScriptsForWithArgv(int nEventType, int nEvent, object oRunnable, object oActor,
 		object oActedOn, location lActedAt, struct EventArguments args, int nRequireMode = EVENT_MODE_ANY) {
 
-	if (!is_valid(oRunnable)) {
-		_ERROR("oRunnable == OBJECT_INVALID for " + itoa(nEventType) + ":" + itoa(nEvent) + " in mode " + itoa(nRequireMode));
-		return EVENT_RESULT_FAIL;
-	}
-
 	int count = GetLocalInt(GetModule(), "inc_events_last");
 	int i, type, mask, sync, ret;
 	string si, script, tag, ref;
@@ -281,11 +276,6 @@ void RunEventScriptAsync(string sScript, int nEventMode, int nEventType, int nEv
 
 int RunEventScript(string sScript, int nEventMode, int nEventType, int nEvent, int nEventMask, object oRunnable,
 		object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime) {
-
-	if ( !GetIsObjectValid(oRunnable) ) {
-		_WARN("script " + sScript + " tried to run on non-runnable for " + itoa(nEventType) + ":" + itoa(nEvent));
-		return EVENT_RESULT_FAIL;
-	}
 
 	// Set the state for this script.
 	
