@@ -11,17 +11,12 @@ int p_get_p_id(object o) {
 }
 
 void main() {
-	int type = GetEventType();
-	int ev   = GetEvent();
-	int mask = GetEventMask();
+	struct EventInfo e = GetEventInfo();
 
-	if (ev == EVENT_AREA_HB || ev == EVENT_CREATURE_HB || ev == EVENT_PLACEABLE_HB)
-		return;
+//	if (-1 != strpos(e.ev, "_hb"))
+//		return;
 
-	object runnable = OBJECT_SELF;
-	object actor = GetEventActor();
-	object actedon = GetEventActedOn();
-	
-	WriteTimestampedLogEntry("event_debug: type=" + itoa(type) + " event=" + itoa(ev) + " mask=" + itoa(mask));
-	WriteTimestampedLogEntry("event_debug: runnable=" + otoa(runnable) + " actor=" + otoa(actor) + " actedon=" + otoa(actedon));
+	WriteTimestampedLogEntry("event_debug: ev=" + e.ev + " rpos=" + itoa(e.r_pos) + "/" + itoa(e.r_total));
+	WriteTimestampedLogEntry("event_debug: delay=" + ftoa(e.defer_time));
+	WriteTimestampedLogEntry("event_debug: runnable=" + otoa(e.runnable) + " actor=" + otoa(e.actor) + " actedon=" + otoa(e.actedon));
 }

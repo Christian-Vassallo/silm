@@ -2,8 +2,8 @@ extern("inc_events")
 
 #undef DestroyObject
 void Hook_DestroyObject(object oObject, float fDelay = 0.0) {
-	RunEventScriptsFor(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_OBJECT_DESTROY, 
-		oObject, oObject, OBJECT_INVALID, GetLocation(oObject), EVENT_MODE_SYNC);
+	//RunEventScriptsFor(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_OBJECT_DESTROY, 
+	//	oObject, oObject, OBJECT_INVALID, GetLocation(oObject), EVENT_MODE_SYNC);
 	DestroyObject(oObject, fDelay);
 }
 
@@ -14,31 +14,31 @@ object Hook_CreateObject(int nObjectType, string sTemplate, location lLocation,
 	object o = CreateObject(nObjectType, sTemplate, lLocation,
 		bUseAppearAnimation, sNewTag);
 
-	if (is_valid(o)) {
+/*	if (is_valid(o)) {
 		int ret = RunEventScriptsFor(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_OBJECT_CREATE,
 			o, o, OBJECT_INVALID, GetLocation(o), EVENT_MODE_SYNC);
 		if (EVENT_RESULT_STOP & ret) 
 			DestroyObject(o);
-	}
+	}*/
 
 	return o;
 }
 
 #undef SetXP
 void Hook_SetXP(object oCreature, int nXpAmount) {
-	struct EventArguments ea;
-	ea.i0 = nXpAmount;
-	int ret = RunEventScriptsForWithArgv(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_XP_SET,
-		oCreature, oCreature, OBJECT_INVALID, GetLocation(oCreature), ea, EVENT_MODE_SYNC);
+//	struct EventArguments ea;
+//	ea.i0 = nXpAmount;
+//	int ret = RunEventScriptsForWithArgv(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_XP_SET,
+//		oCreature, oCreature, OBJECT_INVALID, GetLocation(oCreature), ea, EVENT_MODE_SYNC);
 	SetXP(oCreature, nXpAmount);
 }
 
 #undef GiveXPToCreature
 void Hook_GiveXPToCreature(object oCreature, int nXpAmount) {
-	struct EventArguments ea;
-	ea.i0 = nXpAmount;
-	int ret = RunEventScriptsForWithArgv(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_XP_GIVE,
-		oCreature, oCreature, OBJECT_INVALID, GetLocation(oCreature), ea, EVENT_MODE_SYNC);
+//	struct EventArguments ea;
+//	ea.i0 = nXpAmount;
+//	int ret = RunEventScriptsForWithArgv(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_XP_GIVE,
+//		oCreature, oCreature, OBJECT_INVALID, GetLocation(oCreature), ea, EVENT_MODE_SYNC);
 	GiveXPToCreature(oCreature, nXpAmount);
 }
 
