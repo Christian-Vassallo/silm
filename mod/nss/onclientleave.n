@@ -27,6 +27,6 @@ void main() {
 	ExecuteScript("logout_corpse", oPC);
 	ExecuteScript("logout_pcdata", oPC);
 
-	RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_LOGOUT, oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID), EVENT_MODE_DEFER);
+	RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_LOGOUT, oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID), EVENT_MODE_SYNC);
 	NWNXChatPCout(oPC);
 }
