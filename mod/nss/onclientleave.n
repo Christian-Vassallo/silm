@@ -5,7 +5,6 @@ extern("_gen")
 extern("inc_audit")
 extern("inc_currency")
 extern("inc_mnx")
-extern("inc_online")
 extern("inc_events")
 
 void main() {
@@ -34,8 +33,6 @@ void main() {
 
 	ExecuteScript("logout_corpse", oPC);
 	ExecuteScript("logout_pcdata", oPC);
-
-	onlinePlayerLeave(oPC);
 
 	NWNXChatPCout(oPC);
 	RunEventScriptsFor(EVENT_TYPE_PC, EVENT_PC_LOGOUT, oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID), EVENT_MODE_DEFER);

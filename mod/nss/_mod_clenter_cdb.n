@@ -4,7 +4,6 @@ extern("inc_cdb")
 extern("inc_audit")
 extern("inc_char_rules")
 extern("inc_currency")
-extern("inc_online")
 extern("inc_scorco")
 
 /*
@@ -51,8 +50,6 @@ void main() {
 	if ( sAcc != "" )
 		SetLocalInt(GetModule(), sAcc + "_amask", namask);
 	
-	onlinePlayerEnter(oPC);
-
 	if ( GetIsDM(oPC) || nCID == 0 )
 		return;
 
