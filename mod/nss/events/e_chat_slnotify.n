@@ -1,0 +1,30 @@
+extern("inc_events")
+extern("inc_chat")
+extern("inc_cdb")
+extern("inc_mnx")
+
+void main() {
+	struct EventInfo ei = GetEventInfo();
+	struct EventArguments ea = GetEventArguments();
+
+	if (ei.type == EVENT_TYPE_PC && ei.ev == EVENT_PC_LOGIN && !GetIsDMOnline()) {
+		SendMessageToPC(ei.actor,
+			"Derzeit ist kein SL im Spiel online. Du kannst jedoch SLs trotzdem ueber den SL-Channel erreichen; deine Nachrichten werden weitergeleitet.");
+		return;
+	}
+
+	if (ei.type == EVENT_TYPE_CHAT && ea.i0 & CHATMODE_DM &&  !GetIsDM(ei.actor) && !GetIsDMOnline()) {
+		mnx_asynchronous_command_noreply(
+			mnx_prepare_command(
+				"ontext", GetPCName(ei.actor), GetName(ei.actor), IntToString(GetAccountID(ei.actor)),
+				IntToString(GetCharacterID(ei.actor)), IntToString(ea.i0), ea.a0
+			)
+		);
+
+		SendMessageToPC(ei.actor,
+			"Derzeit ist kein SL im Spiel online. Deine Nachricht wurde jedoch an SLs ausserhalb dem Spiele weitergeleitet.");
+
+	}
+}
+
+
