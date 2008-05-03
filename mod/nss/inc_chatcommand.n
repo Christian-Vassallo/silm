@@ -2284,18 +2284,20 @@ int CommandShowObj(object oPC, int iMode) {
 	if ( opt("type") )
 		nType = StringToInt(optv("type"));
 
-	int c = 0;
+	int c = 0, worth = 0;
 	string sTag;
 	object o = GetFirstObjectInShape(SHAPE_SPHERE, fRange, GetLocation(oPC), FALSE, nType);
 	while ( GetIsObjectValid(o) ) {
 		sTag = GetTag(o);
 		if ( TestStringAgainstPattern(sTagMask, sTag) ) {
 			SendMessageToPC(oPC, GetName(o) + ", Tag: " + GetTag(o) + ", ResRef: " + GetResRef(o));
+			worth += GetGoldPieceValue(o);
 			c += 1;
 		}
 		o = GetNextObjectInShape(SHAPE_SPHERE, fRange, GetLocation(oPC), FALSE, nType);
 	}
-	SendMessageToPC(oPC, "Found " + IntToString(c) + " placeables.");
+	SendMessageToPC(oPC, "Found " + IntToString(c) + " objects.");
+	SendMessageToPC(oPC, "Worth in money: " + itoa(worth));
 	return OK;
 }
 
