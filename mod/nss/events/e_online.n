@@ -9,7 +9,11 @@ void main() {
 	}
 
 	if ("module_hb" == ei.ev) {
-		onlinePlayerUpdateLocation(ei.actor);
+		object oPC = GetFirstPC();
+		while (GetIsPC(oPC)) {
+			onlinePlayerUpdateLocation(oPC);
+			oPC = GetNextPC();
+		}
 	}
 
 	if ("pc_login" == ei.ev) {
