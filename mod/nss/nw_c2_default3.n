@@ -14,8 +14,17 @@
 extern("NW_I0_GENERIC")
 extern("inc_summonai")
 extern("inc_horse")
+extern("inc_events")
 
 void main() {
+
+	// Event: creature_endround
+	// Creature ends it round
+	// - stop
+	int ret = RunEventScriptsFor(GetEventSerial(), "creature_endround", OBJECT_SELF, OBJECT_INVALID, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+	if (ret & EVENT_RESULT_STOP)
+		return;
+
 	CheckFallFromHorse(OBJECT_SELF);
 	if ( GetBehaviorState(NW_FLAG_BEHAVIOR_SPECIAL) ) {
 		DetermineSpecialBehavior();

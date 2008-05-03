@@ -12,8 +12,26 @@
 
 extern("nw_i0_generic")
 extern("inc_summonai")
+extern("inc_events")
 
 void main() {
+	// See if what we just 'heard' matches any of our
+	// predefined patterns
+	int nMatch = GetListenPatternNumber();
+	object oShouter = GetLastSpeaker();
+
+
+	// Event: creature_conversation
+	// - i0: GetListenPatternNumber()
+	// - actor: GetLastSpeaker()
+	struct EventArguments ea;
+	ea.i0 = nMatch; ea.o0 = oShouter; 
+	int serial = GetEventSerial();
+	int ret = RunEventScriptsForWithArgv(serial, "creature_conversation", OBJECT_SELF, oShouter, OBJECT_INVALID, GetLocation(OBJECT_INVALID), ea);
+	DeleteEventArguments(serial);
+	if (ret & EVENT_RESULT_STOP)
+		return;
+
 	// * if petrified, jump out
 	if ( GetHasEffect(EFFECT_TYPE_PETRIFY, OBJECT_SELF) == TRUE ) {
 		return;
@@ -23,11 +41,6 @@ void main() {
 	if ( GetIsDead(OBJECT_SELF) == TRUE ) {
 		return;
 	}
-
-	// See if what we just 'heard' matches any of our
-	// predefined patterns
-	int nMatch = GetListenPatternNumber();
-	object oShouter = GetLastSpeaker();
 
 	if ( nMatch == -1 ) {
 		// Not a match -- start an ordinary conversation

@@ -18,6 +18,7 @@ extern("inc_summon")
 #include "inc_pgsql.nh"
 extern("inc_cdb")
 extern("inc_scorco")
+extern("inc_events")
 
 
 void _Respawn(int iObType, string sResRef, location lLocation) {
@@ -25,6 +26,13 @@ void _Respawn(int iObType, string sResRef, location lLocation) {
 }
 
 void main() {
+
+	// Event: creature_death
+	// - actor: GetLastKiller()
+	int ret = RunEventScriptsFor(GetEventSerial(), "creature_death", OBJECT_SELF, GetLastKiller(), OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+	if (ret & EVENT_RESULT_STOP)
+		return;
+
 	int nClass = GetLevelByClass(CLASS_TYPE_COMMONER);
 	int nAlign = GetAlignmentGoodEvil(OBJECT_SELF);
 	object oKiller = GetLastKiller();

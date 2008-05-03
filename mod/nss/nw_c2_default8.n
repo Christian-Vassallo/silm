@@ -11,8 +11,16 @@
 
 extern("nw_i0_generic")
 extern("inc_summonai")
+extern("inc_events")
 
 void main() {
+
+	// Event: creature_disturbed
+	// - actor: GetLastDisturbed()
+	int ret = RunEventScriptsFor(GetEventSerial(), "creature_disturbed", OBJECT_SELF, GetLastDisturbed(), OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+	if (ret & EVENT_RESULT_STOP)
+		return;
+
 	object oTarget = GetLastDisturbed();
 
 	// If we've been disturbed and are not already fighting,

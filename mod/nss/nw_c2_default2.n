@@ -10,15 +10,28 @@
 
 extern("nw_i0_generic")
 extern("inc_summonai")
+extern("inc_events")
 
 void main() {
-// * if not runnning normal or better Ai then exit for performance reasons
-	// * if not runnning normal or better Ai then exit for performance reasons
-	if ( GetAILevel() == AI_LEVEL_VERY_LOW ) return;
-
 	object oPercep = GetLastPerceived();
 	int bSeen = GetLastPerceptionSeen();
 	int bHeard = GetLastPerceptionHeard();
+
+	// Event: creature_perceive
+	// - i0: GetLastPerceptionSeen()
+	// - i1: GetLastPerceptionHeard()
+	// - stop
+	struct EventArguments ea;
+	ea.i0 = bSeen; ea.i1 = bHeard;
+	int serial = GetEventSerial();
+	int ret = RunEventScriptsForWithArgv(serial, "creature_perceive", OBJECT_SELF, OBJECT_INVALID, OBJECT_INVALID, GetLocation(OBJECT_INVALID), ea);
+	DeleteEventArguments(serial);
+	if (ret & EVENT_RESULT_STOP)
+		return;
+
+	// * if not runnning normal or better Ai then exit for performance reasons
+	if ( GetAILevel() == AI_LEVEL_VERY_LOW ) return;
+
 	if ( bHeard == FALSE ) {
 		// Has someone vanished in front of me?
 		bHeard = GetLastPerceptionVanished();

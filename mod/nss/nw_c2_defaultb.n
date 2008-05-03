@@ -22,9 +22,18 @@
 extern("nw_i0_generic")
 extern("x2_i0_spells")
 extern("inc_summonai")
+extern("inc_events")
 
 void main() {
 	object oCaster = GetLastSpellCaster();
+
+
+	// Event: creature_spellcast
+	// - actor: GetLastSpellCaster()
+	int ret = RunEventScriptsFor(GetEventSerial(), "creature_spellcast", OBJECT_SELF, oCaster, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+	if (ret & EVENT_RESULT_STOP)
+		return;
+
 	DeleteLocalInt(OBJECT_SELF, "summoncard");
 
 	if ( GetLastSpellHarmful() && GetShouldDefend() ) {

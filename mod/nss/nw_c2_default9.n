@@ -28,8 +28,15 @@ extern("x0_i0_anims")
 // extern("x0_i0_walkway") - in x0_i0_anims
 extern("x0_i0_treasure")
 extern("inc_horse")
+extern("inc_events")
 
 void main() {
+
+	// Event: creature_spawn
+	int ret = RunEventScriptsFor(GetEventSerial(), "creature_spawn", OBJECT_SELF, OBJECT_SELF, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+	if (ret & EVENT_RESULT_STOP)
+		return;
+
 	ExecuteScript("corpse_spawn", OBJECT_SELF);
 	string sTag = GetStringLowerCase(GetTag(OBJECT_SELF));
 

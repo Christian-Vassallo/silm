@@ -14,9 +14,16 @@
 extern("nw_i0_generic")
 extern("inc_summonai")
 extern("inc_scorco")
+extern("inc_events")
 
 void main() {
 	
+	// Event: creature_damaged
+	// - actor: GetLastDamager()
+	int ret = RunEventScriptsFor(GetEventSerial(), "creature_damaged", OBJECT_SELF, GetLastDamager(), OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+	if (ret & EVENT_RESULT_STOP)
+		return;
+
 	if (gvGetInt("persist_critters") && !GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF)) {
 		p_save("critters", OBJECT_SELF);
 	}
