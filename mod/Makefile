@@ -119,17 +119,17 @@ local: path
 
 dev-local: path
 	erfpack.pl -m -o $(NAME)-$(BRANCH)-dev-r$(commit).mod $(VALIDEXTDEV)
-	tar -czf $(NAME)-$(BRANCH)-dev-r$(commit).tgz $(NAME)-dev-r$(commit).mod && \
+	tar -czf $(NAME)-$(BRANCH)-dev-r$(commit).tgz $(NAME)-$(BRANCH)-dev-r$(commit).mod && \
 		rm $(NAME)-dev-r$(commit).mod
 
 player-local: path
 	erfpack.pl -m -o $(NAME)-$(BRANCH)-player-r$(commit).mod $(VALIDEXTPLAYER)
-	tar -czf $(NAME)-$(BRANCH)-player-r$(commit).tgz $(NAME)-player-r$(commit).mod && \
+	tar -czf $(NAME)-$(BRANCH)-player-r$(commit).tgz $(NAME)-$(BRANCH)-player-r$(commit).mod && \
 		rm $(NAME)-$(BRANCH)-player-r$(commit).mod
 
 builder-local: path
 	erfpack.pl -m -o $(NAME)-$(BRANCH)-builder-r$(commit).mod $(VALIDEXTBUILDER)
-	tar -czf $(NAME)-$(BRANCH)-builder-r$(commit).tgz $(NAME)-builder-r$(commit).mod && \
+	tar -czf $(NAME)-$(BRANCH)-builder-r$(commit).tgz $(NAME)-$(BRANCH)-builder-r$(commit).mod && \
 		rm $(NAME)-$(BRANCH)-builder-r$(commit).mod
 
 
