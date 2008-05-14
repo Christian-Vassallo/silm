@@ -193,7 +193,6 @@ int p_load_to_location_metadata(string table, string conditions) {
 		o = pRCO("select data from " + normalize_table(table) + " where id = " + pSi(id) + ";", where);
 		if (!GetIsObjectValid(o)) {
 			_WARN("Tried to load a object which did not instanciate: " + pSi(id));
-			continue;
 		}
 		p_set_p_id(o, id);
 
@@ -244,7 +243,6 @@ int p_load_to_inventory(string table, string conditions, object inventory) {
 
 		if (!GetIsObjectValid(o)) {
 			_WARN("Tried to load a object which did not instanciate: " + pSi(id));
-			continue;
 		}
 		p_set_p_id(o, id);
 
