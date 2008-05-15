@@ -419,19 +419,12 @@ void WalkWayPoints(int nRun = FALSE, float fPause = 1.0)
         // * in clearing actions unless I actually have waypoints to walk
         ClearActions(CLEAR_X0_I0_WALKWAY_WalkWayPoints);
 
-		if (GetArea(oWay) != GetArea(OBJECT_SELF)) {
-			// Its in another area. Teleport there.
-			ActionJumpToObject(oWay);
-		} else {
-			// Its in the same area. Move there.
-			ActionMoveToObject(oWay, nRun);
-		}
-
-		if(GetLocalInt(oWay,"X2_L_WAYPOINT_SETFACING") == 1)
-		{
-			ActionDoCommand(SetFacing(GetFacing(oWay)));
-		}
-
+        //SpeakString("Moving to waypoint: " + GetTag(oWay));
+        ActionMoveToObject(oWay, nRun);
+        if(GetLocalInt(oWay,"X2_L_WAYPOINT_SETFACING") == 1)
+        {
+            ActionDoCommand(SetFacing(GetFacing(oWay)));
+        }
         ActionWait(fPause);
         ActionDoCommand(WalkWayPoints(nRun,fPause));      // February 14 2003 added else route only happens once
 
