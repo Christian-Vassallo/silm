@@ -27,6 +27,10 @@ void main() {
 	ExecuteScript("logout_corpse", oPC);
 	ExecuteScript("logout_pcdata", oPC);
 
+	// Event: pc_logout
+	// When a player character logs out
+	// - runnable: the player character object
+	// - sync
 	RunEventScriptsFor(GetEventSerial(), "pc_logout", oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID), EVENT_MODE_SYNC);
 	NWNXChatPCout(oPC);
 }

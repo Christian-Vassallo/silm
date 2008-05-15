@@ -12,8 +12,6 @@ void _StopCustomizing(object oPC, object oItem) {
 	}
 }
 
-void ClothUnequip();
-
 void main() {
 	object oPC = GetPCItemLastUnequippedBy();
 	object oItem = GetPCItemLastUnequipped();
@@ -26,46 +24,9 @@ void main() {
 	if ( GetTag(oItem) == "NW_IT_TORCH001" )
 		UnequippedTorch(oPC, oItem);
 
+	// Event: item_unequip
+	// Creature unequips item
+	// - runnable: item
+	// - actor: pc
 	RunEventScriptsFor(GetEventSerial(), "item_unequip", oItem, oPC, oPC, GetLocation(oPC));
-
-	ClothUnequip();
-}
-
-void ClothUnequip() {
-	if ( !GetLocalInt(GetModule(), "clothchange") )
-		return;
-
-	object oItem = GetPCItemLastUnequipped();
-	object oPC   = GetPCItemLastUnequippedBy();
-
-	if ( GetLocalInt(oPC, "noclothchange") )
-		return;
-
-
-	if ( !GetIsPC(oPC) || GetIsDM(oPC) )
-		return;
-
-	int iType = GetBaseItemType(oItem);
-
-	// AssignCommand(oPC, ClearAllActions());
-
-	//SetCommandable(FALSE, oPC);
-
-	if ( ( iType == BASE_ITEM_CLOAK ) && ( GetIsObjectValid(GetItemInSlot(INVENTORY_SLOT_CHEST, oPC)) ) ) {
-		QuitCloak(oPC, GetItemInSlot(INVENTORY_SLOT_CHEST, oPC));
-	} else if ( ( iType == BASE_ITEM_BELT )
-			   && ( GetIsObjectValid(GetItemInSlot(INVENTORY_SLOT_CHEST, oPC)) ) ) {
-		QuitBelt(oPC, GetItemInSlot(INVENTORY_SLOT_CHEST, oPC));
-	} else if ( iType == BASE_ITEM_GLOVES
-			   && ( GetIsObjectValid(GetItemInSlot(INVENTORY_SLOT_CHEST, oPC)) ) ) {
-		QuitGloBra(oPC, GetItemInSlot(INVENTORY_SLOT_CHEST, oPC));
-	} else if ( iType == BASE_ITEM_BRACER
-			   && ( GetIsObjectValid(GetItemInSlot(INVENTORY_SLOT_CHEST, oPC)) ) ) {
-		QuitGloBra(oPC, GetItemInSlot(INVENTORY_SLOT_CHEST, oPC));
-	} else if ( iType == BASE_ITEM_BOOTS
-			   && ( GetIsObjectValid(GetItemInSlot(INVENTORY_SLOT_CHEST, oPC)) ) ) {
-		QuitBoots(oPC, GetItemInSlot(INVENTORY_SLOT_CHEST, oPC));
-	}
-
-	//DelayCommand(COMMANDABLEFUDGE, SetCommandable(TRUE, oPC));
 }
