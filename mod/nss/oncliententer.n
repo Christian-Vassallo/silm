@@ -33,10 +33,6 @@ void main() {
 	ExecuteScript("login_misc", oPC);
 	ExecuteScript("login_corpse", oPC);
 
-	// XXX hotfix
-	SetLocalInt(oPC, "bandage", 0);
-	SetLocalInt(oPC, "medicine", 0);
-
 	SetLocalInt(oPC, "message_count", 0);
 
 	RunEventScriptsFor(GetEventSerial(), "pc_login", oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID));

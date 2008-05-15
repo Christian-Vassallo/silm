@@ -5,16 +5,21 @@ extern("inc_scorco")
 void main() {
 	struct EventInfo e = GetEventInfo();
 
-	if (e.ev != "item_activate")
-		return;
+	if (e.ev == "pc_login") {
+		SetLocalInt(e.runnable, "bandage", 0);
+		SetLocalInt(e.runnable, "medicine", 0);
+	}
 
-	string ref = GetResRef(e.runnable);
+	if (e.ev == "item_activate") {
 
-	if ("bandage" == ref) {
-		AddBandage(e.actor, e.actedon, e.runnable);
-	} else if ("healerkit" == ref) {
-		UseHealerKit(e.actor, e.actedon, e.runnable);
-	} else if ("medicine" == ref) {
-		AddMedicine(e.actor, e.actedon, e.runnable);
+		string ref = GetResRef(e.runnable);
+
+		if ("bandage" == ref) {
+			AddBandage(e.actor, e.actedon, e.runnable);
+		} else if ("healerkit" == ref) {
+			UseHealerKit(e.actor, e.actedon, e.runnable);
+		} else if ("medicine" == ref) {
+			AddMedicine(e.actor, e.actedon, e.runnable);
+		}
 	}
 }
