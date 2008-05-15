@@ -1,9 +1,16 @@
+extern("inc_events")
 extern("inc_currency")
 extern("inc_persist")
+
+
 void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev != "pc_login")
+		return;
+
 	int iValue, iGoldSum;
 
-	//Let PC start out at level 2, look after starting equipment
 	if ( !GetXP(OBJECT_SELF) && !GetIsDM(OBJECT_SELF) ) {
 		object oItem = GetFirstItemInInventory(OBJECT_SELF);
 
@@ -13,12 +20,11 @@ void main() {
 			DestroyObject(oItem);
 			oItem = GetNextItemInInventory(OBJECT_SELF);
 		}
+
 		//Convert the starting money and pay a compensation for the
 		//items destroyed.
 		iValue = GetGold(OBJECT_SELF);
 		TakeGoldFromCreature(iValue, OBJECT_SELF, TRUE);
 		GiveValueToCreature(OBJECT_SELF, iValue * 100 + iGoldSum);
-
 	}
-
 }
