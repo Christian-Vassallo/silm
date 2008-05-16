@@ -29,6 +29,11 @@ CREATE TABLE chat.logs (
 
 	text text not null
 );
+create index logs_session_idx on chat.logs (session);
+create index logs_aid_idx on chat.logs (aid);
+create index logs_cid_idx on chat.logs (aid);
+create index heard_by_aid_idx on chat.logs using gist (heard_by_aid gist__int_ops);
+create index heard_by_cid_idx on chat.logs using gist (heard_by_cid gist__int_ops);
 
 --create function get_lastlog_for(cid int,area varchar,lim int) returns setof chatlogs
 --as $$
