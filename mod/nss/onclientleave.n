@@ -6,6 +6,7 @@ extern("inc_audit")
 extern("inc_currency")
 extern("inc_mnx")
 extern("inc_events")
+extern("inc_session")
 
 void main() {
 	object oPC = GetExitingObject();
@@ -33,4 +34,5 @@ void main() {
 	// - sync
 	RunEventScriptsFor(GetEventSerial(), "pc_logout", oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID), EVENT_MODE_SYNC);
 	NWNXChatPCout(oPC);
+	session_end(oPC);
 }

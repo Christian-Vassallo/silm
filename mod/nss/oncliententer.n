@@ -5,12 +5,16 @@ extern("inc_mnx")
 extern("inc_audit")
 extern("inc_currency")
 extern("inc_events")
+extern("inc_session")
 #include "inc_pgsql.nh"
 
 void main() {
 	object oPC = GetEnteringObject();
 
 	NWNXChatPCin(oPC);
+
+	ExecuteScript("_mod_clenter_cdb", oPC);
+	session_start(oPC);
 
 	int nGold = Money2Value(CountInventoryMoney(oPC, 0));
 
@@ -24,7 +28,6 @@ void main() {
 	SendMessageToPC(oPC, "Built on: " + GIT_BUILD_ON);
 
 
-	DelayCommand(1.0f, ExecuteScript("_mod_clenter_cdb", oPC));
 
 
 	//Must come first!!!
