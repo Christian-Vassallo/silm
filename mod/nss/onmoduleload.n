@@ -8,6 +8,7 @@ extern("x2_inc_switches")
 extern("inc_setting")
 extern("inc_events")
 extern("inc_chat_run")
+extern("inc_session")
 
 #include "inc_pgsql.nh"
 #include "git.h"
@@ -48,6 +49,8 @@ void main() {
 			IntToString(GetCalendarDay()) +
 			". " + IntToString(GetCalendarMonth()) + ". " + IntToString(GetCalendarYear()));
 	}
+
+	session_cleanup();
 
 	// Global-Weather Setting
 	//weather_setup();
