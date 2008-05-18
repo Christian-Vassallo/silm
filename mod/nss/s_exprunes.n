@@ -45,7 +45,7 @@ void main() {
 		int i = 1;
 		object oI = GetFirstObjectInShape(SHAPE_SPHERE, 4.0, lPC, TRUE, OBJECT_TYPE_CREATURE);
 		while ( GetIsObjectValid(oI) ) {
-			if ( GetIsPC(oI) && !GetIsDM(oI) ) {
+			if ( GetIsPC(oI) && !GetIsDM(oI) && oI != oPC ) {
 				nCID = GetCharacterID(oI);
 				Floaty("Die Runen erkennen " + GetName(oI) + " an.", oPC, 1);
 				SetLocalInt(oPaper, "explosive_runes_cid_" + IntToString(i), nCID);
