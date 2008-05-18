@@ -5,7 +5,7 @@ CREATE TABLE chat.logs (
 	ts timestamptz default now() not null,
 
 	-- The speaker
-	aid int not null,
+	aid int,
 	cid int,
 	character_s varchar not null,
 	account_s varchar not null, 
