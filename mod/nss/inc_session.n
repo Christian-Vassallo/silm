@@ -7,6 +7,13 @@ void session_end(object player = OBJECT_SELF);
 int session_get(object player = OBJECT_SELF);
 
 
+void session_cleanup();
+
+
+void session_cleanup() {
+	pQ("update sessions.sessions set session_end = now(), session_failed = true where session_end is null;");
+}
+
 void session_start(object player = OBJECT_SELF) {
 	int aid = GetAccountID(player);
 	int cid = GetCharacterID(player);
