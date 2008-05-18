@@ -181,7 +181,7 @@ int DoExplosiveRunes(object oItem, object oActivator) {
 
 	int nAllowedID = 0;
 	int i = 0;
-	while ( nAllowedID = GetLocalInt(oItem, "explosive_runes_cid_" + IntToString(i)) > 0 ) {
+	while ( (nAllowedID = GetLocalInt(oItem, "explosive_runes_cid_" + IntToString(i))) > 0 ) {
 		if ( nReaderID == nAllowedID ) {
 			FloatingTextStringOnCreature(
 				"Die Explosiven Runen auf diesem Dokument wissen ob Euch und loesen daher nicht aus.",
