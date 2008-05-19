@@ -144,3 +144,25 @@ const int EVENT_RESULT_SUPPRESS = 1 << 3;
 const int EVENT_MODE_ANY = 1 << 0;
 const int EVENT_MODE_SYNC = 1 << 1;
 const int EVENT_MODE_DEFER = 1 << 2;
+
+
+// Macro: event_ret(value)
+// Returns from the current event with the given return mask
+// SetEventResult(value) && return;
+#define event_ret(value) SetEventResult(value); return;
+
+// Macro: event_fail()
+// return_command(EVENT_RESULT_FAIL | EVENT_RESULT_END)
+#define event_fail() return_command(EVENT_RESULT_FAIL)
+
+// Macro: event_fail_stop()
+// return_command(EVENT_RESULT_FAIL | EVENT_RESULT_STOP | EVENT_RESULT_END)
+#define event_fail_stop() return_command(EVENT_RESULT_FAIL | EVENT_RESULT_STOP | EVENT_RESULT_END)
+
+// Macro: event_end()
+// return_command(EVENT_RESULT_END)
+#define event_end() return_command(EVENT_RESULT_END)
+
+// Macro: event_stop()
+// return_command(EVENT_RESULT_STOP)
+#define event_stop() return_command(EVENT_RESULT_STOP | EVENT_RESULT_END)
