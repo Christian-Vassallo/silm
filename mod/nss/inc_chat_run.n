@@ -1009,6 +1009,21 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 		}
 	}
 
+	struct EventArguments cmdea;
+	cmdea.a0 = GetStringTrim(sCommand);
+	cmdea.a1 = GetStringTrim(sArg);
+	int serial = GetEventSerial();
+	int dispatch_ret = RunEventScriptsForWithArgv(serial, "chat_command", oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID), cmdea, EVENT_MODE_SYNC);
+	DeleteEventArguments(serial);
+
+	if (dispatch_ret & EVENT_RESULT_STOP) {
+		// A plugin said its parsing it, stop it.
+		if (dispatch_ret & EVENT_RESULT_FAIL)
+			return FAIL;
+		else
+			return OK;
+	}
+
 	if ( GetLocalInt(GetModule(), "cmd_" + sCommand) ) {
 		sOpt = GetLocalString(GetModule(), "cmd_" + sCommand + "_opt");
 		nArgMin = GetLocalInt(GetModule(), "cmd_" + sCommand + "_argc_min");
@@ -1031,13 +1046,12 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 		return ACCESS;
 	}
 
-	getoptreset(oPC);
+	getopt_reset(oPC);
+	getopt_init(sArg, "h t= sleep= " + sOpt, oPC);
 
-	getopt(sArg, "h t= sleep= " + sOpt, oPC);
-
-	if ( !opt("h") && GetLocalInt(GetModule(), "cmd_" + sCommand) && (
-			( nArgMin > -1 && argc() < nArgMin )
-			|| ( nArgMax > -1 && argc() > nArgMax )
+	if ( getopt_opt("h") && GetLocalInt(GetModule(), "cmd_" + sCommand) && (
+			( nArgMin > -1 && getopt_argc() < nArgMin )
+			|| ( nArgMax > -1 && getopt_argc() > nArgMax )
 		) ) {
 		ToPC("Falsche Anzahl an Parametern: Mindestens " +
 			IntToString(nArgMin) + " und maximal " + IntToString(nArgMax));
@@ -1045,7 +1059,7 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 		return SYNTAX;
 	}
 
-	if ( opt("h") ) {
+	if ( getopt_opt("h") ) {
 
 		int nCount = GetLocalInt(GetModule(), "cmd_" + sCommand + "_h");
 		int nDisp = 0;
@@ -1065,9 +1079,9 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 	float fWait = 0.0;
 
-	if ( opt("sleep") ) {
+	if ( getopt_opt("sleep") ) {
 		// Wait for w
-		fWait = StringToFloat(optv("sleep"));
+		fWait = StringToFloat(getopt_optv("sleep"));
 		fWait = fWait < 0.0 ? 0.0 : fWait;
 		fWait = fWait > 120.0 ? 120.0 : fWait;
 	}
@@ -1331,10 +1345,10 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 		ret = CommandCreate(oPC, iMode);
 
 	if ( "v" == sCommand )
-		ret = CommandVoiceChat(oPC, getoptargs(), iMode);
+		ret = CommandVoiceChat(oPC, getopt_args(), iMode);
 
 	if ( "a" == sCommand )
-		ret = CommandAnimation(oPC, getoptargs(), iMode);
+		ret = CommandAnimation(oPC, getopt_args(), iMode);
 
 	/* aliases for anim */
 	if ( "sit" == sCommand )
@@ -1424,7 +1438,7 @@ void RunMacro(object oPC, int iMode, string sMacro) {
 
 	int nSlot = TARGET_MACRO_SLOT;
 
-	if ( opt("t") )
+	if ( getopt_opt("t") )
 		nSlot = GetTargetSlot();
 
 	int nOldTarget = GetDefaultSlot();
@@ -1456,11 +1470,11 @@ int CommandMacro(object oPC, int iMode) {
 		return OK;
 	}
 
-	string sMacroName = GetStringLowerCase(arg(0));
-	string sMacro = arg(1);
+	string sMacroName = GetStringLowerCase(getopt_arg(0));
+	string sMacro = getopt_arg(1);
 
 
-	if ( opt("d") ) {
+	if ( getopt_opt("d") ) {
 		pQ("select id from macro where account = " +
 			sAID + " and macro = " + pE(sMacroName) + " order by account desc limit 1;");
 		if ( pF() ) {
@@ -1476,7 +1490,7 @@ int CommandMacro(object oPC, int iMode) {
 		return OK;
 	}
 
-	if ( opt("l") ) {
+	if ( getopt_opt("l") ) {
 		pQ("select id,macro,command from macro where (account = " +
 			sAID + " or account = 0) order by account desc;");
 		int n = 0;
@@ -1491,7 +1505,7 @@ int CommandMacro(object oPC, int iMode) {
 
 	}
 
-	if ( opt("i") ) {
+	if ( getopt_opt("i") ) {
 		pQ("select command from macro where (account = " +
 			sAID +
 			" or account = 0) and macro = " + pE(sMacroName) + " order by account desc limit 1;");
@@ -1510,7 +1524,7 @@ int CommandMacro(object oPC, int iMode) {
 	}
 
 
-	if ( argc() == 1 ) {
+	if ( getopt_argc() == 1 ) {
 		pQ("select command from macro where (account = " +
 			sAID +
 			" or account = 0) and macro = " + pE(sMacroName) + " order by account desc limit 1;");
@@ -1547,7 +1561,7 @@ int CommandMacro(object oPC, int iMode) {
 
 
 int CommandModSet(object oPC, int iMode, int nRunModLevel) {
-	string sRest = arg(0);
+	string sRest = getopt_arg(0);
 	
 	if (gvGetInt("chat_debug")) {
 		SendMessageToAllDMs("chat:mod:self> " + sRest);
@@ -1576,7 +1590,7 @@ int CommandModSet(object oPC, int iMode, int nRunModLevel) {
 }
 
 int CommandModHere(object oPC, int iMode, int nRunModLevel) {
-	string sRest = arg(0);
+	string sRest = getopt_arg(0);
 	
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
@@ -1596,7 +1610,7 @@ int CommandModHere(object oPC, int iMode, int nRunModLevel) {
 
 
 int CommandModSelf(object oPC, int iMode, int nRunModLevel) {
-	string sRest = arg(0);
+	string sRest = getopt_arg(0);
 	
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
@@ -1616,16 +1630,16 @@ int CommandModSelf(object oPC, int iMode, int nRunModLevel) {
 }
 
 int CommandModRadius(object oPC, int iMode, int nRunModLevel) {
-	string sRest = arg(0);
+	string sRest = getopt_arg(0);
 	
 	float radius = 6.0;
 	int otype = OBJECT_TYPE_ALL;
 
-	if (opt("r"))
-		radius = StringToFloat(optv("r"));
+	if (getopt_opt("r"))
+		radius = StringToFloat(getopt_optv("r"));
 
-	if (opt("type"))
-		otype = StringToInt(optv("type"));
+	if (getopt_opt("type"))
+		otype = StringToInt(getopt_optv("type"));
 
 	if (gvGetInt("chat_debug"))
 		SendMessageToAllDMs("chat:mod:radius> r = " + FloatToString(radius));
@@ -1660,11 +1674,11 @@ int CommandModLine(object oPC, int iMode, int nRunModLevel) {
 }
 
 int CommandModArea(object oPC, int iMode, int nRunModLevel) {
-	string sRest = arg(0);
+	string sRest = getopt_arg(0);
 	int otype = OBJECT_TYPE_ALL;
 	
-	if (opt("type"))
-		otype = StringToInt(optv("type"));
+	if (getopt_opt("type"))
+		otype = StringToInt(getopt_optv("type"));
 	
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
@@ -1692,9 +1706,9 @@ int CommandModServer(object oPC, int iMode, int nRunModLevel) {
 }
 
 int CommandModOnline(object oPC, int iMode, int nRunModLevel) { 
-	string sRest = arg(0);
+	string sRest = getopt_arg(0);
 	
-	int bDoDM = opt("dms");
+	int bDoDM = getopt_opt("dms");
 
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
