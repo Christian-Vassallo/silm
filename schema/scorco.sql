@@ -72,6 +72,14 @@ create trigger objects_update_md
 	on objects.audit for each row 
 	execute procedure objects.objects_update_md();
 
+-- templates
+create table objects.templates (
+       name varchar unique
+) inherits (objects.objects);
+create trigger objects_update_md
+       before insert or update
+       on objects.templates for each row
+       execute procedure objects.objects_update_md();
 
 
 
