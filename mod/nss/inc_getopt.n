@@ -9,37 +9,37 @@
 // - opts: a string containing all options, with optional
 //   equal-signs to denote option-values.
 //   Example: "help visual=" to allow --help, and --visual=5
-int getopt(string str, string opts = "", object oPC = OBJECT_SELF);
+int getopt_init(string str, string opts = "", object oPC = OBJECT_SELF);
 
 // Function: getoptreset 
 // 
 // Resets all options.
-int getoptreset(object oPC = OBJECT_SELF);
+int getopt_reset(object oPC = OBJECT_SELF);
 
 // Function: arg 
 // 
 // Returns argument n, starting at 0.
-string arg(int n, object oPC = OBJECT_SELF);
+string getopt_arg(int n, object oPC = OBJECT_SELF);
 
 // Function: argc 
 // 
 // Returns the argument count.
-int argc(object oPC = OBJECT_SELF);
+int getopt_argc(object oPC = OBJECT_SELF);
 
 // Function: opt 
 // 
 // Returns a boolean indicating the presence of option n.
-int opt(string n, object oPC = OBJECT_SELF);
+int getopt_opt(string n, object oPC = OBJECT_SELF);
 
 // Function: optv 
 // 
 // Returns the value of option n, or an empty string.
-string optv(string n, object oPC = OBJECT_SELF);
+string getopt_optv(string n, object oPC = OBJECT_SELF);
 
 // Function: getoptargs 
 // 
 // Returns the complete, unparsed string, including all options.
-string getoptargs(object oPC = OBJECT_SELF);
+string getopt_args(object oPC = OBJECT_SELF);
 
 // Returns the complete, unparsed string, excluding all options.
 // string getoptarga(object oPC = OBJECT_SELF);
@@ -77,11 +77,11 @@ string commandget(int index) {
 }
 
 
-string getoptargs(object oPC = OBJECT_SELF) {
+string getopt_args(object oPC = OBJECT_SELF) {
 	return GetLocalString(MODULE, "getopt_argstr");
 }
 
-int getopt(string str, string opts = "", object oPC = OBJECT_SELF) {
+int getopt_init(string str, string opts = "", object oPC = OBJECT_SELF) {
 	SetLocalString(MODULE, "getopt_argstr", str);
 	int ret = pQ("select getopt.init(" + pSs(str) + ", " + pSs(opts) + ");");
 	if (!ret)
@@ -90,7 +90,7 @@ int getopt(string str, string opts = "", object oPC = OBJECT_SELF) {
 }
 
 
-int argc(object oPC = OBJECT_SELF) {
+int getopt_argc(object oPC = OBJECT_SELF) {
 	pQ("select getopt.argc();");
 	if (pF()) 
 		return pGi(1);
@@ -98,7 +98,7 @@ int argc(object oPC = OBJECT_SELF) {
 		return 0;
 }
 
-string arg(int n, object oPC = OBJECT_SELF) {
+string getopt_arg(int n, object oPC = OBJECT_SELF) {
 	pQ("select getopt.arg(" + pSi0(n, false) + ");");
 	if (!pF())
 		return "";
@@ -106,14 +106,14 @@ string arg(int n, object oPC = OBJECT_SELF) {
 }
 
 
-int opt(string n, object oPC = OBJECT_SELF) {
+int getopt_opt(string n, object oPC = OBJECT_SELF) {
 	pQ("select getopt.opt(" + pSs(n) + ");");
 	if (!pF())
 		return 0;
 	return pGb(1);
 }
 
-string optv(string n, object oPC = OBJECT_SELF) {
+string getopt_optv(string n, object oPC = OBJECT_SELF) {
 	pQ("select getopt.optv(" + pSs(n) + ");");
 	if (!pF())
 		return "";
@@ -122,7 +122,7 @@ string optv(string n, object oPC = OBJECT_SELF) {
 
 
 
-int getoptreset(object oPC = OBJECT_SELF) {
+int getopt_reset(object oPC = OBJECT_SELF) {
 	SetLocalString(MODULE, "getopt_argstr", "");
 	int ret = pQ("select getopt.reset();");
 	return ret;
