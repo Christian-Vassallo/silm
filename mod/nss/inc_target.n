@@ -60,8 +60,8 @@ location GetTargetLocation(int nSlot = TARGET_DEFAULT_SLOT, object oPC = OBJECT_
 }
 
 object GetTarget(int nSlot = TARGET_DEFAULT_SLOT, object oPC = OBJECT_SELF) {
-	if ( opt("t") ) {
-		nSlot = StringToInt(optv("t"));
+	if ( getopt_opt("t") ) {
+		nSlot = StringToInt(getopt_optv("t"));
 	}
 
 	nSlot = SanitiseSlot(nSlot);
@@ -105,8 +105,8 @@ int NotifyBadTarget(string sAddMsg = "", object oPC = OBJECT_SELF) {
 }
 
 int GetTargetSlot(object oPC = OBJECT_SELF) {
-	if ( opt("t") )
-		return SanitiseSlot(StringToInt(optv("t")));
+	if ( getopt_opt("t") )
+		return SanitiseSlot(StringToInt(getopt_optv("t")));
 	else
 		return GetDefaultSlot();
 }
