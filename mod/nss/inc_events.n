@@ -44,12 +44,15 @@ in an event script to indicate certain conditions.
 
 	Const: EVENT_RESULT_END
 		Request termination of other after this one. Only works reliably when in sync mode.
+		This prevents all further event scripts - after this one - from running.
 
 	Const: EVENT_RESULT_STOP
 		Per-event special stop. This stops the event from being handled in the core script.
+		See the event documentation for the specific meaning.
 	
 	Const: EVENT_RESULT_SUPPRESS
-		Per-event special suppress. This suppresses the event (described per event).
+		Per-event special suppress. This suppresses the event.
+		See the event documentation for the specific meaning.
 
 Section: Event Modes
 
@@ -102,6 +105,10 @@ struct EventInfo {
 	// Var: r_total
 	// The number of scripts scheduled to run in total.
 	int r_total;
+
+	// Var: ret
+	// The current return-mask for this event
+	int ret;
 
 	// Var: runnable
 	// The object this event runs on, usually OBJECT_SELF
@@ -180,13 +187,13 @@ int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, 
 // Returns:
 // - mask of EVENT_RESULT_*
 int RunEventScript(string sScript, int nEventMode, event_id_t serial, event_t ev, object oRunnable,
-	object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime);
+	object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime, int retMask);
 
 // Function: RunEventScriptAsync
 //
 // Wrapper around RunEventScript, for delayed execution
 void RunEventScriptAsync(string sScript, int nEventMode, event_id_t serial, event_t ev, object oRunnable,
-	object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime);
+	object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime, int retMask);
 
 
 // Function GetEventInfo
@@ -316,9 +323,9 @@ int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, 
 		ret = 0;
 
 		if (EVENT_MODE_SYNC == runmode)
-			ret = RunEventScript(script, runmode, serial, ev, oRunnable, oActor, oActedOn, lActedAt, i, count, defer_time);
+			ret = RunEventScript(script, runmode, serial, ev, oRunnable, oActor, oActedOn, lActedAt, i, count, defer_time, total_ret);
 		else {
-			DelayCommand(defer_time, RunEventScriptAsync(script, runmode, serial, ev, oRunnable, oActor, oActedOn, lActedAt, i, count, defer_time));
+			DelayCommand(defer_time, RunEventScriptAsync(script, runmode, serial, ev, oRunnable, oActor, oActedOn, lActedAt, i, count, defer_time, total_ret));
 		}
 		
 		if (ret & EVENT_RESULT_STOP)
@@ -345,17 +352,17 @@ int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, 
 
 
 void RunEventScriptAsync(string sScript, int nEventMode, event_id_t serial, event_t ev, object oRunnable,
-		object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime) {
+		object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime, int retMask) {
 
 	RunEventScript(
 		sScript, nEventMode, serial, ev, 
 		oRunnable, oActor, oActedOn, lActedAt, 
-		nCurPos, nMaxPos, fDeferTime
+		nCurPos, nMaxPos, fDeferTime, retMask
 	);
 }
 
 int RunEventScript(string sScript, int nEventMode, event_id_t serial, event_t ev, object oRunnable,
-		object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime) {
+		object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime, int retMask) {
 
 	// Set the state for this particular script execution.
 	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "rpos_cur", nCurPos);
@@ -370,6 +377,8 @@ int RunEventScript(string sScript, int nEventMode, event_id_t serial, event_t ev
 	SetLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + "actedat", lActedAt);
 
 	SetLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + "defer", fDeferTime);
+
+	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retmask", retMask);
 
 	DeleteLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retvar");
 	ExecuteScript(sScript, oRunnable);
@@ -396,6 +405,8 @@ struct EventInfo GetEventInfo() {
 	r.defer_time = GetLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + "defer");
 	r.r_pos = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "rpos_cur");
 	r.r_total = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "rpos_max");
+
+	r.ret = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retmask");
 
 	r.runnable = OBJECT_SELF;
 	r.actor = GetLocalObject(GetModule(), EVENTS_LVAR_PREFIX + "actor");
