@@ -1,20 +1,14 @@
-extern("inc_events")
 extern("inc_chat_lib")
 extern("inc_chat_run")
 extern("inc_setting")
-
-
-
-
+#include "inc_events.nh"
 
 void main() {
 	struct EventInfo ei = GetEventInfo();
 	struct EventArguments ea = GetEventArguments(ei.serial);
 
-
 	if (ei.ev != "chat_prefilter")
 		return;
-
 
 	string first = substr(ea.a0, 0, 1);
 	string second = substr(ea.a0, 1, 1);
@@ -47,64 +41,13 @@ void main() {
 
 		SpeakToMode(oTarget, rest, ea.i0);
 
-		SetEventResult(EVENT_RESULT_STOP | EVENT_RESULT_END | EVENT_RESULT_SUPPRESS);
-		return;
+		event_ret(EVENT_RESULT_STOP | EVENT_RESULT_END | EVENT_RESULT_SUPPRESS);
 	}
 
 	if ("/" != first)
 		return;
 
-	int handled_by_new = false;
+	CommandEval(ei.runnable, ea.i0, rest, true, true, gvGetInt("s_modlevel"));
 
-	rest = GetStringTrim(rest);
-
-	int nCommandCount = commandsplit(rest, "&&");
-	string sCurrentCommand;
-
-	int i;
-	for ( i = 0; i < nCommandCount; i++ ) {
-		sCurrentCommand = commandget(i);
-		
-		string sCommand, sRest;
-
-		struct EventArguments cmdea;
-
-		// Now split up between command and the sCurrentCommand of arguments
-		int iWhite = FindSubString(sCurrentCommand, " ");
-
-		if ( iWhite > -1 ) {
-			sCommand = GetStringLowerCase(GetSubString(sCurrentCommand, 0, iWhite));
-
-			int i = 1;
-			while ( GetSubString(sCurrentCommand, iWhite + i, 1) == " " )
-				i++;
-
-			sRest = GetSubString(sCurrentCommand, iWhite + i, GetStringLength(sCurrentCommand));
-
-		} else {
-
-			sCommand = GetStringLowerCase(GetSubString(sCurrentCommand, 0, 1024));
-			sRest = "";
-
-		}
-
-		cmdea.a0 = GetStringTrim(sCommand);
-		cmdea.a1 = GetStringTrim(sRest);
-		int serial = GetEventSerial();
-		int ret = RunEventScriptsForWithArgv(serial, "chat_command", ei.runnable, ei.actor, ei.actedon, ei.actedat, cmdea, EVENT_MODE_SYNC);
-		DeleteEventArguments(serial);
-
-		if (ret & EVENT_RESULT_STOP) {
-			// A plugin said its parsing it, stop it.
-			handled_by_new = true;
-			break;
-		}
-	}
-
-	
-
-	if (!handled_by_new)
-		CommandEval(ei.runnable, ea.i0, rest, true, true, gvGetInt("s_modlevel"));
-
-	SetEventResult(EVENT_RESULT_STOP | EVENT_RESULT_END | EVENT_RESULT_SUPPRESS);
+	event_ret(EVENT_RESULT_STOP | EVENT_RESULT_END | EVENT_RESULT_SUPPRESS);
 }
