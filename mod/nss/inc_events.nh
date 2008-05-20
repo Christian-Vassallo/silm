@@ -15,12 +15,16 @@
 #define event_ret(value) __EBLOCK(SetEventResult(value); return;)
 
 // Macro: event_fail()
-// event_ret(EVENT_RESULT_FAIL | EVENT_RESULT_END)
+// event_ret(EVENT_RESULT_FAIL)
 #define event_fail() event_ret(EVENT_RESULT_FAIL)
 
+// Macro: event_fail_end()
+// event_ret(EVENT_RESULT_FAIL | EVENT_RESULT_END)
+#define event_fail_end() event_ret(EVENT_RESULT_FAIL | EVENT_RESULT_END)
+
 // Macro: event_fail_stop()
-// event_ret(EVENT_RESULT_FAIL | EVENT_RESULT_STOP | EVENT_RESULT_END)
-#define event_fail_stop() event_ret(EVENT_RESULT_FAIL | EVENT_RESULT_STOP | EVENT_RESULT_END)
+// event_ret(EVENT_RESULT_FAIL | EVENT_RESULT_STOP)
+#define event_fail_stop() event_ret(EVENT_RESULT_FAIL | EVENT_RESULT_STOP)
 
 // Macro: event_end()
 // event_ret(EVENT_RESULT_END)
@@ -28,7 +32,7 @@
 
 // Macro: event_stop()
 // event_ret(EVENT_RESULT_STOP)
-#define event_stop() event_ret(EVENT_RESULT_STOP | EVENT_RESULT_END)
+#define event_stop() event_ret(EVENT_RESULT_STOP)
 
 extern("inc_events")
 
