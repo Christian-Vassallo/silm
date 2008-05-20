@@ -11,6 +11,10 @@
 //   Example: "help visual=" to allow --help, and --visual=5
 int getopt_init(string str, string opts = "", object oPC = OBJECT_SELF);
 
+// Function: getopt_errstr
+// Returns the error string that getopt_init yielded
+string getopt_errstr();
+
 // Function: getoptreset 
 // 
 // Resets all options.
@@ -59,6 +63,9 @@ string commandget(int index);
 
 //
 
+string getopt_errstr() {
+	return pErrStr();
+}
 
 int commandsplit(string sText, string sSplitAt) {
 	pQ("select getopt.commandsplit(" + pSs(sText) + ", " + pSs(sSplitAt) + ")");
