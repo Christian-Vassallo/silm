@@ -1,0 +1,35 @@
+#ifndef EVENTS_H
+#define EVENTS_H
+/* Note: nwns int overflows at 1 << 31, so 1 << 30 is the highest usable bitmask */
+
+#define event(s) substr(strlwr(s), 0, 32)
+#define event_t string
+#define event_id_t int
+
+#define EVENTS_MAX_SERIAL 125
+#define EVENTS_LVAR_PREFIX "_ev_"
+
+// Macro: event_ret(value)
+// Returns from the current event with the given return mask
+// SetEventResult(value) && return;
+#define event_ret(value) __EBLOCK(SetEventResult(value); return;)
+
+// Macro: event_fail()
+// event_ret(EVENT_RESULT_FAIL | EVENT_RESULT_END)
+#define event_fail() event_ret(EVENT_RESULT_FAIL)
+
+// Macro: event_fail_stop()
+// event_ret(EVENT_RESULT_FAIL | EVENT_RESULT_STOP | EVENT_RESULT_END)
+#define event_fail_stop() event_ret(EVENT_RESULT_FAIL | EVENT_RESULT_STOP | EVENT_RESULT_END)
+
+// Macro: event_end()
+// event_ret(EVENT_RESULT_END)
+#define event_end() event_ret(EVENT_RESULT_END)
+
+// Macro: event_stop()
+// event_ret(EVENT_RESULT_STOP)
+#define event_stop() event_ret(EVENT_RESULT_STOP | EVENT_RESULT_END)
+
+extern("inc_events")
+
+#endif
