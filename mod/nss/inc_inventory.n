@@ -1,5 +1,7 @@
 extern("inc_2da")
 
+const int INVENTORY_SLOT_INVALID = -1;
+
 // Function: GetInventoryItemCount
 //
 // Returns the number of items in this containers inventory.
@@ -17,9 +19,27 @@ int GetItemSize(object oItem);
 // Returns the total size of all items in oInv.
 int GetTotalContainerItemSizeSum(object oInv);
 
+// Function: GetItemInventorySlot
+// Returns the slot in which oItem is equipped, or INVENTORY_SLOT_INVALID
+int GetItemInventorySlot(object oItem);
 
 // aa..a..a..aaaa.a.. :)
 // .... a.....a...d.@...
+
+int GetItemInventorySlot(object oItem) {
+	object holder = GetItemPossessor(oItem);
+	if (!is_valid(holder))
+		return INVENTORY_SLOT_INVALID;
+
+	int nSlot;
+	for (nSlot = 0; nSlot < NUM_INVENTORY_SLOTS; nSlot++)
+		if (GetItemInSlot(nSlot, holder) == oItem)
+			return nSlot;
+
+	return INVENTORY_SLOT_INVALID;
+}
+
+
 
 int GetItemSize(object oItem) {
 	int nBaseItem = GetBaseItemType(oItem);
