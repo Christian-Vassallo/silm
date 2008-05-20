@@ -60,8 +60,8 @@
 	"{" + \
 		IntToString(GetObjectType(o)) + "," + \
 		GetResRef(o) + "," + \
-		GetTag(o) + \
-		"[" + itoa(p_get_p_id(o)) + "]," + \
+		GetTag(o) + ",[" + \
+		"[" + (is_client(o) ? (itoa(GetAccountID(o)) + "," + itoa(GetCharacterID(o))) : itoa(p_get_p_id(o))) + "]," + \
 		GetName(o) + \
 	"}") \
 : "OBJECT_INVALID")
@@ -99,7 +99,15 @@
 // Macro: is_area(o)
 // (is_valid(o) && GetObjectType(o) == OBJECT_TYPE_ALL)
 #define is_area(o) (is_valid(o) && GetObjectType(o) == OBJECT_TYPE_ALL)
-
+// Macro: is_client(o)
+// GetIsPC(o)
+#define is_client(o) GetIsPC(o)
+// Macro: is_pc(o)
+// GetIsPC(o) && !GetIsDM(o)
+#define is_pc(o) (GetIsPC(o) && !GetIsDM(o))
+// Macro: is_dm(o)
+// GetIsDM(o)
+#define is_dm(o) GetIsDM(o)
 
 #define lv_i(o,n) GetLocalInt(o,n)
 #define slv_i(o,n,v) SetLocalInt(o,n,v)
