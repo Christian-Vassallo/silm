@@ -74,6 +74,11 @@ string gvGetStr(string sKey) {
 
 
 string gvSetVar(string sKey, string sType, string sValue) {
+	int ts = GetUnixTimestamp();
+	string cacheKey = "gv_" + sType + "_" + sKey;
+	SetLocalString(GetModule(), cacheKey, sValue);
+	SetLocalInt(GetModule(), cacheKey, ts);
+
 	if (gvExistsVar(sKey, sType))
 		pQ("update " + GV_TABLE + " set value = " + pE(sValue) + 
 			" where key = " + pE(sKey) + " and type = " + pE(sType) + 
