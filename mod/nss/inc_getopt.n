@@ -1,0 +1,136 @@
+#include "inc_pgsql.nh"
+
+
+// Function: getopt 
+// 
+// Initialize getopt.
+// Parameters:
+// - str: The string to parse
+// - opts: a string containing all options, with optional
+//   equal-signs to denote option-values.
+//   Example: "help visual=" to allow --help, and --visual=5
+int getopt_init(string str, string opts = "", object oPC = OBJECT_SELF);
+
+// Function: getopt_errstr
+// Returns the error string that getopt_init yielded
+string getopt_errstr();
+
+// Function: getoptreset 
+// 
+// Resets all options.
+int getopt_reset(object oPC = OBJECT_SELF);
+
+// Function: arg 
+// 
+// Returns argument n, starting at 0.
+string getopt_arg(int n, object oPC = OBJECT_SELF);
+
+// Function: argc 
+// 
+// Returns the argument count.
+int getopt_argc(object oPC = OBJECT_SELF);
+
+// Function: opt 
+// 
+// Returns a boolean indicating the presence of option n.
+int getopt_opt(string n, object oPC = OBJECT_SELF);
+
+// Function: optv 
+// 
+// Returns the value of option n, or an empty string.
+string getopt_optv(string n, object oPC = OBJECT_SELF);
+
+// Function: getoptargs 
+// 
+// Returns the complete, unparsed string, including all options.
+string getopt_args(object oPC = OBJECT_SELF);
+
+// Returns the complete, unparsed string, excluding all options.
+// string getoptarga(object oPC = OBJECT_SELF);
+
+
+// Function: commandsplit 
+// Splits the given text with shell-like command parsing, and
+// returns the count of individual commands.
+// Example:
+// - "aa && b && c && 'd && e'" returns 4
+int commandsplit(string sText, string sSplitAt);
+
+// Function: commandget 
+// Returns the argument at index (starting at 0) from the last
+// call to commandsplit.
+string commandget(int index);
+
+//
+
+string getopt_errstr() {
+	return pErrStr();
+}
+
+int commandsplit(string sText, string sSplitAt) {
+	pQ("select getopt.commandsplit(" + pSs(sText) + ", " + pSs(sSplitAt) + ")");
+	if (pF())
+		return pGi(1);
+	else
+		return 0;
+}
+
+string commandget(int index) {
+	pQ("select getopt.commandget(" + pSi0(index, false) +");");
+	if (pF())
+		return pGs(1);
+	else
+		return "";
+}
+
+
+string getopt_args(object oPC = OBJECT_SELF) {
+	return GetLocalString(MODULE, "getopt_argstr");
+}
+
+int getopt_init(string str, string opts = "", object oPC = OBJECT_SELF) {
+	SetLocalString(MODULE, "getopt_argstr", str);
+	int ret = pQ("select getopt.init(" + pSs(str) + ", " + pSs(opts) + ");");
+	if (!ret)
+		_WARN("getopt.init failed!");
+	return ret;
+}
+
+
+int getopt_argc(object oPC = OBJECT_SELF) {
+	pQ("select getopt.argc();");
+	if (pF()) 
+		return pGi(1);
+	else
+		return 0;
+}
+
+string getopt_arg(int n, object oPC = OBJECT_SELF) {
+	pQ("select getopt.arg(" + pSi0(n, false) + ");");
+	if (!pF())
+		return "";
+	return pGs(1);
+}
+
+
+int getopt_opt(string n, object oPC = OBJECT_SELF) {
+	pQ("select getopt.opt(" + pSs(n) + ");");
+	if (!pF())
+		return 0;
+	return pGb(1);
+}
+
+string getopt_optv(string n, object oPC = OBJECT_SELF) {
+	pQ("select getopt.optv(" + pSs(n) + ");");
+	if (!pF())
+		return "";
+	return pGs(1);
+}
+
+
+
+int getopt_reset(object oPC = OBJECT_SELF) {
+	SetLocalString(MODULE, "getopt_argstr", "");
+	int ret = pQ("select getopt.reset();");
+	return ret;
+}

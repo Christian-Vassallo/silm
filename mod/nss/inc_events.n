@@ -1,0 +1,525 @@
+/*
+  File: inc_events.n
+
+  A event system.
+  Designed to replace and surpass nw_*_switches.
+  Copyright Bernard 'elven' Stoeckner.
+
+  This code is licenced under the
+  GNU/GPLv2 General Public Licence.
+*/
+#include "inc_pgsql.nh"
+#include "inc_events.nh"
+
+/*
+Section: Events
+
+	Each event constant has zero or more of the following modifiers  Const: 
+	- defer - Event always runs deferred (scripts registered for sync execution will *NOT RUN*), always implies *no abort*
+	- sync - Event always runs synchronously (scripts registered for deferred execution will be forced to run sync)
+	- stop - Event can be stopped by returning EVENT_RESULT_STOP, if the script is running sync
+	- suppress - Event can be suppressed by returning EVENT_RESULT_SUPPRESS, if the script is running sync
+	- runnable: object - what object the event will run on
+	- actor: object - what object the actor will be
+	- actedon: object - what object the actedon will be
+	- actedat: location - what location actedat will be
+
+	sync, abort, defer:
+	- Event scripts can be run either in *sync* or in *defer* mode.
+	- sync mode has the advantage of allowing event cancellation, but *will block* (and possibly run against TMI).
+	- defer mode will be queued for execution after the current script, and *order of events is not guaranteed*.
+	Also, event-specific native functions that return event-related data are *not guaranteed to be consistent*.
+	Do NOT use them, use the provided objects (actor, actedon, actedat) by the event system instead. If you
+	require any other event-related information, use sync mode.
+	- If possible, choose defer mode for performance and stability.
+	- Some events are forced to run in sync mode for technical reasons.
+	- Some events are forced to run in defer mode (since there would be no advantage running them in sync mode, or the overhead would be too great).
+
+Section: Script Return Codes
+return codes for event scripts. You can return these through SetEventScriptReturnValue()
+in an event script to indicate certain conditions.
+
+	Const: EVENT_RESULT_FAIL
+		Event script failed to execute. Indicate this to handle error conditions.
+
+	Const: EVENT_RESULT_END
+		Request termination of other after this one. Only works reliably when in sync mode.
+		This prevents all further event scripts - after this one - from running.
+
+	Const: EVENT_RESULT_STOP
+		Per-event special stop. This stops the event from being handled in the core script.
+		See the event documentation for the specific meaning.
+	
+	Const: EVENT_RESULT_SUPPRESS
+		Per-event special suppress. This suppresses the event.
+		See the event documentation for the specific meaning.
+
+Section: Event Modes
+
+	const: EVENT_MODE_ANY
+		allow any mode (default)
+
+	const: EVENT_MODE_SYNC
+		sync mode
+
+	const: EVENT_MODE_DEFER
+		defer mode
+*/
+const int EVENT_SCRIPT_LENGTH = 16;
+
+const int EVENT_RESULT_FAIL = 1 << 0;
+const int EVENT_RESULT_END = 1 << 1;
+const int EVENT_RESULT_STOP  = 1 << 2;
+const int EVENT_RESULT_SUPPRESS = 1 << 3;
+
+const int EVENT_MODE_ANY = 1 << 0;
+const int EVENT_MODE_SYNC = 1 << 1;
+const int EVENT_MODE_DEFER = 1 << 2;
+
+
+// Struct: EventInfo
+// A struct containing various information
+// relating the event.
+struct EventInfo {
+
+	// Var: mode
+	// The EVENT_MODE_*
+	int mode;
+
+	// Var: ev
+	// The event
+	event_t ev;
+
+	// Var: ev_id
+	// This events unique id, used to keep track of internal variables.
+	event_id_t serial;
+
+	// Var: defer_time
+	// How many seconds this event is late
+	float defer_time;
+
+	// Var: r_pos
+	// The position in the run queue.
+	int r_pos;
+
+	// Var: r_total
+	// The number of scripts scheduled to run in total.
+	int r_total;
+
+	// Var: ret
+	// The current return-mask for this event
+	int ret;
+
+	// Var: runnable
+	// The object this event runs on, usually OBJECT_SELF
+	object runnable;
+
+	// Var: actor
+	// The actor of the event
+	object actor;
+
+	// Var: actedon
+	// the object the event acted on
+	object actedon;
+
+	// Var: actedat
+	// The location where the event took place
+	location actedat;
+};
+
+
+// Struct: EventArguments
+// A struct containing arguments passed by the
+// event source. Refer to the individual event
+// documentation to find out the meaning and
+// contents of each argument.
+// Yes, this is ugly.
+// Improvements welcome.
+struct EventArguments {
+	// Used internally.
+	bool do_not_set;
+
+	// Var: modified
+	// Have the arguments been modified by a script?
+	bool modified;
+
+	// Vars: a0, a1, a2
+	string a0, a1, a2;
+	// Vars: i0, i1, i2
+	int i0, i1, i2;
+	// Vars: f0, f1, f2
+	float f0, f1, f2;
+	// Vars: o0, o1, o2
+	object o0, o1, o2;
+	// Vars: l0, l1, l2
+	location l0, l1, l2;
+};
+
+
+
+
+// Function: RehashEventScripts
+//
+// Re-loads event scripts from the database
+// 
+// Returns the number of script-events loaded.
+int RehashEventScripts();
+
+// Function: RunEventScriptsFor
+// 
+// Runs all scripts that are registered for nEvent
+// Returns:
+// - mask of EVENT_RESULT_*
+int RunEventScriptsFor(event_id_t serial, event_t ev, object oRunnable, object oActor, object oActedOn,
+	location lActedAt, int nRequireMode = EVENT_MODE_ANY);
+
+// Function: RunEventScriptsForWithArgv
+// 
+// Runs all scripts that are registered for nEvent
+// Returns:
+// - mask of EVENT_RESULT_*
+int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, object oActor, object oActedOn,
+	location lActedAt, struct EventArguments evArgs, int nRequireMode = EVENT_MODE_ANY);
+
+// Function: RunEventScript
+//
+// Runs the named event script on oRunnable
+// Returns:
+// - mask of EVENT_RESULT_*
+int RunEventScript(string sScript, int nEventMode, event_id_t serial, event_t ev, object oRunnable,
+	object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime, int retMask);
+
+// Function: RunEventScriptAsync
+//
+// Wrapper around RunEventScript, for delayed execution
+void RunEventScriptAsync(string sScript, int nEventMode, event_id_t serial, event_t ev, object oRunnable,
+	object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime, int retMask);
+
+
+// Function GetEventInfo
+// Returns EventInfo
+struct EventInfo GetEventInfo();
+
+// Function: SetEventArguments
+// Used internally to set the event arguments.
+void SetEventArguments(event_id_t serial, struct EventArguments ea);
+
+// Function: GetEventArguments
+// Returns all event-specific arguments that have been passed to the event.
+struct EventArguments GetEventArguments(event_id_t serial);
+
+
+void DeleteEventArguments(event_id_t serial);
+
+
+// Function: SetEventScriptReturnValue 
+// 
+// Sets the return value for scripts.
+// - mask of EVENT_RESULT_*
+void SetEventResult(int nValue, string sStatus = "");
+
+
+// Function: GetEventSerial
+// Returns the next serial.
+event_id_t GetEventSerial();
+
+/*
+Section: A demonstration script showing usage
+
+Script file named 'e_test':
+:void main() {
+:}
+*/
+
+/* implementation */
+
+event_id_t GetEventSerial() {
+	event_id_t old = GetLocalInt(GetModule(), "inc_events_serial");
+	old += 1;
+	if (old >= EVENTS_MAX_SERIAL)
+		old = 0;
+	SetLocalInt(GetModule(), "inc_events_serial", old);
+	return old;
+}
+
+
+int RunEventScriptsFor(event_id_t serial, event_t ev, object oRunnable, object oActor,
+		object oActedOn, location lActedAt, int nRequireMode = EVENT_MODE_ANY) {
+
+	struct EventArguments emptyArgs;
+	emptyArgs.do_not_set = true;
+
+	return RunEventScriptsForWithArgv(serial, ev, oRunnable, oActor, oActedOn, lActedAt, emptyArgs, nRequireMode);
+}
+
+int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, object oActor,
+		object oActedOn, location lActedAt, struct EventArguments args, int nRequireMode = EVENT_MODE_ANY) {
+
+	int count = GetLocalInt(GetModule(), "inc_events_last");
+	int i, sync, ret;
+	event_t ret_ev;
+	string si, script, tag, ref;
+	float defer_time = 0.0;
+
+	// Set the initial set of arguments that can be modified by scripts.
+	if (!args.do_not_set)
+		SetEventArguments(serial, args);
+
+	int total_ret = 0;
+
+	for (i = 0; i < count; i++) {
+		si = IntToString(i);
+		
+		ret_ev = GetLocalString(GetModule(), "inc_events_" + si + "_event");
+		if (ret_ev != "" && ev != ret_ev)
+			continue;
+
+		tag = GetLocalString(GetModule(), "inc_events_" + si + "_r_tagmask");
+		if (tag != "" && tag != "**" && !TestStringAgainstPattern(GetStringLowerCase(tag), GetStringLowerCase(GetTag(oRunnable))))
+			continue;
+		ref = GetLocalString(GetModule(), "inc_events_" + si + "_r_refmask");
+		if (ref != "" && ref != "**" && !TestStringAgainstPattern(GetStringLowerCase(ref), GetStringLowerCase(GetResRef(oRunnable))))
+			continue;
+		tag = GetLocalString(GetModule(), "inc_events_" + si + "_a_tagmask");
+		if (tag != "" && tag != "**" && !TestStringAgainstPattern(GetStringLowerCase(tag), GetStringLowerCase(GetTag(oActor))))
+			continue;
+		ref = GetLocalString(GetModule(), "inc_events_" + si + "_a_refmask");
+		if (ref != "" && ref != "**" && !TestStringAgainstPattern(GetStringLowerCase(ref), GetStringLowerCase(GetResRef(oActor))))
+			continue;
+		
+		tag = GetLocalString(GetModule(), "inc_events_" + si + "_o_tagmask");
+		if (tag != "" && tag != "**" && !TestStringAgainstPattern(GetStringLowerCase(tag), GetStringLowerCase(GetTag(oActedOn))))
+			continue;
+		ref = GetLocalString(GetModule(), "inc_events_" + si + "_o_refmask");
+		if (ref != "" && ref != "**" && !TestStringAgainstPattern(GetStringLowerCase(ref), GetStringLowerCase(GetResRef(oActedOn))))
+			continue;
+		
+		
+		script = GetLocalString(GetModule(), "inc_events_" + si + "_script");
+
+		if (script == "")
+			continue;
+
+		sync = GetLocalInt(GetModule(), "inc_events_" + si + "_eventsync");
+	
+		
+		int runmode = EVENT_MODE_ANY;
+
+		if (runmode != nRequireMode)
+			runmode = nRequireMode;
+
+		// Script wants sync mode, but we are forced to defer. Skip.
+		if (sync && runmode == EVENT_MODE_DEFER)
+			continue;
+
+		// Script wants to defer, but we are forced to sync. Continue.
+		// if (!sync && rummode == EVENT_MODE_SYNC)
+		//	;
+		
+		// Scripts wants sync mode, and we dont care. Use sync.
+		if (sync && runmode == EVENT_MODE_ANY)
+			runmode = EVENT_MODE_SYNC;
+
+		ret = 0;
+
+		if (EVENT_MODE_SYNC == runmode)
+			ret = RunEventScript(script, runmode, serial, ev, oRunnable, oActor, oActedOn, lActedAt, i, count, defer_time, total_ret);
+		else {
+			DelayCommand(defer_time, RunEventScriptAsync(script, runmode, serial, ev, oRunnable, oActor, oActedOn, lActedAt, i, count, defer_time, total_ret));
+		}
+		
+		if (ret & EVENT_RESULT_STOP)
+			total_ret |= EVENT_RESULT_STOP;
+		
+		if (ret & EVENT_RESULT_SUPPRESS)
+			total_ret |= EVENT_RESULT_SUPPRESS;
+		
+		if (ret & EVENT_RESULT_FAIL) {
+			_WARN("event script " + script + " indicated failure on " + ev);
+			total_ret |= EVENT_RESULT_FAIL;
+		}
+
+		if (ret & EVENT_RESULT_END) {
+			total_ret |= EVENT_RESULT_END;
+			break;
+		}
+		// Make sure they get queued in the right order.
+		defer_time += 0.01;
+	}
+
+	return total_ret;
+}
+
+
+void RunEventScriptAsync(string sScript, int nEventMode, event_id_t serial, event_t ev, object oRunnable,
+		object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime, int retMask) {
+
+	RunEventScript(
+		sScript, nEventMode, serial, ev, 
+		oRunnable, oActor, oActedOn, lActedAt, 
+		nCurPos, nMaxPos, fDeferTime, retMask
+	);
+}
+
+int RunEventScript(string sScript, int nEventMode, event_id_t serial, event_t ev, object oRunnable,
+		object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime, int retMask) {
+
+	// Set the state for this particular script execution.
+	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "rpos_cur", nCurPos);
+	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "rpos_max", nMaxPos);
+
+	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "mode", nEventMode);
+	SetLocalString(GetModule(), EVENTS_LVAR_PREFIX + "event", ev);
+	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "serial", serial);
+
+	SetLocalObject(GetModule(), EVENTS_LVAR_PREFIX + "actor", oActor);
+	SetLocalObject(GetModule(), EVENTS_LVAR_PREFIX + "actedon", oActedOn);
+	SetLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + "actedat", lActedAt);
+
+	SetLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + "defer", fDeferTime);
+
+	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retmask", retMask);
+
+	DeleteLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retvar");
+	ExecuteScript(sScript, oRunnable);
+	string sRet = GetLocalString(GetModule(), EVENTS_LVAR_PREFIX + "retvar");
+
+	int nRet = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retvar");
+
+	return nRet;
+}
+
+void SetEventResult(int nValue, string sStatus = "") {
+	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retvar", nValue);
+	SetLocalString(GetModule(), EVENTS_LVAR_PREFIX + "retvar", sStatus);
+}
+
+
+
+struct EventInfo GetEventInfo() {
+	struct EventInfo r;
+	
+	r.ev = GetLocalString(GetModule(), EVENTS_LVAR_PREFIX + "event");
+	r.serial = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "serial");
+	
+	r.defer_time = GetLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + "defer");
+	r.r_pos = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "rpos_cur");
+	r.r_total = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "rpos_max");
+
+	r.ret = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retmask");
+
+	r.runnable = OBJECT_SELF;
+	r.actor = GetLocalObject(GetModule(), EVENTS_LVAR_PREFIX + "actor");
+	r.actedon = GetLocalObject(GetModule(), EVENTS_LVAR_PREFIX + "actedon");
+	r.actedat = GetLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + "actedat");
+	return r;
+}
+
+
+
+struct EventArguments GetEventArguments(event_id_t serial) {
+	string serial_s = itoa(serial) + "_";
+	struct EventArguments ea;
+	ea.a0 = GetLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a0");
+	ea.a1 = GetLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a1");
+	ea.a2 = GetLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a2");
+	ea.i0 = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_i0");
+	ea.i1 = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_i1");
+	ea.i2 = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_i2");
+	ea.f0 = GetLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_f0");
+	ea.f1 = GetLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_f1");
+	ea.f2 = GetLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_f2");
+	ea.o0 = GetLocalObject(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_o0");
+	ea.o1 = GetLocalObject(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_o1");
+	ea.o2 = GetLocalObject(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_o2");
+	ea.l0 = GetLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l0");
+	ea.l1 = GetLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l1");
+	ea.l2 = GetLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l2");
+	return ea;
+}
+
+
+
+void SetEventArguments(event_id_t serial, struct EventArguments ea) {
+	string serial_s = itoa(serial) + "_";
+	SetLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a0", ea.a0);
+	SetLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a1", ea.a1);
+	SetLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a2", ea.a2);
+	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_i0", ea.i0);
+	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_i1", ea.i1);
+	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_i2", ea.i2);
+	SetLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_f0", ea.f0);
+	SetLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_f1", ea.f1);
+	SetLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_f2", ea.f2);
+	SetLocalObject(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_o0", ea.o0);
+	SetLocalObject(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_o1", ea.o1);
+	SetLocalObject(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_o2", ea.o2);
+	SetLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l0", ea.l0);
+	SetLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l1", ea.l1);
+	SetLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l2", ea.l2);
+}
+
+
+void DeleteEventArguments(event_id_t serial) {
+	string serial_s = itoa(serial) + "_";
+	DeleteLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a0");
+	DeleteLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a1");
+	DeleteLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a2");
+	DeleteLocalInt(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_i0");
+	DeleteLocalInt(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_i1");
+	DeleteLocalInt(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_i2");
+	DeleteLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_f0");
+	DeleteLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_f1");
+	DeleteLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_f2");
+	DeleteLocalObject(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_o0");
+	DeleteLocalObject(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_o1");
+	DeleteLocalObject(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_o2");
+	DeleteLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l0");
+	DeleteLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l1");
+	DeleteLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l2");
+}
+
+
+
+int RehashEventScripts() {
+	pQ("select script, event, sync, " + 
+		"runnable_tagmask, runnable_refmask, " + 
+		"actor_tagmask, actor_refmask, actedon_tagmask, actedon_refmask from " +
+		"events.events where " +
+		"enabled = true order by event, ordering, script;");
+
+	string script;
+	int sync;
+	string r_t, r_f, a_t, a_f, o_t, o_f;
+	event_t ev;
+
+	int i = 0;
+	string si;
+	while (pF()) {
+		si = itoa(i);
+
+		script = pGs(1);
+		ev = pGs(2);
+		sync = pGb(3);
+		r_t = pGs(4); r_f = pGs(5);
+		a_t = pGs(6); a_f = pGs(7);
+		o_t = pGs(8); o_f = pGs(9);
+
+		SetLocalString(GetModule(), "inc_events_" + si + "_script", script);
+		SetLocalString(GetModule(), "inc_events_" + si + "_event", ev);
+		SetLocalInt(GetModule(), "inc_events_" + si + "_eventsync", sync);
+		SetLocalString(GetModule(), "inc_events_" + si + "_r_tagmask", r_t);
+		SetLocalString(GetModule(), "inc_events_" + si + "_r_refmask", r_f);
+		SetLocalString(GetModule(), "inc_events_" + si + "_a_tagmask", a_t);
+		SetLocalString(GetModule(), "inc_events_" + si + "_a_refmask", a_f);
+		SetLocalString(GetModule(), "inc_events_" + si + "_o_tagmask", o_t);
+		SetLocalString(GetModule(), "inc_events_" + si + "_o_refmask", o_f);
+
+		i++;
+	}
+
+	SetLocalInt(GetModule(), "inc_events_last", i);
+	return i;
+}
+
+

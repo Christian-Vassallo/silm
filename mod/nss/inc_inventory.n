@@ -1,0 +1,79 @@
+extern("inc_2da")
+
+const int INVENTORY_SLOT_INVALID = -1;
+
+// Function: GetInventoryItemCount
+//
+// Returns the number of items in this containers inventory.
+// Loops through sub-containers and counts those as well,
+// including the subcontainer itself.
+int GetInventoryItemCount(object oInv);
+
+// Function: GetItemSize
+//
+// Returns the item size of the given object in inventory tiles.
+int GetItemSize(object oItem);
+
+// Function: GetTotalContainerItemSizeSum
+//
+// Returns the total size of all items in oInv.
+int GetTotalContainerItemSizeSum(object oInv);
+
+// Function: GetItemInventorySlot
+// Returns the slot in which oItem is equipped, or INVENTORY_SLOT_INVALID
+int GetItemInventorySlot(object oItem);
+
+// aa..a..a..aaaa.a.. :)
+// .... a.....a...d.@...
+
+int GetItemInventorySlot(object oItem) {
+	object holder = GetItemPossessor(oItem);
+	if (!is_valid(holder))
+		return INVENTORY_SLOT_INVALID;
+
+	int nSlot;
+	for (nSlot = 0; nSlot < NUM_INVENTORY_SLOTS; nSlot++)
+		if (GetItemInSlot(nSlot, holder) == oItem)
+			return nSlot;
+
+	return INVENTORY_SLOT_INVALID;
+}
+
+
+
+int GetItemSize(object oItem) {
+	int nBaseItem = GetBaseItemType(oItem);
+	if ( BASE_ITEM_INVALID == nBaseItem )
+		return 0;
+
+	int nX = StringToInt(Get2DACached("baseitems", "InvSlotWidth", nBaseItem));
+	int nY = StringToInt(Get2DACached("baseitems", "InvSlotHeight", nBaseItem));
+
+	int ret = nX * nY;
+	if ( GetItemStackSize(oItem) > 1 )
+		ret *= GetItemStackSize(oItem);
+	return ret;
+}
+
+
+
+int GetInventoryItemCount(object oInv) {
+	int total = 0;
+	object o = GetFirstItemInInventory(oInv);
+	while ( GetIsObjectValid(o) ) {
+		total += 1;
+		o = GetNextItemInInventory(oInv);
+	}
+	return total;
+}
+
+
+int GetTotalContainerItemSizeSum(object oInv) {
+	int total = 0;
+	object o = GetFirstItemInInventory(oInv);
+	while ( GetIsObjectValid(o) ) {
+		total += GetItemSize(o);
+		o = GetNextItemInInventory(oInv);
+	}
+	return total;
+}

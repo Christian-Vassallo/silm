@@ -1,0 +1,53 @@
+File: RESREFNAMING
+
+This document is a complete list of all resref
+naming schemata that are present on
+Sternenfall.
+
+
+Scripts:
+- mod_*: module event handler (mod_cliententer)
+- i_*: tag-based item event scripts
+- a_*: tag-bases area event scripts
+- p_*: tag-based placeable event scripts
+
+
+Areas:
+
+For each shard in the game world, a suitable
+_point of origin_ is chosen. This area is
+named: tag_n00e00
+- *tag* is the unique identifier for this
+  shard; a separate list will be kept.
+- *n00* is the offset north (or s for south).
+- *e00* is the offset east (or w for west).
+
+The areas sorrounding this POO are named with
+the direction and an offset.
+
+:         n01e00
+: n00w01  n00e00   n00e01
+: s01w01
+: s02w01  s02e00
+
+Independent areas, such as indoor areas, are
+prefixed with the shard-tag, and named as
+fitting.
+
+Area Transitions:
+Area transitions are done automatically for all
+outdoor areas; world builders are free to place
+invisible hinting objects to designate
+unsuitable spots; they are not required for
+operation, however.
+
+Transitions to/from indoor areas are to be done
+manually by the world builder.
+
+Items:
+
+
+Creatures:
+
+
+Placeables:
