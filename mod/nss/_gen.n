@@ -88,13 +88,6 @@ object FindPCByAccount(string sAccount, int bCheckNameToo = TRUE);
 int GetTotalLevel(object oCreature);
 
 
-// Function: GetUnixTimestamp
-int GetUnixTimestamp();
-
-// Function: GetTimestampTZ
-string GetTimestampTZ();
-
-
 // Function: GetModStartup
 // Returns the unix ts when the mod was started
 int GetModStartup();
@@ -298,21 +291,6 @@ int RemoveAllEffects(object oObj) {
 		e = GetNextEffect(oObj);
 	}
 	return i;
-}
-
-
-int GetUnixTimestamp() {
-	pQ("select unixts();");
-	if (pF())
-		return pGi(1);
-	else
-		return 0;
-}
-
-string GetTimestampTZ() {
-	pQ("select now()::timestamptz;");
-	pF();
-	return pG(1);
 }
 
 
