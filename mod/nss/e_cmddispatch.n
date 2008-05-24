@@ -5,6 +5,12 @@ extern("inc_setting")
 
 void main() {
 	struct EventInfo ei = GetEventInfo();
+
+	if (ei.ev == "module_load") {
+		RegisterAllCommands();
+		return;
+	}
+	
 	struct EventArguments ea = GetEventArguments(ei.serial);
 
 	if (ei.ev != "chat_prefilter")
