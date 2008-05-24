@@ -1,0 +1,42 @@
+#include "inc_pgsql.nh"
+extern("inc_cdb")
+
+// Function: session_start
+// Registers a new player session.
+void session_start(object player = OBJECT_SELF);
+
+// Function: session_end
+// Terminates a player session.
+void session_end(object player = OBJECT_SELF);
+
+// Function: session_get
+// Returns this sessions' serial.
+int session_get(object player = OBJECT_SELF);
+
+// Function: session_cleanup
+// Cleans up stale sessions that were still active before the last restart/crash.
+// Call on mod_load
+void session_cleanup();
+
+
+void session_cleanup() {
+	pQ("update sessions.sessions set session_end = now(), session_failed = true where session_end is null;");
+}
+
+void session_start(object player = OBJECT_SELF) {
+	int aid = GetAccountID(player);
+	int cid = GetCharacterID(player);
+	pQ("insert into sessions.sessions (session_start, aid, cid) values(now(), " + pSi(aid) + ", " + pSi(cid) + ");");
+	int key = pLastId("sessions.sessions");
+	SetLocalInt(player, "session_key", key);
+}
+
+void session_end(object player = OBJECT_SELF) {
+	int key = GetLocalInt(player, "session_key");
+	pQ("update sessions.sessions set session_end = now() where id = " + pSi(key));
+	DeleteLocalInt(player, "session_key");
+}
+
+int session_get(object player = OBJECT_SELF) {
+	return GetLocalInt(player, "session_key");
+}
