@@ -8,4 +8,5 @@ documentation:
 		-xi generated-doc \
 		-xi naturaldocs-project \
 		-xi build \
+		-xi linnwnx2 \
 	-s sternenfall -p naturaldocs-project
