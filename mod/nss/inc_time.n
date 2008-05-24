@@ -27,6 +27,11 @@ struct RealTime {
 struct RealTime GetRealTime();
 
 
+// Function: GetUnixTimestamp
+int GetUnixTimestamp();
+
+// Function: GetTimestampTZ
+string GetTimestampTZ();
 
 
 
@@ -64,3 +69,20 @@ struct RealTime GetRealTime() {
 	return r;
 
 }
+
+
+int GetUnixTimestamp() {
+	pQ("select unixts();");
+	if (pF())
+		return pGi(1);
+	else
+		return 0;
+}
+
+string GetTimestampTZ() {
+	pQ("select now()::timestamptz;");
+	pF();
+	return pG(1);
+}
+
+
