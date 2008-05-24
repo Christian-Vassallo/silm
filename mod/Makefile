@@ -12,7 +12,8 @@
 # Settings below:
 
 # The name of the module that is being built.
-NAME=www.sternenfall.org
+# Set this in your env.
+# NWNMODNAME=www.sternenfall.org
 
 # The current working branch in git.
 BRANCH=$(shell git branch 2>&1| grep "*" | cut -d " " -f 2)
@@ -79,6 +80,10 @@ ifeq  "$(LISTHOME)" ""
 	@echo "env var LISTHOME not set."
 	exit 1
 endif
+ifeq "$(NWNMODNAME)" ""
+	@echo "env var NWNMODNAME not set."
+	exit 1
+endif
 
 scripts: path
 	$(MAKE) -j 2 -C nss
@@ -132,25 +137,25 @@ clean:
 
 # remove older packages
 clean-local:
-	-rm $(NAME)-$(BRANCH)-{dev,builder,player}-r*.tgz
+	-rm $(NWNMODNAME)-$(BRANCH)-{dev,builder,player}-r*.tgz
 
 local: path
-	erfpack.pl -m -o $(NAME)-$(BRANCH).mod $(VALIDEXT)
+	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH).mod $(VALIDEXT)
 
 dev-local: path
-	erfpack.pl -m -o $(NAME)-$(BRANCH)-dev-r$(commit).mod $(VALIDEXTDEV)
-	tar -czf $(NAME)-$(BRANCH)-dev-r$(commit).tgz $(NAME)-dev-r$(commit).mod && \
-		rm $(NAME)-dev-r$(commit).mod
+	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-dev-r$(commit).mod $(VALIDEXTDEV)
+	tar -czf $(NWNMODNAME)-$(BRANCH)-dev-r$(commit).tgz $(NWNMODNAME)-dev-r$(commit).mod && \
+		rm $(NWNMODNAME)-dev-r$(commit).mod
 
 player-local: path
-	erfpack.pl -m -o $(NAME)-$(BRANCH)-player-r$(commit).mod $(VALIDEXTPLAYER)
-	tar -czf $(NAME)-$(BRANCH)-player-r$(commit).tgz $(NAME)-player-r$(commit).mod && \
-		rm $(NAME)-$(BRANCH)-player-r$(commit).mod
+	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-player-r$(commit).mod $(VALIDEXTPLAYER)
+	tar -czf $(NWNMODNAME)-$(BRANCH)-player-r$(commit).tgz $(NWNMODNAME)-player-r$(commit).mod && \
+		rm $(NWNMODNAME)-$(BRANCH)-player-r$(commit).mod
 
 builder-local: path
-	erfpack.pl -m -o $(NAME)-$(BRANCH)-builder-r$(commit).mod $(VALIDEXTBUILDER)
-	tar -czf $(NAME)-$(BRANCH)-builder-r$(commit).tgz $(NAME)-builder-r$(commit).mod && \
-		rm $(NAME)-$(BRANCH)-builder-r$(commit).mod
+	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-builder-r$(commit).mod $(VALIDEXTBUILDER)
+	tar -czf $(NWNMODNAME)-$(BRANCH)-builder-r$(commit).tgz $(NWNMODNAME)-builder-r$(commit).mod && \
+		rm $(NWNMODNAME)-$(BRANCH)-builder-r$(commit).mod
 
 
 # generates a new package with the current commit
@@ -161,6 +166,6 @@ builder-package: path uti utp utc ifo itp builder-local
 
 # installs all packaged in the relevant directories
 install: 
-	cp -v $(NAME)-$(BRANCH).mod $(NWNHOME)/modules/
+	cp -v $(NWNMODNAME)-$(BRANCH).mod $(NWNHOME)/modules/
 
 
