@@ -1,7 +1,7 @@
 #include "inc_pgsql.nh"
 
 
-// Function: getopt 
+// Function: getopt_init
 // 
 // Initialize getopt.
 // Parameters:
@@ -15,32 +15,32 @@ int getopt_init(string str, string opts = "", object oPC = OBJECT_SELF);
 // Returns the error string that getopt_init yielded
 string getopt_errstr();
 
-// Function: getoptreset 
+// Function: getopt_reset
 // 
 // Resets all options.
 int getopt_reset(object oPC = OBJECT_SELF);
 
-// Function: arg 
+// Function: getopt_arg
 // 
 // Returns argument n, starting at 0.
 string getopt_arg(int n, object oPC = OBJECT_SELF);
 
-// Function: argc 
+// Function: getopt_argc
 // 
 // Returns the argument count.
 int getopt_argc(object oPC = OBJECT_SELF);
 
-// Function: opt 
+// Function: getopt_opt
 // 
 // Returns a boolean indicating the presence of option n.
 int getopt_opt(string n, object oPC = OBJECT_SELF);
 
-// Function: optv 
+// Function: getopt_optv
 // 
 // Returns the value of option n, or an empty string.
 string getopt_optv(string n, object oPC = OBJECT_SELF);
 
-// Function: getoptargs 
+// Function: getopt_args
 // 
 // Returns the complete, unparsed string, including all options.
 string getopt_args(object oPC = OBJECT_SELF);
@@ -49,7 +49,7 @@ string getopt_args(object oPC = OBJECT_SELF);
 // string getoptarga(object oPC = OBJECT_SELF);
 
 
-// Function: commandsplit 
+// Function: commandsplit
 // Splits the given text with shell-like command parsing, and
 // returns the count of individual commands.
 // Example:
