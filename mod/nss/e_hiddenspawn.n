@@ -1,0 +1,8 @@
+#include "inc_events.nh"
+
+void main() {
+	if ("module_load" == e.ev) {
+		ExecuteScript("reg_dispenser", e.runnable);
+		ExecuteScript("reg_spawn", e.runnable);
+	}
+}

@@ -1,0 +1,39 @@
+extern("inc_subr_data")
+extern("inc_subr_eff")
+extern("inc_subr_item")
+extern("inc_subr_area")
+#include "inc_events.nh"
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	
+	if ("module_load" == e.ev) {
+		ExecuteScript("reg_subraces", OBJECT_SELF);
+	}
+
+	if ("pc_login" == e.ev) {
+		string sChosen_SR = GetSubRace(e.runnable);
+		int iRT = GetRacialType(e.runnable);
+
+		//FIXME: Perminssion management
+		int iSR_State = GetSubraceGranted(sChosen_SR, iRT, 1);
+
+		if ( !iSR_State )
+			return;
+
+		if ( iSR_State == 2 ) {
+			SendMessageToPC(e.runnable, "Subrasse " +
+				sChosen_SR + " ist nur bei gesonderter Anmeldung verfuegbar.");
+			return;
+		}
+
+		SetLocalString(e.runnable, "SR_Subrace", GetSubraceIdentifier(sChosen_SR, iRT));
+
+		ApplySubraceItems(e.runnable);
+		RefreshSubraceEffects(e.runnable);
+		SR_Update_Flags(e.runnable);
+
+		SendMessageToPC(e.runnable, "Subrasse " + sChosen_SR + " erkannt und gesetzt.");
+	
+	}
+}

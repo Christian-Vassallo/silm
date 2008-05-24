@@ -1,0 +1,13 @@
+extern("inc_corpse")
+#include "inc_events.nh"
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	if ("pc_login" == e.ev) {
+		LoginPC(OBJECT_SELF);
+	}
+
+	if ("pc_logout" == e.ev) {
+		LogoutPC(OBJECT_SELF);
+	}
+}
