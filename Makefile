@@ -4,7 +4,7 @@ mod:
 	make -C mod all
 
 documentation:
-	naturaldocs -o html generated-doc -i . \
+	naturaldocs -o framedhtml generated-doc -i . \
 		-xi generated-doc \
 		-xi naturaldocs-project \
 		-xi build \
