@@ -1,6 +1,19 @@
 /*
 */
+extern("inc_chat")
+extern("inc_session")
+#include "inc_events.nh"
 
 void main() {
+	object oPC = GetEnteringObject();
 
+	SetLocalString(oPC, "player_name", GetPCPlayerName(oPC));
+
+	NWNXChatPCin(oPC);
+	session_start(oPC);
+
+	// Event: pc_login
+	// When a player character logs in.
+	// - runnable: the player character object
+	RunEventScriptsFor(GetEventSerial(), "pc_login", oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
 }
