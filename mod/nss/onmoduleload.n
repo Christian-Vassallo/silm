@@ -33,23 +33,6 @@ void main() {
 	
 	RegisterAllCommands();
 
-	iYear = gvGetInt("t_year");
-	iMonth = gvGetInt("t_month");
-	iDay = gvGetInt("t_day");
-	iHour = gvGetInt("t_hour");
-
-	if ( !iYear )
-		WriteTimestampedLogEntry("No time entry, starting with preset module time");
-	else {
-		SetTime(iHour, 0, 0, 0);
-		SetCalendar(iYear, 1, 1);
-		if ( iMonth > 1 ) SetCalendar(iYear, iMonth, 1);
-		if ( iDay > 1 ) SetCalendar(iYear, iMonth, iDay);
-		WriteTimestampedLogEntry("Set module time to: " +
-			IntToString(GetCalendarDay()) +
-			". " + IntToString(GetCalendarMonth()) + ". " + IntToString(GetCalendarYear()));
-	}
-
 	session_cleanup();
 
 	// Global-Weather Setting
@@ -59,8 +42,6 @@ void main() {
 	ExecuteScript("reg_subraces", OBJECT_SELF);
 	ExecuteScript("reg_dispenser", OBJECT_SELF);
 	ExecuteScript("reg_spawn", OBJECT_SELF);
-
-	ExecuteScript("_events_register", OBJECT_SELF);
 
 	SetLocalInt(oMod, "tracking", 1);
 

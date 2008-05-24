@@ -23,7 +23,6 @@ void main() {
 
 	ExecuteScript("hb_xp_guard", oMod);
 	
-	ExecuteScript("hb_online", oMod);
 	ExecuteScript("hb_labertasche", oMod);
 
 	while ( GetIsObjectValid(oPC) ) {
@@ -51,11 +50,6 @@ void main() {
 		_ClockFix();
 
 		SetLocalInt(oMod, "Module_Hour", iHour);
-
-		gvSetInt("t_year", GetCalendarYear());
-		gvSetInt("t_month", GetCalendarMonth());
-		gvSetInt("t_day", GetCalendarDay());
-		gvSetInt("t_hour", iHour);
 
 		//Place for scripts/routines which are to be executed once every
 		//game hour
