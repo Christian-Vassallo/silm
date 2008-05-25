@@ -2057,7 +2057,7 @@ int CommandJump(object oPC, int iMode) {
 	location lT = GetTargetLocation();
 	object oT = GetTarget();
 
-	if ( getopt_opt("loc") ) {
+	if ( !getopt_opt("loc") ) {
 		if ( !GetIsObjectValid(oT) )
 			return NotifyBadTarget();
 
