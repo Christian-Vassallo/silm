@@ -33,7 +33,7 @@ void session_start(object player = OBJECT_SELF) {
 
 void session_end(object player = OBJECT_SELF) {
 	int key = GetLocalInt(player, "session_key");
-	pQ("update sessions.sessions set session_end = now() where id = " + pSi(key));
+	pQ("update sessions.sessions set cid = " + pSi(GetCharacterID(player)) + ", session_end = now() where id = " + pSi(key));
 	DeleteLocalInt(player, "session_key");
 }
 
