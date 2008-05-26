@@ -8,8 +8,6 @@
   This code is licenced under the
   GNU/GPLv2 General Public Licence.
 */
-#include "inc_pgsql.nh"
-#include "inc_events.nh"
 
 /*
 Section: Events
@@ -157,13 +155,6 @@ struct EventArguments {
 
 
 
-
-// Function: RehashEventScripts
-//
-// Re-loads event scripts from the database
-// 
-// Returns the number of script-events loaded.
-int RehashEventScripts();
 
 // Function: RunEventScriptsFor
 // 
@@ -478,48 +469,4 @@ void DeleteEventArguments(event_id_t serial) {
 	DeleteLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l1");
 	DeleteLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l2");
 }
-
-
-
-int RehashEventScripts() {
-	pQ("select script, event, sync, " + 
-		"runnable_tagmask, runnable_refmask, " + 
-		"actor_tagmask, actor_refmask, actedon_tagmask, actedon_refmask from " +
-		"events.events where " +
-		"enabled = true order by event, ordering, script;");
-
-	string script;
-	int sync;
-	string r_t, r_f, a_t, a_f, o_t, o_f;
-	event_t ev;
-
-	int i = 0;
-	string si;
-	while (pF()) {
-		si = itoa(i);
-
-		script = pGs(1);
-		ev = pGs(2);
-		sync = pGb(3);
-		r_t = pGs(4); r_f = pGs(5);
-		a_t = pGs(6); a_f = pGs(7);
-		o_t = pGs(8); o_f = pGs(9);
-
-		SetLocalString(GetModule(), "inc_events_" + si + "_script", script);
-		SetLocalString(GetModule(), "inc_events_" + si + "_event", ev);
-		SetLocalInt(GetModule(), "inc_events_" + si + "_eventsync", sync);
-		SetLocalString(GetModule(), "inc_events_" + si + "_r_tagmask", r_t);
-		SetLocalString(GetModule(), "inc_events_" + si + "_r_refmask", r_f);
-		SetLocalString(GetModule(), "inc_events_" + si + "_a_tagmask", a_t);
-		SetLocalString(GetModule(), "inc_events_" + si + "_a_refmask", a_f);
-		SetLocalString(GetModule(), "inc_events_" + si + "_o_tagmask", o_t);
-		SetLocalString(GetModule(), "inc_events_" + si + "_o_refmask", o_f);
-
-		i++;
-	}
-
-	SetLocalInt(GetModule(), "inc_events_last", i);
-	return i;
-}
-
 
