@@ -82,5 +82,6 @@
 #include "mutex.h"
 #include "string.h"
 #include "hook.h"
+#include "core.h"
 
 #endif
