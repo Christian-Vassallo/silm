@@ -1,0 +1,18 @@
+extern("inc_currency")
+#include "inc_audit.nh"
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "pc_login") {
+		int gold = Money2Value(CountInventoryMoney(e.runnable, 0));
+		audit("login", e.runnable, audit_fields("key", GetPCPublicCDKey(e.runnable), "xp", IntToString(GetXP(e.runnable)), "gold",
+			IntToString(gold)));
+	}
+
+	if (e.ev == "pc_logout") {
+		int gold = Money2Value(CountInventoryMoney(e.runnable, 0));
+		int nMsgCount = GetLocalInt(e.runnable, "message_count");
+		audit("logout", e.runnable, audit_fields("xp", IntToString(GetXP(e.runnable)), "gold", IntToString(gold), "messages", IntToString(nMsgCount)));
+	}
+}
