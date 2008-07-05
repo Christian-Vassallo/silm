@@ -464,11 +464,13 @@ void RegisterAllCommands() {
 	// Jump to named location.
 	RegisterCommand("go", "", 1, 1);
 	RHs("loc >> Go to location.");
+	RAF(AMASK_GM);
 	
 	// Chatcommand: re
 	// Return to last location before /go
 	RegisterCommand("re", "", 0, 0);
 	RHs("Return to from whence you came.");
+	RAF(AMASK_GM);
 
 	
 	// Chatcommand: shun
