@@ -119,17 +119,46 @@ int ToggleLights() {
 	SetLocalInt(OBJECT_SELF, "lightstate", nLightState);
 
 	if ( nLightState ) {
+		int nApp;
+
 		int nLight = Random(7);
-		nLight = nLight ==
-				 0 ? VFX_DUR_LIGHT_BLUE_15 : nLight ==
-				 1 ? VFX_DUR_LIGHT_GREY_15 : nLight == 2 ? VFX_DUR_LIGHT_ORANGE_15 :
-				 nLight ==
-				 3 ? VFX_DUR_LIGHT_PURPLE_15 : nLight ==
-				 4 ? VFX_DUR_LIGHT_RED_15 : nLight == 5 ? VFX_DUR_LIGHT_WHITE_15 :
-				 VFX_DUR_LIGHT_YELLOW_15;
+		switch (nLight) {
+			case 0:
+				nLight = VFX_DUR_LIGHT_BLUE_15;
+				nApp = 116; /* c_willowisp */
+				break;
+			case 1:
+				nLight = VFX_DUR_LIGHT_GREY_15; /* GREEN, actually */
+				nApp = 868; /* c_willowisp_gr */
+				break;
+			case 2:
+				nLight = VFX_DUR_LIGHT_ORANGE_15;
+				nApp = 867; /* c_willowisp_or */
+				break;
+			case 3:
+				nLight = VFX_DUR_LIGHT_PURPLE_15;
+				nApp = 866; /* c_willowisp_pu */
+				break;
+			case 4:
+				nLight = VFX_DUR_LIGHT_RED_15;
+				nApp = 864; /* c_willowisp_pi */
+				break;
+			case 5:
+				nLight = VFX_DUR_LIGHT_WHITE_15;
+				nApp = 116; /* c_willowisp */
+				break;
+			case 6:
+				nLight = VFX_DUR_LIGHT_YELLOW_15;
+				nApp = 865; /* c_willowisp_ye */
+				break;
+		}
+
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(nLight)),
 			OBJECT_SELF);
+		SetCreatureAppearanceType(OBJECT_SELF, nApp);
 
+	} else {
+		SetCreatureAppearanceType(OBJECT_SELF, 298 /* Invisible_Human_Male */);
 	}
 
 	ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectCutsceneGhost()), OBJECT_SELF);
