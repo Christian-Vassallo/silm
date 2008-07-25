@@ -1,0 +1,78 @@
+void TransporterEffect(object oActivator, location oLocation);
+
+void teleport_effect_and_go(location target, float skew = 0.0);
+
+void teleport_effect_and_go(location target, float skew = 0.0) {
+	ClearAllActions(1);
+
+	TransporterEffect(OBJECT_SELF, GetLocation(OBJECT_SELF));
+
+	DelayCommand(skew, TransporterEffect(OBJECT_SELF, target));
+	object invis = CreateObject(OBJECT_TYPE_PLACEABLE, "invisobj", target);
+	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(445), invis, skew + 3.0);
+	DestroyObject(invis, skew + 4.0);
+
+	DelayCommand(1.1, ActionJumpToLocation(target));
+}
+
+void TransporterEffect(object oActivator, location oLocation) {
+	vector v = GetPositionFromLocation(oLocation);
+
+	vector
+	vFeet = v, vBody = v, vHead = v;
+	vBody.z = vBody.z + 0.9;
+	vHead.z = vBody.z + 0.9;
+
+	location
+		lFeet = Location(GetAreaFromLocation(oLocation), vFeet, 0.0),
+		lBody = Location(GetAreaFromLocation(oLocation), vBody, 0.0),
+		lHead = Location(GetAreaFromLocation(oLocation), vHead, 0.0);
+
+	DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(
+				VFX_IMP_SPELL_MANTLE_USE), oLocation));
+
+	// feet
+	DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
+			lFeet));
+	DelayCommand(0.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
+			lFeet));
+	DelayCommand(0.4, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
+			lFeet));
+
+	// body
+	DelayCommand(0.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
+			lBody));
+	DelayCommand(0.4, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
+			lBody));
+	DelayCommand(0.6, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
+			lBody));
+
+	// head
+	DelayCommand(0.4, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
+			lHead));
+	DelayCommand(0.6, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
+			lHead));
+	DelayCommand(0.8, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
+			lHead));
+
+
+	// nifty rings with cool whoop sound.
+	DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
+			oLocation));
+	DelayCommand(0.5, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
+			oLocation));
+	DelayCommand(1.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
+			oLocation));
+	DelayCommand(1.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
+			oLocation));
+
+	DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
+			lHead));
+	DelayCommand(0.5, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
+			lHead));
+	DelayCommand(1.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
+			lHead));
+	DelayCommand(1.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
+			lHead));
+
+}
