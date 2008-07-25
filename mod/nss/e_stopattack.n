@@ -1,0 +1,37 @@
+extern("inc_events")
+extern("inc_cdb")
+extern("inc_scorco")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	struct EventArguments a = GetEventArguments(e.serial);
+
+	object attacker, attackee;
+
+	if (e.ev == "pc_attack") {
+		attacker = e.actor;
+		attackee = e.actedon;
+	} else if (e.ev == "creature_attacked") {
+		attacker = e.actor;
+		attackee = e.runnable;
+	} else
+		return;
+
+	if (GetReputation(attacker, attackee) >= 10) {
+		SetEventResult(EVENT_RESULT_SUPPRESS | EVENT_RESULT_STOP);
+
+		AssignCommand(attacker, ClearAllActions(1));
+		AssignCommand(attackee, ClearAllActions(1));
+
+		ClearPersonalReputation(attacker, attackee);
+		ClearPersonalReputation(attackee, attacker);
+
+		SendMessageToAllDMs("[stopattack] Stopped " + otoa(attacker) + " from attacking " +
+			otoa(attackee) + " because that would mess up the standard factions.");
+		if (GetIsPC(attacker))
+			SendMessageToPC(attacker, "Du kannst " + GetName(attackee) +
+				" leider nicht angreifen; dies wuerde die Fraktionen zermuerben." +
+				" Sprich mit einem SL fuer Rollenspiel in diese Richtung."
+			);
+	}
+}
