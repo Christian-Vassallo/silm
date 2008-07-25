@@ -36,8 +36,12 @@ void magicLamp_on(object oLamp, int nColor = VFX_DUR_LIGHT_PURPLE_20) {
 	SetLocalInt(oLamp, "active", 1);
 }
 
-void toggleMagicLamp(object oLamp, int nColor = VFX_DUR_LIGHT_PURPLE_20) {
+void toggleMagicLamp(object oLamp) {
 	int nActive = GetLocalInt(oLamp, "active");
+	int nColor = GetLocalInt(oLamp, "color");
+
+	if (!nColor)
+		nColor = VFX_DUR_LIGHT_PURPLE_20;
 
 	if (nActive) {
 		nActive = false;
@@ -57,7 +61,6 @@ void toggleMagicLamp(object oLamp, int nColor = VFX_DUR_LIGHT_PURPLE_20) {
 	}
 		
 	SetLocalInt(oLamp, "active", nActive);
-	SetLocalInt(oLamp, "color", nColor);
 }
 
 
