@@ -1,7 +1,6 @@
 extern("inc_subr_regist")
 
 void main() {
-
 	Register_Subrace("Sonnenelf", RACIAL_TYPE_ELF);
 	AddAlias("Sun Elf");
 	AddAlias("Sun");
@@ -103,4 +102,10 @@ void main() {
 	SetSRItem("ALL_WAT", 1);
 	AddEffect("+sav", -1, SAVING_THROW_ALL, 0, SAVING_THROW_TYPE_COLD, 0, 5, 0);
 	SetFlags(0x00000002); //Immun gg. Dominate/Enchant Person
+
+	Register_Subrace("Vampir", RACIAL_TYPE_UNDEAD);
+	AddAlias("Vampire");
+	SetFlags(0x00020000); // Lichtempfindlich
+	SetSRItem("ALL_VAM", 1);
+	SetSPA(1, "VAMP");
 }
