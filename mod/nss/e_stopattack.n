@@ -17,6 +17,12 @@ void main() {
 	} else
 		return;
 
+	if (is_dm(attacker))
+		return;
+
+	if (is_pc(attacker) && is_pc(attackee))
+		return;
+
 	if (GetReputation(attacker, attackee) >= 10) {
 		SetEventResult(EVENT_RESULT_SUPPRESS | EVENT_RESULT_STOP);
 
