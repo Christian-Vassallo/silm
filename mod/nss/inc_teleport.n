@@ -1,18 +1,38 @@
 void TransporterEffect(object oActivator, location oLocation);
+void DimdoorEffect(object oActivator, location lTarget);
 
-void teleport_effect_and_go(location target, float skew = 0.0);
+void teleport_effect_and_go(location target, float skew = 0.0, int dimdoor = false);
 
-void teleport_effect_and_go(location target, float skew = 0.0) {
+void teleport_effect_and_go(location target, float skew = 0.0, int dimdoor = false) {
 	ClearAllActions(1);
 
-	TransporterEffect(OBJECT_SELF, GetLocation(OBJECT_SELF));
+	if (dimdoor) {
+		DimdoorEffect(OBJECT_SELF, GetLocation(OBJECT_SELF));
+		DelayCommand(skew, DimdoorEffect(OBJECT_SELF, target));
+	} else {
+		TransporterEffect(OBJECT_SELF, GetLocation(OBJECT_SELF));
+		DelayCommand(skew, TransporterEffect(OBJECT_SELF, target));
+	}
 
-	DelayCommand(skew, TransporterEffect(OBJECT_SELF, target));
 	object invis = CreateObject(OBJECT_TYPE_PLACEABLE, "invisobj", target);
 	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(445), invis, skew + 3.0);
 	DestroyObject(invis, skew + 4.0);
 
-	DelayCommand(1.1, ActionJumpToLocation(target));
+	DelayCommand(1.1 + (dimdoor ? 2.0 : 0.0), ActionJumpToLocation(target));
+}
+
+void DimdoorEffect(object oActivator, location lTarget) {
+	DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(146),
+			lTarget));
+	DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_TEMPORARY, EffectVisualEffect(147),
+			lTarget, 2.0));
+
+	DelayCommand(0.7, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(149),
+			lTarget));
+	DelayCommand(1.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(149),
+			lTarget));
+	DelayCommand(1.3, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(149),
+			lTarget));
 }
 
 void TransporterEffect(object oActivator, location oLocation) {

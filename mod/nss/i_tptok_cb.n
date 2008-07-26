@@ -1,0 +1,44 @@
+extern("inc_lists")
+extern("inc_teleport")
+#include "inc_pgsql.nh"
+
+void main() {
+	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
+	object oWho = GetLocalObject(OBJECT_SELF, "tptok_target");
+	
+	string area;
+	float x,y,z,f;
+
+	int
+		iSelection = GetLocalInt(oPC, "ConvList_Select");
+
+	iSelection = GetListInt(oPC, "tptok", iSelection);
+	location lo;
+
+	AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
+
+	pQ("select area,x,y,z,f from locations where id = " + pSi(iSelection) + ";");
+	if (pF()) {
+		area = pGs(1); x = pGf(2); y = pGf(3); z = pGf(4); f = pGf(5);
+
+		object oarea = GetObjectByTag(area);
+		if (!GetIsObjectValid(oarea)) {
+			SendMessageToPC(oPC, "error: area set for location is invalid.");
+			return;
+		}
+
+		vector vec;
+		vec.x = x;
+		vec.y = y;
+		vec.z = z;
+		lo = Location(oarea, vec, f);
+
+		if (GetIsObjectValid(GetAreaFromLocation(lo)))
+			AssignCommand(oWho, teleport_effect_and_go(lo, 3.0));
+		else
+			FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
+
+	} else {
+		FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
+	}
+}

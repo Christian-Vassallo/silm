@@ -1,0 +1,66 @@
+extern("inc_events")
+extern("inc_teleport")
+extern("inc_lists")
+#include "inc_pgsql.nh"
+
+#define CONV_TAG "tptok"
+#define LOAD_SKEW 3.0
+
+int MakeDialog(object oPC, object oTeleportWhom);
+
+void DlgStart(object oPC, object Who);
+
+void DlgStart(object oPC, object Who) {
+	DeleteLocalInt(oPC, CONV_TAG + "_sel");
+	if ( !MakeDialog(oPC, Who) )
+		return;
+	AssignCommand(oPC, ActionStartConversation(oPC, "list_select", TRUE, TRUE));
+}
+
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	struct EventArguments a = GetEventArguments(e.serial);
+	object token = e.runnable;
+
+	if (e.ev != "item_freeactivate")
+		return;
+	
+	SetEventResult(EVENT_RESULT_SUPPRESS);
+	
+	if (is_creature(e.actedon)) {
+		DlgStart(e.actor, e.actedon);
+	} else if (GetAreaFromLocation(e.actedat) == GetArea(e.actor)) {
+		AssignCommand(e.actor, teleport_effect_and_go(e.actedat, 0.0, true));
+	} else {
+		FloatingTextStringOnCreature("Nichts passiert.", e.actor, false);
+	}
+}
+
+int MakeDialog(object oPC, object oTeleportWhom) {
+	ClearList(oPC, CONV_TAG);
+	SetLocalObject(oPC, CONV_TAG + "_target", oTeleportWhom);
+
+	int iSel = GetLocalInt(oPC, CONV_TAG + "_sel");
+
+	string sHeader = "Waehle deinen Zielpunkt:";
+
+	string area, name, lpt;
+	float x,y,z,f;
+	int id;
+	pQ("select l.area,x,y,z,f,l.name,l.id,a.name from locations l,areas a where a.tag = l.area order by a.name asc;");
+
+	while (pF()) {
+		area = pGs(1); x = pGf(2); y = pGf(3); z = pGf(4); f = pGf(5); name = pGs(8); id = pGi(7); lpt = pGs(6);
+
+		AddListItem(oPC, CONV_TAG, name + " (" + lpt + ")");
+		SetListInt(oPC, CONV_TAG, id);
+	}
+	
+	ResetConvList(oPC, oPC, CONV_TAG, 50000, "i_tptok_cb", sHeader);
+
+	return 1;
+}
+
+
+
