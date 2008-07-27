@@ -1,6 +1,13 @@
 extern("inc_events")
 extern("inc_cdb")
 extern("inc_scorco")
+extern("inc_nwnx_func")
+#include "factions.nh"
+
+bool is_faction_commoner(object creature) { return GetFactionID(creature) == FACTION_COMMONER; }
+bool is_faction_defender(object creature) { return GetFactionID(creature) == FACTION_DEFENDER; }
+bool is_faction_merchant(object creature) { return GetFactionID(creature) == FACTION_MERCHANT; }
+bool is_faction_hostile(object creature) { return GetFactionID(creature) == FACTION_HOSTILE; }
 
 void main() {
 	struct EventInfo e = GetEventInfo();
@@ -14,6 +21,9 @@ void main() {
 	} else if (e.ev == "creature_attacked") {
 		attacker = e.actor;
 		attackee = e.runnable;
+	} else if (e.ev == "creature_damaged") {
+		attacker = e.actor;
+		attackee = e.runnable;
 	} else
 		return;
 
@@ -23,7 +33,20 @@ void main() {
 	if (is_pc(attacker) && is_pc(attackee))
 		return;
 
-	if (GetReputation(attacker, attackee) >= 10) {
+	if (
+		(is_faction_commoner(attacker) && is_faction_defender(attackee)) ||
+		(is_faction_commoner(attacker) && is_faction_merchant(attackee)) ||
+
+		(is_faction_defender(attacker) && is_faction_commoner(attackee)) ||
+		(is_faction_defender(attacker) && is_faction_merchant(attackee)) ||
+
+		(is_faction_merchant(attacker) && is_faction_commoner(attackee)) ||
+		(is_faction_merchant(attacker) && is_faction_defender(attackee)) ||
+
+		(is_pc(attacker) && is_faction_commoner(attackee)) ||
+		(is_pc(attacker) && is_faction_defender(attackee)) ||
+		(is_pc(attacker) && is_faction_merchant(attackee))
+	) {
 		SetEventResult(EVENT_RESULT_SUPPRESS | EVENT_RESULT_STOP);
 
 		AssignCommand(attacker, ClearAllActions(1));
