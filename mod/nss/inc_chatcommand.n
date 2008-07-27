@@ -2726,9 +2726,6 @@ int CommandGetTargetChooser(object oPC, int iMode) {
 
 int CommandRestore(object oPC, int iMode) {
 	object oTarget = GetTarget();
-	if ( !is_creature(oTarget)  ) {
-		return NotifyBadTarget();
-	}
 
 	if (getopt_opt("s") ) {
 		effect e = GetFirstEffect(oTarget);
