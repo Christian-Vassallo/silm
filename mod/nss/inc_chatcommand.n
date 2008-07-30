@@ -2291,7 +2291,7 @@ int CommandShowObj(object oPC, int iMode) {
 	object o = GetFirstObjectInShape(SHAPE_SPHERE, fRange, GetLocation(oPC), FALSE, nType);
 	while ( GetIsObjectValid(o) ) {
 		sTag = GetTag(o);
-		if ( TestStringAgainstPattern(sTagMask, sTag) ) {
+		if ( !GetIsPC(o) && TestStringAgainstPattern(sTagMask, sTag) ) {
 			SendMessageToPC(oPC, GetName(o) + ", Tag: " + GetTag(o) + ", ResRef: " + GetResRef(o));
 			worth += GetGoldPieceValue(o);
 			c += 1;
@@ -2326,7 +2326,7 @@ int CommandKillObj(object oPC, int iMode) {
 	object o = GetFirstObjectInShape(SHAPE_SPHERE, fRange, GetLocation(oPC), FALSE, nType);
 	while ( GetIsObjectValid(o) ) {
 		sTag = GetTag(o);
-		if ( TestStringAgainstPattern(sTagMask, sTag) ) {
+		if ( !GetIsPC(o) && TestStringAgainstPattern(sTagMask, sTag) ) {
 			KillInventory(o);
 			KillPlacie(o, delay);
 			delay += 0.1;
