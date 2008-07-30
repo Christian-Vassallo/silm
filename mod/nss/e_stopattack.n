@@ -30,7 +30,7 @@ void main() {
 	if (is_dm(attacker))
 		return;
 
-	if (is_pc(attacker) && is_pc(attackee))
+	if (is_pc(attacker) && is_pc(attackee) && !GetIsDMPossessed(attacker) && !GetIsDMPossessed(attackee))
 		return;
 
 	if (
