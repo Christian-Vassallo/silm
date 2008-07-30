@@ -1,3 +1,4 @@
+extern("_gen")
 extern("inc_subr_ardefs")
 extern("inc_subr_teff")
 
@@ -39,12 +40,15 @@ void Fly_TakeOff(object oPC) {
 	eEff2 = EffectImmunity(IMMUNITY_TYPE_CRITICAL_HIT);
 	eEff1 = EffectLinkEffects(eEff2, eEff1);
 
+	effect ether = EffectEthereal();
+	ether = EffectLinkEffects(EffectFreedomOfMovement(), ether);
 
 	Fly_Effect(oPC);
 
 	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDisappear(), oPC);
 
 	DelayCommand(2.5f, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(eEff1), oPC));
+	DelayCommand(30f, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(ether), oPC));
 
 	SetLocalInt(oPC, "SR_Airborne", 1);
 }
@@ -55,6 +59,7 @@ void Fly_Land(object oPC, int iHard = FALSE) {
 	Fly_Effect(oPC);
 	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectAppear(), oPC);
 	SR_RemoveTempEffect(oPC, EFFECT_TYPE_MOVEMENT_SPEED_INCREASE);
+	SR_RemoveTempEffect(oPC, EFFECT_TYPE_ETHEREAL);
 	DeleteLocalInt(oPC, "SR_Airborne");
 
 	if ( iHard )

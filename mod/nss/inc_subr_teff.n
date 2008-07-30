@@ -1,9 +1,10 @@
-void SR_RemoveTempEffect(object oPC, int iEffType) {
+void SR_RemoveTempEffect(object oPC, int iEffType, int iEffSubType = -1) {
 	effect eEff = GetFirstEffect(oPC);
 
 	while ( GetIsEffectValid(eEff) ) {
 		if ( GetEffectSubType(eEff) == SUBTYPE_SUPERNATURAL
-			&& GetEffectType(eEff) == iEffType )
+			&& GetEffectType(eEff) == iEffType
+			&& (iEffSubType == -1 || iEffSubType == GetEffectSubType(eEff)) )
 			RemoveEffect(oPC, eEff);
 		eEff = GetNextEffect(oPC);
 	}
