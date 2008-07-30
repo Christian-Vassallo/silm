@@ -1,5 +1,6 @@
 // Dancing Lights
 extern("_gen")
+#include "_const.nh"
 
 /*
  * cast at oPC: Follow oPC, put in party
@@ -8,8 +9,6 @@ extern("_gen")
  */
 
 void main() {
-	object oPC = OBJECT_SELF;
-
 	object oTarget = GetSpellTargetObject();
 	location lTarget = GetSpellTargetLocation();
 
@@ -17,14 +16,16 @@ void main() {
 		lTarget = GetLocation(oTarget);
 
 	int nDC = GetSpellSaveDC(); // gets the DC required to save against the effects of the spell
-	int nLevel = GetCasterLevel(oPC); // gets the level the PC cast the spell as
+	int nLevel = GetCasterLevel(OBJECT_SELF); // gets the level the PC cast the spell as
 	int nMeta = GetMetaMagicFeat();
+	
+	if ( !GetIsPC(oTarget) )
+		oTarget = OBJECT_SELF;
+
+	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_DANCING_LIGHTS, FALSE));
 
 	object oLight = CreateObject(OBJECT_TYPE_CREATURE, "dancelight", lTarget, TRUE);
 	SetLocalInt(oLight, "dancelights_level", nLevel);
-
-	if ( !GetIsPC(oTarget) )
-		oTarget = oPC;
 
 	AddHenchman(oTarget, oLight);
 
