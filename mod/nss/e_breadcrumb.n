@@ -1,0 +1,31 @@
+extern("_gen")
+extern("inc_cdb")
+extern("inc_events")
+extern("nw_i0_generic")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "item_activate" && GetTag(e.runnable) == "breadcrumbbag") {
+		SendMessageToPC(e.actor, "Du laesst ein Brotkruemel fallen ..");
+		object breadcrumb = CreateObject(OBJECT_TYPE_ITEM, "breadcrumb", GetLocation(e.actor));
+		SetLocalInt(breadcrumb, "cid", GetCharacterID(e.actor));
+	}
+
+	if (e.ev == "creature_hb" && GetBehaviorState(NW_FLAG_BEHAVIOR_HERBIVORE)) {
+		if (GetIsInCombat())
+			return;
+
+		// Try to locate a breadcrumb near
+		object crumb = GetNearestObjectByTag("breadcrumb");
+		if (!is_valid(crumb))
+			return;
+
+		if (GetDistanceBetween(crumb, OBJECT_SELF) > 15f) // cant see or smell it
+			return;
+
+		ClearAllActions();
+		ActionPickUpItem(crumb);
+		ActionDoCommand(DestroyObject(crumb, 1.0f));
+	}
+}
