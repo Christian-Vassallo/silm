@@ -53,6 +53,10 @@ float GetElevationBetween(object oA, object oB);
 //  (Enemies ignore unconcious/down people)
 effect EffectUnconscious(int bConceal = FALSE);
 
+// Function: EffectFreedomOfMovement
+// Freedom Of Movement
+effect EffectFreedomOfMovement();
+
 // Function: SecondsToTimeDesc
 // Converts seconds to a time descriptor.
 // Example:
@@ -687,8 +691,16 @@ string SecondsToTimeDesc(int nSeconds) {
 	return sRet;
 }
 
-
-
+effect EffectFreedomOfMovement() {
+	effect eParal = EffectImmunity(IMMUNITY_TYPE_PARALYSIS);
+	effect eEntangle = EffectImmunity(IMMUNITY_TYPE_ENTANGLE);
+	effect eSlow = EffectImmunity(IMMUNITY_TYPE_SLOW);
+	effect eMove = EffectImmunity(IMMUNITY_TYPE_MOVEMENT_SPEED_DECREASE);
+	effect eLink = EffectLinkEffects(eParal, eEntangle);
+	eLink = EffectLinkEffects(eLink, eSlow);
+	eLink = EffectLinkEffects(eLink, eMove);
+	return eLink;
+}
 
 effect EffectUnconscious(int bConceal = FALSE) {
 	effect e = EffectSleep();
