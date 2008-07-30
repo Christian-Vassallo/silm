@@ -30,6 +30,12 @@ extern("x0_i0_treasure")
 extern("x0_i0_behavior")
 
 void main() {
+
+	// Event: creature_spawn
+	int ret = RunEventScriptsFor(GetEventSerial(), "creature_spawn", OBJECT_SELF, OBJECT_SELF, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+	if (ret & EVENT_RESULT_STOP)
+		return;
+
 	ExecuteScript("corpse_spawn", OBJECT_SELF);
 
 	// ***** Spawn-In Conditions ***** //
