@@ -97,14 +97,15 @@ int p_get_p_id(object o) {
 
 
 bool p_canpersist(object o) {
-	return 
+	return  !GetLocalInt(o, "do_not_persist") && (
 		GetIsPC(o) || GetIsDM(o) ||
 		GetObjectType(o) == OBJECT_TYPE_ITEM || (
 			GetObjectType(o) == OBJECT_TYPE_CREATURE && (
 				"x2_def_ondeath" == GetEventHandler(o, CREATURE_EVENT_DEATH) ||
 				"nw_c2_default7" == GetEventHandler(o, CREATURE_EVENT_DEATH)
 			)
-		);
+		)
+	);
 }
 
 int p_id(object o) {
