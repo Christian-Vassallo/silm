@@ -31,6 +31,40 @@ void main() {
 	int ret = RunEventScriptsFor(GetEventSerial(), "creature_hb", OBJECT_SELF, OBJECT_INVALID, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
 	if (ret & EVENT_RESULT_STOP)
 		return;
+	
+	// * if not runnning normal or better Ai then exit for performance reasons
+	if ( GetAILevel() == AI_LEVEL_VERY_LOW ) return;
+
+	if (
+		GetLocalInt(OBJECT_SELF, "sit_nearest")
+		&& GetLocalInt(GetArea(OBJECT_SELF), "placies_loaded")
+		&& (GetCurrentAction(OBJECT_SELF) == ACTION_INVALID || GetCurrentAction(OBJECT_SELF) == ACTION_WAIT)
+	) {
+		int n = 1;
+		object oChair = GetNearestObject(OBJECT_TYPE_PLACEABLE, OBJECT_SELF, n);
+		while ( GetIsObjectValid(oChair) ) {
+
+			if ( GetDistanceBetween(OBJECT_SELF, oChair) > 30.0 )
+				break;
+			if (
+				(
+					GetStringLeft(GetResRef(oChair), 4 + 1 + 5) == "move_chair" ||
+					GetResRef(oChair) == "chair" ||
+					GetResRef(oChair) == "chair_invisible"
+				) && !GetIsObjectValid(GetSittingCreature(oChair))
+			) {
+				ClearAllActions();
+				AssignCommand(OBJECT_SELF, ActionSit(oChair));
+				break;
+			}
+
+			n += 1;
+			oChair = GetNearestObject(OBJECT_TYPE_PLACEABLE, OBJECT_SELF, n);
+		}
+	}
+
+	if (GetLocalInt(OBJECT_SELF, "sit_nearest"))
+		return;
 
 	if (gvGetInt("persist_critters") && !GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF)) {
 		// Only save every two minutes at most
@@ -42,30 +76,6 @@ void main() {
 		
 		slv_i(OBJECT_SELF, "p_hb_cycle", lv_i(OBJECT_SELF, "p_hb_cycle") + 1);
 	}
-
-	//FIXME placeables spawned dynamically will not be available when the critter spawns
-	if ( GetLocalInt(OBJECT_SELF, "sit_nearest")
-		&& ( GetCurrentAction() != ACTION_SIT ) && GetLocalInt(GetArea(OBJECT_SELF), "placies_loaded") ) {
-		int n = 1;
-		object oChair = GetNearestObject(OBJECT_TYPE_PLACEABLE, OBJECT_SELF, n);
-		while ( GetIsObjectValid(oChair) ) {
-
-			if ( GetDistanceBetween(OBJECT_SELF, oChair) > 30.0 )
-				break;
-
-			if ( GetStringLeft(GetResRef(oChair), 4 + 1 + 5) == "move_chair" &&
-				!GetIsObjectValid(GetSittingCreature(oChair)) ) {
-				ClearAllActions();
-				ActionSit(oChair);
-			}
-
-			n += 1;
-			oChair = GetNearestObject(OBJECT_TYPE_PLACEABLE, OBJECT_SELF, n);
-		}
-	}
-
-	// * if not runnning normal or better Ai then exit for performance reasons
-	if ( GetAILevel() == AI_LEVEL_VERY_LOW ) return;
 
 
 	// Buff ourselves up right away if we should
