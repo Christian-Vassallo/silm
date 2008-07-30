@@ -21,6 +21,7 @@ extern("nw_i0_generic")
 extern("inc_summonai")
 extern("inc_scorco")
 extern("inc_events")
+extern("_gen")
 
 void main() {
 
@@ -44,7 +45,7 @@ void main() {
 
 	//FIXME placeables spawned dynamically will not be available when the critter spawns
 	if ( GetLocalInt(OBJECT_SELF, "sit_nearest")
-		&& ( GetCurrentAction() != ACTION_SIT ) ) {
+		&& ( GetCurrentAction() != ACTION_SIT ) && GetLocalInt(GetArea(OBJECT_SELF), "placies_loaded") ) {
 		int n = 1;
 		object oChair = GetNearestObject(OBJECT_TYPE_PLACEABLE, OBJECT_SELF, n);
 		while ( GetIsObjectValid(oChair) ) {
