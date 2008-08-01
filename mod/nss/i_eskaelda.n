@@ -1,12 +1,14 @@
 extern("inc_events")
 extern("inc_teleport")
 extern("inc_lists")
+extern("inc_cdb")
 
 #define CONV_TAG "eskaelda"
 #define INSIDE_LOAD_SKEW 3.5
 #define OUTSIDE_LOAD_SKEW 2.5
 #define INSIDE_POINT GetLocation(GetWaypointByTag("wp_eskaelda"))
 #define OUTSIDE_POINT Location(GetObjectByTag("gabel_wald_1"), Vector(68.6,41.1,0.0), 59.6)
+#define IS_KEYED true
 
 int MakeDialog(object oPC, object oTeleportWhom);
 void DlgStart(object oPC, object Who);
@@ -38,6 +40,11 @@ void main() {
 		return;
 
 	if (!is_creature(e.actor)) {
+		FloatingTextStringOnCreature("Nichts passiert.", e.actor, false);
+		return;
+	}
+	
+	if (IS_KEYED && GetCharacterID(e.actor) != GetLocalInt(token, "eskaelda_key_cid")) {
 		FloatingTextStringOnCreature("Nichts passiert.", e.actor, false);
 		return;
 	}
