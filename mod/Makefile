@@ -141,31 +141,17 @@ clean-local:
 
 local: path
 	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH).mod $(VALIDEXT)
+	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-dev.mod $(VALIDEXTDEV)
+	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-player.mod $(VALIDEXTPLAYER)
 
-dev-local: path
-	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-dev-r$(commit).mod $(VALIDEXTDEV)
-	tar -czf $(NWNMODNAME)-$(BRANCH)-dev-r$(commit).tgz $(NWNMODNAME)-dev-r$(commit).mod && \
-		rm $(NWNMODNAME)-dev-r$(commit).mod
-
-player-local: path
-	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-player-r$(commit).mod $(VALIDEXTPLAYER)
-	tar -czf $(NWNMODNAME)-$(BRANCH)-player-r$(commit).tgz $(NWNMODNAME)-player-r$(commit).mod && \
-		rm $(NWNMODNAME)-$(BRANCH)-player-r$(commit).mod
-
-builder-local: path
-	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-builder-r$(commit).mod $(VALIDEXTBUILDER)
-	tar -czf $(NWNMODNAME)-$(BRANCH)-builder-r$(commit).tgz $(NWNMODNAME)-builder-r$(commit).mod && \
-		rm $(NWNMODNAME)-$(BRANCH)-builder-r$(commit).mod
-
+tar:
+	tar -czf $(NWNMODNAME)-$(BRANCH).tgz $(NWNMODNAME)-$(BRANCH).mod
+	tar -czf $(NWNMODNAME)-$(BRANCH)-dev.tgz $(NWNMODNAME)-$(BRANCH)-dev.mod
+	tar -czf $(NWNMODNAME)-$(BRANCH)-player.tgz $(NWNMODNAME)-$(BRANCH)-player.mod
 
 # generates a new package with the current commit
 package: path uti utp utc ifo itp scripts local
-dev-package: path uti utp utc ifo itp dev-local
-player-package: path uti utp utc ifo itp player-local
-builder-package: path uti utp utc ifo itp builder-local
 
 # installs all packaged in the relevant directories
 install: 
-	cp -v $(NWNMODNAME)-$(BRANCH).mod $(NWNHOME)/modules/
-
-
+	cp -v $(NWNMODNAME)-$(BRANCH).mod $(NWNMODNAME)-$(BRANCH)-dev.mod $(NWNMODNAME)-$(BRANCH)-player.mod $(NWNHOME)/modules/
