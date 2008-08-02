@@ -1,5 +1,3 @@
-all: documentation
-
 mod:
 	make -C mod all
 
@@ -10,3 +8,6 @@ documentation:
 		-xi build \
 		-xi linnwnx2 \
 	-s sternenfall -p naturaldocs-project
+
+hak:
+	make -C hak all
