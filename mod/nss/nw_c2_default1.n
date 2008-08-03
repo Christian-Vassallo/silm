@@ -44,6 +44,9 @@ void main() {
 		object oChair = GetNearestObject(OBJECT_TYPE_PLACEABLE, OBJECT_SELF, n);
 		while ( GetIsObjectValid(oChair) ) {
 
+			if (GetSittingCreature(oChair) == OBJECT_SELF)
+				return;
+
 			if ( GetDistanceBetween(OBJECT_SELF, oChair) > 30.0 )
 				break;
 			if (
