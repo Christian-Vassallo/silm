@@ -529,6 +529,7 @@ void RegisterAllCommands() {
 	// - persist=bool: persist this creature
 	// - inv: open inventory
 	RegisterCommand("cr", "i= c= phenotype= subrace= wings= tail= bp= portrait= race= faction= persist= inv", 0, 0);
+	RAF(AMASK_GM);
 	RH("ToDo.");
 
 	
@@ -537,12 +538,14 @@ void RegisterAllCommands() {
 	// Parameters:
 	// - int: [id]
 	RegisterCommand("app", "", 0, 1);
+	RAF(AMASK_GM);
 	
 	// Chatcommand: pht
 	// Get/set phenotype. DEPRECATED, use /cr.
 	// Parameters:
 	// - int: [id]
 	RegisterCommand("pht", "", 0, 1);
+	RAF(AMASK_GM);
 	
 	// Chatcommand: subrace
 	// Gets/changes subrace. DEPRECATED, use /cr.
@@ -559,20 +562,24 @@ void RegisterAllCommands() {
 	RegisterCommand("bp", "", 1, 2);
 	RHs("creature_part_const [newvalue] >> Sets a bodypart on the selected target", 1);
 	RH("Check /showconst creature for a list of CREATURE_PARTs");
+	RAF(AMASK_GM);
 
 	
 	// Chatcommand: wings
 	RegisterCommand("wings", "", 0, 1);
 	RHs("[wing_type] >> Gets/Sets the wings on the selected target", 1);
+	RAF(AMASK_GM);
 
 	
 	// Chatcommand: tail
 	RegisterCommand("tail", "", 0, 1);
 	RHs("[tail_type] >> Gets/Sets the tail on the selected target", 1);
+	RAF(AMASK_GM);
 	
 	// Chatcommand: portrait
 	RegisterCommand("portrait", "", 0, 1);
 	RHs("[new_portrait_resref] >> Gets/Sets the portrait", 1);
+	RAF(AMASK_GM);
 
 	
 	// Chatcommand: it
