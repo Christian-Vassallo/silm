@@ -69,7 +69,7 @@ LISTHOME=$(HOME)/autogen
 
 
 # the holy grail
-all: package dev-local player-local builder-local
+all: package
 
 path:
 ifeq  "$(NWNHOME)" ""
