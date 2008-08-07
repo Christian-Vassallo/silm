@@ -1,5 +1,5 @@
 # This Makefile depends on some of NWNs resource files.
-# In order to compile anything, you need NWN installed, 
+# In order to compile anything, you need NWN installed,
 # and set this environment variable to the path. You can
 # do this outside of make by exporting it in your shell
 # environment. Example:
@@ -34,7 +34,7 @@ VALIDEXT=area/\*.git area/\*.are \
 	itp/\*.itp ssf/\*.ssf \
 	mod/\*.fac mod/\*.ifo mod/\*.jrl \
 	`find uti -iname *.uti` \
- 	nss/\*.ncs 
+ 	nss/\*.ncs
 
 # This gets packaged into a developer package, which has
 # ALL content.
@@ -67,8 +67,7 @@ LISTHOME=$(HOME)/autogen
 # Now type "make all" and hope for the best. :)
 # To generate the package lists, type "make lists". (optional!)
 
-
-# the holy grail
+.PHONY: all path
 all: package
 
 path:
@@ -85,73 +84,86 @@ ifeq "$(NWNMODNAME)" ""
 	exit 1
 endif
 
-scripts: path
-	$(MAKE) -j 2 -C nss
+.PHONY: area
+area:
+	$(MAKE) -C area all
 
-deploy:
-	$(MAKE) -C nss deploy
+.PHONY: dlg
+dlg:
+	$(MAKE) -C dlg all
 
-clean-deploy:
-	rm -rf $(NWNHOME)/res/*
-
-lists: path
-	for i in $(LISTS); do gen_resref.rb $${i}.marshal $${i}/*.$${i} && \
-		process_resref.rb $${i}.marshal $${i}.marshal.txt; \
-	done
-	gen_resref.rb are.marshal area/*.are && \
-		process_resref.rb are.marshal are.marshal.txt;
-
-lists_install:
-	for i in $(LISTS); do \
-		cp -v $${i}.marshal $(LISTHOME) && \
-		cp -v $${i}.marshal.txt $(LISTHOME); \
-	done
-	
-
-unused-dlg:
-	find-unused-conversations.pl -v dlg/*.dlg nss/*.nss area/*.git utc/*.utc
-
-unused-nss:
-	$(MAKE) -C nss unused
-
-ifo:
-	$(MAKE) -C mod ifo
-
-itp:
-	$(MAKE) -C itp all
-
-uti:
-	$(MAKE) -C uti recipes
-
-utp:
-	$(MAKE) -C utp all
-utc:
+.PHONY: utc
+utc: dlg
 	$(MAKE) -C utc all
 
-uncrustify:
-	$(MAKE) -C nss uncrustify
+.PHONY: uti
+uti:
+	$(MAKE) -C uti all
+
+.PHONY: utd
+utd:
+	$(MAKE) -C utd all
+
+.PHONY: ute
+ute:
+	$(MAKE) -C ute all
+
+.PHONY: utm
+utm:
+	$(MAKE) -C utm all
+
+.PHONY: utp
+utp:
+	$(MAKE) -C utp all
+
+.PHONY: uts
+uts:
+	$(MAKE) -C uts all
+
+.PHONY: utt
+utt:
+	$(MAKE) -C utt all
+
+.PHONY: utw
+utw:
+	$(MAKE) -C utw all
+
+.PHONY: ssf
+ssf:
+	$(MAKE) -C ssf all
+
+.PHONY: mod
+mod: area
+	$(MAKE) -C mod all
+
+.PHONY: itp
+itp: utc utd ute uti utp uts utm utt utw
+	$(MAKE) -C itp all
+
+.PHONY: scripts
+scripts: path
+	$(MAKE) -C nss
 
 clean:
-	$(MAKE) -C nss clean 
+	$(MAKE) -C nss clean
 	-rm *.mod
 
-# remove older packages
-clean-local:
-	-rm $(NWNMODNAME)-$(BRANCH)-{dev,builder,player}-r*.tgz
+.PHONY: resources
+resources: area dlg utc uti utd ute utm utp uts utt utw ssf mod itp scripts
 
-local: path
+local: resources
 	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH).mod $(VALIDEXT)
 	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-dev.mod $(VALIDEXTDEV)
 	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-player.mod $(VALIDEXTPLAYER)
 
-tar:
+tar: local
 	tar -czf $(NWNMODNAME)-$(BRANCH).tgz $(NWNMODNAME)-$(BRANCH).mod
 	tar -czf $(NWNMODNAME)-$(BRANCH)-dev.tgz $(NWNMODNAME)-$(BRANCH)-dev.mod
 	tar -czf $(NWNMODNAME)-$(BRANCH)-player.tgz $(NWNMODNAME)-$(BRANCH)-player.mod
 
 # generates a new package with the current commit
-package: path uti utp utc ifo itp scripts local
+package: path local
 
 # installs all packaged in the relevant directories
-install: 
+install:
 	cp -v $(NWNMODNAME)-$(BRANCH).mod $(NWNMODNAME)-$(BRANCH)-dev.mod $(NWNMODNAME)-$(BRANCH)-player.mod $(NWNHOME)/modules/

@@ -1,0 +1,666 @@
+--- !ruby/object:NWN::Gff::Gff 
+type: "GIT "
+version: V3.2
+hash: !ruby/object:NWN::Gff::Struct 
+  hash: 
+    AreaProperties: !ruby/object:NWN::Gff::Element 
+      label: AreaProperties
+      type: :struct
+      value: !ruby/object:NWN::Gff::Struct 
+        hash: 
+          AmbientSndDay: !ruby/object:NWN::Gff::Element {label: AmbientSndDay, type: :int, value: 0}
+          AmbientSndDayVol: !ruby/object:NWN::Gff::Element {label: AmbientSndDayVol, type: :int, value: 12}
+          AmbientSndNight: !ruby/object:NWN::Gff::Element {label: AmbientSndNight, type: :int, value: 0}
+          AmbientSndNitVol: !ruby/object:NWN::Gff::Element {label: AmbientSndNitVol, type: :int, value: 127}
+          EnvAudio: !ruby/object:NWN::Gff::Element {label: EnvAudio, type: :int, value: 0}
+          MusicBattle: !ruby/object:NWN::Gff::Element {label: MusicBattle, type: :int, value: 0}
+          MusicDay: !ruby/object:NWN::Gff::Element {label: MusicDay, type: :int, value: 0}
+          MusicDelay: !ruby/object:NWN::Gff::Element {label: MusicDelay, type: :int, value: 0}
+          MusicNight: !ruby/object:NWN::Gff::Element {label: MusicNight, type: :int, value: 0}
+        struct_id: 100
+    Creature List: !ruby/object:NWN::Gff::Element 
+      label: Creature List
+      type: :list
+      value: []
+
+    Door List: !ruby/object:NWN::Gff::Element 
+      label: Door List
+      type: :list
+      value: 
+      - !ruby/object:NWN::Gff::Struct 
+        hash: 
+          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 1}
+          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 54}
+          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
+          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -1.5707950592041}
+          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
+          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
+          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 80}
+          Description: !ruby/object:NWN::Gff::Element 
+            label: Description
+            str_ref: 4294967295
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: {}
+
+          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
+          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
+          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
+          GenericType: !ruby/object:NWN::Gff::Element {label: GenericType, type: :byte, value: 0}
+          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 80}
+          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
+          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
+          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
+          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
+          LinkedTo: !ruby/object:NWN::Gff::Element {label: LinkedTo, type: :cexostr, value: ""}
+          LinkedToFlags: !ruby/object:NWN::Gff::Element {label: LinkedToFlags, type: :byte, value: 0}
+          LoadScreenID: !ruby/object:NWN::Gff::Element {label: LoadScreenID, type: :word, value: 0}
+          LocName: !ruby/object:NWN::Gff::Element 
+            label: LocName
+            str_ref: 5349
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: {}
+
+          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
+          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
+          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
+          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
+          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
+          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: door_death}
+          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
+          OnFailToOpen: !ruby/object:NWN::Gff::Element {label: OnFailToOpen, type: :resref, value: door_failtoopen}
+          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: door_hb}
+          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: door_lockunlock}
+          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
+          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
+          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
+          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
+          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: door_lockunlock}
+          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
+          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
+          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 0}
+          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 0}
+          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
+          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: ForestExit}
+          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: nw_door_ttr_25}
+          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
+          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
+          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
+          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
+          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
+          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
+          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
+          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 97.3600006103516}
+          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 18.1399993896484}
+          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.0}
+        struct_id: 8
+    Encounter List: !ruby/object:NWN::Gff::Element 
+      label: Encounter List
+      type: :list
+      value: []
+
+    List: !ruby/object:NWN::Gff::Element 
+      label: List
+      type: :list
+      value: []
+
+    Placeable List: !ruby/object:NWN::Gff::Element 
+      label: Placeable List
+      type: :list
+      value: 
+      - !ruby/object:NWN::Gff::Struct 
+        hash: 
+          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
+          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 1240}
+          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
+          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -2.6752610206604}
+          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
+          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
+          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
+          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 10000}
+          Description: !ruby/object:NWN::Gff::Element 
+            label: Description
+            str_ref: 4294967295
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: {}
+
+          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 0}
+          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
+          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 5}
+          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 10000}
+          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
+          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
+          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
+          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
+          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
+          LocName: !ruby/object:NWN::Gff::Element 
+            label: LocName
+            str_ref: 4294967295
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: 
+                4: "Felsbrocken mit Einschl\xFCssen"
+                5: "Felsbrocken mit Einschl\xFCssen"
+          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 1}
+          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
+          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
+          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
+          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
+          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: tms_death_spawn}
+          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
+          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
+          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
+          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
+          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: dispenser_bash}
+          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
+          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
+          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
+          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
+          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
+          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
+          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 0}
+          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 0}
+          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 0}
+          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
+          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 0}
+          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: Disp_MINEROCK}
+          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: disp_mine7}
+          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
+          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
+          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
+          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
+          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
+          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
+          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
+          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 1}
+          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
+          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 90.0320587158203}
+          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 5.80889749526978}
+          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.00143051147460938}
+        struct_id: 9
+      - !ruby/object:NWN::Gff::Struct 
+        hash: 
+          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
+          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 1240}
+          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
+          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -2.30710506439209}
+          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
+          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
+          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
+          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 10000}
+          Description: !ruby/object:NWN::Gff::Element 
+            label: Description
+            str_ref: 4294967295
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: {}
+
+          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 0}
+          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
+          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 5}
+          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 10000}
+          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
+          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
+          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
+          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
+          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
+          LocName: !ruby/object:NWN::Gff::Element 
+            label: LocName
+            str_ref: 4294967295
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: 
+                4: "Felsbrocken mit Einschl\xFCssen"
+                5: "Felsbrocken mit Einschl\xFCssen"
+          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 1}
+          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
+          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
+          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
+          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
+          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: tms_death_spawn}
+          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
+          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
+          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
+          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
+          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: dispenser_bash}
+          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
+          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
+          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
+          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
+          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
+          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
+          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 0}
+          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 0}
+          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 0}
+          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
+          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 0}
+          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: Disp_MINEROCK}
+          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: disp_mine7}
+          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
+          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
+          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
+          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
+          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
+          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
+          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
+          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 1}
+          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
+          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 94.0425796508789}
+          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 11.0738382339478}
+          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: -5.7220458984375e-06}
+        struct_id: 9
+      - !ruby/object:NWN::Gff::Struct 
+        hash: 
+          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
+          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 1240}
+          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
+          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -1.52170777320862}
+          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
+          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
+          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
+          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 10000}
+          Description: !ruby/object:NWN::Gff::Element 
+            label: Description
+            str_ref: 4294967295
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: {}
+
+          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 0}
+          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
+          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 5}
+          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 10000}
+          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
+          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
+          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
+          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
+          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
+          LocName: !ruby/object:NWN::Gff::Element 
+            label: LocName
+            str_ref: 4294967295
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: 
+                4: "Felsbrocken mit Einschl\xFCssen"
+                5: "Felsbrocken mit Einschl\xFCssen"
+          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 1}
+          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
+          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
+          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
+          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
+          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: tms_death_spawn}
+          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
+          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
+          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
+          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
+          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: dispenser_bash}
+          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
+          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
+          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
+          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
+          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
+          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
+          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 0}
+          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 0}
+          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 0}
+          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
+          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 0}
+          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: Disp_MINEROCK}
+          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: disp_mine7}
+          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
+          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
+          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
+          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
+          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
+          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
+          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
+          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 1}
+          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
+          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 94.2528610229492}
+          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 27.061071395874}
+          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: -5.7220458984375e-06}
+        struct_id: 9
+      - !ruby/object:NWN::Gff::Struct 
+        hash: 
+          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
+          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 1240}
+          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
+          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -2.6752610206604}
+          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
+          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
+          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
+          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 10000}
+          Description: !ruby/object:NWN::Gff::Element 
+            label: Description
+            str_ref: 4294967295
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: {}
+
+          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 0}
+          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
+          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 5}
+          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 10000}
+          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
+          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
+          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
+          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
+          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
+          LocName: !ruby/object:NWN::Gff::Element 
+            label: LocName
+            str_ref: 4294967295
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: 
+                4: "Felsbrocken mit Einschl\xFCssen"
+                5: "Felsbrocken mit Einschl\xFCssen"
+          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 1}
+          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
+          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
+          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
+          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
+          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: tms_death_spawn}
+          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
+          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
+          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
+          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
+          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: dispenser_bash}
+          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
+          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
+          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
+          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
+          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
+          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
+          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 0}
+          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 0}
+          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 0}
+          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
+          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 0}
+          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: Disp_MINEROCK}
+          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: disp_mine7}
+          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
+          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
+          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
+          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
+          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
+          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
+          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
+          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 1}
+          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
+          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 83.9721527099609}
+          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 4.0387601852417}
+          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: -5.7220458984375e-06}
+        struct_id: 9
+    SoundList: !ruby/object:NWN::Gff::Element 
+      label: SoundList
+      type: :list
+      value: 
+      - !ruby/object:NWN::Gff::Struct 
+        hash: 
+          Active: !ruby/object:NWN::Gff::Element {label: Active, type: :byte, value: 1}
+          Continuous: !ruby/object:NWN::Gff::Element {label: Continuous, type: :byte, value: 0}
+          Elevation: !ruby/object:NWN::Gff::Element {label: Elevation, type: :float, value: 1.5}
+          GeneratedType: !ruby/object:NWN::Gff::Element {label: GeneratedType, type: :dword, value: 0}
+          Hours: !ruby/object:NWN::Gff::Element {label: Hours, type: :dword, value: 0}
+          Interval: !ruby/object:NWN::Gff::Element {label: Interval, type: :dword, value: 0}
+          IntervalVrtn: !ruby/object:NWN::Gff::Element {label: IntervalVrtn, type: :dword, value: 0}
+          LocName: !ruby/object:NWN::Gff::Element 
+            label: LocName
+            str_ref: 68000
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: 
+                4: "Quaken (Kr\xF6ten/ Schleife)"
+                5: "Quaken (Kr\xF6ten/ Schleife)"
+          Looping: !ruby/object:NWN::Gff::Element {label: Looping, type: :byte, value: 1}
+          MaxDistance: !ruby/object:NWN::Gff::Element {label: MaxDistance, type: :float, value: 10.0}
+          MinDistance: !ruby/object:NWN::Gff::Element {label: MinDistance, type: :float, value: 1.0}
+          PitchVariation: !ruby/object:NWN::Gff::Element {label: PitchVariation, type: :float, value: 0.0}
+          Positional: !ruby/object:NWN::Gff::Element {label: Positional, type: :byte, value: 0}
+          Priority: !ruby/object:NWN::Gff::Element {label: Priority, type: :byte, value: 2}
+          Random: !ruby/object:NWN::Gff::Element {label: Random, type: :byte, value: 0}
+          RandomPosition: !ruby/object:NWN::Gff::Element {label: RandomPosition, type: :byte, value: 0}
+          RandomRangeX: !ruby/object:NWN::Gff::Element {label: RandomRangeX, type: :float, value: 0.0}
+          RandomRangeY: !ruby/object:NWN::Gff::Element {label: RandomRangeY, type: :float, value: 0.0}
+          Sounds: !ruby/object:NWN::Gff::Element 
+            label: Sounds
+            type: :list
+            value: 
+            - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: al_an_toads1}}, struct_id: 0}
+          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: ToadsLoop}
+          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: toadsloop001}
+          Times: !ruby/object:NWN::Gff::Element {label: Times, type: :byte, value: 3}
+          Volume: !ruby/object:NWN::Gff::Element {label: Volume, type: :byte, value: 127}
+          VolumeVrtn: !ruby/object:NWN::Gff::Element {label: VolumeVrtn, type: :byte, value: 0}
+          XPosition: !ruby/object:NWN::Gff::Element {label: XPosition, type: :float, value: 72.9333724975586}
+          YPosition: !ruby/object:NWN::Gff::Element {label: YPosition, type: :float, value: 36.4774131774902}
+          ZPosition: !ruby/object:NWN::Gff::Element {label: ZPosition, type: :float, value: 1.00725173950195}
+        struct_id: 6
+      - !ruby/object:NWN::Gff::Struct 
+        hash: 
+          Active: !ruby/object:NWN::Gff::Element {label: Active, type: :byte, value: 1}
+          Continuous: !ruby/object:NWN::Gff::Element {label: Continuous, type: :byte, value: 1}
+          Elevation: !ruby/object:NWN::Gff::Element {label: Elevation, type: :float, value: 1.5}
+          GeneratedType: !ruby/object:NWN::Gff::Element {label: GeneratedType, type: :dword, value: 0}
+          Hours: !ruby/object:NWN::Gff::Element {label: Hours, type: :dword, value: 0}
+          Interval: !ruby/object:NWN::Gff::Element {label: Interval, type: :dword, value: 15000}
+          IntervalVrtn: !ruby/object:NWN::Gff::Element {label: IntervalVrtn, type: :dword, value: 5000}
+          LocName: !ruby/object:NWN::Gff::Element 
+            label: LocName
+            str_ref: 67999
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: 
+                4: "Kr\xF6te"
+                5: "Kr\xF6te"
+          Looping: !ruby/object:NWN::Gff::Element {label: Looping, type: :byte, value: 0}
+          MaxDistance: !ruby/object:NWN::Gff::Element {label: MaxDistance, type: :float, value: 10.0}
+          MinDistance: !ruby/object:NWN::Gff::Element {label: MinDistance, type: :float, value: 1.0}
+          PitchVariation: !ruby/object:NWN::Gff::Element {label: PitchVariation, type: :float, value: 0.200000002980232}
+          Positional: !ruby/object:NWN::Gff::Element {label: Positional, type: :byte, value: 1}
+          Priority: !ruby/object:NWN::Gff::Element {label: Priority, type: :byte, value: 20}
+          Random: !ruby/object:NWN::Gff::Element {label: Random, type: :byte, value: 0}
+          RandomPosition: !ruby/object:NWN::Gff::Element {label: RandomPosition, type: :byte, value: 1}
+          RandomRangeX: !ruby/object:NWN::Gff::Element {label: RandomRangeX, type: :float, value: 10.0}
+          RandomRangeY: !ruby/object:NWN::Gff::Element {label: RandomRangeY, type: :float, value: 10.0}
+          Sounds: !ruby/object:NWN::Gff::Element 
+            label: Sounds
+            type: :list
+            value: 
+            - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_toad1}}, struct_id: 0}
+          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: Toad}
+          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: toad001}
+          Times: !ruby/object:NWN::Gff::Element {label: Times, type: :byte, value: 3}
+          Volume: !ruby/object:NWN::Gff::Element {label: Volume, type: :byte, value: 127}
+          VolumeVrtn: !ruby/object:NWN::Gff::Element {label: VolumeVrtn, type: :byte, value: 0}
+          XPosition: !ruby/object:NWN::Gff::Element {label: XPosition, type: :float, value: 72.6690521240234}
+          YPosition: !ruby/object:NWN::Gff::Element {label: YPosition, type: :float, value: 74.2666549682617}
+          ZPosition: !ruby/object:NWN::Gff::Element {label: ZPosition, type: :float, value: 1.02468252182007}
+        struct_id: 6
+      - !ruby/object:NWN::Gff::Struct 
+        hash: 
+          Active: !ruby/object:NWN::Gff::Element {label: Active, type: :byte, value: 1}
+          Continuous: !ruby/object:NWN::Gff::Element {label: Continuous, type: :byte, value: 1}
+          Elevation: !ruby/object:NWN::Gff::Element {label: Elevation, type: :float, value: 1.5}
+          GeneratedType: !ruby/object:NWN::Gff::Element {label: GeneratedType, type: :dword, value: 0}
+          Hours: !ruby/object:NWN::Gff::Element {label: Hours, type: :dword, value: 0}
+          Interval: !ruby/object:NWN::Gff::Element {label: Interval, type: :dword, value: 15000}
+          IntervalVrtn: !ruby/object:NWN::Gff::Element {label: IntervalVrtn, type: :dword, value: 5000}
+          LocName: !ruby/object:NWN::Gff::Element 
+            label: LocName
+            str_ref: 67863
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: 
+                4: Frosch
+                5: Frosch
+          Looping: !ruby/object:NWN::Gff::Element {label: Looping, type: :byte, value: 0}
+          MaxDistance: !ruby/object:NWN::Gff::Element {label: MaxDistance, type: :float, value: 10.0}
+          MinDistance: !ruby/object:NWN::Gff::Element {label: MinDistance, type: :float, value: 1.0}
+          PitchVariation: !ruby/object:NWN::Gff::Element {label: PitchVariation, type: :float, value: 0.200000002980232}
+          Positional: !ruby/object:NWN::Gff::Element {label: Positional, type: :byte, value: 1}
+          Priority: !ruby/object:NWN::Gff::Element {label: Priority, type: :byte, value: 20}
+          Random: !ruby/object:NWN::Gff::Element {label: Random, type: :byte, value: 0}
+          RandomPosition: !ruby/object:NWN::Gff::Element {label: RandomPosition, type: :byte, value: 1}
+          RandomRangeX: !ruby/object:NWN::Gff::Element {label: RandomRangeX, type: :float, value: 10.0}
+          RandomRangeY: !ruby/object:NWN::Gff::Element {label: RandomRangeY, type: :float, value: 10.0}
+          Sounds: !ruby/object:NWN::Gff::Element 
+            label: Sounds
+            type: :list
+            value: 
+            - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_frog1}}, struct_id: 0}
+          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: Frog}
+          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: frog001}
+          Times: !ruby/object:NWN::Gff::Element {label: Times, type: :byte, value: 3}
+          Volume: !ruby/object:NWN::Gff::Element {label: Volume, type: :byte, value: 112}
+          VolumeVrtn: !ruby/object:NWN::Gff::Element {label: VolumeVrtn, type: :byte, value: 30}
+          XPosition: !ruby/object:NWN::Gff::Element {label: XPosition, type: :float, value: 77.9979934692383}
+          YPosition: !ruby/object:NWN::Gff::Element {label: YPosition, type: :float, value: 41.678466796875}
+          ZPosition: !ruby/object:NWN::Gff::Element {label: ZPosition, type: :float, value: 1.45296251773834}
+        struct_id: 6
+      - !ruby/object:NWN::Gff::Struct 
+        hash: 
+          Active: !ruby/object:NWN::Gff::Element {label: Active, type: :byte, value: 1}
+          Continuous: !ruby/object:NWN::Gff::Element {label: Continuous, type: :byte, value: 1}
+          Elevation: !ruby/object:NWN::Gff::Element {label: Elevation, type: :float, value: 1.5}
+          GeneratedType: !ruby/object:NWN::Gff::Element {label: GeneratedType, type: :dword, value: 0}
+          Hours: !ruby/object:NWN::Gff::Element {label: Hours, type: :dword, value: 0}
+          Interval: !ruby/object:NWN::Gff::Element {label: Interval, type: :dword, value: 25000}
+          IntervalVrtn: !ruby/object:NWN::Gff::Element {label: IntervalVrtn, type: :dword, value: 5000}
+          LocName: !ruby/object:NWN::Gff::Element 
+            label: LocName
+            str_ref: 68041
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: 
+                4: Klopfen (Specht)
+                5: Klopfen (Specht)
+          Looping: !ruby/object:NWN::Gff::Element {label: Looping, type: :byte, value: 0}
+          MaxDistance: !ruby/object:NWN::Gff::Element {label: MaxDistance, type: :float, value: 10.0}
+          MinDistance: !ruby/object:NWN::Gff::Element {label: MinDistance, type: :float, value: 1.0}
+          PitchVariation: !ruby/object:NWN::Gff::Element {label: PitchVariation, type: :float, value: 0.200000002980232}
+          Positional: !ruby/object:NWN::Gff::Element {label: Positional, type: :byte, value: 0}
+          Priority: !ruby/object:NWN::Gff::Element {label: Priority, type: :byte, value: 19}
+          Random: !ruby/object:NWN::Gff::Element {label: Random, type: :byte, value: 1}
+          RandomPosition: !ruby/object:NWN::Gff::Element {label: RandomPosition, type: :byte, value: 0}
+          RandomRangeX: !ruby/object:NWN::Gff::Element {label: RandomRangeX, type: :float, value: 10.0}
+          RandomRangeY: !ruby/object:NWN::Gff::Element {label: RandomRangeY, type: :float, value: 10.0}
+          Sounds: !ruby/object:NWN::Gff::Element 
+            label: Sounds
+            type: :list
+            value: 
+            - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_woodpeckr1}}, struct_id: 0}
+            - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_woodpeckr2}}, struct_id: 0}
+          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: WoodpeckerPecks}
+          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: woodpecker001}
+          Times: !ruby/object:NWN::Gff::Element {label: Times, type: :byte, value: 3}
+          Volume: !ruby/object:NWN::Gff::Element {label: Volume, type: :byte, value: 127}
+          VolumeVrtn: !ruby/object:NWN::Gff::Element {label: VolumeVrtn, type: :byte, value: 0}
+          XPosition: !ruby/object:NWN::Gff::Element {label: XPosition, type: :float, value: 81.7995834350586}
+          YPosition: !ruby/object:NWN::Gff::Element {label: YPosition, type: :float, value: 32.8165054321289}
+          ZPosition: !ruby/object:NWN::Gff::Element {label: ZPosition, type: :float, value: 2.42587184906006}
+        struct_id: 6
+      - !ruby/object:NWN::Gff::Struct 
+        hash: 
+          Active: !ruby/object:NWN::Gff::Element {label: Active, type: :byte, value: 1}
+          Continuous: !ruby/object:NWN::Gff::Element {label: Continuous, type: :byte, value: 1}
+          Elevation: !ruby/object:NWN::Gff::Element {label: Elevation, type: :float, value: 1.5}
+          GeneratedType: !ruby/object:NWN::Gff::Element {label: GeneratedType, type: :dword, value: 0}
+          Hours: !ruby/object:NWN::Gff::Element {label: Hours, type: :dword, value: 0}
+          Interval: !ruby/object:NWN::Gff::Element {label: Interval, type: :dword, value: 25000}
+          IntervalVrtn: !ruby/object:NWN::Gff::Element {label: IntervalVrtn, type: :dword, value: 5000}
+          LocName: !ruby/object:NWN::Gff::Element 
+            label: LocName
+            str_ref: 67871
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: {}
+
+          Looping: !ruby/object:NWN::Gff::Element {label: Looping, type: :byte, value: 0}
+          MaxDistance: !ruby/object:NWN::Gff::Element {label: MaxDistance, type: :float, value: 10.0}
+          MinDistance: !ruby/object:NWN::Gff::Element {label: MinDistance, type: :float, value: 1.0}
+          PitchVariation: !ruby/object:NWN::Gff::Element {label: PitchVariation, type: :float, value: 0.200000002980232}
+          Positional: !ruby/object:NWN::Gff::Element {label: Positional, type: :byte, value: 0}
+          Priority: !ruby/object:NWN::Gff::Element {label: Priority, type: :byte, value: 19}
+          Random: !ruby/object:NWN::Gff::Element {label: Random, type: :byte, value: 0}
+          RandomPosition: !ruby/object:NWN::Gff::Element {label: RandomPosition, type: :byte, value: 0}
+          RandomRangeX: !ruby/object:NWN::Gff::Element {label: RandomRangeX, type: :float, value: 0.0}
+          RandomRangeY: !ruby/object:NWN::Gff::Element {label: RandomRangeY, type: :float, value: 0.0}
+          Sounds: !ruby/object:NWN::Gff::Element 
+            label: Sounds
+            type: :list
+            value: 
+            - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_hawk1}}, struct_id: 0}
+          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: HawkCry}
+          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: hawkcry001}
+          Times: !ruby/object:NWN::Gff::Element {label: Times, type: :byte, value: 1}
+          Volume: !ruby/object:NWN::Gff::Element {label: Volume, type: :byte, value: 127}
+          VolumeVrtn: !ruby/object:NWN::Gff::Element {label: VolumeVrtn, type: :byte, value: 0}
+          XPosition: !ruby/object:NWN::Gff::Element {label: XPosition, type: :float, value: 44.5315322875977}
+          YPosition: !ruby/object:NWN::Gff::Element {label: YPosition, type: :float, value: 26.1364288330078}
+          ZPosition: !ruby/object:NWN::Gff::Element {label: ZPosition, type: :float, value: 1.85956287384033}
+        struct_id: 6
+      - !ruby/object:NWN::Gff::Struct 
+        hash: 
+          Active: !ruby/object:NWN::Gff::Element {label: Active, type: :byte, value: 1}
+          Continuous: !ruby/object:NWN::Gff::Element {label: Continuous, type: :byte, value: 1}
+          Elevation: !ruby/object:NWN::Gff::Element {label: Elevation, type: :float, value: 1.5}
+          GeneratedType: !ruby/object:NWN::Gff::Element {label: GeneratedType, type: :dword, value: 0}
+          Hours: !ruby/object:NWN::Gff::Element {label: Hours, type: :dword, value: 0}
+          Interval: !ruby/object:NWN::Gff::Element {label: Interval, type: :dword, value: 25000}
+          IntervalVrtn: !ruby/object:NWN::Gff::Element {label: IntervalVrtn, type: :dword, value: 5000}
+          LocName: !ruby/object:NWN::Gff::Element 
+            label: LocName
+            str_ref: 67973
+            type: :cexolocstr
+            value: !ruby/object:NWN::Gff::CExoLocString 
+              languages: 
+                4: Zwitschern (Singvogel)
+                5: Zwitschern (Singvogel)
+          Looping: !ruby/object:NWN::Gff::Element {label: Looping, type: :byte, value: 0}
+          MaxDistance: !ruby/object:NWN::Gff::Element {label: MaxDistance, type: :float, value: 10.0}
+          MinDistance: !ruby/object:NWN::Gff::Element {label: MinDistance, type: :float, value: 1.0}
+          PitchVariation: !ruby/object:NWN::Gff::Element {label: PitchVariation, type: :float, value: 0.200000002980232}
+          Positional: !ruby/object:NWN::Gff::Element {label: Positional, type: :byte, value: 0}
+          Priority: !ruby/object:NWN::Gff::Element {label: Priority, type: :byte, value: 19}
+          Random: !ruby/object:NWN::Gff::Element {label: Random, type: :byte, value: 1}
+          RandomPosition: !ruby/object:NWN::Gff::Element {label: RandomPosition, type: :byte, value: 0}
+          RandomRangeX: !ruby/object:NWN::Gff::Element {label: RandomRangeX, type: :float, value: 10.0}
+          RandomRangeY: !ruby/object:NWN::Gff::Element {label: RandomRangeY, type: :float, value: 10.0}
+          Sounds: !ruby/object:NWN::Gff::Element 
+            label: Sounds
+            type: :list
+            value: 
+            - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_songbird1}}, struct_id: 0}
+            - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_songbird2}}, struct_id: 0}
+            - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_songbird3}}, struct_id: 0}
+            - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_songbirds1}}, struct_id: 0}
+            - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_songbirds2}}, struct_id: 0}
+            - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_songbirds3}}, struct_id: 0}
+          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: SongbirdChirps}
+          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: songbirdchirp001}
+          Times: !ruby/object:NWN::Gff::Element {label: Times, type: :byte, value: 1}
+          Volume: !ruby/object:NWN::Gff::Element {label: Volume, type: :byte, value: 127}
+          VolumeVrtn: !ruby/object:NWN::Gff::Element {label: VolumeVrtn, type: :byte, value: 0}
+          XPosition: !ruby/object:NWN::Gff::Element {label: XPosition, type: :float, value: 51.4588317871094}
+          YPosition: !ruby/object:NWN::Gff::Element {label: YPosition, type: :float, value: 27.402437210083}
+          ZPosition: !ruby/object:NWN::Gff::Element {label: ZPosition, type: :float, value: 1.49999988079071}
+        struct_id: 6
+    StoreList: !ruby/object:NWN::Gff::Element 
+      label: StoreList
+      type: :list
+      value: []
+
+    TriggerList: !ruby/object:NWN::Gff::Element 
+      label: TriggerList
+      type: :list
+      value: []
+
+    WaypointList: !ruby/object:NWN::Gff::Element 
+      label: WaypointList
+      type: :list
+      value: []
+
+  struct_id: 4294967295

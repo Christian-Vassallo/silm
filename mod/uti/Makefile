@@ -1,12 +1,9 @@
+objects := $(basename $(wildcard *.uti.yml))
 
-all: clean_recipes recipes
+all: $(objects)
 
-# Generates new recipe items from database
+$(objects) : %.uti : %.uti.yml
+	nwn-gff-import -y -o $@ $<
 
-clean: clean_recipes
-
-clean_recipes:
-	-rm cp_[0-9]*.uti
-
-recipes:
-	gen_recipes.rb ../../database.yaml .
+clean:
+	-@rm $(objects)

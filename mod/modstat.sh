@@ -1,13 +1,13 @@
 #!/bin/sh
 
-AREAS=$(ls area/*.are | wc -l)
+AREAS=$(ls area/*.are.yml | wc -l)
 SCRIPTS=$(ls nss/*.n | wc -l)
-UTI=$(ls uti/*.uti | wc -l)
-UTC=$(ls utc/*.utc | wc -l)
-DLG=$(ls dlg/*.dlg | wc -l)
+UTI=$(ls uti/*.uti.yml | wc -l)
+UTC=$(ls utc/*.utc.yml | wc -l)
+DLG=$(ls dlg/*.dlg.yml | wc -l)
 
 SCRIPTLINES=$(wc -l nss/*.n | grep total | cut -d" " -f3)
-DIALOGUECHARS=$(gffprint.pl dlg/*.dlg | grep "Text/4" | wc -c)
+DIALOGUECHARS=$(egrep "^ +4:" dlg/*.dlg.yml | wc -c)
 REPOSIZE=$(du -sch .|grep total | cut -f1)
 
 REV=`git-rev-parse --short --verify HEAD`

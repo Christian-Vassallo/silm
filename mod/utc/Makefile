@@ -1,6 +1,9 @@
+objects := $(basename $(wildcard *.utc.yml))
 
-verify:
-	for i in $(PFX)*.utc; do \
-		echo $${i}; \
-		gffprint.pl $${i} >/dev/null ; \
-	done
+all: $(objects)
+
+$(objects) : %.utc : %.utc.yml
+	nwn-gff-import -y -o $@ $<
+
+clean:
+	-@rm $(objects)
