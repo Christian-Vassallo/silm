@@ -22,6 +22,13 @@ int Fly_IsPCOK(object oPC) {
 	return GetCurrentHitPoints(oPC) >= GetMaxHitPoints(oPC) / 2;
 }
 
+void Fly_TakeOff_Etherealness(object oPC) {
+	if (Fly_IsAirborne(oPC)) {
+		effect ether = EffectEthereal();
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(ether), oPC);
+	}
+}
+
 void Fly_TakeOff(object oPC) {
 	effect eEff1, eEff2;
 
@@ -37,16 +44,15 @@ void Fly_TakeOff(object oPC) {
 	eEff1 = EffectLinkEffects(eEff2, eEff1);
 	eEff2 = EffectVisualEffect(VFX_DUR_GHOSTLY_VISAGE);
 	eEff1 = EffectLinkEffects(eEff2, eEff1);
-
-	effect ether = EffectEthereal();
-	ether = EffectLinkEffects(EffectFreedomOfMovement(), ether);
+	eEff2 = EffectFreedomOfMovement();
+	eEff1 = EffectLinkEffects(eEff2, eEff1);
 
 	Fly_Effect(oPC);
 
 	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDisappear(), oPC);
 
 	DelayCommand(2.5f, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(eEff1), oPC));
-	DelayCommand(30f, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(ether), oPC));
+	DelayCommand(12f, Fly_TakeOff_Etherealness(oPC));
 
 	SetLocalInt(oPC, "SR_Airborne", 1);
 }
