@@ -16,11 +16,15 @@ void AddGMXP(object oPlayer, string sGMs, int nAmount) {
 	
 	if (!nAmount)
 		return;
+	
+	if (-6 == nAmount)
+		return;
 
 	pQ("insert into gm_xp (character,account_gms,xp) values( " + IntToString(nCID) + 
 		", '{ " + sGMs + 
 		"}', " + IntToString(nAmount) + " );");
-
+	
+	SendMessageToAllDMs("add_gm_xp(): " + GetName(oPlayer) + " by {" + sGMs + "}, " + itoa(nAmount));
 }
 
 void CheckXP(object oPC, string sGMsOnline) {
