@@ -60,7 +60,7 @@
 	"{" + \
 		IntToString(GetObjectType(o)) + "," + \
 		GetResRef(o) + "," + \
-		GetTag(o) + ",[" + \
+		GetTag(o) + "," + \
 		"[" + (is_client(o) ? (itoa(GetAccountID(o)) + "," + itoa(GetCharacterID(o))) : itoa(p_get_p_id(o))) + "]," + \
 		GetName(o) + \
 	"}") \
