@@ -6,9 +6,12 @@ extern("inc_chat")
 extern("inc_session")
 extern("x2_inc_switches")
 extern("inc_events_sql")
+extern("inc_nwnx_tmi")
 
 void main() {
 	
+	SetTMILimit(0xfffff); // (default: 131071, 8 times)
+
 	SetLocalString(GetModule(), "X2_S_UD_SPELLSCRIPT", "hook_spell");
 	SetModuleSwitch(MODULE_SWITCH_ENABLE_CROSSAREA_WALKWAYPOINTS, TRUE);
 	
