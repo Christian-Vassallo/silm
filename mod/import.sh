@@ -26,7 +26,18 @@ for x in $@; do
 	esac
 
 	base=`basename $x | tr "[:upper:]" "[:lower:]"`
-	to="$modroot/$target/$base.yml"
-	echo "$x -> $to"
-	nwn-gff-print -y $opts $x > $to
+	to="$modroot/$target/$base"
+	to_yml="$to.yml"
+	x_md=`md5sum $x|cut -d' ' -f1`
+	to_md=`md5sum $to|cut -d' ' -f1`
+
+	if [ -f $to ]; then
+		if [ "$x_md" = "$to_md" ]; then
+			echo "Not importing $x: not modified."
+			continue
+		fi
+	fi
+
+	echo "$x -> $to_yml"
+	nwn-gff-print -y $opts $x > $to_yml
 done
