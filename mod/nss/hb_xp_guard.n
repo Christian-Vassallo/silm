@@ -23,8 +23,10 @@ void AddGMXP(object oPlayer, string sGMs, int nAmount) {
 	pQ("insert into gm_xp (character,account_gms,xp) values( " + IntToString(nCID) + 
 		", '{ " + sGMs + 
 		"}', " + IntToString(nAmount) + " );");
-	
-	SendMessageToAllDMs("add_gm_xp(): " + GetName(oPlayer) + " by {" + sGMs + "}, " + itoa(nAmount));
+
+	string message = "xp_guard: " + GetName(oPlayer) + " by {" + sGMs + "}, " + itoa(nAmount);
+	SendMessageToAllDMs(message);
+	WriteTimestampedLogEntry(message);
 }
 
 void CheckXP(object oPC, string sGMsOnline) {
