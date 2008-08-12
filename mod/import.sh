@@ -16,7 +16,7 @@ for x in $@; do
 		target="area"
 		opts="--float_rounding 4"
 		;;
-	*.ut[a-z]) target=${x:(-7):3} ;;
+	*.ut[a-z]) target=${x:(-3):3} ;;
 	*.dlg) target="dlg" ;;
 	*.ssf) target="ssf" ;;
 	*)
