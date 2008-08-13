@@ -28,6 +28,9 @@ extern("inc_xp_handling")
 extern("x0_i0_anims")
 extern("inc_events_sql")
 
+// extern inc_chat_run
+int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel);
+
 int CommandSCO(object oPC, int iMode);
 int CommandRCO(object oPC, int iMode);
 
@@ -2022,18 +2025,38 @@ int CommandCopyObject(object oPC, int iMode) {
 	if ( !GetIsObjectValid(oT) )
 		return NotifyBadTarget();
 
-	object new = CopyObject(oT, GetLocation(oPC), oPC);
+	string t_eval;
 
-	if ( GetIsPC(oT) )
-		ChangeToStandardFaction(new, STANDARD_FACTION_COMMONER);
+	int amount = 1;
+	if (getopt_argc() > 0)
+		amount = atoi(getopt_arg(0));
+	amount = clamp(amount, 1, 50);
 
-	if (getopt_opt("limbo") )
-		Limbo(new);
+	if (getopt_argc() > 1)
+		t_eval = getopt_arg(1);
 
-	if (getopt_opt("newslot") ) {
-		int n = StringToInt(getopt_optv("newslot"));
-		SetTarget(new, n);
+	int nOldTarget;
+	if (t_eval != "") {
+		nOldTarget = GetDefaultSlot();
+		SetDefaultSlot(TARGET_MACRO_SLOT);
 	}
+
+	int i;
+	object new;
+	for (i = 0; i < amount; i++) {
+		new = CopyObject(oT, GetLocation(oPC), oPC);
+
+		if ( GetIsPC(oT) )
+			ChangeToStandardFaction(new, STANDARD_FACTION_COMMONER);
+
+		if (t_eval != "") {
+			SetTarget(new);
+			CommandEval(new, iMode, t_eval, true, true, 10);
+		}
+	}
+
+	if (t_eval != "")
+		SetDefaultSlot(nOldTarget);
 
 	return OK;
 }
