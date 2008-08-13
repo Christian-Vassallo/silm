@@ -28,6 +28,10 @@ int Fly_IsAreaOK(object oPC) {
 }
 
 int Fly_IsPCOK(object oPC) {
+	object armor = GetItemInSlot(INVENTORY_SLOT_CHEST, oPC);
+	if (is_valid(armor) && GetArmorAC(armor) >= 6)
+		return false;
+
 	return GetCurrentHitPoints(oPC) >= GetMaxHitPoints(oPC) / 2;
 }
 

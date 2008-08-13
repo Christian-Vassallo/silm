@@ -2,6 +2,8 @@ extern("inc_subr_data")
 extern("inc_subr_eff")
 extern("inc_subr_item")
 extern("inc_subr_area")
+extern("inc_subr_fly")
+extern("inc_nwnx_func")
 
 void main() {
 	struct EventInfo e = GetEventInfo();
@@ -34,5 +36,14 @@ void main() {
 
 		SendMessageToPC(e.runnable, "Subrasse " + sChosen_SR + " erkannt und gesetzt.");
 	
+	}
+
+	if ("item_equip" == e.ev) {
+		// If he is flying, dont allow equipping medium or heavy.
+		object armor = GetItemInSlot(INVENTORY_SLOT_CHEST, e.actor);
+		if (Fly_IsAirborne(e.actor) && is_valid(armor) && GetArmorAC(armor) >= 6) {
+			SendMessageToPC(e.actor, "Du kannst keine mittleren (oder schwerere) Ruestungen tragen waehrend du fliegst.");
+			AssignCommand(e.actor, ActionUnequipItem(armor));
+		}
 	}
 }
