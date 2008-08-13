@@ -1932,7 +1932,7 @@ int CommandCAQ(object oPC, int iMode) {
 
 
 int CommandStatus(object oPC, int iMode) {
-	if ( amask(oPC, AMASK_GM) ) {
+	if ( amask(oPC, AMASK_GLOBAL_GM) ) {
 		SendMessageToPC(oPC, "Players logged in:");
 		object o = GetFirstPC();
 		while ( GetIsObjectValid(o) ) {
