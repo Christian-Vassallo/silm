@@ -78,6 +78,14 @@ void main() {
 	AddEffect("dvis", -1);
 	SetFlags(0x00000002); //Immun gg. Dominate/Enchant Person
 
+	Register_Subrace("Tauben-Aasimar", RACIAL_TYPE_ALL, 4, 2);
+	SetSRItem("ALL_AAS", 1);
+	SetSPA(12, "LIGT");
+	AddEffect("dvis", -1);
+	//Immun gg. Dominate/Enchant Person
+	// Klaustrophobisch (Mali auf unterirdischem Terrain)
+	SetFlags(0x00000002 | 0x00010000);
+
 	Register_Subrace("Tiefling", RACIAL_TYPE_ALL, 1, 2);
 	SetSRItem("ALL_TIE", 1);
 	SetSPA(12, "DARK");
