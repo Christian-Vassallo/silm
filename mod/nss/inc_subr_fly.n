@@ -2,6 +2,15 @@ extern("_gen")
 extern("inc_subr_ardefs")
 extern("inc_subr_teff")
 
+int GetMovementSpeedForFlyingCreature(object oPC) {
+	if (GetSubRace(oPC) == "Avariel")
+		return 99;
+	if (GetSubRace(oPC) == "Tauben-Aasimar")
+		return 40;
+
+	return 0;
+}
+
 void Fly_Effect(object oPC) {
 	object oEff1, oEff2;
 	location lLoc = GetLocation(oPC);
@@ -35,7 +44,11 @@ void Fly_TakeOff(object oPC) {
 	if ( Fly_IsAirborne(oPC) )
 		return;
 
-	eEff1 = EffectMovementSpeedIncrease(99);
+	int speed = GetMovementSpeedForFlyingCreature(oPC);
+	if (!speed)
+		speed = 25;
+
+	eEff1 = EffectMovementSpeedIncrease(speed);
 	eEff2 = EffectMissChance(100, MISS_CHANCE_TYPE_VS_MELEE);
 	eEff1 = EffectLinkEffects(eEff2, eEff1);
 	eEff2 = EffectConcealment(100, MISS_CHANCE_TYPE_VS_MELEE);
