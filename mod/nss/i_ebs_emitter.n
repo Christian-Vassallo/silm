@@ -1,0 +1,37 @@
+extern("inc_events")
+
+void main() {
+	struct EventInfo ei = GetEventInfo();
+	
+	if (ei.ev == "item_unequip") {
+		object exist = GetLocalObject(ei.actor, "ebse_shield");
+
+		if (ei.runnable == exist) {
+			DestroyObject(exist, 0.2);
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_DISPEL)), ei.actor);
+		}
+	}
+
+	if (ei.ev == "item_activate") {
+		object exist = GetLocalObject(ei.actor, "ebse_shield");
+		if (is_valid(exist)) {
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_DISPEL)), ei.actor);
+			DestroyObject(exist, 0.2);
+
+		} else {
+			string ebs = GetLocalString(ei.runnable, "ebs_ref");
+			if ("" == ebs)
+				ebs = "ebss001";
+			object new = CreateItemOnObject(ebs, ei.actor);
+			if (!is_valid(new))
+				return;
+			SetLocalObject(ei.actor, "ebse_shield", new);
+
+			SetDroppableFlag(new, false);
+			SetPlotFlag(new, true);
+			AssignCommand(ei.actor, ClearAllActions(1));
+			AssignCommand(ei.actor, ActionEquipItem(new, INVENTORY_SLOT_LEFTHAND));
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_CHARM)), ei.actor);
+		}
+	}
+}
