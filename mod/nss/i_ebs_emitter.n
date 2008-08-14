@@ -1,37 +1,61 @@
 extern("inc_events")
+extern("_gen")
+
+#define CHARGE_TIME 120
+
+void ebs_deactivate(object emitter, object actor) {
+	object exist = GetLocalObject(actor, "ebse_shield");
+	if (!is_valid(exist))
+		return;
+
+	DestroyObject(exist, 0.2);
+	ApplyEffectToObject(DURATION_TYPE_INSTANT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_DISPEL)), actor);
+	SetLocalInt(emitter, "ebs_last_charge", GetUnixTimestamp());
+	FloatingTextStringOnCreature("Der Schild laedt (" + itoa(CHARGE_TIME) + " Sekunden) ..", actor, false);
+	DelayCommand(itof(CHARGE_TIME), FloatingTextStringOnCreature("Der Schild ist geladen.", actor, false));
+}
+
+void ebs_activate(object emitter, object actor) {
+	object exist = GetLocalObject(actor, "ebse_shield");
+	if (is_valid(exist))
+		return;
+
+	int last_charge = GetLocalInt(emitter, "ebs_last_charge");
+	int now = GetUnixTimestamp();
+	if (now - last_charge <= CHARGE_TIME) {
+		FloatingTextStringOnCreature("Der Schild laedt noch.", actor, false);
+		return;
+	}
+
+	string ebs = GetLocalString(emitter, "ebs_ref");
+	if ("" == ebs)
+		ebs = "ebss001";
+
+	object new = CreateItemOnObject(ebs, actor);
+	if (!is_valid(new))
+		return;
+
+	SetLocalObject(actor, "ebse_shield", new);
+
+	SetDroppableFlag(new, false);
+	SetPlotFlag(new, true);
+	AssignCommand(actor, ClearAllActions(1));
+	AssignCommand(actor, ActionEquipItem(new, INVENTORY_SLOT_LEFTHAND));
+	ApplyEffectToObject(DURATION_TYPE_INSTANT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_CHARM)), actor);
+}
 
 void main() {
 	struct EventInfo ei = GetEventInfo();
 	
 	if (ei.ev == "item_unequip") {
-		object exist = GetLocalObject(ei.actor, "ebse_shield");
-
-		if (ei.runnable == exist) {
-			DestroyObject(exist, 0.2);
-			ApplyEffectToObject(DURATION_TYPE_INSTANT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_DISPEL)), ei.actor);
-		}
+		ebs_deactivate(GetItemPossessedBy(ei.actor, "ebs_emitter"), ei.actor);
 	}
 
 	if (ei.ev == "item_activate") {
 		object exist = GetLocalObject(ei.actor, "ebse_shield");
-		if (is_valid(exist)) {
-			ApplyEffectToObject(DURATION_TYPE_INSTANT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_DISPEL)), ei.actor);
-			DestroyObject(exist, 0.2);
-
-		} else {
-			string ebs = GetLocalString(ei.runnable, "ebs_ref");
-			if ("" == ebs)
-				ebs = "ebss001";
-			object new = CreateItemOnObject(ebs, ei.actor);
-			if (!is_valid(new))
-				return;
-			SetLocalObject(ei.actor, "ebse_shield", new);
-
-			SetDroppableFlag(new, false);
-			SetPlotFlag(new, true);
-			AssignCommand(ei.actor, ClearAllActions(1));
-			AssignCommand(ei.actor, ActionEquipItem(new, INVENTORY_SLOT_LEFTHAND));
-			ApplyEffectToObject(DURATION_TYPE_INSTANT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_CHARM)), ei.actor);
-		}
+		if (is_valid(exist))
+			ebs_deactivate(ei.runnable, ei.actor);
+		else
+			ebs_activate(ei.runnable, ei.actor);
 	}
 }
