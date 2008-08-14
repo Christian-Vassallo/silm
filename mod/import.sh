@@ -10,13 +10,14 @@ echo "we are at: $modroot"
 for x in $@; do
 	target=""
 	opts=""
-	case `echo $x | tr "[:upper:]" "[:lower:]"` in
+	ext=`echo $x | tr "[:upper:]" "[:lower:]"`
+	case $ext in
 	*.are | *.gic) target="area" ;;
 	*.git)
 		target="area"
 		opts="--float_rounding 4"
 		;;
-	*.ut[a-z]) target=${x:(-3):3} ;;
+	*.ut[a-z]) target=${ext:(-3):3} ;;
 	*.dlg) target="dlg" ;;
 	*.ssf) target="ssf" ;;
 	*)
