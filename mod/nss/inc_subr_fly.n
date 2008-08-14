@@ -28,7 +28,7 @@ int Fly_IsAreaOK(object oPC) {
 }
 
 int Fly_IsPCOK(object oPC) {
-	int maxtlbs = atoi(Get2DAString("encumbrance", "Light", GetAbilityScore(oPC, ABILITY_STRENGTH)));
+	int maxtlbs = atoi(Get2DAString("encumbrance", "Normal", GetAbilityScore(oPC, ABILITY_STRENGTH)));
 	int currtlbs = GetWeight(oPC);
 	if (currtlbs > maxtlbs)
 		return false;
