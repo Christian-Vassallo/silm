@@ -34,7 +34,7 @@ preprocess: $(preprocessed)
 compile: $(objects)
 
 $(preprocessed) : %.nss : %.n
-	@set -e; (gcc -undef -Wall -fextended-identifiers -P -E -nostdinc -Iglobal -include stddef.h -I . -x c -std=c99 $< |\
+	@set -e; (gcc -undef -Wall -fextended-identifiers -P -E -nostdinc -Iglobal -include stddef.h -I . -include _const.nh -x c -std=c99 $< |\
 		gpp +z -C +n --nostdinc -Iglobal -I. -Iglobal --include "gpp.h" > `basename $< .n`.nss)
 
 $(objects) : %.ncs : %.nss
