@@ -1,0 +1,61 @@
+extern("inc_events")
+extern("_gen")
+
+#define ITERATE_EACH 6f
+
+void create_smoke_grid_for(location at, float delay = 10f, int range = 1) {
+	object smk;
+	
+	int x, y, z;
+	vector origin = GetPositionFromLocation(at);
+	vector pos;
+	location ll;
+	int range_m = 3 * range;
+
+	pos.z = origin.z + 0.1f;
+	for (x = -(range_m); x < range_m; x += 1) {
+		pos.x = origin.x + x * 1.5;
+		for (y = -(range_m); y < range_m; y += 1) {
+			pos.y = origin.y + y * 1.5;
+			ll = Location(GetAreaFromLocation(at), pos, 0f);
+			smk = CreateObject(OBJECT_TYPE_PLACEABLE, "lc_smoke", ll);
+			SetLocalInt(smk, "smokebottle", 1);
+		}
+	}
+}
+
+void tick(location loc, object actor, object bottle, int range = 1) {
+
+	// Has been picked up again?
+	if (is_valid(GetItemPossessor(bottle))) {
+		object area = GetArea(GetItemPossessor(bottle));
+
+		object plc = GetFirstObjectInArea(area);
+		while (GetIsObjectValid(plc)) {
+			if (GetLocalInt(plc, "smokebottle"))
+				DestroyObject(plc);
+
+			plc = GetNextObjectInArea(area);
+		}
+		return;
+	}
+	
+	DelayCommand(ITERATE_EACH - 0.5f, tick(loc, actor, bottle, range));
+}
+
+void start(location loc, object actor, object bottle) {
+	create_smoke_grid_for(loc, ITERATE_EACH, 2);
+	tick(loc, actor, bottle, 2);
+}
+
+void main() {
+	struct EventInfo ei = GetEventInfo();
+
+	if (ei.ev == "item_unacquire") {
+		if (GetIsObjectValid(GetArea(ei.actedon))) {
+			if (GetTag(ei.actedon) == "eversmoke_bottle") {
+				start(GetLocation(ei.actor), ei.actor, ei.actedon);
+			}
+		}
+	}
+}
