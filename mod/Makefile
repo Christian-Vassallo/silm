@@ -24,7 +24,7 @@ COMMIT=$(shell git-rev-parse --short --verify HEAD)
 # All areas, except those that should not be packaged.
 # You can use this to exclude certain areas from being distributed
 # to builders/devs.
-AREAS=$(shell ls area/*.git area/*.are area/*.gic | grep -v ooc_solace)
+AREAS=$(shell ls area/*.git area/*.are | grep -v ooc_solace)
 
 # This gets packaged into your final module for
 # deployment on a production server.

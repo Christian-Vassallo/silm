@@ -12,7 +12,7 @@ for x in $@; do
 	opts=""
 	ext=`echo $x | tr "[:upper:]" "[:lower:]"`
 	case $ext in
-	*.are | *.gic) target="area" ;;
+	*.are) target="area" ;;
 	*.git)
 		target="area"
 		opts="--float_rounding 4"
