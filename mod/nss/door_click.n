@@ -1,6 +1,10 @@
-extern("inc_doors")
-
 void main() {
-	object oPC = GetClickingObject();
-	AssignCommand(oPC, JumpToObject(GetTransitionTarget(OBJECT_SELF)));
+	object clicker = GetClickingObject();
+
+	if (GetIsOpen(OBJECT_SELF)) {
+		AssignCommand(clicker, ActionCloseDoor(OBJECT_SELF));
+	} else {
+		AssignCommand(clicker, ActionOpenDoor(OBJECT_SELF));
+	}
 }
+
