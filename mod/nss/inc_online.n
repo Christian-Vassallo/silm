@@ -59,7 +59,7 @@ location GetLastLocation(object oPC) {
 	pQ("select ((at).position).x,((at).position).y,((at).position).z,((at).area).tag from " + LASTLOCATION_TABLE + " where cid = " + IntToString(id) + ";");
 	if (pF()) {
 		vector position = Vector(pGf(1), pGf(2), pGf(3));
-		object area = GetObjectByTag(pGs(5));
+		object area = GetObjectByTag(pGs(4));
 		if (!GetIsObjectValid(area))
 			return GetLocation(oPC);
 		ret = Location(area, position, 0.0);
