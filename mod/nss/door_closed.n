@@ -11,4 +11,9 @@ void main() {
 
 	if ( nAutoLock < 0 || nAutoLock )
 		ActionDoCommand(SetLocked(OBJECT_SELF, 1));
+
+	if (d10() == 1) {
+		SetName(OBJECT_SELF, "");
+		SpeakString("*crrrk*");
+	}
 }
