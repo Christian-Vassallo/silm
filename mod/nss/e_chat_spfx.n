@@ -1,5 +1,25 @@
 extern("inc_events")
 extern("inc_chat_lib")
+extern("_gen")
+
+#define ZONE_OF_SILENCE_RANGE 1.5f
+
+
+bool is_in_zos(object actor) {
+	if (GetHasSpellEffect(SPELL_ZONE_OF_SILENCE, actor))
+		return true;
+
+	object o = GetFirstObjectInShape(SHAPE_SPHERE, ZONE_OF_SILENCE_RANGE, GetLocation(actor), false, OBJECT_TYPE_CREATURE);
+	while (is_valid(o)) {
+		if (!GetIsDM(o) && (GetIsPC(o) || GetIsDMPossessed(o)) && o != actor) {
+			if (GetHasSpellEffect(SPELL_ZONE_OF_SILENCE, o)) {
+				return true;
+			}
+		}
+		o = GetNextObjectInShape(SHAPE_SPHERE, ZONE_OF_SILENCE_RANGE, GetLocation(actor), false, OBJECT_TYPE_CREATURE);
+	}
+	return false;
+}
 
 void main() {
 	struct EventInfo ei = GetEventInfo();
@@ -8,10 +28,38 @@ void main() {
 	if (ei.ev != "chat_prefilter")
 		return;
 	
-	if (ea.i0 & CHATMODE_TALK || ea.i0 & CHATMODE_WHISPER) {
+	if ((!GetIsDM(ei.actor) || GetIsDMPossessed(ei.actor)) && ea.i0 & CHATMODE_TALK || ea.i0 & CHATMODE_WHISPER) {
 		
-		if (GetHasSpellEffect(SPELL_SILENCE, ei.actor)) {
-			// filter all text that is not emote.
+		bool actor_is_in_zos = is_in_zos(ei.actor);
+
+		if (GetHasSpellEffect(SPELL_SILENCE, ei.actor) || actor_is_in_zos) {
+			
+			if (actor_is_in_zos) {
+				string zos_message = GetName(ei.actor) + " (In Zone der Stille): " + ColorisePlayerText(ei.actor, ea.i0, ea.a0, cWhite);
+
+				// Send the clear text to all within range.
+				object o = GetFirstObjectInShape(SHAPE_SPHERE, ZONE_OF_SILENCE_RANGE, GetLocation(ei.actor), false, OBJECT_TYPE_CREATURE);
+				while (is_valid(o)) {
+					if ((GetIsPC(o) || GetIsDMPossessed(o)) && o != ei.actor) {
+						SendMessageToPC(o, zos_message);
+					}
+					o = GetNextObjectInShape(SHAPE_SPHERE, ZONE_OF_SILENCE_RANGE, GetLocation(ei.actor), false, OBJECT_TYPE_CREATURE);
+				}
+
+				// And send it to ourselves.
+				SendMessageToPC(ei.actor, zos_message);
+
+				// And send it to all DMs that are listening.
+				object dm = GetFirstPC();
+				while (is_valid(dm)) {
+					if (GetIsDM(dm) && !GetIsDMPossessed(dm) &&
+							GetDistanceBetween(dm, ei.actor) >= ZONE_OF_SILENCE_RANGE &&
+							hears(ei.actor, dm, ea.i0 & CHATMODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER))
+						SendMessageToPC(ei.actor, zos_message);
+
+					dm = GetNextPC();
+				}
+			}
 
 			string s, c; int i;
 			bool did_dots =false;
@@ -45,12 +93,12 @@ void main() {
 				s = "...";
 			}
 
+			if (!actor_is_in_zos && did_dots)
+				SendMessageToPC(ei.actor, "Du kannst nicht sprechen (aufgrund des Effekts Stille). Du sagtest: " + ea.a0);
+
 			ea.i1 = true;
 			ea.a0 = s;
 			SetEventArguments(ei.serial, ea);
-
-			if (did_dots)
-				SendMessageToPC(ei.actor, "Du kannst nicht sprechen (aufgrund des Effekts Stille).");
 		}
 	}
 }

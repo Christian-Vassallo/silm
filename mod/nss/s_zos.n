@@ -1,0 +1,57 @@
+// Zone of Silence
+/* Zone der Stille
+Illusion
+Level: Brd 4
+Komponenten: V, S
+Reichweite: Selbst
+Gebiet: 5 Fuß um den Zaubernden
+Dauer: 1 Stunde / Stufe
+
+Der Zauber manipuliert die Schallwellen in der unmittelbaren Umgebung des Zaubernden sodass dieser
+und andere innerhalb der Zauberreichweite normal sprechen können, Aussenstehende jedoch weder
+Stimme noch andere Töne vernehmen können, einschließlich Zaubereffekte die somatische Komponenten
+vorraussetzen sowie Schallzauber. Der Effekt ist fixiert auf den Zaubernden und bewegt sich mit ihm.
+Jeder der die Zone betritt, wird sofort durch den Zauber betroffen, jene die sie verlassen, jedoch
+nicht mehr. Ein Gespräch kann dennoch durch einen erfolgreichen Entdeckenwurf (Lippen lesen)
+verstanden werden(siehe unten).
+
+Lippen lesen:
+Um Lippen zu lesen muss sich die Person in einer Reichweite von 10 Metern befinden, die Person
+sprechen sehen sowie die gesprochene Sprache verstehen. Der Standard SG beträgt 15 doch steigt
+bei elaboriertem Sprachgebrauch oder einem undeutlichen Sprecher. Blick auf die Lippen ist
+umbedingt notwendig um Lippen zu lesen.
+
+Wenn der Entdeckenwurf gelingt, lässt sich das gesprochene einer Minute grundlegend verstehen,
+doch entgehenden dem Leser gewisse Details. Sollte der Wurf um 4 oder mehr unter dem SG liegen,
+so können die Lippen nicht gelesen werden. Scheitert der Wurf um 5 oder mehr, so zieht der Leser
+falsche Schlüsse aus dem gesprochenen. Der Wurf wird verdeckt gewürfelt sodass der Leser nicht
+weiß wie hoch sein Wurf war.
+*/
+
+extern("x0_i0_spells")
+extern("x2_inc_spellhook")
+
+void main() {
+
+    if (!X2PreSpellCastCode())
+        return;
+
+	object oTarget = GetSpellTargetObject();
+
+    effect eZOS = EffectSkillDecrease(SKILL_BLUFF, 1); // EffectAreaOfEffect(AOE_MOB_ZONE_OF_SILENCE, "s_zosa", "s_zosc", "s_zosb");
+
+    int nDuration = GetCasterLevel(OBJECT_SELF);
+    int nMetaMagic = GetMetaMagicFeat();
+    if (nDuration < 1)
+		nDuration = 1;
+    if (nMetaMagic == METAMAGIC_EXTEND)
+       nDuration = nDuration * 2;
+
+	//Fire cast spell at event for the specified target
+	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_ZONE_OF_SILENCE));
+
+	//Create an instance of the AOE Object using the Apply Effect function
+	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eZOS, oTarget, HoursToSeconds(nDuration));
+
+	SetupReminder(oTarget, GetSpellName(GetSpellId()), HoursToSeconds(nDuration), eZOS);
+}
