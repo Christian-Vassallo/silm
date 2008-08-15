@@ -18,6 +18,7 @@ for x in $@; do
 		;;
 	*.git.yml)
 		fix-placed-doors.rb $x
+		show-useables.rb $x
 		;;
 
 	*)
