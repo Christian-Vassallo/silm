@@ -4,8 +4,6 @@ void main() {
 	object oDoor = OBJECT_SELF;
 	object oPC = GetLastOpenedBy();
 
-	// ClearAllActions();
-
 	int nAutoClose = GetLocalInt(oDoor, "autoclose");
 	int nAutoLock = GetLocalInt(oDoor, "autolock");
 
@@ -14,5 +12,4 @@ void main() {
 	} else {
 		ActionAutoClose(nAutoClose < 0 ? 60 : nAutoClose);
 	}
-
 }
