@@ -1,18 +1,6 @@
 extern("inc_events")
 extern("inc_chat_lib")
 
-bool GetIsSilenced(object creature) {
-	effect e = GetFirstEffect(creature);
-	while (GetIsEffectValid(e)) {
-		if (GetEffectType(e) == EFFECT_TYPE_SILENCE)
-			return true;
-		e = GetNextEffect(creature);
-	}
-
-	return false;
-}
-
-
 void main() {
 	struct EventInfo ei = GetEventInfo();
 	struct EventArguments ea = GetEventArguments(ei.serial);
@@ -22,7 +10,7 @@ void main() {
 	
 	if (ea.i0 & CHATMODE_TALK || ea.i0 & CHATMODE_WHISPER) {
 		
-		if (GetIsSilenced(ei.actor)) {
+		if (GetHasSpellEffect(SPELL_SILENCE, ei.actor)) {
 			// filter all text that is not emote.
 
 			string s, c; int i;
