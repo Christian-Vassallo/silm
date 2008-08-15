@@ -20,5 +20,5 @@ clean:
 
 publish:
 	for x in $(targets); do \
-		rsync -Pzva --chmod=go+r $(NWNHOME)/tlk/$$x elven@miyeritar.swordcoast.net::nwn-w/hak/ ; \
+		rsync -Pzva --chmod=go+r $(NWNHOME)/tlk/$$x elven@miyeritar.swordcoast.net::nwn-w/tlk/ ; \
 	done
