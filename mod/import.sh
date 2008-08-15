@@ -41,4 +41,6 @@ for x in $@; do
 
 	echo "$x -> $to_yml"
 	nwn-gff-print -y $opts $x > $to_yml
+
+	$modroot/verify.sh $to_yml
 done
