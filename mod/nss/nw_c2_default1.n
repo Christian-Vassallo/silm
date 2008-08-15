@@ -68,6 +68,11 @@ void main() {
 			}
 		}
 	);
+	
+	if (GetLocalInt(OBJECT_SELF, "sit_nearest") == 2) {
+		SetLocalInt(OBJECT_SELF, "sit_nearest", 0);
+		return;
+	}
 
 	if (GetLocalInt(OBJECT_SELF, "sit_nearest"))
 		return;
