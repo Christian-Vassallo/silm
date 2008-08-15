@@ -55,7 +55,7 @@ void main() {
 					if (GetIsDM(dm) && !GetIsDMPossessed(dm) &&
 							GetDistanceBetween(dm, ei.actor) >= ZONE_OF_SILENCE_RANGE &&
 							hears(ei.actor, dm, ea.i0 & CHATMODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER))
-						SendMessageToPC(ei.actor, zos_message);
+						SendMessageToPC(dm, zos_message);
 
 					dm = GetNextPC();
 				}
