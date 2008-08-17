@@ -52,6 +52,12 @@ for file in ARGV do
         end
       end
     }
+    if door['LocName'].value.size > 0
+      print " LocName! "
+      $stdout.flush
+      changed = true
+      door['LocName'].value.languages.clear # = NWN::Gff::Element.new('LocName', :cexolocstr, {})
+    end
   }
 
   if changed
