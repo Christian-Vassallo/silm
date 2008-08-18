@@ -3,6 +3,11 @@ extern("inc_doors")
 void main() {
 	object oDoor = OBJECT_SELF;
 	object oPC = GetLastOpenedBy();
+	
+	// Event: door_open
+	// - runnable: door
+	// - actor: opener/creature
+	RunEventScriptsFor(GetEventSerial(), "door_open", OBJECT_SELF, oPC, oDoor, GetLocation(oDoor));
 
 	int nAutoClose = GetLocalInt(oDoor, "autoclose");
 	int nAutoLock = GetLocalInt(oDoor, "autolock");

@@ -1,6 +1,10 @@
 // Door heartbeat.
 
 void main() {
+	// Event: door_hb
+	// - runnable: door
+	RunEventScriptsFor(GetEventSerial(), "door_hb", OBJECT_SELF, OBJECT_INVALID, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+
 	// Only run each odd heartbeat for performance reasons
 	if ( !GetLocalInt(OBJECT_SELF, "hb_odd") ) {
 		SetLocalInt(OBJECT_SELF, "hb_odd", 1);

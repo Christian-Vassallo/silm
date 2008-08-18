@@ -8,6 +8,12 @@ void ActionOpenTheDurnedDoor(object oDoor);
 
 void main() {
 	object oPC = GetClickingObject();
+	
+	// Event: door_failtoopen
+	// - runnable: door
+	// - actor: clicker/blocked
+	RunEventScriptsFor(GetEventSerial(), "door_failtoopen", OBJECT_SELF, oPC, OBJECT_SELF, GetLocation(OBJECT_SELF));
+	
 	if ( !is_creature(oPC) )
 		return;
 

@@ -1,4 +1,10 @@
 void main() {
+	// Event: door_lock
+	// - runnable: door
+	// - stop
+	if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "door_lock", OBJECT_SELF, OBJECT_INVALID, OBJECT_INVALID, GetLocation(OBJECT_INVALID)))
+		return;
+
 	ExecuteScript("door_lockunlock", OBJECT_SELF);
 }
 

@@ -1,3 +1,7 @@
 extern("inc_doors")
 
-void main() {}
+void main() {
+	// Event: door_spellcast
+	// - runnable: door
+	RunEventScriptsFor(GetEventSerial(), "door_spellcast", OBJECT_SELF, OBJECT_INVALID, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+}

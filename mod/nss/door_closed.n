@@ -4,6 +4,13 @@ void main() {
 	object oDoor = OBJECT_SELF;
 	object oPC = GetLastClosedBy();
 
+	// Event: door_closed
+	// - runnable: door
+	// - actor: closer/creature
+	// - stop
+	if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "door_closed", OBJECT_SELF, GetLastClosedBy(), OBJECT_SELF, GetLocation(OBJECT_SELF)))
+		return;
+
 	// ClearAllActions();
 
 //    int nAutoClose = GetLocalInt(oDoor, "autoclose");
