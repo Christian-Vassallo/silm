@@ -1,0 +1,28 @@
+extern("inc_corpse")
+extern("inc_xp_handling")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "door_click") {
+		if (GetTag(e.runnable) == "ooc_2_nexus") {
+
+
+			object oClicker = e.actor;
+			object oTarget = GetTransitionTarget(e.runnable);
+
+			if ( GetLocalInt(oClicker, "may_enter_game") ) {
+				//Restart digestion on leaving the OOC area
+				SetLocalDecay(oClicker, "Resting_Food",
+					GetLocalDecay(oClicker, "Resting_Food"), 60);
+				AssignCommand(oClicker, JumpToObject(oTarget));
+			} else {
+				FloatingTextStringOnCreature(
+					"Du darfst mit diesem Charakter das Spiel leider nicht betreten.  Beachte bitte die Servermeldungen, als du beigetreten bist.",
+					oClicker, 0);
+			}
+			
+			event_stop();
+		}
+	}
+}
