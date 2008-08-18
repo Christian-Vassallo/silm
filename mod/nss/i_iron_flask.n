@@ -1,0 +1,85 @@
+extern("inc_scorco")
+
+#define IRON_FLASK_DC 19
+#define IRON_FLASK_DOMINATION_DURATION 3600f
+
+void flask_domination(object critter) {
+	effect ef = EffectDominated();
+	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, ef, critter, IRON_FLASK_DOMINATION_DURATION);
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "item_activate" && GetTag(e.runnable) == "iron_flask") {
+		int content = GetLocalInt(e.runnable, "creature_gff");
+
+		if (!is_valid(e.actedon)) { // on ground: release creature
+			if (!content) {
+				SendMessageToPC(e.actor, "Es ist nichts in der Flasche.");
+				return;
+			}
+
+			object critter = p_load(content, e.actedat);
+			p_delete("iron_flask", critter);
+
+			SetLocalInt(e.runnable, "creature_gff", 0);
+			ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH),
+				e.actedat);
+			ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_BREACH),
+				GetLocation(e.actor));
+			SetName(e.runnable, "Eiserne Flasche");
+
+			AssignCommand(e.actor, flask_domination(critter));
+		}
+
+		if (is_valid(e.actedon)) {
+			if (content) {
+				SendMessageToPC(e.actor, "Nur eine Kreatur kann gleichzeitig in der Flasche sein.");
+				return;
+			}
+
+			if (!is_creature(e.actedon)) {
+				SendMessageToPC(e.actor, "Du kannst nur Kreaturen einsperren.");
+				return;
+			}
+
+			if (e.actor == e.actedon) {
+				SendMessageToPC(e.actor, "Du kannst dich nicht selbst einsperren.");
+				return;
+			}
+
+			if (is_pc(e.actedon) || is_dm(e.actedon)) {
+				SendMessageToPC(e.actor, "Du kannst keine Spieler einsperren.");
+				return;
+			}
+
+			if (GetIsDMPossessed(e.actedon) || GetIsPossessedFamiliar(e.actedon)) {
+				SendMessageToPC(e.actor, "Du kannst keine von SLs oder Spielern besetzten Kreaturen einsperren.");
+				return;
+			}
+
+			if (GetAssociateType(e.actedon) == ASSOCIATE_TYPE_ANIMALCOMPANION ||
+					GetAssociateType(e.actedon) == ASSOCIATE_TYPE_FAMILIAR) {
+				SendMessageToPC(e.actor, "Du kannst keine Vertrauten oder Gefaehrten einsperren.");
+				return;
+			}
+
+			if (WillSave(e.actedon, IRON_FLASK_DC, SAVING_THROW_TYPE_TRAP, e.actor)) {
+				SendMessageToPC(e.actor, "Dein Ziel hat den Rettungswurf geschafft!");
+				return;
+			} else {
+				// lock creature into flask
+				SetName(e.runnable, "Eiserne Flasche (voll)");
+				SetLocalInt(e.runnable, "creature_gff", p_save("iron_flask", e.actedon));
+				ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH),
+					GetLocation(e.actedon));
+				ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_BREACH),
+					GetLocation(e.actor));
+				DestroyObject(e.actedon, 0.1f);
+				SendMessageToPC(e.actor, "Du sperrst die Kreatur in die Flasche.");
+			}
+		}
+	}
+
+}

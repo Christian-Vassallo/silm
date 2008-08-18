@@ -43,6 +43,15 @@ create trigger objects_update_md
 	on objects.dropped_items for each row 
 	execute procedure objects.objects_update_md();
 
+-- Table: iron_flask
+-- Items on the ground
+create table objects.iron_flask (
+) inherits (objects.objects);
+create trigger objects_update_md
+	before insert or update
+	on objects.iron_flask for each row 
+	execute procedure objects.objects_update_md();
+
 -- Table: critters
 -- Creatures on the ground somewhere
 create table objects.critters (
