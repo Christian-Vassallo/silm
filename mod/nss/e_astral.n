@@ -1,0 +1,25 @@
+extern("inc_corpse")
+extern("inc_xp_handling")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "door_click") {
+		if (GetTag(e.runnable) == "astralebene_2_nexus") {
+			object oClicker = e.actor;
+			object oTarget = GetTransitionTarget(e.runnable);
+			SetAreaTransitionBMP(AREA_TRANSITION_RANDOM);
+
+			if ( GetIsPC(oClicker) ) {
+				ReincarnatePC(oClicker);
+				SetLegacyPersistentInt(oClicker, "PC_XP_PENALTY", 0);
+				XP_LoseXP(oClicker, GetLegacyPersistentInt(oClicker, "PC_XP_PENALTY"));
+			}
+
+			//FIXME: RespawnTarget
+			AssignCommand(oClicker, JumpToObject(GetObjectByTag("RESPAWN_LOC")));
+			
+			event_stop();
+		}
+	}
+}
