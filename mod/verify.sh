@@ -12,6 +12,9 @@ for x in $@; do
 	*.utd.yml)
 		fix-door-scripts.rb $x
 		;;
+	*.uti.yml)
+		show-item.rb $x
+		;;
 
 	*.are.yml)
 		fix-area-scripts.rb $x
