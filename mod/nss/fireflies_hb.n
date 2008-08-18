@@ -1,0 +1,15 @@
+// fireflies heartbeat script
+// This just swaps out placeables depending on the time of day
+
+void main() {
+	object flies = OBJECT_SELF;
+
+	if ((GetIsDawn() || GetIsDay()) && GetTag(flies) == "fireflies_night") {
+		CreateObject(OBJECT_TYPE_PLACEABLE, "fireflies_day", GetLocation(flies));
+		DestroyObject(flies, 0.1f);
+
+	} else if ((GetIsDusk() || GetIsNight()) && GetTag(flies) == "fireflies_day") {
+		CreateObject(OBJECT_TYPE_PLACEABLE, "fireflies_night", GetLocation(flies));
+		DestroyObject(flies, 0.1f);
+	}
+}
