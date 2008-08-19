@@ -36,21 +36,6 @@ void SetTag(object oObject, string sValue);
 // - nRacialType: RACIAL_TYPE_*
 void SetRacialType(object oObject, int nRacialType);
 
-// Function: GetDescriptionLength
-// Get the length of oObject's description
-// Works with items, placeables, doors and creatures
-int GetDescriptionLength(object oObject);
-
-// Function: GetDescription
-// Get description of oObject
-// Works with items, placeables, doors and creatures
-string GetDescription(object oObject);
-
-// Function: SetDescription
-// Set description of oObject
-// Works with items, placeables, doors and creatures
-void SetDescription(object oObject, string sNewDescription);
-
 // Function: GetConversation
 // Get NPC's conversation resource name
 string GetConversation(object oObject);
@@ -209,30 +194,6 @@ void SetRacialType(object oObject, int nRacialType)
 {
     SetLocalString(oObject, "NWNX!FUNCTIONS!SETRACIALTYPE", IntToString(nRacialType));
     DeleteLocalString(oObject, "NWNX!FUNCTIONS!SETRACIALTYPE");
-}
-
-int GetDescriptionLength(object oObject)
-{
-    int nDescLength;
-    SetLocalString(oObject, "NWNX!FUNCTIONS!GETDESCRIPTIONLENGTH", "          ");
-    nDescLength = StringToInt(GetLocalString(oObject, "NWNX!FUNCTIONS!GETDESCRIPTIONLENGTH"));
-    DeleteLocalString(oObject, "NWNX!FUNCTIONS!GETDESCRIPTIONLENGTH");
-    return nDescLength;
-}
-
-string GetDescription(object oObject)
-{
-    string sDesc;
-    SetLocalString(oObject, "NWNX!FUNCTIONS!GETDESCRIPTION", "                                                                                                                                                                                                                                                            ");
-    sDesc = GetLocalString(oObject, "NWNX!FUNCTIONS!GETDESCRIPTION");
-    DeleteLocalString(oObject, "NWNX!FUNCTIONS!GETDESCRIPTION");
-    return sDesc;
-}
-
-void SetDescription(object oObject, string sNewDescription)
-{
-    SetLocalString(oObject, "NWNX!FUNCTIONS!SETDESCRIPTION", sNewDescription);
-    DeleteLocalString(oObject, "NWNX!FUNCTIONS!SETDESCRIPTION");
 }
 
 string GetConversation(object oObject)
