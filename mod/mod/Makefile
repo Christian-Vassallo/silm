@@ -1,12 +1,12 @@
-all:  resources ifo
+objects := $(basename $(wildcard *.yml))
+
+all:  $(objects) ifo
 
 ifo:
 	update-ifo.pl ../area/\*.are
 
-resources:
-	nwn-gff-import -y -o module.ifo module.ifo.yml
-	nwn-gff-import -y -o module.jrl module.jrl.yml
-	nwn-gff-import -y -o repute.fac repute.fac.yml
+$(objects) : % : %.yml
+	nwn-gff-import -y -o $@ $<
 
 clean:
-	-@rm -v module.ifo module.jrl repute.fac
+	-@rm -v $(objects)
