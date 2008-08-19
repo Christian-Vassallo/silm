@@ -1,0 +1,78 @@
+
+void prepare_spell_cache() {
+	int i = 0;
+	int count = 0;
+	for (i = 0; i < IPRP_SPELLS_2DA_MAX_ID; i++) {
+		if (
+			Get2DAString("iprp_spells", "GeneralUse", i) == "1" &&
+			atoi(Get2DAString("iprp_spells", "Cost", i)) > 20 &&
+			Get2DAString("iprp_spells", "Icon", i) != "****"
+		) {
+			SetLocalInt(GetModule(), "usable_spells_" + itoa(count), i);
+			count++;
+		}
+	}
+	SetLocalInt(GetModule(), "usable_spells", count);
+	_INFO("Usable spell cache: found " + itoa(count) + " usable spells.");
+}
+
+void turn_page(object book) {
+	// Remove any cast spell iprps.
+	itemproperty ip = GetFirstItemProperty(book);
+	while (GetIsItemPropertyValid(ip)) {
+		if (
+			GetItemPropertyType(ip) == ITEM_PROPERTY_CAST_SPELL &&
+			GetItemPropertySubType(ip) != IP_CONST_CASTSPELL_UNIQUE_POWER_SELF_ONLY
+		) {
+			RemoveItemProperty(book, ip);
+		}
+		ip = GetNextItemProperty(book);
+	}
+
+	int usable_spell_count = GetLocalInt(GetModule(), "usable_spells");
+	int new_spell = Random(usable_spell_count);
+	new_spell = GetLocalInt(GetModule(), "usable_spells_" + itoa(new_spell));
+	if (!new_spell) {
+		_ERROR("Cannot find new spell in useable spell list.");
+		return;
+	}
+	ip = ItemPropertyCastSpell(new_spell, IP_CONST_CASTSPELL_NUMUSES_1_USE_PER_DAY);
+	AddItemProperty(DURATION_TYPE_PERMANENT, ip, book);
+	return;
+}
+
+
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "module_load") {
+		prepare_spell_cache();
+	}
+
+	if (e.ev == "item_activate") {
+		if (GetTag(e.runnable) != "art_book_spells")
+			return;
+
+		int num_pages = GetLocalInt(e.runnable, "num_pages");
+		int current_page = GetLocalInt(e.runnable, "current_page");
+		
+		if (num_pages == 0) {
+			num_pages = 22 + d8();
+			SetLocalInt(e.runnable, "num_pages", num_pages);
+		}
+		current_page++;
+		SetLocalInt(e.runnable, "current_page", current_page);
+		
+		if (current_page > num_pages) {
+			DestroyObject(e.runnable);
+			return;
+		}
+		
+		SendMessageToPC(e.actor, "Es verbleiben " + itoa(num_pages - current_page) + " Seiten, ausschliesslich der aktuellen.");
+		SetName(e.runnable, "");
+		SetName(e.runnable, GetName(e.runnable) + " (" + itoa(num_pages - current_page) + " ungesehene Seiten verbleibend)");
+
+		turn_page(e.runnable);
+	}
+}
