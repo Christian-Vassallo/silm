@@ -26,7 +26,9 @@ void main() {
 
 	// Event: item_unequip
 	// Creature unequips item
-	// - runnable: item
+	// - runnable: module
 	// - actor: pc
-	RunEventScriptsFor(GetEventSerial(), "item_unequip", oItem, oPC, oPC, GetLocation(oPC));
+	// - actedon: item
+	// - actedat: location of item
+	RunEventScriptsFor(GetEventSerial(), "item_unequip", GetModule(), oPC, oItem, GetLocation(oItem));
 }

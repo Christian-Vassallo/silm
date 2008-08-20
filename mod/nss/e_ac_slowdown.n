@@ -46,12 +46,12 @@ void main() {
 	struct EventInfo ei = GetEventInfo();
 
 	if ("item_equip" == ei.ev) {
-		if (BASE_ITEM_ARMOR == GetBaseItemType(ei.runnable))
-			each(ei.actor, ei.runnable);
+		if (BASE_ITEM_ARMOR == GetBaseItemType(ei.actedon))
+			each(ei.actor, ei.actedon);
 	}
 
 	if ("item_unequip" == ei.ev) {
-		if (BASE_ITEM_ARMOR == GetBaseItemType(ei.runnable))
-			each(ei.actor, ei.runnable);
+		if (BASE_ITEM_ARMOR == GetBaseItemType(ei.actedon))
+			each(ei.actor, ei.actedon);
 	}
 }

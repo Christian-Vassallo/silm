@@ -44,9 +44,12 @@ void main() {
 	}
 
 
-	// Run the event script, if available.
-	if (is_valid(oItem))
-		RunEventScriptsFor(GetEventSerial(), "item_unacquire", GetModule(), oPC, oItem, GetLocation(oPC));
+	// Event: item_unacquire
+	// - runnable: module
+	// - actor: pc
+	// - actedon: item
+	// - actedat: location of item
+	RunEventScriptsFor(GetEventSerial(), "item_unacquire", GetModule(), oPC, oItem, GetLocation(oItem));
 }
 
 
