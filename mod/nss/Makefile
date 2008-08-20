@@ -40,9 +40,9 @@ $(preprocessed) : %.nss : %.n
 $(objects) : %.ncs : %.nss
 	$(NCC) $(NCCFLAGS) $(NWNHOME) $<
 
-
+.PHONY: tags
 tags:
-	@ctags --language-force=c --totals --fields=fksmnSzt  global/*.h *.{n,nh,h} $(NWNHOME)/original_resources/nss/*.nss
+	@ctags --language-force=c --totals --fields=fksmnSzt  global/*.h *.{n,nh,h} $(NWNHOME)/original_resources/*.nss
 
 clean:
 	-rm *.nss *.ncs *.ndb
