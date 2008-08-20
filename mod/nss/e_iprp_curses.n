@@ -71,30 +71,38 @@ void remove_curse(object item, int subtype = -1) {
 void main() {
 	struct EventInfo e = GetEventInfo();
 
-	/* if (e.ev == "item_unequip" && is_valid(e.runnable) &&
-			is_cursed(e.runnable, IP_CONST_CURSED_UNDROPPABLE)) {
-		
-		SendMessageToAllDMs("unequip: " + GetName(e.runnable) + " by " + GetName(e.actor));
+//	if (e.r_pos != 0)
+//		_WARN("not at first queue position (" + itoa(e.r_pos) + "/" + itoa(e.r_total) + ")");
 
-		int slot = GetBestEquippableSlot(e.actor, e.runnable);
+	if (e.ev == "item_unequip" && is_valid(e.actedon) &&
+			is_cursed(e.actedon, IP_CONST_CURSED_UNUNEQUIPPABLE)) {
+		
+		int slot = GetBestEquippableSlot(e.actor, e.actedon);
 		if (-1 == slot) {
-			_WARN("player " + GetName(e.actor) + " unequipped a cursed item, but we cant find a slot to re-equip. oops.");
+			_WARN("player " + GetName(e.actor) + " unequipped a cursed item (" + GetName(e.actedon) + ", but we cant find a slot to re-equip. oops.");
 			return;
 		}
-		FloatingTextStringOnCreature("So sehr du auch versuchst, diesen Gegenstand abzulegen, es gelingt dir nicht.", e.actor, FALSE);
-		AssignCommand(e.actor, ActionEquipItem(e.runnable, slot));
+		FloatingTextStringOnCreature("So sehr du auch versuchst, diesen Gegenstand aus der Hand zu legen/abzustreifen, es gelingt dir nicht.", e.actor, false);
+		AssignCommand(e.actor, ActionEquipItem(e.actedon, slot));
 
-		event_ret(EVENT_RESULT_STOP | EVENT_RESULT_END);
-	} */
+		event_stop_end();
+	}
+
+	if (e.ev == "item_acquire" && is_cursed(e.runnable, IP_CONST_CURSED_UNDROPPABLE)) {
+		FloatingTextStringOnCreature("Du fuehlst ein leichtes Kribbeln, ausgehend von: " + GetName(e.runnable) + ".", e.actor, false);
+		SetItemCursedFlag(e.runnable, true);
+		return;
+	}
 
 	if (e.ev == "item_spellcast" && is_valid(e.actedon) &&
-			is_cursed(e.actedon, IP_CONST_CURSED_UNDROPPABLE)) {
+			is_cursed(e.actedon, IP_CONST_CURSED_UNDROPPABLE) &&
+			GetItemCursedFlag(e.actedon)) {
 		
 		if (GetSpellId() != SPELL_REMOVE_CURSE)
 			return;
 
-		SetDroppableFlag(e.actedon, false);
-		remove_curse(e.actedon, IP_CONST_CURSED_UNDROPPABLE);
+		SetItemCursedFlag(e.actedon, false);
+		FloatingTextStringOnCreature("Du brichst den Fluch auf " + GetName(e.actedon) + ".", e.actor, false);
 		
 		event_stop_end();
 	}
