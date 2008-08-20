@@ -42,7 +42,7 @@ $(objects) : %.ncs : %.nss
 
 .PHONY: tags
 tags:
-	@ctags --language-force=c --totals --fields=fksmnSzt  global/*.h *.{n,nh,h} $(NWNHOME)/original_resources/*.nss
+	@ctags --language-force=c --totals --c-kinds=cdefgmnpstuvx --fields=fksmnSzt global/*.h *.{n,nh,h} $(NWNHOME)/original_resources/*.nss
 
 clean:
 	-rm *.nss *.ncs *.ndb
