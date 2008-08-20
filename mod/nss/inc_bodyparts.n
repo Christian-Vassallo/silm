@@ -3,9 +3,15 @@ extern("inc_persist")
 extern("inc_lists")
 
 const int
-CREATURE_WING_TYPE_AVARIEL = 15,
 CREATURE_PART_WING = 1411,     // not taken :D
 CREATURE_PART_TAIL = 1412;
+
+const int MY_COLOR_CHANNEL_SKIN     = 1024 + COLOR_CHANNEL_SKIN;
+const int MY_COLOR_CHANNEL_HAIR     = 1024 + COLOR_CHANNEL_HAIR;
+const int MY_COLOR_CHANNEL_TATTOO_1 = 1024 + COLOR_CHANNEL_TATTOO_1;
+const int MY_COLOR_CHANNEL_TATTOO_2 = 1024 + COLOR_CHANNEL_TATTOO_2;
+
+const int MAX_COLORS = 175;
 
 string GetModelsIndex(object oPC) {
 	string sInd = ( GetGender(oPC) == GENDER_FEMALE ) ? "f" : "m";
@@ -24,17 +30,12 @@ void SwitchSlot(object oPC, int iPart, int iDelta) {
 		iCurrent = GetCreatureWingType(oPC);
 	if ( iPart == CREATURE_PART_TAIL )
 		iCurrent = GetCreatureTailType(oPC);
+	if ( iPart == MY_COLOR_CHANNEL_SKIN || iPart == MY_COLOR_CHANNEL_HAIR ||
+		iPart == MY_COLOR_CHANNEL_TATTOO_1 || iPart == MY_COLOR_CHANNEL_TATTOO_2)
+		iCurrent = GetColor(oPC, iPart - 1024);
 
 	int iOld = iCurrent;
 	int iFieldEntry;
-
-	/*SendMessageToPC(oPC,
-	 * 	" - CREATURE_MODEL_TYPE_NONE = " + IntToString(CREATURE_MODEL_TYPE_NONE) +
-	 * 	" - CREATURE_MODEL_TYPE_SKIN = " + IntToString(CREATURE_MODEL_TYPE_SKIN) +
-	 * 	" - CREATURE_MODEL_TYPE_TATTOO = " + IntToString(CREATURE_MODEL_TYPE_TATTOO) +
-	 * 	" - CREATURE_MODEL_TYPE_UNDEAD = " + IntToString(CREATURE_MODEL_TYPE_UNDEAD) +
-	 * 	" - current = " + IntToString(iCurrent)
-	 * );*/
 
 	switch ( iPart ) {
 		case CREATURE_PART_HEAD:
@@ -83,16 +84,15 @@ void SwitchSlot(object oPC, int iPart, int iDelta) {
 			else if ( iCurrent < 0 )
 				iCurrent = 3;
 			break;
-			/*
-			 * case NWNX_BODYPART_COLOR_HAIR:
-			 * case NWNX_BODYPART_COLOR_SKIN:
-			 * case NWNX_BODYPART_COLOR_TATTOO_1:
-			 * case NWNX_BODYPART_COLOR_TATTOO_2:
-			 * iCurrent += iDelta;
-			 * if(iCurrent < 0) iCurrent=63;
-			 * else if(iCurrent > 63) iCurrent=0;
-			 * break;
-			 */
+
+		case MY_COLOR_CHANNEL_SKIN:
+		case MY_COLOR_CHANNEL_HAIR:
+		case MY_COLOR_CHANNEL_TATTOO_1:
+		case MY_COLOR_CHANNEL_TATTOO_2:
+			iCurrent += iDelta;
+			if (iCurrent < 0) iCurrent = MAX_COLORS;
+			else if (iCurrent > MAX_COLORS) iCurrent = 0;
+			break;
 	}
 
 	if ( iCurrent != iOld ) {
@@ -104,13 +104,17 @@ void SwitchSlot(object oPC, int iPart, int iDelta) {
 			case CREATURE_PART_TAIL:
 				SetCreatureTailType(iCurrent, oPC);
 				break;
+			case MY_COLOR_CHANNEL_SKIN:
+			case MY_COLOR_CHANNEL_HAIR:
+			case MY_COLOR_CHANNEL_TATTOO_1:
+			case MY_COLOR_CHANNEL_TATTOO_2:
+				SetColor(oPC, iPart - 1024, iCurrent);
+				break;
+
 			default:
 				SetCreatureBodyPart(iPart, iCurrent, oPC);
 				break;
 		}
-
-		//SafeSetBodyPart(oPC,iPart,iCurrent,TRUE);
-		//Save_BodyPart(oPC,iPart);
 	}
 }
 
@@ -144,16 +148,14 @@ void MakeDialog(object oPC) {
 		AddListItem(oPC, "body_sel_list", "Schwanz");
 		SetListInt(oPC, "body_sel_list", CREATURE_PART_TAIL);
 
-		/*
-		 * AddListItem(oPC,"body_sel_list","Hautfarbe");
-		 * SetListInt(oPC,"body_sel_list",NWNX_BODYPART_COLOR_SKIN);
-		 * AddListItem(oPC,"body_sel_list","Haarfarbe");
-		 * SetListInt(oPC,"body_sel_list",NWNX_BODYPART_COLOR_HAIR);
-		 * AddListItem(oPC,"body_sel_list","Taetowierung 1");
-		 * SetListInt(oPC,"body_sel_list",NWNX_BODYPART_COLOR_TATTOO_1);
-		 * AddListItem(oPC,"body_sel_list","Taetowierung 2");
-		 * SetListInt(oPC,"body_sel_list",NWNX_BODYPART_COLOR_TATTOO_2);
-		 */
+		AddListItem(oPC,"body_sel_list","Hautfarbe");
+		SetListInt(oPC,"body_sel_list", MY_COLOR_CHANNEL_SKIN);
+		AddListItem(oPC,"body_sel_list","Haarfarbe");
+		SetListInt(oPC,"body_sel_list", MY_COLOR_CHANNEL_HAIR);
+		AddListItem(oPC,"body_sel_list","Taetowierung 1");
+		SetListInt(oPC,"body_sel_list", MY_COLOR_CHANNEL_TATTOO_1);
+		AddListItem(oPC,"body_sel_list","Taetowierung 2");
+		SetListInt(oPC,"body_sel_list", MY_COLOR_CHANNEL_TATTOO_2);
 
 		ResetConvList(oPC, oPC, "body_sel_list", 50000, "body_choose", "Was wollt Ihr nun aendern?");
 	} else {
@@ -167,12 +169,3 @@ void MakeDialog(object oPC) {
 			"body_chgother", "Anderes Modell aendern");
 	}
 }
-
-
-
-
-
-
-
-
-// void main() { }
