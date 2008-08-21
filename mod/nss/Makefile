@@ -1,44 +1,49 @@
 # inherits stuff
 
-all: revupdate preprocess compile
+all:
+	$(MAKE) Makefile.dep
+	$(MAKE) revupdate compile
 
 NCC=nwnnsscomp
 NCCFLAGS=-g -c -q -o
 NSSVERIFYFLAGS=-g -o -q -t4
-
-includes := 
-
-includesstart := $(filter inc_% %_inc_% %_i0_% funcs_% %inc, $(basename $(wildcard *.nss)))
-
-includesncs := $(addsuffix .ncs, $(includes) $(includesstart))
-includesnss := $(addsuffix .nss, $(includes) $(includesstart))
-sources  := $(filter-out $(includesnss), $(wildcard *.nss))
-
-topreprocess := $(wildcard *.n)
-preprocessed := $(addsuffix .nss, $(basename $(wildcard *.n)))
-
-objects  := $(filter-out $(includesncs), $(addsuffix .ncs, $(basename $(wildcard *.n))))
 
 commit := $(shell git-rev-parse --short --verify HEAD)
 fullcommit := $(shell git log --decorate -n 1|head -1|cut -d' ' -f2-)
 commitdate := $(shell git log --decorate -n 1|grep Date|cut -f4- -d' ')
 builddate := $(shell date "+%Y-%m-%d %X %z (%a, %d %b %Y)")
 
+include Makefile.dep
+
+globals := $(wildcard global/*.h)
+scripts := $(wildcard *.n)
+objects := $(addsuffix .ncs, $(basename $(objects)))
+preprocessed := $(addsuffix .nss, $(basename $(scripts)))
+
+Makefile.dep:
+	@./build_dep_list.rb $(scripts) > Makefile.dep
+
 revupdate:
 	@echo '#define GIT_COMMIT_ON "$(commitdate)"' > git.h
 	@echo '#define GIT_BUILD_ON "$(builddate)"'  >> git.h
 	@echo '#define GIT_COMMIT "$(commit)"'       >> git.h
 
+# Crude hack for revision update thingies.
+e_mnxnotify.nss: git.h
 
-preprocess: $(preprocessed)
-compile: $(objects)
+# This doesn't work yet. Be sure to 'make clean' when changing
+# global headers/includes.
+%.nss: $(globals)
+%.ncs: $(globals)
 
-$(preprocessed) : %.nss : %.n
+%.nss : %.n
 	@set -e; (gcc -undef -Wall -fextended-identifiers -P -E -nostdinc -Iglobal -include stddef.h -I . -include _const.nh -x c -std=c99 $< |\
 		gpp +z -C +n --nostdinc -Iglobal -I. -Iglobal --include "gpp.h" > `basename $< .n`.nss)
 
-$(objects) : %.ncs : %.nss
+%.ncs : %.nss
 	$(NCC) $(NCCFLAGS) $(NWNHOME) $<
+
+compile: $(preprocessed) $(objects)
 
 .PHONY: tags
 tags:
@@ -46,5 +51,3 @@ tags:
 
 clean:
 	-rm *.nss *.ncs *.ndb
-
-
