@@ -305,6 +305,10 @@ void RegisterAllCommands() {
 	RegisterCommand("afk", "");
 	RHs(">> Sets/unsets AFK mode (with flashy visuals!).");
 	RAF(AMASK_ANY);
+	
+	RegisterCommand("repeat", "");
+	RHs(">> Repeat the last spoken message in the current chat channel");
+	RAF(AMASK_ANY);
 
 	// Chatcommand: write
 	// Writes text onto parchment.
@@ -1176,6 +1180,9 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 	if ( "afk" == sCommand )
 		ret = CommandAFK(oPC, iMode);
+	
+	if ("repeat" == sCommand)
+		ret = CommandRepeat(oPC, iMode);
 
 	if ( "cr" == sCommand )
 		ret = CommandCreature(oPC, iMode);

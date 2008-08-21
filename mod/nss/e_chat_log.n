@@ -11,5 +11,9 @@ void main() {
 	if (ea.i0 & CHATMODE_DM_MODE)
 		ea.i0 -= CHATMODE_DM_MODE;
 
+	SetLocalString(ei.actor, "last_chat_message_text", ea.a0);
+	SetLocalInt(ei.actor, "last_chat_message_mode", ea.i0);
+	SetLocalObject(ei.actor, "last_chat_message_on", ei.actedon);
+
 	ChatLog(ei.actor, ea.i0, ea.a0, ei.actedon);
 }

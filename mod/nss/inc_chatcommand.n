@@ -203,6 +203,8 @@ int CommandEventHandler(object oPC, int iMode);
 
 int CommandPersist(object oPC, int iMode);
 
+int CommandRepeat(object oPC, int iMode);
+
 /* implementation */
 
 // This is a stub you can copypaste to implement your own command.
@@ -217,7 +219,15 @@ int CommandStub(object oPC, int iMode) {
 	return OK;
 }
 
-
+int CommandRepeat(object oPC, int iMode) {
+	string message = GetLocalString(oPC, "last_chat_message_text");
+	if (message != "") {
+		SpeakToMode(oPC, message, iMode);
+		return OK;
+	} else {
+		return FAIL;
+	}
+}
 
 int CommandPersist(object oPC, int iMode) {
 	
