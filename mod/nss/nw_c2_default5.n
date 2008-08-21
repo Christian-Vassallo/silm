@@ -19,6 +19,8 @@ extern("inc_events")
 void main() {
 
 	// Event: creature_attacked
+	// This does not fire for PCs.
+	// - runnable: npc that gets attacked 
 	// - actor: GetLastAttacker()
 	int ret = RunEventScriptsFor(GetEventSerial(), "creature_attacked", OBJECT_SELF, GetLastAttacker(), OBJECT_INVALID, GetLocation(OBJECT_INVALID));
 	if (ret & EVENT_RESULT_STOP)

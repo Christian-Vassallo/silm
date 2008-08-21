@@ -37,14 +37,14 @@ void main() {
 			break;
 
 		case NWNXEVENT_ATTACK:
-			// Event: pc_attack
-			// A player character attacks something
+			// Event: creature_attack
+			// A creature (pc or npc) attacks something
 			// - sync
 			// - suppress
-			// - runnable: pc
-			// - actor: pc
+			// - runnable: creature
+			// - actor: creature
 			// - actedon: attacked object
-			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_attack", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
+			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "creature_attack", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
 				NWNXBypassEvent();
 			break;
 
