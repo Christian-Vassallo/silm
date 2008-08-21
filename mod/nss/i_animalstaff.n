@@ -19,6 +19,7 @@ void main() {
 
 		if (!is_valid(oComp)) {
 			SendMessageToPC(e.actor, "Ihr benoetigt einen anwesenden Tiergefaehrten oder Vertauten, um diesen Stab benutzen zu koennen.");
+			event_ret(EVENT_RESULT_STOP | EVENT_RESULT_SUPPRESS);
 			return;
 		}
 
@@ -28,6 +29,7 @@ void main() {
 		SetCustomToken(1338, GetName(oComp));
 		AssignCommand(e.actor, ClearAllActions());
 		AssignCommand(e.actor, ActionStartConversation(OBJECT_SELF, "animalstaff", TRUE, FALSE));
+		event_ret(EVENT_RESULT_STOP | EVENT_RESULT_SUPPRESS);
 	}
 
 }
