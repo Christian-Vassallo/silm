@@ -29,14 +29,6 @@ revupdate:
 	@echo '#define GIT_BUILD_ON "$(builddate)"'  >> git.h
 	@echo '#define GIT_COMMIT "$(commit)"'       >> git.h
 
-# Crude hack for revision update thingies.
-e_mnxnotify.nss: git.h
-
-# This doesn't work yet. Be sure to 'make clean' when changing
-# global headers/includes.
-%.nss: $(globals)
-%.ncs: $(globals)
-
 %.nss : %.n
 	@set -e; (gcc -undef -Wall -fextended-identifiers -P -E -nostdinc -Iglobal -include stddef.h -I . -include _const.nh -x c -std=c99 $< |\
 		gpp +z -C +n --nostdinc -Iglobal -I. -Iglobal --include "gpp.h" > `basename $< .n`.nss)

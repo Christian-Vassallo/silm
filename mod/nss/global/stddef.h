@@ -76,7 +76,6 @@
  */
 #define iterate_area(area,inline_code) iterate_valid_object_sequential(GetFirstObjectInArea(area),GetNextObjectInArea(area),inline_code)
 
-#include "git.h"
 #include "log.h"
 #include "inline.h"
 #include "mutex.h"
