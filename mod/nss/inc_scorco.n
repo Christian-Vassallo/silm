@@ -203,7 +203,7 @@ int p_load_to_location_metadata(string table, string conditions) {
         location where = Location(area, p, pGf(5));
         
 		o = pRCO("select data from " + normalize_table(table) + " where id = " + pSi(id) + ";", where);
-		DelayCommand(0.0, p_delayed_rco_finalizer(id, o));
+		DelayCommand(0.25, p_delayed_rco_finalizer(id, o));
 
         total += 1;
     }
