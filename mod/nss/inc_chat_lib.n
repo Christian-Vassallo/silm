@@ -206,6 +206,9 @@ void SpeakToMode(object oObject, string sText, int iMode) {
 	if ( "" == sText )
 		return; // SIGSEGV :D
 
+	if (iMode & CHATMODE_DM_MODE)
+		iMode -= CHATMODE_DM_MODE;
+
 	_DEBUG("chat", 2, "speaktomode(" + otoa(oObject) + ", " + itoa(iMode) + "): enter");
 
 	object speaker = oObject;
