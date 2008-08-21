@@ -25,20 +25,25 @@ end
 
 
 global_externs = get_externs_for('global/stddef.h')
-mergeme = []
+new = []
 global_externs.each {|ext|
   externs = get_externs_for('global/' + ext)
-  mergeme << ext
+  new << 'global/' + ext
+  new.concat externs
 }
-global_externs.concat mergeme
+global_externs = new
 global_externs.concat ['_const.nh']
 global_externs.uniq!
+
+puts "global_externs := %s"  % global_externs.join(' ')
 
 ARGV.each {|file|
   nssdep = []
   ncsdep = []
 
   externs = get_externs_for(file)
+#  externs.concat global_externs
+  nssdep << '$(global_externs)'
 
   is_compileable = get_is_compileable(file)
 
@@ -71,5 +76,3 @@ ARGV.each {|file|
   end
 }
 puts "objects := %s" % compileable.join(' ')
-puts "global_externs := %s"  % global_externs.join(' ')
-puts '%.nss: $(global_externs)'
