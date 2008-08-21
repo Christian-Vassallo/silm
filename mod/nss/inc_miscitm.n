@@ -11,12 +11,13 @@ extern("inc_horse")
 extern("inc_craft")
 extern("inc_craft_hlp")
 extern("inc_dbook")
-
+extern("inc_dbplac")
 extern("inc_cdb")
 
 
 void _BuildTent(object oItem, object oPC, location lTarget) {
-	CreateObject(OBJECT_TYPE_PLACEABLE, "zelt", lTarget);
+	object oTent = CreateObject(OBJECT_TYPE_PLACEABLE, "zelt", lTarget);
+	SavePlacie(oTent, oPC);
 	DestroyObject(oItem);
 }
 
