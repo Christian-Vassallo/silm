@@ -20,6 +20,7 @@ scripts := $(wildcard *.n)
 objects := $(addsuffix .ncs, $(basename $(objects)))
 preprocessed := $(addsuffix .nss, $(basename $(scripts)))
 
+.PHONY: Makefile.dep
 Makefile.dep:
 	@./build_dep_list.rb $(scripts) > Makefile.dep
 
