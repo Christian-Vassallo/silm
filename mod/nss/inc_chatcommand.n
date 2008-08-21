@@ -218,8 +218,9 @@ int CommandStub(object oPC, int iMode) {
 }
 
 int CommandRepeat(object oPC, int iMode) {
-	string message = GetLocalString(oPC, "last_chat_message_text");
-	if (message != "") {
+	string aidcid = itoa(GetAccountID(oPC)) + "_" + itoa(GetCharacterID(oPC));
+	string message = GetLocalString(GetModule(), "last_chat_message_text_" + aidcid);
+	if ((iMode & CHATMODE_TALK || iMode & CHATMODE_WHISPER) && message != "") {
 		SpeakToMode(oPC, message, iMode);
 		return OK;
 	} else {

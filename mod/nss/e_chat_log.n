@@ -1,5 +1,5 @@
-extern("inc_events")
 extern("inc_chatlog")
+extern("inc_cdb")
 
 void main() {
 	struct EventInfo ei = GetEventInfo();
@@ -11,9 +11,11 @@ void main() {
 	if (ea.i0 & CHATMODE_DM_MODE)
 		ea.i0 -= CHATMODE_DM_MODE;
 
-	SetLocalString(ei.actor, "last_chat_message_text", ea.a0);
-	SetLocalInt(ei.actor, "last_chat_message_mode", ea.i0);
-	SetLocalObject(ei.actor, "last_chat_message_on", ei.actedon);
+	string aid = itoa(GetAccountID(ei.actor));
+	string cid = itoa(GetCharacterID(ei.actor));
+	SetLocalString(GetModule(),  "last_chat_message_text_" + aid + "_" + cid, ea.a0);
+	SetLocalInt(GetModule(), "last_chat_message_mode_" + aid + "_" + cid, ea.i0);
+	SetLocalObject(GetModule(), "last_chat_message_on_" + aid + "_" + cid, ei.actedon);
 
 	ChatLog(ei.actor, ea.i0, ea.a0, ei.actedon);
 }
