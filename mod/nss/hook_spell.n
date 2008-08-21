@@ -47,10 +47,23 @@ void main() {
 	// The Event hook goes here
 
 	if ( is_item(oTarget) ) {
+		// Event: item_spellcast
+		// - actor: GetLastSpellCaster()
 		int nResult = RunEventScriptsFor(GetEventSerial(), "item_spellcast", oPC, oPC, oTarget, lTarget); //oTarget, EVENT_ITEM_SPELLCAST_AT, EVENT_PREFIX_ITEM);
 
 		if ( nResult & EVENT_RESULT_STOP ) {
 			// Do not continue.
+			SetModuleOverrideSpellScriptFinished();
+			return;
+		}
+	}
+
+	if (is_creature(oTarget)) {
+		// Event: creature_spellcast
+		// - actor: GetLastSpellCaster()
+		int ret = RunEventScriptsFor(GetEventSerial(), "creature_spellcast", oPC, oPC, oTarget, lTarget);
+
+		if (ret & EVENT_RESULT_STOP) {
 			SetModuleOverrideSpellScriptFinished();
 			return;
 		}
