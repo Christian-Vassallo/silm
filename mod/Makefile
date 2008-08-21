@@ -33,7 +33,7 @@ VALIDEXT=area/\*.git area/\*.are \
 	utc/\*.utc utd/\*.utd ute/\*.ute \
 	itp/\*.itp ssf/\*.ssf \
 	mod/\*.fac mod/\*.ifo mod/\*.jrl \
-	`find uti -iname *.uti` \
+	`find uti -iname \*.uti` \
  	nss/\*.ncs
 
 # This gets packaged into a developer package, which has
@@ -41,7 +41,7 @@ VALIDEXT=area/\*.git area/\*.are \
 VALIDEXTDEV=$(AREAS) \
 	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
 	utc/\*.utc utd/\*.utd ute/\*.ute \
-	`find uti -iname *.uti` \
+	`find uti -iname \*.uti` \
 	itp/\*.itp ssf/\*.ssf \
 	mod/\*.fac mod/\*.ifo mod/\*.jrl \
 	nss/\*.ncs nss/\*.nss
