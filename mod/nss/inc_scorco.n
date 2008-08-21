@@ -176,7 +176,7 @@ bool p_destroy(string table, object o) {
 
 
 void p_delayed_rco_finalizer(int p_id, object o) {
-	if (!GetIsObjectValid(o)) {
+	if (!p_get_p_id(o)) {
 		_WARN("Tried to load a object which did not instanciate: " + pSi(p_id));
 	}
 }
