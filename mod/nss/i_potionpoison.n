@@ -1,0 +1,27 @@
+#define is_potion(o) GetBaseItemType(o)==BASE_ITEM_POTIONS
+
+void main () {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "creature_spellcast" && is_potion(GetSpellCastItem()) && is_creature(e.actedon)) {
+		int poison = GetLocalInt(GetSpellCastItem(), "poison_type");
+		if (poison) {
+			poison--;
+			ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectPoison(poison), e.actedon);
+
+			if (!GetLocalInt(GetSpellCastItem(), "poison_keep_original"))
+				event_stop();
+		}
+	}
+
+	if (e.ev == "item_activate") {
+		int poison = GetLocalInt(e.runnable, "poison_type");
+		if (poison) {
+			poison--;
+			ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectPoison(poison), e.actedon);
+
+			if (!GetLocalInt(GetSpellCastItem(), "poison_keep_original"))
+				event_stop_end();
+		}
+	}
+}
