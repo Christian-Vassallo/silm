@@ -1,7 +1,7 @@
 # Set as environment var!
 # NWNHOME=/home/elven/nwn
 
-targets := $(basename $(wildcard *.tlk.txt))
+targets := $(basename $(wildcard *.tlk.source))
 
 all: path $(targets)
 
@@ -15,7 +15,7 @@ endif
 clean:
 	-rm *.tlk
 
-%.tlk : %.tlk.txt
+%.tlk : %.tlk.source
 	tlkencode.pl -o $(NWNHOME)/tlk/$@ $<
 
 publish:
