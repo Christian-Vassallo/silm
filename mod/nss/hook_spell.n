@@ -69,6 +69,16 @@ void main() {
 		}
 	}
 
+	if (is_placeable(oTarget)) {
+		// Event: placeable_spellcast
+		// - actor: GetLastSpellCaster()
+		int ret = RunEventScriptsFor(GetEventSerial(), "placeable_spellcast", oPC, oPC, oTarget, lTarget);
+
+		if (ret & EVENT_RESULT_STOP) {
+			SetModuleOverrideSpellScriptFinished();
+			return;
+		}
+	}
 
 	// SpellStaff
 	if ( DoSpellStaff(oPC, nSpell) )
