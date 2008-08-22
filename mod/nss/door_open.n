@@ -7,7 +7,9 @@ void main() {
 	// Event: door_open
 	// - runnable: door
 	// - actor: opener/creature
-	RunEventScriptsFor(GetEventSerial(), "door_open", OBJECT_SELF, oPC, oDoor, GetLocation(oDoor));
+	// - stop
+	if(EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "door_open", OBJECT_SELF, oPC, oDoor, GetLocation(oDoor)))
+		return;
 
 	int nAutoClose = GetLocalInt(oDoor, "autoclose");
 	int nAutoLock = GetLocalInt(oDoor, "autolock");
