@@ -1,0 +1,34 @@
+extern("inc_cdb")
+extern("x2_inc_spellhook")
+
+void main() {
+	if ( !X2PreSpellCastCode() )
+		return;
+
+	object oPC = OBJECT_SELF;
+	object oTarget = GetSpellTargetObject();
+	
+
+	int cid = GetCharacterID(oPC);
+	if (!cid)
+		cid = -1;
+
+	if (is_dm(oPC))
+		SendMessageToPC(oPC, "Du bist SL, das Schloss oeffnet fuer niemanden.");
+
+	if (!is_door(oTarget) || !GetLockLockable(oTarget)) {
+		FloatingTextStringOnCreature("Dieses Objekt laesst sich nicht verschliessen.", oPC, false);
+		return;
+	}
+
+	int current_lock = GetLocalInt(oTarget, "arcane_lock");
+	int current_level = GetLocalInt(oTarget, "arcane_lock_caster_level");
+	if (!current_lock || current_level <= GetCasterLevel(oPC)) {
+		AssignCommand(oTarget, ActionCloseDoor(oTarget));
+		SetLocalInt(oTarget, "arcane_lock", cid);
+		SetLocalInt(oTarget, "arcane_lock_caster_level", GetCasterLevel(oPC));
+	}
+
+	FloatingTextStringOnCreature("Du versiehst dieses Objekt mit einem Magischen Schloss.", oPC, false);
+	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_SONIC), oTarget);
+}

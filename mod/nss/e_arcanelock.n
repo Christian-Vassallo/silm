@@ -1,0 +1,60 @@
+extern("inc_cdb")
+
+void ShowDoorIsLocked(object oDoor, object oUser) {
+	// Print '*locked*' message and play sound
+	DelayCommand(0.1, PlaySound("as_dr_locked2"));
+	FloatingTextStringOnCreature("*" + GetStringByStrRef(8307) + "*", oUser);
+	SendMessageToPC(oUser, GetStringByStrRef(8296));
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if ("door_open" == e.ev) {
+		int cid = GetCharacterID(e.actor);
+		int arcane_lock = GetLocalInt(e.runnable, "arcane_lock");
+
+		if (arcane_lock != 0) {
+			if (cid == arcane_lock || is_dm(e.actor)) {
+				SendMessageToPC(e.actor, "Du passierst dein eigenes magisches Schloss ..");
+				return;
+			}
+
+			ShowDoorIsLocked(e.runnable, e.actor);
+			AssignCommand(e.runnable, ActionCloseDoor(e.runnable));
+			event_stop_end(); // Dont propagate the open request
+		}
+	}
+
+	if ("door_spellcast" == e.ev) {
+		int spell = GetLastSpell();
+
+		if (spell == SPELL_DISPEL_MAGIC || spell == SPELL_LESSER_DISPEL ||
+				spell == SPELL_GREATER_DISPELLING || spell == SPELL_MORDENKAINENS_DISJUNCTION) {
+
+			object caster = GetLastSpellCaster();
+			int dc = 11 + GetLocalInt(e.runnable, "arcane_lock_caster_level");
+			int save = GetCasterLevel(caster);
+			switch (spell) {
+				case SPELL_LESSER_DISPEL: if (save > 5) save = 5; break;
+				case SPELL_DISPEL_MAGIC: if (save > 10) save = 10; break;
+				case SPELL_GREATER_DISPELLING: if (save > 15) save = 15; break;
+			}
+			save = d20() + save;
+
+			if (is_dm(caster) || save >= dc) {
+				SetLocalInt(e.runnable, "arcane_lock", 0);
+				SetLocalInt(e.runnable, "arcane_lock_caster_level", 0);
+			}
+		}
+
+		if (spell == SPELL_KNOCK) {
+			int lock_id = GetLocalInt(e.runnable, "arcane_lock");
+			if (lock_id != 0) {
+				ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_KNOCK), e.runnable);
+				SetLocalInt(e.runnable, "arcane_lock", 0);
+				DelayCommand(10*60f, SetLocalInt(e.runnable, "arcane_lock", lock_id));
+			}
+		}
+	}
+}
