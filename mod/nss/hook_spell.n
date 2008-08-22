@@ -80,6 +80,15 @@ void main() {
 		}
 	}
 
+	// Event: object_spellcast
+	// - actor: GetLastSpellCaster()
+	int ret = RunEventScriptsFor(GetEventSerial(), "object_spellcast", oPC, oPC, oTarget, lTarget);
+
+	if (ret & EVENT_RESULT_STOP) {
+		SetModuleOverrideSpellScriptFinished();
+		return;
+	}
+
 	// SpellStaff
 	if ( DoSpellStaff(oPC, nSpell) )
 		SetModuleOverrideSpellScriptFinished();
