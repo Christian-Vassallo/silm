@@ -1,20 +1,24 @@
 extern("inc_cdb")
+extern("inc_session")
 
 void main() {
 	struct EventInfo e = GetEventInfo();
 
 	if ("module_load" == e.ev) {
+		session_cleanup();
 		ExecuteScript("_mod_load_cdb", GetModule());
 	}
 
 	if ("pc_login" == e.ev) {
 		ExecuteScript("_mod_clenter_cdb", e.runnable);
+		session_start(e.runnable);
 	}
 
 	if ("pc_logout" == e.ev) {
 		ExecuteScript("_mod_clleave_cdb", e.runnable);
 		if (!is_dm(e.runnable))
 			UpdateMessageCount(e.runnable, GetLocalInt(e.runnable, "message_count"));
+		session_end(e.runnable);
 	}
 
 	if ("chat_prefilter" == e.ev && !is_dm(e.runnable)) {
