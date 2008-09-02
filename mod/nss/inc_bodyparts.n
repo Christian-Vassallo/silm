@@ -123,6 +123,16 @@ void MakeDialog(object oPC) {
 
 	if ( !iSelPart ) {
 		ClearList(oPC, "body_sel_list");
+
+		AddListItem(oPC,"body_sel_list","Hautfarbe");
+		SetListInt(oPC,"body_sel_list", MY_COLOR_CHANNEL_SKIN);
+		AddListItem(oPC,"body_sel_list","Haarfarbe");
+		SetListInt(oPC,"body_sel_list", MY_COLOR_CHANNEL_HAIR);
+		AddListItem(oPC,"body_sel_list","Taetowierung 1");
+		SetListInt(oPC,"body_sel_list", MY_COLOR_CHANNEL_TATTOO_1);
+		AddListItem(oPC,"body_sel_list","Taetowierung 2");
+		SetListInt(oPC,"body_sel_list", MY_COLOR_CHANNEL_TATTOO_2);
+
 		AddListItem(oPC, "body_sel_list", "Kopf");
 		SetListInt(oPC, "body_sel_list", CREATURE_PART_HEAD);
 		AddListItem(oPC, "body_sel_list", "Brustbereich");
@@ -147,15 +157,6 @@ void MakeDialog(object oPC) {
 		SetListInt(oPC, "body_sel_list", CREATURE_PART_WING);
 		AddListItem(oPC, "body_sel_list", "Schwanz");
 		SetListInt(oPC, "body_sel_list", CREATURE_PART_TAIL);
-
-		AddListItem(oPC,"body_sel_list","Hautfarbe");
-		SetListInt(oPC,"body_sel_list", MY_COLOR_CHANNEL_SKIN);
-		AddListItem(oPC,"body_sel_list","Haarfarbe");
-		SetListInt(oPC,"body_sel_list", MY_COLOR_CHANNEL_HAIR);
-		AddListItem(oPC,"body_sel_list","Taetowierung 1");
-		SetListInt(oPC,"body_sel_list", MY_COLOR_CHANNEL_TATTOO_1);
-		AddListItem(oPC,"body_sel_list","Taetowierung 2");
-		SetListInt(oPC,"body_sel_list", MY_COLOR_CHANNEL_TATTOO_2);
 
 		ResetConvList(oPC, oPC, "body_sel_list", 50000, "body_choose", "Was wollt Ihr nun aendern?");
 	} else {
