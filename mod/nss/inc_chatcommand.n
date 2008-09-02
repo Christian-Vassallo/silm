@@ -203,6 +203,8 @@ int CommandEventHandler(object oPC, int iMode);
 
 int CommandRepeat(object oPC, int iMode);
 
+int CommandBodyOperator(object oPC, int iMode);
+
 /* implementation */
 
 // This is a stub you can copypaste to implement your own command.
@@ -1801,6 +1803,10 @@ int CommandPassword(object oPC, int iMode) {
 }
 
 
+int CommandBodyOperator(object oPC, int iMode) {
+	ExecuteScript("body_start_self", oPC);
+	return OK;
+}
 
 int CommandBodyPart(object oPC, int iMode) {
 	object oTarget = GetTarget();
