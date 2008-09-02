@@ -9,10 +9,11 @@ void main() {
 		return;
 
 	int bpsel = GetLocalInt(e.runnable, "BODY_SEL_PART");
+	int cutype = GetLocalInt(e.runnable, "CUST_TYPE");
 	int cusel = GetLocalInt(e.runnable, "CUST_PART");
 	int cuside = GetLocalInt(e.runnable, "CUST_SIDE");
 
-	if (!bpsel && !cusel)
+	if (!bpsel && !cutype)
 		return;
 
 	struct EventArguments ea = GetEventArguments(e.serial);
@@ -26,7 +27,7 @@ void main() {
 	} else {
 		if (bpsel)
 			SwitchSlot(e.runnable, bpsel, new_part, true);
-		else if (cusel)
+		else if (cutype)
 			PerformModify(e.runnable, cusel);
 	}
 
