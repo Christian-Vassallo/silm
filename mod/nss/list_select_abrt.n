@@ -1,0 +1,11 @@
+void main() {
+	object speaker = GetPCSpeaker();
+	if (!is_valid(speaker))
+		speaker = OBJECT_SELF;
+	if (!is_valid(speaker))
+		return;
+
+	string scr = GetLocalString(speaker, "list_select_abort_script");
+	if (scr != "")
+		ExecuteScript(scr, speaker);
+}
