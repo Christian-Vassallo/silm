@@ -24,7 +24,7 @@ string GetModelsIndex(object oPC) {
 	return sInd;
 }
 
-void SwitchSlot(object oPC, int iPart, int iDelta) {
+void SwitchSlot(object oPC, int iPart, int iDelta, bool deltaIsAbsolute = false) {
 	int iCurrent = GetCreatureBodyPart(iPart, oPC);
 	if ( iPart == CREATURE_PART_WING )
 		iCurrent = GetCreatureWingType(oPC);
@@ -66,7 +66,7 @@ void SwitchSlot(object oPC, int iPart, int iDelta) {
 		case CREATURE_PART_WING:
 			// 0 = none, 1 demon 2 angel 3 bat 4 dragon 5 butterfly 6 bird
 			// 15 avariel
-			iCurrent += iDelta;
+			iCurrent = deltaIsAbsolute ? iDelta : iCurrent + iDelta;
 
 			if ( iCurrent > 15 )
 				iCurrent = 0;
@@ -77,7 +77,7 @@ void SwitchSlot(object oPC, int iPart, int iDelta) {
 			break;
 
 		case CREATURE_PART_TAIL:
-			iCurrent += iDelta;
+			iCurrent = deltaIsAbsolute ? iDelta : iCurrent + iDelta;
 
 			if ( iCurrent > 3 )
 				iCurrent = 0;
@@ -89,7 +89,7 @@ void SwitchSlot(object oPC, int iPart, int iDelta) {
 		case MY_COLOR_CHANNEL_HAIR:
 		case MY_COLOR_CHANNEL_TATTOO_1:
 		case MY_COLOR_CHANNEL_TATTOO_2:
-			iCurrent += iDelta;
+			iCurrent = deltaIsAbsolute ? iDelta : iCurrent + iDelta;
 			if (iCurrent < 0) iCurrent = MAX_COLORS;
 			else if (iCurrent > MAX_COLORS) iCurrent = 0;
 			break;
