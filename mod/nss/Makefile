@@ -2,7 +2,7 @@
 
 all:
 	$(MAKE) Makefile.dep
-	$(MAKE) revupdate compile
+	$(MAKE) compile
 
 NCC=nwnnsscomp
 NCCFLAGS=-g -c -q -o

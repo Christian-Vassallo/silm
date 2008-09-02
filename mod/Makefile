@@ -142,7 +142,7 @@ itp: utc utd ute uti utp uts utm utt utw
 
 .PHONY: scripts
 scripts: path
-	$(MAKE) -C nss
+	$(MAKE) -C nss revupdate all
 
 clean:
 	$(MAKE) -C nss clean
