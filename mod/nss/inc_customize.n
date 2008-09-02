@@ -144,6 +144,7 @@ string Get_2daTable(int iPart) {
 object ModifyArmorPart(object oArmor, int iPart, int iDelta) {
 	string s2DATable = Get_2daTable(iPart);
 	int iModel = GetItemAppearance(oArmor, ITEM_APPR_TYPE_ARMOR_MODEL, iPart);
+	SendMessageToPC(GetItemPossessor(oArmor), "Altes Modell: " + IntToString(iModel));
 	string sRes;
 	object oNew;
 
@@ -156,6 +157,7 @@ object ModifyArmorPart(object oArmor, int iPart, int iDelta) {
 	if ( sRes == "****" ) return OBJECT_INVALID;
 
 	iModel = StringToInt(sRes);
+	SendMessageToPC(GetItemPossessor(oArmor), "Neues Modell: " + IntToString(iModel));
 
 	oNew = CopyItemAndModify(oArmor, ITEM_APPR_TYPE_ARMOR_MODEL, iPart, iModel, TRUE);
 	DestroyObject(oArmor);
@@ -186,10 +188,12 @@ void PerformModifyArmorCol(object oPC, int iDelta) {
 	int iColSlot = GetLocalInt(oPC, "CUST_COLOR");
 
 	int iCurrentCol = GetItemAppearance(oArmor, ITEM_APPR_TYPE_ARMOR_COLOR, iColSlot);
+	SendMessageToPC(oPC, "Altes Modell: " + IntToString(iCurrentCol));
 
 	iCurrentCol += iDelta;
 	if ( iCurrentCol < 0 ) iCurrentCol = MAX_COLOR;
 	if ( iCurrentCol > MAX_COLOR ) iCurrentCol = 0;
+	SendMessageToPC(oPC, "Neues Modell: " + IntToString(iCurrentCol));
 
 	oNew = CopyItemAndModify(oArmor, ITEM_APPR_TYPE_ARMOR_COLOR, iColSlot, iCurrentCol, TRUE);
 	if ( GetIsObjectValid(oNew) ) {
@@ -203,10 +207,12 @@ void PerformModifyWeapon(object oPC, int iDelta) {
 	object oNew;
 	int iSlot = GetLocalInt(oPC, "CUST_PART");
 	int iCurrentMod = GetItemAppearance(oWeap, ITEM_APPR_TYPE_WEAPON_MODEL, iSlot);
+	SendMessageToPC(oPC, "Altes Modell: " + IntToString(iCurrentMod));
 
 	iCurrentMod += iDelta;
 	if ( iCurrentMod < 1 ) iSlot = 89;
 	if ( iCurrentMod > 89 ) iSlot = 1;
+	SendMessageToPC(oPC, "Neues Modell: " + IntToString(iCurrentMod));
 
 	oNew = CopyItemAndModify(oWeap, ITEM_APPR_TYPE_WEAPON_MODEL, iSlot, iCurrentMod, TRUE);
 	if ( GetIsObjectValid(oNew) ) {
@@ -234,10 +240,12 @@ void PerformModifyWeaponCol(object oPC, int iDelta) {
 	}
 
 	int iCurrentCol = GetItemAppearance(oWeap, ITEM_APPR_TYPE_WEAPON_COLOR, iSlot);
+	SendMessageToPC(oPC, "Altes Modell: " + IntToString(iCurrentCol));
 
 	iCurrentCol += iDelta;
 	if ( iCurrentCol < 1 ) iSlot = 9;
 	if ( iCurrentCol > 9 ) iSlot = 1;
+	SendMessageToPC(oPC, "Neues Modell: " + IntToString(iCurrentCol));
 
 	oNew = CopyItemAndModify(oWeap, ITEM_APPR_TYPE_WEAPON_COLOR, iSlot, iCurrentCol, TRUE);
 	if ( GetIsObjectValid(oNew) ) {
@@ -279,10 +287,12 @@ void PerformModifyCloakCol(object oPC, int iDelta) {
 	int iColSlot = GetLocalInt(oPC, "CUST_COLOR");
 
 	int iCurrentCol = GetItemAppearance(oArmor, ITEM_APPR_TYPE_ARMOR_COLOR, iColSlot);
+	SendMessageToPC(oPC, "Altes Modell: " + IntToString(iCurrentCol));
 
 	iCurrentCol += iDelta;
 	if ( iCurrentCol < 0 ) iCurrentCol = MAX_COLOR;
 	if ( iCurrentCol > MAX_COLOR ) iCurrentCol = 0;
+	SendMessageToPC(oPC, "Neues Modell: " + IntToString(iCurrentCol));
 
 	oNew = CopyItemAndModify(oArmor, ITEM_APPR_TYPE_ARMOR_COLOR, iColSlot, iCurrentCol, TRUE);
 	if ( GetIsObjectValid(oNew) ) {

@@ -96,7 +96,7 @@ void SwitchSlot(object oPC, int iPart, int iDelta, bool deltaIsAbsolute = false)
 	}
 
 	if ( iCurrent != iOld ) {
-		SendMessageToPC(oPC, "Aktuelles Modell: " + IntToString(iCurrent));
+		SendMessageToPC(oPC, "Altes Modell: " + IntToString(iOld) + ", neues Modell: " + IntToString(iCurrent));
 		switch ( iPart ) {
 			case CREATURE_PART_WING:
 				SetCreatureWingType(iCurrent, oPC);
