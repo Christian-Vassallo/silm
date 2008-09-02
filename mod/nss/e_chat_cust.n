@@ -1,0 +1,30 @@
+extern("inc_customize")
+extern("inc_bodyparts")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	
+	if (e.ev != "chat_prefilter")
+		return;
+
+	int bpsel = GetLocalInt(e.runnable, "BODY_SEL_PART");
+	int cusel = GetLocalInt(e.runnable, "CUST_PART");
+	int cuside = GetLocalInt(e.runnable, "CUST_SIDE");
+
+	if (!bpsel && !cusel)
+		return;
+	
+	struct EventArguments ea = GetEventArguments(e.serial);
+
+	int new_part = atoi(ea.a0);
+	if (0 > new_part) {
+		SendMessageToPC(e.runnable, "Ungueltige Model-ID; muss >= 0 sein.");
+	} else {
+		if (bpsel)
+			SwitchSlot(e.runnable, bpsel, new_part, true);
+		else if (cusel)
+			PerformModify(e.runnable, cusel);
+	}
+
+	event_ret(EVENT_RESULT_STOP | EVENT_RESULT_END | EVENT_RESULT_SUPPRESS);
+}
