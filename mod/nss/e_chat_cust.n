@@ -1,9 +1,10 @@
 extern("inc_customize")
 extern("inc_bodyparts")
+extern("inc_chat_lib")
 
 void main() {
 	struct EventInfo e = GetEventInfo();
-	
+
 	if (e.ev != "chat_prefilter")
 		return;
 
@@ -13,8 +14,11 @@ void main() {
 
 	if (!bpsel && !cusel)
 		return;
-	
+
 	struct EventArguments ea = GetEventArguments(e.serial);
+
+	if (!(ea.i0 & CHATMODE_TALK))
+		return;
 
 	int new_part = atoi(ea.a0);
 	if (0 > new_part) {
