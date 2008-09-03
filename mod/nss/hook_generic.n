@@ -43,3 +43,66 @@ void Hook_GiveXPToCreature(object oCreature, int nXpAmount) {
 }
 
 
+void _hook_jump_associates(object obj, location jumpTo, bool as_action);
+
+#undef JumpToLocation
+void Hook_JumpToLocation(location locDestination, bool jump_associates = true) {
+	JumpToLocation(locDestination);
+	if (jump_associates)
+		_hook_jump_associates(OBJECT_SELF, locDestination, false);
+}
+
+#undef JumpToObject
+void Hook_JumpToObject(object target, int a = TRUE, bool jump_associates = true) {
+	JumpToObject(target, a);
+	if (jump_associates)
+		_hook_jump_associates(OBJECT_SELF, GetLocation(target), false);
+}
+
+#undef ActionJumpToLocation
+void Hook_ActionJumpToLocation(location locDestination, bool jump_associates = true) {
+	ActionJumpToLocation(locDestination);
+	if (jump_associates)
+		_hook_jump_associates(OBJECT_SELF, locDestination, true);
+}
+
+#undef ActionJumpToObject
+void Hook_ActionJumpToObject(object target, int a = TRUE, bool jump_associates = true) {
+	ActionJumpToObject(target, a);
+	if (jump_associates)
+		_hook_jump_associates(OBJECT_SELF, GetLocation(target), true);
+}
+
+void _hook_jump_associates(object obj, location jumpTo, bool as_action) {
+	if (GetAreaFromLocation(jumpTo) != GetArea(obj))
+		return; // associates will follow automagically
+
+	if (as_action) {
+		AssignCommand(GetAssociate(ASSOCIATE_TYPE_ANIMALCOMPANION, obj), ActionJumpToLocation(jumpTo));
+		AssignCommand(GetAssociate(ASSOCIATE_TYPE_DOMINATED, obj), ActionJumpToLocation(jumpTo));
+		AssignCommand(GetAssociate(ASSOCIATE_TYPE_FAMILIAR, obj), ActionJumpToLocation(jumpTo));
+		AssignCommand(GetAssociate(ASSOCIATE_TYPE_SUMMONED, obj), ActionJumpToLocation(jumpTo));
+
+		int i = 1;
+		object assoc = GetAssociate(ASSOCIATE_TYPE_HENCHMAN, obj, i);
+		while (is_valid(assoc)) {
+			AssignCommand(assoc, ActionJumpToLocation(jumpTo));
+			i++;
+			assoc = GetAssociate(ASSOCIATE_TYPE_HENCHMAN, obj, i);
+		}
+
+	} else {
+		AssignCommand(GetAssociate(ASSOCIATE_TYPE_ANIMALCOMPANION, obj), JumpToLocation(jumpTo));
+		AssignCommand(GetAssociate(ASSOCIATE_TYPE_DOMINATED, obj), JumpToLocation(jumpTo));
+		AssignCommand(GetAssociate(ASSOCIATE_TYPE_FAMILIAR, obj), JumpToLocation(jumpTo));
+		AssignCommand(GetAssociate(ASSOCIATE_TYPE_SUMMONED, obj), JumpToLocation(jumpTo));
+
+		int i = 1;
+		object assoc = GetAssociate(ASSOCIATE_TYPE_HENCHMAN, obj, i);
+		while (is_valid(assoc)) {
+			AssignCommand(assoc, JumpToLocation(jumpTo));
+			i++;
+			assoc = GetAssociate(ASSOCIATE_TYPE_HENCHMAN, obj, i);
+		}
+	}
+}
