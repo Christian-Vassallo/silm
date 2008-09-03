@@ -8,7 +8,14 @@ void main() {
 	// - runnable: door
 	// - actor: opener/creature
 	// - stop
-	if(EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "door_open", OBJECT_SELF, oPC, oDoor, GetLocation(oDoor)))
+	// - suppress
+	int ret = RunEventScriptsFor(GetEventSerial(), "door_open", OBJECT_SELF, oPC, oDoor, GetLocation(oDoor));
+	if (ret & EVENT_RESULT_SUPPRESS) {
+		AssignCommand(oDoor, ActionCloseDoor(oDoor));
+		return;
+	}
+
+	if (ret & EVENT_RESULT_STOP)
 		return;
 
 	int nAutoClose = GetLocalInt(oDoor, "autoclose");
