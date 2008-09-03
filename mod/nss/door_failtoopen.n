@@ -12,7 +12,9 @@ void main() {
 	// Event: door_failtoopen
 	// - runnable: door
 	// - actor: clicker/blocked
-	RunEventScriptsFor(GetEventSerial(), "door_failtoopen", OBJECT_SELF, oPC, OBJECT_SELF, GetLocation(OBJECT_SELF));
+	// - stop
+	if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "door_failtoopen", OBJECT_SELF, oPC, OBJECT_SELF, GetLocation(OBJECT_SELF)))
+		return;
 	
 	if ( !is_creature(oPC) )
 		return;
