@@ -20,7 +20,7 @@ end
 def get_is_compileable(file)
   data = IO.read(file)
   return data =~ /^\s*void\s+main\s*\(\)/ ||
-    data =~ /^\s*int\s+StartingConditional\(\)\s*\(\)/
+    data =~ /^\s*int\s+StartingConditional\s*\(\)/
 end
 
 
