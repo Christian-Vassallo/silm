@@ -226,6 +226,11 @@ int GetOrCreateAccountID(object oPC) {
 	if ( sAccount == "" )
 		return 0;
 
+	if (GetIsDMPossessed(oPC) || GetIsPossessedFamiliar(oPC)) {
+		_ERROR("Cannot save possessed characters to the database.");
+		return 0;
+	}
+
 	sAccount = pE(sAccount);
 
 	pQ("select id from " + TABLE_ACCOUNTS + " where account = " + sAccount + ";");
@@ -264,6 +269,11 @@ int GetOrCreateCharacterID(object oPC) {
 	string
 	sAID = IntToString(nAID),
 	sChar = pE(GetName(oPC));
+
+	if (GetIsDMPossessed(oPC) || GetIsPossessedFamiliar(oPC)) {
+		_ERROR("Cannot save possessed characters to the database.");
+		return 0;
+	}
 
 	pQ("select id from " +
 		TABLE_CHARACTERS +
