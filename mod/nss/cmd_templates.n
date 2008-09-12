@@ -36,9 +36,9 @@ void main() {
 
 	if (a0 == "") {
 		ToPC("Persisted templates: ");
-		pQ("select name, to_char(coalesce(update_on,create_on), 'DD.MM.YY HH:MI') from objects.templates order by update_on asc, create_on asc;");
+		pQ("select name, to_char(coalesce(update_on,create_on), 'DD.MM.YY HH:MI'), tag, resref from objects.templates order by update_on asc, create_on asc;");
 		while (pF()) {
-			ToPC(pGs(1) + " (" + pGs(2) + ")");
+			ToPC(pGs(1) + "/" + pGs(3) + "/" + pGs(4) + " (" + pGs(2) + ")");
 		}
 		ToPC("End of list.");
 		SetEventResult(EVENT_RESULT_END | EVENT_RESULT_STOP);
@@ -61,9 +61,13 @@ void main() {
 		} else {
 			pQ("select id from objects.templates where name = " + pSs(name));
 			if (pF())
-				pSCO("update objects.templates set data = %s where name = " + pSs(name), target);
+				pSCO("update objects.templates set data = %s, tag = " +
+					pSs(GetTag(target)) + ", resref = " + pSs(GetResRef(target)) + 
+					" where name = " + pSs(name), target);
 			else
-				pSCO("insert into objects.templates (name, data) values(" + pSs(name) + ", %s);", target);
+				pSCO("insert into objects.templates (name, tag, resref, data) values(" +
+					pSs(name) + ", " + pSs(GetTag(target)) + ", " + pSs(GetResRef(target)) +
+					", %s);", target);
 		}
 
 	} else if (a0 == "get") {

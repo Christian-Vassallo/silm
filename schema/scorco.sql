@@ -83,6 +83,17 @@ create trigger objects_update_md
 	execute procedure objects.objects_update_md();
 
 
+-- Table: templates
+-- /tpl templates
+create table objects.templates (
+	name varchar,
+	tag varchar,
+	resref varchar
+) inherits (objects.objects);
+create trigger objects_update_md
+	before insert or update
+	on objects.templates for each row
+	execute procedure objects.objects_update_md();
 
 
 -- Items in a public container
