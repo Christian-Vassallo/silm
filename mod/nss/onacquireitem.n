@@ -28,7 +28,7 @@ void main() {
 	int iStack = GetModuleItemAcquiredStackSize();
 	string sResRef = GetResRef(oItem);
 
-	if (gvGetInt("persist_dropped_items") && GetIsObjectValid(oItem) && p_id(oItem)) {
+	if (gvGetInt("persist_dropped_items") && p_id(oItem)) {
 		p_delete("dropped_items", oItem);
 	}
 
