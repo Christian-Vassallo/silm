@@ -300,8 +300,10 @@ int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, 
 			runmode = nRequireMode;
 
 		// Script wants sync mode, but we are forced to defer. Skip.
-		if (sync && runmode == EVENT_MODE_DEFER)
+		if (sync && runmode == EVENT_MODE_DEFER) {
+			_WARN("cannot run " + script + " for " + ret_ev + ", wants sync but we force defer.");
 			continue;
+		}
 
 		// Script wants to defer, but we are forced to sync. Continue.
 		// if (!sync && rummode == EVENT_MODE_SYNC)
