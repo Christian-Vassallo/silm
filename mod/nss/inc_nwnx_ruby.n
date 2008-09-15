@@ -1,0 +1,33 @@
+
+/*
+  Function: ruby_send_event
+
+  This sends event 'ev' to ruby. Does not return anything.
+
+  ev has to be a valid ruby symbol.
+*/
+void ruby_send_event(string ev, object caller = OBJECT_SELF);
+
+
+/*
+  Function: ruby_call_token
+  Used internally by ruby_call_token.nss.
+  This calls a "token", which is a stored proc, inside ruby,
+  on caller.
+*/
+void ruby_call_token(string token, object caller = OBJECT_SELF);
+
+
+void ruby_eval(string str) {
+    SetLocalString(GetModule(), "NWNX!RUBY!EVAL", str);
+}
+
+void ruby_send_event(string ev, object caller = OBJECT_SELF) {
+	string self = ObjectToString(caller);
+    SetLocalString(GetModule(), "NWNX!RUBY!EVAL", "Roe::Route.on_event '" + self + "', :'" + ev + "'");
+}
+
+void ruby_call_token(string token, object caller = OBJECT_SELF) {
+	string self = ObjectToString(caller);
+    SetLocalString(GetModule(), "NWNX!RUBY!EVAL", "Roe::Route.on_token '" + self + "', '" + token + "'");
+}
