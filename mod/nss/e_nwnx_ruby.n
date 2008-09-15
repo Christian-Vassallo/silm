@@ -1,0 +1,7 @@
+extern("inc_nwnx_ruby")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	ruby_send_event(e.ev, e.runnable);
+}
