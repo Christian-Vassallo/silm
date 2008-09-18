@@ -1,0 +1,56 @@
+extern("inc_nwnx_structs")
+void main() {
+
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "item_equip") {
+		effect app;
+		string es = GetLocalString(e.runnable, "equipspell");
+		if ("" == es)
+			return;
+		else if ("invisibility" == es)
+			app = EffectInvisibility(INVISIBILITY_TYPE_NORMAL);
+		else if ("petrify" == es)
+			app = SupernaturalEffect(EffectPetrify());
+		else if ("blindness" == es)
+			app = SupernaturalEffect(EffectBlindness());
+		else if ("confused" == es)
+			app = SupernaturalEffect(EffectConfused());
+		else if ("dazed" == es)
+			app = SupernaturalEffect(EffectDazed());
+		else if ("darkness" == es)
+			app = SupernaturalEffect(EffectAreaOfEffect(AOE_PER_DARKNESS));
+		else if ("silence" == es)
+			app = SupernaturalEffect(EffectSilence());
+		else if ("sleep" == es)
+			app = SupernaturalEffect(EffectSleep());
+		else if ("swarm" == es) {
+			string ref = GetLocalString(e.runnable, "swarm_ref"); // substr(es, 6, 1024);
+			app = EffectSwarm(true, ref);
+		}
+		else if ("" != es) {
+			_WARN("Unknown equipspell '" + es + "'");
+			return;
+		}
+		
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, app, e.actor);
+	}
+
+	if (e.ev == "item_unequip") {
+		if (!is_valid(e.runnable))
+			return;
+
+		string es = GetLocalString(e.runnable, "equipspell");
+		if (es == "")
+			return;
+
+		effect ef = GetFirstEffect(e.actor);
+		while (GetIsEffectValid(ef)) {
+			if (GetEffectCreator(ef) == e.runnable &&
+				GetEffectSubType(ef) == SUBTYPE_MAGICAL) {
+				RemoveEffect(e.actor, ef);
+			}
+			ef = GetNextEffect(e.actor);
+		}
+	}
+}
