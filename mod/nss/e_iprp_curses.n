@@ -1,4 +1,3 @@
-extern("inc_misc")
 extern("inc_iprp_curses")
 
 void main() {
@@ -9,6 +8,11 @@ void main() {
 
 	if (e.ev == "item_unequip" && is_valid(e.actedon) &&
 			IPGetIsCursed(e.actedon, IP_CONST_CURSED_UNUNEQUIPPABLE)) {
+
+		if (GetLocalInt(e.actedon, "allow_unequip")) {
+			SetLocalInt(e.actedon, "allow_unequip", 0);
+			return;
+		}
 		
 		int slot = GetBestEquippableSlot(e.actor, e.actedon);
 		if (-1 == slot) {
@@ -39,4 +43,29 @@ void main() {
 		
 		event_stop_end();
 	}
+
+	if (e.ev == "creature_spellcast") {
+		if (GetSpellId() != SPELL_REMOVE_CURSE)
+			return;
+
+		int n = 0;
+		for (n = 0; n < 14; n++) {
+			object o = GetItemInSlot(n, e.actedon);
+			if (is_valid(o) && IPGetIsCursed(o, IP_CONST_CURSED_UNUNEQUIPPABLE)) {
+				SetLocalInt(o, "allow_unequip", 1);
+				AssignCommand(e.actedon, ActionUnequipItem(o));
+			}
+		}
+		
+		object o = GetFirstItemInInventory(e.actedon);
+		while (is_valid(o)) {
+			if (IPGetIsCursed(o, IP_CONST_CURSED_UNDROPPABLE)) {
+				SetItemCursedFlag(o, false);
+				FloatingTextStringOnCreature("Du brichst den Fluch auf " + GetName(e.actedon) + ".", e.actor, false);
+			}
+			o = GetNextItemInInventory(e.actedon);
+		}
+	}
+
+
 }
