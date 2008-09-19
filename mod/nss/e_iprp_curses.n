@@ -1,72 +1,5 @@
 extern("inc_misc")
-
-int GetBestEquippableSlot(object creature, object item) {
-	int mask = HexToInt(Get2DAString("baseitems", "EquipableSlots", GetBaseItemType(item)));
-	if (mask & 0x00001)
-		return INVENTORY_SLOT_HEAD;
-	if (mask & 0x00002)
-		return INVENTORY_SLOT_CHEST;
-	if (mask & 0x00004)
-		return INVENTORY_SLOT_BOOTS;
-	if (mask & 0x00008)
-		return INVENTORY_SLOT_ARMS;
-	if (mask & 0x00010)
-		return INVENTORY_SLOT_RIGHTHAND;
-	if (mask & 0x00020)
-		return INVENTORY_SLOT_LEFTHAND;
-	if (mask & 0x00040)
-		return INVENTORY_SLOT_CLOAK;
-	if (mask & 0x00180) {
-		if (is_valid(GetItemInSlot(INVENTORY_SLOT_RIGHTRING)))
-			return INVENTORY_SLOT_LEFTRING;
-		else
-			return INVENTORY_SLOT_RIGHTRING;
-	}
-	if (mask & 0x00200)
-		return INVENTORY_SLOT_NECK;
-	if (mask & 0x00400)
-		return INVENTORY_SLOT_BELT;
-	if (mask & 0x00800)
-		return INVENTORY_SLOT_ARROWS;
-	if (mask & 0x01000)
-		return INVENTORY_SLOT_BULLETS;
-	if (mask & 0x02000)
-		return INVENTORY_SLOT_BOLTS;
-
-	// 0x1c000: cweapon
-	// 0x20000: carmor
-
-	return -1; // INVENTORY_SLOT_INVALID;
-}
-
-bool is_cursed(object item, int subtype = -1) {
-	itemproperty p = GetFirstItemProperty(item);
-	while (GetIsItemPropertyValid(p)) {
-		if (GetItemPropertyType(p) == ITEM_PROPERTY_CURSED) {
-			if (subtype == -1)
-				return true;
-			if (GetItemPropertySubType(p) == subtype)
-				return true;
-		}
-		p = GetNextItemProperty(item);
-	}
-
-	return false;
-}
-
-void remove_curse(object item, int subtype = -1) {
-	itemproperty p = GetFirstItemProperty(item);
-	while (GetIsItemPropertyValid(p)) {
-		if (GetItemPropertyType(p) == ITEM_PROPERTY_CURSED) {
-			if (subtype == -1) {
-				RemoveItemProperty(item, p);
-			} else if (GetItemPropertySubType(p) == subtype) {
-				RemoveItemProperty(item, p);
-			}
-		}
-		p = GetNextItemProperty(item);
-	}
-}
+extern("inc_iprp_curses")
 
 void main() {
 	struct EventInfo e = GetEventInfo();
@@ -75,7 +8,7 @@ void main() {
 //		_WARN("not at first queue position (" + itoa(e.r_pos) + "/" + itoa(e.r_total) + ")");
 
 	if (e.ev == "item_unequip" && is_valid(e.actedon) &&
-			is_cursed(e.actedon, IP_CONST_CURSED_UNUNEQUIPPABLE)) {
+			IPGetIsCursed(e.actedon, IP_CONST_CURSED_UNUNEQUIPPABLE)) {
 		
 		int slot = GetBestEquippableSlot(e.actor, e.actedon);
 		if (-1 == slot) {
@@ -88,14 +21,14 @@ void main() {
 		event_stop_end();
 	}
 
-	if (e.ev == "item_acquire" && is_cursed(e.runnable, IP_CONST_CURSED_UNDROPPABLE)) {
+	if (e.ev == "item_acquire" && IPGetIsCursed(e.runnable, IP_CONST_CURSED_UNDROPPABLE)) {
 		FloatingTextStringOnCreature("Du fuehlst ein leichtes Kribbeln, ausgehend von: " + GetName(e.runnable) + ".", e.actor, false);
 		SetItemCursedFlag(e.runnable, true);
 		return;
 	}
 
 	if (e.ev == "item_spellcast" && is_valid(e.actedon) &&
-			is_cursed(e.actedon, IP_CONST_CURSED_UNDROPPABLE) &&
+			IPGetIsCursed(e.actedon, IP_CONST_CURSED_UNDROPPABLE) &&
 			GetItemCursedFlag(e.actedon)) {
 		
 		if (GetSpellId() != SPELL_REMOVE_CURSE)
