@@ -24,10 +24,20 @@ void main() {
 			app = SupernaturalEffect(EffectSilence());
 		else if ("sleep" == es)
 			app = SupernaturalEffect(EffectSleep());
-		else if ("swarm" == es) {
+		else if ("poison" == es) {
+			int poison = GetLocalInt(e.runnable, "poison");
+			if (!poison) {
+				_WARN("poison equipspell by " + GetName(e.actor) +
+					" did not have a poison set, defaulting to HUGE_SPIDER_VENOM");
+				poison = POISON_HUGE_SPIDER_VENOM;
+			} else
+				poison--;
+			app = SupernaturalEffect(EffectPoison(poison));
+		} else if ("swarm" == es) {
 			string ref = GetLocalString(e.runnable, "swarm_ref"); // substr(es, 6, 1024);
 			app = EffectSwarm(true, ref);
-		}
+		} else if ("spellfailure" == es)
+			app = SupernaturalEffect(EffectSpellFailure(100));
 		else if ("" != es) {
 			_WARN("Unknown equipspell '" + es + "'");
 			return;
