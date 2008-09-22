@@ -1,7 +1,8 @@
 extern("inc_nwnx_structs")
 extern("_gen")
 
-// 1 damage per N seconds:
+// X damage per N seconds:
+#define LIFEDRAIN_DAMAGE 1
 #define LIFEDRAIN_OFFSET 120
 
 void RemoveLifeDrain(object creature) {
@@ -42,9 +43,11 @@ void main() {
 			app = SupernaturalEffect(EffectSilence());
 		else if ("sleep" == es)
 			app = SupernaturalEffect(EffectSleep());
-		else if ("lifedrain" == es)
+		else if ("lifedrain" == es) {
 			SetLocalInt(e.actor, "equipspell_lifedrain", 1);
-		else if ("poison" == es) {
+			SetLocalInt(e.actor, "equipspell_lifedrain_offset", GetLocalInt(e.runnable, "equipspell_lifedrain_offset"));
+			SetLocalInt(e.actor, "equipspell_lifedrain_damage", GetLocalInt(e.runnable, "equipspell_lifedrain_damage"));
+		} else if ("poison" == es) {
 			int poison = GetLocalInt(e.runnable, "poison");
 			if (!poison) {
 				_WARN("poison equipspell by " + GetName(e.actor) +
@@ -93,8 +96,13 @@ void main() {
 		while (is_pc(pc)) {
 			if (ld = GetLocalInt(pc, "equipspell_lifedrain")) {
 				int now = GetUnixTimestamp();
-				if (ld + LIFEDRAIN_OFFSET <= now) {
-					effect dam = EffectDamage(1, DAMAGE_TYPE_MAGICAL, DAMAGE_POWER_ENERGY);
+				int offset = GetLocalInt(pc, "equipspell_lifedrain_offset");
+				if (!offset) offset = LIFEDRAIN_OFFSET;
+				int damage = GetLocalInt(pc, "equipspell_lifedrain_damage");
+				if (!damage) damage = LIFEDRAIN_DAMAGE;
+
+				if (ld + offset <= now) {
+					effect dam = EffectDamage(damage, DAMAGE_TYPE_MAGICAL, DAMAGE_POWER_ENERGY);
 					SetLocalInt(pc, "equipspell_lifedrain", now);
 					ApplyEffectToObject(DURATION_TYPE_INSTANT, dam, pc);
 				}
