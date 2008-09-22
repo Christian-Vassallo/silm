@@ -1,4 +1,22 @@
 extern("inc_nwnx_structs")
+extern("_gen")
+
+// 1 damage per N seconds:
+#define LIFEDRAIN_OFFSET 120
+
+void RemoveLifeDrain(object creature) {
+	int found = false;
+	int n; for (n = 0; n < 14; n++) {
+		object oIterate = GetItemInSlot(n, creature);
+		if (GetLocalString(oIterate, "equipspell") == "lifedrain") {
+			found = true;
+			break;
+		}
+	}
+	if (!found)
+		SetLocalInt(creature, "equipspell_lifedrain", 0);
+}
+
 void main() {
 
 	struct EventInfo e = GetEventInfo();
@@ -24,6 +42,8 @@ void main() {
 			app = SupernaturalEffect(EffectSilence());
 		else if ("sleep" == es)
 			app = SupernaturalEffect(EffectSleep());
+		else if ("lifedrain" == es)
+			SetLocalInt(e.actor, "equipspell_lifedrain", 1);
 		else if ("poison" == es) {
 			int poison = GetLocalInt(e.runnable, "poison");
 			if (!poison) {
@@ -47,6 +67,9 @@ void main() {
 	}
 
 	if (e.ev == "item_unequip") {
+		if (GetLocalInt(e.actor, "equipspell_lifedrain"))
+			DelayCommand(0.1, RemoveLifeDrain(e.actor));
+
 		if (!is_valid(e.runnable))
 			return;
 
@@ -61,6 +84,22 @@ void main() {
 				RemoveEffect(e.actor, ef);
 			}
 			ef = GetNextEffect(e.actor);
+		}
+	}
+
+	if (e.ev == "module_hb") {
+		object pc = GetFirstPC();
+		int ld;
+		while (is_pc(pc)) {
+			if (ld = GetLocalInt(pc, "equipspell_lifedrain")) {
+				int now = GetUnixTimestamp();
+				if (ld + LIFEDRAIN_OFFSET <= now) {
+					effect dam = EffectDamage(1, DAMAGE_TYPE_MAGICAL, DAMAGE_POWER_ENERGY);
+					SetLocalInt(pc, "equipspell_lifedrain", now);
+					ApplyEffectToObject(DURATION_TYPE_INSTANT, dam, pc);
+				}
+			}
+			pc = GetNextPC();
 		}
 	}
 }
