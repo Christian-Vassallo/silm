@@ -18,6 +18,15 @@ void RemoveLifeDrain(object creature) {
 		SetLocalInt(creature, "equipspell_lifedrain", 0);
 }
 
+bool GetHasEquipEffect(object creature, string eff) {
+	int nSlot;
+	for (nSlot = 0; nSlot < NUM_INVENTORY_SLOTS; nSlot++)
+		if (GetLocalString(GetItemInSlot(nSlot, creature), "equipspell") == eff)
+			return true;
+
+	return false;
+}
+
 void main() {
 
 	struct EventInfo e = GetEventInfo();
@@ -27,9 +36,23 @@ void main() {
 		string es = GetLocalString(e.runnable, "equipspell");
 		if ("" == es)
 			return;
+
+		/* regular items */
 		else if ("invisibility" == es)
 			app = EffectInvisibility(INVISIBILITY_TYPE_NORMAL);
-		else if ("petrify" == es)
+
+		/* cursed items */
+		else if ("ethereal" == es) {
+			app = SupernaturalEffect(EffectLinkEffects(
+				EffectLinkEffects(EffectSlow(), EffectEthereal()),
+				EffectLinkEffects(
+					EffectLinkEffects(EffectDeaf(), EffectSilence()),
+					EffectMissChance(100)
+				)
+			));
+			SetLocalInt(e.actor, "equipspell_appearance", GetAppearanceType(e.actor));
+			SetCreatureAppearanceType(e.actor, APPEARANCE_TYPE_INVISIBLE_HUMAN_MALE);
+		} else if ("petrify" == es)
 			app = SupernaturalEffect(EffectPetrify());
 		else if ("blindness" == es)
 			app = SupernaturalEffect(EffectBlindness());
@@ -72,10 +95,7 @@ void main() {
 	if (e.ev == "item_unequip") {
 		if (GetLocalInt(e.actor, "equipspell_lifedrain"))
 			DelayCommand(0.1, RemoveLifeDrain(e.actor));
-
-		if (!is_valid(e.runnable))
-			return;
-
+		
 		string es = GetLocalString(e.runnable, "equipspell");
 		if (es == "")
 			return;
@@ -84,6 +104,10 @@ void main() {
 		while (GetIsEffectValid(ef)) {
 			if (GetEffectCreator(ef) == e.runnable &&
 				GetEffectSubType(ef) == SUBTYPE_MAGICAL) {
+				if (es == "ethereal" && GetLocalInt(e.actor, "equipspell_appearance")) {
+					SetCreatureAppearanceType(e.actor, GetLocalInt(e.actor, "equipspell_appearance"));
+					SetLocalInt(e.actor, "equipspell_appearance", 0);
+				}
 				RemoveEffect(e.actor, ef);
 			}
 			ef = GetNextEffect(e.actor);
@@ -108,6 +132,12 @@ void main() {
 				}
 			}
 			pc = GetNextPC();
+		}
+	}
+
+	if (e.ev == "creature_attack") {
+		if (GetHasEquipEffect(e.actor, "ethereal") || GetHasEquipEffect(e.actedon, "ethereal")) {
+			event_stop_suppress();
 		}
 	}
 }
