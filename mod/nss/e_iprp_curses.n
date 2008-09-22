@@ -20,7 +20,7 @@ void main() {
 			return;
 		}
 		FloatingTextStringOnCreature("So sehr du auch versuchst, diesen Gegenstand aus der Hand zu legen/abzustreifen, es gelingt dir nicht.", e.actor, false);
-		AssignCommand(e.actor, ActionEquipItem(e.actedon, slot));
+		DelayCommand(1.0, ReequipCursedItem(e.actor, e.actedon, slot));
 
 		event_stop_end();
 	}
