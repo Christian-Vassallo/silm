@@ -44,14 +44,18 @@ void main() {
 		/* cursed items */
 		else if ("ethereal" == es) {
 			app = SupernaturalEffect(EffectLinkEffects(
-				EffectLinkEffects(EffectSlow(), EffectEthereal()),
+				EffectLinkEffects(EffectVisualEffect(VFX_DUR_CUTSCENE_INVISIBILITY), EffectEthereal()),
 				EffectLinkEffects(
-					EffectLinkEffects(EffectDeaf(), EffectSilence()),
-					EffectMissChance(100)
+					EffectLinkEffects(
+						EffectDeaf(),
+						EffectSilence()
+					),
+					EffectLinkEffects(
+						EffectMissChance(100),
+						EffectSpellFailure(100)
+					)
 				)
 			));
-			SetLocalInt(e.actor, "equipspell_appearance", GetAppearanceType(e.actor));
-			SetCreatureAppearanceType(e.actor, APPEARANCE_TYPE_INVISIBLE_HUMAN_MALE);
 		} else if ("petrify" == es)
 			app = SupernaturalEffect(EffectPetrify());
 		else if ("blindness" == es)
@@ -104,10 +108,6 @@ void main() {
 		while (GetIsEffectValid(ef)) {
 			if (GetEffectCreator(ef) == e.runnable &&
 				GetEffectSubType(ef) == SUBTYPE_MAGICAL) {
-				if (es == "ethereal" && GetLocalInt(e.actor, "equipspell_appearance")) {
-					SetCreatureAppearanceType(e.actor, GetLocalInt(e.actor, "equipspell_appearance"));
-					SetLocalInt(e.actor, "equipspell_appearance", 0);
-				}
 				RemoveEffect(e.actor, ef);
 			}
 			ef = GetNextEffect(e.actor);
