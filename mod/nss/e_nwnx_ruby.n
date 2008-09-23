@@ -3,5 +3,13 @@ extern("inc_nwnx_ruby")
 void main() {
 	struct EventInfo e = GetEventInfo();
 
-	ruby_send_event(e.ev, e.runnable);
+	string retval = ruby_send_event(e.ev, e.runnable);
+	int mask = 0;
+	int rv = atoi(retval);
+	if (rv & EVENT_RESULT_STOP)
+		mask |= EVENT_RESULT_STOP;
+	if (rv & EVENT_RESULT_SUPPRESS)
+		mask |= EVENT_RESULT_SUPPRESS;
+	if (mask > 0)
+		event_ret(mask);
 }
