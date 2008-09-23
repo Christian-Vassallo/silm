@@ -319,29 +319,29 @@ int CommandEventHandler(object oPC, int iMode) {
 		string sEvent =getopt_arg(0);
 		string sVal =getopt_arg(1);
 		if ("heartbeat" == sEvent)
-			SetEventHandler(oT, CREATURE_EVENT_HEARTBEAT, sVal);
+			SetCreatureEventHandler(oT, CREATURE_EVENT_HEARTBEAT, sVal);
 		else if ("perception" == sEvent)
-			SetEventHandler(oT, CREATURE_EVENT_PERCEPTION, sVal);
+			SetCreatureEventHandler(oT, CREATURE_EVENT_PERCEPTION, sVal);
 		else if ("spellcast" == sEvent)
-			SetEventHandler(oT, CREATURE_EVENT_SPELLCAST, sVal);
+			SetCreatureEventHandler(oT, CREATURE_EVENT_SPELLCAST, sVal);
 		else if ("attacked" == sEvent)
-			SetEventHandler(oT, CREATURE_EVENT_ATTACKED, sVal);
+			SetCreatureEventHandler(oT, CREATURE_EVENT_ATTACKED, sVal);
 		else if ("damaged" == sEvent)
-			SetEventHandler(oT, CREATURE_EVENT_DAMAGED, sVal);
+			SetCreatureEventHandler(oT, CREATURE_EVENT_DAMAGED, sVal);
 		else if ("endcombat" == sEvent)
-			SetEventHandler(oT, CREATURE_EVENT_ENDCOMBAT, sVal);
+			SetCreatureEventHandler(oT, CREATURE_EVENT_ENDCOMBAT, sVal);
 		else if ("conversation" == sEvent)
-			SetEventHandler(oT, CREATURE_EVENT_CONVERSATION, sVal);
+			SetCreatureEventHandler(oT, CREATURE_EVENT_CONVERSATION, sVal);
 		else if ("spawn" == sEvent)
-			SetEventHandler(oT, CREATURE_EVENT_SPAWN, sVal);
+			SetCreatureEventHandler(oT, CREATURE_EVENT_SPAWN, sVal);
 		else if ("rested" == sEvent)
-			SetEventHandler(oT, CREATURE_EVENT_RESTED, sVal);
+			SetCreatureEventHandler(oT, CREATURE_EVENT_RESTED, sVal);
 		else if ("death" == sEvent)
-			SetEventHandler(oT, CREATURE_EVENT_DEATH, sVal);
+			SetCreatureEventHandler(oT, CREATURE_EVENT_DEATH, sVal);
 		else if ("userdef" == sEvent)
-			SetEventHandler(oT, CREATURE_EVENT_USERDEF, sVal);
+			SetCreatureEventHandler(oT, CREATURE_EVENT_USERDEF, sVal);
 		else if ("blocked" == sEvent)
-			SetEventHandler(oT, CREATURE_EVENT_BLOCKED, sVal);
+			SetCreatureEventHandler(oT, CREATURE_EVENT_BLOCKED, sVal);
 		else {
 			ToPC("Unknown event: " + sEvent);
 			return FAIL;
@@ -351,18 +351,18 @@ int CommandEventHandler(object oPC, int iMode) {
 		return SYNTAX;
 	}
 
-	ToPC("heartbeat: " + GetEventHandler(oT, CREATURE_EVENT_HEARTBEAT));
-	ToPC("perception: " + GetEventHandler(oT, CREATURE_EVENT_PERCEPTION));
-	ToPC("spellcast: " + GetEventHandler(oT, CREATURE_EVENT_SPELLCAST));
-	ToPC("attacked: " + GetEventHandler(oT, CREATURE_EVENT_ATTACKED));
-	ToPC("damaged: " + GetEventHandler(oT, CREATURE_EVENT_DAMAGED));
-	ToPC("endcombat: " + GetEventHandler(oT, CREATURE_EVENT_ENDCOMBAT));
-	ToPC("conversation: " + GetEventHandler(oT, CREATURE_EVENT_CONVERSATION));
-	ToPC("spawn: " + GetEventHandler(oT, CREATURE_EVENT_SPAWN));
-	ToPC("rested: " + GetEventHandler(oT, CREATURE_EVENT_RESTED));
-	ToPC("death: " + GetEventHandler(oT, CREATURE_EVENT_DEATH));
-	ToPC("userdef: " + GetEventHandler(oT, CREATURE_EVENT_USERDEF));
-	ToPC("blocked: " + GetEventHandler(oT, CREATURE_EVENT_BLOCKED));
+	ToPC("heartbeat: " + GetCreatureEventHandler(oT, CREATURE_EVENT_HEARTBEAT));
+	ToPC("perception: " + GetCreatureEventHandler(oT, CREATURE_EVENT_PERCEPTION));
+	ToPC("spellcast: " + GetCreatureEventHandler(oT, CREATURE_EVENT_SPELLCAST));
+	ToPC("attacked: " + GetCreatureEventHandler(oT, CREATURE_EVENT_ATTACKED));
+	ToPC("damaged: " + GetCreatureEventHandler(oT, CREATURE_EVENT_DAMAGED));
+	ToPC("endcombat: " + GetCreatureEventHandler(oT, CREATURE_EVENT_ENDCOMBAT));
+	ToPC("conversation: " + GetCreatureEventHandler(oT, CREATURE_EVENT_CONVERSATION));
+	ToPC("spawn: " + GetCreatureEventHandler(oT, CREATURE_EVENT_SPAWN));
+	ToPC("rested: " + GetCreatureEventHandler(oT, CREATURE_EVENT_RESTED));
+	ToPC("death: " + GetCreatureEventHandler(oT, CREATURE_EVENT_DEATH));
+	ToPC("userdef: " + GetCreatureEventHandler(oT, CREATURE_EVENT_USERDEF));
+	ToPC("blocked: " + GetCreatureEventHandler(oT, CREATURE_EVENT_BLOCKED));
 
 	return OK;
 }
@@ -710,12 +710,12 @@ int CommandItem(object oPC, int iMode) {
 	if (-1 != weight)
 		SetItemWeight(oTarget, weight);
 	if (-1 != drop)
-		SetUndroppableFlag(oTarget, !drop);
+		SetDroppableFlag(oTarget, drop);
 	if (-1 != value)
 		SetGoldPieceValue(oTarget, value);
 
-	ToPC("Undroppable: " + IntToString(GetUndroppableFlag(oTarget)));
-	ToPC("Weight: " + IntToString(GetItemWeight(oTarget)));
+	ToPC("Droppable: " + IntToString(GetDroppableFlag(oTarget)));
+	ToPC("Weight: " + IntToString(GetWeight(oTarget)));
 	ToPC("Value: " + IntToString(GetGoldPieceValue(oTarget)));
 	return OK;
 }
@@ -764,7 +764,7 @@ int CommandCreature(object oPC, int iMode) {
 	if ( -1 != race )
 		SetRacialType(oTarget, race);
 	if ( -1 != faction )
-		SetFactionID(oTarget, faction);
+		SetFactionId(oTarget, faction);
 	if ( -1 != phenotype )
 		SetPhenoType(phenotype, oTarget);
 
@@ -786,7 +786,7 @@ int CommandCreature(object oPC, int iMode) {
 	ToPC("Immortal: " + IntToString(GetImmortal(oTarget)));
 	ToPC("RacialType: " + IntToString(GetRacialType(oTarget)));
 	ToPC("PhenoType: " + IntToString(GetPhenoType(oTarget)));
-	ToPC("Faction: " + IntToString(GetFactionID(oTarget)));
+	ToPC("Faction: " + IntToString(GetFactionId(oTarget)));
 	// ToPC("Conversation: " + GetConversation(oTarget));
 	ToPC("p_id: " + itoa(p_id(oTarget)));
 
@@ -3181,7 +3181,7 @@ int CommandGetVar(object oPC, int iMode) {
 	p0 =getopt_arg(0),
 	p1 =getopt_arg(1);
 
-	if (p0 == "all") {
+/*	if (p0 == "all") {
 		// Dump all variables
 		struct scriptvar ssv;
 		ssv = GetFirstLocalVariable(oTarget);
@@ -3201,7 +3201,7 @@ int CommandGetVar(object oPC, int iMode) {
 			ssv = GetNextLocalVariable(oTarget);
 		}
 		return OK;
-	}
+	}*/
 
 	int nType = ( p0 == "int" ? 1 : ( p0 == "str" ? 2 : ( p0 == "float" ? 3 : -1 ) ) );
 
