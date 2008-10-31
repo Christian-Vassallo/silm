@@ -730,6 +730,7 @@ int CommandCreature(object oPC, int iMode) {
 	bCommandable = -1,
 	bPlot = -1,
 	race = -1,
+	gender = -1,
 	faction = -1,
 	phenotype = -1,
 	persist = -1;
@@ -747,6 +748,8 @@ int CommandCreature(object oPC, int iMode) {
 
 	if (getopt_opt("race") )
 		race = StringToInt(getopt_optv("race"));
+	if (getopt_opt("gender"))
+		gender = StringToInt(getopt_optv("gender"));
 	if (getopt_opt("faction") )
 		race = StringToInt(getopt_optv("faction"));
 	
@@ -763,6 +766,8 @@ int CommandCreature(object oPC, int iMode) {
 	
 	if ( -1 != race )
 		SetRacialType(oTarget, race);
+	if ( -1 != gender )
+		SetGender(oTarget, gender);
 	if ( -1 != faction )
 		SetFactionId(oTarget, faction);
 	if ( -1 != phenotype )
@@ -785,6 +790,7 @@ int CommandCreature(object oPC, int iMode) {
 	ToPC("Plot: " + IntToString(GetPlotFlag(oTarget)));
 	ToPC("Immortal: " + IntToString(GetImmortal(oTarget)));
 	ToPC("RacialType: " + IntToString(GetRacialType(oTarget)));
+	ToPC("Gender: " + IntToString(GetGender(oTarget)));
 	ToPC("PhenoType: " + IntToString(GetPhenoType(oTarget)));
 	ToPC("Faction: " + IntToString(GetFactionId(oTarget)));
 	// ToPC("Conversation: " + GetConversation(oTarget));
