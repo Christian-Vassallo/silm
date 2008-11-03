@@ -18,8 +18,9 @@ string ruby_send_event(string ev, object caller = OBJECT_SELF);
 void ruby_call_token(string token, object caller = OBJECT_SELF);
 
 
-void ruby_eval(string str) {
+string ruby_eval(string str) {
     SetLocalString(GetModule(), "NWNX!RUBY!EVAL", str);
+    return GetLocalString(GetModule(), "NWNX!RUBY!EVAL");
 }
 
 string ruby_send_event(string ev, object caller = OBJECT_SELF) {
