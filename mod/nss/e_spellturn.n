@@ -1,0 +1,99 @@
+// A generic spell-turn event handler.
+//
+// Local variables on equipped items:
+// - spellturn_school_E      - match all enchantment spells (refer spells.2da)
+// - spellturn_spell_125     - match spell 125
+// - spellturn_category_2    - match all Harmful_Ranged spells (refer categories.2da)
+// - spellturn_hostile       - match all spells that would render an NPC hostile
+// - spellturn_verbal        - match all verbal spells
+// - spellturn_somatic       - match all somatic spells
+// - spellturn_all           - match ALL spells
+// Variables are int: 0: dont handle, 1: absorb, 2: reflect/turn spell
+//
+// Also, the following boolean (0, 1) switches apply (default = 0, needs to be equipped to work):
+// - spellturn_act_unequipped - Work even when not equipped
+
+extern("inc_scorco")
+extern("inc_inventory")
+
+int CheckItem(object item, int spell) {
+	int v = 0;
+	
+	if (!GetLocalInt(item, "spellturn_act_unequipped") && INVENTORY_SLOT_INVALID == GetItemInventorySlot(item))
+		return 0;
+
+	if (v = GetLocalInt(item, "spellturn_all"))
+		return v;
+
+	if (v = GetLocalInt(item, "spellturn_spell_" + itoa(spell)))
+		return v;
+	
+	if (v = GetLocalInt(item, "spellturn_verbal") && -1 != strpos(Get2DAString("spells", "VS", spell), "v"))
+		return v;
+	
+	if (v = GetLocalInt(item, "spellturn_somatic") && -1 != strpos(Get2DAString("spells", "VS", spell), "s"))
+		return v;
+	
+	if (v = GetLocalInt(item, "spellturn_hostile") && Get2DAString("spells", "HostileSetting", spell) == "1")
+		return v;
+
+	if (v = GetLocalInt(item, "spellturn_category_" + Get2DAString("spells", "Category", spell)))
+		return v;
+
+	if (v = GetLocalInt(item, "spellturn_school_" + Get2DAString("spells", "School", spell)))
+		return v;
+	
+	return 0;
+}
+
+
+int CheckInventory(object inventory, int spell) {
+	int ret = 0;
+
+	int nSlot;
+	for (nSlot = 0; nSlot < NUM_INVENTORY_SLOTS; nSlot++)
+		if (ret = CheckItem(GetItemInSlot(nSlot, inventory), spell))
+			return ret;
+	
+	object item = GetFirstItemInInventory(inventory);
+	while (is_valid(item)) {
+		ret = CheckItem(item, spell);
+		if (ret)
+			break;
+		item = GetNextItemInInventory(inventory);
+	}
+
+	return ret;
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	
+	if ("creature_spellcast" != e.ev)
+		return;
+
+	object target = e.actedon;
+	object caster = e.actor;
+
+	if (target == caster)
+		return;
+
+	int spid = GetSpellId();
+
+	int ret = CheckInventory(target, spid);
+
+	switch (ret) {
+		case 2: // turn back
+			if (is_valid(caster)) {
+				AssignCommand(target, ActionCastSpellAtObject( spid, caster, GetMetaMagicFeat(), true,
+						GetCasterLevel(caster), PROJECTILE_PATH_TYPE_DEFAULT, true
+					));
+			}
+
+		case 1: // and/or absorb
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_SPELL_MANTLE_USE), target);
+			event_stop();
+			break;
+	}
+
+}
