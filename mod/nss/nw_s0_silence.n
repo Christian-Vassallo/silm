@@ -35,9 +35,7 @@ void main()
 
 // End of Spell Cast Hook
 
-
-    //Declare major variables including Area of Effect Object
-    effect eAOE = EffectAreaOfEffect(AOE_MOB_SILENCE);
+	effect eSilence = EffectSilence();
     int nDuration = GetCasterLevel(OBJECT_SELF);
     object oTarget = GetSpellTargetObject();
     int nMetaMagic = GetMetaMagicFeat();
@@ -62,7 +60,7 @@ void main()
                 SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_SILENCE));
 
                 //Create an instance of the AOE Object using the Apply Effect function
-                ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eAOE, oTarget, TurnsToSeconds(nDuration));
+                ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eSilence, oTarget, TurnsToSeconds(nDuration));
             }
         }
     }
@@ -71,7 +69,7 @@ void main()
         //Fire cast spell at event for the specified target
         SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_SILENCE, FALSE));
         //Create an instance of the AOE Object using the Apply Effect function
-        ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eAOE, oTarget, TurnsToSeconds(nDuration));
+        ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eSilence, oTarget, TurnsToSeconds(nDuration));
     }
 }
 
