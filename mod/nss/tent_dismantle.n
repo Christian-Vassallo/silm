@@ -9,7 +9,11 @@ void main() {
 	object oPC = GetLastUsedBy();
 	object oTent = OBJECT_SELF;
 
-	AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_GET_LOW, 1.0f, 20.0f));
+	float delay = GetLocalFloat(oTent, "tent_dismantle_delay");
+	if (0.0 == delay)
+		delay = 20.0;
+
+	AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_GET_LOW, 1.0f, delay));
 	AssignCommand(oPC, ActionDoCommand(_DismantleTent(oTent, oPC)));
 }
 
