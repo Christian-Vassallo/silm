@@ -1,0 +1,49 @@
+#include "inc_dcont.nh"
+
+#define is_dcont(obj) GetLocalInt(obj, "dcont")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if ("item_activate" == e.ev) {
+		object pc = e.actor;
+		object activator = e.runnable;
+		object container = OBJECT_INVALID;
+		if (!is_dcont(activator))
+			return;
+
+		container = dcont_open(activator, container, e.actor);
+		if (!is_valid(container)) {
+			_ERROR("proxy failed to spawn.");
+			return;
+		}
+
+		AssignCommand(pc, ActionInteractObject(container));
+	}
+
+	if ("placeable_open" == e.ev) {
+		if (is_dcont(e.runnable)) {
+			object activator = e.runnable;
+			object container = e.runnable;
+
+			dcont_open(activator, container, e.actor);
+		}
+
+		if (dcont_is_dcont_proxy(e.runnable))
+			SetLocalInt(e.runnable, "dcont_open", true);
+	}
+
+	if ("placeable_close" == e.ev) {
+		if (dcont_is_dcont_proxy(e.runnable))
+			SetLocalInt(e.runnable, "dcont_open", false);
+	}
+
+	if ("placeable_disturb" == e.ev) {
+		object activator = OBJECT_INVALID;
+		object container = e.runnable;
+		if (!is_dcont(activator))
+			return;
+		dcont_handle_event(activator, container, GetInventoryDisturbType(), GetInventoryDisturbItem());
+	}
+
+}

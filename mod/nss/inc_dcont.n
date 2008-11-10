@@ -1,0 +1,147 @@
+/*
+ Detached Containers
+
+ Persistent database-stored inventory for item-based placeables, and placeables.
+ Automatically generate an ID for items.
+
+ Termina:
+ - activator: the object which bound the open call
+   (either a item with (simulated) inventory, or a placeable; never the player)
+ - container: the container, either the placeable itself, or a proxy placeable (for items)
+*/
+
+extern("inc_scorco")
+extern("inc_inventory")
+extern("inc_cdb")
+
+#define DCONT_TABLE "dcont"
+#define DCONT_OBJECTS_TABLE "dcont_inventory"
+#define DCONT_PROXY_Z_OFFSET -10
+#define _dcont_get_activator(proxy) GetLocalObject(proxy, "dcont_activator")
+#define _dcont_get_proxy(activator) GetLocalObject(activator, "dcont_proxy")
+#define _dcont_is_proxy_open(proxy) GetLocalInt(proxy, "dcont_open")
+
+bool dcont_is_dcont_proxy(object obj);
+int dcont_get_id(object activator, object container, bool create_when_missing = true);
+object dcont_get_proxy(object activator);
+void dcont_destroy_proxy(object activator, object container);
+object dcont_open(object activator, object container, object opened_by);
+void dcont_handle_event(object activator, object container, int disturb_event, object item);
+void dcont_update(int id, location opened_at, object opened_by);
+
+bool dcont_is_dcont_proxy(object obj) {
+	return is_valid(_dcont_get_activator(obj));
+}
+
+void dcont_update(int id, location opened_at, object opened_by) {
+	int aid = GetAccountID(opened_by);
+	int cid = GetCharacterID(opened_by);
+	pQ("update " + DCONT_TABLE + " set last_opened_by_aid = " + pSi(aid) + ", last_opened_by_cid = " + pSi(cid) +
+		", last_opened_where = " + pEscapeLocation(opened_at) + ", last_opened_at = now() where id = " + pSi(id));
+}
+
+int dcont_get_id(object activator, object container, bool create_when_missing = true) {
+	int ret = GetLocalInt(activator, "dcont_id");
+	if (0 == ret) {
+		if (create_when_missing && is_item(activator)) {
+			pQ("insert into " + DCONT_TABLE + " () values();");
+			ret = pLastId(DCONT_TABLE);
+			SetLocalInt(activator, "dcont_id", ret);
+		} else {
+			_ERROR("cannot assign seq value to non-persistent inventory: " + otoa(activator));
+		}
+	}
+	return ret;
+}
+
+object dcont_get_proxy(object activator) {
+	object old_proxy = _dcont_get_proxy(activator);
+	// TODO: check if proxy is near enough to be re-used
+
+	if (is_valid(old_proxy)) {
+		if (_dcont_is_proxy_open(old_proxy))
+			return OBJECT_INVALID;
+
+		dcont_destroy_proxy(activator, old_proxy);
+	}
+
+	vector vx = GetPosition(activator);
+	vx.z += DCONT_PROXY_Z_OFFSET;
+	location loc = Location(GetArea(activator), vx, GetFacing(activator));
+	object proxy = CreateObject(OBJECT_TYPE_PLACEABLE, "dcont_proxy", loc);
+	SetLocalObject(proxy, "dcont_activator", activator);
+	SetLocalObject(activator, "dcont_proxy", proxy);
+	return proxy;
+}
+
+void dcont_destroy_proxy(object activator, object container) {
+	if (!is_valid(container))
+		container = GetLocalObject(activator, "dcont_proxy");
+
+	if (!is_valid(container)) {
+		_ERROR(otoa(activator) + ": cannot destroy non-existent proxy container");
+		return;
+	}
+
+	DestroyObject(container);
+}
+
+object dcont_open(object activator, object container, object opened_by) {
+	int loaded = GetLocalInt(container, "dcont_loaded");
+
+	if (!loaded && GetInventoryItemCount(container)) {
+		_WARN(otoa(activator) + " <-> " + otoa(container) + " bound to dcont, not loaded, and has items. Ignoring events.");
+		return OBJECT_INVALID;
+	}
+
+	int id = dcont_get_id(activator, container, !loaded);
+	if (!id) {
+		_WARN(otoa(activator) + " <-> " + otoa(container) + " bound to dcont, but no id can be assigned. Ignoring events.");
+		return OBJECT_INVALID;
+	}
+
+	container = dcont_get_proxy(activator);
+	if (!is_valid(container)) {
+		_WARN(otoa(activator) + " <-> " + otoa(container) + " bound to dcont, but cannot get a proxy. Ignoring events..");
+		return OBJECT_INVALID;
+	}
+
+	if (!loaded) {
+		p_load_to_inventory(DCONT_OBJECTS_TABLE, "container = " + itoa(id), container);
+		SetLocalInt(container, "dcont_loaded", 1);
+	}
+
+	dcont_update(id, GetLocation(container), opened_by);
+	return container;
+}
+
+void dcont_handle_event(object activator, object container, int disturb_event, object item) {
+	if (!is_valid(activator))
+		activator = _dcont_get_activator(container);
+	if (!is_valid(activator)) {
+		_WARN(otoa(activator) + " <-> " + otoa(container) + " bound to dcont, but no activator assigned. Ignoring events.");
+		return;
+	}
+
+	int cont_id = dcont_get_id(activator, container, false);
+	if (0 == cont_id) {
+		_WARN(otoa(activator) + " <-> " + otoa(container) + " bound to dcont, but no id assigned. Ignoring events.");
+		return;
+	}
+	switch (disturb_event) {
+		case INVENTORY_DISTURB_TYPE_REMOVED:
+		case INVENTORY_DISTURB_TYPE_STOLEN:
+			p_delete(DCONT_OBJECTS_TABLE, item);
+			break;
+
+		case INVENTORY_DISTURB_TYPE_ADDED:
+			p_save(DCONT_OBJECTS_TABLE, item, "container = " + itoa(cont_id));
+			break;
+	}
+}
+
+void dcont_handle_proxy_open(object activator, object proxy) {
+}
+
+void dcont_handle_proxy_close(object activator, object proxy) {
+}

@@ -52,6 +52,25 @@ create trigger objects_update_md
 	on objects.iron_flask for each row 
 	execute procedure objects.objects_update_md();
 
+create table dcont (
+	id serial primary key,
+	last_opened_by_aid int references accounts,
+	last_opened_by_cid int references characters,
+	created_at timestamp default now() not null,
+	last_opened_at timestamp default now() not null,
+	last_opened_where location
+);
+
+-- Table: dcont
+-- Items on the ground
+create table objects.dcont (
+	container int not null
+) inherits (objects.objects);
+create trigger objects_update_md
+	before insert or update
+	on objects.cont for each row 
+	execute procedure objects.objects_update_md();
+
 -- Table: critters
 -- Creatures on the ground somewhere
 create table objects.critters (
