@@ -119,6 +119,11 @@ object pRCO(string query, location where, object owner = OBJECT_INVALID);
 // Returns the last-inserted id.
 int pLastId(string table, string column = "id");
 
+// Function: pGetNextSeqValue
+//
+// Returns the next value for the given sequence name.
+int pGetNextSeqValue(string seq);
+
 // Returns a nwn-generated serial for the cursor functions.
 int pCursorGetNextSerial();
 
@@ -373,7 +378,14 @@ int pLastId(string table, string column = "id") {
 		return pGetInt(1);
 }
 
-
+int pGetNextSeqValue(string seq) {
+	pQuery("select nextval('" + seq + "');");
+	if (!pFetch()) {
+		_ERROR("cannot fetch nextval for seq '" + seq + "'");
+		return 0;
+	} else
+		return pGetInt(1);
+}
 
 int pCursorGetNextSerial() {
 	int last = GetLocalInt(GetModule(), "psql_cursor_serial");
