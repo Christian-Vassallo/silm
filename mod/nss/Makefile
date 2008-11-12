@@ -1,8 +1,4 @@
-# inherits stuff
-
-all:
-	$(MAKE) Makefile.dep
-	$(MAKE) compile
+all: compile
 
 NCC=nwnnsscomp
 NCCFLAGS=-g -c -q -o
@@ -15,19 +11,25 @@ builddate := $(shell date "+%Y-%m-%d %X %z (%a, %d %b %Y)")
 
 include Makefile.dep
 
+corefiles := $(wildcard $(NWNHOME)/original_resources/*.nss)
 globals := $(wildcard global/*.h)
 scripts := $(wildcard *.n)
+headers := $(wildcard *.h *.nh)
+
 objects := $(addsuffix .ncs, $(basename $(objects)))
 preprocessed := $(addsuffix .nss, $(basename $(scripts)))
 
-.PHONY: Makefile.dep
-Makefile.dep:
-	@./build_dep_list.rb $(scripts) > Makefile.dep
+Makefile.dep: $(globals) $(headers) $(scripts)
+	@echo "Building dependencies: Makefile.dep .."
+	@./build_dep_list.rb $(globals) $(headers) $(scripts) > Makefile.dep
 
 revupdate:
 	@echo '#define GIT_COMMIT_ON "$(commitdate)"' > git.h
 	@echo '#define GIT_BUILD_ON "$(builddate)"'  >> git.h
 	@echo '#define GIT_COMMIT "$(commit)"'       >> git.h
+
+%.nss: Makefile.dep
+%.ncs: Makefile.dep
 
 %.nss : %.n
 	@set -e; (gcc -undef -Wall -fextended-identifiers -P -E -nostdinc -Iglobal -include stddef.h -I . -include _const.nh -x c -std=c99 $< |\
@@ -36,14 +38,13 @@ revupdate:
 %.ncs : %.nss
 	$(NCC) $(NCCFLAGS) $(NWNHOME) $<
 
-compile: $(preprocessed) $(objects)
+compile: Makefile.dep $(preprocessed) $(objects)
 
-.PHONY: tags
-tags:
-	@ctags --language-force=c --totals --c-kinds=cdefgmnpstuvx --fields=fksmnSzt global/*.h *.{n,nh,h} $(NWNHOME)/original_resources/*.nss
+tags: $(globals) $(headers) $(scripts) $(corefiles)
+	@ctags --language-force=c --totals --c-kinds=cdefgmnpstuvx --fields=fksmnSzt $(globals) $(headers) $(scripts) $(corefiles)
 
 clean:
-	-rm *.nss *.ncs *.ndb Makefile.dep
+	-rm *.nss *.ncs *.ndb Makefile.dep tags
 
 clean-stale:
 	@for x in *.n[cs]s; do [ -f `echo $$x |cut -d. -f1`.n ] || rm -v $$x; done

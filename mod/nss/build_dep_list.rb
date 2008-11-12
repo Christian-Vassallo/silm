@@ -72,7 +72,7 @@ ARGV.each {|file|
     puts "%s: %s" % [file, nssdep.join(' ')] if nssdep.size > 0
   else
     puts "%s: %s" % [file + "ss", nssdep.join(' ')] if nssdep.size > 0
-    puts "%s: %s" % [file + "cs", ncsdep.join(' ')] if ncsdep.size > 0
+    puts "%s: %s" % [file + "cs", ncsdep.join(' ')] if ncsdep.size > 0 && is_compileable
   end
 }
 puts "objects := %s" % compileable.join(' ')
