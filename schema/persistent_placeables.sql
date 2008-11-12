@@ -11,6 +11,7 @@ CREATE TABLE placeables (
     last_access timestamp with time zone DEFAULT now(),
     lock_key character varying(255) NOT NULL,
     store_tag character varying(100) NOT NULL,
+	dcont_id int not null, -- references sequence: objects.dcont
     first_placed_by integer references characters,
     last_placed_by integer references characters
 );

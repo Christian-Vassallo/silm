@@ -50,12 +50,12 @@ void LoadPlaciesForArea(object oA) {
 	string sResRef, sName;
 	vector v;
 	float f;
-	int id, nLocked;
+	int id, nLocked, dcont_id;
 	location lT;
 
 	int count = 0;
 
-	pQ("select resref,x,y,z,f,name,id,locked from " +
+	pQ("select resref,x,y,z,f,name,id,locked,dcont_id from " +
 		PLAC_TABLE + " where area = " + sAreaTag + ";");
 
 	while (pF()) {
@@ -68,6 +68,7 @@ void LoadPlaciesForArea(object oA) {
 		sName = pG(6);
 		id = StringToInt(pG(7));
 		nLocked = pGb(8);
+		dcont_id = pGi(9);
 
 		lT = Location(oA, v, f);
 		object oP = CreateObject(OBJECT_TYPE_PLACEABLE, sResRef, lT, FALSE);
@@ -83,6 +84,7 @@ void LoadPlaciesForArea(object oA) {
 		SetLocked(oP, nLocked == 1);
 
 		SetLocalInt(oP, "placie_id", id);
+		SetLocalInt(oP, "dcont_id", dcont_id);
 	}
 
 	WriteTimestampedLogEntry("Done loading: " + IntToString(count));
@@ -139,6 +141,8 @@ int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
 	if ( GetIsPC(oPlacedBy) && !GetIsDM(oPlacedBy) )
 		nID = GetCharacterID(oPlacedBy);
 
+	int dcont_id = GetLocalInt(oP, "dcont_id");
+
 	int id = GetLocalInt(oP, "placie_id");
 	vector v = GetPosition(oP);
 	float f = GetFacing(oP);
@@ -149,7 +153,7 @@ int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
 	if ( id == 0 ) {
 		pQ("insert into " +
 			PLAC_TABLE +
-			" (area,name,store_tag,lock_key,resref,x,y,z,f,locked,first_placed_by) values("
+			" (area,name,store_tag,lock_key,resref,x,y,z,f,locked,first_placed_by,dcont_id) values("
 			+
 			"" + sAreaTag + ", " +
 			"" + sName + ", " +
@@ -158,7 +162,8 @@ int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
 			"" + pE(GetResRef(oP)) + ", " +
 			"" + FloatToString(v.x) + ", " + FloatToString(v.y) + ", " + FloatToString(v.z) + ", " +
 			"'" + FloatToString(f) + "', " +
-			"" + pSb(GetLocked(oP)) + ", " + pSi0(nID, TRUE) + "" +
+			"" + pSb(GetLocked(oP)) + ", " + pSi0(nID, TRUE) + ", " +
+			"" + pSi(dcont_id) +
 			")");
 
 		pQ("select id from " + PLAC_TABLE + " order by id desc limit 1;");
@@ -178,7 +183,8 @@ int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
 					"name=" + sName + ", " +
 					"store_tag=" + sStoreTag + ", " +
 					"lock_key=" + sLockKey + ", " +
-					"last_placed_by=" + (nID == 0 ? "NULL" : IntToString(nID)) + " " +
+					"last_placed_by=" + (nID == 0 ? "NULL" : IntToString(nID)) + ", " +
+					"dcont_id=" + (dcont_id == 0 ? "NULL" : IntToString(dcont_id)) + " " +
 
 					" where id = " + IntToString(id) + ";";
 
