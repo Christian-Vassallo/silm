@@ -28,7 +28,7 @@ AREAS=$(shell ls area/*.git area/*.are | grep -v ooc_solace)
 
 # This gets packaged into your final module for
 # deployment on a production server.
-VALIDEXT=area/\*.git area/\*.are \
+VALIDEXT= \
 	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
 	utc/\*.utc utd/\*.utd ute/\*.ute \
 	itp/\*.itp ssf/\*.ssf \
@@ -152,9 +152,15 @@ clean:
 resources: area dlg utc uti utd ute utm utp uts utt utw ssf mod itp scripts
 
 local: resources
-	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH).mod $(VALIDEXT)
-	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-dev.mod $(VALIDEXTDEV)
-	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-player.mod $(VALIDEXTPLAYER)
+ifeq ($(MAPMASK),)
+	@echo "Packing up all maps."
+	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH).mod area/\*.are area/\*.git $(VALIDEXT)
+else
+	@echo "Packing up maps matching: $(MAPMASK)"
+	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH).mod area/$(MAPMASK).are area/$(MAPMASK).git $(VALIDEXT)
+endif
+	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-dev.mod $(MAPS) $(VALIDEXTDEV)
+	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-player.mod $(MAPS) $(VALIDEXTPLAYER)
 
 tar: local
 	tar -czf $(NWNMODNAME)-$(BRANCH).tgz $(NWNMODNAME)-$(BRANCH).mod
