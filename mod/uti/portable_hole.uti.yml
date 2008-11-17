@@ -4,7 +4,7 @@ version: V3.2
 hash: !ruby/object:NWN::Gff::Struct 
   hash: 
     AddCost: !ruby/object:NWN::Gff::Element {label: AddCost, type: :dword, value: 0}
-    BaseItem: !ruby/object:NWN::Gff::Element {label: BaseItem, type: :int, value: 216}
+    BaseItem: !ruby/object:NWN::Gff::Element {label: BaseItem, type: :int, value: 24}
     Charges: !ruby/object:NWN::Gff::Element {label: Charges, type: :byte, value: 0}
     Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
     Cost: !ruby/object:NWN::Gff::Element {label: Cost, type: :dword, value: 2250}
@@ -43,15 +43,25 @@ hash: !ruby/object:NWN::Gff::Struct
       - !ruby/object:NWN::Gff::Struct 
         hash: 
           ChanceAppear: !ruby/object:NWN::Gff::Element {label: ChanceAppear, type: :byte, value: 100}
-          CostTable: !ruby/object:NWN::Gff::Element {label: CostTable, type: :byte, value: 15}
-          CostValue: !ruby/object:NWN::Gff::Element {label: CostValue, type: :word, value: 5}
+          CostTable: !ruby/object:NWN::Gff::Element {label: CostTable, type: :byte, value: 3}
+          CostValue: !ruby/object:NWN::Gff::Element {label: CostValue, type: :word, value: 13}
           Param1: !ruby/object:NWN::Gff::Element {label: Param1, type: :byte, value: 255}
           Param1Value: !ruby/object:NWN::Gff::Element {label: Param1Value, type: :byte, value: 0}
-          PropertyName: !ruby/object:NWN::Gff::Element {label: PropertyName, type: :word, value: 32}
-          Subtype: !ruby/object:NWN::Gff::Element {label: Subtype, type: :word, value: 0}
+          PropertyName: !ruby/object:NWN::Gff::Element {label: PropertyName, type: :word, value: 15}
+          Subtype: !ruby/object:NWN::Gff::Element {label: Subtype, type: :word, value: 335}
         struct_id: 0
     StackSize: !ruby/object:NWN::Gff::Element {label: StackSize, type: :word, value: 1}
     Stolen: !ruby/object:NWN::Gff::Element {label: Stolen, type: :byte, value: 0}
     Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: portable_hole}
     TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: portable_hole}
+    VarTable: !ruby/object:NWN::Gff::Element
+      label: VarTable
+      type: :list
+      value:
+      - !ruby/object:NWN::Gff::Struct
+        struct_id: 0
+        hash:
+          Name: !ruby/object:NWN::Gff::Element {label: Name, type: :cexostr, value: dcont}
+          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :dword, value: 1}
+          Value: !ruby/object:NWN::Gff::Element {label: Value, type: :int, value: 1}
   struct_id: 4294967295
