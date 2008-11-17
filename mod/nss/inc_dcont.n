@@ -8,11 +8,21 @@
  - activator: the object which bound the open call
    (either a item with (simulated) inventory, or a placeable; never the player)
  - container: the container, either the placeable itself, or a proxy placeable (for items)
+
+ Known issues:
+ - proxied and nonproxied access to the same container do NOT mix.
+ - container contents between containers accessing the same id are NOT synced,
+   and thus can be abused for item duplication if placed twice.
 */
 
 extern("inc_scorco")
 extern("inc_inventory")
 extern("inc_cdb")
+
+// Reload stationary (eg placeable-activators) proxies on each access?
+// Use this if you intend to place multiple proxies with the same id at different spots.
+// Note: item activators always get destroyed and reloaded.
+#define DCONT_UNLOAD_PROXY 1
 
 #define DCONT_TABLE "dcont"
 #define DCONT_OBJECTS_TABLE "dcont_inventory"
@@ -20,17 +30,26 @@ extern("inc_cdb")
 #define _dcont_get_activator(proxy) GetLocalObject(proxy, "dcont_activator")
 #define _dcont_get_proxy(activator) GetLocalObject(activator, "dcont_proxy")
 #define _dcont_is_proxy_open(proxy) GetLocalInt(proxy, "dcont_open")
+#define _dcont_is_unbound(proxy) GetLocalInt(proxy, "dcont_unbound")
+#define _dcont_unbound_execution(container, code) __EBLOCK( SetLocalInt(container, "dcont_unbound", 1); code; SetLocalInt(container, "dcont_unbound", 0); )
 
-bool dcont_is_dcont_proxy(object obj);
+bool dcont_is_activator(object activator);
+bool dcont_is_proxy(object proxy);
 int dcont_get_id(object activator, object container, bool create_when_missing = true);
 object dcont_get_proxy(object activator);
 void dcont_destroy_proxy(object activator, object container);
 object dcont_open(object activator, object container, object opened_by);
 void dcont_handle_event(object activator, object container, int disturb_event, object item);
 void dcont_update(int id, location opened_at, object opened_by);
+void dcont_handle_proxy_open(object proxy);
+void dcont_handle_proxy_close(object proxy);
 
-bool dcont_is_dcont_proxy(object obj) {
-	return is_valid(_dcont_get_activator(obj));
+bool dcont_is_activator(object activator) {
+	return GetLocalInt(activator, "dcont") > 0;
+}
+
+bool dcont_is_proxy(object proxy) {
+	return is_valid(_dcont_get_activator(proxy));
 }
 
 void dcont_update(int id, location opened_at, object opened_by) {
@@ -44,10 +63,11 @@ int dcont_get_id(object activator, object container, bool create_when_missing = 
 	int ret = GetLocalInt(activator, "dcont_id");
 	if (0 == ret) {
 		if (create_when_missing && is_item(activator)) {
-			pQ("insert into " + DCONT_TABLE + " () values();");
+			pQ("insert into " + DCONT_TABLE + " (created_at) values(now());");
 			ret = pLastId(DCONT_TABLE);
 			SetLocalInt(activator, "dcont_id", ret);
-		} else {
+		}
+		if (0 == ret) {
 			_ERROR("cannot assign seq value to non-persistent inventory: " + otoa(activator));
 		}
 	}
@@ -56,19 +76,31 @@ int dcont_get_id(object activator, object container, bool create_when_missing = 
 
 object dcont_get_proxy(object activator) {
 	object old_proxy = _dcont_get_proxy(activator);
-	// TODO: check if proxy is near enough to be re-used
+
+	if (is_placeable(activator)) {
+		object proxy = activator;
+		SetLocalObject(proxy, "dcont_activator", activator);
+		SetLocalObject(activator, "dcont_proxy", proxy);
+		return activator;
+	}
 
 	if (is_valid(old_proxy)) {
-		if (_dcont_is_proxy_open(old_proxy))
+		if (_dcont_is_proxy_open(old_proxy)) {
+			_WARN("cannot invalidate opened proxy: " + otoa(old_proxy));
 			return OBJECT_INVALID;
-
+		}
 		dcont_destroy_proxy(activator, old_proxy);
 	}
 
-	vector vx = GetPosition(activator);
+	object activator_create_at = activator;
+	if (is_item(activator_create_at))
+		activator_create_at = GetItemPossessor(activator_create_at);
+	vector vx = GetPosition(activator_create_at);
+
 	vx.z += DCONT_PROXY_Z_OFFSET;
-	location loc = Location(GetArea(activator), vx, GetFacing(activator));
+	location loc = Location(GetArea(activator_create_at), vx, GetFacing(activator_create_at));
 	object proxy = CreateObject(OBJECT_TYPE_PLACEABLE, "dcont_proxy", loc);
+
 	SetLocalObject(proxy, "dcont_activator", activator);
 	SetLocalObject(activator, "dcont_proxy", proxy);
 	return proxy;
@@ -83,7 +115,8 @@ void dcont_destroy_proxy(object activator, object container) {
 		return;
 	}
 
-	DestroyObject(container);
+	_dcont_unbound_execution(container, iterate_inventory(container, DestroyObject(oIterate)));
+	DestroyObject(container, 1.0);
 }
 
 object dcont_open(object activator, object container, object opened_by) {
@@ -116,6 +149,9 @@ object dcont_open(object activator, object container, object opened_by) {
 }
 
 void dcont_handle_event(object activator, object container, int disturb_event, object item) {
+	if (_dcont_is_unbound(container))
+		return;
+
 	if (!is_valid(activator))
 		activator = _dcont_get_activator(container);
 	if (!is_valid(activator)) {
@@ -128,6 +164,11 @@ void dcont_handle_event(object activator, object container, int disturb_event, o
 		_WARN(otoa(activator) + " <-> " + otoa(container) + " bound to dcont, but no id assigned. Ignoring events.");
 		return;
 	}
+
+	int loaded = GetLocalInt(container, "dcont_loaded");
+	if (!loaded)
+		return;
+
 	switch (disturb_event) {
 		case INVENTORY_DISTURB_TYPE_REMOVED:
 		case INVENTORY_DISTURB_TYPE_STOLEN:
@@ -140,8 +181,21 @@ void dcont_handle_event(object activator, object container, int disturb_event, o
 	}
 }
 
-void dcont_handle_proxy_open(object activator, object proxy) {
+void dcont_handle_proxy_open(object proxy) {
+	SetLocalInt(proxy, "dcont_open", true);
 }
 
-void dcont_handle_proxy_close(object activator, object proxy) {
+void dcont_handle_proxy_close(object proxy) {
+	SetLocalInt(proxy, "dcont_open", false);
+	object activator = _dcont_get_activator(proxy);
+	if (is_valid(activator)) {
+		if (is_item(activator)) {
+			dcont_destroy_proxy(activator, proxy);
+		} else {
+#ifdef DCONT_UNLOAD_PROXY
+			_dcont_unbound_execution(proxy, iterate_inventory(proxy, DestroyObject(oIterate)));
+			SetLocalInt(proxy, "dcont_loaded", 0);
+#endif
+		}
+	}
 }

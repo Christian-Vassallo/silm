@@ -1,7 +1,5 @@
 #include "inc_dcont.nh"
 
-#define is_dcont(obj) GetLocalInt(obj, "dcont")
-
 void main() {
 	struct EventInfo e = GetEventInfo();
 
@@ -9,7 +7,7 @@ void main() {
 		object pc = e.actor;
 		object activator = e.runnable;
 		object container = OBJECT_INVALID;
-		if (!is_dcont(activator))
+		if (!dcont_is_activator(activator))
 			return;
 
 		container = dcont_open(activator, container, e.actor);
@@ -22,28 +20,29 @@ void main() {
 	}
 
 	if ("placeable_open" == e.ev) {
-		if (is_dcont(e.runnable)) {
+
+		if (dcont_is_activator(e.runnable)) {
 			object activator = e.runnable;
 			object container = e.runnable;
 
 			dcont_open(activator, container, e.actor);
 		}
 
-		if (dcont_is_dcont_proxy(e.runnable))
-			SetLocalInt(e.runnable, "dcont_open", true);
+		if (dcont_is_proxy(e.runnable))
+			dcont_handle_proxy_open(e.runnable);
 	}
 
-	if ("placeable_close" == e.ev) {
-		if (dcont_is_dcont_proxy(e.runnable))
-			SetLocalInt(e.runnable, "dcont_open", false);
+	if ("placeable_closed" == e.ev) {
+		if (dcont_is_proxy(e.runnable))
+			dcont_handle_proxy_close(e.runnable);
 	}
 
-	if ("placeable_disturb" == e.ev) {
+	if ("placeable_disturbed" == e.ev) {
 		object activator = OBJECT_INVALID;
 		object container = e.runnable;
-		if (!is_dcont(activator))
-			return;
-		dcont_handle_event(activator, container, GetInventoryDisturbType(), GetInventoryDisturbItem());
+
+		if (dcont_is_proxy(container))
+			dcont_handle_event(activator, container, GetInventoryDisturbType(), GetInventoryDisturbItem());
 	}
 
 }
