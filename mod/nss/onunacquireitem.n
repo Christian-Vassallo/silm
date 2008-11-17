@@ -34,16 +34,6 @@ void main() {
 		return;
 	}
 
-	if (gvGetInt("persist_dropped_items") && GetIsObjectValid(oItem)) {
-		if (p_canpersist(oItem) && GetIsObjectValid(GetAreaFromLocation(GetLocation(oItem)))) {
-			p_save("dropped_items", oItem, "dropped_by_cid = " + pSi(GetCharacterID(oPC)) + ", dropped_by_aid = " + pSi(GetAccountID(oPC)));
-		}
-	}
-	if (!p_id(oItem)) {
-		ToPC(GetName(oItem) + ": Dieses Item ist NICHT abgespeichert. Es wird bei einem Server-Restart verloren gehen.");
-	}
-
-
 	// Event: item_unacquire
 	// - runnable: module
 	// - actor: pc

@@ -70,11 +70,6 @@ void main() {
 		}
 	}
 
-	if (gvGetInt("persist_dropped_items") && !lv_i(oArea, "dropped_items_loaded")) {
-		p_load_to_location_metadata_in_chunks_for_area("dropped_items", oArea);
-		slv_i(oArea, "dropped_items_loaded", 1);
-	}
-		
 	if (gvGetInt("persist_critters") && !lv_i(oArea, "critters_loaded")) {
 		p_load_to_location_metadata_in_chunks_for_area("critters", oArea);
 		slv_i(oArea, "critters_loaded", 1);
@@ -82,9 +77,3 @@ void main() {
 
 	RunEventScriptsFor(GetEventSerial(), "area_enter", oArea, oPC, oArea, GetLocation(oPC));
 }
-
-
-
-
-
-
