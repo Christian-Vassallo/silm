@@ -1,0 +1,9 @@
+void main() {
+	object oPlac = OBJECT_SELF;
+	object oPC = GetLastClosedBy();
+
+	// Event: placeable_closed
+	// - runnable: placeable
+	// - actor: closer/creature
+	RunEventScriptsFor(GetEventSerial(), "placeable_closed", OBJECT_SELF, GetLastClosedBy(), OBJECT_SELF, GetLocation(OBJECT_SELF));
+}

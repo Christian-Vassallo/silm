@@ -1,0 +1,11 @@
+extern("inc_scorco")
+
+void main() {
+	object oPlac = OBJECT_SELF;
+	object oPC = GetLastOpenedBy();
+
+	// Event: placeable_open
+	// - runnable: placeable
+	// - actor: opener/creature
+	RunEventScriptsFor(GetEventSerial(), "placeable_open", OBJECT_SELF, oPC, oPlac, GetLocation(oPlac));
+}

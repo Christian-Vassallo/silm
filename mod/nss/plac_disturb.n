@@ -1,0 +1,17 @@
+void main() {
+	object oPlac = OBJECT_SELF;
+	object oPC = GetLastDisturbed();
+	object oItem = GetInventoryDisturbItem();
+	int type = GetInventoryDisturbType();
+
+	// Event: placeable_disturbed
+	// - runnable: placeable
+	// - actor: disturber
+	// - actedon: item
+	// - i0: INVENTORY_DISTURB_TYPE_*
+	struct EventArguments ea;
+	ea.i0 = type;
+	int serial = GetEventSerial();
+	RunEventScriptsForWithArgv(serial, "placeable_disturbed", OBJECT_SELF, oPC, oItem, GetLocation(oPC), ea);
+	DeleteEventArguments(serial);
+}
