@@ -95,8 +95,10 @@ int p_set_p_id(object o, int id) {
 }
 
 int p_get_p_id(object o) {
-	string ident = ObjectToString(o);
-	return GetLocalInt(GetModule(), "p_id_" + ident);
+	int id = GetLocalInt(o, "p_id");
+	if (!id)
+		id = GetLocalInt(GetModule(), "p_id_" + ObjectToString(o));
+	return id;
 }
 
 
@@ -156,11 +158,14 @@ bool p_delete(string table, object o) {
 		_FATAL("cannot p_delete " + otoa(o) + ", not persistent");
 		return 0;
 	}
-
-	pQ("delete from " + normalize_table(table) + " where id = " + pSi(p_id(o)) + ";");
-		/* cascade-delete the metadata as well .. */
-
-	p_set_p_id(o, 0);
+	
+	// Workaround: we cannot use DELETE ONLY, because nwnx_odmbc does not support
+	// proper DELETE RETURNING statement parsing.
+	pQ("select id from " + normalize_table(table) + " where id = " + pSi(p_id(o)) + ";");
+	if (pF()) {
+		pQ("delete from " + normalize_table(table) + " where id = " + pSi(p_id(o)) + ";");
+		p_set_p_id(o, 0);
+	}
 	return 1;
 }
 
