@@ -9,13 +9,16 @@
 )
 
 // Macro: _INFO(x)
-// print informational messages. disabled by default
-#define _INFO(x)
+// print informational messages.
+#define _INFO(message) __EBLOCK(\
+	string inline_message = "Info: " + __FILE__ + ":" + xstr(__LINE__) + ": " + message;\
+	WriteTimestampedLogEntry(inline_message);\
+	SendMessageToAllDMs(inline_message);\
+)
 
 // Macro: _ADVISE(x)
 // advise the backend about something
 #define _ADVISE(x) "slowpath_XXX fix me"
-
 
 // Macro: _WARN(message)
 // print a non-fatal warning message
