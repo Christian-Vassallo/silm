@@ -1,20 +1,31 @@
 #!/usr/bin/env ruby
 
-compileable = []
+require 'optparse'
 
-# n depends on nss
+$global_includes = []
+OptionParser.new do |o|
+  o.on "-g file", "global include, which will be added to each file before parsing/compiling" do |g|
+    $global_includes << g
+  end
+end.parse!
 
-def get_externs_for(file)
+# Returns all included file names for this file. Extensions are sanitized.
+def get_includes_and_externs_for(file)
+  includes = []
   externs = []
+
   IO.readlines(file).each {|line|
-    line.strip!
-    if line =~ /^#include "(.*)"\s*$/ || line =~ /^\s*extern\("(.*)"\)\s*$/
-      dep = $1
-      dep.downcase!
-      externs << dep
+    case line.strip
+      when /^#include "(.*)"\s*$/
+        dep = $1.downcase
+        includes << dep
+      when /^\s*extern\("(.*)"\)\s*$/
+        dep = $1.downcase + ".n"
+        externs << dep
     end
   }
-  externs
+
+  [includes, externs]
 end
 
 def get_is_compileable(file)
@@ -23,56 +34,63 @@ def get_is_compileable(file)
     data =~ /^\s*int\s+StartingConditional\s*\(\)/
 end
 
+def print_depend file, *argv
+  a = argv.flatten.compact.reject {|v|v == ""}.uniq
+  puts "%s: %s" % [file, a.join(' ')] if a.size > 0
+end
 
-global_externs = get_externs_for('global/stddef.h')
-new = []
-global_externs.each {|ext|
-  externs = get_externs_for('global/' + ext)
-  new << 'global/' + ext
-  new.concat externs
+# First, parse all global dependencies.
+
+$global_depends_on = $global_includes
+$global_includes.each {|file|
+  file_depends_on = get_includes_and_externs_for(file).flatten
+  $global_depends_on.concat file_depends_on
 }
-global_externs = new
-global_externs.concat ['_const.nh']
-global_externs.uniq!
+$global_depends_on.uniq!
 
-puts "global_externs := %s"  % global_externs.join(' ')
+$objects  = ARGV.select {|file| get_is_compileable(file) }.map {|file| File.basename(file).split('.')[0..-2].join('.') }
+$includes, $externs = {}, {}
+ARGV.each {|file| $includes[file], $externs[file] = *get_includes_and_externs_for(file) }
+
+puts "global_dependencies := %s" % $global_depends_on.join(' ')
+puts "objects := %s" % $objects.map{|v|v + ".ncs"}.join(' ')
+puts ""
+
+depends = {}
 
 ARGV.each {|file|
-  nssdep = []
-  ncsdep = []
+  extension = File.extname(file)
+  file_without_extension = File.basename(file).split('.')[0..-2].join('.')
 
-  externs = get_externs_for(file)
-#  externs.concat global_externs
-  nssdep << '$(global_externs)'
+  # Filter our non-existing source files (we assume they're NWN core).
+  includes = $includes[file].reject {|f| !File.exists?(f) }
+  externs  =  $externs[file].reject {|f| !File.exists?(f) }
 
-  is_compileable = get_is_compileable(file)
+  case extension
+    when ".n"
+      # to make the .ncs, we need a .nss of the same name
+      (depends[file_without_extension + ".ncs"] ||= []) << file_without_extension + ".nss" if $objects.index(file_without_extension)
 
-  externs.each {|dep|
-    extension = File.extname(dep).gsub(".", "")
+      # to make the .nss, we need the .n
+      (depends[file_without_extension + ".nss"] ||= []) << file
 
-    case extension
-      when "nh", "h"
-        dep_exists = ( FileTest.exists?(dep) || FileTest.exists?('global/' + dep) )
-        nssdep << dep
-      else
-        dep_exists = FileTest.exists?(dep + ".n")
-        # We want to make a .n
-        # First, we need the preprocessed file
-        # ncsdep: ncs depends on nss
-        ncsdep << dep + ".nss" if dep_exists
+      # and all #included files need to be checked as well:
+      (depends[file_without_extension + ".nss"] ||= []) << includes
 
-        # nssdep: nss depends on on (preprocess step)
-        nssdep << dep + ".n" if dep_exists
-    end
-  }
+      # and we need all files, that the included files extern:
+      (depends[file_without_extension + ".nss"] ||= []) << includes.map {|v| $includes[v] }
+      (depends[file_without_extension + ".nss"] ||= []) << includes.map {|v| $externs[v] }
 
-  compileable << file if is_compileable
+      # to make the .ncs, we need all extern()ed files to be properly preprocessed
+      (depends[file_without_extension + ".ncs"] ||= [] ) << externs.map {|v| v + "ss" }
 
-  if file =~ /\.nh$/
-    puts "%s: %s" % [file, nssdep.join(' ')] if nssdep.size > 0
-  else
-    puts "%s: %s" % [file + "ss", nssdep.join(' ')] if nssdep.size > 0
-    puts "%s: %s" % [file + "cs", ncsdep.join(' ')] if ncsdep.size > 0 && is_compileable
+    when ".h", ".nh"
+      depends[file] ||= []
+      depends[file] << includes
+      depends[file] << externs
   end
 }
-puts "objects := %s" % compileable.join(' ')
+
+depends.each {|file, depends|
+  print_depend file, depends
+}
