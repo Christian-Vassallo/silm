@@ -1,4 +1,5 @@
 #include "inc_dcont.nh"
+extern("inc_inventory")
 
 void main() {
 	struct EventInfo e = GetEventInfo();
@@ -28,8 +29,14 @@ void main() {
 			dcont_open(activator, container, e.actor);
 		}
 
-		if (dcont_is_proxy(e.runnable))
+		if (dcont_is_proxy(e.runnable)) {
 			dcont_handle_proxy_open(e.runnable);
+
+			int count = 0; float weight = 0f;
+			iterate_inventory(e.runnable, count += GetItemStackSize(oIterate); weight += GetWeight(oIterate););
+			SendMessageToPC(e.actor, "Gegenstaende eingelagert: " + itoa(count));
+			SendMessageToPC(e.actor, "Gesamtes Gewicht eingelagert: " + ftoa(weight));
+		}
 	}
 
 	if ("placeable_closed" == e.ev) {
