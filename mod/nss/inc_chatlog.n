@@ -1,6 +1,7 @@
 extern("inc_cdb")
 extern("inc_chat")
 extern("inc_session")
+extern("inc_nwnx_func")
 
 void ChatLog(object oPC, int nMode, string sMessage, object oTo);
 
@@ -13,19 +14,42 @@ void ChatLog(object oPC, int nMode, string sMessage, object oTo) {
 	heard_by_aid += "E'{";
 	heard_by_cid += "E'{";
 
-	iterate_players(
-		if (oPC != oIterate && hears(oPC, oIterate, nMode & CHATMODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER)) {
-			if (GetCharacterID(oIterate) > 0) {
-				nheard_by_cid += 1;
-				heard_by_cid += itoa(GetCharacterID(oIterate));
-				heard_by_cid += ",";
-			} else {
-				nheard_by_aid += 1;
-				heard_by_aid += itoa(GetAccountID(oIterate));
-				heard_by_aid += ",";
+	if (nMode & CHATMODE_PRIVATE) {
+		if (GetCharacterID(oTo))
+			heard_by_cid += itoa(GetCharacterID(oTo));
+		else
+			heard_by_aid += itoa(GetAccountID(oTo));
+
+	} else {
+		iterate_players(
+			if (oPC != oIterate) {
+				bool did_hear = false;
+
+				if (nMode & CHATMODE_SHOUT)
+					did_hear = true;
+				else if (nMode & CHATMODE_PARTY)
+					did_hear = (GetIsDM(oIterate) || GetFactionId(oPC) == GetFactionId(oIterate));
+				else if (nMode & CHATMODE_DM || nMode & CHATMODE_SERVER)
+					did_hear = GetIsDM(oIterate);
+				else if ((nMode & CHATMODE_TALK || nMode & CHATMODE_WHISPER) &&
+						hears(oPC, oIterate, nMode & CHATMODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER))
+					did_hear = true;
+
+				if (did_hear) {
+					if (GetCharacterID(oIterate) > 0) {
+						nheard_by_cid += 1;
+						heard_by_cid += itoa(GetCharacterID(oIterate));
+						heard_by_cid += ",";
+					} else {
+						nheard_by_aid += 1;
+						heard_by_aid += itoa(GetAccountID(oIterate));
+						heard_by_aid += ",";
+					}
+				}
 			}
-		}
-	);
+		);
+	}
+
 	if (nheard_by_aid > 0)
 		heard_by_aid = substr(heard_by_aid, 0, strlen(heard_by_aid) - 1);
 	if (nheard_by_cid > 0)
