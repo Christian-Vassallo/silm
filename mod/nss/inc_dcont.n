@@ -45,6 +45,10 @@ void dcont_update(int id, location opened_at, object opened_by);
 void dcont_handle_proxy_open(object proxy);
 void dcont_handle_proxy_close(object proxy);
 
+object dcont_get_activator(object proxy) {
+	return _dcont_get_activator(proxy);
+}
+
 bool dcont_is_activator(object activator) {
 	return GetLocalInt(activator, "dcont") > 0;
 }

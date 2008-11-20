@@ -48,8 +48,15 @@ void main() {
 		object activator = OBJECT_INVALID;
 		object container = e.runnable;
 
-		if (dcont_is_proxy(container))
-			dcont_handle_event(activator, container, GetInventoryDisturbType(), GetInventoryDisturbItem());
+		if (dcont_is_proxy(container)) {
+			activator = dcont_get_activator(container);
+			if (is_item(activator) && GetInventoryDisturbType() == INVENTORY_DISTURB_TYPE_ADDED && activator == GetInventoryDisturbItem()) {
+				AssignCommand(container, ActionGiveItem(GetInventoryDisturbItem(), e.actor));
+				SendMessageToPC(e.actor, "Du kannst das Behaeltnis nicht in sich selbst stecken.");
+			} else {
+				dcont_handle_event(activator, container, GetInventoryDisturbType(), GetInventoryDisturbItem());
+			}
+		}
 	}
 
 }
