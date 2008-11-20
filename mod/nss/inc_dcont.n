@@ -18,6 +18,7 @@
 extern("inc_scorco")
 extern("inc_inventory")
 extern("inc_cdb")
+extern("inc_position")
 
 // Reload stationary (eg placeable-activators) proxies on each access?
 // Use this if you intend to place multiple proxies with the same id at different spots.
@@ -26,7 +27,7 @@ extern("inc_cdb")
 
 #define DCONT_TABLE "dcont"
 #define DCONT_OBJECTS_TABLE "dcont_inventory"
-#define DCONT_PROXY_Z_OFFSET -10
+#define DCONT_PROXY_Z_OFFSET -10.0
 #define _dcont_get_activator(proxy) GetLocalObject(proxy, "dcont_activator")
 #define _dcont_get_proxy(activator) GetLocalObject(activator, "dcont_proxy")
 #define _dcont_is_proxy_open(proxy) GetLocalInt(proxy, "dcont_open")
@@ -95,10 +96,8 @@ object dcont_get_proxy(object activator) {
 	object activator_create_at = activator;
 	if (is_item(activator_create_at))
 		activator_create_at = GetItemPossessor(activator_create_at);
-	vector vx = GetPosition(activator_create_at);
 
-	vx.z += DCONT_PROXY_Z_OFFSET;
-	location loc = Location(GetArea(activator_create_at), vx, GetFacing(activator_create_at));
+	location loc = GetOppositeLocation(activator_create_at, DISTANCE_TINY, 0f, 0f, DCONT_PROXY_Z_OFFSET);
 	object proxy = CreateObject(OBJECT_TYPE_PLACEABLE, "dcont_proxy", loc);
 
 	SetLocalObject(proxy, "dcont_activator", activator);
