@@ -26,6 +26,7 @@ extern("inc_track")
 extern("inc_xp_handling")
 extern("x0_i0_anims")
 extern("inc_events_sql")
+extern("inc_chat")
 
 // extern inc_chat_run
 int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel);
@@ -670,6 +671,8 @@ int CommandAFK(object oPC, int iMode) {
 			e = GetNextEffect(oPC);
 		}
 		SendMessageToAllDMs(GetName(oPC) + " ist nicht mehr afk.");
+		if (!GetIsDM(oPC))
+			NWNXChatSpeakToChannel(oPC, MSG_PARTY, GetName(oPC) + " ist nicht mehr afk.");
 		FloatingTextStringOnCreature("*Nicht mehr AFK*", oPC, TRUE);
 
 	} else {
@@ -678,6 +681,8 @@ int CommandAFK(object oPC, int iMode) {
 		SetLocalInt(oPC, "afk", 1 /* unix_ts? avoiding sql call for now*/);
 		FloatingTextStringOnCreature("*AFK*", oPC, TRUE);
 		SendMessageToAllDMs(GetName(oPC) + " ist afk.");
+		if (!GetIsDM(oPC))
+			NWNXChatSpeakToChannel(oPC, MSG_PARTY, GetName(oPC) + " ist afk.");
 	}
 
 	return OK;
