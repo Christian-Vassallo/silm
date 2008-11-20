@@ -1,0 +1,38 @@
+extern("inc_target")
+extern("x0_i0_partywide")
+
+// Returns the faction id of the given players' party.
+// Returns 0, if the player is not in any party.
+int GetPartyFactionId(object pc);
+
+// Returns a member of the given party, or OBJECT_INVALID
+// if no party by the given ID can be found.
+object GetPartyMemberByFactionId(int id);
+
+
+int GetPartyFactionId(object pc) {
+	if (!is_pc(pc) || GetNumberPartyMembers(pc) < 2)
+		return 0;
+
+	int faction = GetFactionId(pc);
+	int other_faction = 0;
+
+	iterate_players(
+		if (oIterate != pc) {
+			other_faction = GetFactionId(pc);
+			if (other_faction == faction)
+				break;
+		}
+	);
+
+	return other_faction;
+}
+
+object GetPartyMemberByFactionId(int id) {
+	iterate_players(
+		if (GetFactionId(oIterate) == id)
+			return oIterate;
+	);
+
+	return OBJECT_INVALID;
+}
