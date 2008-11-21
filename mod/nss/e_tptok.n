@@ -7,13 +7,13 @@ extern("inc_position")
 #define CONV_TAG "tptok"
 #define LOAD_SKEW 3.0
 
-int MakeDialog(object oPC, object oTeleportWhom);
+int MakeDialog(object oPC, object oTeleportWhom, bool allow_swap);
 
-void DlgStart(object oPC, object Who);
+void DlgStart(object oPC, object Who, bool allow_swap);
 
-void DlgStart(object oPC, object Who) {
+void DlgStart(object oPC, object Who, bool allow_swap) {
 	DeleteLocalInt(oPC, CONV_TAG + "_sel");
-	if ( !MakeDialog(oPC, Who) )
+	if ( !MakeDialog(oPC, Who, allow_swap) )
 		return;
 	AssignCommand(oPC, ActionStartConversation(oPC, "list_select", TRUE, TRUE));
 }
@@ -30,16 +30,22 @@ void main() {
 		float max_distance = GetLocalFloat(token, "tptok_max_distance");
 		bool allow_others = GetLocalInt(token, "tptok_allow_others");
 		bool allow_teleport = GetLocalInt(token, "tptok_allow_teleport");
+		bool allow_swap = GetLocalInt(token, "tptok_allow_swap");
 		bool allow_dimdoor = GetLocalInt(token, "tptok_allow_dimdoor");
 
 		bool works = false;
-		if ( allow_teleport && is_creature(e.actedon) && (allow_others && e.actedon != e.actor)) {
-			works = true;
-			DlgStart(e.actor, e.actedon);
+		if (is_creature(e.actedon)) {
+			if (allow_teleport && (allow_others && e.actedon != e.actor)) {
+				works = true;
+				DlgStart(e.actor, e.actedon, allow_swap);
+			}
 		}
-		if (!is_creature(e.actedon) && allow_dimdoor && GetAreaFromLocation(e.actedat) == GetArea(e.actor) && (max_distance == 0f || GetDistanceBetweenLocations(e.actedat, GetLocation(e.actor)) <= max_distance)) {
-			works = true;
-			AssignCommand(e.actor, teleport_effect_and_go(e.actedat, 0.0, true));
+
+		if (!is_valid(e.actedon)) {
+			if (allow_dimdoor && GetAreaFromLocation(e.actedat) == GetArea(e.actor) && (max_distance == 0f || GetDistanceBetweenLocations(e.actedat, GetLocation(e.actor)) <= max_distance)) {
+				works = true;
+				AssignCommand(e.actor, teleport_effect_and_go(e.actedat, 0.0, true));
+			}
 		}
 
 		if (!works)
@@ -47,13 +53,23 @@ void main() {
 	}
 }
 
-int MakeDialog(object oPC, object oTeleportWhom) {
+int MakeDialog(object oPC, object oTeleportWhom, bool allow_swap) {
 	ClearList(oPC, CONV_TAG);
 	SetLocalObject(oPC, CONV_TAG + "_target", oTeleportWhom);
 
 	int iSel = GetLocalInt(oPC, CONV_TAG + "_sel");
 
 	string sHeader = "Waehle deinen Zielpunkt:";
+	
+	if (allow_swap && oPC != oTeleportWhom) {
+		AddListItem(oPC, CONV_TAG, "Mit " + GetName(oTeleportWhom) + " tauschen");
+		SetListInt(oPC, CONV_TAG, -2);
+	}
+
+	if (oPC != oTeleportWhom) {
+		AddListItem(oPC, CONV_TAG, GetName(oTeleportWhom) + " zu dir holen");
+		SetListInt(oPC, CONV_TAG, -1);
+	}
 
 	string area, name, lpt;
 	float x,y,z,f;
@@ -67,7 +83,7 @@ int MakeDialog(object oPC, object oTeleportWhom) {
 		SetListInt(oPC, CONV_TAG, id);
 	}
 
-	ResetConvList(oPC, oPC, CONV_TAG, 50000, "i_tptok_cb", sHeader);
+	ResetConvList(oPC, oPC, CONV_TAG, 50000, "i_tptok_cb2", sHeader);
 
 	return 1;
 }

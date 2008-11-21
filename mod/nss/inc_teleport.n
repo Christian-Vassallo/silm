@@ -7,7 +7,7 @@ void teleport_effect_and_go(location target, float skew = 0.0, int dimdoor = fal
 	ClearAllActions(1);
 
 	if (dimdoor) {
-		DimdoorEffect(OBJECT_SELF, GetLocation(OBJECT_SELF));
+		DelayCommand(0.4, DimdoorEffect(OBJECT_SELF, target));
 	} else {
 		TransporterEffect(OBJECT_SELF, GetLocation(OBJECT_SELF));
 		DelayCommand(skew, TransporterEffect(OBJECT_SELF, target));
@@ -16,15 +16,19 @@ void teleport_effect_and_go(location target, float skew = 0.0, int dimdoor = fal
 		DestroyObject(invis, skew + 4.0);
 	}
 
-
-	DelayCommand(1.1 + (dimdoor ? -0.2 : 0.0), ActionJumpToLocation(target));
+	ClearAllActions(1);
+	SetFacingPoint(GetPositionFromLocation(target));
+	DelayCommand((dimdoor ? 0.6 : 1.1), ActionJumpToLocation(target));
 }
 
 void DimdoorEffect(object oActivator, location lTarget) {
 	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(747), oActivator, 0.5); // wiggles
 
-	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(471), oActivator); // tele in
-	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(472), lTarget); // tele out
+	int i;
+	for (i = 76; i < 81; i++) {
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(i), oActivator); // tele in
+		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(i), lTarget); // tele out
+	}
 }
 
 void TransporterEffect(object oActivator, location oLocation) {

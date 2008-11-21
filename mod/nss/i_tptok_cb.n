@@ -1,5 +1,6 @@
 extern("inc_lists")
 extern("inc_teleport")
+extern("inc_position")
 #include "inc_pgsql.nh"
 
 void main() {
@@ -17,28 +18,47 @@ void main() {
 
 	AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
 
-	pQ("select area,x,y,z,f from locations where id = " + pSi(iSelection) + ";");
-	if (pF()) {
-		area = pGs(1); x = pGf(2); y = pGf(3); z = pGf(4); f = pGf(5);
+	switch (iSelection) {
+		case -2:
+			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_WILL, oPC)) {
+				AssignCommand(oPC, teleport_effect_and_go(GetLocation(oWho), 0.0, true));
+				AssignCommand(oPC, SetFacing(GetFacing(oWho)));
+				AssignCommand(oWho, teleport_effect_and_go(GetLocation(oPC), 0.0, true));
+				AssignCommand(oWho, SetFacing(GetFacing(oPC)));
+			}
+			break;
 
-		object oarea = GetObjectByTag(area);
-		if (!GetIsObjectValid(oarea)) {
-			SendMessageToPC(oPC, "error: area set for location is invalid.");
-			return;
-		}
+		case -1:
+			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_WILL, oPC)) {
+				AssignCommand(oWho, teleport_effect_and_go(GetAheadLocation(oPC, DISTANCE_TINY), 0.0, true));
+			}
+			break;
 
-		vector vec;
-		vec.x = x;
-		vec.y = y;
-		vec.z = z;
-		lo = Location(oarea, vec, f);
+		default:
+			pQ("select area,x,y,z,f from locations where id = " + pSi(iSelection) + ";");
+			if (pF()) {
+				area = pGs(1); x = pGf(2); y = pGf(3); z = pGf(4); f = pGf(5);
 
-		if (GetIsObjectValid(GetAreaFromLocation(lo)))
-			AssignCommand(oWho, teleport_effect_and_go(lo, 3.0));
-		else
-			FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
+				object oarea = GetObjectByTag(area);
+				if (!GetIsObjectValid(oarea)) {
+					SendMessageToPC(oPC, "error: area set for location is invalid.");
+					return;
+				}
 
-	} else {
-		FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
+				vector vec;
+				vec.x = x;
+				vec.y = y;
+				vec.z = z;
+				lo = Location(oarea, vec, f);
+
+				if (GetIsObjectValid(GetAreaFromLocation(lo)))
+					AssignCommand(oWho, teleport_effect_and_go(lo, 3.0));
+				else
+					FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
+
+			} else {
+				FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
+			}
+			break;
 	}
 }
