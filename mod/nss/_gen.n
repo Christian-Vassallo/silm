@@ -155,7 +155,7 @@ void Floaty(string sMsg, object oPC = OBJECT_SELF, int nBroadCast = 0) {
 
 
 // Function: RemoveAllEffects
-int RemoveAllEffects(object oObj);
+int RemoveAllEffects(object oObj, int effect_type = -1, int subtype = -1);
 
 // Function: GetStringTrim
 // Returns s trimmed.
@@ -326,12 +326,14 @@ int GetIsPlayerInArea() {
 	return GetIsObjectValid(GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC));
 }
 
-int RemoveAllEffects(object oObj) {
+int RemoveAllEffects(object oObj, int effect_type = -1, int subtype = -1) {
 	int i = 0;
 	effect e = GetFirstEffect(oObj);
 	while ( GetIsEffectValid(e) ) {
-		RemoveEffect(oObj, e);
-		i += 1;
+		if ((effect_type == -1 || GetEffectType(e) == effect_type) && (subtype == -1 || GetEffectSubType(e) == subtype)) {
+			RemoveEffect(oObj, e);
+			i += 1;
+		}
 		e = GetNextEffect(oObj);
 	}
 	return i;
