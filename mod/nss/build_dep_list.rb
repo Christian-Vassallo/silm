@@ -76,6 +76,7 @@ ARGV.each {|file|
 
       # and all #included files need to be checked as well:
       (depends[file_without_extension + ".nss"] ||= []) << includes
+      (depends[file_without_extension + ".nss"] ||= []) << externs
 
       # and we need all files, that the included files extern:
       (depends[file_without_extension + ".nss"] ||= []) << includes.map {|v| $includes[v] }
