@@ -1,0 +1,43 @@
+extern("_gen")
+
+int IPGetNegativeLevelsFor(object creature, object item) {
+	int diff = 0;
+
+	int ge = GetAlignmentGoodEvil(creature);
+	int lc = GetAlignmentLawChaos(creature);
+	string gelc = AlignmentToString(ge, lc, true);
+
+	itemproperty p = GetFirstItemProperty(item);
+	while (GetIsItemPropertyValid(p)) {
+		switch (GetItemPropertyType(p)) {
+			case ITEM_PROPERTY_NEGATIVE_LEVELS:
+				diff += abs(GetItemPropertyCostTableValue(p));
+				break;
+			case ITEM_PROPERTY_NEGATIVE_LEVELS_BY_ALIGNMENT:
+				diff += abs(GetItemPropertyCostTableValue(p)) * atoi(Get2DAString("alignment_diff", gelc, abs(GetItemPropertySubType(p))));
+				break;
+		}
+
+		p = GetNextItemProperty(item);
+	}
+
+	return diff;
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "item_equip") {
+		int diff = IPGetNegativeLevelsFor(e.actor, e.runnable);
+		if (diff > 0) {
+			ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectNegativeLevel(diff)), e.actor);
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_REDUCE_ABILITY_SCORE), e.actor);
+		}
+	}
+
+	if (e.ev == "item_unequip") {
+		int diff = IPGetNegativeLevelsFor(e.actor, e.actedon);
+		if (diff > 0)
+			RemoveAllEffects(e.actor, EFFECT_TYPE_NEGATIVELEVEL, SUBTYPE_SUPERNATURAL);
+	}
+}
