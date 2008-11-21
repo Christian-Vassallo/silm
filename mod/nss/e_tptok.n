@@ -1,6 +1,7 @@
 extern("inc_events")
 extern("inc_teleport")
 extern("inc_lists")
+extern("inc_position")
 #include "inc_pgsql.nh"
 
 #define CONV_TAG "tptok"
@@ -23,17 +24,26 @@ void main() {
 	struct EventArguments a = GetEventArguments(e.serial);
 	object token = e.runnable;
 
-	if (e.ev != "item_freeactivate")
-		return;
-	
-	SetEventResult(EVENT_RESULT_SUPPRESS);
-	
-	if (is_creature(e.actedon)) {
-		DlgStart(e.actor, e.actedon);
-	} else if (GetAreaFromLocation(e.actedat) == GetArea(e.actor)) {
-		AssignCommand(e.actor, teleport_effect_and_go(e.actedat, 0.0, true));
-	} else {
-		FloatingTextStringOnCreature("Nichts passiert.", e.actor, false);
+	if (GetLocalInt(token, "tptok") && (GetLocalInt(token, "tptok_quick") && e.ev == "item_freeactivate") || e.ev == "item_activate") {
+		SetEventResult(EVENT_RESULT_SUPPRESS);
+
+		float max_distance = GetLocalFloat(token, "tptok_max_distance");
+		bool allow_others = GetLocalInt(token, "tptok_allow_others");
+		bool allow_teleport = GetLocalInt(token, "tptok_allow_teleport");
+		bool allow_dimdoor = GetLocalInt(token, "tptok_allow_dimdoor");
+
+		bool works = false;
+		if ( allow_teleport && is_creature(e.actedon) && (allow_others && e.actedon != e.actor)) {
+			works = true;
+			DlgStart(e.actor, e.actedon);
+		}
+		if (!is_creature(e.actedon) && allow_dimdoor && GetAreaFromLocation(e.actedat) == GetArea(e.actor) && (max_distance == 0f || GetDistanceBetweenLocations(e.actedat, GetLocation(e.actor)) <= max_distance)) {
+			works = true;
+			AssignCommand(e.actor, teleport_effect_and_go(e.actedat, 0.0, true));
+		}
+
+		if (!works)
+			FloatingTextStringOnCreature("Nichts passiert.", e.actor, false);
 	}
 }
 
@@ -56,7 +66,7 @@ int MakeDialog(object oPC, object oTeleportWhom) {
 		AddListItem(oPC, CONV_TAG, name + " (" + lpt + ")");
 		SetListInt(oPC, CONV_TAG, id);
 	}
-	
+
 	ResetConvList(oPC, oPC, CONV_TAG, 50000, "i_tptok_cb", sHeader);
 
 	return 1;
