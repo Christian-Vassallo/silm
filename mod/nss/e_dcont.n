@@ -1,6 +1,40 @@
 #include "inc_dcont.nh"
 extern("inc_inventory")
 
+/*
+Limitations:
+ int dcont_max_item_size - maximum item size in fields
+ int dcont_max_total_size - maximum size of all items in container (stackables count as number of stacksize items)
+ int dcont_max_total_weight - total weight this container will hold
+*/
+
+bool fits_into_container(object container, object item) {
+	object activator = dcont_get_activator(container);
+	int item_size = GetItemSize(item);
+
+	int max_item_size = GetLocalInt(activator, "dcont_max_item_size");
+	int max_total_size = GetLocalInt(activator, "dcont_max_total_size");
+	int max_total_weight = GetLocalInt(activator, "dcont_max_total_weight");
+
+	if (max_total_size && (item_size > max_total_size || GetTotalContainerItemSizeSum(container) + item_size > max_total_size))
+			return false;
+
+	if (max_item_size && item_size > max_item_size)
+			return false;
+
+	if (max_total_weight && GetWeight(container) + GetWeight(item) > max_total_weight)
+		return false;
+
+	return true;
+}
+
+void print_container_stats(object pc, object container) {
+	int count = 0; float weight = 0f;
+	iterate_inventory(container, count += GetItemStackSize(oIterate); weight += GetWeight(oIterate););
+	SendMessageToPC(pc, "Gegenstaende eingelagert: " + itoa(count));
+	SendMessageToPC(pc, "Gesamtes Gewicht eingelagert: " + ftoa(weight));
+}
+
 void main() {
 	struct EventInfo e = GetEventInfo();
 
@@ -31,11 +65,7 @@ void main() {
 
 		if (dcont_is_proxy(e.runnable)) {
 			dcont_handle_proxy_open(e.runnable);
-
-			int count = 0; float weight = 0f;
-			iterate_inventory(e.runnable, count += GetItemStackSize(oIterate); weight += GetWeight(oIterate););
-			SendMessageToPC(e.actor, "Gegenstaende eingelagert: " + itoa(count));
-			SendMessageToPC(e.actor, "Gesamtes Gewicht eingelagert: " + ftoa(weight));
+			print_container_stats(e.actor, e.runnable);
 		}
 	}
 
@@ -50,12 +80,20 @@ void main() {
 
 		if (dcont_is_proxy(container)) {
 			activator = dcont_get_activator(container);
-			if (is_item(activator) && GetInventoryDisturbType() == INVENTORY_DISTURB_TYPE_ADDED && activator == GetInventoryDisturbItem()) {
-				AssignCommand(container, ActionGiveItem(GetInventoryDisturbItem(), e.actor));
-				SendMessageToPC(e.actor, "Du kannst das Behaeltnis nicht in sich selbst stecken.");
-			} else {
-				dcont_handle_event(activator, container, GetInventoryDisturbType(), GetInventoryDisturbItem());
+
+			switch (GetInventoryDisturbType()) {
+				case INVENTORY_DISTURB_TYPE_ADDED:
+					if ((is_item(activator) && activator == GetInventoryDisturbItem()) || !fits_into_container(container, GetInventoryDisturbItem())) {
+						AssignCommand(container, ActionGiveItem(GetInventoryDisturbItem(), e.actor));
+						SendMessageToPC(e.actor, "Das passt hier nicht rein.");
+						return;
+					}
+					break;
 			}
+			// Check container weight
+
+			dcont_handle_event(activator, container, GetInventoryDisturbType(), GetInventoryDisturbItem());
+			print_container_stats(e.actor, container);
 		}
 	}
 
