@@ -109,6 +109,31 @@ void Floaty(string sMsg, object oPC = OBJECT_SELF, int nBroadCast = 0);
 // Function: GetArmorAC
 int GetArmorAC(object oItem);
 
+string AlignmentToString(int ge, int lc, bool short = false);
+
+string AlignmentToString(int ge, int lc, bool short = false) {
+	if (ALIGNMENT_NEUTRAL == ge && ALIGNMENT_NEUTRAL == lc)
+		return short ? "TN" : "True Neutral";
+
+	string ges, lcs;
+	switch (ge) {
+		case ALIGNMENT_GOOD:
+			ges = short ? "G" : "Good"; break;
+		case ALIGNMENT_NEUTRAL:
+			ges = short ? "N" : "Neutral"; break;
+		case ALIGNMENT_EVIL:
+			ges = short ? "E" : "Evil"; break;
+	}
+	switch (lc) {
+		case ALIGNMENT_LAWFUL:
+			lcs = short ? "L" : "Lawful"; break;
+		case ALIGNMENT_NEUTRAL:
+			lcs = short ? "N" : "Neutral"; break;
+		case ALIGNMENT_CHAOTIC:
+			lcs = short ? "C" : "Chaotic"; break;
+	}
+	return short ? lcs + ges : lcs + " " + ges;
+}
 
 
 int GetArmorAC(object oItem) { 
