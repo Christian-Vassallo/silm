@@ -1,4 +1,3 @@
-
 // Show the transporter effect at the given location (with oActivator as the to-be-teleported object).
 // This does not show effects at the actual teleport target - you will want to use it twice.
 void TeleportEffect(object oActivator, location oLocation);
@@ -18,15 +17,12 @@ void SpellDimensionDoorOrTeleport(location lTarget, bool bVisualsOnly = false);
 
 
 void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false, bool bShowDistanceTraveled = true) {
-	if (!bVisualsOnly)
-		ActionDoCommand(SetFacingPoint(GetPositionFromLocation(lTarget)));
-
 	ActionDoCommand(DelayCommand(0.4, DimensionDoorEffect(OBJECT_SELF, GetLocation(OBJECT_SELF), lTarget)));
 
 	if (!bVisualsOnly) {
-		ActionDoCommand(DelayCommand(0.6, ActionJumpToLocation(lTarget)));
+		ActionDoCommand(DelayCommand(0.7, ActionJumpToLocation(lTarget)));
 		if (bShowDistanceTraveled)
-			ActionDoCommand(DelayCommand(0.6, FloatingTextStringOnCreature("Distanz: " +
+			ActionDoCommand(DelayCommand(0.5, FloatingTextStringOnCreature("Distanz: " +
 				FloatToString(GetDistanceBetweenLocations(GetLocation(OBJECT_SELF), lTarget), 0, 2) +
 				" Meter.", OBJECT_SELF, false))
 			);
@@ -61,13 +57,19 @@ void SpellDimensionDoorOrTeleport(location lTarget, bool bVisualsOnly = false) {
 
 
 void DimensionDoorEffect(object oActivator, location lSource, location lTarget) {
-	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(747), oActivator, 0.5); // wiggles
-
+	vector vSource = GetPositionFromLocation(lSource);
+	vector vTarget = GetPositionFromLocation(lTarget);
+	vSource.z += 0.9; vTarget.z += 0.9;
+	location lElevatedSource = Location(GetAreaFromLocation(lSource), vSource, GetFacingFromLocation(lSource));
+	location lElevatedTarget = Location(GetAreaFromLocation(lTarget), vTarget, GetFacingFromLocation(lTarget));
+	
 	int i;
 	for (i = 76; i < 81; i++) {
-		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(i), lSource); // tele in
-		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(i), lTarget); // tele out
+		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(i), lElevatedSource);
+		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(i), lElevatedTarget);
 	}
+
+	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_SUMMON_UNDEAD), lTarget);
 }
 
 void TeleportEffect(object oActivator, location oLocation) {
