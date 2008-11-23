@@ -28,12 +28,13 @@ void main() {
 		SetEventResult(EVENT_RESULT_SUPPRESS);
 
 		float max_distance = GetLocalFloat(token, "tptok_max_distance");
-		bool allow_others = GetLocalInt(token, "tptok_allow_others");
-		bool allow_teleport = GetLocalInt(token, "tptok_allow_teleport");
-		bool allow_swap = GetLocalInt(token, "tptok_allow_swap");
-		bool allow_dimdoor = GetLocalInt(token, "tptok_allow_dimdoor");
+		bool allow_others = GetLocalInt(token, "tptok_allow_others"); // Allow teleporting other people.
+		bool allow_teleport = GetLocalInt(token, "tptok_allow_teleport"); // Allow teleporting.
+		bool allow_swap = GetLocalInt(token, "tptok_allow_swap"); // Allow swapping with other people - only dimension door as per spec.
+		bool allow_dimdoor = GetLocalInt(token, "tptok_allow_dimdoor"); // Allow dimension door.
 
 		bool works = false;
+
 		if (is_creature(e.actedon)) {
 			if (allow_teleport || (allow_others && e.actedon != e.actor)) {
 				works = true;
@@ -44,6 +45,7 @@ void main() {
 		if (!is_valid(e.actedon)) {
 			if (allow_dimdoor && GetAreaFromLocation(e.actedat) == GetArea(e.actor) && (max_distance == 0f || GetDistanceBetweenLocations(e.actedat, GetLocation(e.actor)) <= max_distance)) {
 				works = true;
+				AssignCommand(e.actor, ClearAllActions(true));
 				AssignCommand(e.actor, SpellDimensionDoor(e.actedat));
 			}
 		}
