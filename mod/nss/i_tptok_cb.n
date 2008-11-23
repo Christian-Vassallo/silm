@@ -21,20 +21,22 @@ void main() {
 	switch (iSelection) {
 		case -3:
 			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_WILL, oPC)) {
+				AssignCommand(oPC, ClearAllActions(1));
 				AssignCommand(oPC, SpellDimensionDoorOrTeleport(GetLocation(oWho)));
-				AssignCommand(oPC, SetFacing(GetFacing(oWho)));
+				AssignCommand(oWho, ClearAllActions(1));
 				AssignCommand(oWho, SpellDimensionDoorOrTeleport(GetLocation(oPC)));
-				AssignCommand(oWho, SetFacing(GetFacing(oPC)));
 			}
 			break;
 
 		case -2:
 			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_WILL, oPC)) {
+				AssignCommand(oWho, ClearAllActions(1));
 				AssignCommand(oWho, SpellDimensionDoorOrTeleport(GetAheadLocation(oPC, DISTANCE_TINY)));
 			}
 			break;
 
 		case -1:
+				AssignCommand(oPC, ClearAllActions(1));
 			AssignCommand(oPC, SpellDimensionDoorOrTeleport(GetBehindLocation(oWho, DISTANCE_TINY)));
 			break;
 
@@ -56,9 +58,10 @@ void main() {
 				vec.z = z;
 				lo = Location(oarea, vec, f);
 
-				if (GetIsObjectValid(GetAreaFromLocation(lo)))
+				if (GetIsObjectValid(GetAreaFromLocation(lo))) {
+					AssignCommand(oWho, ClearAllActions(1));
 					AssignCommand(oWho, SpellDimensionDoorOrTeleport(lo));
-				else
+				} else
 					FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
 
 			} else {
