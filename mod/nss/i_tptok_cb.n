@@ -20,7 +20,7 @@ void main() {
 
 	switch (iSelection) {
 		case -3:
-			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_WILL, oPC)) {
+			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_TYPE_NONE, oPC)) {
 				AssignCommand(oPC, ClearAllActions(1));
 				AssignCommand(oPC, SpellDimensionDoorOrTeleport(GetLocation(oWho)));
 				AssignCommand(oWho, ClearAllActions(1));
@@ -29,7 +29,7 @@ void main() {
 			break;
 
 		case -2:
-			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_WILL, oPC)) {
+			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_TYPE_NONE, oPC)) {
 				AssignCommand(oWho, ClearAllActions(1));
 				AssignCommand(oWho, SpellDimensionDoorOrTeleport(GetAheadLocation(oPC, DISTANCE_TINY)));
 			}
