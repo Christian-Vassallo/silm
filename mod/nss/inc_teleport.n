@@ -11,20 +11,26 @@ void DimensionDoorEffect(object oActivator, location lSource, location lTarget);
 void SpellTeleport(location lTarget, bool bVisualsOnly = false);
 
 // Dimension doors OBJECT_SELF to the given location.
-void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false);
+void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false, bool bShowDistanceTraveled = true);
 
 // Dimension doors (or teleports, if cross-area) OBJECT_SELF to the given location.
 void SpellDimensionDoorOrTeleport(location lTarget, bool bVisualsOnly = false);
 
 
-void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false) {
+void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false, bool bShowDistanceTraveled = true) {
 	if (!bVisualsOnly)
 		ActionDoCommand(SetFacingPoint(GetPositionFromLocation(lTarget)));
 
 	ActionDoCommand(DelayCommand(0.4, DimensionDoorEffect(OBJECT_SELF, GetLocation(OBJECT_SELF), lTarget)));
 
-	if (!bVisualsOnly)
+	if (!bVisualsOnly) {
 		ActionDoCommand(DelayCommand(0.6, ActionJumpToLocation(lTarget)));
+		if (bShowDistanceTraveled)
+			ActionDoCommand(DelayCommand(0.6, FloatingTextStringOnCreature("Distanz: " +
+				FloatToString(GetDistanceBetweenLocations(GetLocation(OBJECT_SELF), lTarget), 0, 2) +
+				" Meter.", OBJECT_SELF, false))
+			);
+	}
 }
 
 
