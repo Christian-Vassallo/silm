@@ -36,13 +36,20 @@ void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false, bool bShowD
 
 void SpellTeleport(location lTarget, bool bVisualsOnly = false) {
 	object teleport = OBJECT_SELF;
-	float skew = GetArea(OBJECT_SELF) == GetAreaFromLocation(lTarget) ? 0.0 : 3.0;
+	bool inter_area = GetArea(OBJECT_SELF) != GetAreaFromLocation(lTarget);
+	float skew = inter_area ? 3.0 : 0.0;
 
 	AssignCommand(teleport, TeleportEffect(teleport, GetLocation(teleport)));
 	AssignCommand(teleport, DelayCommand(skew, TeleportEffect(teleport, lTarget)));
 
-	if (!bVisualsOnly)
+	if (!bVisualsOnly) {
+		if (true || inter_area) {
+			object invis = CreateObject(OBJECT_TYPE_PLACEABLE, "invisobj", lTarget);
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(445), invis, skew + 3.0);
+			DestroyObject(invis, skew + 4.0);
+		}
 		ActionDoCommand(DelayCommand(1.1, ActionJumpToLocation(lTarget)));
+	}
 }
 
 void SpellDimensionDoorOrTeleport(location lTarget, bool bVisualsOnly = false) {
