@@ -57,7 +57,7 @@ void main() {
 		location targ = INSIDE_POINT;
 
 		if (is_near_enough(e.actor, OUTSIDE_POINT)) {
-			AssignCommand(e.actor, teleport_effect_and_go(targ, INSIDE_LOAD_SKEW));
+			AssignCommand(e.actor, SpellTeleport(targ));
 		} else {
 			FloatingTextStringOnCreature("Nichts passiert.", e.actor, false);
 		}

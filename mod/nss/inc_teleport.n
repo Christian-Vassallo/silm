@@ -1,37 +1,63 @@
-void TransporterEffect(object oActivator, location oLocation);
-void DimdoorEffect(object oActivator, location lTarget);
 
-void teleport_effect_and_go(location target, float skew = 0.0, int dimdoor = false);
+// Show the transporter effect at the given location (with oActivator as the to-be-teleported object).
+// This does not show effects at the actual teleport target - you will want to use it twice.
+void TeleportEffect(object oActivator, location oLocation);
 
-void teleport_effect_and_go(location target, float skew = 0.0, int dimdoor = false) {
-	ClearAllActions(1);
+// Show the dimension door effect visuals.
+// Do not use this for cross-area-travel, use TeleportEffect
+void DimensionDoorEffect(object oActivator, location lSource, location lTarget);
 
-	if (dimdoor) {
-		DelayCommand(0.4, DimdoorEffect(OBJECT_SELF, target));
-	} else {
-		TransporterEffect(OBJECT_SELF, GetLocation(OBJECT_SELF));
-		DelayCommand(skew, TransporterEffect(OBJECT_SELF, target));
-		object invis = CreateObject(OBJECT_TYPE_PLACEABLE, "invisobj", target);
-		ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(445), invis, skew + 3.0);
-		DestroyObject(invis, skew + 4.0);
-	}
+// Teleports OBJECT_SELF to the given location.
+void SpellTeleport(location lTarget, bool bVisualsOnly = false);
 
-	ClearAllActions(1);
-	SetFacingPoint(GetPositionFromLocation(target));
-	DelayCommand((dimdoor ? 0.6 : 1.1), ActionJumpToLocation(target));
+// Dimension doors OBJECT_SELF to the given location.
+void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false);
+
+// Dimension doors (or teleports, if cross-area) OBJECT_SELF to the given location.
+void SpellDimensionDoorOrTeleport(location lTarget, bool bVisualsOnly = false);
+
+
+void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false) {
+	if (!bVisualsOnly)
+		ActionDoCommand(SetFacingPoint(GetPositionFromLocation(lTarget)));
+
+	ActionDoCommand(DelayCommand(0.4, DimensionDoorEffect(OBJECT_SELF, GetLocation(OBJECT_SELF), lTarget)));
+
+	if (!bVisualsOnly)
+		ActionDoCommand(DelayCommand(0.6, ActionJumpToLocation(lTarget)));
 }
 
-void DimdoorEffect(object oActivator, location lTarget) {
+
+void SpellTeleport(location lTarget, bool bVisualsOnly = false) {
+	object teleport = OBJECT_SELF;
+	float skew = GetArea(OBJECT_SELF) == GetAreaFromLocation(lTarget) ? 0.0 : 3.0;
+
+	AssignCommand(teleport, TeleportEffect(teleport, GetLocation(teleport)));
+	AssignCommand(teleport, DelayCommand(skew, TeleportEffect(teleport, lTarget)));
+
+	if (!bVisualsOnly)
+		ActionDoCommand(DelayCommand(1.1, ActionJumpToLocation(lTarget)));
+}
+
+void SpellDimensionDoorOrTeleport(location lTarget, bool bVisualsOnly = false) {
+	if (GetAreaFromLocation(lTarget) == GetArea(OBJECT_SELF))
+		SpellDimensionDoor(lTarget, bVisualsOnly);
+	else
+		SpellTeleport(lTarget, bVisualsOnly);
+}
+
+
+void DimensionDoorEffect(object oActivator, location lSource, location lTarget) {
 	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(747), oActivator, 0.5); // wiggles
 
 	int i;
 	for (i = 76; i < 81; i++) {
-		ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(i), oActivator); // tele in
+		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(i), lSource); // tele in
 		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(i), lTarget); // tele out
 	}
 }
 
-void TransporterEffect(object oActivator, location oLocation) {
+void TeleportEffect(object oActivator, location oLocation) {
 	vector v = GetPositionFromLocation(oLocation);
 
 	vector

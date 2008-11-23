@@ -19,20 +19,25 @@ void main() {
 	AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
 
 	switch (iSelection) {
-		case -2:
+		case -3:
 			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_WILL, oPC)) {
-				AssignCommand(oPC, teleport_effect_and_go(GetLocation(oWho), 0.0, true));
+				AssignCommand(oPC, SpellDimensionDoorOrTeleport(GetLocation(oWho)));
 				AssignCommand(oPC, SetFacing(GetFacing(oWho)));
-				AssignCommand(oWho, teleport_effect_and_go(GetLocation(oPC), 0.0, true));
+				AssignCommand(oWho, SpellDimensionDoorOrTeleport(GetLocation(oPC)));
 				AssignCommand(oWho, SetFacing(GetFacing(oPC)));
 			}
 			break;
 
-		case -1:
+		case -2:
 			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_WILL, oPC)) {
-				AssignCommand(oWho, teleport_effect_and_go(GetAheadLocation(oPC, DISTANCE_TINY), 0.0, true));
+				AssignCommand(oWho, SpellDimensionDoorOrTeleport(GetAheadLocation(oPC, DISTANCE_TINY)));
 			}
 			break;
+
+		case -1:
+			AssignCommand(oPC, SpellDimensionDoorOrTeleport(GetBehindLocation(oWho, DISTANCE_TINY)));
+			break;
+
 
 		default:
 			pQ("select area,x,y,z,f from locations where id = " + pSi(iSelection) + ";");
@@ -52,7 +57,7 @@ void main() {
 				lo = Location(oarea, vec, f);
 
 				if (GetIsObjectValid(GetAreaFromLocation(lo)))
-					AssignCommand(oWho, teleport_effect_and_go(lo, 3.0));
+					AssignCommand(oWho, SpellDimensionDoorOrTeleport(lo));
 				else
 					FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
 
