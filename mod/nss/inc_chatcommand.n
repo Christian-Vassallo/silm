@@ -1587,6 +1587,19 @@ int CommandEffect(object oPC, int iMode) {
 		return OK;
 	}
 
+	if (getopt_opt("l")) {
+		int i;
+		SendMessageToPC(oPC, "Effects:");
+		effect e = GetFirstEffect(GetTarget());
+		while (GetIsEffectValid(e)) {
+			SendMessageToPC(oPC, itoa(i) + ": " + EffectToString(e));
+			i += 1;
+			e = GetNextEffect(GetTarget());
+		}
+		SendMessageToPC(oPC, "end of list.");
+		return OK;
+	}
+
 	if ( "vfx" == sE && getopt_argc() == 2 )
 		e = EffectVisualEffect(StringToInt(s1));
 

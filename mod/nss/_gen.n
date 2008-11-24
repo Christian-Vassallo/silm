@@ -110,6 +110,23 @@ int GetArmorAC(object oItem);
 
 string AlignmentToString(int ge, int lc, bool short = false);
 
+// Function: EffectToString
+string EffectToString(effect e);
+
+
+string EffectToString(effect e) {
+	string s = "";
+	s += "et=" + itoa(GetEffectType(e));
+	s += " dt=" + itoa(GetEffectDurationType(e));
+	s += " st=" + itoa(GetEffectSubType(e));
+	s += " sp=" + itoa(GetEffectSpellId(e));
+
+	int i;
+	for (i = 0; i < 16; i++)
+		s += " " + itoa(i) + "=" + itoa(GetEffectInteger(e, i));
+	return s;
+}
+
 string AlignmentToString(int ge, int lc, bool short = false) {
 	if (ALIGNMENT_NEUTRAL == ge && ALIGNMENT_NEUTRAL == lc)
 		return short ? "TN" : "True Neutral";
