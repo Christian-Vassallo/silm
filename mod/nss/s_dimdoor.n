@@ -1,0 +1,13 @@
+extern("inc_teleport")
+extern("x2_inc_spellhook")
+
+void main() {
+	if ( !X2PreSpellCastCode() )
+		return;
+
+	object oPC = OBJECT_SELF;
+	location lTarget = GetSpellTargetLocation();
+	
+	AssignCommand(oPC, ClearAllActions(1));
+	AssignCommand(oPC, SpellDimensionDoor(lTarget));
+}
