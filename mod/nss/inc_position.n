@@ -158,7 +158,7 @@ location GetStepRightLocation(object oTarget);
 // If that is not available, will use the roughly-center point
 // of the area.
 // If distance is set to 0.0, a random distance will be used.
-// location GetRandomLocation(object oArea, object oSource=OBJECT_INVALID, float fDist=0.0);
+location GetRandomLocation(object oArea, object oSource=OBJECT_INVALID, float fDist=0.0);
 
 /**********************************************************************
  * FUNCTION DEFINITIONS
@@ -507,7 +507,6 @@ location GetCenterPointOfArea(object oArea)
 	return Location(oArea, vTmp, 0.0);
 }
 
-/*
 // Get a random location in a given area based on a given object,
 // the specified distance away.
 // If no object is given, will use a random object in the area.
@@ -545,4 +544,4 @@ location GetRandomLocation(object oArea, object oSource=OBJECT_INVALID, float fD
 										   fDist,
 										   fAngle,
 										   fOrient);
-}*/
+}
