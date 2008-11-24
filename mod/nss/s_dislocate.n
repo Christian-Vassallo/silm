@@ -9,7 +9,10 @@ void main() {
 	object oPC = OBJECT_SELF;
 	object oTarget = GetSpellTargetObject();
 
-	location lTarget = GetPseudoRandomLocation(GetArea(oTarget), oTarget, 8.0f);
+	object oItem = GetSpellCastItem();
+	if (GetLocalInt(oItem, "dislocator_disabled"))
+		return;
 
+	location lTarget = GetPseudoRandomLocation(GetArea(oTarget), oTarget, 8.0f);
 	AssignCommand(oTarget, SpellDimensionDoor(lTarget, false, false));
 }
