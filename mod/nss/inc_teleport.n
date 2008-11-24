@@ -7,24 +7,27 @@ void TeleportEffect(object oActivator, location oLocation);
 void DimensionDoorEffect(object oActivator, location lSource, location lTarget);
 
 // Teleports OBJECT_SELF to the given location.
+// This will execute immediately. If you want to put it onto the action queue, use AssignCommand(ActionDoCommand()).
 void SpellTeleport(location lTarget, bool bVisualsOnly = false);
 
 // Dimension doors OBJECT_SELF to the given location.
+// This will execute immediately. If you want to put it onto the action queue, use AssignCommand(ActionDoCommand()).
 void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false, bool bShowDistanceTraveled = true);
 
 // Dimension doors (or teleports, if cross-area) OBJECT_SELF to the given location.
+// This will execute immediately. If you want to put it onto the action queue, use AssignCommand(ActionDoCommand()).
 void SpellDimensionDoorOrTeleport(location lTarget, bool bVisualsOnly = false);
 
 
 void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false, bool bShowDistanceTraveled = true) {
-	ActionDoCommand(DelayCommand(0.4, DimensionDoorEffect(OBJECT_SELF, GetLocation(OBJECT_SELF), lTarget)));
+	DelayCommand(0.4, DimensionDoorEffect(OBJECT_SELF, GetLocation(OBJECT_SELF), lTarget));
 
 	if (!bVisualsOnly) {
-		ActionDoCommand(DelayCommand(0.7, ActionJumpToLocation(lTarget)));
+		DelayCommand(0.7, JumpToLocation(lTarget));
 		if (bShowDistanceTraveled)
-			ActionDoCommand(DelayCommand(0.5, FloatingTextStringOnCreature("Distanz: " +
+			DelayCommand(0.5, FloatingTextStringOnCreature("Distanz: " +
 				FloatToString(GetDistanceBetweenLocations(GetLocation(OBJECT_SELF), lTarget), 0, 2) +
-				" Meter.", OBJECT_SELF, false))
+				" Meter.", OBJECT_SELF, false)
 			);
 	}
 }
@@ -44,7 +47,7 @@ void SpellTeleport(location lTarget, bool bVisualsOnly = false) {
 			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(445), invis, skew + 3.0);
 			DestroyObject(invis, skew + 4.0);
 		}
-		ActionDoCommand(DelayCommand(1.1, ActionJumpToLocation(lTarget)));
+		DelayCommand(1.1, JumpToLocation(lTarget));
 	}
 }
 
