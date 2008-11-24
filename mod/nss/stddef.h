@@ -80,6 +80,7 @@
 #include "inline.h"
 #include "mutex.h"
 #include "string.h"
+#include "effects.h"
 #include "hook.h"
 #include "core.h"
 

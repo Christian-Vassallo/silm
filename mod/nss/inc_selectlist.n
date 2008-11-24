@@ -147,14 +147,14 @@ object GetItemCopy(int iIndex) {
 	return GetListObject2(OBJECT_SELF, "Item", iIndex);
 }
 
-int GetItemCount() {
+int _GetItemCount() {
 	return GetListCount(OBJECT_SELF, "Item");
 }
 
 void TagAll(int iSetTag = FALSE) {
 	int iIndex;
 
-	for ( iIndex = 0; iIndex < GetItemCount(); iIndex++ )
+	for ( iIndex = 0; iIndex < _GetItemCount(); iIndex++ )
 		SetListDisplayMode(OBJECT_SELF, "Item", ( iSetTag ? 1 : 0 ), iIndex);
 }
 
@@ -165,7 +165,7 @@ int RobItems(object oTarget) {
 	object oSelf = OBJECT_SELF;
 	object oSource = GetLocalObject(OBJECT_SELF, "Item_Source");
 
-	for ( i = 0; i < GetItemCount(); i++ ) {
+	for ( i = 0; i < _GetItemCount(); i++ ) {
 		if ( GetItemTagged(i) ) {
 			if ( nGold = GetListInt(OBJECT_SELF, "Item", i) ) {
 				TakeGoldFromCreature(nGold, oSource, TRUE);
