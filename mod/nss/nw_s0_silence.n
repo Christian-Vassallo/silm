@@ -35,7 +35,15 @@ void main()
 
 // End of Spell Cast Hook
 
-	effect eSilence = EffectSilence();
+	effect eSilence;
+	if (GetSpellId() == SPELL_SILENCE_PERSONAL)
+		eSilence = EffectSilence();
+	else if (GetSpellId() == SPELL_SILENCE_AOE)
+		eSilence = EffectAreaOfEffect(AOE_MOB_SILENCE);
+	else {
+		_ERROR("Unknown spell variant: " + itoa(GetSpellId()));
+		return;
+	}
     int nDuration = GetCasterLevel(OBJECT_SELF);
     object oTarget = GetSpellTargetObject();
     int nMetaMagic = GetMetaMagicFeat();
