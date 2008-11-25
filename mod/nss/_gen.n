@@ -574,12 +574,9 @@ string LocationToStringPrintable(location lo) {
 	if ( !GetIsObjectValid(oArea) )
 		return "";
 
-	return "'" +
-		   AreaToString(oArea) +
-		   "':(" +
-		   FloatToString(v.x, 0, 2) +
-		   ":" + FloatToString(v.y, 0, 2) + ":" + FloatToString(v.z, 0, 2) + "):(" + FloatToString(f, 0, 2) + ")";
-
+	return "(" + AreaToString(oArea) +
+		"):(" + FloatToString(v.x, 0, 2) + "," + FloatToString(v.y, 0, 2) + "," + FloatToString(v.z, 0, 2) +
+		"):(" + FloatToString(f, 0, 2) + ")";
 }
 
 string PCToString(object oPC, int bShort = FALSE) {
@@ -593,7 +590,7 @@ string PCToString(object oPC, int bShort = FALSE) {
 }
 
 string AreaToString(object oArea) {
-	return "'" + GetName(oArea) + "'(" + GetResRef(oArea) + ")";
+	return GetTag(oArea) + "/" + GetResRef(oArea);
 }
 
 

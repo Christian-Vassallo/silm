@@ -28,21 +28,20 @@ int NotifyBadTarget(string sAddMsg = "", object oPC = OBJECT_SELF);
 
 void ShowTargetFor(int nSlot, object oTarget, object oPC = OBJECT_SELF);
 
+void ShowTargetLocationFor(int nSlot, location lTarget, object oPC = OBJECT_SELF);
+
 // impl
 
 void ShowTargetFor(int nSlot, object oTarget, object oPC = OBJECT_SELF) {
-	SendMessageToPC(oPC, "O[" +
-		IntToString(nSlot) +
-		"]: '" +
-		GetName(oTarget) +
-		"', Tag: " +
-		GetTag(oTarget) +
-		", ResRef: " +
-		GetResRef(oTarget) +
-		", OID: " + ObjectToString(oTarget) + ", " + ObjectTypeToString(GetObjectType(oTarget)));
-	SendMessageToPC(oPC, "O[" + IntToString(nSlot) + "]: " + LocationToStringPrintable(GetLocation(oTarget)));
+	SendMessageToPC(oPC, ColorTag(cTeal) + "O[" + IntToString(nSlot) + "]:" + ColorTag(cLightBlue) + " " + itoa(GetObjectType(oTarget)) + "/" + ObjectToString(oTarget) + "/" + GetTag(oTarget) + "/" + GetResRef(oTarget));
+	SendMessageToPC(oPC, ColorTag(cTeal) + "O[" + IntToString(nSlot) + "]:" + ColorTag(cLightGrey) + " '" + GetName(oTarget) + "'");
+	SendMessageToPC(oPC, ColorTag(cTeal) + "O[" + IntToString(nSlot) + "]:" + ColorTag(cLightGrey) + " " + LocationToStringPrintable(GetLocation(oTarget)));
 }
 
+void ShowTargetLocationFor(int nSlot, location lTarget, object oPC = OBJECT_SELF) {
+	SendMessageToPC(oPC, ColorTag(cTeal) + "L[" + IntToString(nSlot) + "]:" + ColorTag(cGreen) + " " + LocationToStringPrintable(lTarget));
+	SendMessageToPC(oPC, ColorTag(cTeal) + "L[" + IntToString(nSlot) + "]:" + ColorTag(cLightGrey) + " d: " + FloatToString(GetDistanceBetweenLocations(GetLocation(oPC), lTarget), 0, 2));
+}
 
 int SanitiseSlot(int n, object oPC = OBJECT_SELF) {
 	if ( n == TARGET_DEFAULT_SLOT )
@@ -72,28 +71,14 @@ object GetTarget(int nSlot = TARGET_DEFAULT_SLOT, object oPC = OBJECT_SELF) {
 void SetTarget(object oTarget, int nSlot = TARGET_DEFAULT_SLOT, object oPC = OBJECT_SELF) {
 	nSlot = SanitiseSlot(nSlot);
 	SetLocalObject(oPC, "use_target_object_" + IntToString(nSlot), oTarget);
-	SendMessageToPC(oPC, "O[" +
-		IntToString(nSlot) +
-		"]: '" +
-		GetName(oTarget) +
-		"', Tag: " +
-		GetTag(oTarget) +
-		", ResRef: " +
-		GetResRef(oTarget) +
-		", OID: " + ObjectToString(oTarget) + ", " + ObjectTypeToString(GetObjectType(oTarget)));
-	SendMessageToPC(oPC, "O[" + IntToString(nSlot) + "]: " + LocationToStringPrintable(GetLocation(oTarget)));
-	// Distance: " + FloatToString(GetDistanceBetween(oPC, oTarget)));
+	ShowTargetFor(nSlot, oTarget, oPC);
 }
 
 void SetTargetLocation(location lTarget, int nSlot = TARGET_DEFAULT_SLOT, object oPC = OBJECT_SELF) {
 	nSlot = SanitiseSlot(nSlot);
 	SetLocalLocation(oPC, "use_target_location_" + IntToString(nSlot), lTarget);
-	SendMessageToPC(oPC, "L[" + IntToString(nSlot) + "]: " + LocationToStringPrintable(lTarget));
-	SendMessageToPC(oPC, "L[" +
-		IntToString(nSlot) +
-		"] Distance: " + FloatToString(GetDistanceBetweenLocations(GetLocation(oPC), lTarget)));
+	ShowTargetLocationFor(nSlot, lTarget, oPC);
 }
-
 
 int NotifyBadTarget(string sAddMsg = "", object oPC = OBJECT_SELF) {
 	if ( sAddMsg == "" )
