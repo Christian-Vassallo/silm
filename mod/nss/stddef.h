@@ -70,6 +70,10 @@
  */
 #define iterate_effects(on_object,inline_code) iterate_type_sequential_conditional(effect,GetFirstEffect(on_object),GetNextEffect(on_object),GetIsEffectValid(oIterate),inline_code)
 
+/* Macro: iterate_iprp(on_object,inline_code)
+ * Iterates through all item propertys on a given item.
+ */
+#define iterate_iprp(on_object,inline_code) iterate_type_sequential_conditional(itemproperty,GetFirstItemProperty(on_object),GetNextItemProperty(on_object),GetIsItemPropertyValid(oIterate),inline_code)
 
 /* Macro: iterate_area(area,inline_code)
  * Iterates through all objects in this area.
