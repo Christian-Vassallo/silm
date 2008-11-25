@@ -1,6 +1,6 @@
 extern("inc_scorco")
 extern("inc_cdb")
-
+extern("_gen")
 
 void main() {
 	struct EventInfo e = GetEventInfo();
@@ -19,9 +19,9 @@ void main() {
 		count += 1;
 		p = GetNextItemProperty(e.actedon);
 	}
-	
+
 	SendMessageToPC(e.actor, "  ");
-	
+
 	if (!count) {
 		SendMessageToPC(e.actor, ColorTag(cWhite) + "Keine Eigenschaften auf " + GetName(e.actedon) + ".");
 
@@ -31,9 +31,6 @@ void main() {
 		while (GetIsItemPropertyValid(p)) {
 			string str = "";
 
-			// Format:
-			//  Name_from_itempropdef.2da (in color depending on duration)
-			//  
 			struct Color col;
 			switch (GetItemPropertyDurationType(p)) {
 				case DURATION_TYPE_INSTANT:
@@ -44,33 +41,14 @@ void main() {
 					col = cLightBlue;
 					break;
 			}
-			str += ColorTag(col) + " " + GetStringByStrRef(atoi(Get2DAString("itempropdef", "Name", GetItemPropertyType(p))));
 
-			string subtype_table = Get2DAString("itempropdef", "SubTypeResRef", GetItemPropertyType(p));
-			if (subtype_table != "") {
-				int subtype = GetItemPropertySubType(p);
-				string subtype_value = GetStringByStrRef(atoi(Get2DAString(subtype_table, "Name", subtype)));
-				str += " (" + subtype_value + ")";
-			}
+			str += ColorTag(col) + " " + ItemPropertyToString(p);
 
-			int param1_table = GetItemPropertyParam1(p);
-			if (param1_table > -1 && param1_table != 255) {
-				string param1_table_name = Get2DAString("iprp_paramtable", "TableResRef", param1_table);
-				string param1_table_value = GetStringByStrRef(atoi(Get2DAString(param1_table_name, "Name", GetItemPropertyParam1Value(p))));
-				str += ", " + param1_table_value;
-			}
-		
-			int cost_table = GetItemPropertyCostTable(p);
-			if (cost_table > 0) {
-				string cost_table_name = Get2DAString("iprp_costtable", "Name", cost_table);
-				string cost_table_value = GetStringByStrRef(atoi(Get2DAString(cost_table_name, "Name", GetItemPropertyCostTableValue(p))));
-				str += ": " + cost_table_value; // + "(t: " + itoa(cost_table) + ", tv: " + cost_table_name + ", ctv: " + itoa(GetItemPropertyCostTableValue(p));
-			}
-			
 			SendMessageToPC(e.actor, str);
 
 			p = GetNextItemProperty(e.actedon);
 		}
+
 		SendMessageToPC(e.actor, ColorTag(cWhite) + "Ende der Liste.");
 	}
 }

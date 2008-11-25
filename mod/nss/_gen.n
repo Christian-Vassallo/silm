@@ -113,6 +113,40 @@ string AlignmentToString(int ge, int lc, bool short = false);
 // Function: EffectToString
 string EffectToString(effect e);
 
+// Function: ItemPropertyToString
+//
+// Returns p formatted as following:
+// Name (Subtype), Param1Value: CostValue
+string ItemPropertyToString(itemproperty p);
+
+
+string ItemPropertyToString(itemproperty p) {
+	string str = GetStringByStrRef(atoi(Get2DAString("itempropdef", "Name", GetItemPropertyType(p))));
+
+	string subtype_table = Get2DAString("itempropdef", "SubTypeResRef", GetItemPropertyType(p));
+	if (subtype_table != "") {
+		int subtype = GetItemPropertySubType(p);
+		string subtype_value = GetStringByStrRef(atoi(Get2DAString(subtype_table, "Name", subtype)));
+		str += " (" + subtype_value + ")";
+	}
+
+	int param1_table = GetItemPropertyParam1(p);
+	if (param1_table > -1 && param1_table != 255) {
+		string param1_table_name = Get2DAString("iprp_paramtable", "TableResRef", param1_table);
+		string param1_table_value = GetStringByStrRef(atoi(Get2DAString(param1_table_name, "Name", GetItemPropertyParam1Value(p))));
+		str += ", " + param1_table_value;
+	}
+
+	int cost_table = GetItemPropertyCostTable(p);
+	if (cost_table > 0) {
+		string cost_table_name = Get2DAString("iprp_costtable", "Name", cost_table);
+		string cost_table_value = GetStringByStrRef(atoi(Get2DAString(cost_table_name, "Name", GetItemPropertyCostTableValue(p))));
+		str += ": " + cost_table_value;
+	}
+
+	return str;
+}
+
 
 string EffectToString(effect e) {
 	string s = "";
