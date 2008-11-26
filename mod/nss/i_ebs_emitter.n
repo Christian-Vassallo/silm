@@ -48,6 +48,10 @@ void main() {
 	struct EventInfo ei = GetEventInfo();
 	
 	if (ei.ev == "item_unequip") {
+		object exist = GetLocalObject(ei.actor, "ebse_shield");
+		if (!is_valid(exist) || exist != ei.actedon)
+			return;
+
 		ebs_deactivate(GetItemPossessedBy(ei.actor, "ebs_emitter"), ei.actor);
 	}
 
