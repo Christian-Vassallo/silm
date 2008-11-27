@@ -12,11 +12,24 @@ int IPGetNegativeLevelsFor(object creature, object item) {
 			case ITEM_PROPERTY_NEGATIVE_LEVELS:
 				diff += abs(GetItemPropertyCostTableValue(oIterate));
 				break;
-			case ITEM_PROPERTY_NEGATIVE_LEVELS_BY_ALIGNMENT:
+			case ITEM_PROPERTY_NEGATIVE_LEVELS_DIFFERING_ALIGNMENT:
 				diff += abs(GetItemPropertyCostTableValue(oIterate)) * atoi(Get2DAString("alignment_diff", gelc, abs(GetItemPropertySubType(oIterate))));
 				break;
-			case ITEM_PROPERTY_NEGATIVE_LEVELS_BY_ALIGNGRP:
+			case ITEM_PROPERTY_NEGATIVE_LEVELS_DIFFERING_ALIGNGRP:
 				diff += abs(GetItemPropertyCostTableValue(oIterate)) * atoi(Get2DAString("aligngrp_diff", gelc, abs(GetItemPropertySubType(oIterate))));
+				break;
+			case ITEM_PROPERTY_NEGATIVE_LEVELS_BY_ALIGNMENT:
+				if (Get2DAString("iprp_alignment", "Label", GetItemPropertySubType(oIterate)) != gelc)
+					diff += abs(GetItemPropertyCostTableValue(oIterate));
+				break;
+			case ITEM_PROPERTY_NEGATIVE_LEVELS_BY_ALIGNGRP:
+				switch (GetItemPropertySubType(oIterate)) {
+					case 1 /* N */: if (ALIGNMENT_NEUTRAL == ge || ALIGNMENT_NEUTRAL == lc) diff += abs(GetItemPropertyCostTableValue(oIterate)); break;
+					case 2 /* L */: if (ALIGNMENT_LAWFUL == lc) diff += abs(GetItemPropertyCostTableValue(oIterate)); break;
+					case 3 /* C */: if (ALIGNMENT_CHAOTIC == lc) diff += abs(GetItemPropertyCostTableValue(oIterate)); break;
+					case 4 /* G */: if (ALIGNMENT_GOOD == ge) diff += abs(GetItemPropertyCostTableValue(oIterate)); break;
+					case 5 /* E */: if (ALIGNMENT_EVIL == ge) diff += abs(GetItemPropertyCostTableValue(oIterate)); break;
+				}
 				break;
 		}
 	);
