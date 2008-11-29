@@ -421,6 +421,12 @@ int CommandGo(object oPC, int iMode) {
 
 	string area, name;
 	float x,y,z,f;
+
+	struct Color
+		col1 = cLightGrey,
+		col2 = cLightBlue;
+	int color_swap = 1;
+
 	// Direct matches go first
 	pQ("select area,x,y,z,f,name from locations where name = " + pSs(loc) + " limit 1;");
 
@@ -436,7 +442,8 @@ int CommandGo(object oPC, int iMode) {
 		while (pF()) {
 			area = pGs(1); x = pGf(2); y = pGf(3); z = pGf(4); f = pGf(5); name = pGs(6);
 
-			matches += " " + name;
+			matches += " " + ColorTag(color_swap ? cLightBlue : cLightGrey) + name;
+			color_swap = color_swap ? 0 : 1;
 
 			count++;
 		}
