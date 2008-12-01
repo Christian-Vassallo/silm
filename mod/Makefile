@@ -84,6 +84,11 @@ ifeq "$(NWNMODNAME)" ""
 	exit 1
 endif
 
+.PHONY: mandatory-verify
+mandatory-verify:
+	@echo Verifying resources ..
+	@./verify-resources.sh
+
 .PHONY: area
 area:
 	$(MAKE) -C area all
@@ -149,7 +154,7 @@ clean:
 	-rm *.mod
 
 .PHONY: resources
-resources: area dlg utc uti utd ute utm utp uts utt utw ssf mod itp scripts
+resources: mandatory-verify area dlg utc uti utd ute utm utp uts utt utw ssf mod itp scripts
 
 local: resources
 ifeq ($(MAPMASK),)
