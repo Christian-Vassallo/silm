@@ -1,11 +1,5 @@
 extern("inc_cdb")
-
-void ShowDoorIsLocked(object oDoor, object oUser) {
-	// Print '*locked*' message and play sound
-	DelayCommand(0.1, PlaySound("as_dr_locked2"));
-	FloatingTextStringOnCreature("*" + GetStringByStrRef(8307) + "*", oUser);
-	SendMessageToPC(oUser, GetStringByStrRef(8296));
-}
+extern("_gen")
 
 void main() {
 	struct EventInfo e = GetEventInfo();

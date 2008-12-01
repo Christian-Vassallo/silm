@@ -119,6 +119,15 @@ string EffectToString(effect e);
 // Name (Subtype), Param1Value: CostValue
 string ItemPropertyToString(itemproperty p);
 
+// Print '*locked*' message and play sound
+void ShowDoorIsLocked(object oDoor, object oUser);
+
+
+void ShowDoorIsLocked(object oDoor, object oUser) {
+	DelayCommand(0.1, PlaySound("as_dr_locked2"));
+	FloatingTextStringOnCreature("*" + GetStringByStrRef(8307) + "*", oUser);
+	SendMessageToPC(oUser, GetStringByStrRef(8296));
+}
 
 string ItemPropertyToString(itemproperty p) {
 	string str = GetStringByStrRef(atoi(Get2DAString("itempropdef", "Name", GetItemPropertyType(p))));
