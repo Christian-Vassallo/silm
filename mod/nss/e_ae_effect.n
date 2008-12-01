@@ -1,0 +1,21 @@
+extern("inc_teleport")
+
+// This shows effects on area enter.
+
+#define ENTER_SKEW 0.0
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if ("area_enter" != e.ev)
+		return;
+
+	string eff = GetLocalString(e.actor, "e_ae_effect");
+	if ("" != eff) {
+		if ("dimdoor" == eff)
+			DelayCommand(ENTER_SKEW, DimensionDoorEffect(e.actor, GetLocation(e.actor)));
+		if ("teleport" == eff)
+			DelayCommand(ENTER_SKEW, TeleportEffect(e.actor, GetLocation(e.actor)));
+		SetLocalString(e.actor, "e_ae_effect", "");
+	}
+}

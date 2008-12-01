@@ -3,8 +3,7 @@
 void TeleportEffect(object oActivator, location oLocation);
 
 // Show the dimension door effect visuals.
-// Do not use this for cross-area-travel, use TeleportEffect
-void DimensionDoorEffect(object oActivator, location lSource, location lTarget);
+void DimensionDoorEffect(object oActivator, location lTarget);
 
 // Teleports OBJECT_SELF to the given location.
 // This will execute immediately. If you want to put it onto the action queue, use AssignCommand(ActionDoCommand()).
@@ -20,11 +19,17 @@ void SpellDimensionDoorOrTeleport(location lTarget, bool bVisualsOnly = false);
 
 
 void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false, bool bShowDistanceTraveled = true) {
-	DelayCommand(0.4, DimensionDoorEffect(OBJECT_SELF, GetLocation(OBJECT_SELF), lTarget));
+	bool inter_area = GetArea(OBJECT_SELF) != GetAreaFromLocation(lTarget);
+
+	DelayCommand(0.4, DimensionDoorEffect(OBJECT_SELF, GetLocation(OBJECT_SELF)));
+	if (inter_area)
+		SetLocalString(OBJECT_SELF, "e_ae_effect", "dimdoor");
+	else
+		DelayCommand(0.4, DimensionDoorEffect(OBJECT_SELF, lTarget));
 
 	if (!bVisualsOnly) {
 		DelayCommand(0.7, JumpToLocation(lTarget));
-		if (bShowDistanceTraveled)
+		if (bShowDistanceTraveled && !inter_area)
 			DelayCommand(0.5, FloatingTextStringOnCreature("Distanz: " +
 				FloatToString(GetDistanceBetweenLocations(GetLocation(OBJECT_SELF), lTarget), 0, 2) +
 				" Meter.", OBJECT_SELF, false)
@@ -36,16 +41,18 @@ void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false, bool bShowD
 void SpellTeleport(location lTarget, bool bVisualsOnly = false) {
 	object teleport = OBJECT_SELF;
 	bool inter_area = GetArea(OBJECT_SELF) != GetAreaFromLocation(lTarget);
-	float skew = inter_area ? 3.0 : 0.0;
 
 	AssignCommand(teleport, TeleportEffect(teleport, GetLocation(teleport)));
-	AssignCommand(teleport, DelayCommand(skew, TeleportEffect(teleport, lTarget)));
+	if (inter_area)
+		SetLocalString(teleport, "e_ae_effect", "teleport");
+	else
+		AssignCommand(teleport, TeleportEffect(teleport, lTarget));
 
 	if (!bVisualsOnly) {
-		if (true || inter_area) {
+		if (inter_area) {
 			object invis = CreateObject(OBJECT_TYPE_PLACEABLE, "invisobj", lTarget);
-			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(445), invis, skew + 3.0);
-			DestroyObject(invis, skew + 4.0);
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(445), invis, 6.0);
+			DestroyObject(invis, 7.0);
 		}
 		DelayCommand(1.1, JumpToLocation(lTarget));
 	}
@@ -59,18 +66,14 @@ void SpellDimensionDoorOrTeleport(location lTarget, bool bVisualsOnly = false) {
 }
 
 
-void DimensionDoorEffect(object oActivator, location lSource, location lTarget) {
-	vector vSource = GetPositionFromLocation(lSource);
+void DimensionDoorEffect(object oActivator, location lTarget) {
 	vector vTarget = GetPositionFromLocation(lTarget);
-	vSource.z += 0.9; vTarget.z += 0.9;
-	location lElevatedSource = Location(GetAreaFromLocation(lSource), vSource, GetFacingFromLocation(lSource));
+	vTarget.z += 0.9;
 	location lElevatedTarget = Location(GetAreaFromLocation(lTarget), vTarget, GetFacingFromLocation(lTarget));
 	
 	int i;
-	for (i = 76; i < 81; i++) {
-		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(i), lElevatedSource);
+	for (i = 76; i < 81; i++)
 		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(i), lElevatedTarget);
-	}
 
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_SUMMON_UNDEAD), lTarget);
 }
