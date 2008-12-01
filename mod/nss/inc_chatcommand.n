@@ -949,9 +949,6 @@ int CommandCastSpell(object oPC, int iMode) {
 	if (getopt_opt("loc") && !GetIsObjectValid(GetAreaFromLocation(lTarget)) )
 		return NotifyBadTarget("bad location");
 
-	if ( getopt_opt("loc") && !GetIsObjectValid(oTarget) )
-		return NotifyBadTarget();
-
 	object oCaster = oPC;
 
 	if (getopt_opt("caster") )
