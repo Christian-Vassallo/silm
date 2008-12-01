@@ -56,6 +56,17 @@ vector GetChangedPosition(vector vOriginal, float fDistance, float fAngle);
 // This returns the angle between two locations
 float GetAngleBetweenLocations(location lOne, location lTwo);
 
+// Function: GetIsOnThisSideOfFacing
+//
+// Returns true if oTo is on "this" side of facing.
+// oFacing has to be in the same area than oTo, or the result will
+// not make any sense.
+//
+//   oTo   -|>    = true
+//   oTo   <|-    = false
+//  (| is a door object, <- indicating the facing)
+bool GetIsOnThisSideOfFacing(object oTest, object oTo);
+
 /********** DIRECTION *************/
 
 // This returns the opposite direction (ie, this is the direction you
@@ -163,6 +174,16 @@ location GetPseudoRandomLocation(object oArea, object oSource=OBJECT_INVALID, fl
 /**********************************************************************
  * FUNCTION DEFINITIONS
  **********************************************************************/
+
+
+bool GetIsOnThisSideOfFacing(object oTest, object oTo) {
+	location l1 = GetAheadLocation(oTest, DISTANCE_TINY);
+	location l2 = GetBehindLocation(oTest, DISTANCE_TINY);
+	location lo = GetLocation(oTo);
+
+	return GetDistanceBetweenLocations(lo, l1) < GetDistanceBetweenLocations(lo, l2);
+}
+
 
 // This actually moves the target to the given new location,
 // and makes them face the correct way once they get there.
