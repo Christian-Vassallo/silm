@@ -1,7 +1,7 @@
 extern("_gen")
 extern("inc_party")
 
-#define PARTY_REJOIN_DIFF 360
+#define PARTY_REJOIN_DIFF 600
 
 void main() {
 	struct EventInfo e = GetEventInfo();
@@ -11,7 +11,7 @@ void main() {
 		int ts_then = GetLocalInt(e.runnable, "last_logout_at");
 		int ts_now = GetUnixTimestamp();
 
-		if (p && ts_now - ts_then < PARTY_REJOIN_DIFF) {
+		if (p && ts_then > 0 && (ts_now - ts_then < PARTY_REJOIN_DIFF)) {
 			object other = GetPartyMemberByFactionId(p);
 			if (is_valid(other)) {
 				AddToParty(e.runnable, other);
