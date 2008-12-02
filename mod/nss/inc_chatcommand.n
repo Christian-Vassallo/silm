@@ -1517,20 +1517,20 @@ int CommandXP(object oPC, int iMode) {
 			return FAIL;
 		}
 
-		int bIsCAPXP =getopt_opt("cap");
+		int bIsCAPXP = getopt_opt("cap");
+		int bIsTimeXP = getopt_opt("time");
 
 		if ( bIsCAPXP ) {
 			AddCombatXP(oT, nXP);
+			SendMessageToPC(oPC, "XP is: " + IntToString(GetXP(oT)));
 
-
+		} else if ( bIsTimeXP ) {
+			GiveTimeXP(oT, nXP);
 			SendMessageToPC(oPC, "XP is: " + IntToString(GetXP(oT)));
 
 		} else {
-
 			SendMessageToPC(oPC, "XP was: " + IntToString(GetXP(oT)));
-
 			SetXP(oT, nXP);
-
 			SendMessageToPC(oPC, "XP is: " + IntToString(GetXP(oT)));
 		}
 
