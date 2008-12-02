@@ -1,7 +1,7 @@
 all: compile
 
 clean:
-	-rm *.nss *.ncs *.ndb Makefile.dep tags
+	-rm *.nss *.ncs *.ndb Makefile.dep
 
 clean-stale:
 	@for x in *.n[cs]s; do [ -f `echo $$x |cut -d. -f1`.n ] || rm -v $$x; done
