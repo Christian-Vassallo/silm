@@ -7,7 +7,7 @@ int IPGetNegativeLevelsFor(object creature, object item) {
 	int lc = GetAlignmentLawChaos(creature);
 	string gelc = AlignmentToString(ge, lc, true);
 
-	iterate_iprp(item,
+	iterate_iprp(item, oIterate,
 		switch (GetItemPropertyType(oIterate)) {
 			case ITEM_PROPERTY_NEGATIVE_LEVELS:
 				diff += abs(GetItemPropertyCostTableValue(oIterate));

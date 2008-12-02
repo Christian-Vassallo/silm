@@ -30,7 +30,7 @@ bool fits_into_container(object container, object item) {
 
 void print_container_stats(object pc, object container) {
 	int count = 0; float weight = 0f;
-	iterate_inventory(container, count += GetItemStackSize(oIterate); weight += GetWeight(oIterate););
+	iterate_inventory(container, oIterate, count += GetItemStackSize(oIterate); weight += GetWeight(oIterate););
 	SendMessageToPC(pc, "Gegenstaende eingelagert: " + itoa(count));
 	SendMessageToPC(pc, "Gesamtes Gewicht eingelagert: " + ftoa(weight));
 }

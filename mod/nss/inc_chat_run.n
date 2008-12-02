@@ -1705,7 +1705,7 @@ int CommandModArea(object oPC, int iMode, int nRunModLevel) {
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
 
-	iterate_area(GetArea(oPC),
+	iterate_area(GetArea(oPC), oIterate,
 		if (GetObjectType(oIterate) == otype) {
 			SetTarget(oIterate);
 			if (!CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1)) {
@@ -1735,7 +1735,7 @@ int CommandModOnline(object oPC, int iMode, int nRunModLevel) {
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
 
-	iterate_players(
+	iterate_players(oIterate,
 		SetTarget(oIterate);
 		
 		if (gvGetInt("chat_debug")) {

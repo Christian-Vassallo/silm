@@ -118,7 +118,7 @@ void dcont_destroy_proxy(object activator, object container) {
 		return;
 	}
 
-	_dcont_unbound_execution(container, iterate_inventory(container, DestroyObject(oIterate)));
+	_dcont_unbound_execution(container, iterate_inventory(container, oIterate, DestroyObject(oIterate)));
 	DestroyObject(container, 1.0);
 }
 
@@ -196,7 +196,7 @@ void dcont_handle_proxy_close(object proxy) {
 			dcont_destroy_proxy(activator, proxy);
 		} else {
 #ifdef DCONT_UNLOAD_PROXY
-			_dcont_unbound_execution(proxy, iterate_inventory(proxy, DestroyObject(oIterate)));
+			_dcont_unbound_execution(proxy, iterate_inventory(proxy, oIterate, DestroyObject(oIterate)));
 			SetLocalInt(proxy, "dcont_loaded", 0);
 #endif
 		}

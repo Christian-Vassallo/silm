@@ -17,7 +17,7 @@ int GetPartyFactionId(object pc) {
 	int faction = GetFactionId(pc);
 	int other_faction = 0;
 
-	iterate_players(
+	iterate_players(oIterate,
 		if (oIterate != pc) {
 			other_faction = GetFactionId(pc);
 			if (other_faction == faction)
@@ -29,7 +29,7 @@ int GetPartyFactionId(object pc) {
 }
 
 object GetPartyMemberByFactionId(int id) {
-	iterate_players(
+	iterate_players(oIterate,
 		if (GetFactionId(oIterate) == id)
 			return oIterate;
 	);

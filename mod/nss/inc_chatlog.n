@@ -20,7 +20,7 @@ void ChatLog(object oPC, int nMode, string sMessage, object oTo) {
 			heard_by_aid += itoa(GetAccountID(oTo));
 
 	} else {
-		iterate_players(
+		iterate_players(oIterate,
 			if (oPC != oIterate) {
 				bool did_hear = false;
 
