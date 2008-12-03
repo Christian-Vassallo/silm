@@ -52,7 +52,7 @@
 /* Macro: iterate_iprp(on_object,varname,inline_code)
  * Iterates through all item propertys on a given item.
  */
-#define iterate_iprp(on_object,varname,inline_code) iterate_type_sequential_conditional(itemproperty,GetFirstItemProperty(on_object),GetNextItemProperty(on_object),GetIsItemPropertyValid(oIterate),varname,inline_code)
+#define iterate_iprp(on_object,varname,inline_code) iterate_type_sequential_conditional(itemproperty,GetFirstItemProperty(on_object),GetNextItemProperty(on_object),GetIsItemPropertyValid(varname),varname,inline_code)
 
 /* Macro: iterate_area(area,varname,inline_code)
  * Iterates through all objects in this area.
