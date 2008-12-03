@@ -47,7 +47,7 @@
 /* Macro: iterate_effects(on_object,varname,inline_code)
  * Iterates through all effects on a given object.
  */
-#define iterate_effects(on_object,varname,inline_code) iterate_type_sequential_conditional(effect,GetFirstEffect(on_object),GetNextEffect(on_object),GetIsEffectValid(oIterate),varname,inline_code)
+#define iterate_effects(on_object,varname,inline_code) iterate_type_sequential_conditional(effect,GetFirstEffect(on_object),GetNextEffect(on_object),GetIsEffectValid(varname),varname,inline_code)
 
 /* Macro: iterate_iprp(on_object,varname,inline_code)
  * Iterates through all item propertys on a given item.
