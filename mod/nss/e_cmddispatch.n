@@ -25,7 +25,7 @@ void main() {
 		rest = "go " + rest;
 	}
 
-	if ( ( GetIsDM(ei.actor) || amask(ei.actor, AMASK_FORCETALK | AMASK_GLOBAL_FORCETALK) )  && "." == first && "." != second) {
+	if (!(ea.i0 & CHATMODE_PRIVATE) &&  ( GetIsDM(ei.actor) || amask(ei.actor, AMASK_FORCETALK | AMASK_GLOBAL_FORCETALK) )  && "." == first && "." != second) {
 		rest = substr(ea.a0, 2, 1024);
 		int t = atoi(second);
 		object oTarget = GetTarget(t);
