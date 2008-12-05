@@ -21,8 +21,8 @@ void onlinePlayerEnter(object oPC) {
 		"insert into " + ONLINE_TABLE + " (aid, cid, account, character, dm, at, afk) values";
 
 	q += "(" +
-		 pSi0(GetAccountID(oPC), TRUE) + "," +
-		 pSi0(GetCharacterID(oPC), TRUE) + "," +
+		 pSi(GetAccountID(oPC), true) + "," +
+		 pSi(GetCharacterID(oPC), true) + "," +
 		 pSs(GetPCName(oPC)) + "," + 
 		 pSs(GetName(oPC)) + "," + 
 		 pSb(GetIsDM(oPC)) + "," + 
