@@ -44,6 +44,16 @@
  */
 #define iterate_inventory(object,varname,inline_code) iterate_valid_object_sequential(GetFirstItemInInventory(object),GetNextItemInInventory(object),varname,inline_code)
 
+/* Macro: iterate_equipped(object,slotvarname,varname,inline_code)
+ * Iterates over all equipped items.
+ */
+#define iterate_equipped(on_object,slotvarname,varname,inline_code) __EBLOCK(object varname;int slotvarname;for(slotvarname = 0; slotvarname < NUM_INVENTORY_SLOTS; slotvarname++) { varname = GetItemInSlot(slotvarname, on_object); inline_code; })
+
+/* Macro: iterate_equipped_and_inventory(object,varname,inline_code)
+ * Iterates over all equipped items, and then over the rest of objects' inventory.
+ */
+#define iterate_equipped_and_inventory(object,varname,inline_code) iterate_equipped(object,nSlot,varname,inline_code);iterate_inventory(object,varname,inline_code)
+
 /* Macro: iterate_effects(on_object,varname,inline_code)
  * Iterates through all effects on a given object.
  */
