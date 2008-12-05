@@ -11,7 +11,7 @@ NCCFLAGS=-g -c -q -o
 NSSVERIFYFLAGS=-g -o -q -t4
 
 # Various git/shell-related variables.
-commit := $(shell git-rev-parse --short --verify HEAD)
+commit := $(shell git rev-parse --short --verify HEAD)
 fullcommit := $(shell git log --decorate -n 1|head -1|cut -d' ' -f2-)
 commitdate := $(shell git log --decorate -n 1|grep Date|cut -f4- -d' ')
 builddate := $(shell date "+%Y-%m-%d %X %z (%a, %d %b %Y)")
