@@ -2,6 +2,7 @@ void main() {
 	object oPC = GetLastUsedBy();
 
 	string sTargetTag = GetLocalString(OBJECT_SELF, "target_rope");
+	string sSource = GetTag(OBJECT_SELF);
 
 	object oTargetLoc = GetWaypointByTag("w" + sTargetTag);
 
@@ -19,7 +20,7 @@ void main() {
 			SendMessageToPC(oPC, "Cannot spawn rope :/");
 			return;
 		}
-		SetLocalString(oNewRope, "target", "wst_eskarith");
+		SetLocalString(oNewRope, "target", sSource);
 
 		FloatingTextStringOnCreature("Du laesst die Strickleiter herab.", oPC, TRUE);
 	} else {
