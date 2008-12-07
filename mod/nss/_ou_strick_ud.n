@@ -6,7 +6,7 @@ void main() {
 
 	object oTargetLoc = GetWaypointByTag("w" + sTargetTag);
 
-	object oRope = GetObjectByTag(sTargetTag);
+	object oRope = GetObjectByTag(sTargetTag + "_s");
 
 	if ( !GetIsObjectValid(oTargetLoc) ) {
 		SendMessageToPC(oPC, "Invalid target (bug)");
@@ -15,7 +15,7 @@ void main() {
 
 	if ( !GetIsObjectValid(oRope) ) {
 		object oNewRope = CreateObject(OBJECT_TYPE_PLACEABLE, "strickleiter", GetLocation(oTargetLoc), FALSE,
-							  sTargetTag);
+							  sTargetTag + "_s");
 		if ( !GetIsObjectValid(oNewRope) ) {
 			SendMessageToPC(oPC, "Cannot spawn rope :/");
 			return;
