@@ -10,7 +10,7 @@ void main() {
 	object oPC = GetLastUsedBy();
 	string sTarget = GetLocalString(oLeiter, "target");
 
-	object oWP = GetWaypointByTag(sTarget);
+	object oWP = GetObjectByTag(sTarget);
 
 	if ( !GetIsObjectValid(oWP) ) {
 		SendMessageToPC(oPC, "Diese Strickleiter hat kein gueltiges Ziel. (bug)");
