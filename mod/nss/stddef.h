@@ -21,6 +21,7 @@
 #define queue(obj,diff,action) AssignCommand(obj,DelayCommand(diff,action))
 
 #include "log.h"
+#include "aliases.h"
 #include "inline.h"
 #include "iterators.h"
 #include "mutex.h"
