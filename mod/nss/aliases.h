@@ -19,6 +19,9 @@
 // Macro: itof(u)
 // Cast a int to a float
 #define itof(i) IntToFloat(i)
+// Macro: otox(o)
+// Convert o to its object id in hex notation, as a string.
+#define otox(o) ObjectToString(o)
 
 // Macro: otoa(o)
 // Converts a object into a human-readable format
