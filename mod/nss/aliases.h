@@ -28,7 +28,11 @@
 		IntToString(GetObjectType(o)) + "," + \
 		GetResRef(o) + "," + \
 		GetTag(o) + "," + \
-		"[" + (is_client(o) ? (itoa(GetAccountID(o)) + "," + itoa(GetCharacterID(o))) : itoa(p_get_p_id(o))) + "]," + \
+		"[" + ( \
+			is_client(o) ? \
+				(itoa(GetLocalInt(GetModule(), GetPCPlayerName(o) + "_aid")) + "," + itoa(GetLocalInt(GetModule(), GetPCPlayerName(o) + "_cid"))) : \
+				itoa(GetLocalInt(GetModule(), "p_id_" + ObjectToString(o))) \
+		) + "]," + \
 		GetName(o) + \
 	"}") \
 : "OBJECT_INVALID")
