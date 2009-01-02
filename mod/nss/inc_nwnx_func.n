@@ -101,6 +101,8 @@ struct CreatureSkills {
     int sk_ride;
 };
 
+void USleep(int delay);
+
 /* Returns TRUE if the target inherently knows a feat (as opposed to
  * by any equipment they may possess) */
 int GetKnowsFeat (int nFeatId, object oCreature);
@@ -453,6 +455,7 @@ object IntToObject (int nObjectId);
 void DumpObject (object oObject);
 
 
+
 int NWNXFuncsZero (object oObject, string sFunc) {
     SetLocalString(oObject, sFunc, "          ");
     return StringToInt(GetLocalString(oObject, sFunc));
@@ -474,6 +477,9 @@ int NWNXFuncsThree (object oObject, string sFunc, int nVal1, int nVal2, int nVal
     return StringToInt(GetLocalString(oObject, sFunc));
 }
 
+void usleep(int delay) {
+	NWNXFuncsOne(GetModule(), "NWNX!FUNCS!USLEEP", delay);
+}
 
 int SetAbilityScore (object oCreature, int nAbility, int nValue) {
     return NWNXFuncsTwo(oCreature, "NWNX!FUNCS!SETABILITYSCORE", nAbility, nValue);
