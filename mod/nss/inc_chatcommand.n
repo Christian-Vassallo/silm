@@ -885,8 +885,7 @@ int CommandPlaceable(object oPC, int iMode) {
 
 
 int CommandShowWeather(object oPC, int iMode) {
-	ShowAndUpdateWeather(GetArea(oPC), oPC);
-	return OK;
+	return FAIL;
 }
 
 int CommandDescription(object oPC, int iMode) {
@@ -1341,14 +1340,14 @@ int CommandLastLog(object oPC, int iMode) {
 
 
 int CommandUptime(object oPC, int iMode) {
-	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("uptime"));
+/*	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("uptime"));
 	if (r.error) {
 		ToPC("Data not available.");
 		return FAIL;
 	}
 	 
-	ToPC(r.ret);
-	return OK;
+	ToPC(r.ret);*/
+	return FAIL;
 }
 
 int CommandRMNX(object oPC, int iMode) {
