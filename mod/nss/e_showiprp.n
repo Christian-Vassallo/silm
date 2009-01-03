@@ -9,7 +9,7 @@ void main() {
 		return;
 
 	int cid;
-	if (is_item(e.actedon) && (
+	if (!is_item(e.actedon) || (
 		!is_dm(e.actor) &&
 		!GetItemHasItemProperty(e.actedon, ITEM_PROPERTY_SELFIDENTIFYING) &&
 		!(cid = GetCharacterID(e.actor) && GetLocalInt(e.actedon, "identifies_for_" + itoa(cid))) &&
