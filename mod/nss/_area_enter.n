@@ -15,7 +15,6 @@ extern("inc_dbplac")
 extern("inc_scorco")
 
 extern("inc_mnx")
-extern("inc_mnx_temp")
 
 extern("inc_track")
 
@@ -48,16 +47,9 @@ void main() {
 		return;
 	}
 
-
-
 	ExploreAreaForPlayer(oArea, oPC, TRUE);
 
-
 	LoadPlaciesForArea(oArea);
-
-	// Show temperature
-	ShowAndUpdateWeather(oArea, oPC);
-
 
 	if ( !GetIsDM(oPC) ) {
 		//Spuren hinterlassen starten

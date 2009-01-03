@@ -234,7 +234,7 @@ struct mnxRet mnx_synchronous_command(string command, int uTimeout = MNX_DEFAULT
 		}
 
 		// else sleep and try again!
-		// usleep(MNX_SLEEP_STEP);
+		usleep(MNX_SLEEP_STEP);
 
 		tries++;
 		slept += MNX_SLEEP_STEP;
