@@ -107,16 +107,12 @@ struct Weather GetWeatherFor(object oArea, int nYear, int nMonth, int nDay, int 
 	if ( GetIsAreaInterior(oArea) )
 		nMask += A_INTERIOR;
 
-	struct mnxRet r = mnx_synchronous_command(
-		mnx_prepare_command(
-			"getweather", sAreaResRef, sTilesetResRef,
-			IntToString(nMask), IntToString(nYear), IntToString(nMonth), IntToString(nDay),
-			IntToString(nHour), IntToString(nMinute)
-		)
-	);
-
-	if ( !r.error ) {
-		w = ParseWeatherString(w, r.ret);
+	if (pQ("select convert_from(weather.getweather(" + pSs(sAreaResRef) + ", " + pSs(sTilesetResRef) + ", " +
+			pSi(nMask, false) + ", " + pSi(nYear, false) + ", " + pSi(nMonth, false) + ", " + pSi(nDay, false) + ", " +
+			pSi(nHour, false) + ", " + pSi(nMinute, false) + "), 'latin1');") && pF()
+	) {
+		string ret = pG(1);
+		w = ParseWeatherString(w, ret);
 
 		w.mask = nMask;
 		w.tileset = sTilesetResRef;
@@ -127,7 +123,7 @@ struct Weather GetWeatherFor(object oArea, int nYear, int nMonth, int nDay, int 
 		w.hour = nHour;
 		w.minute = nMinute;
 	} else {
-		SendMessageToAllDMs("Error retrieving weather information: " + r.ret);
+		SendMessageToAllDMs("Error retrieving weather information: " + pErrStr());
 	}
 
 

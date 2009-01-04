@@ -1,0 +1,31 @@
+extern("inc_mnx_temp")
+
+void UpdateForPlayer(object oPlayer) {
+	object oArea = GetArea(oPlayer);
+
+	if ( !GetIsObjectValid(oArea) || GetIsAreaInterior(oArea) )
+		return;
+
+	struct Weather w = GetWeatherFor(oArea, GetCalendarYear(), GetCalendarMonth(), GetCalendarDay(),
+						   GetTimeHour(), GetTimeMinute());
+
+	SetEngineWeatherFromWeather(oArea, w);
+}
+
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if ("area_enter" == e.ev) {
+		ShowAndUpdateWeather(e.runnable, e.actor);
+	}
+
+	if ("module_hb" == e.ev) {
+		// hb script run every hour that sets the actual weather for all areas
+		if (GetTimeHour() != GetLocalInt(GetModule(), "e_weather_hb")) {
+			iterate_players(oPC, UpdateForPlayer(oPC));
+			SetLocalInt(GetModule(), "e_weather_hb", GetTimeHour());
+		}
+	}
+
+}
