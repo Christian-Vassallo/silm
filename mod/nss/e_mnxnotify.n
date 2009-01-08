@@ -27,7 +27,7 @@ void main() {
 	}
 
 	if ("pc_login" == ei.ev) {
-		mnx_asynchronous_command(mnx_prepare_command("cliententer", sAccountName, sCharName, IntToString(nAID), IntToString(nCID),
+		mnx_asynchronous_command_noreply(mnx_prepare_command("cliententer", sAccountName, sCharName, IntToString(nAID), IntToString(nCID),
 			bIsDM, GetPCIPAddress(ei.actor), GetPCPublicCDKey(ei.actor)));
 	}
 	
