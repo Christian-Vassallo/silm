@@ -1,0 +1,69 @@
+#define IP_CONST_UNLIMITEDAMMO_BASIC     1
+#define IP_CONST_UNLIMITEDAMMO_1D6FIRE   2
+#define IP_CONST_UNLIMITEDAMMO_1D6COLD   3
+#define IP_CONST_UNLIMITEDAMMO_1D6LIGHT  4
+#define IP_CONST_UNLIMITEDAMMO_1D6ACID   5
+
+int GetNextAmmoType(int type) {
+	switch (type) {
+		case IP_CONST_UNLIMITEDAMMO_1D6FIRE:
+			return IP_CONST_UNLIMITEDAMMO_1D6COLD;
+		case IP_CONST_UNLIMITEDAMMO_1D6COLD:
+			return IP_CONST_UNLIMITEDAMMO_1D6LIGHT;
+		case IP_CONST_UNLIMITEDAMMO_1D6LIGHT:
+			return IP_CONST_UNLIMITEDAMMO_1D6ACID;
+		case IP_CONST_UNLIMITEDAMMO_1D6ACID:
+			return IP_CONST_UNLIMITEDAMMO_BASIC;
+		case IP_CONST_UNLIMITEDAMMO_BASIC:
+			return IP_CONST_UNLIMITEDAMMO_1D6FIRE;
+	}
+	_ERROR("cannot parse type");
+	return -1;
+}
+
+void _add_and_equip(object owner, object item, int new_cost) {
+	itemproperty new_ip = ItemPropertyUnlimitedAmmo(new_cost);
+	string name = GetStringByStrRef(atoi(Get2DAString("iprp_ammocost", "Name", new_cost)));
+	FloatingTextStringOnCreature("Schadensart ist nun: " + name, owner, false);
+
+	SetName(item, "");
+	SetName(item, GetName(item) + " (" + name + ")");
+
+	AddItemProperty(DURATION_TYPE_PERMANENT, new_ip, item);
+	AssignCommand(owner, ClearAllActions(true));
+	AssignCommand(owner, ActionEquipItem(item, INVENTORY_SLOT_RIGHTHAND));
+}
+
+int IPChangeDamageType(object owner, object item, int change_to = 0) {
+	iterate_iprp(item, ip,
+		if (GetItemPropertyType(ip) == ITEM_PROPERTY_UNLIMITED_AMMUNITION) {
+			int old_cost = GetItemPropertyCostTableValue(ip);
+			int new_cost = GetNextAmmoType(old_cost);
+			if (!new_cost)
+				return -1;
+
+			RemoveItemProperty(item, ip);
+
+			// We need to re-equip, because of a bug in nwserver.
+			AssignCommand(owner, ClearAllActions(true));
+			AssignCommand(owner, ActionUnequipItem(item));
+
+			DelayCommand(0.2, _add_and_equip(owner, item, new_cost));
+			return change_to;
+		}
+	);
+	return -1;
+}
+
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if ("item_freeactivate" == e.ev || "item_activate" == e.ev) {
+		if (!GetLocalInt(e.runnable, "change_damage"))
+			return;
+
+		if(IPChangeDamageType(e.actor, e.runnable) > -1)
+			event_ret(EVENT_RESULT_SUPPRESS);
+	}
+}
