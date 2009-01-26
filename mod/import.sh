@@ -15,7 +15,6 @@ for x in $@; do
 	*.are) target="area" ;;
 	*.git)
 		target="area"
-		opts="--float_rounding 4"
 		;;
 	*.ut[a-z]) target=${ext:(-3):3} ;;
 	*.dlg) target="dlg" ;;
@@ -40,7 +39,5 @@ for x in $@; do
 	fi
 
 	echo "$x -> $to_yml"
-	nwn-gff-print -y $opts $x > $to_yml
-
-	$modroot/verify.sh $to_yml
+	nwn-gff -i $x -ky -o $to_yml
 done
