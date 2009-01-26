@@ -1,0 +1,12 @@
+
+void cprot_enter(object trigger, object o) {
+//	if (d20() + GetSkillRank(SKILL_LORE, o) > 18)
+//		SendMessageToPC(o, "Du betrittst einen Schutzkreis.");
+	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_REMOVE_CONDITION), o);
+}
+
+void cprot_exit(object trigger, object o) {
+//	if (d20() + GetSkillRank(SKILL_LORE, o) > 18)
+//		SendMessageToPC(o, "Du verlaesst einen Schutzkreis.");
+	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEAD_HOLY), o);
+}
