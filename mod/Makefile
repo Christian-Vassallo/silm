@@ -45,8 +45,7 @@ VALIDEXTDEV=$(AREAS) \
 	utc/\*.utc utd/\*.utd ute/\*.ute \
 	`find uti -iname \*.uti` \
 	itp/\*.itp ssf/\*.ssf \
-	mod/\*.fac mod/\*.ifo mod/\*.jrl \
-	nss/\*.ncs nss/\*.nss
+	mod/\*.fac mod/\*.ifo mod/\*.jrl
 
 # The player package is a leightweight module variant for
 # players to build their own areas, items, etc.
