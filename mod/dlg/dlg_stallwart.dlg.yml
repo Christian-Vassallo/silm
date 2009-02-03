@@ -1,421 +1,359 @@
---- !ruby/object:NWN::Gff::Gff 
-type: "DLG "
-version: V3.2
-hash: !ruby/object:NWN::Gff::Struct 
-  hash: 
-    DelayEntry: !ruby/object:NWN::Gff::Element {label: DelayEntry, type: :dword, value: 0}
-    DelayReply: !ruby/object:NWN::Gff::Element {label: DelayReply, type: :dword, value: 0}
-    EndConverAbort: !ruby/object:NWN::Gff::Element {label: EndConverAbort, type: :resref, value: nw_walk_wp}
-    EndConversation: !ruby/object:NWN::Gff::Element {label: EndConversation, type: :resref, value: nw_walk_wp}
-    EntryList: !ruby/object:NWN::Gff::Element 
-      label: EntryList
+--- !nwn-lib.elv.es,2008-12/struct
+__data_type: DLG
+__struct_id: 4294967295
+DelayEntry: {type: :dword, value: 0}
+DelayReply: {type: :dword, value: 0}
+EndConverAbort: {type: :resref, value: nw_walk_wp}
+EndConversation: {type: :resref, value: nw_walk_wp}
+EntryList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 0
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
       type: :list
       value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: dlg_nohorse}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 4}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: dlg_hashorse}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 1}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 1
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 2
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Seid gegruesst! Was kann ich f\xFCr Euch tun?"
-                5: "Seid gegr\xFCsst, was kann ich f\xFCr euch tun?"
-        struct_id: 0
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: []
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 0
+        Active: {type: :resref, value: dlg_nohorse}
+        Index: {type: :dword, value: 4}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 1
+        Active: {type: :resref, value: dlg_hashorse}
+        Index: {type: :dword, value: 1}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 2
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 0}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Seid gegr\xFCsst, was kann ich f\xFCr euch tun?"
+        4: "Seid gegruesst! Was kann ich f\xFCr Euch tun?"
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 1
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
+      type: :list
+      value: []
 
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: dlg_killhorse}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Natuerlich <Mister/Missus> <LastName>, macht Euch keine Sorgen. Euer Liebling ist hier in besten Haenden.
-                5: "Nat\xFCrlich <Mister/Missus> <LastName>, macht euch keine Sorgen euer Liebling ist hier in besten H\xE4nden."
-        struct_id: 1
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 3}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 2}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 1
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Gerne - doch bedenkt die Mietskosten - *der Stallwart bietet Euch eine Liste an* des Stallplatzes; dies schliesst Futter und Pflege mit ein! - wenn dies in Eurem Sinne ist ..?
-        struct_id: 2
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: []
+    Script: {type: :resref, value: dlg_killhorse}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Nat\xFCrlich <Mister/Missus> <LastName>, macht euch keine Sorgen euer Liebling ist hier in besten H\xE4nden."
+        4: Natuerlich <Mister/Missus> <LastName>, macht Euch keine Sorgen. Euer Liebling ist hier in besten Haenden.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 2
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 0
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 3}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 1
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 2}
+        IsChild: {type: :byte, value: 0}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        4: Gerne - doch bedenkt die Mietskosten - *der Stallwart bietet Euch eine Liste an* des Stallplatzes; dies schliesst Futter und Pflege mit ein! - wenn dies in Eurem Sinne ist ..?
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 3
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
+      type: :list
+      value: []
 
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: dlg_killhorse}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Natuerlich <Mister/Missus> <LastName>, macht Euch keine Sorgen. Euer Liebling ist hier in besten Haenden.
-                5: "Nat\xFCrlich <Mister/Missus> <LastName>, macht euch keine Sorgen euer Liebling ist hier in besten H\xE4nden."
-        struct_id: 3
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: []
+    Script: {type: :resref, value: dlg_killhorse}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Nat\xFCrlich <Mister/Missus> <LastName>, macht euch keine Sorgen euer Liebling ist hier in besten H\xE4nden."
+        4: Natuerlich <Mister/Missus> <LastName>, macht Euch keine Sorgen. Euer Liebling ist hier in besten Haenden.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 4
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
+      type: :list
+      value: []
 
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: dlg_stallwart}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Aber natuerlich.
-        struct_id: 4
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: dlg_horsehasrent}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 6}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 5}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 1
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Aber natuerlich - doch bitte entrichtet die Mietskosten des Stallplatzes.  *laechelt*
-        struct_id: 5
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: []
-
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: dlg_stallwart}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Ich danke Euch.
-        struct_id: 6
-    NumWords: !ruby/object:NWN::Gff::Element {label: NumWords, type: :dword, value: 124}
-    PreventZoomIn: !ruby/object:NWN::Gff::Element {label: PreventZoomIn, type: :byte, value: 0}
-    ReplyList: !ruby/object:NWN::Gff::Element 
-      label: ReplyList
+    Script: {type: :resref, value: dlg_stallwart}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        4: Aber natuerlich.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 5
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
       type: :list
       value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: []
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 0
+        Active: {type: :resref, value: dlg_horsehasrent}
+        Index: {type: :dword, value: 6}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 1
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 5}
+        IsChild: {type: :byte, value: 0}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        4: Aber natuerlich - doch bitte entrichtet die Mietskosten des Stallplatzes.  *laechelt*
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 6
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
+      type: :list
+      value: []
 
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Nichts, danke.. ich wollte mich nur etwas umsehen.
-                5: Nichts, danke.. ich wollt mich nur etwas umsehen.
-        struct_id: 0
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: dlg_stblwantrent}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 2}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 1}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 1
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Mein Pferd braucht etwas Ruhe und Futter.
-                5: "Nun mein Pferd braucht etwas Ruhe und Futter, ich h\xE4tte gern ein Stallplatz."
-        struct_id: 1
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: []
+    Script: {type: :resref, value: dlg_stallwart}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        4: Ich danke Euch.
+NumWords: {type: :dword, value: 124}
+PreventZoomIn: {type: :byte, value: 0}
+ReplyList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 0
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value: []
 
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Nein - ich danke Euch jedoch trotzdem.
-        struct_id: 2
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 3}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Ja, bitte.
-        struct_id: 3
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: dlg_horseneedpay}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 5}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 4}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 1
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Ich komme um mein Pferd abzuholen.
-                5: Ja ich komme um mein Pferd abzuholen.
-        struct_id: 4
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: []
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Nichts, danke.. ich wollt mich nur etwas umsehen.
+        4: Nichts, danke.. ich wollte mich nur etwas umsehen.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 1
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: dlg_stblwantrent}
+        Index: {type: :dword, value: 2}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 1
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 1}
+        IsChild: {type: :byte, value: 0}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Nun mein Pferd braucht etwas Ruhe und Futter, ich h\xE4tte gern ein Stallplatz."
+        4: Mein Pferd braucht etwas Ruhe und Futter.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 2
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value: []
 
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Oh .. nun, gerade nicht.  Ich danke Euch trotzdem.
-        struct_id: 5
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 6}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Hier, bitte.
-        struct_id: 6
-    StartingList: !ruby/object:NWN::Gff::Element 
-      label: StartingList
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        4: Nein - ich danke Euch jedoch trotzdem.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 3
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 3}
+        IsChild: {type: :byte, value: 0}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        4: Ja, bitte.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 4
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
       type: :list
       value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-          Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-        struct_id: 0
-  struct_id: 4294967295
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: dlg_horseneedpay}
+        Index: {type: :dword, value: 5}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 1
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 4}
+        IsChild: {type: :byte, value: 0}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Ja ich komme um mein Pferd abzuholen.
+        4: Ich komme um mein Pferd abzuholen.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 5
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value: []
+
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        4: Oh .. nun, gerade nicht.  Ich danke Euch trotzdem.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 6
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 6}
+        IsChild: {type: :byte, value: 0}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        4: Hier, bitte.
+StartingList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/StartingList
+    __struct_id: 0
+    Active: {type: :resref, value: ""}
+    Index: {type: :dword, value: 0}

@@ -1,149 +1,131 @@
---- !ruby/object:NWN::Gff::Gff 
-type: "UTC "
-version: V3.2
-hash: !ruby/object:NWN::Gff::Struct 
-  hash: 
-    Appearance_Type: !ruby/object:NWN::Gff::Element {label: Appearance_Type, type: :word, value: 241}
-    BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-    CRAdjust: !ruby/object:NWN::Gff::Element {label: CRAdjust, type: :int, value: 0}
-    Cha: !ruby/object:NWN::Gff::Element {label: Cha, type: :byte, value: 10}
-    ChallengeRating: !ruby/object:NWN::Gff::Element {label: ChallengeRating, type: :float, value: 0.5}
-    ClassList: !ruby/object:NWN::Gff::Element 
-      label: ClassList
-      type: :list
-      value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          Class: !ruby/object:NWN::Gff::Element {label: Class, type: :int, value: 20}
-          ClassLevel: !ruby/object:NWN::Gff::Element {label: ClassLevel, type: :short, value: 1}
-        struct_id: 2
-    Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-    Con: !ruby/object:NWN::Gff::Element {label: Con, type: :byte, value: 6}
-    Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-    CurrentHitPoints: !ruby/object:NWN::Gff::Element {label: CurrentHitPoints, type: :short, value: 4}
-    DecayTime: !ruby/object:NWN::Gff::Element {label: DecayTime, type: :dword, value: 5000}
-    Deity: !ruby/object:NWN::Gff::Element {label: Deity, type: :cexostr, value: Helm}
-    Description: !ruby/object:NWN::Gff::Element 
-      label: Description
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          4: "Ein kleiner, wohl etwa sechsj\xE4hriger Junge mit zersausten Haaren und einem frechen Grinsen."
-          5: "Ein kleiner, wohl etwa sechsj\xE4hriger Junge mit zersausten Haaren und einem frechen Grinsen."
-    Dex: !ruby/object:NWN::Gff::Element {label: Dex, type: :byte, value: 10}
-    Disarmable: !ruby/object:NWN::Gff::Element {label: Disarmable, type: :byte, value: 1}
-    Equip_ItemList: !ruby/object:NWN::Gff::Element 
-      label: Equip_ItemList
-      type: :list
-      value: []
+--- !nwn-lib.elv.es,2008-12/struct
+__data_type: UTC
+__struct_id: 4294967295
+Appearance_Type: {type: :word, value: 241}
+BodyBag: {type: :byte, value: 0}
+CRAdjust: {type: :int, value: 0}
+Cha: {type: :byte, value: 10}
+ChallengeRating: {type: :float, value: 0.5}
+ClassList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: UTC/ClassList
+    __struct_id: 2
+    Class: {type: :int, value: 20}
+    ClassLevel: {type: :short, value: 1}
+Comment: {type: :cexostr, value: ""}
+Con: {type: :byte, value: 6}
+Conversation: {type: :resref, value: ""}
+CurrentHitPoints: {type: :short, value: 4}
+DecayTime: {type: :dword, value: 5000}
+Deity: {type: :cexostr, value: Helm}
+Description:
+  type: :cexolocstr
+  value:
+    5: "Ein kleiner, wohl etwa sechsj\xE4hriger Junge mit zersausten Haaren und einem frechen Grinsen."
+    4: "Ein kleiner, wohl etwa sechsj\xE4hriger Junge mit zersausten Haaren und einem frechen Grinsen."
+Dex: {type: :byte, value: 10}
+Disarmable: {type: :byte, value: 1}
+Equip_ItemList:
+  type: :list
+  value: []
 
-    FactionID: !ruby/object:NWN::Gff::Element {label: FactionID, type: :word, value: 2}
-    FeatList: !ruby/object:NWN::Gff::Element 
-      label: FeatList
-      type: :list
-      value: 
-      - !ruby/object:NWN::Gff::Struct {hash: {Feat: !ruby/object:NWN::Gff::Element {label: Feat, type: :word, value: 258}}, struct_id: 1}
-    FirstName: !ruby/object:NWN::Gff::Element 
-      label: FirstName
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          4: Beron
-          5: Beron
-    Gender: !ruby/object:NWN::Gff::Element {label: Gender, type: :byte, value: 0}
-    GoodEvil: !ruby/object:NWN::Gff::Element {label: GoodEvil, type: :byte, value: 50}
-    HitPoints: !ruby/object:NWN::Gff::Element {label: HitPoints, type: :short, value: 4}
-    Int: !ruby/object:NWN::Gff::Element {label: Int, type: :byte, value: 10}
-    Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 0}
-    IsImmortal: !ruby/object:NWN::Gff::Element {label: IsImmortal, type: :byte, value: 0}
-    IsPC: !ruby/object:NWN::Gff::Element {label: IsPC, type: :byte, value: 0}
-    LastName: !ruby/object:NWN::Gff::Element 
-      label: LastName
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          4: Jharask
-          5: Jharask
-    LawfulChaotic: !ruby/object:NWN::Gff::Element {label: LawfulChaotic, type: :byte, value: 50}
-    Lootable: !ruby/object:NWN::Gff::Element {label: Lootable, type: :byte, value: 0}
-    MaxHitPoints: !ruby/object:NWN::Gff::Element {label: MaxHitPoints, type: :short, value: 2}
-    NaturalAC: !ruby/object:NWN::Gff::Element {label: NaturalAC, type: :byte, value: 0}
-    NoPermDeath: !ruby/object:NWN::Gff::Element {label: NoPermDeath, type: :byte, value: 1}
-    PaletteID: !ruby/object:NWN::Gff::Element {label: PaletteID, type: :byte, value: 44}
-    PerceptionRange: !ruby/object:NWN::Gff::Element {label: PerceptionRange, type: :byte, value: 11}
-    Phenotype: !ruby/object:NWN::Gff::Element {label: Phenotype, type: :int, value: 0}
-    Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 0}
-    PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 169}
-    Race: !ruby/object:NWN::Gff::Element {label: Race, type: :byte, value: 6}
-    ScriptAttacked: !ruby/object:NWN::Gff::Element {label: ScriptAttacked, type: :resref, value: x2_def_attacked}
-    ScriptDamaged: !ruby/object:NWN::Gff::Element {label: ScriptDamaged, type: :resref, value: x2_def_ondamage}
-    ScriptDeath: !ruby/object:NWN::Gff::Element {label: ScriptDeath, type: :resref, value: x2_def_ondeath}
-    ScriptDialogue: !ruby/object:NWN::Gff::Element {label: ScriptDialogue, type: :resref, value: x2_def_onconv}
-    ScriptDisturbed: !ruby/object:NWN::Gff::Element {label: ScriptDisturbed, type: :resref, value: x2_def_ondisturb}
-    ScriptEndRound: !ruby/object:NWN::Gff::Element {label: ScriptEndRound, type: :resref, value: x2_def_endcombat}
-    ScriptHeartbeat: !ruby/object:NWN::Gff::Element {label: ScriptHeartbeat, type: :resref, value: x2_def_heartbeat}
-    ScriptOnBlocked: !ruby/object:NWN::Gff::Element {label: ScriptOnBlocked, type: :resref, value: x2_def_onblocked}
-    ScriptOnNotice: !ruby/object:NWN::Gff::Element {label: ScriptOnNotice, type: :resref, value: x2_def_percept}
-    ScriptRested: !ruby/object:NWN::Gff::Element {label: ScriptRested, type: :resref, value: x2_def_rested}
-    ScriptSpawn: !ruby/object:NWN::Gff::Element {label: ScriptSpawn, type: :resref, value: x2_def_spawn}
-    ScriptSpellAt: !ruby/object:NWN::Gff::Element {label: ScriptSpellAt, type: :resref, value: x2_def_spellcast}
-    ScriptUserDefine: !ruby/object:NWN::Gff::Element {label: ScriptUserDefine, type: :resref, value: x2_def_userdef}
-    SkillList: !ruby/object:NWN::Gff::Element 
-      label: SkillList
-      type: :list
-      value: 
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Rank: !ruby/object:NWN::Gff::Element {label: Rank, type: :byte, value: 0}}, struct_id: 0}
-    SoundSetFile: !ruby/object:NWN::Gff::Element {label: SoundSetFile, type: :word, value: 122}
-    SpecAbilityList: !ruby/object:NWN::Gff::Element 
-      label: SpecAbilityList
-      type: :list
-      value: []
+FactionID: {type: :word, value: 2}
+FeatList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 258}}
+FirstName:
+  type: :cexolocstr
+  value:
+    5: Beron
+    4: Beron
+Gender: {type: :byte, value: 0}
+GoodEvil: {type: :byte, value: 50}
+HitPoints: {type: :short, value: 4}
+Int: {type: :byte, value: 10}
+Interruptable: {type: :byte, value: 0}
+IsImmortal: {type: :byte, value: 0}
+IsPC: {type: :byte, value: 0}
+LastName:
+  type: :cexolocstr
+  value:
+    5: Jharask
+    4: Jharask
+LawfulChaotic: {type: :byte, value: 50}
+Lootable: {type: :byte, value: 0}
+MaxHitPoints: {type: :short, value: 2}
+NaturalAC: {type: :byte, value: 0}
+NoPermDeath: {type: :byte, value: 1}
+PaletteID: {type: :byte, value: 44}
+PerceptionRange: {type: :byte, value: 11}
+Phenotype: {type: :int, value: 0}
+Plot: {type: :byte, value: 0}
+PortraitId: {type: :word, value: 169}
+Race: {type: :byte, value: 6}
+ScriptAttacked: {type: :resref, value: x2_def_attacked}
+ScriptDamaged: {type: :resref, value: x2_def_ondamage}
+ScriptDeath: {type: :resref, value: x2_def_ondeath}
+ScriptDialogue: {type: :resref, value: x2_def_onconv}
+ScriptDisturbed: {type: :resref, value: x2_def_ondisturb}
+ScriptEndRound: {type: :resref, value: x2_def_endcombat}
+ScriptHeartbeat: {type: :resref, value: x2_def_heartbeat}
+ScriptOnBlocked: {type: :resref, value: x2_def_onblocked}
+ScriptOnNotice: {type: :resref, value: x2_def_percept}
+ScriptRested: {type: :resref, value: x2_def_rested}
+ScriptSpawn: {type: :resref, value: x2_def_spawn}
+ScriptSpellAt: {type: :resref, value: x2_def_spellcast}
+ScriptUserDefine: {type: :resref, value: x2_def_userdef}
+SkillList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+SoundSetFile: {type: :word, value: 122}
+SpecAbilityList:
+  type: :list
+  value: []
 
-    StartingPackage: !ruby/object:NWN::Gff::Element {label: StartingPackage, type: :byte, value: 82}
-    Str: !ruby/object:NWN::Gff::Element {label: Str, type: :byte, value: 5}
-    Subrace: !ruby/object:NWN::Gff::Element {label: Subrace, type: :cexostr, value: ""}
-    Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: buerger_beron}
-    Tail: !ruby/object:NWN::Gff::Element {label: Tail, type: :byte, value: 0}
-    TemplateList: !ruby/object:NWN::Gff::Element 
-      label: TemplateList
-      type: :list
-      value: []
+StartingPackage: {type: :byte, value: 82}
+Str: {type: :byte, value: 5}
+Subrace: {type: :cexostr, value: ""}
+Tag: {type: :cexostr, value: buerger_beron}
+Tail: {type: :byte, value: 0}
+TemplateList:
+  type: :list
+  value: []
 
-    TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: buerger_beron}
-    WalkRate: !ruby/object:NWN::Gff::Element {label: WalkRate, type: :int, value: 4}
-    Wings: !ruby/object:NWN::Gff::Element {label: Wings, type: :byte, value: 0}
-    Wis: !ruby/object:NWN::Gff::Element {label: Wis, type: :byte, value: 10}
-    fortbonus: !ruby/object:NWN::Gff::Element {label: fortbonus, type: :short, value: 0}
-    refbonus: !ruby/object:NWN::Gff::Element {label: refbonus, type: :short, value: 0}
-    willbonus: !ruby/object:NWN::Gff::Element {label: willbonus, type: :short, value: 0}
-  struct_id: 4294967295
+TemplateResRef: {type: :resref, value: buerger_beron}
+WalkRate: {type: :int, value: 4}
+Wings: {type: :byte, value: 0}
+Wis: {type: :byte, value: 10}
+fortbonus: {type: :short, value: 0}
+refbonus: {type: :short, value: 0}
+willbonus: {type: :short, value: 0}

@@ -1,114 +1,104 @@
---- !ruby/object:NWN::Gff::Gff 
-type: "UTM "
-version: V3.2
-hash: !ruby/object:NWN::Gff::Struct 
-  hash: 
-    BM_MarkDown: !ruby/object:NWN::Gff::Element {label: BM_MarkDown, type: :int, value: 20}
-    BlackMarket: !ruby/object:NWN::Gff::Element {label: BlackMarket, type: :byte, value: 0}
-    Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-    ID: !ruby/object:NWN::Gff::Element {label: ID, type: :byte, value: 5}
-    IdentifyPrice: !ruby/object:NWN::Gff::Element {label: IdentifyPrice, type: :int, value: -1}
-    LocName: !ruby/object:NWN::Gff::Element 
-      label: LocName
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          4: "Gabelmarkt (Obst/Gem\xFCse)"
-    MarkDown: !ruby/object:NWN::Gff::Element {label: MarkDown, type: :int, value: 20}
-    MarkUp: !ruby/object:NWN::Gff::Element {label: MarkUp, type: :int, value: 150}
-    MaxBuyPrice: !ruby/object:NWN::Gff::Element {label: MaxBuyPrice, type: :int, value: -1}
-    OnOpenStore: !ruby/object:NWN::Gff::Element {label: OnOpenStore, type: :resref, value: tms_storeopened}
-    OnStoreClosed: !ruby/object:NWN::Gff::Element {label: OnStoreClosed, type: :resref, value: tms_storeclosed}
-    ResRef: !ruby/object:NWN::Gff::Element {label: ResRef, type: :resref, value: st_gabel_obst}
-    StoreGold: !ruby/object:NWN::Gff::Element {label: StoreGold, type: :int, value: -1}
-    StoreList: !ruby/object:NWN::Gff::Element 
-      label: StoreList
+--- !nwn-lib.elv.es,2008-12/struct
+__data_type: UTM
+__struct_id: 4294967295
+BM_MarkDown: {type: :int, value: 20}
+BlackMarket: {type: :byte, value: 0}
+Comment: {type: :cexostr, value: ""}
+ID: {type: :byte, value: 5}
+IdentifyPrice: {type: :int, value: -1}
+LocName:
+  type: :cexolocstr
+  value:
+    4: "Gabelmarkt (Obst/Gem\xFCse)"
+MarkDown: {type: :int, value: 20}
+MarkUp: {type: :int, value: 150}
+MaxBuyPrice: {type: :int, value: -1}
+OnOpenStore: {type: :resref, value: tms_storeopened}
+OnStoreClosed: {type: :resref, value: tms_storeclosed}
+ResRef: {type: :resref, value: st_gabel_obst}
+StoreGold: {type: :int, value: -1}
+StoreList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTM/StoreList, __struct_id: 0}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTM/StoreList, __struct_id: 4}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTM/StoreList, __struct_id: 2}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTM/StoreList, __struct_id: 3}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: UTM/StoreList
+    __struct_id: 1
+    ItemList:
       type: :list
       value: 
-      - !ruby/object:NWN::Gff::Struct {hash: {}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {}, struct_id: 4}
-      - !ruby/object:NWN::Gff::Struct {hash: {}, struct_id: 2}
-      - !ruby/object:NWN::Gff::Struct {hash: {}, struct_id: 3}
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          ItemList: !ruby/object:NWN::Gff::Element 
-            label: ItemList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: food_cok_801}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: food_raw_996}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 1}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 1
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: food_cok_996_240}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 2
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: food_cok_802}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 3
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: herb006}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 5}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 4
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: herb018}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 6}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 5
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: waldbeere}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 7}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 6
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: herb016}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 8}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 7
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: herb020}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 9}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 8
-        struct_id: 1
-    Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: ST_gabel_obst}
-    WillNotBuy: !ruby/object:NWN::Gff::Element 
-      label: WillNotBuy
-      type: :list
-      value: []
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 0
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: food_cok_801}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 1
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: food_raw_996}
+        Repos_PosX: {type: :word, value: 1}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 2
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: food_cok_996_240}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 3
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: food_cok_802}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 4
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: herb006}
+        Repos_PosX: {type: :word, value: 5}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 5
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: herb018}
+        Repos_PosX: {type: :word, value: 6}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 6
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: waldbeere}
+        Repos_PosX: {type: :word, value: 7}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 7
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: herb016}
+        Repos_PosX: {type: :word, value: 8}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 8
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: herb020}
+        Repos_PosX: {type: :word, value: 9}
+        Repos_Posy: {type: :word, value: 0}
+Tag: {type: :cexostr, value: ST_gabel_obst}
+WillNotBuy:
+  type: :list
+  value: []
 
-    WillOnlyBuy: !ruby/object:NWN::Gff::Element 
-      label: WillOnlyBuy
-      type: :list
-      value: 
-      - !ruby/object:NWN::Gff::Struct {hash: {BaseItem: !ruby/object:NWN::Gff::Element {label: BaseItem, type: :int, value: 106}}, struct_id: 97869}
-  struct_id: 4294967295
+WillOnlyBuy:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTM/WillOnlyBuy, __struct_id: 97869, BaseItem: {type: :int, value: 106}}

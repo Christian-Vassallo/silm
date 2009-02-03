@@ -1,44 +1,38 @@
---- !ruby/object:NWN::Gff::Gff 
-type: "UTS "
-version: V3.2
-hash: !ruby/object:NWN::Gff::Struct 
-  hash: 
-    Active: !ruby/object:NWN::Gff::Element {label: Active, type: :byte, value: 1}
-    Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-    Continuous: !ruby/object:NWN::Gff::Element {label: Continuous, type: :byte, value: 1}
-    Elevation: !ruby/object:NWN::Gff::Element {label: Elevation, type: :float, value: 1.5}
-    Hours: !ruby/object:NWN::Gff::Element {label: Hours, type: :dword, value: 0}
-    Interval: !ruby/object:NWN::Gff::Element {label: Interval, type: :dword, value: 17500}
-    IntervalVrtn: !ruby/object:NWN::Gff::Element {label: IntervalVrtn, type: :dword, value: 5000}
-    LocName: !ruby/object:NWN::Gff::Element 
-      label: LocName
-      str_ref: 67832
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          0: "Kr\xE4chzen (Kr\xE4he)"
-    Looping: !ruby/object:NWN::Gff::Element {label: Looping, type: :byte, value: 0}
-    MaxDistance: !ruby/object:NWN::Gff::Element {label: MaxDistance, type: :float, value: 10.0}
-    MinDistance: !ruby/object:NWN::Gff::Element {label: MinDistance, type: :float, value: 1.0}
-    PaletteID: !ruby/object:NWN::Gff::Element {label: PaletteID, type: :byte, value: 6}
-    PitchVariation: !ruby/object:NWN::Gff::Element {label: PitchVariation, type: :float, value: 0.200000002980232}
-    Positional: !ruby/object:NWN::Gff::Element {label: Positional, type: :byte, value: 0}
-    Priority: !ruby/object:NWN::Gff::Element {label: Priority, type: :byte, value: 19}
-    Random: !ruby/object:NWN::Gff::Element {label: Random, type: :byte, value: 1}
-    RandomPosition: !ruby/object:NWN::Gff::Element {label: RandomPosition, type: :byte, value: 0}
-    RandomRangeX: !ruby/object:NWN::Gff::Element {label: RandomRangeX, type: :float, value: 10.0}
-    RandomRangeY: !ruby/object:NWN::Gff::Element {label: RandomRangeY, type: :float, value: 10.0}
-    Sounds: !ruby/object:NWN::Gff::Element 
-      label: Sounds
-      type: :list
-      value: 
-      - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_crow1}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_crow2}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_crows1}}, struct_id: 0}
-      - !ruby/object:NWN::Gff::Struct {hash: {Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: as_an_crows2}}, struct_id: 0}
-    Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: CrowCaws}
-    TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: crowcaws001}
-    Times: !ruby/object:NWN::Gff::Element {label: Times, type: :byte, value: 3}
-    Volume: !ruby/object:NWN::Gff::Element {label: Volume, type: :byte, value: 127}
-    VolumeVrtn: !ruby/object:NWN::Gff::Element {label: VolumeVrtn, type: :byte, value: 0}
-  struct_id: 4294967295
+--- !nwn-lib.elv.es,2008-12/struct
+__data_type: UTS
+__struct_id: 4294967295
+Active: {type: :byte, value: 1}
+Comment: {type: :cexostr, value: ""}
+Continuous: {type: :byte, value: 1}
+Elevation: {type: :float, value: 1.5}
+Hours: {type: :dword, value: 0}
+Interval: {type: :dword, value: 17500}
+IntervalVrtn: {type: :dword, value: 5000}
+LocName:
+  type: :cexolocstr
+  str_ref: 67832
+  value:
+    0: "Kr\xE4chzen (Kr\xE4he)"
+Looping: {type: :byte, value: 0}
+MaxDistance: {type: :float, value: 10.0}
+MinDistance: {type: :float, value: 1.0}
+PaletteID: {type: :byte, value: 6}
+PitchVariation: {type: :float, value: 0.200000002980232}
+Positional: {type: :byte, value: 0}
+Priority: {type: :byte, value: 19}
+Random: {type: :byte, value: 1}
+RandomPosition: {type: :byte, value: 0}
+RandomRangeX: {type: :float, value: 10.0}
+RandomRangeY: {type: :float, value: 10.0}
+Sounds:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTS/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_crow1}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTS/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_crow2}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTS/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_crows1}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTS/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_crows2}}
+Tag: {type: :cexostr, value: CrowCaws}
+TemplateResRef: {type: :resref, value: crowcaws001}
+Times: {type: :byte, value: 3}
+Volume: {type: :byte, value: 127}
+VolumeVrtn: {type: :byte, value: 0}

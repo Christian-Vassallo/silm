@@ -1,100 +1,79 @@
---- !ruby/object:NWN::Gff::Gff 
-type: "GIT "
-version: V3.2
-hash: !ruby/object:NWN::Gff::Struct 
-  hash: 
-    AreaProperties: !ruby/object:NWN::Gff::Element 
-      label: AreaProperties
-      type: :struct
-      value: !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AmbientSndDay: !ruby/object:NWN::Gff::Element {label: AmbientSndDay, type: :int, value: 102}
-          AmbientSndDayVol: !ruby/object:NWN::Gff::Element {label: AmbientSndDayVol, type: :int, value: 127}
-          AmbientSndNight: !ruby/object:NWN::Gff::Element {label: AmbientSndNight, type: :int, value: 0}
-          AmbientSndNitVol: !ruby/object:NWN::Gff::Element {label: AmbientSndNitVol, type: :int, value: 0}
-          EnvAudio: !ruby/object:NWN::Gff::Element {label: EnvAudio, type: :int, value: 0}
-          MusicBattle: !ruby/object:NWN::Gff::Element {label: MusicBattle, type: :int, value: 0}
-          MusicDay: !ruby/object:NWN::Gff::Element {label: MusicDay, type: :int, value: 0}
-          MusicDelay: !ruby/object:NWN::Gff::Element {label: MusicDelay, type: :int, value: 0}
-          MusicNight: !ruby/object:NWN::Gff::Element {label: MusicNight, type: :int, value: 0}
-        struct_id: 100
-    Creature List: !ruby/object:NWN::Gff::Element 
-      label: Creature List
-      type: :list
-      value: []
+--- !nwn-lib.elv.es,2008-12/struct
+__data_type: GIT
+__struct_id: 4294967295
+AreaProperties:
+  type: :struct
+  value: !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/AreaProperties
+    __struct_id: 100
+    AmbientSndDay: {type: :int, value: 102}
+    AmbientSndDayVol: {type: :int, value: 127}
+    AmbientSndNight: {type: :int, value: 0}
+    AmbientSndNitVol: {type: :int, value: 0}
+    EnvAudio: {type: :int, value: 0}
+    MusicBattle: {type: :int, value: 0}
+    MusicDay: {type: :int, value: 0}
+    MusicDelay: {type: :int, value: 0}
+    MusicNight: {type: :int, value: 0}
+Creature List:
+  type: :list
+  value: []
 
-    Door List: !ruby/object:NWN::Gff::Element 
-      label: Door List
-      type: :list
-      value: []
+Door List:
+  type: :list
+  value: []
 
-    Encounter List: !ruby/object:NWN::Gff::Element 
-      label: Encounter List
-      type: :list
-      value: []
+Encounter List:
+  type: :list
+  value: []
 
-    List: !ruby/object:NWN::Gff::Element 
-      label: List
-      type: :list
-      value: []
+List:
+  type: :list
+  value: []
 
-    Placeable List: !ruby/object:NWN::Gff::Element 
-      label: Placeable List
-      type: :list
-      value: []
+Placeable List:
+  type: :list
+  value: []
 
-    SoundList: !ruby/object:NWN::Gff::Element 
-      label: SoundList
-      type: :list
-      value: []
+SoundList:
+  type: :list
+  value: []
 
-    StoreList: !ruby/object:NWN::Gff::Element 
-      label: StoreList
-      type: :list
-      value: []
+StoreList:
+  type: :list
+  value: []
 
-    TriggerList: !ruby/object:NWN::Gff::Element 
-      label: TriggerList
-      type: :list
-      value: []
+TriggerList:
+  type: :list
+  value: []
 
-    WaypointList: !ruby/object:NWN::Gff::Element 
-      label: WaypointList
-      type: :list
-      value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :byte, value: 1}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: {}
+WaypointList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/WaypointList
+    __struct_id: 5
+    Appearance: {type: :byte, value: 1}
+    Description:
+      type: :cexolocstr
+      value: {}
 
-          HasMapNote: !ruby/object:NWN::Gff::Element {label: HasMapNote, type: :byte, value: 0}
-          LinkedTo: !ruby/object:NWN::Gff::Element {label: LinkedTo, type: :cexostr, value: ""}
-          LocalizedName: !ruby/object:NWN::Gff::Element 
-            label: LocalizedName
-            str_ref: 14817
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: {}
+    HasMapNote: {type: :byte, value: 0}
+    LinkedTo: {type: :cexostr, value: ""}
+    LocalizedName:
+      type: :cexolocstr
+      str_ref: 14817
+      value: {}
 
-          MapNote: !ruby/object:NWN::Gff::Element 
-            label: MapNote
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: {}
+    MapNote:
+      type: :cexolocstr
+      value: {}
 
-          MapNoteEnabled: !ruby/object:NWN::Gff::Element {label: MapNoteEnabled, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: wp_plane_fire}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: nw_waypoint001}
-          XOrientation: !ruby/object:NWN::Gff::Element {label: XOrientation, type: :float, value: -0.7071}
-          XPosition: !ruby/object:NWN::Gff::Element {label: XPosition, type: :float, value: 25.901}
-          YOrientation: !ruby/object:NWN::Gff::Element {label: YOrientation, type: :float, value: 0.7071}
-          YPosition: !ruby/object:NWN::Gff::Element {label: YPosition, type: :float, value: 62.327}
-          ZPosition: !ruby/object:NWN::Gff::Element {label: ZPosition, type: :float, value: 0.0087}
-        struct_id: 5
-  struct_id: 4294967295
+    MapNoteEnabled: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: wp_plane_fire}
+    TemplateResRef: {type: :resref, value: nw_waypoint001}
+    XOrientation: {type: :float, value: -0.707099974155426}
+    XPosition: {type: :float, value: 25.9009990692139}
+    YOrientation: {type: :float, value: 0.707099974155426}
+    YPosition: {type: :float, value: 62.3269996643066}
+    ZPosition: {type: :float, value: 0.00870000012218952}

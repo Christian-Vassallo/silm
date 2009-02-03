@@ -1,310 +1,264 @@
---- !ruby/object:NWN::Gff::Gff 
-type: "DLG "
-version: V3.2
-hash: !ruby/object:NWN::Gff::Struct 
-  hash: 
-    DelayEntry: !ruby/object:NWN::Gff::Element {label: DelayEntry, type: :dword, value: 0}
-    DelayReply: !ruby/object:NWN::Gff::Element {label: DelayReply, type: :dword, value: 0}
-    EndConverAbort: !ruby/object:NWN::Gff::Element {label: EndConverAbort, type: :resref, value: nw_walk_wp}
-    EndConversation: !ruby/object:NWN::Gff::Element {label: EndConversation, type: :resref, value: nw_walk_wp}
-    EntryList: !ruby/object:NWN::Gff::Element 
-      label: EntryList
+--- !nwn-lib.elv.es,2008-12/struct
+__data_type: DLG
+__struct_id: 4294967295
+DelayEntry: {type: :dword, value: 0}
+DelayReply: {type: :dword, value: 0}
+EndConverAbort: {type: :resref, value: nw_walk_wp}
+EndConversation: {type: :resref, value: nw_walk_wp}
+EntryList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 0
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
       type: :list
       value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: buerger_kun}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Den G\xF6ttern zum Grusse! Ein herrlicher Tag, nicht wahr?"
-                5: "Den G\xF6ttern zum Grusse! Ein herrlicher Tag, nicht wahr?"
-        struct_id: 0
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 2}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 1}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 1
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: buerger_kun}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Nun, meine Wenigkeit, Carrachas Kun, bin rein zuf\xE4llig einer der besten Chemiker diesseits der W\xFCstenschlundberge. Und da hier in diesen gef\xE4hrlichen Landstrichen nur zu oft Bedarf an Wundsalben, Lampen\xF6l und sogar Tinte besteht, ist dieser Ort eine wahre Goldgrube f\xFCr mich."
-                5: "Nun, meine Wenigkeit, Carrachas Kun, bin rein zuf\xE4llig einer der besten Chemiker diesseits der W\xFCstenschlundberge. Und da hier in diesen gef\xE4hrlichen Landstrichen nur zu oft Bedarf an Wundsalben, Lampen\xF6l und sogar Tinte besteht, ist dieser Ort eine wahre Goldgrube f\xFCr mich."
-        struct_id: 1
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 4}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 3}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 1
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: buerger_kun}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Oh, keineswegs, wenn man sich die Umst\xE4nde vor Augen h\xE4lt. Immerhin ist hier eine st\xE4dtische Administration im Aufbau, und Dokumente werden ja schliesslich mit Tinte geschrieben, nicht wahr? Die legion muss zudem Vorr\xE4te anfertigen, die neuen Laternen wollen mit \xD6l gef\xFCllt sein. Hach, das ganze erinnert mich an Corm Orp. Ihr kennt doch Corm Orp, oder?"
-                5: "Oh, keineswegs, wenn man sich die Umst\xE4nde vor Augen h\xE4lt. Immerhin ist hier eine st\xE4dtische Administration im Aufbau, und Dokumente werden ja schliesslich mit Tinte geschrieben, nicht wahr? Die legion muss zudem Vorr\xE4te anfertigen, die neuen Laternen wollen mit \xD6l gef\xFCllt sein. Hach, das ganze erinnert mich an Corm Orp. Ihr kennt doch Corm Orp, oder?"
-        struct_id: 2
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 5}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: buerger_kun}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Wie wirklich und ungemein jammerschade! Corm Orp ist ein kleines, ebenfalls im Ausbau begriffenes D\xF6rfchen nahe den Streckw\xE4ldern. Ich habe dort ebenfalls den einen oder anderen Goldl\xF6wen verdient... Goldtaler mein ich. Die Goldl\xF6wen gibts ja nur in Cormyr, mein Fehler. Ich stamme aus Cormyr, wisst ihr? Lauschiges \xD6rtchen namens Abendstern."
-                5: "Wie wirklich und ungemein jammerschade! Corm Orp ist ein kleines, ebenfalls im Ausbau begriffenes D\xF6rfchen nahe den Streckw\xE4ldern. Ich habe dort ebenfalls den einen oder anderen Goldl\xF6wen verdient... Goldtaler mein ich. Die Goldl\xF6wen gibts ja nur in Cormyr, mein Fehler. Ich stamme aus Cormyr, wisst ihr? Lauschiges \xD6rtchen namens Abendstern."
-        struct_id: 3
-    NumWords: !ruby/object:NWN::Gff::Element {label: NumWords, type: :dword, value: 204}
-    PreventZoomIn: !ruby/object:NWN::Gff::Element {label: PreventZoomIn, type: :byte, value: 0}
-    ReplyList: !ruby/object:NWN::Gff::Element 
-      label: ReplyList
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 0
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 0}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: buerger_kun}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Den G\xF6ttern zum Grusse! Ein herrlicher Tag, nicht wahr?"
+        4: "Den G\xF6ttern zum Grusse! Ein herrlicher Tag, nicht wahr?"
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 1
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
       type: :list
       value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 1}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Recht habt ihr! Was f\xFChrt euch an die Gabel, der Herr?"
-                5: "Recht habt ihr! Was f\xFChrt euch an die Gabel, der Herr?"
-        struct_id: 0
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: []
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 0
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 2}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 1
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 1}
+        IsChild: {type: :byte, value: 0}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: buerger_kun}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Nun, meine Wenigkeit, Carrachas Kun, bin rein zuf\xE4llig einer der besten Chemiker diesseits der W\xFCstenschlundberge. Und da hier in diesen gef\xE4hrlichen Landstrichen nur zu oft Bedarf an Wundsalben, Lampen\xF6l und sogar Tinte besteht, ist dieser Ort eine wahre Goldgrube f\xFCr mich."
+        4: "Nun, meine Wenigkeit, Carrachas Kun, bin rein zuf\xE4llig einer der besten Chemiker diesseits der W\xFCstenschlundberge. Und da hier in diesen gef\xE4hrlichen Landstrichen nur zu oft Bedarf an Wundsalben, Lampen\xF6l und sogar Tinte besteht, ist dieser Ort eine wahre Goldgrube f\xFCr mich."
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 2
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 0
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 4}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 1
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 3}
+        IsChild: {type: :byte, value: 0}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: buerger_kun}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Oh, keineswegs, wenn man sich die Umst\xE4nde vor Augen h\xE4lt. Immerhin ist hier eine st\xE4dtische Administration im Aufbau, und Dokumente werden ja schliesslich mit Tinte geschrieben, nicht wahr? Die legion muss zudem Vorr\xE4te anfertigen, die neuen Laternen wollen mit \xD6l gef\xFCllt sein. Hach, das ganze erinnert mich an Corm Orp. Ihr kennt doch Corm Orp, oder?"
+        4: "Oh, keineswegs, wenn man sich die Umst\xE4nde vor Augen h\xE4lt. Immerhin ist hier eine st\xE4dtische Administration im Aufbau, und Dokumente werden ja schliesslich mit Tinte geschrieben, nicht wahr? Die legion muss zudem Vorr\xE4te anfertigen, die neuen Laternen wollen mit \xD6l gef\xFCllt sein. Hach, das ganze erinnert mich an Corm Orp. Ihr kennt doch Corm Orp, oder?"
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 3
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 0
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 5}
+        IsChild: {type: :byte, value: 0}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: buerger_kun}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Wie wirklich und ungemein jammerschade! Corm Orp ist ein kleines, ebenfalls im Ausbau begriffenes D\xF6rfchen nahe den Streckw\xE4ldern. Ich habe dort ebenfalls den einen oder anderen Goldl\xF6wen verdient... Goldtaler mein ich. Die Goldl\xF6wen gibts ja nur in Cormyr, mein Fehler. Ich stamme aus Cormyr, wisst ihr? Lauschiges \xD6rtchen namens Abendstern."
+        4: "Wie wirklich und ungemein jammerschade! Corm Orp ist ein kleines, ebenfalls im Ausbau begriffenes D\xF6rfchen nahe den Streckw\xE4ldern. Ich habe dort ebenfalls den einen oder anderen Goldl\xF6wen verdient... Goldtaler mein ich. Die Goldl\xF6wen gibts ja nur in Cormyr, mein Fehler. Ich stamme aus Cormyr, wisst ihr? Lauschiges \xD6rtchen namens Abendstern."
+NumWords: {type: :dword, value: 204}
+PreventZoomIn: {type: :byte, value: 0}
+ReplyList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 0
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 1}
+        IsChild: {type: :byte, value: 0}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Recht habt ihr! Was f\xFChrt euch an die Gabel, der Herr?"
+        4: "Recht habt ihr! Was f\xFChrt euch an die Gabel, der Herr?"
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 1
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value: []
 
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Hochinteressant. Auf Bald, der Herr.
-                5: Hochinteressant. Auf Bald, der Herr.
-        struct_id: 1
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 2}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Das ist wahrlich \xFCberraschend."
-                5: "Das ist wahrlich \xFCberraschend."
-        struct_id: 2
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: []
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Hochinteressant. Auf Bald, der Herr.
+        4: Hochinteressant. Auf Bald, der Herr.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 2
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 2}
+        IsChild: {type: :byte, value: 0}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Das ist wahrlich \xFCberraschend."
+        4: "Das ist wahrlich \xFCberraschend."
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 3
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value: []
 
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Aber klar doch! Wisst ihr, mir ist gerade eingefallen dass ich noch etwas erledigen muss. Auf Bald!
-                5: Aber klar doch! Wisst ihr, mir ist gerade eingefallen dass ich noch etwas erledigen muss. Auf Bald!
-        struct_id: 3
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 3}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "\xC4h... Nein?"
-                5: "\xC4h... Nein?"
-        struct_id: 4
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: []
-
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Ich muss leider wieder weiter. Die G\xF6tter mit euch."
-                5: "Ich muss leider wieder weiter. Die G\xF6tter mit euch."
-        struct_id: 5
-    StartingList: !ruby/object:NWN::Gff::Element 
-      label: StartingList
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Aber klar doch! Wisst ihr, mir ist gerade eingefallen dass ich noch etwas erledigen muss. Auf Bald!
+        4: Aber klar doch! Wisst ihr, mir ist gerade eingefallen dass ich noch etwas erledigen muss. Auf Bald!
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 4
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
       type: :list
       value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-          Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-        struct_id: 0
-  struct_id: 4294967295
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 3}
+        IsChild: {type: :byte, value: 0}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "\xC4h... Nein?"
+        4: "\xC4h... Nein?"
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 5
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value: []
+
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Ich muss leider wieder weiter. Die G\xF6tter mit euch."
+        4: "Ich muss leider wieder weiter. Die G\xF6tter mit euch."
+StartingList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/StartingList
+    __struct_id: 0
+    Active: {type: :resref, value: ""}
+    Index: {type: :dword, value: 0}

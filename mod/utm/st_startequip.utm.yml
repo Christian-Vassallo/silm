@@ -1,808 +1,794 @@
---- !ruby/object:NWN::Gff::Gff 
-type: "UTM "
-version: V3.2
-hash: !ruby/object:NWN::Gff::Struct 
-  hash: 
-    BM_MarkDown: !ruby/object:NWN::Gff::Element {label: BM_MarkDown, type: :int, value: 25}
-    BlackMarket: !ruby/object:NWN::Gff::Element {label: BlackMarket, type: :byte, value: 0}
-    Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-    ID: !ruby/object:NWN::Gff::Element {label: ID, type: :byte, value: 5}
-    IdentifyPrice: !ruby/object:NWN::Gff::Element {label: IdentifyPrice, type: :int, value: -1}
-    LocName: !ruby/object:NWN::Gff::Element 
-      label: LocName
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          4: Anfangsequipment
-    MarkDown: !ruby/object:NWN::Gff::Element {label: MarkDown, type: :int, value: 100}
-    MarkUp: !ruby/object:NWN::Gff::Element {label: MarkUp, type: :int, value: 100}
-    MaxBuyPrice: !ruby/object:NWN::Gff::Element {label: MaxBuyPrice, type: :int, value: -1}
-    OnOpenStore: !ruby/object:NWN::Gff::Element {label: OnOpenStore, type: :resref, value: tms_storeopened}
-    OnStoreClosed: !ruby/object:NWN::Gff::Element {label: OnStoreClosed, type: :resref, value: tms_storeclosed}
-    ResRef: !ruby/object:NWN::Gff::Element {label: ResRef, type: :resref, value: st_startequip}
-    StoreGold: !ruby/object:NWN::Gff::Element {label: StoreGold, type: :int, value: -1}
-    StoreList: !ruby/object:NWN::Gff::Element 
-      label: StoreList
+--- !nwn-lib.elv.es,2008-12/struct
+__data_type: UTM
+__struct_id: 4294967295
+BM_MarkDown: {type: :int, value: 25}
+BlackMarket: {type: :byte, value: 0}
+Comment: {type: :cexostr, value: ""}
+ID: {type: :byte, value: 5}
+IdentifyPrice: {type: :int, value: -1}
+LocName:
+  type: :cexolocstr
+  value:
+    4: Anfangsequipment
+MarkDown: {type: :int, value: 100}
+MarkUp: {type: :int, value: 100}
+MaxBuyPrice: {type: :int, value: -1}
+OnOpenStore: {type: :resref, value: tms_storeopened}
+OnStoreClosed: {type: :resref, value: tms_storeclosed}
+ResRef: {type: :resref, value: st_startequip}
+StoreGold: {type: :int, value: -1}
+StoreList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: UTM/StoreList
+    __struct_id: 0
+    ItemList:
       type: :list
       value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          ItemList: !ruby/object:NWN::Gff::Element 
-            label: ItemList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth003}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth028}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 1
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth021}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 2
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth004}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 6}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 3
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth006}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 8}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 4
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 3}
-              struct_id: 5
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_arhe003}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 3}
-              struct_id: 6
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_arhe001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 3}
-              struct_id: 7
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_aarcl001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 6}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 3}
-              struct_id: 8
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_aarcl012}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 8}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 3}
-              struct_id: 9
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_aarcl009}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 5}
-              struct_id: 10
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_aarcl010}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 5}
-              struct_id: 11
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_aarcl008}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 6}
-              struct_id: 12
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_aarcl011}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 6}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 6}
-              struct_id: 13
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_aarcl006}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 8}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 6}
-              struct_id: 14
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_aarcl007}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 10}
-              struct_id: 15
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_ashlw001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 10}
-              struct_id: 16
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_ashsw001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 8}
-              struct_id: 17
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_ashto001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 10}
-              struct_id: 18
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_aarcl002}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 6}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 10}
-              struct_id: 19
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth008}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 8}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 10}
-              struct_id: 20
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth005}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 13}
-              struct_id: 21
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth014}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 13}
-              struct_id: 22
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth026}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 6}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 13}
-              struct_id: 23
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth010}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 8}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 13}
-              struct_id: 24
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth007}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 14}
-              struct_id: 25
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 16}
-              struct_id: 26
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth006}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 16}
-              struct_id: 27
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth023}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 6}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 16}
-              struct_id: 28
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth017}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 8}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 16}
-              struct_id: 29
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth015}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 17}
-              struct_id: 30
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth012}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 20}
-              struct_id: 31
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth022}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 20}
-              struct_id: 32
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth024}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 20}
-              struct_id: 33
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_cloth011}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 6}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 20}
-              struct_id: 34
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: aarcl008}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 8}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 20}
-              struct_id: 35
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: aarcl009}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 23}
-              struct_id: 36
-        struct_id: 0
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          ItemList: !ruby/object:NWN::Gff::Element 
-            label: ItemList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wdbax001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wdbsw001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 1
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wdbqs001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 2
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wdbma001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 5}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 3
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_waxbt001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 7}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 4
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_waxhn001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 9}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 5
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_waxgr001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 7}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 3}
-              struct_id: 6
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wspka001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 4}
-              struct_id: 7
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wspku001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 9}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 2}
-              struct_id: 8
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wspsc001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 4}
-              struct_id: 9
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wbwxl001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 5}
-              struct_id: 10
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wbwxh001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 6}
-              struct_id: 11
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wbwsh001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 6}
-              struct_id: 12
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wbwln001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 10}
-              struct_id: 13
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wbwsl001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 6}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 4}
-              struct_id: 14
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wswka001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 6}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 7}
-              struct_id: 15
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wswsc001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 9}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 4}
-              struct_id: 16
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wswrp001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 8}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 7}
-              struct_id: 17
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wswbs001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 10}
-              struct_id: 18
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wswdg001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 6}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 6}
-              struct_id: 19
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wswss001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 9}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 7}
-              struct_id: 20
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wswls001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 10}
-              struct_id: 21
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wswgs001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 5}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 10}
-              struct_id: 22
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wambu001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 8}
-              struct_id: 23
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wplhb001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 7}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 10}
-              struct_id: 24
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wplsc001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 14}
-              struct_id: 25
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wplss001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 9}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 10}
-              struct_id: 26
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wblfl001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 14}
-              struct_id: 27
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wblfh001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 3}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 14}
-              struct_id: 28
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wblhl001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 3}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 8}
-              struct_id: 29
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wblhw001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 5}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 15}
-              struct_id: 30
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wblcl001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 9}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 14}
-              struct_id: 31
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wblms001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 7}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 15}
-              struct_id: 32
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wblml001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 8}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 15}
-              struct_id: 33
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wthsh001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 9}
-              struct_id: 34
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wthax001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 17}
-              struct_id: 35
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_wthdt001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 9}
-              struct_id: 36
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: fishingrod}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 20}
-              struct_id: 37
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: fishingrod001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 8}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 17}
-              struct_id: 38
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: krummsaebel006}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 9}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 17}
-              struct_id: 39
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: speer003}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 1}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 20}
-              struct_id: 40
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: eisenholzhammer}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 20}
-              struct_id: 41
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: arrow_oak_iron}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 18}
-              struct_id: 42
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: bolt_oak_iron}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 1}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 18}
-              struct_id: 43
-        struct_id: 4
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          ItemList: !ruby/object:NWN::Gff::Element 
-            label: ItemList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_it_mpotion001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_it_mpotion001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 1}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 1
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: it_sparscr105}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 2
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: it_sparscr110}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 3}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 3
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: it_sparscr106}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 4
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: it_sparscr113}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 5}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 5
-        struct_id: 2
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          ItemList: !ruby/object:NWN::Gff::Element 
-            label: ItemList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: lyra}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: tamburin}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 1}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 1
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: panflte}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 2}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 2
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: laute}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 3}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 3
-        struct_id: 3
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          ItemList: !ruby/object:NWN::Gff::Element 
-            label: ItemList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_it_picks001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_it_trap001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 1}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 1
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_it_trap009}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 3}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 2
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: zelt}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 5}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 3
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: milkbottle_empty}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 7}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 4
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: tms_tinder}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 8}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 5
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: food_cok_997}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 9}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 0}
-              struct_id: 6
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: fishingbait}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 0}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 2}
-              struct_id: 7
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: food_cok_003}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 1}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 2}
-              struct_id: 8
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: nw_it_torch001}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 3}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 2}
-              struct_id: 9
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: healerkit}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 7}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 2}
-              struct_id: 10
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: medicine}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 2}
-              struct_id: 11
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: bandage}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 9}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 2}
-              struct_id: 12
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Infinite: !ruby/object:NWN::Gff::Element {label: Infinite, type: :byte, value: 1}
-                InventoryRes: !ruby/object:NWN::Gff::Element {label: InventoryRes, type: :resref, value: muenzbeutel}
-                Repos_PosX: !ruby/object:NWN::Gff::Element {label: Repos_PosX, type: :word, value: 4}
-                Repos_Posy: !ruby/object:NWN::Gff::Element {label: Repos_Posy, type: :word, value: 3}
-              struct_id: 13
-        struct_id: 1
-    Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: st_startequip}
-    WillNotBuy: !ruby/object:NWN::Gff::Element 
-      label: WillNotBuy
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 0
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth003}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 1
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth028}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 2
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth021}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 3
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth004}
+        Repos_PosX: {type: :word, value: 6}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 4
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth006}
+        Repos_PosX: {type: :word, value: 8}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 5
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth001}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 3}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 6
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_arhe003}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 3}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 7
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_arhe001}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 3}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 8
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_aarcl001}
+        Repos_PosX: {type: :word, value: 6}
+        Repos_Posy: {type: :word, value: 3}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 9
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_aarcl012}
+        Repos_PosX: {type: :word, value: 8}
+        Repos_Posy: {type: :word, value: 3}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 10
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_aarcl009}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 5}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 11
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_aarcl010}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 5}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 12
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_aarcl008}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 6}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 13
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_aarcl011}
+        Repos_PosX: {type: :word, value: 6}
+        Repos_Posy: {type: :word, value: 6}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 14
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_aarcl006}
+        Repos_PosX: {type: :word, value: 8}
+        Repos_Posy: {type: :word, value: 6}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 15
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_aarcl007}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 10}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 16
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_ashlw001}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 10}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 17
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_ashsw001}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 8}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 18
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_ashto001}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 10}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 19
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_aarcl002}
+        Repos_PosX: {type: :word, value: 6}
+        Repos_Posy: {type: :word, value: 10}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 20
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth008}
+        Repos_PosX: {type: :word, value: 8}
+        Repos_Posy: {type: :word, value: 10}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 21
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth005}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 13}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 22
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth014}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 13}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 23
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth026}
+        Repos_PosX: {type: :word, value: 6}
+        Repos_Posy: {type: :word, value: 13}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 24
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth010}
+        Repos_PosX: {type: :word, value: 8}
+        Repos_Posy: {type: :word, value: 13}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 25
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth007}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 14}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 26
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth001}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 16}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 27
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth006}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 16}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 28
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth023}
+        Repos_PosX: {type: :word, value: 6}
+        Repos_Posy: {type: :word, value: 16}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 29
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth017}
+        Repos_PosX: {type: :word, value: 8}
+        Repos_Posy: {type: :word, value: 16}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 30
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth015}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 17}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 31
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth012}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 20}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 32
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth022}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 20}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 33
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth024}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 20}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 34
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_cloth011}
+        Repos_PosX: {type: :word, value: 6}
+        Repos_Posy: {type: :word, value: 20}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 35
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: aarcl008}
+        Repos_PosX: {type: :word, value: 8}
+        Repos_Posy: {type: :word, value: 20}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 36
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: aarcl009}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 23}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: UTM/StoreList
+    __struct_id: 4
+    ItemList:
       type: :list
-      value: []
-
-    WillOnlyBuy: !ruby/object:NWN::Gff::Element 
-      label: WillOnlyBuy
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 0
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wdbax001}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 1
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wdbsw001}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 2
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wdbqs001}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 3
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wdbma001}
+        Repos_PosX: {type: :word, value: 5}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 4
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_waxbt001}
+        Repos_PosX: {type: :word, value: 7}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 5
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_waxhn001}
+        Repos_PosX: {type: :word, value: 9}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 6
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_waxgr001}
+        Repos_PosX: {type: :word, value: 7}
+        Repos_Posy: {type: :word, value: 3}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 7
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wspka001}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 4}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 8
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wspku001}
+        Repos_PosX: {type: :word, value: 9}
+        Repos_Posy: {type: :word, value: 2}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 9
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wspsc001}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 4}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 10
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wbwxl001}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 5}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 11
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wbwxh001}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 6}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 12
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wbwsh001}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 6}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 13
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wbwln001}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 10}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 14
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wbwsl001}
+        Repos_PosX: {type: :word, value: 6}
+        Repos_Posy: {type: :word, value: 4}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 15
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wswka001}
+        Repos_PosX: {type: :word, value: 6}
+        Repos_Posy: {type: :word, value: 7}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 16
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wswsc001}
+        Repos_PosX: {type: :word, value: 9}
+        Repos_Posy: {type: :word, value: 4}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 17
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wswrp001}
+        Repos_PosX: {type: :word, value: 8}
+        Repos_Posy: {type: :word, value: 7}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 18
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wswbs001}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 10}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 19
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wswdg001}
+        Repos_PosX: {type: :word, value: 6}
+        Repos_Posy: {type: :word, value: 6}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 20
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wswss001}
+        Repos_PosX: {type: :word, value: 9}
+        Repos_Posy: {type: :word, value: 7}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 21
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wswls001}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 10}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 22
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wswgs001}
+        Repos_PosX: {type: :word, value: 5}
+        Repos_Posy: {type: :word, value: 10}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 23
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wambu001}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 8}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 24
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wplhb001}
+        Repos_PosX: {type: :word, value: 7}
+        Repos_Posy: {type: :word, value: 10}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 25
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wplsc001}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 14}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 26
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wplss001}
+        Repos_PosX: {type: :word, value: 9}
+        Repos_Posy: {type: :word, value: 10}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 27
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wblfl001}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 14}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 28
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wblfh001}
+        Repos_PosX: {type: :word, value: 3}
+        Repos_Posy: {type: :word, value: 14}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 29
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wblhl001}
+        Repos_PosX: {type: :word, value: 3}
+        Repos_Posy: {type: :word, value: 8}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 30
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wblhw001}
+        Repos_PosX: {type: :word, value: 5}
+        Repos_Posy: {type: :word, value: 15}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 31
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wblcl001}
+        Repos_PosX: {type: :word, value: 9}
+        Repos_Posy: {type: :word, value: 14}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 32
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wblms001}
+        Repos_PosX: {type: :word, value: 7}
+        Repos_Posy: {type: :word, value: 15}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 33
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wblml001}
+        Repos_PosX: {type: :word, value: 8}
+        Repos_Posy: {type: :word, value: 15}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 34
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wthsh001}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 9}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 35
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wthax001}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 17}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 36
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_wthdt001}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 9}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 37
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: fishingrod}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 20}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 38
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: fishingrod001}
+        Repos_PosX: {type: :word, value: 8}
+        Repos_Posy: {type: :word, value: 17}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 39
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: krummsaebel006}
+        Repos_PosX: {type: :word, value: 9}
+        Repos_Posy: {type: :word, value: 17}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 40
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: speer003}
+        Repos_PosX: {type: :word, value: 1}
+        Repos_Posy: {type: :word, value: 20}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 41
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: eisenholzhammer}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 20}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 42
+        InventoryRes: {type: :resref, value: arrow_oak_iron}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 18}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 43
+        InventoryRes: {type: :resref, value: bolt_oak_iron}
+        Repos_PosX: {type: :word, value: 1}
+        Repos_Posy: {type: :word, value: 18}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: UTM/StoreList
+    __struct_id: 2
+    ItemList:
       type: :list
-      value: []
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 0
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_it_mpotion001}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 1
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_it_mpotion001}
+        Repos_PosX: {type: :word, value: 1}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 2
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: it_sparscr105}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 3
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: it_sparscr110}
+        Repos_PosX: {type: :word, value: 3}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 4
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: it_sparscr106}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 5
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: it_sparscr113}
+        Repos_PosX: {type: :word, value: 5}
+        Repos_Posy: {type: :word, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: UTM/StoreList
+    __struct_id: 3
+    ItemList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 0
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: lyra}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 1
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: tamburin}
+        Repos_PosX: {type: :word, value: 1}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 2
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: panflte}
+        Repos_PosX: {type: :word, value: 2}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 3
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: laute}
+        Repos_PosX: {type: :word, value: 3}
+        Repos_Posy: {type: :word, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: UTM/StoreList
+    __struct_id: 1
+    ItemList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 0
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_it_picks001}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 1
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_it_trap001}
+        Repos_PosX: {type: :word, value: 1}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 2
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_it_trap009}
+        Repos_PosX: {type: :word, value: 3}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 3
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: zelt}
+        Repos_PosX: {type: :word, value: 5}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 4
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: milkbottle_empty}
+        Repos_PosX: {type: :word, value: 7}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 5
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: tms_tinder}
+        Repos_PosX: {type: :word, value: 8}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 6
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: food_cok_997}
+        Repos_PosX: {type: :word, value: 9}
+        Repos_Posy: {type: :word, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 7
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: fishingbait}
+        Repos_PosX: {type: :word, value: 0}
+        Repos_Posy: {type: :word, value: 2}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 8
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: food_cok_003}
+        Repos_PosX: {type: :word, value: 1}
+        Repos_Posy: {type: :word, value: 2}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 9
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: nw_it_torch001}
+        Repos_PosX: {type: :word, value: 3}
+        Repos_Posy: {type: :word, value: 2}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 10
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: healerkit}
+        Repos_PosX: {type: :word, value: 7}
+        Repos_Posy: {type: :word, value: 2}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 11
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: medicine}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 2}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 12
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: bandage}
+        Repos_PosX: {type: :word, value: 9}
+        Repos_Posy: {type: :word, value: 2}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: UTM/StoreList/ItemList
+        __struct_id: 13
+        Infinite: {type: :byte, value: 1}
+        InventoryRes: {type: :resref, value: muenzbeutel}
+        Repos_PosX: {type: :word, value: 4}
+        Repos_Posy: {type: :word, value: 3}
+Tag: {type: :cexostr, value: st_startequip}
+WillNotBuy:
+  type: :list
+  value: []
 
-  struct_id: 4294967295
+WillOnlyBuy:
+  type: :list
+  value: []
+

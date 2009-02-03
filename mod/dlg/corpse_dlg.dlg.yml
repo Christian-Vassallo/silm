@@ -1,1258 +1,1104 @@
---- !ruby/object:NWN::Gff::Gff 
-type: "DLG "
-version: V3.2
-hash: !ruby/object:NWN::Gff::Struct 
-  hash: 
-    DelayEntry: !ruby/object:NWN::Gff::Element {label: DelayEntry, type: :dword, value: 0}
-    DelayReply: !ruby/object:NWN::Gff::Element {label: DelayReply, type: :dword, value: 0}
-    EndConverAbort: !ruby/object:NWN::Gff::Element {label: EndConverAbort, type: :resref, value: nw_walk_wp}
-    EndConversation: !ruby/object:NWN::Gff::Element {label: EndConversation, type: :resref, value: nw_walk_wp}
-    EntryList: !ruby/object:NWN::Gff::Element 
-      label: EntryList
+--- !nwn-lib.elv.es,2008-12/struct
+__data_type: DLG
+__struct_id: 4294967295
+DelayEntry: {type: :dword, value: 0}
+DelayReply: {type: :dword, value: 0}
+EndConverAbort: {type: :resref, value: nw_walk_wp}
+EndConversation: {type: :resref, value: nw_walk_wp}
+EntryList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 0
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
       type: :list
       value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasprev}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 31}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryg}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 30}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 1
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryn}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 29}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 2
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryg}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 28}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 3
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryn}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 27}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 4
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryg}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 26}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 5
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryn}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 25}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 6
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryg}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 24}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 7
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryn}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 23}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 8
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryg}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 22}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 9
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryn}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 21}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 10
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryg}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 20}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 11
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryn}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 19}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 12
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryg}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 18}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 13
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryn}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 17}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 14
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryg}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 16}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 15
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryn}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 15}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 16
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryg}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 14}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 17
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryn}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 13}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 18
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryg}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 12}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 19
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasentryn}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 11}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 20
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_hasnext}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 10}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 21
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 9}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 22
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 4}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 23
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: cr_dlg_canpick}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 3}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 24
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 25
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Vor Dir liegt eine Leiche, mitsamt ihrem Hab und Gut. Du kannst ausw\xE4hlen, was Du von ihr mitnehmen willst."
-                5: "Vor Dir liegt eine Leiche, mitsamt ihrem Hab und Gut. Du kannst ausw\xE4hlen, was Du von ihr mitnehmen willst."
-        struct_id: 0
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 2}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 1}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 1
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Du bist Dir nicht sicher ob Du alles gefunden hast.
-                5: Du bist Dir nicht sicher ob Du alles gefunden hast.
-        struct_id: 1
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: []
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_hasprev}
+        Index: {type: :dword, value: 31}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 1
+        Active: {type: :resref, value: list_hasentryg}
+        Index: {type: :dword, value: 30}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 2
+        Active: {type: :resref, value: list_hasentryn}
+        Index: {type: :dword, value: 29}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 3
+        Active: {type: :resref, value: list_hasentryg}
+        Index: {type: :dword, value: 28}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 4
+        Active: {type: :resref, value: list_hasentryn}
+        Index: {type: :dword, value: 27}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 5
+        Active: {type: :resref, value: list_hasentryg}
+        Index: {type: :dword, value: 26}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 6
+        Active: {type: :resref, value: list_hasentryn}
+        Index: {type: :dword, value: 25}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 7
+        Active: {type: :resref, value: list_hasentryg}
+        Index: {type: :dword, value: 24}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 8
+        Active: {type: :resref, value: list_hasentryn}
+        Index: {type: :dword, value: 23}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 9
+        Active: {type: :resref, value: list_hasentryg}
+        Index: {type: :dword, value: 22}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 10
+        Active: {type: :resref, value: list_hasentryn}
+        Index: {type: :dword, value: 21}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 11
+        Active: {type: :resref, value: list_hasentryg}
+        Index: {type: :dword, value: 20}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 12
+        Active: {type: :resref, value: list_hasentryn}
+        Index: {type: :dword, value: 19}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 13
+        Active: {type: :resref, value: list_hasentryg}
+        Index: {type: :dword, value: 18}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 14
+        Active: {type: :resref, value: list_hasentryn}
+        Index: {type: :dword, value: 17}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 15
+        Active: {type: :resref, value: list_hasentryg}
+        Index: {type: :dword, value: 16}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 16
+        Active: {type: :resref, value: list_hasentryn}
+        Index: {type: :dword, value: 15}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 17
+        Active: {type: :resref, value: list_hasentryg}
+        Index: {type: :dword, value: 14}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 18
+        Active: {type: :resref, value: list_hasentryn}
+        Index: {type: :dword, value: 13}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 19
+        Active: {type: :resref, value: list_hasentryg}
+        Index: {type: :dword, value: 12}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 20
+        Active: {type: :resref, value: list_hasentryn}
+        Index: {type: :dword, value: 11}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 21
+        Active: {type: :resref, value: list_hasnext}
+        Index: {type: :dword, value: 10}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 22
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 9}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 23
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 4}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 24
+        Active: {type: :resref, value: cr_dlg_canpick}
+        Index: {type: :dword, value: 3}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 25
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 0}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Vor Dir liegt eine Leiche, mitsamt ihrem Hab und Gut. Du kannst ausw\xE4hlen, was Du von ihr mitnehmen willst."
+        4: "Vor Dir liegt eine Leiche, mitsamt ihrem Hab und Gut. Du kannst ausw\xE4hlen, was Du von ihr mitnehmen willst."
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 1
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 0
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 2}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 1
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 1}
+        IsChild: {type: :byte, value: 0}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Du bist Dir nicht sicher ob Du alles gefunden hast.
+        4: Du bist Dir nicht sicher ob Du alles gefunden hast.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 2
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
+      type: :list
+      value: []
 
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Das wars.
-                5: Das wars.
-        struct_id: 2
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 6}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 5}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 1
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Du bist Dir nicht sicher ob Du alles gefunden hast.
-                5: Du bist Dir nicht sicher ob Du alles gefunden hast.
-        struct_id: 3
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          RepliesList: !ruby/object:NWN::Gff::Element 
-            label: RepliesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 8}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 7}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 1
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Speaker: !ruby/object:NWN::Gff::Element {label: Speaker, type: :cexostr, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Du wei\xDFt mit Sicherheit, da\xDF das nicht alle Objekte waren. Es ist noch mehr zu finden."
-                5: "Du wei\xDFt mit Sicherheit, da\xDF das nicht alle Objekte waren. Es ist noch mehr zu finden."
-        struct_id: 4
-    NumWords: !ruby/object:NWN::Gff::Element {label: NumWords, type: :dword, value: 132}
-    PreventZoomIn: !ruby/object:NWN::Gff::Element {label: PreventZoomIn, type: :byte, value: 0}
-    ReplyList: !ruby/object:NWN::Gff::Element 
-      label: ReplyList
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Das wars.
+        4: Das wars.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 3
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
       type: :list
       value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: cr_dlg_mayrem2}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 1}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 2}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 1
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Nichts mitnehmen
-                5: Nichts mitnehmen
-        struct_id: 0
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: []
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 0
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 6}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 1
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 5}
+        IsChild: {type: :byte, value: 0}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Du bist Dir nicht sicher ob Du alles gefunden hast.
+        4: Du bist Dir nicht sicher ob Du alles gefunden hast.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/EntryList
+    __struct_id: 4
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    Quest: {type: :cexostr, value: ""}
+    RepliesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 0
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 8}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/EntryList/RepliesList
+        __struct_id: 1
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 7}
+        IsChild: {type: :byte, value: 0}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Speaker: {type: :cexostr, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Du wei\xDFt mit Sicherheit, da\xDF das nicht alle Objekte waren. Es ist noch mehr zu finden."
+        4: "Du wei\xDFt mit Sicherheit, da\xDF das nicht alle Objekte waren. Es ist noch mehr zu finden."
+NumWords: {type: :dword, value: 132}
+PreventZoomIn: {type: :byte, value: 0}
+ReplyList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 0
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: cr_dlg_mayrem2}
+        Index: {type: :dword, value: 1}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 1
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 2}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Nichts mitnehmen
+        4: Nichts mitnehmen
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 1
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value: []
 
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Soll ein anderer sein Gl\xFCck versuchen."
-                5: "Soll ein anderer sein Gl\xFCck versuchen."
-        struct_id: 1
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: cr_dlg_retry}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Ein zweiter Blick kann wohl nicht schaden.
-                5: Ein zweiter Blick kann wohl nicht schaden.
-        struct_id: 2
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: []
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Soll ein anderer sein Gl\xFCck versuchen."
+        4: "Soll ein anderer sein Gl\xFCck versuchen."
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 2
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: cr_dlg_retry}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Ein zweiter Blick kann wohl nicht schaden.
+        4: Ein zweiter Blick kann wohl nicht schaden.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 3
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value: []
 
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: cr_dlg_pickup}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Leiche im Ganzen mitnehmen
-                5: Leiche im Ganzen mitnehmen
-        struct_id: 3
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: cr_dlg_surerem}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 4}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 0
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: cr_dlg_mayrem}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 3}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 1
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: ""}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 2}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 0}
-              struct_id: 2
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: cr_dlg_rob}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Markierte Objekte mitnehmen
-                5: Markierte Objekte mitnehmen
-        struct_id: 4
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: []
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: cr_dlg_pickup}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Leiche im Ganzen mitnehmen
+        4: Leiche im Ganzen mitnehmen
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 4
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: cr_dlg_surerem}
+        Index: {type: :dword, value: 4}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 1
+        Active: {type: :resref, value: cr_dlg_mayrem}
+        Index: {type: :dword, value: 3}
+        IsChild: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 2
+        Active: {type: :resref, value: ""}
+        Index: {type: :dword, value: 2}
+        IsChild: {type: :byte, value: 0}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: cr_dlg_rob}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Markierte Objekte mitnehmen
+        4: Markierte Objekte mitnehmen
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 5
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value: []
 
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Soll ein anderer sein Gl\xFCck versuchen."
-                5: "Soll ein anderer sein Gl\xFCck versuchen."
-        struct_id: 5
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: cr_dlg_retry}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Ein zweiter Blick kann wohl nicht schaden.
-                5: Ein zweiter Blick kann wohl nicht schaden.
-        struct_id: 6
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: []
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Soll ein anderer sein Gl\xFCck versuchen."
+        4: "Soll ein anderer sein Gl\xFCck versuchen."
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 6
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: cr_dlg_retry}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Ein zweiter Blick kann wohl nicht schaden.
+        4: Ein zweiter Blick kann wohl nicht schaden.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 7
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value: []
 
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: ""}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Nein, das reicht f\xFCr mich."
-                5: "Nein, das reicht f\xFCr mich."
-        struct_id: 7
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: cr_dlg_retry}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Gut, ich werfe noch ein Blick rein.
-                5: Gut, ich werfe noch ein Blick rein.
-        struct_id: 8
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: cr_dlg_markall}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Alles markieren
-                5: Alles markieren
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_donext}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "N\xE4chste Seite --"
-                5: "N\xE4chste Seite --"
-        struct_id: 10
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_9}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <CUSTOM50009>
-                5: <CUSTOM50009>
-        struct_id: 11
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_9}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <StartAction><CUSTOM50009></Start>
-                5: <StartAction><CUSTOM50009></Start>
-        struct_id: 12
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_8}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <CUSTOM50008>
-                5: <CUSTOM50008>
-        struct_id: 13
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_8}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <StartAction><CUSTOM50008></Start>
-                5: <StartAction><CUSTOM50008></Start>
-        struct_id: 14
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_7}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <CUSTOM50007>
-                5: <CUSTOM50007>
-        struct_id: 15
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_7}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <StartAction><CUSTOM50007></Start>
-                5: <StartAction><CUSTOM50007></Start>
-        struct_id: 16
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_6}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <CUSTOM50006>
-                5: <CUSTOM50006>
-        struct_id: 17
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_6}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <StartAction><CUSTOM50006></Start>
-                5: <StartAction><CUSTOM50006></Start>
-        struct_id: 18
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_5}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <CUSTOM50005>
-                5: <CUSTOM50005>
-        struct_id: 19
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_5}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <StartAction><CUSTOM50005></Start>
-                5: <StartAction><CUSTOM50005></Start>
-        struct_id: 20
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_4}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <CUSTOM50004>
-                5: <CUSTOM50004>
-        struct_id: 21
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_4}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <StartAction><CUSTOM50004></Start>
-                5: <StartAction><CUSTOM50004></Start>
-        struct_id: 22
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_3}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <CUSTOM50003>
-                5: <CUSTOM50003>
-        struct_id: 23
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_3}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <StartAction><CUSTOM50003></Start>
-                5: <StartAction><CUSTOM50003></Start>
-        struct_id: 24
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_2}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <CUSTOM50002>
-                5: <CUSTOM50002>
-        struct_id: 25
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_2}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <StartAction><CUSTOM50002></Start>
-                5: <StartAction><CUSTOM50002></Start>
-        struct_id: 26
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_1}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <CUSTOM50001>
-                5: <CUSTOM50001>
-        struct_id: 27
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_1}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <StartAction><CUSTOM50001></Start>
-                5: <StartAction><CUSTOM50001></Start>
-        struct_id: 28
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_0}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <CUSTOM50000>
-                5: <CUSTOM50000>
-        struct_id: 29
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_select_0}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: <StartAction><CUSTOM50000></Start>
-                5: <StartAction><CUSTOM50000></Start>
-        struct_id: 30
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimLoop: !ruby/object:NWN::Gff::Element {label: AnimLoop, type: :byte, value: 1}
-          Animation: !ruby/object:NWN::Gff::Element {label: Animation, type: :dword, value: 0}
-          Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-          Delay: !ruby/object:NWN::Gff::Element {label: Delay, type: :dword, value: 4294967295}
-          EntriesList: !ruby/object:NWN::Gff::Element 
-            label: EntriesList
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-                Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-                IsChild: !ruby/object:NWN::Gff::Element {label: IsChild, type: :byte, value: 1}
-                LinkComment: !ruby/object:NWN::Gff::Element {label: LinkComment, type: :cexostr, value: ""}
-              struct_id: 0
-          Quest: !ruby/object:NWN::Gff::Element {label: Quest, type: :cexostr, value: ""}
-          Script: !ruby/object:NWN::Gff::Element {label: Script, type: :resref, value: list_doprev}
-          Sound: !ruby/object:NWN::Gff::Element {label: Sound, type: :resref, value: ""}
-          Text: !ruby/object:NWN::Gff::Element 
-            label: Text
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: -- Vorige Seite
-                5: -- Vorige Seite
-        struct_id: 31
-    StartingList: !ruby/object:NWN::Gff::Element 
-      label: StartingList
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: ""}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "Nein, das reicht f\xFCr mich."
+        4: "Nein, das reicht f\xFCr mich."
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 8
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: cr_dlg_retry}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Gut, ich werfe noch ein Blick rein.
+        4: Gut, ich werfe noch ein Blick rein.
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 9
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: cr_dlg_markall}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: Alles markieren
+        4: Alles markieren
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 10
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_donext}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: "N\xE4chste Seite --"
+        4: "N\xE4chste Seite --"
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 11
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_9}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <CUSTOM50009>
+        4: <CUSTOM50009>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 12
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_9}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <StartAction><CUSTOM50009></Start>
+        4: <StartAction><CUSTOM50009></Start>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 13
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_8}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <CUSTOM50008>
+        4: <CUSTOM50008>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 14
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_8}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <StartAction><CUSTOM50008></Start>
+        4: <StartAction><CUSTOM50008></Start>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 15
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_7}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <CUSTOM50007>
+        4: <CUSTOM50007>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 16
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_7}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <StartAction><CUSTOM50007></Start>
+        4: <StartAction><CUSTOM50007></Start>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 17
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_6}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <CUSTOM50006>
+        4: <CUSTOM50006>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 18
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_6}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <StartAction><CUSTOM50006></Start>
+        4: <StartAction><CUSTOM50006></Start>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 19
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_5}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <CUSTOM50005>
+        4: <CUSTOM50005>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 20
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_5}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <StartAction><CUSTOM50005></Start>
+        4: <StartAction><CUSTOM50005></Start>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 21
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_4}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <CUSTOM50004>
+        4: <CUSTOM50004>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 22
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_4}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <StartAction><CUSTOM50004></Start>
+        4: <StartAction><CUSTOM50004></Start>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 23
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
       type: :list
       value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          Active: !ruby/object:NWN::Gff::Element {label: Active, type: :resref, value: list_page}
-          Index: !ruby/object:NWN::Gff::Element {label: Index, type: :dword, value: 0}
-        struct_id: 0
-  struct_id: 4294967295
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_3}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <CUSTOM50003>
+        4: <CUSTOM50003>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 24
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_3}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <StartAction><CUSTOM50003></Start>
+        4: <StartAction><CUSTOM50003></Start>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 25
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_2}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <CUSTOM50002>
+        4: <CUSTOM50002>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 26
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_2}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <StartAction><CUSTOM50002></Start>
+        4: <StartAction><CUSTOM50002></Start>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 27
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_1}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <CUSTOM50001>
+        4: <CUSTOM50001>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 28
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_1}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <StartAction><CUSTOM50001></Start>
+        4: <StartAction><CUSTOM50001></Start>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 29
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_0}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <CUSTOM50000>
+        4: <CUSTOM50000>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 30
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_select_0}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: <StartAction><CUSTOM50000></Start>
+        4: <StartAction><CUSTOM50000></Start>
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/ReplyList
+    __struct_id: 31
+    AnimLoop: {type: :byte, value: 1}
+    Animation: {type: :dword, value: 0}
+    Comment: {type: :cexostr, value: ""}
+    Delay: {type: :dword, value: 4294967295}
+    EntriesList:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: DLG/ReplyList/EntriesList
+        __struct_id: 0
+        Active: {type: :resref, value: list_page}
+        Index: {type: :dword, value: 0}
+        IsChild: {type: :byte, value: 1}
+        LinkComment: {type: :cexostr, value: ""}
+    Quest: {type: :cexostr, value: ""}
+    Script: {type: :resref, value: list_doprev}
+    Sound: {type: :resref, value: ""}
+    Text:
+      type: :cexolocstr
+      value:
+        5: -- Vorige Seite
+        4: -- Vorige Seite
+StartingList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: DLG/StartingList
+    __struct_id: 0
+    Active: {type: :resref, value: list_page}
+    Index: {type: :dword, value: 0}

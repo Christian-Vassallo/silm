@@ -1,60 +1,47 @@
---- !ruby/object:NWN::Gff::Gff 
-type: "UTI "
-version: V3.2
-hash: !ruby/object:NWN::Gff::Struct 
-  hash: 
-    AddCost: !ruby/object:NWN::Gff::Element {label: AddCost, type: :dword, value: 9260}
-    BaseItem: !ruby/object:NWN::Gff::Element {label: BaseItem, type: :int, value: 213}
-    Charges: !ruby/object:NWN::Gff::Element {label: Charges, type: :byte, value: 0}
-    Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-    Cost: !ruby/object:NWN::Gff::Element {label: Cost, type: :dword, value: 9263}
-    Cursed: !ruby/object:NWN::Gff::Element {label: Cursed, type: :byte, value: 0}
-    DescIdentified: !ruby/object:NWN::Gff::Element 
-      label: DescIdentified
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          4: |-
-            Der Mordayn-Nebel, auch als Traumnebel bekannt, ist eine der staerksten Drogen in den gesamten Reichen. Die Fluessigkeit ist derart potent, dass ein purer Verzehr in jeder Quantitaet fast sofort toedlich endet. Die normale Art, diese Droge zu nehmen, ist indem ein Tropfen in heisses Wasser gebracht wird, und die resultierenden Daempfe inhaliert werden.
-            
-            Visionen von unbeschreiblicher Schoenheit und Ruhe ueberstroemen den Einnehmenden.
-            
-            Bereits eine einzige Einnahme fuehrt zu fast unwiderstehlicher Abhaengigkeit.
-    Description: !ruby/object:NWN::Gff::Element 
-      label: Description
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          4: Eine unbekannte Substanz.
-    Identified: !ruby/object:NWN::Gff::Element {label: Identified, type: :byte, value: 0}
-    LocalizedName: !ruby/object:NWN::Gff::Element 
-      label: LocalizedName
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          4: Traumnebel
-    ModelPart1: !ruby/object:NWN::Gff::Element {label: ModelPart1, type: :byte, value: 32}
-    PaletteID: !ruby/object:NWN::Gff::Element {label: PaletteID, type: :byte, value: 0}
-    Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 0}
-    PropertiesList: !ruby/object:NWN::Gff::Element 
-      label: PropertiesList
-      type: :list
-      value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          ChanceAppear: !ruby/object:NWN::Gff::Element {label: ChanceAppear, type: :byte, value: 100}
-          CostTable: !ruby/object:NWN::Gff::Element {label: CostTable, type: :byte, value: 3}
-          CostValue: !ruby/object:NWN::Gff::Element {label: CostValue, type: :word, value: 13}
-          Param1: !ruby/object:NWN::Gff::Element {label: Param1, type: :byte, value: 255}
-          Param1Value: !ruby/object:NWN::Gff::Element {label: Param1Value, type: :byte, value: 0}
-          PropertyName: !ruby/object:NWN::Gff::Element {label: PropertyName, type: :word, value: 15}
-          Subtype: !ruby/object:NWN::Gff::Element {label: Subtype, type: :word, value: 329}
-        struct_id: 0
-    StackSize: !ruby/object:NWN::Gff::Element {label: StackSize, type: :word, value: 1}
-    Stolen: !ruby/object:NWN::Gff::Element {label: Stolen, type: :byte, value: 1}
-    Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: drug004}
-    TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: drug004}
-  struct_id: 4294967295
+--- !nwn-lib.elv.es,2008-12/struct
+__data_type: UTI
+__struct_id: 4294967295
+AddCost: {type: :dword, value: 9260}
+BaseItem: {type: :int, value: 213}
+Charges: {type: :byte, value: 0}
+Comment: {type: :cexostr, value: ""}
+Cost: {type: :dword, value: 9263}
+Cursed: {type: :byte, value: 0}
+DescIdentified:
+  type: :cexolocstr
+  value:
+    4: |-
+      Der Mordayn-Nebel, auch als Traumnebel bekannt, ist eine der staerksten Drogen in den gesamten Reichen. Die Fluessigkeit ist derart potent, dass ein purer Verzehr in jeder Quantitaet fast sofort toedlich endet. Die normale Art, diese Droge zu nehmen, ist indem ein Tropfen in heisses Wasser gebracht wird, und die resultierenden Daempfe inhaliert werden.
+
+      Visionen von unbeschreiblicher Schoenheit und Ruhe ueberstroemen den Einnehmenden.
+
+      Bereits eine einzige Einnahme fuehrt zu fast unwiderstehlicher Abhaengigkeit.
+Description:
+  type: :cexolocstr
+  value:
+    4: Eine unbekannte Substanz.
+Identified: {type: :byte, value: 0}
+LocalizedName:
+  type: :cexolocstr
+  value:
+    4: Traumnebel
+ModelPart1: {type: :byte, value: 32}
+PaletteID: {type: :byte, value: 0}
+Plot: {type: :byte, value: 0}
+PropertiesList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: UTI/PropertiesList
+    __struct_id: 0
+    ChanceAppear: {type: :byte, value: 100}
+    CostTable: {type: :byte, value: 3}
+    CostValue: {type: :word, value: 13}
+    Param1: {type: :byte, value: 255}
+    Param1Value: {type: :byte, value: 0}
+    PropertyName: {type: :word, value: 15}
+    Subtype: {type: :word, value: 329}
+StackSize: {type: :word, value: 1}
+Stolen: {type: :byte, value: 1}
+Tag: {type: :cexostr, value: drug004}
+TemplateResRef: {type: :resref, value: drug004}

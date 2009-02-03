@@ -1,1330 +1,1235 @@
---- !ruby/object:NWN::Gff::Gff 
-type: "GIT "
-version: V3.2
-hash: !ruby/object:NWN::Gff::Struct 
-  hash: 
-    AreaProperties: !ruby/object:NWN::Gff::Element 
-      label: AreaProperties
-      type: :struct
-      value: !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AmbientSndDay: !ruby/object:NWN::Gff::Element {label: AmbientSndDay, type: :int, value: 97}
-          AmbientSndDayVol: !ruby/object:NWN::Gff::Element {label: AmbientSndDayVol, type: :int, value: 32}
-          AmbientSndNight: !ruby/object:NWN::Gff::Element {label: AmbientSndNight, type: :int, value: 98}
-          AmbientSndNitVol: !ruby/object:NWN::Gff::Element {label: AmbientSndNitVol, type: :int, value: 32}
-          EnvAudio: !ruby/object:NWN::Gff::Element {label: EnvAudio, type: :int, value: 0}
-          MusicBattle: !ruby/object:NWN::Gff::Element {label: MusicBattle, type: :int, value: 0}
-          MusicDay: !ruby/object:NWN::Gff::Element {label: MusicDay, type: :int, value: 52}
-          MusicDelay: !ruby/object:NWN::Gff::Element {label: MusicDelay, type: :int, value: 90000}
-          MusicNight: !ruby/object:NWN::Gff::Element {label: MusicNight, type: :int, value: 52}
-        struct_id: 100
-    Creature List: !ruby/object:NWN::Gff::Element 
-      label: Creature List
-      type: :list
-      value: []
+--- !nwn-lib.elv.es,2008-12/struct
+__data_type: GIT
+__struct_id: 4294967295
+AreaProperties:
+  type: :struct
+  value: !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/AreaProperties
+    __struct_id: 100
+    AmbientSndDay: {type: :int, value: 97}
+    AmbientSndDayVol: {type: :int, value: 32}
+    AmbientSndNight: {type: :int, value: 98}
+    AmbientSndNitVol: {type: :int, value: 32}
+    EnvAudio: {type: :int, value: 0}
+    MusicBattle: {type: :int, value: 0}
+    MusicDay: {type: :int, value: 52}
+    MusicDelay: {type: :int, value: 90000}
+    MusicNight: {type: :int, value: 52}
+Creature List:
+  type: :list
+  value: []
 
-    Door List: !ruby/object:NWN::Gff::Element 
-      label: Door List
+Door List:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Door List
+    __struct_id: 8
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 82}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -3.1414999961853}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 80}
+    Description:
+      type: :cexolocstr
+      value: {}
+
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    GenericType: {type: :byte, value: 0}
+    HP: {type: :short, value: 80}
+    Hardness: {type: :byte, value: 5}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LinkedTo: {type: :cexostr, value: AscImTempel2AscverfTempel}
+    LinkedToFlags: {type: :byte, value: 1}
+    LoadScreenID: {type: :word, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 5349
+      value: {}
+
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: door_click}
+    OnClosed: {type: :resref, value: door_closed}
+    OnDamaged: {type: :resref, value: door_damaged}
+    OnDeath: {type: :resref, value: door_death}
+    OnDisarm: {type: :resref, value: door_disarm}
+    OnFailToOpen: {type: :resref, value: door_failtoopen}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: door_lock}
+    OnMeleeAttacked: {type: :resref, value: door_attacked}
+    OnOpen: {type: :resref, value: door_open}
+    OnSpellCastAt: {type: :resref, value: door_spellcast}
+    OnTrapTriggered: {type: :resref, value: door_traptrig}
+    OnUnlock: {type: :resref, value: door_unlock}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 0}
+    PortraitId: {type: :word, value: 0}
+    Ref: {type: :byte, value: 0}
+    Tag: {type: :cexostr, value: AscTempel2AscImTempel}
+    TemplateResRef: {type: :resref, value: nw_door_ttr_14}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 55.0}
+    Y: {type: :float, value: 83.1999969482422}
+    Z: {type: :float, value: 0.200000002980232}
+Encounter List:
+  type: :list
+  value: []
+
+List:
+  type: :list
+  value: []
+
+Placeable List:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 80}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 15}
+    Description:
+      type: :cexolocstr
+      str_ref: 14686
+      value:
+        5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+        4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    HP: {type: :short, value: 15}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 14684
+      value:
+        5: "S\xE4ule"
+        4: "S\xE4ule"
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 438}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: PillarStyle3}
+    TemplateResRef: {type: :resref, value: plc_pillar3}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 49.2831993103027}
+    Y: {type: :float, value: 89.1396026611328}
+    Z: {type: :float, value: 0.0}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 80}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 15}
+    Description:
+      type: :cexolocstr
+      str_ref: 14686
+      value:
+        5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+        4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    HP: {type: :short, value: 15}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 14684
+      value:
+        5: "S\xE4ule"
+        4: "S\xE4ule"
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 438}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: PillarStyle3}
+    TemplateResRef: {type: :resref, value: plc_pillar3}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 60.7513008117676}
+    Y: {type: :float, value: 89.1396026611328}
+    Z: {type: :float, value: 0.0}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 80}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 15}
+    Description:
+      type: :cexolocstr
+      str_ref: 14686
+      value:
+        5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+        4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    HP: {type: :short, value: 15}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 14684
+      value:
+        5: "S\xE4ule"
+        4: "S\xE4ule"
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 438}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: PillarStyle3}
+    TemplateResRef: {type: :resref, value: plc_pillar3}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 60.8591995239258}
+    Y: {type: :float, value: 99.3215026855469}
+    Z: {type: :float, value: 0.0}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 80}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 15}
+    Description:
+      type: :cexolocstr
+      str_ref: 14686
+      value:
+        5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+        4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    HP: {type: :short, value: 15}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 14684
+      value:
+        5: "S\xE4ule"
+        4: "S\xE4ule"
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 438}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: PillarStyle3}
+    TemplateResRef: {type: :resref, value: plc_pillar3}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 49.0737991333008}
+    Y: {type: :float, value: 99.2025985717773}
+    Z: {type: :float, value: 0.0}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 80}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 15}
+    Description:
+      type: :cexolocstr
+      str_ref: 14686
+      value:
+        5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+        4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    HP: {type: :short, value: 15}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 14684
+      value:
+        5: "S\xE4ule"
+        4: "S\xE4ule"
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 438}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: PillarStyle3}
+    TemplateResRef: {type: :resref, value: plc_pillar3}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 40.9121017456055}
+    Y: {type: :float, value: 89.072998046875}
+    Z: {type: :float, value: 0.0}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 80}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 15}
+    Description:
+      type: :cexolocstr
+      str_ref: 14686
+      value:
+        5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+        4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    HP: {type: :short, value: 15}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 14684
+      value:
+        5: "S\xE4ule"
+        4: "S\xE4ule"
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 438}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: PillarStyle3}
+    TemplateResRef: {type: :resref, value: plc_pillar3}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 41.0088005065918}
+    Y: {type: :float, value: 99.0830993652344}
+    Z: {type: :float, value: 0.0}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 80}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 15}
+    Description:
+      type: :cexolocstr
+      str_ref: 14686
+      value:
+        5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+        4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    HP: {type: :short, value: 15}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 14684
+      value: 
+        5: "S\xE4ule"
+        4: "S\xE4ule"
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 438}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: PillarStyle3}
+    TemplateResRef: {type: :resref, value: plc_pillar3}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 31.0541000366211}
+    Y: {type: :float, value: 99.3215026855469}
+    Z: {type: :float, value: 0.0}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 80}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 15}
+    Description:
+      type: :cexolocstr
+      str_ref: 14686
+      value:
+        5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+        4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    HP: {type: :short, value: 15}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 14684
+      value:
+        5: "S\xE4ule"
+        4: "S\xE4ule"
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 438}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: PillarStyle3}
+    TemplateResRef: {type: :resref, value: plc_pillar3}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 69.1078033447266}
+    Y: {type: :float, value: 98.8426971435547}
+    Z: {type: :float, value: 0.0}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 80}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 15}
+    Description:
+      type: :cexolocstr
+      str_ref: 14686
+      value:
+        5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+        4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    HP: {type: :short, value: 15}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 14684
+      value:
+        5: "S\xE4ule"
+        4: "S\xE4ule"
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 438}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: PillarStyle3}
+    TemplateResRef: {type: :resref, value: plc_pillar3}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 69.0164031982422}
+    Y: {type: :float, value: 89.2386016845703}
+    Z: {type: :float, value: 0.0}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 80}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 15}
+    Description:
+      type: :cexolocstr
+      str_ref: 14686
+      value:
+        5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+        4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    HP: {type: :short, value: 15}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 14684
+      value:
+        5: "S\xE4ule"
+        4: "S\xE4ule"
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 438}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: PillarStyle3}
+    TemplateResRef: {type: :resref, value: plc_pillar3}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 79.0882034301758}
+    Y: {type: :float, value: 98.679801940918}
+    Z: {type: :float, value: 0.0}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 238}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 15}
+    Description:
+      type: :cexolocstr
+      str_ref: 68903
+      value:
+        5: "Die uralten Zeichen auf dem Stein k\xF6nnen nicht mehr entziffert werden."
+        4: "Die uralten Zeichen auf dem Stein k\xF6nnen nicht mehr entziffert werden."
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    HP: {type: :short, value: 15}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 68902
+      value:
+        5: Runenstein
+        4: Runenstein
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 791}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: x0_RuneStone1}
+    TemplateResRef: {type: :resref, value: x0_runestone1}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 59.8577995300293}
+    Y: {type: :float, value: 83.7257995605469}
+    Z: {type: :float, value: 0.400000005960464}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 187}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 15}
+    Description:
+      type: :cexolocstr
+      str_ref: 66885
+      value:
+        5: "Ein gro\xDFer, massiver Granitbrocken ragt aus dem Boden hervor."
+        4: "Ein gro\xDFer, massiver Granitbrocken ragt aus dem Boden hervor."
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    HP: {type: :short, value: 15}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 52998
+      value:
+        5: Felsbrocken
+        4: Felsbrocken
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 550}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: Boulder}
+    TemplateResRef: {type: :resref, value: boulder001}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 22.3400001525879}
+    Y: {type: :float, value: 24.8132991790771}
+    Z: {type: :float, value: 0.517599999904633}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 187}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 15}
+    Description:
+      type: :cexolocstr
+      str_ref: 66885
+      value:
+        5: "Ein gro\xDFer, massiver Granitbrocken ragt aus dem Boden hervor."
+        4: "Ein gro\xDFer, massiver Granitbrocken ragt aus dem Boden hervor."
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    HP: {type: :short, value: 15}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      str_ref: 52998
+      value:
+        5: Felsbrocken
+        4: Felsbrocken
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 550}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: Boulder}
+    TemplateResRef: {type: :resref, value: boulder001}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 85.0783004760742}
+    Y: {type: :float, value: 32.5770988464355}
+    Z: {type: :float, value: 0.409999996423721}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 1389}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 10}
+    Description:
+      type: :cexolocstr
+      value: {}
+
+    DisarmDC: {type: :byte, value: 0}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 5}
+    HP: {type: :short, value: 10}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      value:
+        5: Strasse01
+        4: Strasse01
+    Lockable: {type: :byte, value: 1}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 0}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 0}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: Strasse01}
+    TemplateResRef: {type: :resref, value: strasse002}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 54.885799407959}
+    Y: {type: :float, value: 95.0587005615234}
+    Z: {type: :float, value: 0.0}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/Placeable List
+    __struct_id: 9
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 1393}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.049100000411272}
+    BodyBag: {type: :byte, value: 0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 10}
+    Description:
+      type: :cexolocstr
+      value: {}
+
+    DisarmDC: {type: :byte, value: 0}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 5}
+    HP: {type: :short, value: 10}
+    Hardness: {type: :byte, value: 5}
+    HasInventory: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LocName:
+      type: :cexolocstr
+      value:
+        5: Strasse
+        4: Strasse
+    Lockable: {type: :byte, value: 1}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: ""}
+    OnClosed: {type: :resref, value: ""}
+    OnDamaged: {type: :resref, value: ""}
+    OnDeath: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnInvDisturbed: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: ""}
+    OnMeleeAttacked: {type: :resref, value: ""}
+    OnOpen: {type: :resref, value: ""}
+    OnSpellCastAt: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    OnUnlock: {type: :resref, value: ""}
+    OnUsed: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 0}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 0}
+    Ref: {type: :byte, value: 0}
+    Static: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: Strasse}
+    TemplateResRef: {type: :resref, value: weg001}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :byte, value: 0}
+    Useable: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 54.6240005493164}
+    Y: {type: :float, value: 85.9548034667969}
+    Z: {type: :float, value: 0.0181000009179115}
+SoundList:
+  type: :list
+  value: []
+
+StoreList:
+  type: :list
+  value: []
+
+TriggerList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/TriggerList
+    __struct_id: 1
+    AutoRemoveKey: {type: :byte, value: 0}
+    Cursor: {type: :byte, value: 1}
+    DisarmDC: {type: :byte, value: 0}
+    Faction: {type: :dword, value: 1}
+    Geometry:
       type: :list
       value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 82}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -3.1415}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 80}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: {}
-
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          GenericType: !ruby/object:NWN::Gff::Element {label: GenericType, type: :byte, value: 0}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 80}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LinkedTo: !ruby/object:NWN::Gff::Element {label: LinkedTo, type: :cexostr, value: AscImTempel2AscverfTempel}
-          LinkedToFlags: !ruby/object:NWN::Gff::Element {label: LinkedToFlags, type: :byte, value: 1}
-          LoadScreenID: !ruby/object:NWN::Gff::Element {label: LoadScreenID, type: :word, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 5349
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: {}
-
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: door_click}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: door_closed}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: door_damaged}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: door_death}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: door_disarm}
-          OnFailToOpen: !ruby/object:NWN::Gff::Element {label: OnFailToOpen, type: :resref, value: door_failtoopen}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: door_lock}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: door_attacked}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: door_open}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: door_spellcast}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: door_traptrig}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: door_unlock}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 0}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 0}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: AscTempel2AscImTempel}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: nw_door_ttr_14}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 55.0}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 83.2}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.2}
-        struct_id: 8
-    Encounter List: !ruby/object:NWN::Gff::Element 
-      label: Encounter List
-      type: :list
-      value: []
-
-    List: !ruby/object:NWN::Gff::Element 
-      label: List
-      type: :list
-      value: []
-
-    Placeable List: !ruby/object:NWN::Gff::Element 
-      label: Placeable List
-      type: :list
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: GIT/TriggerList/Geometry
+        __struct_id: 3
+        PointX: {type: :float, value: -0.0}
+        PointY: {type: :float, value: -1.13380002975464}
+        PointZ: {type: :float, value: 0.025000000372529}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: GIT/TriggerList/Geometry
+        __struct_id: 3
+        PointX: {type: :float, value: 56.7919006347656}
+        PointY: {type: :float, value: -1.33990001678467}
+        PointZ: {type: :float, value: 0.025000000372529}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: GIT/TriggerList/Geometry
+        __struct_id: 3
+        PointX: {type: :float, value: 56.7918014526367}
+        PointY: {type: :float, value: -0.0}
+        PointZ: {type: :float, value: 0.025000000372529}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: GIT/TriggerList/Geometry
+        __struct_id: 3
+        PointX: {type: :float, value: 0.0}
+        PointY: {type: :float, value: 0.0}
+        PointZ: {type: :float, value: 0.025000000372529}
+      - !nwn-lib.elv.es,2008-12/struct
+        __data_type: GIT/TriggerList/Geometry
+        __struct_id: 3
+        PointX: {type: :float, value: -0.0}
+        PointY: {type: :float, value: -0.618399977684021}
+        PointZ: {type: :float, value: 0.025000000372529}
+    HighlightHeight: {type: :float, value: 0.0}
+    KeyName: {type: :cexostr, value: ""}
+    LinkedTo: {type: :cexostr, value: WP_AscMitte2AscTempel}
+    LinkedToFlags: {type: :byte, value: 2}
+    LoadScreenID: {type: :word, value: 0}
+    LocalizedName:
+      type: :cexolocstr
+      str_ref: 14760
       value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 80}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 15}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 14686
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-                5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 15}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 14684
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "S\xE4ule"
-                5: "S\xE4ule"
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 438}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: PillarStyle3}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: plc_pillar3}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 49.2832}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 89.1396}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.0}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 80}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 15}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 14686
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-                5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 15}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 14684
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "S\xE4ule"
-                5: "S\xE4ule"
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 438}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: PillarStyle3}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: plc_pillar3}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 60.7513}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 89.1396}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.0}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 80}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 15}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 14686
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-                5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 15}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 14684
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "S\xE4ule"
-                5: "S\xE4ule"
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 438}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: PillarStyle3}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: plc_pillar3}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 60.8592}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 99.3215}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.0}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 80}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 15}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 14686
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-                5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 15}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 14684
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "S\xE4ule"
-                5: "S\xE4ule"
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 438}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: PillarStyle3}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: plc_pillar3}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 49.0738}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 99.2026}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.0}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 80}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 15}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 14686
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-                5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 15}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 14684
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "S\xE4ule"
-                5: "S\xE4ule"
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 438}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: PillarStyle3}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: plc_pillar3}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 40.9121}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 89.073}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.0}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 80}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 15}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 14686
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-                5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 15}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 14684
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "S\xE4ule"
-                5: "S\xE4ule"
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 438}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: PillarStyle3}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: plc_pillar3}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 41.0088}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 99.0831}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.0}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 80}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 15}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 14686
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-                5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 15}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 14684
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "S\xE4ule"
-                5: "S\xE4ule"
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 438}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: PillarStyle3}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: plc_pillar3}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 31.0541}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 99.3215}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.0}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 80}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 15}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 14686
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-                5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 15}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 14684
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "S\xE4ule"
-                5: "S\xE4ule"
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 438}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: PillarStyle3}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: plc_pillar3}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 69.1078}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 98.8427}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.0}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 80}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 15}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 14686
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-                5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 15}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 14684
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "S\xE4ule"
-                5: "S\xE4ule"
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 438}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: PillarStyle3}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: plc_pillar3}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 69.0164}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 89.2386}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.0}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 80}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 15}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 14686
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-                5: In dem Kalkstein kann man versteinerte Muscheln und anderes Meeresgetier erkennen.
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 15}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 14684
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "S\xE4ule"
-                5: "S\xE4ule"
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 438}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: PillarStyle3}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: plc_pillar3}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 79.0882}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 98.6798}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.0}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 238}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 15}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 68903
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Die uralten Zeichen auf dem Stein k\xF6nnen nicht mehr entziffert werden."
-                5: "Die uralten Zeichen auf dem Stein k\xF6nnen nicht mehr entziffert werden."
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 15}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 68902
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Runenstein
-                5: Runenstein
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 791}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: x0_RuneStone1}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: x0_runestone1}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 59.8578}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 83.7258}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.4}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 187}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 15}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 66885
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Ein gro\xDFer, massiver Granitbrocken ragt aus dem Boden hervor."
-                5: "Ein gro\xDFer, massiver Granitbrocken ragt aus dem Boden hervor."
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 15}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 52998
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Felsbrocken
-                5: Felsbrocken
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 550}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: Boulder}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: boulder001}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 22.34}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 24.8133}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.5176}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 187}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 15}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 66885
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: "Ein gro\xDFer, massiver Granitbrocken ragt aus dem Boden hervor."
-                5: "Ein gro\xDFer, massiver Granitbrocken ragt aus dem Boden hervor."
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 15}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 16}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 15}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 52998
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Felsbrocken
-                5: Felsbrocken
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 0}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 18}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 550}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: Boulder}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: boulder001}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 85.0783}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 32.5771}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.41}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 1389}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 10}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: {}
+        5: AscTempel2AscMitte
+        4: AscTempel2AscMitte
+    OnClick: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    PortraitId: {type: :word, value: 0}
+    ScriptHeartbeat: {type: :resref, value: ""}
+    ScriptOnEnter: {type: :resref, value: ""}
+    ScriptOnExit: {type: :resref, value: ""}
+    ScriptUserDefine: {type: :resref, value: ""}
+    Tag: {type: :cexostr, value: AscTempel2AscMitte}
+    TemplateResRef: {type: :resref, value: newtransition}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :int, value: 1}
+    XOrientation: {type: :float, value: 0.0}
+    XPosition: {type: :float, value: 26.9673004150391}
+    YOrientation: {type: :float, value: 0.0}
+    YPosition: {type: :float, value: 99.9605026245117}
+    ZOrientation: {type: :float, value: 0.0}
+    ZPosition: {type: :float, value: 0.0}
+VarTable:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/VarTable
+    __struct_id: 0
+    Name: {type: :cexostr, value: weather}
+    Type: {type: :dword, value: 1}
+    Value: {type: :int, value: 1}
+WaypointList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: GIT/WaypointList
+    __struct_id: 5
+    Appearance: {type: :byte, value: 1}
+    Description:
+      type: :cexolocstr
+      value: {}
 
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 0}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 5}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 10}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Strasse01
-                5: Strasse01
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 1}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 0}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 0}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: Strasse01}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: strasse002}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 54.8858}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 95.0587}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.0}
-        struct_id: 9
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AnimationState: !ruby/object:NWN::Gff::Element {label: AnimationState, type: :byte, value: 0}
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :dword, value: 1393}
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Bearing: !ruby/object:NWN::Gff::Element {label: Bearing, type: :float, value: -0.0491}
-          BodyBag: !ruby/object:NWN::Gff::Element {label: BodyBag, type: :byte, value: 0}
-          CloseLockDC: !ruby/object:NWN::Gff::Element {label: CloseLockDC, type: :byte, value: 0}
-          Conversation: !ruby/object:NWN::Gff::Element {label: Conversation, type: :resref, value: ""}
-          CurrentHP: !ruby/object:NWN::Gff::Element {label: CurrentHP, type: :short, value: 10}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: {}
+    HasMapNote: {type: :byte, value: 0}
+    LinkedTo: {type: :cexostr, value: ""}
+    LocalizedName:
+      type: :cexolocstr
+      value: {}
 
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 0}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Fort: !ruby/object:NWN::Gff::Element {label: Fort, type: :byte, value: 5}
-          HP: !ruby/object:NWN::Gff::Element {label: HP, type: :short, value: 10}
-          Hardness: !ruby/object:NWN::Gff::Element {label: Hardness, type: :byte, value: 5}
-          HasInventory: !ruby/object:NWN::Gff::Element {label: HasInventory, type: :byte, value: 0}
-          Interruptable: !ruby/object:NWN::Gff::Element {label: Interruptable, type: :byte, value: 1}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          KeyRequired: !ruby/object:NWN::Gff::Element {label: KeyRequired, type: :byte, value: 0}
-          LocName: !ruby/object:NWN::Gff::Element 
-            label: LocName
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: Strasse
-                5: Strasse
-          Lockable: !ruby/object:NWN::Gff::Element {label: Lockable, type: :byte, value: 1}
-          Locked: !ruby/object:NWN::Gff::Element {label: Locked, type: :byte, value: 0}
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnClosed: !ruby/object:NWN::Gff::Element {label: OnClosed, type: :resref, value: ""}
-          OnDamaged: !ruby/object:NWN::Gff::Element {label: OnDamaged, type: :resref, value: ""}
-          OnDeath: !ruby/object:NWN::Gff::Element {label: OnDeath, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnHeartbeat: !ruby/object:NWN::Gff::Element {label: OnHeartbeat, type: :resref, value: ""}
-          OnInvDisturbed: !ruby/object:NWN::Gff::Element {label: OnInvDisturbed, type: :resref, value: ""}
-          OnLock: !ruby/object:NWN::Gff::Element {label: OnLock, type: :resref, value: ""}
-          OnMeleeAttacked: !ruby/object:NWN::Gff::Element {label: OnMeleeAttacked, type: :resref, value: ""}
-          OnOpen: !ruby/object:NWN::Gff::Element {label: OnOpen, type: :resref, value: ""}
-          OnSpellCastAt: !ruby/object:NWN::Gff::Element {label: OnSpellCastAt, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          OnUnlock: !ruby/object:NWN::Gff::Element {label: OnUnlock, type: :resref, value: ""}
-          OnUsed: !ruby/object:NWN::Gff::Element {label: OnUsed, type: :resref, value: ""}
-          OnUserDefined: !ruby/object:NWN::Gff::Element {label: OnUserDefined, type: :resref, value: ""}
-          OpenLockDC: !ruby/object:NWN::Gff::Element {label: OpenLockDC, type: :byte, value: 0}
-          Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 0}
-          Ref: !ruby/object:NWN::Gff::Element {label: Ref, type: :byte, value: 0}
-          Static: !ruby/object:NWN::Gff::Element {label: Static, type: :byte, value: 1}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: Strasse}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: weg001}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :byte, value: 0}
-          Useable: !ruby/object:NWN::Gff::Element {label: Useable, type: :byte, value: 0}
-          Will: !ruby/object:NWN::Gff::Element {label: Will, type: :byte, value: 0}
-          X: !ruby/object:NWN::Gff::Element {label: X, type: :float, value: 54.624}
-          Y: !ruby/object:NWN::Gff::Element {label: Y, type: :float, value: 85.9548}
-          Z: !ruby/object:NWN::Gff::Element {label: Z, type: :float, value: 0.0181}
-        struct_id: 9
-    SoundList: !ruby/object:NWN::Gff::Element 
-      label: SoundList
-      type: :list
-      value: []
+    MapNote:
+      type: :cexolocstr
+      value: {}
 
-    StoreList: !ruby/object:NWN::Gff::Element 
-      label: StoreList
-      type: :list
-      value: []
-
-    TriggerList: !ruby/object:NWN::Gff::Element 
-      label: TriggerList
-      type: :list
-      value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          AutoRemoveKey: !ruby/object:NWN::Gff::Element {label: AutoRemoveKey, type: :byte, value: 0}
-          Cursor: !ruby/object:NWN::Gff::Element {label: Cursor, type: :byte, value: 1}
-          DisarmDC: !ruby/object:NWN::Gff::Element {label: DisarmDC, type: :byte, value: 0}
-          Faction: !ruby/object:NWN::Gff::Element {label: Faction, type: :dword, value: 1}
-          Geometry: !ruby/object:NWN::Gff::Element 
-            label: Geometry
-            type: :list
-            value: 
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                PointX: !ruby/object:NWN::Gff::Element {label: PointX, type: :float, value: -0.0}
-                PointY: !ruby/object:NWN::Gff::Element {label: PointY, type: :float, value: -1.1338}
-                PointZ: !ruby/object:NWN::Gff::Element {label: PointZ, type: :float, value: 0.025}
-              struct_id: 3
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                PointX: !ruby/object:NWN::Gff::Element {label: PointX, type: :float, value: 56.7919}
-                PointY: !ruby/object:NWN::Gff::Element {label: PointY, type: :float, value: -1.3399}
-                PointZ: !ruby/object:NWN::Gff::Element {label: PointZ, type: :float, value: 0.025}
-              struct_id: 3
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                PointX: !ruby/object:NWN::Gff::Element {label: PointX, type: :float, value: 56.7918}
-                PointY: !ruby/object:NWN::Gff::Element {label: PointY, type: :float, value: -0.0}
-                PointZ: !ruby/object:NWN::Gff::Element {label: PointZ, type: :float, value: 0.025}
-              struct_id: 3
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                PointX: !ruby/object:NWN::Gff::Element {label: PointX, type: :float, value: 0.0}
-                PointY: !ruby/object:NWN::Gff::Element {label: PointY, type: :float, value: 0.0}
-                PointZ: !ruby/object:NWN::Gff::Element {label: PointZ, type: :float, value: 0.025}
-              struct_id: 3
-            - !ruby/object:NWN::Gff::Struct 
-              hash: 
-                PointX: !ruby/object:NWN::Gff::Element {label: PointX, type: :float, value: -0.0}
-                PointY: !ruby/object:NWN::Gff::Element {label: PointY, type: :float, value: -0.6184}
-                PointZ: !ruby/object:NWN::Gff::Element {label: PointZ, type: :float, value: 0.025}
-              struct_id: 3
-          HighlightHeight: !ruby/object:NWN::Gff::Element {label: HighlightHeight, type: :float, value: 0.0}
-          KeyName: !ruby/object:NWN::Gff::Element {label: KeyName, type: :cexostr, value: ""}
-          LinkedTo: !ruby/object:NWN::Gff::Element {label: LinkedTo, type: :cexostr, value: WP_AscMitte2AscTempel}
-          LinkedToFlags: !ruby/object:NWN::Gff::Element {label: LinkedToFlags, type: :byte, value: 2}
-          LoadScreenID: !ruby/object:NWN::Gff::Element {label: LoadScreenID, type: :word, value: 0}
-          LocalizedName: !ruby/object:NWN::Gff::Element 
-            label: LocalizedName
-            str_ref: 14760
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: 
-                4: AscTempel2AscMitte
-                5: AscTempel2AscMitte
-          OnClick: !ruby/object:NWN::Gff::Element {label: OnClick, type: :resref, value: ""}
-          OnDisarm: !ruby/object:NWN::Gff::Element {label: OnDisarm, type: :resref, value: ""}
-          OnTrapTriggered: !ruby/object:NWN::Gff::Element {label: OnTrapTriggered, type: :resref, value: ""}
-          PortraitId: !ruby/object:NWN::Gff::Element {label: PortraitId, type: :word, value: 0}
-          ScriptHeartbeat: !ruby/object:NWN::Gff::Element {label: ScriptHeartbeat, type: :resref, value: ""}
-          ScriptOnEnter: !ruby/object:NWN::Gff::Element {label: ScriptOnEnter, type: :resref, value: ""}
-          ScriptOnExit: !ruby/object:NWN::Gff::Element {label: ScriptOnExit, type: :resref, value: ""}
-          ScriptUserDefine: !ruby/object:NWN::Gff::Element {label: ScriptUserDefine, type: :resref, value: ""}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: AscTempel2AscMitte}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: newtransition}
-          TrapDetectDC: !ruby/object:NWN::Gff::Element {label: TrapDetectDC, type: :byte, value: 0}
-          TrapDetectable: !ruby/object:NWN::Gff::Element {label: TrapDetectable, type: :byte, value: 1}
-          TrapDisarmable: !ruby/object:NWN::Gff::Element {label: TrapDisarmable, type: :byte, value: 1}
-          TrapFlag: !ruby/object:NWN::Gff::Element {label: TrapFlag, type: :byte, value: 0}
-          TrapOneShot: !ruby/object:NWN::Gff::Element {label: TrapOneShot, type: :byte, value: 1}
-          TrapType: !ruby/object:NWN::Gff::Element {label: TrapType, type: :byte, value: 0}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :int, value: 1}
-          XOrientation: !ruby/object:NWN::Gff::Element {label: XOrientation, type: :float, value: 0.0}
-          XPosition: !ruby/object:NWN::Gff::Element {label: XPosition, type: :float, value: 26.9673}
-          YOrientation: !ruby/object:NWN::Gff::Element {label: YOrientation, type: :float, value: 0.0}
-          YPosition: !ruby/object:NWN::Gff::Element {label: YPosition, type: :float, value: 99.9605}
-          ZOrientation: !ruby/object:NWN::Gff::Element {label: ZOrientation, type: :float, value: 0.0}
-          ZPosition: !ruby/object:NWN::Gff::Element {label: ZPosition, type: :float, value: 0.0}
-        struct_id: 1
-    VarTable: !ruby/object:NWN::Gff::Element 
-      label: VarTable
-      type: :list
-      value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          Name: !ruby/object:NWN::Gff::Element {label: Name, type: :cexostr, value: weather}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :dword, value: 1}
-          Value: !ruby/object:NWN::Gff::Element {label: Value, type: :int, value: 1}
-        struct_id: 0
-    WaypointList: !ruby/object:NWN::Gff::Element 
-      label: WaypointList
-      type: :list
-      value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          Appearance: !ruby/object:NWN::Gff::Element {label: Appearance, type: :byte, value: 1}
-          Description: !ruby/object:NWN::Gff::Element 
-            label: Description
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: {}
-
-          HasMapNote: !ruby/object:NWN::Gff::Element {label: HasMapNote, type: :byte, value: 0}
-          LinkedTo: !ruby/object:NWN::Gff::Element {label: LinkedTo, type: :cexostr, value: ""}
-          LocalizedName: !ruby/object:NWN::Gff::Element 
-            label: LocalizedName
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: {}
-
-          MapNote: !ruby/object:NWN::Gff::Element 
-            label: MapNote
-            str_ref: 4294967295
-            type: :cexolocstr
-            value: !ruby/object:NWN::Gff::CExoLocString 
-              languages: {}
-
-          MapNoteEnabled: !ruby/object:NWN::Gff::Element {label: MapNoteEnabled, type: :byte, value: 0}
-          Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: WP_AscTempel2AscMitte}
-          TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: ""}
-          XOrientation: !ruby/object:NWN::Gff::Element {label: XOrientation, type: :float, value: -0.0001}
-          XPosition: !ruby/object:NWN::Gff::Element {label: XPosition, type: :float, value: 54.7213}
-          YOrientation: !ruby/object:NWN::Gff::Element {label: YOrientation, type: :float, value: -1.0}
-          YPosition: !ruby/object:NWN::Gff::Element {label: YPosition, type: :float, value: 99.5091}
-          ZPosition: !ruby/object:NWN::Gff::Element {label: ZPosition, type: :float, value: 0.0}
-        struct_id: 5
-  struct_id: 4294967295
+    MapNoteEnabled: {type: :byte, value: 0}
+    Tag: {type: :cexostr, value: WP_AscTempel2AscMitte}
+    TemplateResRef: {type: :resref, value: ""}
+    XOrientation: {type: :float, value: -9.99999974737875e-05}
+    XPosition: {type: :float, value: 54.7212982177734}
+    YOrientation: {type: :float, value: -1.0}
+    YPosition: {type: :float, value: 99.5091018676758}
+    ZPosition: {type: :float, value: 0.0}

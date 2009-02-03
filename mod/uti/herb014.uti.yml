@@ -1,58 +1,45 @@
---- !ruby/object:NWN::Gff::Gff 
-type: "UTI "
-version: V3.2
-hash: !ruby/object:NWN::Gff::Struct 
-  hash: 
-    AddCost: !ruby/object:NWN::Gff::Element {label: AddCost, type: :dword, value: 5}
-    BaseItem: !ruby/object:NWN::Gff::Element {label: BaseItem, type: :int, value: 213}
-    Charges: !ruby/object:NWN::Gff::Element {label: Charges, type: :byte, value: 0}
-    Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: "Wald zu 3%; Herbst\r\n\
-        eine Pflanze hat genug Bl\xE4tter f\xFCr ein maximal menschengro\xDFes Wesen in den erholsamen Schlaf zu schicken "}
-    Cost: !ruby/object:NWN::Gff::Element {label: Cost, type: :dword, value: 8}
-    Cursed: !ruby/object:NWN::Gff::Element {label: Cursed, type: :byte, value: 0}
-    DescIdentified: !ruby/object:NWN::Gff::Element 
-      label: DescIdentified
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          4: "Die Schattenbeeren wachsen im Schatten von Eichen; Pflanze mit etwa 10 cm langen gezackten Bl\xE4ttern und giftgr\xFCnen kleinen Beeren"
-          5: "Die Schattenbeeren wachsen im Schatten von Eichen; Pflanze mit etwa 10 cm langen gezackten Bl\xE4ttern und giftgr\xFCnen kleinen Beeren"
-    Description: !ruby/object:NWN::Gff::Element 
-      label: Description
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          4: ""
-    Identified: !ruby/object:NWN::Gff::Element {label: Identified, type: :byte, value: 1}
-    LocalizedName: !ruby/object:NWN::Gff::Element 
-      label: LocalizedName
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          4: Schattenbeere
-          5: Schattenbeere
-    ModelPart1: !ruby/object:NWN::Gff::Element {label: ModelPart1, type: :byte, value: 66}
-    PaletteID: !ruby/object:NWN::Gff::Element {label: PaletteID, type: :byte, value: 0}
-    Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 0}
-    PropertiesList: !ruby/object:NWN::Gff::Element 
-      label: PropertiesList
-      type: :list
-      value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          ChanceAppear: !ruby/object:NWN::Gff::Element {label: ChanceAppear, type: :byte, value: 100}
-          CostTable: !ruby/object:NWN::Gff::Element {label: CostTable, type: :byte, value: 3}
-          CostValue: !ruby/object:NWN::Gff::Element {label: CostValue, type: :word, value: 13}
-          Param1: !ruby/object:NWN::Gff::Element {label: Param1, type: :byte, value: 255}
-          Param1Value: !ruby/object:NWN::Gff::Element {label: Param1Value, type: :byte, value: 0}
-          PropertyName: !ruby/object:NWN::Gff::Element {label: PropertyName, type: :word, value: 15}
-          Subtype: !ruby/object:NWN::Gff::Element {label: Subtype, type: :word, value: 329}
-        struct_id: 0
-    StackSize: !ruby/object:NWN::Gff::Element {label: StackSize, type: :word, value: 1}
-    Stolen: !ruby/object:NWN::Gff::Element {label: Stolen, type: :byte, value: 0}
-    Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: herb014}
-    TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: herb014}
-  struct_id: 4294967295
+--- !nwn-lib.elv.es,2008-12/struct
+__data_type: UTI
+__struct_id: 4294967295
+AddCost: {type: :dword, value: 5}
+BaseItem: {type: :int, value: 213}
+Charges: {type: :byte, value: 0}
+Comment: {type: :cexostr, value: "Wald zu 3%; Herbst\r\n\
+    eine Pflanze hat genug Bl\xE4tter f\xFCr ein maximal menschengro\xDFes Wesen in den erholsamen Schlaf zu schicken "}
+Cost: {type: :dword, value: 8}
+Cursed: {type: :byte, value: 0}
+DescIdentified:
+  type: :cexolocstr
+  value:
+    5: "Die Schattenbeeren wachsen im Schatten von Eichen; Pflanze mit etwa 10 cm langen gezackten Bl\xE4ttern und giftgr\xFCnen kleinen Beeren"
+    4: "Die Schattenbeeren wachsen im Schatten von Eichen; Pflanze mit etwa 10 cm langen gezackten Bl\xE4ttern und giftgr\xFCnen kleinen Beeren"
+Description:
+  type: :cexolocstr
+  value:
+    4: ""
+Identified: {type: :byte, value: 1}
+LocalizedName:
+  type: :cexolocstr
+  value:
+    5: Schattenbeere
+    4: Schattenbeere
+ModelPart1: {type: :byte, value: 66}
+PaletteID: {type: :byte, value: 0}
+Plot: {type: :byte, value: 0}
+PropertiesList:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: UTI/PropertiesList
+    __struct_id: 0
+    ChanceAppear: {type: :byte, value: 100}
+    CostTable: {type: :byte, value: 3}
+    CostValue: {type: :word, value: 13}
+    Param1: {type: :byte, value: 255}
+    Param1Value: {type: :byte, value: 0}
+    PropertyName: {type: :word, value: 15}
+    Subtype: {type: :word, value: 329}
+StackSize: {type: :word, value: 1}
+Stolen: {type: :byte, value: 0}
+Tag: {type: :cexostr, value: herb014}
+TemplateResRef: {type: :resref, value: herb014}

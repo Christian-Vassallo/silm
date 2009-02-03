@@ -1,62 +1,48 @@
---- !ruby/object:NWN::Gff::Gff 
-type: "UTI "
-version: V3.2
-hash: !ruby/object:NWN::Gff::Struct 
-  hash: 
-    AddCost: !ruby/object:NWN::Gff::Element {label: AddCost, type: :dword, value: 90}
-    BaseItem: !ruby/object:NWN::Gff::Element {label: BaseItem, type: :int, value: 29}
-    Charges: !ruby/object:NWN::Gff::Element {label: Charges, type: :byte, value: 0}
-    Comment: !ruby/object:NWN::Gff::Element {label: Comment, type: :cexostr, value: ""}
-    Cost: !ruby/object:NWN::Gff::Element {label: Cost, type: :dword, value: 90}
-    Cursed: !ruby/object:NWN::Gff::Element {label: Cursed, type: :byte, value: 0}
-    DescIdentified: !ruby/object:NWN::Gff::Element 
-      label: DescIdentified
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: {}
+--- !nwn-lib.elv.es,2008-12/struct
+__data_type: UTI
+__struct_id: 4294967295
+AddCost: {type: :dword, value: 90}
+BaseItem: {type: :int, value: 29}
+Charges: {type: :byte, value: 0}
+Comment: {type: :cexostr, value: ""}
+Cost: {type: :dword, value: 90}
+Cursed: {type: :byte, value: 0}
+DescIdentified:
+  type: :cexolocstr
+  value: {}
 
-    Description: !ruby/object:NWN::Gff::Element 
-      label: Description
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          4: ""
-    Identified: !ruby/object:NWN::Gff::Element {label: Identified, type: :byte, value: 1}
-    LocalizedName: !ruby/object:NWN::Gff::Element 
-      label: LocalizedName
-      str_ref: 4294967295
-      type: :cexolocstr
-      value: !ruby/object:NWN::Gff::CExoLocString 
-        languages: 
-          4: "Werkzeug: Sandpapier"
-    ModelPart1: !ruby/object:NWN::Gff::Element {label: ModelPart1, type: :byte, value: 87}
-    PaletteID: !ruby/object:NWN::Gff::Element {label: PaletteID, type: :byte, value: 64}
-    Plot: !ruby/object:NWN::Gff::Element {label: Plot, type: :byte, value: 1}
-    PropertiesList: !ruby/object:NWN::Gff::Element 
-      label: PropertiesList
-      type: :list
-      value: []
+Description:
+  type: :cexolocstr
+  value:
+    4: ""
+Identified: {type: :byte, value: 1}
+LocalizedName:
+  type: :cexolocstr
+  value:
+    4: "Werkzeug: Sandpapier"
+ModelPart1: {type: :byte, value: 87}
+PaletteID: {type: :byte, value: 64}
+Plot: {type: :byte, value: 1}
+PropertiesList:
+  type: :list
+  value: []
 
-    StackSize: !ruby/object:NWN::Gff::Element {label: StackSize, type: :word, value: 1}
-    Stolen: !ruby/object:NWN::Gff::Element {label: Stolen, type: :byte, value: 0}
-    Tag: !ruby/object:NWN::Gff::Element {label: Tag, type: :cexostr, value: tool_sandpaper}
-    TemplateResRef: !ruby/object:NWN::Gff::Element {label: TemplateResRef, type: :resref, value: tool_sandpaper}
-    VarTable: !ruby/object:NWN::Gff::Element 
-      label: VarTable
-      type: :list
-      value: 
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          Name: !ruby/object:NWN::Gff::Element {label: Name, type: :cexostr, value: use_uses}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :dword, value: 1}
-          Value: !ruby/object:NWN::Gff::Element {label: Value, type: :int, value: 1}
-        struct_id: 0
-      - !ruby/object:NWN::Gff::Struct 
-        hash: 
-          Name: !ruby/object:NWN::Gff::Element {label: Name, type: :cexostr, value: uses}
-          Type: !ruby/object:NWN::Gff::Element {label: Type, type: :dword, value: 1}
-          Value: !ruby/object:NWN::Gff::Element {label: Value, type: :int, value: 9}
-        struct_id: 0
-  struct_id: 4294967295
+StackSize: {type: :word, value: 1}
+Stolen: {type: :byte, value: 0}
+Tag: {type: :cexostr, value: tool_sandpaper}
+TemplateResRef: {type: :resref, value: tool_sandpaper}
+VarTable:
+  type: :list
+  value:
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: UTI/VarTable
+    __struct_id: 0
+    Name: {type: :cexostr, value: use_uses}
+    Type: {type: :dword, value: 1}
+    Value: {type: :int, value: 1}
+  - !nwn-lib.elv.es,2008-12/struct
+    __data_type: UTI/VarTable
+    __struct_id: 0
+    Name: {type: :cexostr, value: uses}
+    Type: {type: :dword, value: 1}
+    Value: {type: :int, value: 9}
