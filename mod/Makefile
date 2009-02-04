@@ -26,7 +26,9 @@ COMMIT=$(shell git-rev-parse --short --verify HEAD)
 # to builders/devs.
 AREAS=$(shell ls area/*.git area/*.are | grep -v ooc_solace)
 
-CONCURRENCY_LEVEL=2
+ifeq "$(CONCURRENCY_LEVEL)" ""
+CONCURRENCY_LEVEL=1
+endif
 
 # This gets packaged into your final module for
 # deployment on a production server.
@@ -83,7 +85,7 @@ mandatory-verify:
 .PHONY: resources
 resources: path mandatory-verify
 	@for res in $(RESOURCEDIRS); do \
-		$(MAKE) -C $$res all ;\
+		$(MAKE) -j$(CONCURRENCY_LEVEL) -C $$res all ;\
 	done
 
 .PHONY: refilter-resources
