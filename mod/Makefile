@@ -21,11 +21,6 @@ BRANCH=$(shell git branch 2>&1| grep "*" | cut -d " " -f 2)
 # The current commit hash.
 COMMIT=$(shell git-rev-parse --short --verify HEAD)
 
-# All areas, except those that should not be packaged.
-# You can use this to exclude certain areas from being distributed
-# to builders/devs.
-AREAS=$(shell ls area/*.git area/*.are | grep -v ooc_solace)
-
 ifeq "$(CONCURRENCY_LEVEL)" ""
 CONCURRENCY_LEVEL=1
 endif
@@ -42,7 +37,7 @@ VALIDEXT= \
 
 # This gets packaged into a developer package, which has
 # ALL content.
-VALIDEXTDEV=$(AREAS) \
+VALIDEXTDEV=area/\*.git area/\*.are \
 	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
 	utc/\*.utc utd/\*.utd ute/\*.ute \
 	`find uti -iname \*.uti` \
