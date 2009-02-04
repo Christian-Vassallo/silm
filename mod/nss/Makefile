@@ -33,10 +33,12 @@ include Makefile.dep
 # From Makefile.dep:
 # $(objects)   array of script basenames (without extension) that are compileable
 
+autogen := appearance.h
+
 appearance.h:
 	../generate_appearance_h.rb > appearance.h
 
-Makefile.dep: $(headers) $(scripts)
+Makefile.dep: $(autogen) $(headers) $(scripts)
 	@echo "Building dependencies: Makefile.dep .."
 	@./build_dep_list.rb -g stddef.h -g _const.nh $(headers) $(scripts) > Makefile.dep
 

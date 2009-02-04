@@ -103,7 +103,7 @@ clean:
 	done
 	-@rm *.mod
 
-local: resources
+local: resources scripts
 ifeq ($(MAPMASK),)
 	@echo "Packing up all maps."
 	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH).mod area/\*.are area/\*.git $(VALIDEXT)
