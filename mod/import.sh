@@ -5,7 +5,11 @@
 # appropriately.
 
 modroot=$(readlink -f `dirname $0`)
-echo "we are at: $modroot"
+
+run() {
+	echo "$@"
+	$@
+}
 
 for x in $@; do
 	target=""
@@ -28,16 +32,15 @@ for x in $@; do
 	base=`basename $x | tr "[:upper:]" "[:lower:]"`
 	to="$modroot/$target/$base"
 	to_yml="$to.yml"
-	x_md=`md5sum $x|cut -d' ' -f1`
-	to_md=`md5sum $to|cut -d' ' -f1`
 
 	if [ -f $to ]; then
+		x_md=`md5sum $x|cut -d' ' -f1`
+		to_md=`md5sum $to|cut -d' ' -f1`
 		if [ "$x_md" = "$to_md" ]; then
 			echo "Not importing $x: not modified."
 			continue
 		fi
 	fi
 
-	echo "$x -> $to_yml"
-	nwn-gff -i $x -ky -o $to_yml
+	run nwn-gff $($modroot/nwn-lib-import-filters.sh) -i $x -ky -o $to_yml
 done
