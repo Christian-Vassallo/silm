@@ -1,4 +1,4 @@
---- !nwn-lib.elv.es,2008-12/struct 
+--- !nwn-lib.elv.es,2008-12/struct
 __data_type: UTI
 __struct_id: 4294967295
 AddCost: {type: :dword, value: 0}
@@ -7,10 +7,10 @@ Charges: {type: :byte, value: 0}
 Comment: {type: :cexostr, value: ""}
 Cost: {type: :dword, value: 0}
 Cursed: {type: :byte, value: 0}
-DescIdentified: 
+DescIdentified:
   type: :cexolocstr
-  value: 
-    0: "Schl\xFCssel:\n\n\
+  value:
+    5: "Schl\xFCssel:\n\n\
       A  Tod (sofortige Vollstreckung)\n\
       B  Tod (Vollstreckung nach Verurteilung)\n\
       C  Exil\n\
@@ -84,19 +84,94 @@ DescIdentified:
       -\xDCberfall mit Verwundung: I (Kosten der Heilung + bis zu 100 GM)\n\n\
       SEHR LEICHTE:\n\n\
       -\xDCberfall (ohne Verwundung oder Beraubung): F (\xFCber Nacht) und I (bis zu 50 GM)"
-Description: 
+    4: "Schl\xFCssel:\n\n\
+      A  Tod (sofortige Vollstreckung)\n\
+      B  Tod (Vollstreckung nach Verurteilung)\n\
+      C  Exil\n\
+      D  Verst\xFCmmelung\n\
+      E  Einkerkerung (mit Schwerstarbeit)\n\
+      F  Einkerkerung (ohne Freigang)\n\
+      G  Einkerkerung (mit leichter Arbeit in der Umgebung)\n\
+      H  Bussgeld (an die Siedlung zu zahlen)\n\
+      I  Schadensersatz (an die gesch\xE4digte Stelle zu zahlen)\n\
+      J  Erlass gegen den Verurteilten (\xD6ffentliche Bekanntmachung des Frevels, Sanktionen)\n\n\n\
+      I  Verbrechen gegen weltliche W\xFCrdentr\xE4ger:\n\n\
+      SEHR SCHWERE\n\n\
+      -Verrat (schliesst Angriff auf einen weltlichen hohen W\xFCrdentr\xE4ger ein): A\n\
+      -Vort\xE4uschen eines hohen weltlichen W\xFCrdentr\xE4gers: A\n\
+      -Vort\xE4uschen eines niederen weltlichen W\xFCrdentr\xE4gers: B nach Auspeitschung\n\
+      -F\xE4lschung eines offiziellen Dokuments B oder C (auf Lebenszeit), zus\xE4tzlich D\n\
+      -Angriff auf einen niederen weltlichen W\xFCrdentr\xE4ger: B oder F (10 Jahre) nach Auspeitschung\n\n\
+      SCHWERE\n\n\
+      -Diebstahl, Vandalismus oder Brandstiftung gegen ein Regierungsgeb\xE4ude oder Teile der Stadtmauern: E (wie es die Gerechtigkeit verlangt), zus\xE4tzlich H (Reparaturkosten + bis 1000 GM) \n\
+      -Vort\xE4uschen eines Wachmannes oder Offiziers der Wache: F (wie es die Gerechtigkeit verlangt), zus\xE4tzlich H (bis 5000GM) und Auspeitschung\n\
+      -Wiederholung irgendeines leichten oder sehr leichten Verbrechens gegen weltliche W\xFCrdentr\xE4ger: E oder F (bis zu 1 Monat) und/oder H (bis zu 1000GM)\n\
+      -Bewusstes Missachten eines, von einem legitimierten Rechtssprechers, ausgesprochenen Urteils oder Erlasses: H (bis 1000 GM) und/oder C (bis 5 Jahre)\n\n\
+      LEICHTE\n\n\
+      -Angriff auf eine Wache, w\xE4hrend diese im Dienst ist: F (bis 1 Woche) und H (wie es die Gerechtigkeit verlangt); Auspeitschung wenn keine Zahlung m\xF6glich\n\n\
+      SEHR LEICHTE\n\n\
+      -Verleumdung eines weltliche W\xFCrdentr\xE4ger: G (4 Tage) und H (bis 20 GM)\n\n\n\n\
+      II Verbrechen gegen die Siedlung:\n\n\
+      SEHR SCHWERE:\n\n\
+      -Vergiftung von Wasser zum Schaden der Siedlung: A\n\
+      -Mord: B oder E (10-15 Jahre)\n\
+      -Spionage, Sabotage: B oder C (auf Lebenszeit), Zus\xE4tzlich H ( Kosten der Reperatur + 2000 - 5000 GM), oder F (20 Jahre) und H\n\n\
+      SCHWERE\n\n\
+      -Gef\xE4hrdung der Sicherheit innerhalb der Siedlung: H (bis zu 500 GM) und/oder G (bis 6 Monate) [bei besonders schweren F\xE4llen wie es das Recht verlangt]\n\
+      -Verkauf gestohlener G\xFCter: G (bis zu 2 Jahren) und H (normalerweise doppelter Verkaufspreis der Waren), zus\xE4tzlich J\n\
+      -Mord mit Rechtfertigung: C (bis 5 Jahre) oder E (bis 3 Jahre)\n\
+      -Wiederholung irgendeines leichten oder sehr leichten Verbrechens gegen weltliche W\xFCrdentr\xE4ger: E oder F (bis zu 1 Monat) und/oder H (bis zu 100 GM)\n\n\
+      LEICHTE\n\n\
+      -rechtswidriges, selbst provoziertes, Duellieren: G (1 Woche) und H (100 GM)\n\n\
+      SEHR LEICHTE\n\n\
+      -Bestechung: G (1 Woche) und/oder H (nach ermessen)\n\
+      -Verleumdung eines ausl\xE4ndischen Botschafters: G (bis zu 1 Woche) H (50 GM)\n\
+      -Pr\xE4sentieren einer Waffe in gef\xE4hrlicher Weise oder bedrohender Weise: F (\xFCber Nacht)\n\n\n\
+      III Verbrechen gegen die G\xF6tter:\n\n\
+      SEHR SCHWERE\n\n\
+      -Entweihung eines heiligen Ortes: C (5 Jahre) und I (wie es die Gerechtigkeit verlangt)\n\n\
+      SCHWERE\n\n\
+      -Diebstahl von Tempeleigentum oder Tempelgaben: F (bis 1 Monat) und I (doppelter Wert des Gestohlenen), zus\xE4tzlich J\n\
+      -Grabraub G (bis 1 Woche) und I (Schaden +  bis zu 500 GM)\n\
+      -Wiederholung irgendeines leichten oder sehr leichten Verbrechens gegen die G\xF6tter: E oder F (bis zu 1 Monat) und/oder H (bis zu 100 GM)\n\
+      -Verbotene Totenbeschw\xF6rung I (bis 200 GM) + \xF6ffentliche Z\xFCchtigung + J (wenn es die Gerechtigkeit verlangt)\n\n\
+      LEICHTE\n\n\
+      -Angriff auf einen Priester: I (bis zu 100GM zu zahlen an den Klerus des Priesters), zus\xE4tzlich zu Verbrechen gegen die B\xFCrger\n\
+      -St\xF6rung der Totenruhe : I (bis zu 100GM)\n\n\
+      SEHR LEICHTE\n\n\
+      -\xD6ffentliche Verleumdung eines Gottes oder einer Priesterschaft: I (bis 10 GM ; von der Zahlungsf\xE4higkeit abh\xE4ngig)\n\
+      -Trunkenheit w\xE4hrend eines Gottesdienstes: I (bis 5 GM von der Zahlungsf\xE4higkeit abh\xE4ngig)\n\n\
+      IV Verbrechen gegen die B\xFCrger:\n\n\
+      SEHR SCHWERE\n\
+      -Brandstiftung: E (bis zu 3 Monate) und I (Wert des verlorenen Besitzes)\n\
+      -Vergewaltigung: D und I (bis zu 2000 GM) \n\
+      -Angriff der Verst\xFCmmelung oder Verkr\xFCppelung zur Folge hat: D und I (bis 2000 GM) oder E (bis zu 3 Jahren)\n\
+      -Sklavenhaltung: C (bis 10 Jahre), wenn der Sklave grausam behandelt wurde\n\n\
+      SCHWERE\n\n\
+      -Raub: E (bis 1 Monat)\n\
+      -Einbruch: F (bis zu 1 Monat)\n\
+      -Diebstahl oder T\xF6tung von Vieh: I (doppelte Kosten des gestohlenen Viehs)\n\
+      -Wiederholung irgendeines leichten oder sehr leichten Verbrechens gegen die B\xFCrger: F (bis zu 1 Woche) und G (bis 1 Woche)\n\
+      -Wucher: F (bis 1 Woche) und I (der Mehrpreis ist an die gesch\xE4digte Stelle zur\xFCckzuzahlen)\n\n\
+      LEICHTE\n\n\
+      -Besch\xE4digung von Eigentum: I (Wert des Besch\xE4digten + bis zu 100 GM)\n\
+      -\xDCberfall mit Verwundung: I (Kosten der Heilung + bis zu 100 GM)\n\n\
+      SEHR LEICHTE:\n\n\
+      -\xDCberfall (ohne Verwundung oder Beraubung): F (\xFCber Nacht) und I (bis zu 50 GM)"
+Description:
   type: :cexolocstr
-  value: {}
-
+  value:
+    4: ""
 Identified: {type: :byte, value: 1}
-LocalizedName: 
+LocalizedName:
   type: :cexolocstr
-  value: 
-    0: Gesetze der Marken
+  value:
+    5: Gesetze der Marken
+    4: Gesetze der Marken
 ModelPart1: {type: :byte, value: 113}
 PaletteID: {type: :byte, value: 60}
 Plot: {type: :byte, value: 0}
-PropertiesList: 
+PropertiesList:
   type: :list
   value: []
 
