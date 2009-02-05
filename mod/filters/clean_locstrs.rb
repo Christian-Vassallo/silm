@@ -15,8 +15,6 @@ self.each_by_flat_path do |label, field|
 
   val = field.v.dup
 
-  val.clear if field.has_str_ref?
-
   # strip empty strings
   val.reject! {|k,v|
     v.strip == ""
@@ -37,7 +35,7 @@ self.each_by_flat_path do |label, field|
   unless will_output?
     unless compactable
       log "%s: need interactive." % [label]
-      log "  %s" % [field.v.inspect]
+      log "  %s" % [val.inspect]
     else
       log "%s: can fix for myself." % label
     end
@@ -52,12 +50,12 @@ self.each_by_flat_path do |label, field|
     else
       str = val[val.keys.sort[0]]
     end
-    field.v.clear
-    field.v[0] = str if str
-
-    count += 1
+    if str
+      field.v.clear
+      field.v[0] = str
+      count += 1
+    end
   end
-
 end
 
 log "#{count} str-refs modified." if will_output?
