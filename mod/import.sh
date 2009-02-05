@@ -23,6 +23,7 @@ for x in $@; do
 	*.ut[a-z]) target=${ext:(-3):3} ;;
 	*.dlg) target="dlg" ;;
 	*.ssf) target="ssf" ;;
+	*.itp) target="itp" ;;
 	*)
 		echo "WARNING: Cannot place $x; skipping."
 		continue
