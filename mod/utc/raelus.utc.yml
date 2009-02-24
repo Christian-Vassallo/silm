@@ -1,8 +1,8 @@
 --- !nwn-lib.elv.es,2008-12/struct 
 __data_type: UTC
 __struct_id: 4294967295
-Appearance_Head: {type: :byte, value: 1}
-Appearance_Type: {type: :word, value: 6}
+Appearance_Head: {type: :byte, value: 117}
+Appearance_Type: {type: :word, value: 1}
 ArmorPart_RFoot: {type: :byte, value: 1}
 BodyBag: {type: :byte, value: 0}
 BodyPart_Belt: {type: :byte, value: 0}
@@ -23,8 +23,8 @@ BodyPart_RShoul: {type: :byte, value: 0}
 BodyPart_RThigh: {type: :byte, value: 1}
 BodyPart_Torso: {type: :byte, value: 1}
 CRAdjust: {type: :int, value: 0}
-Cha: {type: :byte, value: 10}
-ChallengeRating: {type: :float, value: 1.0}
+Cha: {type: :byte, value: 14}
+ChallengeRating: {type: :float, value: 5.0}
 ClassList: 
   type: :list
   value: 
@@ -32,7 +32,7 @@ ClassList:
     __data_type: UTC/ClassList
     __struct_id: 2
     Class: {type: :int, value: 10}
-    ClassLevel: {type: :short, value: 1}
+    ClassLevel: {type: :short, value: 6}
     MemorizedList0: 
       type: :list
       value: 
@@ -54,9 +54,21 @@ ClassList:
         Spell: {type: :word, value: 100}
         SpellFlags: {type: :byte, value: 1}
         SpellMetaMagic: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __data_type: UTC/ClassList/MemorizedList0
+        __struct_id: 3
+        Spell: {type: :word, value: 151}
+        SpellFlags: {type: :byte, value: 1}
+        SpellMetaMagic: {type: :byte, value: 0}
     MemorizedList1: 
       type: :list
       value: 
+      - !nwn-lib.elv.es,2008-12/struct 
+        __data_type: UTC/ClassList/MemorizedList1
+        __struct_id: 3
+        Spell: {type: :word, value: 86}
+        SpellFlags: {type: :byte, value: 1}
+        SpellMetaMagic: {type: :byte, value: 0}
       - !nwn-lib.elv.es,2008-12/struct 
         __data_type: UTC/ClassList/MemorizedList1
         __struct_id: 3
@@ -66,50 +78,113 @@ ClassList:
       - !nwn-lib.elv.es,2008-12/struct 
         __data_type: UTC/ClassList/MemorizedList1
         __struct_id: 3
+        Spell: {type: :word, value: 107}
+        SpellFlags: {type: :byte, value: 1}
+        SpellMetaMagic: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __data_type: UTC/ClassList/MemorizedList1
+        __struct_id: 3
         Spell: {type: :word, value: 174}
         SpellFlags: {type: :byte, value: 1}
         SpellMetaMagic: {type: :byte, value: 0}
-Color_Hair: {type: :byte, value: 23}
-Color_Skin: {type: :byte, value: 1}
-Color_Tattoo1: {type: :byte, value: 1}
+    MemorizedList2: 
+      type: :list
+      value: 
+      - !nwn-lib.elv.es,2008-12/struct 
+        __data_type: UTC/ClassList/MemorizedList2
+        __struct_id: 3
+        Spell: {type: :word, value: 120}
+        SpellFlags: {type: :byte, value: 1}
+        SpellMetaMagic: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __data_type: UTC/ClassList/MemorizedList2
+        __struct_id: 3
+        Spell: {type: :word, value: 115}
+        SpellFlags: {type: :byte, value: 1}
+        SpellMetaMagic: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __data_type: UTC/ClassList/MemorizedList2
+        __struct_id: 3
+        Spell: {type: :word, value: 175}
+        SpellFlags: {type: :byte, value: 1}
+        SpellMetaMagic: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __data_type: UTC/ClassList/MemorizedList2
+        __struct_id: 3
+        Spell: {type: :word, value: 90}
+        SpellFlags: {type: :byte, value: 1}
+        SpellMetaMagic: {type: :byte, value: 0}
+    MemorizedList3: 
+      type: :list
+      value: 
+      - !nwn-lib.elv.es,2008-12/struct 
+        __data_type: UTC/ClassList/MemorizedList3
+        __struct_id: 3
+        Spell: {type: :word, value: 58}
+        SpellFlags: {type: :byte, value: 1}
+        SpellMetaMagic: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __data_type: UTC/ClassList/MemorizedList3
+        __struct_id: 3
+        Spell: {type: :word, value: 21}
+        SpellFlags: {type: :byte, value: 1}
+        SpellMetaMagic: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __data_type: UTC/ClassList/MemorizedList3
+        __struct_id: 3
+        Spell: {type: :word, value: 176}
+        SpellFlags: {type: :byte, value: 1}
+        SpellMetaMagic: {type: :byte, value: 0}
+Color_Hair: {type: :byte, value: 8}
+Color_Skin: {type: :byte, value: 10}
+Color_Tattoo1: {type: :byte, value: 82}
 Color_Tattoo2: {type: :byte, value: 1}
 Comment: {type: :cexostr, value: ""}
-Con: {type: :byte, value: 14}
-Conversation: {type: :resref, value: dhorn}
-CurrentHitPoints: {type: :short, value: 4}
+Con: {type: :byte, value: 12}
+Conversation: {type: :resref, value: ""}
+CurrentHitPoints: {type: :short, value: 24}
 DecayTime: {type: :dword, value: 5000}
-Deity: {type: :cexostr, value: Gond}
+Deity: {type: :cexostr, value: ""}
 Description: 
   type: :cexolocstr
   value: 
-    0: "Ein grossgewachsener junger Mann von vielleicht zwanzig Jahren.\n\
-      Das sonnengebr\xE4unte Gesicht wird von kurzgeschorenen schwarzen haaren eingerahmt, und braune Augen blicken aufmerksam daraus hervor.\n\n\
-      Man sieht ihm wohl an dass er zuweilen auch k\xF6rperliche Arbeit verrichtet. Manch einer mag ihn als Dhorn Houxler erkennen, den Sohn des Schmiedes."
+    0: "Der Goldelf tr\xE4gt die Robe eines Novizen. Goldelftypisch ist sein Blick neutral und ausdruckslos. Schweigsam ist er meist in B\xFCchern vertieft und schert sich nicht um Streitereien."
 Dex: {type: :byte, value: 12}
 Disarmable: {type: :byte, value: 1}
 Equip_ItemList: 
   type: :list
   value: 
-  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/Equip_ItemList, __struct_id: 2, EquippedRes: {type: :resref, value: cloth_bachelor}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/Equip_ItemList, __struct_id: 2, EquippedRes: {type: :resref, value: cloth_novice}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/Equip_ItemList, __struct_id: 8192, EquippedRes: {type: :resref, value: nw_wambo001}}
 FactionID: {type: :word, value: 2}
 FeatList: 
   type: :list
   value: 
-  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 258}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 354}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 239}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 237}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 238}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 7}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 235}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 1089}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 240}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 945}}
-  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 384}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 944}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 256}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 51}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 303}}
-  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 172}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 236}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 11}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/FeatList, __struct_id: 1, Feat: {type: :word, value: 946}}
 FirstName: 
   type: :cexolocstr
   value: 
-    0: Dhorn
+    0: Raelus
 Gender: {type: :byte, value: 0}
-GoodEvil: {type: :byte, value: 50}
-HitPoints: {type: :short, value: 4}
-Int: {type: :byte, value: 16}
-Interruptable: {type: :byte, value: 1}
+GoodEvil: {type: :byte, value: 100}
+HitPoints: {type: :short, value: 24}
+Int: {type: :byte, value: 18}
+Interruptable: {type: :byte, value: 0}
 IsImmortal: {type: :byte, value: 0}
 IsPC: {type: :byte, value: 0}
 ItemList: 
@@ -124,36 +199,60 @@ ItemList:
   - !nwn-lib.elv.es,2008-12/struct 
     __data_type: UTC/ItemList
     __struct_id: 1
-    InventoryRes: {type: :resref, value: nw_it_sparscr102}
+    InventoryRes: {type: :resref, value: nw_it_mpotion001}
     Repos_PosX: {type: :word, value: 1}
     Repos_Posy: {type: :word, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __data_type: UTC/ItemList
     __struct_id: 2
-    InventoryRes: {type: :resref, value: nw_it_sparscr108}
+    InventoryRes: {type: :resref, value: nw_it_mpotion001}
     Repos_PosX: {type: :word, value: 2}
     Repos_Posy: {type: :word, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __data_type: UTC/ItemList
     __struct_id: 3
-    InventoryRes: {type: :resref, value: nw_wswdg001}
+    InventoryRes: {type: :resref, value: nw_it_sparscr102}
     Repos_PosX: {type: :word, value: 3}
+    Repos_Posy: {type: :word, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __data_type: UTC/ItemList
+    __struct_id: 4
+    InventoryRes: {type: :resref, value: nw_it_sparscr105}
+    Repos_PosX: {type: :word, value: 4}
+    Repos_Posy: {type: :word, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __data_type: UTC/ItemList
+    __struct_id: 5
+    InventoryRes: {type: :resref, value: nw_it_sparscr108}
+    Repos_PosX: {type: :word, value: 5}
+    Repos_Posy: {type: :word, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __data_type: UTC/ItemList
+    __struct_id: 6
+    InventoryRes: {type: :resref, value: nw_it_sparscr109}
+    Repos_PosX: {type: :word, value: 6}
+    Repos_Posy: {type: :word, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __data_type: UTC/ItemList
+    __struct_id: 7
+    InventoryRes: {type: :resref, value: nw_wswdg001}
+    Repos_PosX: {type: :word, value: 7}
     Repos_Posy: {type: :word, value: 0}
 LastName: 
   type: :cexolocstr
   value: 
-    0: Houxler
-LawfulChaotic: {type: :byte, value: 100}
+    0: Daralo
+LawfulChaotic: {type: :byte, value: 0}
 Lootable: {type: :byte, value: 0}
-MaxHitPoints: {type: :short, value: 6}
+MaxHitPoints: {type: :short, value: 24}
 NaturalAC: {type: :byte, value: 0}
 NoPermDeath: {type: :byte, value: 1}
-PaletteID: {type: :byte, value: 44}
+PaletteID: {type: :byte, value: 39}
 PerceptionRange: {type: :byte, value: 11}
 Phenotype: {type: :int, value: 0}
 Plot: {type: :byte, value: 0}
-PortraitId: {type: :word, value: 823}
-Race: {type: :byte, value: 6}
+PortraitId: {type: :word, value: 35}
+Race: {type: :byte, value: 1}
 ScriptAttacked: {type: :resref, value: x2_def_attacked}
 ScriptDamaged: {type: :resref, value: x2_def_ondamage}
 ScriptDeath: {type: :resref, value: x2_def_ondeath}
@@ -164,58 +263,58 @@ ScriptHeartbeat: {type: :resref, value: x2_def_heartbeat}
 ScriptOnBlocked: {type: :resref, value: x2_def_onblocked}
 ScriptOnNotice: {type: :resref, value: x2_def_percept}
 ScriptRested: {type: :resref, value: x2_def_rested}
-ScriptSpawn: {type: :resref, value: nw_c2_default9}
+ScriptSpawn: {type: :resref, value: x2_def_spawn}
 ScriptSpellAt: {type: :resref, value: x2_def_spellcast}
 ScriptUserDefine: {type: :resref, value: x2_def_userdef}
 SkillList: 
   type: :list
   value: 
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
-  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 4}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 9}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
-  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 4}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 9}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
-  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 4}}
-  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
-  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
-  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 9}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
-  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 4}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 9}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
-  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 4}}
+  - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 9}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
   - !nwn-lib.elv.es,2008-12/struct {__data_type: UTC/SkillList, __struct_id: 0, Rank: {type: :byte, value: 0}}
-SoundSetFile: {type: :word, value: 131}
+SoundSetFile: {type: :word, value: 194}
 SpecAbilityList: 
   type: :list
   value: []
 
 StartingPackage: {type: :byte, value: 10}
-Str: {type: :byte, value: 14}
+Str: {type: :byte, value: 10}
 Subrace: {type: :cexostr, value: ""}
-Tag: {type: :cexostr, value: Dhorn}
+Tag: {type: :cexostr, value: Raelus}
 Tail_New: {type: :dword, value: 0}
 TemplateList: 
   type: :list
   value: []
 
-TemplateResRef: {type: :resref, value: dhorn}
+TemplateResRef: {type: :resref, value: raelus}
 WalkRate: {type: :int, value: 4}
 Wings_New: {type: :dword, value: 0}
-Wis: {type: :byte, value: 10}
+Wis: {type: :byte, value: 12}
 fortbonus: {type: :short, value: 0}
 refbonus: {type: :short, value: 0}
 willbonus: {type: :short, value: 0}
