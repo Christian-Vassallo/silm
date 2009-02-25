@@ -5,10 +5,6 @@ int StartingConditional() {
 	if ( !GetIsObjectValid(oCloak) )
 		return FALSE;
 
-	if ( GetStringLowerCase(GetStringLeft(GetResRef(oCloak), 6)) != "umhang" )
-		return FALSE;
-
-
 	SetLocalObject(oPC, "CHG_CURRENT_ARM", oCloak);
 
 	return TRUE;
