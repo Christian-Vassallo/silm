@@ -10,7 +10,7 @@ SCRIPTLINES=$(wc -l nss/*.n | grep total | cut -d" " -f3)
 DIALOGUECHARS=$(egrep "^ +4:" dlg/*.dlg.yml | wc -c)
 REPOSIZE=$(du -sch .|grep total | cut -f1)
 
-REV=`git-rev-parse --short --verify HEAD`
+REV=`git rev-parse --short --verify HEAD`
 
 printf "Statistics for commit %s, created on\n" $REV
 printf "  %s\n" "$(date)"
