@@ -34,8 +34,8 @@ clean: clean-backup
 $(TARGET): $(twoda)
 	erfpack.pl -H -o $@ $(VALIDEXT)
 
-install: path
+install: path $(TARGET)
 	@cp -v $(TARGET) $(NWNHOME)/hak/
 
 publish:
-	rsync -Pzva --chmod=go+r $(TARGET) elven@miyeritar.swordcoast.net::nwn-w/hak/
+	rsync -Pzva --chmod=go+r $(TARGET) silbermarken@miyeritar:rsync/nwn/hak/

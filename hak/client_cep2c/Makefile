@@ -1,11 +1,13 @@
 # Set as environment var!
 # NWNHOME=/home/elven/nwn
 
-NAME=silm_cep2c
+TARGET=silm_cep2c.hak
 
 VALIDEXT=*.dds *.mdl *.plt *.ssf *.tga *.wav
 
-all: hak
+resources := $(wildcard $(VALIDEXT))
+
+all: $(TARGET)
 
 path:
 ifeq  "$(NWNHOME)" ""
@@ -13,14 +15,16 @@ ifeq  "$(NWNHOME)" ""
 	exit 1
 endif
 
-
 clean-backup:
 	-rm *.*~ *.out
 
 clean: clean-backup
 	
-hak: path
-	erfpack.pl -H -o $(NWNHOME)/hak/$(NAME).hak $(VALIDEXT)
+$(TARGET): $(resources)
+	erfpack.pl -H -o $@ $(VALIDEXT)
+
+install: path $(TARGET)
+	@cp -v $(TARGET) $(NWNHOME)/hak/
 
 publish:
-	rsync -Pzva $(NWNHOME)/hak/$(NAME).hak elven@miyeritar.swordcoast.net::nwn-w/hak/
+	rsync -Pzva --chmod=go+r $(TARGET) silbermarken@miyeritar:rsync/nwn/hak/
