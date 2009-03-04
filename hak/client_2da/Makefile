@@ -6,6 +6,7 @@ TARGET=silm_2da.hak
 VALIDEXT=*.2da *.itp
 
 twoda := $(addsuffix .2da, $(basename $(wildcard *.2ds)))
+chg := $(addsuffix .2da, $(subst parts, chg, $(basename $(wildcard parts_*.2ds))))
 
 all: $(TARGET)
 
@@ -14,6 +15,9 @@ ifeq  "$(NWNHOME)" ""
 	@echo "env var NWNHOME not set."
 	exit 1
 endif
+
+chg_%.2da : parts_%.2da
+	make_partstable.sh 0.0 < $< > $@
 
 # 2ds were generated with:
 # for x in *.2da; do \
@@ -31,7 +35,7 @@ clean-backup:
 clean: clean-backup
 	rm *.2da
 	
-$(TARGET): $(twoda)
+$(TARGET): $(twoda) $(chg)
 	erfpack.pl -H -o $@ $(VALIDEXT)
 
 install: path $(TARGET)
