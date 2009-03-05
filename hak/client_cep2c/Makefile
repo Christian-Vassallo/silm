@@ -26,5 +26,5 @@ $(TARGET): $(resources)
 install: path $(TARGET)
 	@cp -v $(TARGET) $(NWNHOME)/hak/
 
-publish:
+publish: $(TARGET)
 	rsync -Pzva --chmod=go+r $(TARGET) silbermarken@miyeritar:rsync/nwn/hak/

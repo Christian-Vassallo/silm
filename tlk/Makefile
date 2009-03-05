@@ -16,9 +16,10 @@ clean:
 	-rm *.tlk
 
 %.tlk : %.tlk.source
-	tlkencode.pl -o $(NWNHOME)/tlk/$@ $<
+	tlkencode.pl -o $@ $<
 
-publish:
-	for x in $(targets); do \
-		rsync -Pzva --chmod=go+r $(NWNHOME)/tlk/$$x elven@miyeritar.swordcoast.net::nwn-w/tlk/ ; \
-	done
+install: $(targets)
+	@cp -v $(targets) $(NWNHOME)/tlk/
+
+publish: $(targets)
+	rsync -Pzva --chmod=go+r $(targets) silbermarken@miyeritar:rsync/nwn/tlk/
