@@ -169,7 +169,9 @@ location GetStepRightLocation(object oTarget);
 // If that is not available, will use the roughly-center point
 // of the area.
 // If distance is set to 0.0, a random distance will be used.
-location GetPseudoRandomLocation(object oArea, object oSource=OBJECT_INVALID, float fDist=0.0);
+location GetRandomLocation(object oArea, object oSource = OBJECT_INVALID, float fDist=0.0);
+
+location GetRandomLocationAt(location lWhere, float fDist=0.0);
 
 /**********************************************************************
  * FUNCTION DEFINITIONS
@@ -528,41 +530,46 @@ location GetCenterPointOfArea(object oArea)
 	return Location(oArea, vTmp, 0.0);
 }
 
+
 // Get a random location in a given area based on a given object,
 // the specified distance away.
 // If no object is given, will use a random object in the area.
 // If that is not available, will use the roughly-center point
 // of the area.
 // If distance is set to 0.0, a random distance will be used.
-location GetPseudoRandomLocation(object oArea, object oSource=OBJECT_INVALID, float fDist=0.0) {
-	location lStart;
-
-	if (!GetIsObjectValid(oSource)) {
-		lStart = GetCenterPointOfArea(oArea);
-	} else {
-		lStart = GetLocation(oSource);
+location GetRandomLocation(object oArea, object oSource = OBJECT_INVALID, float fDist=0.0) {
+	object o = oSource;
+	if (!GetIsObjectValid(o)) {
+		o = GetNearestObjectToLocation(OBJECT_TYPE_ALL, GetCenterPointOfArea(oArea));
 	}
-
-	float fAngle; float fOrient;
 
 	if (fDist == 0.0) {
 		int nRoll = Random(3);
 		switch (nRoll) {
-		case 0:
-			fDist = DISTANCE_MEDIUM; break;
-		case 1:
-			fDist = DISTANCE_LARGE; break;
-		case 2:
-			fDist = DISTANCE_HUGE; break;
+			case 0:
+				fDist = DISTANCE_MEDIUM; break;
+			case 1:
+				fDist = DISTANCE_LARGE; break;
+			case 2:
+				fDist = DISTANCE_HUGE; break;
 		}
 	}
 
-	fAngle = IntToFloat(Random(140) + 40);
-
-	fOrient = IntToFloat(Random(360));
-
-	return GenerateNewLocationFromLocation(lStart,
-										   fDist,
-										   fAngle,
-										   fOrient);
+	return GetRandomLocationAt(GetLocation(o), fDist);
 }
+
+location GetRandomLocationAt(location lWhere, float fDist = 0.0) {
+	vector vNewPos = GetPositionFromLocation(lWhere);
+	object oArea = GetAreaFromLocation(lWhere);
+	float fX, fY;
+	float fMaxY;
+	fX = ( Random(200) / 100.0 - 1.0 ) * fDist;
+	fMaxY = sqrt(fDist * fDist - fX * fX);
+	fY = ( Random(200) / 100.0 - 1.0 ) * fMaxY;
+	vNewPos += Vector(fX, fY, 0.0);
+	//Why a third parameter? Is this the "facing" value? --Rikan
+	location lNewLoc = Location(oArea, vNewPos, VectorToAngle(-1.0 * vNewPos));
+	return lNewLoc;
+
+}
+

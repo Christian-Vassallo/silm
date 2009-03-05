@@ -7,6 +7,7 @@
 
 extern("inc_misc")
 extern("inc_debug")
+extern("x0_i0_position")
 
 struct SpawnData {
 	int __pad;
@@ -102,7 +103,7 @@ location GetValidLocation(location lTarget) {
 
 void TMS_PlaceObject(object oObj, int iEntry) {
 	struct SpawnData entry = TMS_Read_SpawnData(oObj, iEntry);
-	location lNew = GetRandomLocationAt(oObj, entry.iDistance);
+	location lNew =   GetRandomLocationAt(GetLocation(oObj), IntToFloat(entry.iDistance));
 	object oNew = CreateObject(
 		entry.iObjType, GetRandomResRef(entry.sResRef), GetValidLocation(lNew));
 	string sPend = "TMS_SP_Pend_" + IntToString(iEntry);

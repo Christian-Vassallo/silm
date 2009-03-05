@@ -1,4 +1,5 @@
 extern("inc_misc")
+extern("x0_i0_position")
 
 // Number of hearbeats before first spawn
 int FIRE_SPAWN_TIME = 5;
@@ -16,7 +17,7 @@ int FIRE_SPAWN_GEN  = 4;
 int FIRE_TURNS      = 40;
 
 void SpawnNewFlame(int iGen) {
-	location lNewLoc = GetRandomLocation(GetLocation(OBJECT_SELF), 5);
+	location lNewLoc = GetRandomLocationAt(GetLocation(OBJECT_SELF), 5f);
 
 	object oOb = CreateObject(OBJECT_TYPE_PLACEABLE, GetResRef(OBJECT_SELF), lNewLoc);
 	SetLocalInt(oOb, "_GENERATION", iGen);

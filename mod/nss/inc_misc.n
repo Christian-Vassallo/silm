@@ -19,25 +19,6 @@ string StrTok(string sString, string sDelim) {
 	}
 }
 
-location GetRandomLocation(location lWhere, int iMaxDistance) {
-	vector vNewPos = GetPositionFromLocation(lWhere);
-	object oArea = GetAreaFromLocation(lWhere);
-	float fX, fY;
-	float fMaxY;
-	float fRadius = IntToFloat(iMaxDistance);
-	fX = ( Random(200) / 100.0 - 1.0 ) * fRadius;
-	fMaxY = sqrt(fRadius * fRadius - fX * fX);
-	fY = ( Random(200) / 100.0 - 1.0 ) * fMaxY;
-	vNewPos += Vector(fX, fY, 0.0);
-	//Why a third parameter? Is this the "facing" value? --Rikan
-	location lNewLoc = Location(oArea, vNewPos, VectorToAngle(-1.0 * vNewPos));
-	return lNewLoc;
-}
-
-location GetRandomLocationAt(object oObj, int iMaxDistance) {
-	return GetRandomLocation(GetLocation(oObj), iMaxDistance);
-}
-
 //Returns a general type of the object.
 // 0: Melee Weapon
 // 1: Body Armour

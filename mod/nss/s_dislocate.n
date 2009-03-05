@@ -1,6 +1,6 @@
 extern("inc_teleport")
 extern("x2_inc_spellhook")
-extern("inc_position")
+extern("x0_i0_position")
 
 void main() {
 	if ( !X2PreSpellCastCode() )
@@ -13,6 +13,6 @@ void main() {
 	if (GetLocalInt(oItem, "dislocator_disabled"))
 		return;
 
-	location lTarget = GetPseudoRandomLocation(GetArea(oTarget), oTarget, 8.0f);
+	location lTarget = GetRandomLocation(GetArea(oTarget), oTarget, 8.0f);
 	AssignCommand(oTarget, SpellDimensionDoor(lTarget, false, false));
 }
