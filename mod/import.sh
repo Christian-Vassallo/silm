@@ -24,6 +24,7 @@ for x in $@; do
 	*.dlg) target="dlg" ;;
 	*.ssf) target="ssf" ;;
 	*.itp) target="itp" ;;
+	*.fac) target="mod" ;;
 	*)
 		echo "WARNING: Cannot place $x; skipping."
 		continue
