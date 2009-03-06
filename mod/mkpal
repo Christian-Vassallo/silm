@@ -1,0 +1,229 @@
+#!/usr/bin/env nwn-dsl
+# vim: ft=ruby
+
+$palette_id_strref = {}
+
+$palette_id_strref["UTI"] = {16=>6745, 27=>6757, 49=>6779, 5=>186, 60=>6815, 38=>6768,
+22=>6751, 11=>6822, 33=>6764, 55=>6810, 44=>6819, 0=>6688, 61=>6817, 17=>6746,
+28=>6758, 50=>6780, 6=>4815, 39=>6769, 56=>6811, 12=>6742, 34=>6765, 23=>6699,
+45=>6820, 1=>6689, 18=>6747, 29=>6759, 51=>489, 7=>6669, 40=>6770, 62=>6821,
+2=>6690, 46=>6775, 57=>6812, 13=>6744, 35=>6766, 24=>6753, 8=>4818, 19=>1530,
+30=>6760, 52=>494, 63=>6831, 41=>6771, 3=>6691, 47=>6776, 58=>6813, 36=>6767,
+14=>6809, 42=>6772, 53=>6732, 9=>6739, 64=>83602, 31=>6761, 20=>6748, 26=>6754,
+48=>6778, 15=>1520, 4=>6692, 59=>6814, 37=>6699, 21=>6750, 54=>6808, 10=>6741,
+32=>6762, 43=>6774}
+
+$palette_id_strref["UTC"] = {49=>63246, 16=>6708, 38=>23, 5=>6695, 27=>2058,
+44=>35, 11=>6702, 0=>6688, 33=>6725, 22=>6714, 28=>6722, 17=>6709, 39=>25,
+6=>6696, 50=>201, 34=>6727, 45=>201, 12=>6703, 1=>6689, 23=>6716, 29=>201,
+18=>6710, 40=>27, 7=>6697, 24=>6717, 13=>1592, 46=>6732, 35=>6728, 2=>6690,
+30=>2116, 19=>537, 8=>6698, 41=>29, 25=>6718, 47=>6699, 14=>6706, 36=>6729,
+3=>6691, 9=>201, 31=>6723, 20=>6712, 42=>31, 48=>63235, 26=>6719, 15=>6707,
+37=>6730, 4=>6692, 43=>33, 10=>6701, 32=>2155, 21=>6713}
+
+$twoda_table = ARGV.shift
+$twoda_lookup_column = ARGV.shift
+$palette_type = ARGV.shift
+
+$palette_id_strref[$palette_type] or raise ArgumentError, "Unknown palette type"
+
+$ref_offset = 0xffffff + 1
+
+$dropped = []
+
+$do_alphabetically = false
+$do_by_type = true
+$do_by_cpal = true
+
+$itp = Gff::Struct.new(4294967295, "ITP", "V3.2")
+$master_list = $itp.add_list 'MAIN', []
+
+
+# baseitem_type => array of [ resref, displayed_name ]
+$refs = {}
+# palid => array of ..
+$pals = {}
+
+# first letter of name => array of ..
+$first_letter = {}
+count = 0
+ARGV.each {|item|
+  gff = need item, :uti
+
+  name = nil
+  if gff['LocalizedName']
+    nname = gff['LocalizedName'].v
+    nname = nname[nname.keys[0]]
+    name = if nname
+      nname
+    else
+      #TODO: look up strref
+      "(Str-ref: #{gff['LocalizedName'].str_ref})"
+    end
+
+    name = "%s (%s)" % [name, gff['TemplateResRef'].v]
+
+  elsif gff['FirstName']
+    fname = gff['FirstName'].v
+    fname = fname[fname.keys[0]]
+    lname = gff['LastName'].v
+    lname = lname[lname.keys[0]]
+
+    name = "%s %s (%s)" % [fname, lname, gff['TemplateResRef'].v]
+
+  else
+    # can't parse this one ..
+    $dropped << item
+    next
+  end
+
+
+  entry = case $palette_type
+    when 'UTI'
+      [gff['TemplateResRef'].v, name, lambda {|list|
+        list.add_cexostr "NAME", name
+        list.add_resref "RESREF", gff['TemplateResRef'].v
+      }]
+
+    when 'UTC'
+      cr = "0.0"
+      factionname = "Faction"
+
+      [gff['TemplateResRef'].v, name, lambda {|list|
+        list.add_cexostr "NAME", name
+        list.add_resref "RESREF", gff['TemplateResRef'].v
+        list.add_float "CR", 0.0 # gff['CR'].v
+        list.add_cexostr "FACTION", gff['FactionID'].v.to_s
+      }]
+  end
+
+  if base = gff[$twoda_lookup_column]
+    base = base.v.to_i
+    $refs[base] ||= []
+    $refs[base] << entry
+  end
+
+  if palid = gff['PaletteID']
+    palid = palid.v.to_i
+    $pals[palid] ||= []
+    $pals[palid] << entry
+  end
+
+  first_letter = name.strip[0,1].upcase
+  first_letter = case first_letter
+    when 'A'..'Z'
+      first_letter
+    else
+      '0'
+  end
+  $first_letter[first_letter] ||= []
+  $first_letter[first_letter] << entry
+
+  count += 1
+}
+
+
+[$refs, $pals, $first_letter].each {|table|
+  table.each {|key, value|
+    value.sort! {|a,b| a[1] <=> b[1]}
+  }
+}
+$id = lambda { 0 }
+
+# Alphabetically
+$master_list.add_struct 0 do |ns|
+  ns.add_dword 'STRREF', $ref_offset + 99 # "Alphabetical"
+  ns.add_list 'LIST', [] do |ls|
+
+    index = 0
+    letters = ('A'..'Z').to_a # + ["0"]
+    letters.each_slice(2) do |lt|
+      llt = lt.join("-")
+
+      ls.add_struct do |nns|
+        # ns.add_byte 'ID', 0
+        # nns.add_dword 'STRREF', $ref_offset + 72 + index  # each letter
+        nns.add_cexostr "NAME", llt
+
+        items = $first_letter[lt[0]]
+        items += $first_letter[lt[1]] if $first_letter[lt[1]]
+
+        nns.add_list 'LIST', [] do |lls|
+          items.each {|(ref, nam, lam)|
+            lls.add_struct do |nnns|
+              lam.call(nnns)
+            end
+          }
+        end
+      end # if $first_letter[letter]
+
+      index += 2
+    end
+  end
+end if $do_alphabetically
+
+# By Palette ID
+$master_list.add_struct 0 do |ms|
+  ms.add_dword 'STRREF', 7222 # "Custom Palette"
+
+  ms.add_list 'LIST', [] do |palid_list|
+
+    $pals.keys.each {|palid|
+      name = $palette_id_strref[$palette_type][palid] || 0 # ID of Palette ID strref ..
+
+      items = $pals[palid] || []
+
+      next if items.size == 0
+
+      palid_list.add_struct do |ns|
+        # ns.add_byte 'ID', 0
+        ns.add_dword 'STRREF', name.to_i
+        list = ns.add_list 'LIST', []
+
+        items.map {|(ref, nam, lam)|
+          list.add_struct do |nns|
+            lam.call(nns)
+          end
+        }
+      end
+    }
+
+  end
+end if $do_by_cpal
+
+# By TwoDA Type ..
+$master_list.add_struct 0 do |ms|
+  ms.add_dword 'STRREF', 966 # "Type"
+
+  twoda = TwoDA::Cache.get($twoda_table)
+  ms.add_list 'LIST', [] do |baseitem_list|
+
+    twoda.rows.each {|row|
+      row_id = row.ID
+      name  = row.Name
+      row.Name.to_i > 0 or begin
+        # log "Not adding tree for #{row.inspect}"
+        next
+      end
+      items = $refs[row.ID] || []
+
+      next if items.size == 0
+
+      baseitem_list.add_struct do |ns|
+        # ns.add_byte 'ID', 0
+        ns.add_dword 'STRREF', name.to_i
+        list = ns.add_list 'LIST', []
+
+        items.map {|(ref, nam, lam)|
+          list.add_struct do |nns|
+            lam.call(nns)
+          end
+        }
+      end
+    }
+
+  end
+end if $do_by_type
+
+log "#{count} templates"
+Gff.write($stdout, :gff, $itp)
