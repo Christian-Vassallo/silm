@@ -6,18 +6,14 @@ TARGET=silm_2da.hak
 VALIDEXT=*.2da *.itp
 
 twoda := $(addsuffix .2da, $(basename $(wildcard *.2ds)))
-chg := $(addsuffix .2da, $(subst parts, chg, $(basename $(wildcard parts_*.2ds))))
 
-all: $(TARGET)
+all: $(twoda) $(TARGET)
 
 path:
 ifeq  "$(NWNHOME)" ""
 	@echo "env var NWNHOME not set."
 	exit 1
 endif
-
-chg_%.2da : parts_%.2da
-	make_partstable.sh 0.0 < $< > $@
 
 # 2ds were generated with:
 # for x in *.2da; do \
@@ -28,6 +24,10 @@ chg_%.2da : parts_%.2da
 %.2da : %.2ds
 	@echo "$< -> $@"
 	@cat $< | ruby -ne 'print $$_.gsub(/\$$\(([\d]+)\)/) {|x| $$1.to_i + 1 + 0xffffff}' > $@
+	@if [[ "$@" == parts_*.2da ]]; then\
+		make_partstable.sh 0.0 < $@ > chg_`echo $@ | cut -d_ -f2-` ;\
+		echo "make_partstable.sh 0.0 < $@ > chg_`echo $@ | cut -d_ -f2-`";\
+	fi
 
 clean-backup:
 	-rm *.*~ *.out
@@ -35,7 +35,7 @@ clean-backup:
 clean: clean-backup
 	rm *.2da
 	
-$(TARGET): $(twoda) $(chg)
+$(TARGET): $(twoda)
 	erfpack.pl -H -o $@ $(VALIDEXT)
 
 install: path $(TARGET)
