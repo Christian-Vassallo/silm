@@ -24,9 +24,13 @@ void main() {
 			ActionCastSpellAtObject(stored_spell, otarget,
 				metamagic_stored, true, cl, PROJECTILE_PATH_TYPE_DEFAULT, true);
 
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(76), otarget);
+
 		} else if (mask & 0x04) {
 			ActionCastSpellAtLocation(stored_spell, target,
 				metamagic_stored, true, PROJECTILE_PATH_TYPE_DEFAULT, true);
+			
+			ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(76), target);
 
 		} else {
 			// Fail.

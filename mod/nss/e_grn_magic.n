@@ -20,6 +20,9 @@ void main() {
 		if (GetLocalInt(e.actedon, "mag_grenade_has_spell")) {
 			// grenade already has a spell on it - what do we want to do?
 			// For now, just recharge with the new one
+
+			FloatingTextStringOnCreature("Die Granate ist bereits geladen, und kann keinen anderen oder weiteren Zauber mehr aufnehmen.", e.actor, false);
+			event_stop_suppress();
 		}
 
 		int spell_id     = NWNXGetEventSubType()       & 0xffff;
@@ -30,7 +33,7 @@ void main() {
 			// Spell can be used for a mag_gren
 
 		} else {
-			FloatingTextStringOnCreature("*Dieser Zauber ist nicht fuer die magische Granate geeignet.", e.actor, false);
+			FloatingTextStringOnCreature("Dieser Zauber ist nicht fuer die magische Granate geeignet.", e.actor, false);
 			event_stop_suppress();
 		}
 
@@ -46,7 +49,7 @@ void main() {
 		SetLocalInt(e.actedon, "mag_grenade_metamagic", meta);
 		SetLocalInt(e.actedon, "mag_grenade_caster_level", caster_level);
 
-		DelayCommand(1.5, FloatingTextStringOnCreature("*Granate geladen: " + spell_name + "*", e.actor, false));
+		DelayCommand(1.5, FloatingTextStringOnCreature("Granate geladen: " + spell_name + "", e.actor, false));
 		SetName(e.actedon, "Magische Granate: " + spell_name);
 
 		SetLocalInt(e.actedon, "mag_grenade_do_visuals", true);
