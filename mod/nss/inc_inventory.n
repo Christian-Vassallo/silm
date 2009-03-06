@@ -101,10 +101,10 @@ int GetBestEquippableSlot(object creature, object item) {
 	if (mask & 0x00040)
 		return INVENTORY_SLOT_CLOAK;
 	if (mask & 0x00180) {
-		if (is_valid(GetItemInSlot(INVENTORY_SLOT_RIGHTRING)))
-			return INVENTORY_SLOT_LEFTRING;
-		else
+		if (is_valid(GetItemInSlot(INVENTORY_SLOT_LEFTRING)))
 			return INVENTORY_SLOT_RIGHTRING;
+		else
+			return INVENTORY_SLOT_LEFTRING;
 	}
 	if (mask & 0x00200)
 		return INVENTORY_SLOT_NECK;
