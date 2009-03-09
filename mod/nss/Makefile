@@ -57,4 +57,4 @@ revupdate:
 compile: Makefile.dep $(preprocessed) $(objects)
 
 tags: $(headers) $(scripts) $(corefiles)
-	@ctags --language-force=c --totals --c-kinds=cdefgmnpstuvx --fields=fksmnSzt $(headers) $(scripts) $(corefiles)
+	@ctags --language-force=c --totals --c-kinds=cdefgmnpstuvx --fields=fksmnSzt $(corefiles) $(scripts) $(headers)
