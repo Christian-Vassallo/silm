@@ -10,6 +10,6 @@ too_long_files=$(find $modroot/{ut*,area,dlg,itp,mod,nss,ssf}/ -maxdepth 1 | cut
 [ ! -z "$too_long_files" ] && echo -e "Files that are too long:\n$too_long_files" >&2 && exit 1
 
 # check that all areas have their scripts set
-( egrep ' On(Enter|Exit|Heartbeat|UserDefined):' area/*.are.yml|fgrep '""' ) && exit 1
+( egrep 'On(Enter|Exit|Heartbeat|UserDefined):' area/*.are.yml|fgrep '""' ) && exit 1
 
 exit 0
