@@ -56,6 +56,8 @@ VALIDEXTPLAYER=utp/\*.utp \
 
 RESOURCEDIRS=area dlg ssf utc utd ute uti utm utp uts utt utw mod itp
 
+NWNLIB_VERSION=0.4.4
+
 # End of settings.
 # Now type "make all" and hope for the best. :)
 
@@ -71,6 +73,8 @@ ifeq "$(NWNMODNAME)" ""
 	@echo "env var NWNMODNAME not set."
 	exit 1
 endif
+	@ruby -rubygems -e "gem 'nwn-lib', '>= $(NWNLIB_VERSION)'" || (\
+		echo "Your nwn-lib version is too old. Upgrade at least to $(NWNLIB_VERSION)."; exit 1)
 
 .PHONY: mandatory-verify
 mandatory-verify:
