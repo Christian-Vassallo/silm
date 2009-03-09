@@ -205,13 +205,8 @@ void OnPaperActivate(object oItem, object oActivator) {
 
 	int nTotalSize = GetTotalTextLength(oItem);
 	int nPrint = nTotalSize;
-	// Print 1/3rd of the Letters
-
-	if ( HasExplosiveRunes(oItem) )
-		nPrint /= 2;
 
 	int nPrinted = 0;
-
 
 	if ( 0 == nWriteCycles ) {
 		FloatingTextStringOnCreature("Das Pergament ist leer.", oActivator, 0);
@@ -236,9 +231,6 @@ void OnPaperActivate(object oItem, object oActivator) {
 
 			if ( nDiff > 0 )
 				sText = GetStringLeft(sText, GetStringLength(sText) - nDiff);
-
-			if ( nDiff > 0 && HasExplosiveRunes(oItem) )
-				sText += " Explosive Runen Explosive Runen Explosive Runen.";
 
 			FloatingTextStringOnCreature(sText, oActivator, 0);
 
