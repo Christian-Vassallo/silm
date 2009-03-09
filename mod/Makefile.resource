@@ -17,3 +17,9 @@ run-filters-on-yml:
 
 clean:
 	-@rm $(res)
+
+show-stale:
+	@for x in *.*; do \
+		[[ $$x == *.yml ]] && continue; \
+		[[ -f $$x.yml ]] || echo "stale file: $$x"; \
+	done

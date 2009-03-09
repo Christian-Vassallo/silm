@@ -93,6 +93,12 @@ refilter-resources: path mandatory-verify
 		$(MAKE) -j$(CONCURRENCY_LEVEL) -C $$res run-filters-on-yml ;\
 	done
 
+.PHONY: show-stale
+show-stale: path
+	@for res in $(RESOURCEDIRS); do \
+		$(MAKE) -C $$res show-stale ;\
+	done
+
 .PHONY: scripts
 scripts: path
 	$(MAKE) -j$(CONCURRENCY_LEVEL) -C nss revupdate all
