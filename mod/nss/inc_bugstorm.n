@@ -1,0 +1,142 @@
+extern("x0_i0_position")
+extern("nw_i0_generic")
+extern("x0_i0_enemy")
+
+// Bugs last one minute at most, but will leave shortly after arriving
+// when no food can be found
+#define BUGSTORM_BUG_LAST_TIME 6*10f
+#define BUGSTORM_BUG_SPAWN_RADIUS 15f
+#define BUGSTORM_BUG_SENSE_RADIUS 35f
+#define BUGSTORM_BUGS_IN_SENSE_RADIUS Random(10)+10
+#define BUGSTORM_HB 3f
+
+object bugstorm_get_likely_target(object bug) {
+	int i = 0;
+
+	while (true) {
+		i++;
+
+		object critter = GetNearestEnemy(bug, i);
+
+		if (!GetIsObjectValid(critter))
+			break;
+
+		if (GetDistanceBetween(critter, bug) > BUGSTORM_BUG_SENSE_RADIUS)
+			break;
+
+		if (GetIsObjectValid(GetItemPossessedBy(critter, "bugpodp")))
+			continue;
+
+		return critter;
+	}
+
+	return OBJECT_INVALID;
+}
+
+// Spawn a bug at +where+. The bug will do as it pleases, until
+// despawn conditions are met.
+object bugstorm_spawn_bug(location where);
+
+// Periodic timer initiated for each bug spawned by
+// +bugstorm_spawn_bug+. No need to call this.
+// Bugs despawn under the following conditions:
+// - The've been for BUGSTORM_BUG_LAST_TIME seconds
+//   alive.
+// - There is no more food for BUGSTORM_NO_FOOD_TIME seconds.
+void bugstorm_despawn_bug_timer(object bug, float time_present, float time_remaining);
+
+
+// Assign to a bug to make him think at +where+ is food.
+void bugstorm_bug_sniff_to(location where);
+
+// Make all bugs in the vicinity think that +where+ is
+// a place of great interest. Will spawn additional bugs
+// if the area is right and not enough bugs are here already.
+void bugstorm_signal(location where);
+
+void bugstorm_bug_sniff_to(location where) {
+	// SpeakString("*sniff*");
+
+	ClearAllActions(true);
+	ActionForceMoveToLocation(where);
+	// When there, look for the nearest hostile, and just attack.
+	object t = bugstorm_get_likely_target(OBJECT_SELF);
+	if (GetIsObjectValid(t))
+		ActionAttack(t);
+}
+
+// Someone threw a bugpod at +target+. All bugs in the vicinity
+// go there immediately and maybe some more appear unless .. what/
+void bugstorm_signal(location where) {
+	object bug;
+	int bugs_found = 0;
+
+	bug = GetFirstObjectInShape(SHAPE_SPHERE, BUGSTORM_BUG_SENSE_RADIUS, where, false, OBJECT_TYPE_CREATURE);
+	while (GetIsObjectValid(bug)) {
+		if (GetTag(bug) == "bugstorm_bug") {
+			AssignCommand(bug, bugstorm_bug_sniff_to(where));
+			bugs_found++;
+		}
+
+		bug = GetNextObjectInShape(SHAPE_SPHERE, BUGSTORM_BUG_SENSE_RADIUS, where, false, OBJECT_TYPE_CREATURE);
+	}
+	
+	while (bugs_found++ < BUGSTORM_BUGS_IN_SENSE_RADIUS) {
+		location loc = GetRandomLocationAt(where, BUGSTORM_BUG_SPAWN_RADIUS);
+		bug = bugstorm_spawn_bug(loc);
+		AssignCommand(bug, bugstorm_bug_sniff_to(where));
+	}
+}
+
+void bugstorm_despawn_bug_timer(object bug, float time_present, float time_remaining) {
+	//AssignCommand(bug, SpeakString("despawn_timer(" + ftoa(time_remaining) + ");"));
+
+	bool can_despawn = false;
+
+	object nearest_enemy = bugstorm_get_likely_target(bug);
+
+	if (time_remaining < BUGSTORM_HB) {
+		can_despawn = true;
+	}
+
+
+	if (time_present > 6f) {
+
+		if (!GetIsObjectValid(nearest_enemy) ||
+			/*!GetObjectSeen(nearest_enemy, bug) ||*/
+			GetDistanceBetween(nearest_enemy, bug) > BUGSTORM_BUG_SENSE_RADIUS
+		)
+			can_despawn = true;
+	}
+
+	if (!can_despawn) {
+		if (!GetIsInCombat(bug))
+			ActionAttack(nearest_enemy);
+
+		DelayCommand(BUGSTORM_HB, bugstorm_despawn_bug_timer(bug, time_present + BUGSTORM_HB, time_remaining - BUGSTORM_HB));
+
+	} else {
+		AssignCommand(bug, ClearAllActions(1));
+		location loc = GetLocation(bug);
+		DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DUST_EXPLOSION), loc));
+		DelayCommand(0.0, DestroyObject(bug));
+	}
+}
+
+
+// Create a bug at the given location, and also add a despawn trigger.
+object bugstorm_spawn_bug(location where) {
+	string ref = "bugstorm_bug0";
+
+	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DUST_EXPLOSION), where);
+	object bug = CreateObject(OBJECT_TYPE_CREATURE, ref, where);
+	DelayCommand(0.2, SetCreatureTailType(410, bug));
+	
+	DelayCommand(0.1, bugstorm_despawn_bug_timer(bug, 0.1, BUGSTORM_BUG_LAST_TIME));
+
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectHaste(), bug);
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectAttackIncrease(5), bug);
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectDamageReduction(30, DAMAGE_POWER_PLUS_FOUR, 0), bug);
+
+	return bug;
+}
