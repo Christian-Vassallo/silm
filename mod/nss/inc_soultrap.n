@@ -1,0 +1,75 @@
+extern("inc_scorco")
+
+const int SPELL_TRAP_THE_SOUL = 825;
+
+// Returns true if the given object is trapped already
+bool soultrap_is(object trap);
+
+// Returns true if the given target can be trapped into
+// a soultrap.
+bool soultrap_can(object target, object caster);
+
+// Trap +target+ into +trap+.
+// returns true on success, false otherwise.
+bool soultrap_trap(object target, object trap, object caster);
+
+// Release the creature trapped in +trap+.
+object soultrap_release(location at, object trap, object caster);
+
+bool soultrap_is(object trap) {
+	return GetLocalInt(trap, "creature_gff") > 0;
+}
+
+bool soultrap_can(object target, object caster) {
+	return (
+		is_valid(target) &&
+		is_creature(target) &&
+		caster != target &&
+		!is_pc(target) &&
+		!is_dm(target) &&
+		!GetIsDMPossessed(target) &&
+		!GetIsPossessedFamiliar(target) &&
+		GetAssociateType(target) != ASSOCIATE_TYPE_ANIMALCOMPANION &&
+		GetAssociateType(target) != ASSOCIATE_TYPE_FAMILIAR
+	);
+}
+
+bool soultrap_trap(object target, object trap, object caster) {
+	if (soultrap_is(trap))
+		return false;
+
+	if (!soultrap_can(target, caster))
+		return false;
+
+	SetLocalInt(trap, "creature_gff", p_save("soultrap", target));
+
+	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH),
+		GetLocation(target));
+	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_BREACH),
+		GetLocation(target));
+
+	DestroyObject(target);
+	return true;
+}
+
+object soultrap_release(location at, object trap, object caster) {
+	if (!soultrap_is(trap))
+		return OBJECT_INVALID;
+
+	object critter = p_load(GetLocalInt(trap, "creature_gff"), at);
+	p_delete("soultrap", critter);
+
+	SetLocalInt(trap, "creature_gff", 0);
+	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH),
+		at);
+	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_BREACH),
+		at);
+
+	return critter;
+}
+
+// Destroy the given soultrap.
+void soultrap_destroy(object trap) {
+	// TODO: delete database entry
+	DestroyObject(trap);
+}

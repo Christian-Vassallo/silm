@@ -1,0 +1,55 @@
+extern("inc_soultrap")
+extern("nw_i0_spells")
+
+/*
+TODO: How to trap PCs:
+ - store their CID on the flask
+ - move them to asoultrap
+ - only allow summoning while the player is online
+*/
+
+void __trap(object oTarget, object oItem, object oPC) {
+	if (GetIsDead(oTarget)) {
+		FloatingTextStringOnCreature("Fange die Seele: " + GetName(oTarget) + ": .. tot.", oPC, false);
+		return;
+	}
+
+	if (soultrap_can(oTarget, oPC)) {
+
+		if (GetIsObjectValid(oItem) && soultrap_is(oItem)) {
+			FloatingTextStringOnCreature("Du kannst nur eine Kreatur gleichzeitig einsperren.", oPC, false);
+			return;
+		}
+
+		if (MySavingThrow(SAVING_THROW_WILL, oTarget, GetSpellSaveDC(), SAVING_THROW_TYPE_TRAP, oPC)) {
+			FloatingTextStringOnCreature("Das Ziel hat den Rettungswurf geschafft.", oPC, false);
+			
+		} else {
+			object trap = GetIsObjectValid(oItem) ? oItem : CreateItemOnObject("soulstone", oPC);
+			soultrap_trap(oTarget, trap, oPC);
+		}
+
+	} else {
+		FloatingTextStringOnCreature("Dieses Ziel kann nicht eingesperrt werden.", oPC, false);
+
+	}
+}
+
+void main() {
+	object oPC = OBJECT_SELF;
+
+	object oItem = GetSpellCastItem();
+
+	object oTarget = GetSpellTargetObject();
+
+	// Hotfix for OnHitCastSpell-type
+	if (GetCurrentAction(oPC) == ACTION_ATTACKOBJECT) {
+		// We trap the target AFTER the attack round, because the weapon damage might kill
+		// the target
+		DelayCommand(0.1, __trap(oTarget, oItem, oPC));
+
+	} else {
+		__trap(oTarget, oItem, oPC);
+
+	}
+}
