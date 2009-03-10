@@ -74,7 +74,8 @@ void bugstorm_signal(location where) {
 	bug = GetFirstObjectInShape(SHAPE_SPHERE, BUGSTORM_BUG_SENSE_RADIUS, where, false, OBJECT_TYPE_CREATURE);
 	while (GetIsObjectValid(bug)) {
 		if (GetTag(bug) == "bugstorm_bug") {
-			AssignCommand(bug, bugstorm_bug_sniff_to(where));
+			// sniff_to breaks Get*InShape, so we schedule it for later
+			DelayCommand(0.1, AssignCommand(bug, bugstorm_bug_sniff_to(where)));
 			bugs_found++;
 		}
 
