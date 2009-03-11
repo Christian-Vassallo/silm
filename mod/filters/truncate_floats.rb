@@ -10,6 +10,10 @@ count = 0
 self.each_by_flat_path do |label, field|
 	next unless field.is_a?(Gff::Field)
 	next unless field.field_type == :float
+  next unless field.l == "Bearing" || field.l == "Facing" ||
+    field.l =~ /Orientation$/ || field.l =~ /^[XZY]$/ ||
+    field.l =~ /Position$/
+
 	field.field_value =
 		("%.#{PRECISION}f" % field.field_value).to_f
 	count += 1
