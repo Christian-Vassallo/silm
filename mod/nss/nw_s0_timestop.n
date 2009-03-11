@@ -15,9 +15,6 @@
 extern("x2_inc_spellhook")
 
 void main() {
-//  SendMessageToAllDMs("No Timestop.");
-	return;
-
 /*
  * Spellcast Hook Code
  * Added 2003-06-20 by Georg
@@ -44,7 +41,7 @@ void main() {
 	SignalEvent(OBJECT_SELF, EventSpellCastAt(OBJECT_SELF, SPELL_TIME_STOP, FALSE));
 
 	//Apply the VFX impact and effects
-	DelayCommand(0.75, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eTime, OBJECT_SELF, 9.0));
+	DelayCommand(0.75, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eTime, OBJECT_SELF, itof((d4()+1) * 6)));
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, eVis, lTarget);
 }
 
