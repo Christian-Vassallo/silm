@@ -21,6 +21,10 @@ endif
 #   >! $(basename $x .2da).2ds; \
 # done
 
+tailmodel.2ds:: appearance.2ds
+	cat tailmodel.2ds | ./generate_tailmodel.2ds.rb appearance.2ds > tailmodel_new &&\
+		mv tailmodel_new tailmodel.2ds
+
 %.2da : %.2ds
 	@echo "$< -> $@"
 	@cat $< | ruby -ne 'print $$_.gsub(/\$$\(([\d]+)\)/) {|x| $$1.to_i + 1 + 0xffffff}' > $@
