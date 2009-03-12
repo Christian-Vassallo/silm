@@ -46,6 +46,12 @@ void TakeValueFromCreature(int iValue, object oPC, int bDestroy = FALSE);
 // Gives money (in coin items) to a creature.
 void GiveMoneyToCreature(object oPC, struct Money stCoins);
 
+int GetMoney(object oWithInventory);
+
+int GetMoney(object oWithInventory) {
+	return Money2Value(CountInventoryMoney(oWithInventory, false));
+}
+
 //
 
 string MoneyToString(struct Money m) {
