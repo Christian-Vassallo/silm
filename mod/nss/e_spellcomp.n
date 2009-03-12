@@ -1,6 +1,7 @@
 extern("inc_nwnx_events")
 extern("inc_colors")
 extern("inc_spelltools")
+extern("draconic")
 
 // wait at max N iterations for a spell to be started casting
 // TICK_ITERATIONS * TICK_DELAY / 6.0 is the amount of spells that this
@@ -21,23 +22,18 @@ void _show(object caster, int spell, int meta, int flags) {
 		case 6: c = cOrange; break;
 	}
 	
-	string meta_s = "";
-	switch (meta) {
-		case METAMAGIC_EMPOWER:  meta_s = GetStringByStrRef(66762); break;
-		case METAMAGIC_EXTEND:   meta_s = GetStringByStrRef(66763); break;
-		case METAMAGIC_MAXIMIZE: meta_s = GetStringByStrRef(66764); break;
-		case METAMAGIC_QUICKEN:  meta_s = GetStringByStrRef(66765); break;
-		case METAMAGIC_SILENT:   meta_s = GetStringByStrRef(66766); break;
-		case METAMAGIC_STILL:    meta_s = GetStringByStrRef(66767); break;
+	string meta_s = MetaMagicToDraconic(meta);
+
+	string name = SpellToDraconic(spell);
+	if (name == "") {
+		_WARN("cannot resolve verbal component for " + itoa(spell));
+		return;
 	}
-
-	string name = GetSpellName(spell);
 	if (meta_s != "")
-		name = meta_s + " " + name;
+		name += " " + strupper(meta_s);
 
-	string str = name + "!";
+	string str = ColorTag(c) + name + "!";
 
-	str = ColorTag(c) + str;
 	AssignCommand(caster, SpeakString(str));
 }
 
@@ -77,6 +73,10 @@ void main() {
 		int meta         = NWNXGetEventSubType() >> 16 & 0xff;
 		int flags        = NWNXGetEventSubType() >> 27 & 0x0f; // instant_cast
 		
+		if (flags) // We assume instant spells are scripted events, and not player-cast
+			return;
+
+		DelayCommand(TICK_DELAY, _tick(e.actor, spell_id, meta, flags, TICK_ITERATIONS));
 		int is_verbal = -1 != strpos(strlwr(Get2DAString("spells", "VS", spell_id)), "v");
 
 		if (!is_verbal)
@@ -85,9 +85,5 @@ void main() {
 		if (METAMAGIC_SILENT == meta)
 			return;
 
-		if (flags) // We assume instant spells are scripted events, and not player-cast
-			return;
-
-		DelayCommand(TICK_DELAY, _tick(e.actor, spell_id, meta, flags, TICK_ITERATIONS));
 	}
 }

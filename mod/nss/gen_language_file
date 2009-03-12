@@ -1,0 +1,106 @@
+#!/usr/bin/env nwn-dsl
+# vim: ft=ruby
+
+spells = TwoDA.get('spells')
+
+# (metamagic +) range + spellschool-#{last_digit_of_id} + innate + hostile + has_projectile?
+# word of power: one word?
+
+$lex = YAML.load(%~
+schools:
+  G: ini       # "general"
+  A: afzenat   # "abjure"
+  C: vehafor   # "create"
+  D: ithquant  # "divine"
+  E: levax     # "enchant"
+  V: bvare     # "recall" - yes, whatever
+  I: hejing    # "water"
+  N: neccasal  # "necromanc-"
+  T: thirku    # "change"
+
+metamagic:
+  empower:    dastur   # "power"
+  extend:     voran    # "extra"
+  maximize:   turalisj # "big"
+  quicken:    queelak  # "quick"
+  silent:     ssej     # "silent"
+  still:      crodr    # "inside"
+
+# "ouith" = benefic.
+# "nesca" = harmful
+category:
+  1:  ouith creol  # some
+  2:  ouith svern  # over
+  3:  ouith xtirl
+  4:  nezca shio   # all
+  5:  nezca xtirl  # touch
+  6:  nezca creol
+  7:  nezcaehs
+  8:  nezca svern
+  9:  nezcair
+  10: nezca
+  11: pazienna  # "madness"
+
+range:
+  P:   siluf    # "oneself"
+  T:   lithlota # "intimate" :}
+  S:   leirith  # "near"
+  M:   lyrik    # "other"
+  L:   karif    # "far"
+
+projectile:
+  1: nlgnos
+
+hostile:
+  0: thurirl
+  1: irlym
+
+level:
+  0: ehs   # "nothing"
+  1: ir
+  2: jiil
+  3: fogah
+  4: vrrar
+  5: jlatak
+  6: jiko
+  7: vakil
+  8: supri
+  9: wlekjr
+~).freeze
+
+def get_for_spell row
+  [
+    $lex['range'][row.Range.upcase],
+    $lex['schools'][row.School.upcase] + $lex['level'][ row.ID.to_s[-1,1].to_i ],
+#    $lex['category'][row.Category.to_i],
+    $lex['level'][row.Innate.to_i],
+    $lex['hostile'][row.HostileSetting.to_i],
+    $lex['projectile'][row.Proj.to_i],
+  ].compact.join(" ").capitalize
+end
+
+puts "string MetaMagicToDraconic(int meta) {"
+$lex['metamagic'].each {|m, v|
+  puts "\tif (METAMAGIC_#{m.upcase} == meta) return #{v.inspect};"
+}
+puts "\treturn \"\";"
+puts "}"
+
+puts "string SpellToDraconic(int spell) {"
+spells.rows.each {|row|
+  next unless row.UserType == "1"
+  next unless row.Innate != ""
+  next unless (
+    row.Wiz_Sorc != "" ||
+    row.Ranger != "" ||
+    row.Paladin != "" ||
+    row.Druid != "" ||
+    row.Cleric != "" ||
+    row.Bard != ""
+  )
+
+  words = get_for_spell row
+  puts "\tif (spell == #{row.ID}) return #{words.inspect};"
+}
+puts "\treturn \"\";"
+puts "}"

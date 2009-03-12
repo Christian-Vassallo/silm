@@ -35,6 +35,9 @@ include Makefile.dep
 
 autogen := appearance.h
 
+draconic.n: gen_language_file
+	./gen_language_file > draconic.n
+
 appearance.h:
 	../generate_appearance_h.rb > appearance.h
 
