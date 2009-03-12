@@ -48,11 +48,8 @@ VALIDEXTDEV=area/\*.git area/\*.are \
 # players to build their own areas, items, etc.
 VALIDEXTPLAYER=utp/\*.utp \
 	itp/placeablepalcus.itp \
-	itp/doorpalcus.itp \
-	itp/soundpalcus.itp \
-	ssf/\*.ssf \
-	mod/\*.fac mod/\*.jrl \
-	override-player/\*
+	mod/\*.fac \
+	override-player/\*.*
 
 RESOURCEDIRS=area dlg ssf utc utd ute uti utm utp uts utt utw mod itp
 
@@ -121,16 +118,23 @@ else
 	@echo "Packing up maps matching: $(MAPMASK)"
 	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH).mod area/$(MAPMASK).are area/$(MAPMASK).git $(VALIDEXT)
 endif
+
+local-dev:
 	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-dev.mod $(MAPS) $(VALIDEXTDEV)
+
+local-player:
+	cp mod/module.ifo override-player
+	cd override-player && update-ifo.pl *.are
 	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-player.mod $(MAPS) $(VALIDEXTPLAYER)
 
 tar: local
-	tar -czf $(NWNMODNAME)-$(BRANCH).tgz $(NWNMODNAME)-$(BRANCH).mod
 	tar -czf $(NWNMODNAME)-$(BRANCH)-dev.tgz $(NWNMODNAME)-$(BRANCH)-dev.mod
 	tar -czf $(NWNMODNAME)-$(BRANCH)-player.tgz $(NWNMODNAME)-$(BRANCH)-player.mod
 
 # generates a new package with the current commit
 package: path local
+
+package-player: path local-player
 
 # installs all packaged in the relevant directories
 install:
