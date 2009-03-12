@@ -1,0 +1,93 @@
+extern("inc_nwnx_events")
+extern("inc_colors")
+extern("inc_spelltools")
+
+// wait at max N iterations for a spell to be started casting
+// TICK_ITERATIONS * TICK_DELAY / 6.0 is the amount of spells that this
+// can queue, and still catch - the rest will emit a warning and simply
+// not say anything.
+#define TICK_ITERATIONS 120
+#define TICK_DELAY 1.0
+
+void _show(object caster, int spell, int meta, int flags) {
+	struct Color c;
+	switch (Random(7)) {
+		case 0: c = cRed; break;
+		case 1: c = cLightBlue; break;
+		case 2: c = cYellow; break;
+		case 3: c = cMidGreen; break;
+		case 4: c = cMagenta; break;
+		case 5: c = cTeal; break;
+		case 6: c = cOrange; break;
+	}
+	
+	string meta_s = "";
+	switch (meta) {
+		case METAMAGIC_EMPOWER:  meta_s = GetStringByStrRef(66762); break;
+		case METAMAGIC_EXTEND:   meta_s = GetStringByStrRef(66763); break;
+		case METAMAGIC_MAXIMIZE: meta_s = GetStringByStrRef(66764); break;
+		case METAMAGIC_QUICKEN:  meta_s = GetStringByStrRef(66765); break;
+		case METAMAGIC_SILENT:   meta_s = GetStringByStrRef(66766); break;
+		case METAMAGIC_STILL:    meta_s = GetStringByStrRef(66767); break;
+	}
+
+	string name = GetSpellName(spell);
+	if (meta_s != "")
+		name = meta_s + " " + name;
+
+	string str = name + "!";
+
+	str = ColorTag(c) + str;
+	AssignCommand(caster, SpeakString(str));
+}
+
+void _tick(object caster, int spell, int meta, int flags, int remaining = 0) {
+	if (remaining <= 0) {
+		_INFO("spell timer expired while waiting for caster = " + otoa(caster) + ", spell = " + itoa(spell));
+		return;
+	}
+
+	if (GetCurrentAction(caster) == ACTION_CASTSPELL &&
+			GetSpellId() == spell && GetMetaMagicFeat() == meta) {
+
+		_show(caster, spell, meta, flags);
+
+	} else {
+		DelayCommand(TICK_DELAY, _tick(caster, spell, meta, flags, remaining - 1));
+
+	}
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	
+	if (e.ev == "creature_castspell") {
+		if (!is_creature(e.actor))
+			return;
+
+		if (GetIsDM(e.actor))
+			return;
+
+		if (GetLocalInt(e.actor, "spellcomp_skip")) {
+			SetLocalInt(e.actor, "spellcomp_skip", 0);
+			return;
+		}
+
+		int spell_id     = NWNXGetEventSubType()       & 0xffff;
+		int meta         = NWNXGetEventSubType() >> 16 & 0xff;
+		int flags        = NWNXGetEventSubType() >> 27 & 0x0f; // instant_cast
+		
+		int is_verbal = -1 != strpos(strlwr(Get2DAString("spells", "VS", spell_id)), "v");
+
+		if (!is_verbal)
+			return;
+	
+		if (METAMAGIC_SILENT == meta)
+			return;
+
+		if (flags) // We assume instant spells are scripted events, and not player-cast
+			return;
+
+		DelayCommand(TICK_DELAY, _tick(e.actor, spell_id, meta, flags, TICK_ITERATIONS));
+	}
+}
