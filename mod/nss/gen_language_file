@@ -88,16 +88,7 @@ puts "}"
 
 puts "string SpellToDraconic(int spell) {"
 spells.rows.each {|row|
-  next unless row.UserType == "1"
   next unless row.Innate != ""
-  next unless (
-    row.Wiz_Sorc != "" ||
-    row.Ranger != "" ||
-    row.Paladin != "" ||
-    row.Druid != "" ||
-    row.Cleric != "" ||
-    row.Bard != ""
-  )
 
   words = get_for_spell row
   puts "\tif (spell == #{row.ID}) return #{words.inspect};"

@@ -33,7 +33,7 @@ include Makefile.dep
 # From Makefile.dep:
 # $(objects)   array of script basenames (without extension) that are compileable
 
-autogen := appearance.h
+autogen := appearance.h draconic.n
 
 draconic.n: gen_language_file
 	./gen_language_file > draconic.n
