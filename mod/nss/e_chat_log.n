@@ -11,6 +11,11 @@ void main() {
 	if (ea.i0 & CHATMODE_DM_MODE)
 		ea.i0 -= CHATMODE_DM_MODE;
 
+	if (ei.runnable == ei.actedon) {
+		FloatingTextStringOnCreature("Warnung: Diese Nachricht ging an dich selbst (falsch geklickt?): " +
+			substr(ea.a0, 0, 10) + " ..", ei.runnable, false);
+	}
+
 	string aid = itoa(GetAccountID(ei.actor));
 	string cid = itoa(GetCharacterID(ei.actor));
 	SetLocalString(GetModule(),  "last_chat_message_text_" + aid + "_" + cid, ea.a0);
