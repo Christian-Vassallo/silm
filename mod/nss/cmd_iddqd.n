@@ -1,0 +1,50 @@
+extern("inc_nwnx_func")
+
+void summon_set_events(object creature) {
+	SetCreatureEventHandler(creature, CREATURE_EVENT_ATTACKED, "nw_ch_ac5");
+	SetCreatureEventHandler(creature, CREATURE_EVENT_DAMAGED, "nw_ch_ac5");
+	SetCreatureEventHandler(creature, CREATURE_EVENT_DEATH, "nw_ch_ac7");
+	SetCreatureEventHandler(creature, CREATURE_EVENT_CONVERSATION, "nw_ch_ac4");
+	SetCreatureEventHandler(creature, CREATURE_EVENT_DISTURBED, "nw_ch_ac8");
+	SetCreatureEventHandler(creature, CREATURE_EVENT_ENDCOMBAT, "nw_ch_ac3");
+	SetCreatureEventHandler(creature, CREATURE_EVENT_HEARTBEAT, "nw_ch_ac1");
+	SetCreatureEventHandler(creature, CREATURE_EVENT_BLOCKED, "nw_ch_ace");
+	SetCreatureEventHandler(creature, CREATURE_EVENT_PERCEPTION, "nw_ch_ac2");
+	SetCreatureEventHandler(creature, CREATURE_EVENT_RESTED, "nw_ch_aca");
+	SetCreatureEventHandler(creature, CREATURE_EVENT_SPAWN, "nw_ch_aca");
+	SetCreatureEventHandler(creature, CREATURE_EVENT_SPELLCAST, "nw_ch_summon_9");
+	SetCreatureEventHandler(creature, CREATURE_EVENT_USERDEF, "nw_ch_acb");
+}
+
+void _fix(object p) {
+	object golem = GetAssociate(ASSOCIATE_TYPE_SUMMONED, p);
+	if (strlwr(GetResRef(golem)) != "x2_golem002") {
+		_ERROR("Summon not our expected golem, bailing.");
+		return;
+	}
+
+	summon_set_events(golem);
+	ExecuteScript("nw_ch_summon_9", golem);
+
+	SetCreatureAppearanceType(golem, 1362);
+	SetCreatureTailType(292, golem);
+	SetName(golem, "Marvin");
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	struct EventArguments ea = GetEventArguments(e.serial);
+
+	if (e.ev == "chat_command" && ea.a0 == "iddqd" &&
+			GetIsPC(e.runnable) && !GetIsDM(e.runnable)) {
+
+		_WARN(GetName(e.runnable) + " used iddqd");
+		effect esummon = EffectSummonCreature("x2_golem002", VFX_FNF_SUMMON_MONSTER_3);
+		ApplyEffectAtLocation(DURATION_TYPE_PERMANENT, esummon, GetLocation(e.runnable));
+		DelayCommand(1.0, _fix(e.runnable));
+		SendMessageToPC(e.runnable, "iddqd> Yeeehaw!");
+
+		event_stop();
+	}
+}
+
