@@ -76,7 +76,6 @@ void main() {
 		if (flags) // We assume instant spells are scripted events, and not player-cast
 			return;
 
-		DelayCommand(TICK_DELAY, _tick(e.actor, spell_id, meta, flags, TICK_ITERATIONS));
 		int is_verbal = -1 != strpos(strlwr(Get2DAString("spells", "VS", spell_id)), "v");
 
 		if (!is_verbal)
@@ -84,6 +83,7 @@ void main() {
 	
 		if (METAMAGIC_SILENT == meta)
 			return;
-
+		
+		DelayCommand(TICK_DELAY, _tick(e.actor, spell_id, meta, flags, TICK_ITERATIONS));
 	}
 }
