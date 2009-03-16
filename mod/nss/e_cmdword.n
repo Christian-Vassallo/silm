@@ -1,0 +1,46 @@
+extern("inc_nwnx_events")
+extern("inc_colors")
+extern("draconic")
+
+void _show(object creature, object obj, int spell) {
+	string word = SpellToDraconicActivationWord(spell);
+
+	struct Color c;
+	switch (Random(7)) {
+		case 0: c = cRed; break;
+		case 1: c = cLightBlue; break;
+		case 2: c = cYellow; break;
+		case 3: c = cMidGreen; break;
+		case 4: c = cMagenta; break;
+		case 5: c = cTeal; break;
+		case 6: c = cOrange; break;
+	}
+
+	word = ColorTag(c) + word + "!";
+
+	AssignCommand(creature, SpeakString(word));
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "object_spellcast") {
+		if (!is_creature(e.actor) || GetIsDM(e.actor))
+			return;
+
+		if (GetCurrentAction(e.actor) != ACTION_ITEMCASTSPELL)
+			return;
+
+		object item = GetSpellCastItem();
+
+		if (!is_item(item))
+			return;
+
+		if (GetLocalInt(e.actor, "cmdword_skip")) {
+			SetLocalInt(e.actor, "cmdword_skip", 0);
+			return;
+		}
+
+		_show(e.actor, item, GetSpellId());
+	}
+}

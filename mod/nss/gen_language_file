@@ -65,7 +65,7 @@ level:
   6: jiko
   7: vakil
   8: supri
-  9: wlekjr
+  9: welekijr
 ~).freeze
 
 def get_for_spell row
@@ -79,6 +79,13 @@ def get_for_spell row
   ].compact.join(" ").capitalize
 end
 
+def get_for_spell_activate row
+  [
+    $lex['hostile'][row.HostileSetting.to_i],
+    $lex['level'][row.Innate.to_i]
+  ].join(" ").capitalize
+end
+
 puts "string MetaMagicToDraconic(int meta) {"
 $lex['metamagic'].each {|m, v|
   puts "\tif (METAMAGIC_#{m.upcase} == meta) return #{v.inspect};"
@@ -88,9 +95,19 @@ puts "}"
 
 puts "string SpellToDraconic(int spell) {"
 spells.rows.each {|row|
-  next unless row.Innate != ""
+  next if row.Innate == ""
 
   words = get_for_spell row
+  puts "\tif (spell == #{row.ID}) return #{words.inspect};"
+}
+puts "\treturn \"\";"
+puts "}"
+
+puts "string SpellToDraconicActivationWord(int spell) {"
+spells.rows.each {|row|
+  next if row.Innate == ""
+
+  words = get_for_spell_activate row
   puts "\tif (spell == #{row.ID}) return #{words.inspect};"
 }
 puts "\treturn \"\";"
