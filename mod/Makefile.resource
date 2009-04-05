@@ -21,5 +21,5 @@ clean:
 show-stale:
 	@for x in *.*; do \
 		[[ $$x == *.yml ]] && continue; \
-		[[ -f $$x.yml ]] || echo "stale file: $$x"; \
+		[[ -f $$x.yml ]] || echo $$x; \
 	done
