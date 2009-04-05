@@ -56,7 +56,7 @@ void register_genguards() {
 	SetLocalString(GetModule(), "genguard_citydoors_guard_tag", "sl_bogenschuetze");
 	SetLocalInt(GetModule(), "genguard_citydoors_reject_weapons", 1);
 	SetLocalInt(GetModule(), "genguard_citydoors_reject_helmets", 1);
-	SetLocalInt(GetModule(), "genguard_citydoors_denysr_dunkelelf", 1);
+	SetLocalInt(GetModule(), "genguard_citydoors_denysr_dunkelelf", 0);
 }
 
 void main() {
@@ -71,6 +71,9 @@ void main() {
 				GetLocalInt(e.runnable, "genguard_active"))
 	) {
 		string genguard_type = GetLocalString(e.runnable, "genguard_type");
+
+		if (GetLocalInt(e.actor, "genguard_override"))
+			return;
 
 		string guard_tag = "";
 		if (genguard_type != "")
