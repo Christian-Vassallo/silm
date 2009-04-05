@@ -62,13 +62,24 @@ create table dcont (
 );
 
 -- Table: dcont
--- Items on the ground
+-- Items in dynamic containers
 create table objects.dcont (
 	container int not null
 ) inherits (objects.objects);
 create trigger objects_update_md
 	before insert or update
 	on objects.cont for each row 
+	execute procedure objects.objects_update_md();
+
+-- Table: trashbox
+-- Items thrown into sigil boxes
+create table objects.trashbox (
+	aid int,
+	cid int
+) inherits (objects.objects);
+create trigger objects_update_md
+	before insert or update
+	on objects.trashbox for each row 
 	execute procedure objects.objects_update_md();
 
 -- Table: critters

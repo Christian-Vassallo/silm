@@ -1,9 +1,16 @@
+extern("inc_scorco")
+extern("inc_cdb")
+
 void main() {
+	int aid = GetAccountID(GetLastClosedBy());
+	int cid = GetCharacterID(GetLastClosedBy());
 
 	int c = 0;
 	object oItem = GetFirstItemInInventory();
 	while ( GetIsObjectValid(oItem) ) {
-		DestroyObject(oItem);
+		p_save("trashbox", oItem, "aid = " + pSi(aid) + ", cid = " + pSi(cid) + ", at = " + pEscapeLocation(GetLocation(OBJECT_SELF)));
+
+		DestroyObject(oItem, 0.1);
 		c += 1;
 		oItem = GetNextItemInInventory();
 	}
