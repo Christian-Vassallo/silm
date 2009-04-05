@@ -25,12 +25,20 @@ tailmodel.2ds:: appearance.2ds
 	cat tailmodel.2ds | ./generate_tailmodel.2ds.rb appearance.2ds > tailmodel_new &&\
 		mv tailmodel_new tailmodel.2ds
 
+parts_chest.2da: parts_chest.2ds
+	@echo "$< -> $@"
+	@cat $< | ruby -ne 'print $$_.gsub(/\$$\(([\d]+)\)/) {|x| $$1.to_i + 1 + 0xffffff}' > $@
+	@if [[ "$@" == parts_*.2da ]]; then\
+		make_partstable.sh < $@ > chg_`echo $@ | cut -d_ -f2-` ;\
+		echo "make_partstable.sh < $@ > chg_`echo $@ | cut -d_ -f2-`";\
+	fi
+
 %.2da : %.2ds
 	@echo "$< -> $@"
 	@cat $< | ruby -ne 'print $$_.gsub(/\$$\(([\d]+)\)/) {|x| $$1.to_i + 1 + 0xffffff}' > $@
 	@if [[ "$@" == parts_*.2da ]]; then\
-		make_partstable.sh 0.0 < $@ > chg_`echo $@ | cut -d_ -f2-` ;\
-		echo "make_partstable.sh 0.0 < $@ > chg_`echo $@ | cut -d_ -f2-`";\
+		make_partstable.sh 0.00 < $@ > chg_`echo $@ | cut -d_ -f2-` ;\
+		echo "make_partstable.sh 0.00 < $@ > chg_`echo $@ | cut -d_ -f2-`";\
 	fi
 
 clean-backup:

@@ -14,7 +14,11 @@ do
   lastindex=$index
   read <&3 index cost ac
   if [ "x$index" == "x" ]; then break; fi
-  ac=$1
+
+  if [ "$1" != "" ]; then
+    ac=$1
+  fi
+
   if [ $currentac != $ac ]; then
     if [ $startindex -gt -1 ]; then
       prev[$startindex]=$lastindex
