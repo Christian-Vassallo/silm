@@ -1840,19 +1840,43 @@ int CommandBodyPart(object oPC, int iMode) {
 	if ( !is_creature(oTarget) )
 		return NotifyBadTarget("Must be a creature.");
 
-	if ( getopt_argc() == 1 ) {
-		int nPart = StringToInt(getopt_arg(0));
-		int nVal = GetCreatureBodyPart(nPart, oTarget);
-		SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " is: " + IntToString(nVal));
+	if (getopt_argc() < 1)
+		return FAIL;
 
-	} else if ( getopt_argc() == 2 ) {
-		int nPart = StringToInt(getopt_arg(0));
-		int nVal = StringToInt(getopt_arg(1));
+	string a0 = getopt_arg(0);
 
-		SetCreatureBodyPart(nPart, nVal, oTarget);
-		SendMessageToPC(oPC, "Okay, done.");
+	if (a0 == "hair" || a0 == "skin" || a0 == "tattoo1" || a0 == "tattoo2") {
+		int nPart;
+		if (a0 == "hair") nPart = COLOR_CHANNEL_HAIR;
+		if (a0 == "skin") nPart = COLOR_CHANNEL_SKIN;
+		if (a0 == "tattoo1") nPart = COLOR_CHANNEL_TATTOO_1;
+		if (a0 == "tattoo2") nPart = COLOR_CHANNEL_TATTOO_2;
+
+		if ( getopt_argc() == 1 ) {
+			int nVal = GetColor(oTarget, nPart);
+			SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " = " + a0 + " is: " + IntToString(nVal));
+
+		} else {
+			int nVal = StringToInt(getopt_arg(1));
+			SetColor(oTarget, nPart, nVal);
+			SendMessageToPC(oPC, "Okay, done.");
+
+		}
+
+	} else {
+		int nPart = StringToInt(a0);
+
+		if ( getopt_argc() == 1 ) {
+			int nVal = GetCreatureBodyPart(nPart, oTarget);
+			SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " is: " + IntToString(nVal));
+
+		} else if ( getopt_argc() == 2 ) {
+			int nVal = StringToInt(getopt_arg(1));
+
+			SetCreatureBodyPart(nPart, nVal, oTarget);
+			SendMessageToPC(oPC, "Okay, done.");
+		}
 	}
-
 
 	return OK;
 }
