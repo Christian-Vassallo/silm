@@ -1,0 +1,16 @@
+extern("inc_nwnx_func")
+
+// removes all post-169 feats from characters
+
+void featfix(object r) {
+	int i;
+	for (i = 1080; i < 1116; i++)
+		RemoveKnownFeat(r, i);
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if ("pc_login" == e.ev)
+		DelayCommand(2.0, featfix(e.runnable));
+}
