@@ -11,7 +11,7 @@ void check_all_incomes(object runnable) {
 	int cid = GetCharacterID(runnable);
 	struct RealTime ts = GetRealTime();
 	pBegin();
-	string prof_c = pDeclare("select id, source from income.mappings where cid = " + pSi(cid) + ";");
+	string prof_c = pDeclare("select id, source from income.mappings where cid is null or cid = " + pSi(cid) + ";");
 	while (pCursorFetch(prof_c)) {
 		int mapping_id = pGi(1);
 		int source_id = pGi(2);
@@ -32,8 +32,8 @@ void check_all_incomes(object runnable) {
 		int ability_ranks = GetAbilityScore(runnable, ability, ability_base);
 		ability_ranks = (ability_ranks - 10) / 2;
 
-		pQ("select income.days_since_last_payment(" + pSi(mapping_id) + "), " +
-			"income.payment_due(" + pSi(mapping_id) + ", " + pSi(ability_ranks, false) + ", " + pSi(skill_ranks, false) + ", " + ftoa(max_days_backpay) + ");"
+		pQ("select income.days_since_last_payment(" + pSi(cid) + ", " + pSi(mapping_id) + "), " +
+			"income.payment_due(" + pSi(cid) + ", " + pSi(mapping_id) + ", " + pSi(ability_ranks, false) + ", " + pSi(skill_ranks, false) + ", " + ftoa(max_days_backpay) + ");"
 		);
 		pF();
 		float days = pGf(1);
@@ -51,7 +51,7 @@ void check_all_incomes(object runnable) {
 
 			GiveValueToCreature(runnable, copper, true);
 
-			pQ("insert into income.payments (mapping, copper) values(" + pSi(mapping_id) + "," + pSi(copper, false) + ");");
+			pQ("insert into income.payments (cid, mapping, copper) values(" + pSi(cid) + ", " + pSi(mapping_id) + "," + pSi(copper, false) + ");");
 
 			_INFO("paid " + itoa(copper) + " copper for " + itoa(mapping_id) + " to " + otoa(runnable));
 

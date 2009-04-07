@@ -42,16 +42,20 @@ create table income.sources (
 create table income.mappings (
 	id serial primary key,
 
-	cid int references characters not null,
+	cid int references characters,
 
 	source int references income.sources not null,
 
-	created_at timestamp not null default now()
+	created_at timestamp not null default now(),
+
+	unique (cid, source)
 );
 
 create table income.payments (
 	id serial primary key,
 
+
+	cid int references characters not null,
 	mapping int references income.mappings not null,
 
 	-- when has this been collected?
@@ -62,25 +66,25 @@ create table income.payments (
 );
 
 
-create function income.days_since_last_payment(mapping int) returns float as
+create function income.days_since_last_payment(cid int, mapping int) returns float as
 $$
-	select
-		extract(epoch from (now() - coalesce((select paydate from income.payments where mapping = m.id order by paydate desc limit 1), m.created_at)))::float/60/60/24
+	select coalesce((select
+		extract(epoch from (now() - coalesce((select paydate from income.payments where mapping = m.id and cid = $1 order by paydate desc limit 1), m.created_at)))::float/60/60/24
 	from income.mappings m, income.sources s
-	where s.id = m.source and m.id = $1;
+	where s.id = m.source and m.id = $2), 0.0);
 
 $$ language sql stable;
 
 
-create function income.payment_due(mapping int, abilitymod int, skillmod int, max_days float) returns int as
+create function income.payment_due(cid int, mapping int, abilitymod int, skillmod int, max_days float) returns int as
 $$
-	select (
-		copper::float * clamp(income.days_since_last_payment($1), 0.0, $4)
+	select coalesce((select (
+		copper::float * clamp(income.days_since_last_payment($1, $2), 0.0, $5)
 			+
 		case
 			when s.skill > -1
 		then
-			(10 + $3)::float * s.skill_factor * clamp(income.days_since_last_payment($1), 0.0, $4)
+			(10 + $4)::float * s.skill_factor * clamp(income.days_since_last_payment($1, $2), 0.0, $5)
 		else
 			0
 		end
@@ -88,12 +92,12 @@ $$
 		case
 			when s.ability > -1
 		then
-			(10 + $2)::float * s.ability_factor * clamp(income.days_since_last_payment($1), 0.0, $4)
+			(10 + $3)::float * s.ability_factor * clamp(income.days_since_last_payment($1, $2), 0.0, $5)
 		else
 			0
 		end
 	)::int
 	from income.mappings m, income.sources s
-	where s.id = m.source and m.id = $1;
+	where s.id = m.source and m.id = $2), 0);
 
 $$ language sql stable;
