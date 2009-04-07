@@ -24,19 +24,23 @@ void check_all_incomes(object runnable) {
 		float skill_factor = pGf(4);
 		float min_days_pay = pGf(5);
 		float max_days_backpay = pGf(6);
+		int ability = pGi(7);
+		int ability_base = pGb(8);
+		float ability_factor = pGf(9);
 
 		int skill_ranks = GetSkillRank(skill, runnable, skill_base);
+		int ability_ranks = GetAbilityScore(runnable, ability, ability_base);
+		ability_ranks = (ability_ranks - 10) / 2;
 
-
-		pQ("select income.days_since_last_payment(" + pSi(mapping_id) + "), income.payment_due(" + pSi(mapping_id) + ", " + pSi(skill_ranks, false) + ", " + ftoa(max_days_backpay) + ");");
+		pQ("select income.days_since_last_payment(" + pSi(mapping_id) + "), " +
+			"income.payment_due(" + pSi(mapping_id) + ", " + pSi(ability_ranks, false) + ", " + pSi(skill_ranks, false) + ", " + ftoa(max_days_backpay) + ");"
+		);
 		pF();
 		float days = pGf(1);
 		int copper = pGi(2);
 
-		// dont pay out values smaller than a day.
 		if (days < min_days_pay)
 			continue;
-
 
 		if (copper > 0) {
 			struct Money val = Value2Money(copper);
@@ -48,12 +52,12 @@ void check_all_incomes(object runnable) {
 			GiveValueToCreature(runnable, copper, true);
 
 			pQ("insert into income.payments (mapping, copper) values(" + pSi(mapping_id) + "," + pSi(copper, false) + ");");
-			
+
 			_INFO("paid " + itoa(copper) + " copper for " + itoa(mapping_id) + " to " + otoa(runnable));
 
 			if (days > max_days_backpay)
 				msg += ColorTag(cLightGrey) + " (laenger fort, nicht alles ausgezahlt)";
-				
+
 
 			SendMessageToPC(runnable, msg);
 		}

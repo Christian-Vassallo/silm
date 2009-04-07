@@ -10,6 +10,16 @@ create table income.sources (
 
 	name varchar not null,
 
+	-- set this to a abilities.2da entry ID to give (d20 + ability_mod) * ability_factor copper coins.
+	ability int not null default -1, -- we cant use null, because nwscript doesn't support a distinctive nil datatype
+
+	-- set this to true to only use the base ability without feats, items and temporaries.
+	ability_base bool not null default false,
+
+	-- multiply the ability check with this value
+	ability_factor float not null default 1.0,
+
+
 	-- set this to a skills.2da entry ID to give (d20 + skill_mod) * skill_factor copper coins.
 	skill int not null default -1, -- we cant use null, because nwscript doesn't support a distinctive nil datatype
 
@@ -62,15 +72,23 @@ $$
 $$ language sql stable;
 
 
-create function income.payment_due(mapping int, skillmod int, max_days float) returns int as
+create function income.payment_due(mapping int, abilitymod int, skillmod int, max_days float) returns int as
 $$
 	select (
-		copper::float * clamp(income.days_since_last_payment($1), 0.0, $3)
+		copper::float * clamp(income.days_since_last_payment($1), 0.0, $4)
 			+
 		case
 			when s.skill > -1
 		then
-			(10 + $2)::float * s.skill_factor * clamp(income.days_since_last_payment($1), 0.0, $3)
+			(10 + $3)::float * s.skill_factor * clamp(income.days_since_last_payment($1), 0.0, $4)
+		else
+			0
+		end
+			+
+		case
+			when s.ability > -1
+		then
+			(10 + $2)::float * s.ability_factor * clamp(income.days_since_last_payment($1), 0.0, $4)
 		else
 			0
 		end
