@@ -46,7 +46,7 @@ self.each_by_flat_path do |label, field|
       log "Cannot compact #{label}, because the contained strings are not unique."
       selection = ask "Use what string?", val
       log "Using: #{selection.inspect}"
-      str = val[selection.to_i]
+      str = selection
     else
       str = val[val.keys.sort[0]]
     end
