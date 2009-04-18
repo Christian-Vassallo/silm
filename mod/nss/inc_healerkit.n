@@ -175,7 +175,7 @@ void AddBandage(object oPC, object oTarget, object oItem) {
 
 	if ( GetIsObjectValid(oTarget) ) {
 
-		if ( GetDistanceBetween(oPC, oTarget) < 2.0 ) {
+		if ( GetDistanceBetween(oPC, oTarget) < 2.0 || GetItemPossessor(oTarget) == oPC ) {
 
 			if ( GetObjectType(oTarget) == OBJECT_TYPE_CREATURE ) {
 
@@ -235,7 +235,7 @@ void AddMedicine(object oPC, object oTarget, object oItem) {
 			GetName(oPC) + " uses on " + GetName(oTarget) + ", item: " + GetName(oItem) + " " + GetTag(oItem));
 
 	if ( GetIsObjectValid(oTarget) ) {
-		if ( GetDistanceBetween(oPC, oTarget) < 2.0 ) {
+		if ( GetDistanceBetween(oPC, oTarget) < 2.0 || GetItemPossessor(oTarget) == oPC ) {
 			if ( GetResRef(oTarget) == "healerkit" ) {
 				int nBandage = GetMedicineValue(oTarget);
 				if ( nBandage < gvGetInt("healerkit_max_medicines") ) {
