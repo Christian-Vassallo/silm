@@ -280,34 +280,51 @@ void CureDisease(object oPC, effect eDisease, int nHealSkill) {
 }
 
 int GetBandageValue(object oHealerKit) {
-	string name = GetName(oHealerKit);
-	int nIndex = FindSubString(name, ":");
-	if (-1 == nIndex)
-		return 0;
+	int has = GetLocalInt(oHealerKit, "hk_init");
+	int old;
 
-	int nOldVal = StringToInt(GetSubString(name, nIndex + 2, 2));
-	if (nOldVal > gvGetInt("healerkit_max_bandages"))
-		return gvGetInt("healerkit_max_bandages");
+	if (has) {
+		old = GetLocalInt(oHealerKit, "hk_bandages");
 
-	return nOldVal;
+	} else {
+		string name = GetName(oHealerKit);
+		int nIndex = FindSubString(name, ":");
+		if (-1 == nIndex)
+			return 0;
+
+		old = StringToInt(GetSubString(name, nIndex + 2, 2));
+		if (old > gvGetInt("healerkit_max_bandages"))
+			return gvGetInt("healerkit_max_bandages");
+	}
+
+	return old;
 }
 
 
 int GetMedicineValue(object oHealerKit) {
-	int length = GetStringLength(GetName(oHealerKit));
-	int nOldVal = StringToInt(GetSubString(GetName(oHealerKit), length - 3, length - 2 ));
-	if (nOldVal > gvGetInt("healerkit_max_medicines"))
-		return gvGetInt("healerkit_max_medicines");
+	int has = GetLocalInt(oHealerKit, "hk_init");
+	int old;
 
-	return nOldVal;
+	if (has) {
+		old = GetLocalInt(oHealerKit, "hk_medicines");
+
+	} else {
+		int length = GetStringLength(GetName(oHealerKit));
+		int old = StringToInt(GetSubString(GetName(oHealerKit), length - 3, length - 2 ));
+		if (old > gvGetInt("healerkit_max_medicines"))
+			return gvGetInt("healerkit_max_medicines");
+	}
+
+	return old;
 }
 
 void SetHealerKitValues(object oHealerKit, int nBandage, int nMedicine) {
-	// SetLocalInt(oHealerKit, "bandages", nBandage);
-	// SetLocalInt(oHealerKit, "medicines", nMedicine);
-
 	string sBandage = IntToString(nBandage);
 	string sMedicine = IntToString(nMedicine);
+
+	SetLocalInt(oHealerKit, "hk_init", 1);
+	SetLocalInt(oHealerKit, "hk_bandages", nBandage);
+	SetLocalInt(oHealerKit, "hk_medicines", nMedicine);
 
 	SetName(oHealerKit, "Heiltasche (Bandagen: " + sBandage + " / Medikamente: " + sMedicine + ")");
 }
