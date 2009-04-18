@@ -8,10 +8,10 @@ void main() {
 
 	if (e.ev == "pc_login") {
 		int p = GetLocalInt(e.runnable, "faction_id");
-		int ts_then = GetLocalInt(e.runnable, "last_logout_at");
+		int ts_then = GetLocalInt(e.runnable, "last_activity_at");
 		int ts_now = GetUnixTimestamp();
 
-		if (p && ts_then > 0 && (ts_now - ts_then < PARTY_REJOIN_DIFF)) {
+		if (p && ts_then > 0 && (ts_now - ts_then) < PARTY_REJOIN_DIFF) {
 			object other = GetPartyMemberByFactionId(p);
 			if (is_valid(other)) {
 				AddToParty(e.runnable, other);
@@ -21,11 +21,10 @@ void main() {
 	}
 
 	if (e.ev == "module_hb") {
-		iterate_players(oIterate, SetLocalInt(oIterate, "faction_id", GetFactionId(oIterate)));
-	}
-	
-	if (e.ev == "pc_logout") {
 		int ts = GetUnixTimestamp();
-		SetLocalInt(e.runnable, "last_logout_at", ts);
+		iterate_players(oIterate,
+			SetLocalInt(oIterate, "faction_id", GetFactionId(oIterate));
+			SetLocalInt(oIterate, "last_activity_at", ts);
+		);
 	}
 }
