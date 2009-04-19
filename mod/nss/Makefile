@@ -38,6 +38,8 @@ autogen := appearance.h draconic.n
 draconic.n: gen_language_file
 	./gen_language_file > draconic.n
 
+draconic.nss: draconic.n
+
 appearance.h:
 	../generate_appearance_h.rb > appearance.h
 
