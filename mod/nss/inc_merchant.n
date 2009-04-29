@@ -59,6 +59,8 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			SetLocalFloat(oPC, TTT + "_" + sTag, fAppraiseMod);
 		}
 	}
+	if ( fAppraiseMod == 0.0 )
+		fAppraiseMod = 0.1;
 
 
 	int nPCMoney = Money2Value(CountInventoryMoney(oPC, 0));
@@ -87,6 +89,8 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		string sResRef = "";
 		object oSell;
 		int nPrice;
+		int nStackSize;
+		int nAvailable;
 		float fMark;
 
 		pQ(
@@ -110,8 +114,12 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			SetPlotFlag(oSell, FALSE);
 			SetIdentified(oSell, TRUE);
 
+			nStackSize = GetItemStackSize(oSell);
+			if (!nStackSize)
+				nStackSize = 1;
+
 			nPrice = FloatToInt(( 1.0 / fAppraiseMod ) *
-						 fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
+						 fMark * ( GetGoldPieceValue(oSell) / nStackSize ));
 
 			AddListItem(oPC, TTT, GetName(oSell) +
 				( nMax == 0 ? " (gut bestockt)" : " (" + IntToString(nWant) + " auf Lager)" ) +
@@ -147,6 +155,7 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		string sResRef = "";
 		object oSell;
 		int nPrice = 0;
+		int nStackSize;
 		int nAvailable;
 		float fMark;
 
@@ -190,7 +199,11 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 				continue;
 			}
 			
-			nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
+			nStackSize = GetItemStackSize(oSell);
+			if (!nStackSize)
+				nStackSize = 1;
+
+			nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / nStackSize ));
 
 			AddListItem(oPC, TTT, GetName(oSell) +
 				( nMax ==
