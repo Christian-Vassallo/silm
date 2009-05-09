@@ -16,9 +16,10 @@ ifeq  "$(NWNHOME)" ""
 endif
 
 clean-backup:
-	-rm *.*~ *.out
+	-rm *.*~ *.out *.hak
 
 clean: clean-backup
+	-rm *.hak
 	
 $(TARGET): $(resources)
 	erfpack.pl -H -o $@ $(VALIDEXT)

@@ -45,7 +45,7 @@ clean-backup:
 	-rm *.*~ *.out
 
 clean: clean-backup
-	rm *.2da
+	-rm *.2da *.hak
 	
 $(TARGET): $(twoda)
 	erfpack.pl -H -o $@ $(VALIDEXT)
