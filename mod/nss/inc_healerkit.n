@@ -212,7 +212,7 @@ void AddBandage(object oPC, object oTarget, object oItem) {
 
 			if ( GetResRef(oTarget) == "healerkit" ) {
 				int nBandage = GetBandageValue(oTarget);
-				if ( nBandage < gvGetInt("healerkit_max_medicines") ) {
+				if ( nBandage < gvGetInt("healerkit_max_bandages") ) {
 					FloatingTextStringOnCreature("Die Bandage wurde der Heiltasche hinzugefuegt.", oPC, FALSE);
 					SetHealerKitValues(oTarget, GetBandageValue(oTarget) + 1, GetMedicineValue(oTarget));
 					DestroyObject(oItem);
