@@ -23,7 +23,7 @@ self.each_by_flat_path do |label, field|
   rej_lid = ENV['NWN_LIB_CLEAN_LOCSTR_REJECT_LANGUAGES']
   val.reject! {|k,v|
     rej_lid.index(k.to_s)
-  } if rej_lid && rej_lid = rej_lid.split(/\s+/)
+  } if val.size > 1 && rej_lid && rej_lid = rej_lid.split(/\s+/)
 
   # Remove all duplicate values.
   val.each {|k,v|
