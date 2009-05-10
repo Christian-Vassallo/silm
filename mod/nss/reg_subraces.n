@@ -24,14 +24,19 @@ void main() {
 
 	Register_Subrace("Dunkelelf", RACIAL_TYPE_ELF, 2, 2);
 	AddAlias("Drow");
-	AddAlias("Dhaeraow");
-	AddAlias("Ilythiiri");
 	AddAlias("Halfdrow");
 	AddAlias("Halbdrow");
 	SetSRItem("ELF_DRO", 1);
 	SetSPA(12, "DARK");
 	SetFlags(0x00020000); // Lichtempfindlich
 	AddEffect("+spr", -1, 11, 0, 0, 1, 0, 0);
+
+	Register_Subrace("Surface-Dunkelelf", RACIAL_TYPE_ELF, 2, 2);
+	AddAlias("Surface-Drow");
+	SetSRItem("ELF_DRO", 1);
+	SetSPA(12, "DARK");
+	AddEffect("+spr", -1, 11, 0, 0, 1, 0, 0);
+
 
 	Register_Subrace("Avariel", RACIAL_TYPE_ELF, 3);
 	AddAlias("Winged Elf");
