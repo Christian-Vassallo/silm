@@ -31,7 +31,6 @@ extern("inc_target")
 extern("inc_chatcommand")
 extern("inc_getopt")
 extern("inc_chat_lib")
-extern("inc_mnx_lib")
 
 const string
 COMMAND_SPLIT = "&&",
@@ -755,20 +754,6 @@ void RegisterAllCommands() {
 	RAF(AMASK_CAN_DO_BACKEND);
 
 	
-	// Chatcommand: rmnx
-	// rmnx backend, raw ruby command.
-	RegisterCommand("rmnx", "", 1);
-	RAF(AMASK_CAN_DO_BACKEND);
-
-	
-	// Chatcommand: remind
-	// Place a reminder.
-	RegisterCommand("remind", "");
-	RAF(AMASK_CAN_DO_BACKEND);
-
-
-
-	
 	// Chatcommand: ooc
 	// Show text in OOC colors.
 	RegisterCommand("ooc", "");
@@ -1242,17 +1227,8 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	if ( "getrecipe" == sCommand )
 		ret = CommandGetRecipe(oPC, iMode);
 
-	if ( "rmnx" == sCommand )
-		ret = CommandRMNX(oPC, iMode);
-
-	if ( "remind" == sCommand )
-		ret = CommandRemind(oPC, iMode);
-
 	if ( "lastlog" == sCommand )
 		ret = CommandLastLog(oPC, iMode);
-
-	if ( "uptime" == sCommand )
-		ret = CommandUptime(oPC, iMode);
 
 	if ( "charges" == sCommand )
 		ret = CommandCharges(oPC, iMode);

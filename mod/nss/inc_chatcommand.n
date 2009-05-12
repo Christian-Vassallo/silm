@@ -2,8 +2,6 @@
  * This file contains chat commands.
  */
 
-extern("inc_mnx")
-
 extern("_gen")
 extern("inc_cdb")
 extern("inc_chat_lib")
@@ -15,7 +13,6 @@ extern("inc_draw_text")
 extern("inc_events")
 extern("inc_getopt")
 extern("inc_limbo")
-extern("inc_mnx_temp")
 extern("inc_objset")
 extern("inc_planewalk")
 extern("inc_scorco")
@@ -1271,25 +1268,6 @@ int CommandPlaneWalk(object oPC, int iMode) {
 }
 
 
-int CommandRemind(object oPC, int iMode) {
-/*	struct mnxRet r = mnxRun(oPC, "timedesc2sec",getopt_arg(0));
-	if ( r.error ) {
-		ToPC("Fehler: " + r.ret);
-		return FAIL;
-	}
-
-	int nD = StringToInt(r.ret);
-	if ( nD < 5 || nD > ( 60 * 60 * 24 * 7 ) ) {
-		ToPC("Das ist keine gueltige Zeitangabe.");
-		return FAIL;
-	}
-
-	DelayCommand(IntToFloat(nD), FloatingTextStringOnCreature("Erinnerung: " +getopt_arg(1) ==
-			"" ? "Beep!" :getopt_arg(1), oPC, 0));
-	ToPC("Erinnerung platziert.");*/
-	return OK;
-}
-
 int CommandLastLog(object oPC, int iMode) {
 	return FAIL;
 
@@ -1337,72 +1315,6 @@ int CommandLastLog(object oPC, int iMode) {
 	return OK;
 }
 
-
-
-int CommandUptime(object oPC, int iMode) {
-/*	struct mnxRet r = mnx_synchronous_command(mnx_prepare_command("uptime"));
-	if (r.error) {
-		ToPC("Data not available.");
-		return FAIL;
-	}
-	 
-	ToPC(r.ret);*/
-	return FAIL;
-}
-
-int CommandRMNX(object oPC, int iMode) {
-/*	string
-	sCommand =getopt_arg(0),
-	s0 =getopt_arg(1),
-	s1 =getopt_arg(2),
-	s2 =getopt_arg(3);
-
-	object oT = GetTarget();
-
-	string ret = mnxCommand(sCommand, s0, s1, s2);
-	string err = "";
-	ToPC("'" + sCommand + "(" + s0 + ", " + s1 + ", " + s2 + ")':");
-
-	if ( mnxWasError() ) {
-		err = mnxGetError();
-		ToPC("ERROR: '" + err + "'");
-		return FAIL;
-	} else {
-		ToPC("SUCCESS: '" + ret + "'");
-	}*/
-
-	return OK;
-}
-
-
-int CommandDraw(object oPC, int iMode) {
-
-	return OK;
-}
-
-
-
-int CommandDrawText(object oPC, int iMode) {
-
-	float
-	fSpeed    = StringToFloat(getopt_optv("speed")),
-	fLifeTime = StringToFloat(getopt_optv("lifetime")),
-	fFontHeight = StringToFloat(getopt_optv("h")),
-	fFontWidth = StringToFloat(getopt_optv("w")),
-	fRotation  = StringToFloat(getopt_optv("r"));
-	int nVFX = StringToInt(getopt_optv("vfx"));
-	object oTarget = GetTarget();
-	string sMsg =getopt_arg(0);
-	if ( getopt_opt("speed") ) fSpeed = 2.0;
-	if ( getopt_opt("lifetime") ) fLifeTime = 10.0;
-	if ( getopt_opt("h") ) fFontHeight = 0.5;
-	if ( getopt_opt("w") ) fFontWidth = 0.25;
-	if ( getopt_opt("vfx") ) nVFX = VFX_BEAM_FIRE_W_SILENT;
-
-	// Delay TextMessage(sMsg, oTarget, fSpeed, fLifeTime, fFontHeight, fFontWidth, nVFX, fRotate);
-
-	return OK;
-}
 
 
 int CommandGetRecipe(object oPC, int iMode) {
