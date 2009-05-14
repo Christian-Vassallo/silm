@@ -96,6 +96,13 @@ show-stale: path
 		$(MAKE) -C $$res show-stale ;\
 	done
 
+.PHONY: clean-stale
+clean-stale: path
+	@for res in $(RESOURCEDIRS); do \
+		$(MAKE) -C $$res clean-stale ;\
+	done
+
+
 .PHONY: scripts
 scripts: path
 	$(MAKE) -j$(CONCURRENCY_LEVEL) -C nss revupdate all

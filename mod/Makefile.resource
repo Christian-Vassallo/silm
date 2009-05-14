@@ -23,3 +23,9 @@ show-stale:
 		[[ $$x == *.yml ]] && continue; \
 		[[ -f $$x.yml ]] || echo $$x; \
 	done
+
+clean-stale:
+	@for x in *.*; do \
+		[[ $$x == *.yml ]] && continue; \
+		[[ -f $$x.yml ]] || rm $$x; \
+	done
