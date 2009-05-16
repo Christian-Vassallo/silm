@@ -131,7 +131,6 @@ object bugstorm_spawn_bug(location where) {
 
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DUST_EXPLOSION), where);
 	object bug = CreateObject(OBJECT_TYPE_CREATURE, ref, where);
-	DelayCommand(0.2, SetCreatureTailType(410, bug));
 	
 	DelayCommand(0.1, bugstorm_despawn_bug_timer(bug, 0.1, BUGSTORM_BUG_LAST_TIME));
 
