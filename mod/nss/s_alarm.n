@@ -35,7 +35,6 @@ void main() {
 	effect eI = EffectSkillIncrease(SKILL_LISTEN, 1);
 	effect eLink = EffectLinkEffects(EffectSkillDecrease(SKILL_LISTEN, 1), eI);
 	ApplyEffectToObject(DTT, eLink, oPC, HoursToSeconds(nHours));
-	SetupReminder(oPC, GetSpellName(GetSpellId()), HoursToSeconds(nHours), eLink);
 }
 
 

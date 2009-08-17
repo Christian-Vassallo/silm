@@ -1,0 +1,33 @@
+extern("inc_spells")
+extern("inc_spellremind")
+extern("inc_nwnx_structs")
+
+#define DELAY 1.0
+
+void check(object notify, object effectHolder, int spell) {
+	iterate_effects(effectHolder, eff,
+		int id = GetEffectSpellId(eff);
+		if (id == spell) {
+			string spellName = GetSpellName(spell);
+			SetupReminder(notify, effectHolder, spellName + " (auf " + GetName(effectHolder) + ")", GetEffectDuration(eff), eff);
+			break;
+		}
+	);
+
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	// on cast spell
+	if ("object_spellcast" == e.ev) {
+		object actor = e.actor;
+		object acton = e.actedon;
+		int spellid = GetSpellId();
+		if (!is_pc(actor) || is_dm(actor))
+			return;
+		DelayCommand(DELAY, check(actor, acton, spellid));
+	}
+
+}
+
