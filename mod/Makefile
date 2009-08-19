@@ -141,6 +141,7 @@ tar: local
 # generates a new package with the current commit
 package: path local
 
+package-dev: path local-dev
 package-player: path local-player
 
 # installs all packaged in the relevant directories
