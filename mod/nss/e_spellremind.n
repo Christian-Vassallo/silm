@@ -7,7 +7,7 @@ extern("inc_nwnx_structs")
 void check(object notify, object effectHolder, int spell) {
 	iterate_effects(effectHolder, eff,
 		int id = GetEffectSpellId(eff);
-		if (id == spell) {
+		if (GetEffectDurationType(eff) == DURATION_TYPE_TEMPORARY && id == spell) {
 			string spellName = GetSpellName(spell);
 			SetupReminder(notify, effectHolder, spellName + " (auf " + GetName(effectHolder) + ")", GetEffectDuration(eff), eff);
 			break;
