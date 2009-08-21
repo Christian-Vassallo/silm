@@ -34,6 +34,9 @@ void SetupReminder(object oRemindWho, object oEffectHolder, string sReminderName
 }
 
 void DoRemind(object oRemindWho, object oEffectHolder, string sReminderName, effect eEffect, int nSeconds) {
+	if (GetIsDead(oEffectHolder))
+		return;
+
 	int nFound = 0;
 	effect e = GetFirstEffect(oEffectHolder);
 	while ( GetIsEffectValid(e) ) {
@@ -44,9 +47,13 @@ void DoRemind(object oRemindWho, object oEffectHolder, string sReminderName, eff
 		e = GetNextEffect(oEffectHolder);
 	}
 
-	if ( nFound )
-		SendMessageToPC(oRemindWho, "Eure Arkane " +
-			sReminderName + " loest sich in " + SecondsToTimeDesc(nSeconds));
+	if ( nFound ) {
+		string msg = "Eure Arkane " + sReminderName + " loest sich in " + SecondsToTimeDesc(nSeconds);
+		if (nSeconds <= 120)
+			FloatingTextStringOnCreature(msg, oRemindWho, false);
+		else
+			SendMessageToPC(oRemindWho, msg);
+	}
 }
 
 
