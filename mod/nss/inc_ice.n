@@ -1,0 +1,20 @@
+const int ICE_STOP = 0;
+const int ICE_SUPPRESS = 1;
+const int ICE_CONTINUE = 2;
+const int ICE_ERROR = 3;
+
+int ICE_EVENT(string e);
+
+void ICE_TOKEN(string t);
+
+int ICE_EVENT(string e) {
+  SetLocalString(GetModule(), "NWNX!ICE!EVENT", ObjectToString(OBJECT_SELF) + " " + e);
+  string ret = GetLocalString(GetModule(), "NWNX!ICE!EVENT");
+  // WriteTimestampedLogEntry("ICE: " + e + " = " + ret);
+  return StringToInt(ret);
+}
+
+void ICE_TOKEN(string t) {
+  SetLocalString(GetModule(), "NWNX!ICE!TOKEN", ObjectToString(OBJECT_SELF) + " " + t);
+  // DeleteLocalString(GetModule(), "NWNX!ICE!TOKEN");
+}
