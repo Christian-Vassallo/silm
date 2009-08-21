@@ -22,10 +22,17 @@ const int NWNXEVENT_TYPE_POSSESS_FAMILIAR  = 12;
 void EventUseItem(object oPC, object oItem, object oTarget, location lTarget);
 
 void main() {
-    int nEventType = NWNXGetEventType();
+	object oPC = OBJECT_SELF;
+
+	int ret = RunEventScriptsFor(GetEventSerial(), "nwnx_event", oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_SYNC);
+	if (ret & EVENT_RESULT_SUPPRESS)
+		NWNXBypassEvent();
+	if (ret & EVENT_RESULT_STOP)
+		return;
+
+	int nEventType = NWNXGetEventType();
 	int nEventSubType = NWNXGetEventSubType();
 
-	object oPC = OBJECT_SELF;
 	object oItem = NWNXGetEventItem();
 	object oTarget = NWNXGetEventTarget();
 	vector vTarget = NWNXGetEventPosition();
