@@ -71,7 +71,7 @@ void main() {
 	struct EventInfo e = GetEventInfo();
 	struct EventArguments ea = GetEventArguments(e.serial);
 
-	if (e.ev == "pc_login" && is_pc(e.runnable) && !is_dm(e.runnable)) {
+	if (e.ev == "player_login" && is_pc(e.runnable) && !is_dm(e.runnable)) {
 		object pc = e.runnable;
 		DelayCommand(15f, check_all_incomes(pc));
 	}

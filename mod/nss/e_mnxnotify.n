@@ -26,12 +26,12 @@ void main() {
 		mnx_asynchronous_command_noreply(mnx_prepare_command("arealeave", sAccountName, sCharName, IntToString(nAID), IntToString(nCID)));
 	}
 
-	if ("pc_login" == ei.ev) {
+	if ("player_login" == ei.ev) {
 		mnx_asynchronous_command_noreply(mnx_prepare_command("cliententer", sAccountName, sCharName, IntToString(nAID), IntToString(nCID),
 			bIsDM, GetPCIPAddress(ei.actor), GetPCPublicCDKey(ei.actor)));
 	}
 	
-	if ("pc_logout" == ei.ev) {
+	if ("player_logout" == ei.ev) {
 		mnx_asynchronous_command_noreply(mnx_prepare_command("clientleave", sAccountName, sCharName, IntToString(nAID), IntToString(nCID)));
 	}
 

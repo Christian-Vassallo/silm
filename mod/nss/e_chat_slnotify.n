@@ -7,7 +7,7 @@ void main() {
 	struct EventInfo ei = GetEventInfo();
 	struct EventArguments ea = GetEventArguments(ei.serial);
 
-	if (ei.ev == "pc_login" && !GetIsDMOnline()) {
+	if (ei.ev == "player_login" && !GetIsDMOnline()) {
 		SendMessageToPC(ei.actor,
 			"Derzeit ist kein SL im Spiel online. Du kannst jedoch SLs trotzdem ueber den SL-Channel erreichen; deine Nachrichten werden weitergeleitet.");
 		return;

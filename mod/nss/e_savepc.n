@@ -9,11 +9,11 @@ void main() {
 	if (!is_client(e.runnable))
 		return;
 
-	if ("pc_logout" == e.ev) {
+	if ("player_logout" == e.ev) {
 		save_player(OBJECT_SELF);
 	}
 	
-	if ("pc_login" == e.ev) {
+	if ("player_login" == e.ev) {
 		load_player(OBJECT_SELF);
 		DelayCommand(300.0, save_player(OBJECT_SELF, TRUE));
 

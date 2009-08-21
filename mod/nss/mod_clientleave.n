@@ -6,11 +6,11 @@ extern("inc_session")
 void main() {
 	object oExit = GetExitingObject();
 
-	// Event: pc_logout
+	// Event: player_logout
 	// When a player character logs out
 	// - runnable: the player character object
 	// - sync
-	RunEventScriptsFor(GetEventSerial(), "pc_logout", oExit, oExit, OBJECT_INVALID, GetLocation(OBJECT_INVALID), EVENT_MODE_SYNC);
+	RunEventScriptsFor(GetEventSerial(), "player_logout", oExit, oExit, OBJECT_INVALID, GetLocation(OBJECT_INVALID), EVENT_MODE_SYNC);
 
 	NWNXChatPCout(oExit);
 }

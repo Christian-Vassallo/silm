@@ -2,11 +2,11 @@ extern("inc_corpse")
 
 void main() {
 	struct EventInfo e = GetEventInfo();
-	if ("pc_login" == e.ev) {
+	if ("player_login" == e.ev) {
 		LoginPC(OBJECT_SELF);
 	}
 
-	if ("pc_logout" == e.ev) {
+	if ("player_logout" == e.ev) {
 		LogoutPC(OBJECT_SELF);
 	}
 }

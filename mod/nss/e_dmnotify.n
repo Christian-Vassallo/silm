@@ -9,7 +9,7 @@ void main() {
 	int nAID = GetAccountID(ei.actor);
 	int nCID = GetCharacterID(ei.actor);
 
-	if ("pc_login" == ei.ev) {
+	if ("player_login" == ei.ev) {
 
 		string host = GetPCIPAddress(ei.actor);
 		pQ("select dns.getname(" + pSs(host) + ");");
@@ -29,7 +29,7 @@ void main() {
 
 	}
 
-	if ("pc_logout" == ei.ev) {
+	if ("player_logout" == ei.ev) {
 		SendMessageToAllDMs("leave: '" + sAccountName +
 			"'(" +
 			IntToString(nAID) +

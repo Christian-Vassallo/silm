@@ -1,7 +1,7 @@
 void main() {
 	struct EventInfo e = GetEventInfo();
 
-	if (e.ev == "pc_login") {
+	if (e.ev == "player_login") {
 		if (is_wizard(e.actor) || is_sorcerer(e.actor) || is_druid(e.actor) || is_ranger(e.actor)) {
 			object staff = GetItemPossessedBy(e.actor, "animalstaff");
 			if (is_valid(staff))
