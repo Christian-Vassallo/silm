@@ -3,7 +3,7 @@
 void main () {
 	struct EventInfo e = GetEventInfo();
 
-	if (e.ev == "creature_spellcast" && is_potion(GetSpellCastItem()) && is_creature(e.actedon)) {
+	if (e.ev == "creature_spell_cast_at" && is_potion(GetSpellCastItem()) && is_creature(e.actedon)) {
 		int poison = GetLocalInt(GetSpellCastItem(), "poison_type");
 		if (poison) {
 			poison--;

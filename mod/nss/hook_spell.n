@@ -49,7 +49,7 @@ void main() {
 	if ( is_item(oTarget) ) {
 		// Event: item_spellcast
 		// - actor: GetLastSpellCaster()
-		int nResult = RunEventScriptsFor(GetEventSerial(), "item_spellcast", oPC, oPC, oTarget, lTarget); //oTarget, EVENT_ITEM_SPELLCAST_AT, EVENT_PREFIX_ITEM);
+		int nResult = RunEventScriptsFor(GetEventSerial(), "item_spell_cast_at", oPC, oPC, oTarget, lTarget); //oTarget, EVENT_ITEM_SPELLCAST_AT, EVENT_PREFIX_ITEM);
 
 		if ( nResult & EVENT_RESULT_STOP ) {
 			// Do not continue.
@@ -61,7 +61,7 @@ void main() {
 	if (is_creature(oTarget)) {
 		// Event: creature_spellcast
 		// - actor: GetLastSpellCaster()
-		int ret = RunEventScriptsFor(GetEventSerial(), "creature_spellcast", oPC, oPC, oTarget, lTarget);
+		int ret = RunEventScriptsFor(GetEventSerial(), "creature_spell_cast_at", oPC, oPC, oTarget, lTarget);
 
 		if (ret & EVENT_RESULT_STOP) {
 			SetModuleOverrideSpellScriptFinished();
@@ -72,7 +72,7 @@ void main() {
 	if (is_placeable(oTarget)) {
 		// Event: placeable_spellcast
 		// - actor: GetLastSpellCaster()
-		int ret = RunEventScriptsFor(GetEventSerial(), "placeable_spellcast", oPC, oPC, oTarget, lTarget);
+		int ret = RunEventScriptsFor(GetEventSerial(), "placeable_spell_cast_", oPC, oPC, oTarget, lTarget);
 
 		if (ret & EVENT_RESULT_STOP) {
 			SetModuleOverrideSpellScriptFinished();
@@ -82,7 +82,7 @@ void main() {
 
 	// Event: object_spellcast
 	// - actor: GetLastSpellCaster()
-	int ret = RunEventScriptsFor(GetEventSerial(), "object_spellcast", oPC, oPC, oTarget, lTarget);
+	int ret = RunEventScriptsFor(GetEventSerial(), "object_spell_cast_at", oPC, oPC, oTarget, lTarget);
 
 	if (ret & EVENT_RESULT_STOP) {
 		SetModuleOverrideSpellScriptFinished();

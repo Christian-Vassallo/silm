@@ -31,7 +31,7 @@ void main() {
 		return;
 	}
 
-	if (e.ev == "item_spellcast" && is_valid(e.actedon) &&
+	if (e.ev == "item_spell_cast_at" && is_valid(e.actedon) &&
 			IPGetIsCursed(e.actedon, IP_CONST_CURSED_UNDROPPABLE) &&
 			GetItemCursedFlag(e.actedon)) {
 		
@@ -44,7 +44,7 @@ void main() {
 		event_stop_end();
 	}
 
-	if (e.ev == "creature_spellcast") {
+	if (e.ev == "creature_spell_cast_at") {
 		if (GetSpellId() != SPELL_REMOVE_CURSE)
 			return;
 

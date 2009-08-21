@@ -69,7 +69,7 @@ int CheckInventory(object inventory, int spell) {
 void main() {
 	struct EventInfo e = GetEventInfo();
 	
-	if ("creature_spellcast" != e.ev)
+	if ("creature_spell_cast_at" != e.ev)
 		return;
 
 	object target = e.actedon;

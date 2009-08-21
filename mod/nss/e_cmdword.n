@@ -24,7 +24,7 @@ void _show(object creature, object obj, int spell) {
 void main() {
 	struct EventInfo e = GetEventInfo();
 
-	if (e.ev == "object_spellcast") {
+	if (e.ev == "object_spell_cast_at") {
 		if (!is_creature(e.actor) || GetIsDM(e.actor))
 			return;
 
