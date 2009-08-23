@@ -10,10 +10,10 @@ void main() {
 	object oSpeaker = OBJECT_SELF;
 
 	int ret = RunEventScriptsFor(GetEventSerial(), "nwnx_chat", oSpeaker, oSpeaker, OBJECT_INVALID, GetLocation(oSpeaker));
-	if (ret & EVENT_RESULT_SUPPRESS)
+	if (ret & EVENT_RESULT_SUPPRESS) {
 		NWNXChatSuppress();
-	if (ret & EVENT_RESULT_STOP)
 		return;
+	}
 
 	// get text and stuff
 	SetLocalString(oSpeaker, "NWNX!CHAT!TEXT", NWNXChatGetSpacer());
