@@ -26,6 +26,7 @@ void __trap(object oTarget, object oItem, object oPC) {
 			
 		} else {
 			object trap = GetIsObjectValid(oItem) ? oItem : CreateItemOnObject("soulstone", oPC);
+			SetName(trap, "Seelenstein (" + GetName(oTarget) + ")");
 			soultrap_trap(oTarget, trap, oPC);
 		}
 
