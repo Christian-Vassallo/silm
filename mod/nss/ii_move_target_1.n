@@ -15,8 +15,7 @@ void main() {
 		!amask(oPC, AMASK_FORCETALK) &&
 		!amask(oPC, AMASK_GLOBAL_FORCETALK)
 	) {
-		SendMessageToPC(oPC, "Ich mag dich nicht.  PAFF!");
-		DestroyObject(oItem);
+		SendMessageToPC(oPC, "Nicht genuegend Rechte um " + GetName(oItem) + " zu benutzen.");
 		return;
 	}
 
