@@ -75,6 +75,8 @@ void DimensionDoorEffect(object oActivator, location lTarget) {
 	for (i = 76; i < 81; i++)
 		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(i), lElevatedTarget);
 
+	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(747), oActivator, 0.74f);
+
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_SUMMON_UNDEAD), lTarget);
 }
 
