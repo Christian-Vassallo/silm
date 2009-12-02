@@ -75,10 +75,8 @@ object GetMoneyBag(object oPC) {
 	object oItem = GetFirstItemInInventory(oPC);
 	while ( GetIsObjectValid(oItem) ) {
 		string sTag = GetTag(oItem);
-		if ( sTag == "Muenzbeutel" && GetFirstItemInInventory(oItem) == OBJECT_INVALID ) {
-			SendMessageToPC(oPC, GetName(oItem));
+		if ( sTag == "Muenzbeutel" )
 			return oItem;
-		}
 		oItem = GetNextItemInInventory(oPC);
 	}
 	return oPC;
