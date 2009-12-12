@@ -9,7 +9,10 @@ void main() {
 			ApplyEffectToObject(DURATION_TYPE_PERMANENT,
 				EffectLinkEffects(
 					EffectPolymorph(69, false),
-					EffectDamageReduction(10, 1, 0)
+					EffectLinkEffects(
+						EffectDamageReduction(10, 1, 0),
+						EffectMovementSpeedIncrease(35)
+					)
 				), e.actor);
 	}
 }
