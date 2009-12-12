@@ -1,0 +1,16 @@
+extern("_gen")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	// struct EventArguments ea = GetEventArguments(e.serial);
+
+	if (e.ev == "item_activate" && GetTag(e.runnable) == "keela_props") {
+		if (!GetIsPolymorphed(e.actor))
+			ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+				EffectLinkEffects(
+					EffectPolymorph(69, false),
+					EffectDamageReduction(10, 1, 0)
+				), e.actor);
+	}
+}
+
