@@ -47,6 +47,7 @@ Makefile.dep: $(autogen) $(headers) $(scripts)
 	@echo "Building dependencies: Makefile.dep .."
 	@./build_dep_list.rb -g stddef.h -g _const.nh $(headers) $(scripts) > Makefile.dep
 
+.PHONY: revupdate
 revupdate:
 	@echo '#define GIT_COMMIT_ON "$(commitdate)"' > git.h
 	@echo '#define GIT_BUILD_ON "$(builddate)"'  >> git.h
