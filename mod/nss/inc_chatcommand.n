@@ -1748,6 +1748,8 @@ int CommandBodyOperator(object oPC, int iMode) {
 
 int CommandBodyPart(object oPC, int iMode) {
 	object oTarget = GetTarget();
+	if ( !amask(oPC, AMASK_GM) )
+		oTarget = oPC;
 
 	if ( !is_creature(oTarget) )
 		return NotifyBadTarget("Must be a creature.");
@@ -1764,29 +1766,25 @@ int CommandBodyPart(object oPC, int iMode) {
 		if (a0 == "tattoo1") nPart = COLOR_CHANNEL_TATTOO_1;
 		if (a0 == "tattoo2") nPart = COLOR_CHANNEL_TATTOO_2;
 
-		if ( getopt_argc() == 1 ) {
-			int nVal = GetColor(oTarget, nPart);
-			SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " = " + a0 + " is: " + IntToString(nVal));
+		int nVal = GetColor(oTarget, nPart);
+		SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " = " + a0 + " is: " + IntToString(nVal));
 
-		} else {
+		if (getopt_argc() > 1) {
 			int nVal = StringToInt(getopt_arg(1));
 			SetColor(oTarget, nPart, nVal);
-			SendMessageToPC(oPC, "Okay, done.");
-
+			SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " = " + a0 + " is now: " + IntToString(nVal));
 		}
 
 	} else {
 		int nPart = StringToInt(a0);
 
-		if ( getopt_argc() == 1 ) {
-			int nVal = GetCreatureBodyPart(nPart, oTarget);
-			SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " is: " + IntToString(nVal));
+		int nVal = GetCreatureBodyPart(nPart, oTarget);
+		SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " is: " + IntToString(nVal));
 
-		} else if ( getopt_argc() == 2 ) {
+		if ( getopt_argc() > 1 ) {
 			int nVal = StringToInt(getopt_arg(1));
-
 			SetCreatureBodyPart(nPart, nVal, oTarget);
-			SendMessageToPC(oPC, "Okay, done.");
+			SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " = " + a0 + " is now: " + IntToString(nVal));
 		}
 	}
 
@@ -1797,6 +1795,8 @@ int CommandBodyPart(object oPC, int iMode) {
 
 int CommandWing(object oPC, int iMode) {
 	object oTarget = GetTarget();
+	if ( !amask(oPC, AMASK_GM) )
+		oTarget = oPC;
 
 	if ( !is_creature(oTarget) )
 		return NotifyBadTarget("Must be a creature.");
@@ -1819,6 +1819,8 @@ int CommandWing(object oPC, int iMode) {
 
 int CommandTail(object oPC, int iMode) {
 	object oTarget = GetTarget();
+	if ( !amask(oPC, AMASK_GM) )
+		oTarget = oPC;
 
 	if ( !is_creature(oTarget) )
 		return NotifyBadTarget("Must be a creature.");
