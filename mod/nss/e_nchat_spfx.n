@@ -1,0 +1,111 @@
+extern("inc_events")
+extern("inc_chat_lib")
+extern("_gen")
+extern("x0_i0_match")
+
+#define ZONE_OF_SILENCE_RANGE 1.5f
+
+
+bool is_in_zos(object actor) {
+	if (GetHasSpellEffect(SPELL_ZONE_OF_SILENCE, actor))
+		return true;
+
+	object o = GetFirstObjectInShape(SHAPE_SPHERE, ZONE_OF_SILENCE_RANGE, GetLocation(actor), false, OBJECT_TYPE_CREATURE);
+	while (is_valid(o)) {
+		if (!GetIsDM(o) && (GetIsPC(o) || GetIsDMPossessed(o)) && o != actor) {
+			if (GetHasSpellEffect(SPELL_ZONE_OF_SILENCE, o)) {
+				return true;
+			}
+		}
+		o = GetNextObjectInShape(SHAPE_SPHERE, ZONE_OF_SILENCE_RANGE, GetLocation(actor), false, OBJECT_TYPE_CREATURE);
+	}
+	return false;
+}
+
+void main() {
+	struct EventInfo ei = GetEventInfo();
+
+	if (ei.ev != "nwnx_chat")
+		return;
+	
+	struct EventArguments ea = GetEventArguments(ei.serial);
+
+	SetLocalString(ei.actor, "NWNX!CHAT!TEXT", NWNXChatGetSpacer());
+	string text = GetLocalString(ei.actor, "NWNX!CHAT!TEXT");
+
+	int mode = MsgToChatMode(StringToInt(GetStringLeft(text, 2)));
+	text = GetSubString(text, 12, GetStringLength(text));
+
+	
+	if ((!GetIsDM(ei.actor) || GetIsDMPossessed(ei.actor)) && (mode & CHATMODE_TALK || mode & CHATMODE_WHISPER) && GetStringLeft(text, 1) != "/") {
+		bool actor_is_in_zos = is_in_zos(ei.actor);
+
+		if (GetHasEffect(EFFECT_TYPE_SILENCE, ei.actor) || actor_is_in_zos) {
+			
+			if (actor_is_in_zos) {
+				string zos_message = GetName(ei.actor) + " (In Zone der Stille): " + ColorisePlayerText(ei.actor, mode, text, cWhite);
+
+				// Send the clear text to all within range.
+				object o = GetFirstObjectInShape(SHAPE_SPHERE, ZONE_OF_SILENCE_RANGE, GetLocation(ei.actor), false, OBJECT_TYPE_CREATURE);
+				while (is_valid(o)) {
+					if ((GetIsPC(o) || GetIsDMPossessed(o)) && o != ei.actor) {
+						SendMessageToPC(o, zos_message);
+					}
+					o = GetNextObjectInShape(SHAPE_SPHERE, ZONE_OF_SILENCE_RANGE, GetLocation(ei.actor), false, OBJECT_TYPE_CREATURE);
+				}
+
+				// And send it to ourselves.
+				SendMessageToPC(ei.actor, zos_message);
+
+				// And send it to all DMs that are listening.
+				object dm = GetFirstPC();
+				while (is_valid(dm)) {
+					if (GetIsDM(dm) && !GetIsDMPossessed(dm) &&
+							GetDistanceBetween(dm, ei.actor) >= ZONE_OF_SILENCE_RANGE &&
+							hears(ei.actor, dm, mode & CHATMODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER))
+						SendMessageToPC(dm, zos_message);
+
+					dm = GetNextPC();
+				}
+			}
+
+			string s, c; int i;
+			bool did_dots =false;
+			bool in_emote = false, in_dots = false;
+			for (i = 0; i < strlen(text); i++) {
+				c = substr(text, i, 1);
+				
+				if (c == "*") {
+					s += c;
+					in_dots = false;
+					in_emote = !in_emote;
+					continue;
+				}
+
+				if (in_emote) {
+					s += c;
+					continue;
+				}
+
+				if (!in_emote) {
+					if (!in_dots) {
+						s += " ... ";
+						did_dots = true;
+						in_dots = true;
+					}
+				}
+			}
+
+			if ("" == s) {
+				did_dots = true;
+				s = "...";
+			}
+
+			if (!actor_is_in_zos && did_dots)
+				SendMessageToPC(ei.actor, "Du kannst nicht sprechen (aufgrund des Effekts Stille). Du sagtest: " + text);
+
+			NWNXChatSpeakToChannel(ei.actor, ChatModeToMsg(mode), ColorisePlayerText(ei.actor, mode, s, cOrange));
+			event_stop_end_suppress();
+		}
+	}
+}
