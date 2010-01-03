@@ -4,7 +4,6 @@ __struct_id: 4294967295
 AreaProperties: 
   type: :struct
   value: !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/AreaProperties
     __struct_id: 100
     AmbientSndDay: {type: :int, value: 51}
     AmbientSndDayVol: {type: :int, value: 32}
@@ -23,7 +22,6 @@ Door List:
   type: :list
   value: 
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Door List
     __struct_id: 8
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 0}
@@ -45,15 +43,15 @@ Door List:
     Hardness: {type: :byte, value: 15}
     Interruptable: {type: :byte, value: 1}
     KeyName: {type: :cexostr, value: key_sumpfturm}
-    KeyRequired: {type: :byte, value: 0}
-    LinkedTo: {type: :cexostr, value: sumpf_turm_2_sumpf04}
+    KeyRequired: {type: :byte, value: 1}
+    LinkedTo: {type: :cexostr, value: ""}
     LinkedToFlags: {type: :byte, value: 1}
     LoadScreenID: {type: :word, value: 0}
     LocName: 
       type: :cexolocstr
       str_ref: 5349
-      value: {}
-
+      value: 
+        0: Door
     Lockable: {type: :byte, value: 1}
     Locked: {type: :byte, value: 1}
     OnClick: {type: :resref, value: door_click}
@@ -74,7 +72,7 @@ Door List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Tag: {type: :cexostr, value: sumpf04_2_sumpf_turm}
+    Tag: {type: :cexostr, value: door}
     TemplateResRef: {type: :resref, value: x2_doormed2}
     TrapDetectDC: {type: :byte, value: 0}
     TrapDetectable: {type: :byte, value: 1}
@@ -90,28 +88,24 @@ Encounter List:
   type: :list
   value: 
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Encounter List
     __struct_id: 7
     Active: {type: :byte, value: 1}
     CreatureList: 
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Encounter List/CreatureList
         __struct_id: 0
         Appearance: {type: :int, value: 300}
         CR: {type: :float, value: 1.0}
         ResRef: {type: :resref, value: koboldkrieger}
         SingleSpawn: {type: :byte, value: 0}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Encounter List/CreatureList
         __struct_id: 0
         Appearance: {type: :int, value: 305}
         CR: {type: :float, value: 0.5}
         ResRef: {type: :resref, value: koboldschtze}
         SingleSpawn: {type: :byte, value: 0}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Encounter List/CreatureList
         __struct_id: 0
         Appearance: {type: :int, value: 305}
         CR: {type: :float, value: 4.0}
@@ -124,25 +118,21 @@ Encounter List:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Encounter List/Geometry
         __struct_id: 1
         X: {type: :float, value: 0.0}
         Y: {type: :float, value: 0.0}
         Z: {type: :float, value: 0.025}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Encounter List/Geometry
         __struct_id: 1
         X: {type: :float, value: 0.236}
         Y: {type: :float, value: -11.093}
         Z: {type: :float, value: 0.025}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Encounter List/Geometry
         __struct_id: 1
         X: {type: :float, value: 2.1242}
         Y: {type: :float, value: -9.4409}
         Z: {type: :float, value: 0.025}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Encounter List/Geometry
         __struct_id: 1
         X: {type: :float, value: 2.1242}
         Y: {type: :float, value: -2.3602}
@@ -167,7 +157,6 @@ Encounter List:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Encounter List/SpawnPointList
         __struct_id: 2
         Orientation: {type: :float, value: -0.0}
         X: {type: :float, value: 62.0372}
@@ -186,7 +175,6 @@ Placeable List:
   type: :list
   value: 
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 4}
     Appearance: {type: :dword, value: 1105}
@@ -250,7 +238,6 @@ Placeable List:
     Y: {type: :float, value: 44.0079}
     Z: {type: :float, value: 0.01}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 4}
     Appearance: {type: :dword, value: 1108}
@@ -314,7 +301,6 @@ Placeable List:
     Y: {type: :float, value: 25.8674}
     Z: {type: :float, value: 0.01}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 4}
     Appearance: {type: :dword, value: 1105}
@@ -378,7 +364,6 @@ Placeable List:
     Y: {type: :float, value: 62.064}
     Z: {type: :float, value: 0.0}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 4}
     Appearance: {type: :dword, value: 1108}
@@ -442,7 +427,6 @@ Placeable List:
     Y: {type: :float, value: 95.0907}
     Z: {type: :float, value: 0.01}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 4}
     Appearance: {type: :dword, value: 1106}
@@ -506,7 +490,6 @@ Placeable List:
     Y: {type: :float, value: 85.198}
     Z: {type: :float, value: 0.01}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 4}
     Appearance: {type: :dword, value: 1109}
@@ -570,7 +553,6 @@ Placeable List:
     Y: {type: :float, value: 15.0708}
     Z: {type: :float, value: 0.01}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 4}
     Appearance: {type: :dword, value: 1110}
@@ -634,7 +616,6 @@ Placeable List:
     Y: {type: :float, value: 7.7404}
     Z: {type: :float, value: 0.01}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 4}
     Appearance: {type: :dword, value: 1107}
@@ -698,7 +679,6 @@ Placeable List:
     Y: {type: :float, value: 5.2473}
     Z: {type: :float, value: 0.0995}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 4}
     Appearance: {type: :dword, value: 1106}
@@ -762,7 +742,6 @@ Placeable List:
     Y: {type: :float, value: 14.5412}
     Z: {type: :float, value: 0.01}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 4}
     Appearance: {type: :dword, value: 1105}
@@ -826,7 +805,6 @@ Placeable List:
     Y: {type: :float, value: 35.4331}
     Z: {type: :float, value: 0.01}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 4}
     Appearance: {type: :dword, value: 1108}
@@ -890,7 +868,6 @@ Placeable List:
     Y: {type: :float, value: 82.9468}
     Z: {type: :float, value: 0.01}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 4}
     Appearance: {type: :dword, value: 1107}
@@ -954,7 +931,6 @@ Placeable List:
     Y: {type: :float, value: 23.4614}
     Z: {type: :float, value: 0.01}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 4}
     Appearance: {type: :dword, value: 1110}
@@ -1018,7 +994,6 @@ Placeable List:
     Y: {type: :float, value: 37.6684}
     Z: {type: :float, value: 0.0}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 157}
@@ -1083,19 +1058,16 @@ Placeable List:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: fSearchDist}
         Type: {type: :dword, value: 2}
         Value: {type: :float, value: 10.0}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: nDiffaculty}
         Type: {type: :dword, value: 1}
         Value: {type: :int, value: 8}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: sTyp}
         Type: {type: :dword, value: 3}
@@ -1105,7 +1077,6 @@ Placeable List:
     Y: {type: :float, value: 80.2662}
     Z: {type: :float, value: 0.0}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 157}
@@ -1170,19 +1141,16 @@ Placeable List:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: fSearchDist}
         Type: {type: :dword, value: 2}
         Value: {type: :float, value: 10.0}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: nDiffaculty}
         Type: {type: :dword, value: 1}
         Value: {type: :int, value: 8}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: sTyp}
         Type: {type: :dword, value: 3}
@@ -1192,7 +1160,6 @@ Placeable List:
     Y: {type: :float, value: 73.7708}
     Z: {type: :float, value: 0.0}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 157}
@@ -1257,19 +1224,16 @@ Placeable List:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: fSearchDist}
         Type: {type: :dword, value: 2}
         Value: {type: :float, value: 10.0}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: nDiffaculty}
         Type: {type: :dword, value: 1}
         Value: {type: :int, value: 8}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: sTyp}
         Type: {type: :dword, value: 3}
@@ -1279,7 +1243,6 @@ Placeable List:
     Y: {type: :float, value: 67.0651}
     Z: {type: :float, value: 0.01}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 157}
@@ -1344,19 +1307,16 @@ Placeable List:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: fSearchDist}
         Type: {type: :dword, value: 2}
         Value: {type: :float, value: 10.0}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: nDiffaculty}
         Type: {type: :dword, value: 1}
         Value: {type: :int, value: 8}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: sTyp}
         Type: {type: :dword, value: 3}
@@ -1366,7 +1326,6 @@ Placeable List:
     Y: {type: :float, value: 90.8079}
     Z: {type: :float, value: 0.0}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 157}
@@ -1431,19 +1390,16 @@ Placeable List:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: fSearchDist}
         Type: {type: :dword, value: 2}
         Value: {type: :float, value: 10.0}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: nDiffaculty}
         Type: {type: :dword, value: 1}
         Value: {type: :int, value: 8}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: sTyp}
         Type: {type: :dword, value: 3}
@@ -1453,7 +1409,6 @@ Placeable List:
     Y: {type: :float, value: 18.2291}
     Z: {type: :float, value: -0.0}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 157}
@@ -1518,19 +1473,16 @@ Placeable List:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: fSearchDist}
         Type: {type: :dword, value: 2}
         Value: {type: :float, value: 10.0}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: nDiffaculty}
         Type: {type: :dword, value: 1}
         Value: {type: :int, value: 8}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: sTyp}
         Type: {type: :dword, value: 3}
@@ -1540,7 +1492,6 @@ Placeable List:
     Y: {type: :float, value: 20.3588}
     Z: {type: :float, value: -0.0}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 304}
@@ -1603,7 +1554,6 @@ Placeable List:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: Ressource}
         Type: {type: :dword, value: 3}
@@ -1613,7 +1563,6 @@ Placeable List:
     Y: {type: :float, value: 59.4406}
     Z: {type: :float, value: -0.0}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/Placeable List
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 304}
@@ -1676,7 +1625,6 @@ Placeable List:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/Placeable List/VarTable
         __struct_id: 0
         Name: {type: :cexostr, value: Ressource}
         Type: {type: :dword, value: 3}
@@ -1689,7 +1637,6 @@ SoundList:
   type: :list
   value: 
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/SoundList
     __struct_id: 6
     Active: {type: :byte, value: 1}
     Continuous: {type: :byte, value: 1}
@@ -1716,7 +1663,7 @@ SoundList:
     Sounds: 
       type: :list
       value: 
-      - !nwn-lib.elv.es,2008-12/struct {__data_type: GIT/SoundList/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_frog1}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: as_an_frog1}}
     Tag: {type: :cexostr, value: Frog}
     TemplateResRef: {type: :resref, value: frog001}
     Times: {type: :byte, value: 3}
@@ -1726,7 +1673,6 @@ SoundList:
     YPosition: {type: :float, value: 41.3135}
     ZPosition: {type: :float, value: 1.5}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/SoundList
     __struct_id: 6
     Active: {type: :byte, value: 1}
     Continuous: {type: :byte, value: 1}
@@ -1753,7 +1699,7 @@ SoundList:
     Sounds: 
       type: :list
       value: 
-      - !nwn-lib.elv.es,2008-12/struct {__data_type: GIT/SoundList/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_toad1}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: as_an_toad1}}
     Tag: {type: :cexostr, value: Toad}
     TemplateResRef: {type: :resref, value: toad001}
     Times: {type: :byte, value: 3}
@@ -1763,7 +1709,6 @@ SoundList:
     YPosition: {type: :float, value: 38.4792}
     ZPosition: {type: :float, value: 1.5}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/SoundList
     __struct_id: 6
     Active: {type: :byte, value: 1}
     Continuous: {type: :byte, value: 0}
@@ -1790,7 +1735,7 @@ SoundList:
     Sounds: 
       type: :list
       value: 
-      - !nwn-lib.elv.es,2008-12/struct {__data_type: GIT/SoundList/Sounds, __struct_id: 0, Sound: {type: :resref, value: al_an_toads1}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: al_an_toads1}}
     Tag: {type: :cexostr, value: ToadsLoop}
     TemplateResRef: {type: :resref, value: toadsloop}
     Times: {type: :byte, value: 3}
@@ -1800,7 +1745,6 @@ SoundList:
     YPosition: {type: :float, value: 51.2355}
     ZPosition: {type: :float, value: 1.5}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/SoundList
     __struct_id: 6
     Active: {type: :byte, value: 1}
     Continuous: {type: :byte, value: 1}
@@ -1827,7 +1771,7 @@ SoundList:
     Sounds: 
       type: :list
       value: 
-      - !nwn-lib.elv.es,2008-12/struct {__data_type: GIT/SoundList/Sounds, __struct_id: 0, Sound: {type: :resref, value: al_an_mosquitos1}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: al_an_mosquitos1}}
     Tag: {type: :cexostr, value: MosquitoLoop}
     TemplateResRef: {type: :resref, value: mosquitoloop001}
     Times: {type: :byte, value: 3}
@@ -1837,7 +1781,6 @@ SoundList:
     YPosition: {type: :float, value: 50.1975}
     ZPosition: {type: :float, value: 1.5}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/SoundList
     __struct_id: 6
     Active: {type: :byte, value: 1}
     Continuous: {type: :byte, value: 1}
@@ -1864,15 +1807,15 @@ SoundList:
     Sounds: 
       type: :list
       value: 
-      - !nwn-lib.elv.es,2008-12/struct {__data_type: GIT/SoundList/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_crittgnaw1}}
-      - !nwn-lib.elv.es,2008-12/struct {__data_type: GIT/SoundList/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_crittgnaw2}}
-      - !nwn-lib.elv.es,2008-12/struct {__data_type: GIT/SoundList/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_crittgnaw3}}
-      - !nwn-lib.elv.es,2008-12/struct {__data_type: GIT/SoundList/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_crittgnaw4}}
-      - !nwn-lib.elv.es,2008-12/struct {__data_type: GIT/SoundList/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_crittpeep1}}
-      - !nwn-lib.elv.es,2008-12/struct {__data_type: GIT/SoundList/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_crittpeep2}}
-      - !nwn-lib.elv.es,2008-12/struct {__data_type: GIT/SoundList/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_crittscmp1}}
-      - !nwn-lib.elv.es,2008-12/struct {__data_type: GIT/SoundList/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_crittscmp2}}
-      - !nwn-lib.elv.es,2008-12/struct {__data_type: GIT/SoundList/Sounds, __struct_id: 0, Sound: {type: :resref, value: as_an_crittscmp3}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: as_an_crittgnaw1}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: as_an_crittgnaw2}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: as_an_crittgnaw3}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: as_an_crittgnaw4}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: as_an_crittpeep1}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: as_an_crittpeep2}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: as_an_crittscmp1}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: as_an_crittscmp2}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: as_an_crittscmp3}}
     Tag: {type: :cexostr, value: Critters}
     TemplateResRef: {type: :resref, value: critters001}
     Times: {type: :byte, value: 3}
@@ -1889,7 +1832,6 @@ TriggerList:
   type: :list
   value: 
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/TriggerList
     __struct_id: 1
     AutoRemoveKey: {type: :byte, value: 0}
     Cursor: {type: :byte, value: 1}
@@ -1899,25 +1841,21 @@ TriggerList:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: 0.0}
         PointZ: {type: :float, value: 0.025000000372529}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: -9.25220012664795}
         PointZ: {type: :float, value: 0.025000000372529}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 1.19809997081757}
         PointY: {type: :float, value: -9.25220012664795}
         PointZ: {type: :float, value: 0.025000000372529}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 1.19809997081757}
         PointY: {type: :float, value: 0.0}
@@ -1956,7 +1894,6 @@ TriggerList:
     ZOrientation: {type: :float, value: 0.0}
     ZPosition: {type: :float, value: 0.0}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/TriggerList
     __struct_id: 1
     AutoRemoveKey: {type: :byte, value: 0}
     Cursor: {type: :byte, value: 1}
@@ -1966,25 +1903,21 @@ TriggerList:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: 0.0}
         PointZ: {type: :float, value: 0.025000000372529}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: -1.4695999622345}
         PointZ: {type: :float, value: 0.025000000372529}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 8.95740032196045}
         PointY: {type: :float, value: -1.4695999622345}
         PointZ: {type: :float, value: 0.025000000372529}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 8.95740032196045}
         PointY: {type: :float, value: -0.0700000002980232}
@@ -2023,7 +1956,6 @@ TriggerList:
     ZOrientation: {type: :float, value: 0.0}
     ZPosition: {type: :float, value: 0.0}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/TriggerList
     __struct_id: 1
     AutoRemoveKey: {type: :byte, value: 0}
     Cursor: {type: :byte, value: 1}
@@ -2033,25 +1965,21 @@ TriggerList:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: 0.0}
         PointZ: {type: :float, value: 0.025000000372529}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 0.138199999928474}
         PointY: {type: :float, value: -18.5214004516602}
         PointZ: {type: :float, value: 0.025000000372529}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 1.31309998035431}
         PointY: {type: :float, value: -18.5214004516602}
         PointZ: {type: :float, value: 0.025000000372529}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 1.31309998035431}
         PointY: {type: :float, value: 0.0}
@@ -2090,7 +2018,6 @@ TriggerList:
     ZOrientation: {type: :float, value: 0.0}
     ZPosition: {type: :float, value: 0.0}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/TriggerList
     __struct_id: 1
     AutoRemoveKey: {type: :byte, value: 0}
     Cursor: {type: :byte, value: 1}
@@ -2100,31 +2027,26 @@ TriggerList:
       type: :list
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: 0.0}
         PointZ: {type: :float, value: 0.025000000372529}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: -0.0445000007748604}
         PointZ: {type: :float, value: 0.025000000372529}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 0.0445000007748604}
         PointY: {type: :float, value: -9.7371997833252}
         PointZ: {type: :float, value: 0.025000000372529}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 1.28939998149872}
         PointY: {type: :float, value: -10.003999710083}
         PointZ: {type: :float, value: 0.025000000372529}
       - !nwn-lib.elv.es,2008-12/struct 
-        __data_type: GIT/TriggerList/Geometry
         __struct_id: 3
         PointX: {type: :float, value: 1.28939998149872}
         PointY: {type: :float, value: -0.0}
@@ -2166,7 +2088,6 @@ WaypointList:
   type: :list
   value: 
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/WaypointList
     __struct_id: 5
     Appearance: {type: :byte, value: 1}
     Description: 
@@ -2192,7 +2113,6 @@ WaypointList:
     YPosition: {type: :float, value: 0.8805}
     ZPosition: {type: :float, value: 0.025}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/WaypointList
     __struct_id: 5
     Appearance: {type: :byte, value: 1}
     Description: 
@@ -2218,7 +2138,6 @@ WaypointList:
     YPosition: {type: :float, value: 24.827}
     ZPosition: {type: :float, value: 0.0}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/WaypointList
     __struct_id: 5
     Appearance: {type: :byte, value: 1}
     Description: 
@@ -2244,7 +2163,6 @@ WaypointList:
     YPosition: {type: :float, value: 50.0}
     ZPosition: {type: :float, value: 0.0}
   - !nwn-lib.elv.es,2008-12/struct 
-    __data_type: GIT/WaypointList
     __struct_id: 5
     Appearance: {type: :byte, value: 1}
     Description: 
