@@ -42,6 +42,22 @@ void Hook_GiveXPToCreature(object oCreature, int nXpAmount) {
 	GiveXPToCreature(oCreature, nXpAmount);
 }
 
+#undef CopyItemAndModify
+object Hook_CopyItemAndModify(object oItem, int nType, int nIndex, int nNewValue, int bCopyVars=FALSE) {
+	object oNew = CopyItemAndModify(oItem, nType, nIndex, nNewValue, bCopyVars);
+	if (GetDescription(oItem, false) != GetDescription(oItem, true))
+		SetDescription(oNew, GetDescription(oItem));
+	return oNew;
+}
+
+#undef CopyItem
+object Hook_CopyItem(object oItem, object oTarget = OBJECT_INVALID, int copy = FALSE) {
+	object oNew = CopyItem(oItem, oTarget, copy);
+	if (GetDescription(oItem, false) != GetDescription(oItem, true))
+		SetDescription(oNew, GetDescription(oItem));
+	return oNew;
+}
+
 
 void _hook_jump_associates(object obj, location jumpTo, bool as_action);
 

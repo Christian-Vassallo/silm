@@ -17,6 +17,8 @@ extern("hook_generic")
 #define CreateObject(...) Hook_CreateObject(__VA_ARGS__)
 #define SetXP(...) Hook_SetXP(__VA_ARGS__)
 #define GiveXPToCreature(...) Hook_GiveXPToCreature(__VA_ARGS__)
+#define CopyItemAndModify(...) Hook_CopyItemAndModify(__VA_ARGS__)
+#define CopyItem(...) Hook_CopyItem(__VA_ARGS__)
 
 #define ActionJumpToObject(...) Hook_ActionJumpToObject(__VA_ARGS__)
 #define ActionJumpToLocation(...) Hook_ActionJumpToLocation(__VA_ARGS__)
