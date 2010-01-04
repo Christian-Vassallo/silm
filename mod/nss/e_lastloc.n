@@ -1,0 +1,22 @@
+extern("inc_online")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	if (e.ev != "player_login")
+		return;
+
+	if (GetIsDM(e.runnable))
+		return;
+
+	if (GetLocalInt(e.runnable, "lastloc_restored"))
+		return;
+
+	location lastLoc = GetLastLocation(e.runnable);
+
+	object oocArea = GetObjectByTag("OOC");
+
+	if (GetAreaFromLocation(lastLoc) != oocArea)
+		JumpToLocation(lastLoc);
+	
+	SetLocalInt(e.runnable, "lastloc_restored", 1);
+}
