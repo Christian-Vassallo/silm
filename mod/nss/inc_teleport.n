@@ -28,7 +28,7 @@ void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false, bool bShowD
 		DelayCommand(0.4, DimensionDoorEffect(OBJECT_SELF, lTarget));
 
 	if (!bVisualsOnly) {
-		DelayCommand(0.7, JumpToLocation(lTarget));
+		DelayCommand(0.7, ActionJumpToLocation(lTarget));
 		if (bShowDistanceTraveled && !inter_area)
 			DelayCommand(0.5, FloatingTextStringOnCreature("Distanz: " +
 				FloatToString(GetDistanceBetweenLocations(GetLocation(OBJECT_SELF), lTarget), 0, 2) +
