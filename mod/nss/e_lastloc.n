@@ -15,8 +15,10 @@ void main() {
 
 	object oocArea = GetObjectByTag("OOC");
 
-	if (GetAreaFromLocation(lastLoc) != oocArea)
+	if (GetAreaFromLocation(lastLoc) != oocArea) {
+		ClearAllActions();
 		JumpToLocation(lastLoc);
+	}
 	
 	SetLocalInt(e.runnable, "lastloc_restored", 1);
 }
