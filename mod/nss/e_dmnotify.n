@@ -11,11 +11,6 @@ void main() {
 
 	if ("player_login" == ei.ev) {
 
-		string host = GetPCIPAddress(ei.actor);
-		pQ("select dns.getname(" + pSs(host) + ");");
-		if (pF())
-			host = pGs(1);
-
 		string
 			sIP = GetPCIPAddress(ei.actor),
 			sKey = GetPCPublicCDKey(ei.actor);
@@ -24,7 +19,7 @@ void main() {
 			sAccountName +
 			"'(" +
 			IntToString(nAID) +
-			") '" + sCharName + "'(" + IntToString(nCID) + "), " + sIP + " -> " + host + "/" + sKey
+			") '" + sCharName + "'(" + IntToString(nCID) + "), " + sIP + "/" + sKey
 		);
 
 	}
