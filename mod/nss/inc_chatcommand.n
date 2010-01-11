@@ -2325,8 +2325,19 @@ int CommandKillObj(object oPC, int iMode) {
 	while ( GetIsObjectValid(o) ) {
 		sTag = GetTag(o);
 		if ( !GetIsPC(o) && TestStringAgainstPattern(sTagMask, sTag) ) {
-			KillInventory(o);
-			KillPlacie(o, delay);
+			switch (GetObjectType(o)) {
+				case OBJECT_TYPE_PLACEABLE:
+					KillInventory(o);
+					KillPlacie(o, delay);
+					break;
+				case OBJECT_TYPE_CREATURE:
+					if (p_id(o) > 0)
+						p_delete("critters", o);
+					break;
+				default:
+					DestroyObject(o, delay);
+					break;
+			}
 			delay += 0.1;
 			c += 1;
 		}
@@ -3139,7 +3150,13 @@ int CommandKill(object oPC, int iMode) {
 	AssignCommand(oTarget, SetIsDestroyable(TRUE, FALSE, FALSE));
 
 	if ( bUseDestroy ) {
-		KillInventory(oTarget);
+		if (GetObjectType(oTarget) == OBJECT_TYPE_PLACEABLE) {
+			KillInventory(oTarget);
+			KillPlacie(oTarget, 0.0, false);
+		}
+		if (GetObjectType(oTarget) == OBJECT_TYPE_CREATURE && p_id(oTarget) > 0)
+			p_delete("critters", oTarget);
+
 		DestroyObject(oTarget, getsleep());
 		return OK;
 	}
@@ -3160,6 +3177,7 @@ int CommandKill(object oPC, int iMode) {
 		case OBJECT_TYPE_ITEM:
 		case OBJECT_TYPE_PLACEABLE:
 			KillInventory(oTarget);
+			KillPlacie(oTarget, 0.0, false);
 			DestroyObject(oTarget, getsleep());
 			break;
 		default:
