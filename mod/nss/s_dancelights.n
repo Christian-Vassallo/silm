@@ -43,5 +43,10 @@ void main() {
 
 	DelayCommand(2.0, AssignCommand(oLight, turn_on()));
 
+	SendMessageToPC(OBJECT_SELF, "Tanzendes Licht: 'Aus Gruppe entfernen' um es zu loesen");
+	SendMessageToPC(OBJECT_SELF, "  'Bewache mich' um es an/abzuschalten, die Farbe zu aendern");
+	SendMessageToPC(OBJECT_SELF, "  'Folgen', 'Position halten' wie erwartet");
+	SendMessageToPC(OBJECT_SELF, "  'Zaubern an/abschalten' um das Licht freizusetzen");
+
 	AssignCommand(oLight, DelayCommand(fDuration, DestroyObject(oLight)));
 }
