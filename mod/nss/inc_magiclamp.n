@@ -29,7 +29,6 @@ void magicLamp_on(object oLamp, int nColor = VFX_DUR_LIGHT_PURPLE_20) {
 	AssignCommand(oLamp, PlayAnimation(ANIMATION_PLACEABLE_ACTIVATE));
 	DelayCommand(1.0, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_DUR_LIGHT_BLUE_5)), oLamp));
 	DelayCommand(0.2, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_CHARM)), oLamp));
-	DelayCommand(1.0, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_DUR_AURA_WHITE)), oLamp));
 	DelayCommand(2.0, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(nColor)), oLamp));
 
 	SetLocalInt(oLamp, "color", nColor);
