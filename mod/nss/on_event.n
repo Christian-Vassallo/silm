@@ -127,11 +127,9 @@ void main() {
 			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_pickpocket", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
 				NWNXBypassEvent();
 			else  {
-				if (!GetIsPC(oTarget)) {
-					SendMessageToPC(oPC, "Taschendiebstahl an NSCs bitte ueber SLs regeln.");
-					NWNXBypassEvent();
-					AssignCommand(oPC, ClearAllActions(true));
-				}
+				SendMessageToPC(oPC, "Taschendiebstahl bitte ueber SLs oder im Rollenspiel abhandeln.");
+				NWNXBypassEvent();
+				AssignCommand(oPC, ClearAllActions(true));
 			}
 			break;
 
