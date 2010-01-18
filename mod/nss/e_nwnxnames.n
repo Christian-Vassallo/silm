@@ -1,0 +1,118 @@
+extern("inc_nwnx_names")
+extern("inc_playertarget")
+extern("inc_cdb")
+
+#define UNKNOWN_STYLE 3
+
+void show_for(object pc, object target) {
+	if (GetIsDM(pc) || GetIsPossessedFamiliar(pc))
+		return;
+	if (GetIsDM(target) || GetIsPossessedFamiliar(target))
+		return;
+	if (pc == target)
+		return;
+
+	int cid_pc     = GetCharacterID(pc);
+	int cid_target = GetCharacterID(target);
+	if (cid_pc < 1 || cid_target < 1)
+		return;
+
+	pQ("select name from dynamic_names where player = " + pSi(cid_pc) +
+		" and target = " + pSi(cid_target) + ";");
+	if (pF())
+		SetDynamicName(pc, target, pGs(1));
+}
+
+void init_for(object pc) {
+	if (GetIsDM(pc) || GetIsPossessedFamiliar(pc))
+		return;
+
+	InitPlayerNameList(pc, UNKNOWN_STYLE);
+	SetNamesEnabled(pc, true);
+	
+	int cid_pc = GetCharacterID(pc);
+	if (cid_pc < 1)
+		return;
+
+	iterate_players(i, show_for(pc, i));
+	iterate_players(i, show_for(i, pc));
+}
+
+void set_for(object pc, object target, string name) {
+	if (GetIsDM(pc) || GetIsPossessedFamiliar(pc))
+		return;
+	if (GetIsDM(target) || GetIsPossessedFamiliar(target))
+		return;
+
+	SetDynamicName(pc, target, name);
+	int cid_pc = GetCharacterID(pc);
+	int cid_target = GetCharacterID(target);
+
+	if (cid_pc > 0 && cid_target > 0) {
+		pQ("delete from dynamic_names where player = " + pSi(cid_pc) +
+			" and target = " + pSi(cid_target) + ";");
+		pQ("insert into dynamic_names (player, target, name) values (" +
+			pSi(cid_pc) + ", " + pSi(cid_target) + ", " + pSs(name) + ");");
+	}
+}
+
+void unset_for(object pc, object target) {
+	if (GetIsDM(pc) || GetIsPossessedFamiliar(pc))
+		return;
+	if (GetIsDM(target) || GetIsPossessedFamiliar(target))
+		return;
+
+	DeleteDynamicName(pc, target);
+	int cid_pc = GetCharacterID(pc);
+	int cid_target = GetCharacterID(target);
+
+	if (cid_pc > 0 && cid_target > 0) {
+		pQ("delete from dynamic_names where player = " + pSi(cid_pc) +
+			" and target = " + pSi(cid_target) + ";");
+	}
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "player_login") {
+		init_for(e.runnable);
+	}
+
+	if (e.ev == "chat_command") {
+		struct EventArguments ea = GetEventArguments(e.serial);
+		if (ea.a0 == "init_nwnx_names") {
+			if (GetIsDM(e.runnable))
+				return;
+
+			init_for(e.runnable);
+			SendMessageToPC(e.runnable, "Init done.");
+			event_stop_end();
+		}
+
+		if (ea.a0 == "name") {
+			if (GetIsDM(e.runnable))
+				return;
+
+			string name = GetStringTrim(ea.a1);
+			object target = GetPlayerTarget(e.runnable);
+
+			if (GetIsPC(target) && !GetIsDM(target) &&
+					!GetIsPossessedFamiliar(target)) {
+
+				if (name == "") {
+					unset_for(e.runnable, target);
+					SendMessageToPC(e.runnable, "Name geloescht.");
+
+				} else {
+					set_for(e.runnable, target, name);
+					SendMessageToPC(e.runnable, "Name gesetzt: " + name);
+				}
+
+			} else
+				SendMessageToPC(e.runnable, "Das aktuelle Ziel muss ein Spieler sein.");
+
+			event_stop_end();
+		}
+	}
+}
