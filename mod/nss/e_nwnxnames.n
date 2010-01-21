@@ -29,7 +29,7 @@ void init_for(object pc) {
 
 	InitPlayerNameList(pc, UNKNOWN_STYLE);
 	SetNamesEnabled(pc, true);
-	
+
 	int cid_pc = GetCharacterID(pc);
 	if (cid_pc < 1)
 		return;
@@ -89,30 +89,38 @@ void main() {
 			SendMessageToPC(e.runnable, "Init done.");
 			event_stop_end();
 		}
+	}
 
-		if (ea.a0 == "name") {
-			if (GetIsDM(e.runnable))
-				return;
+	if (e.ev == "chat_prefilter") {
+		if (GetIsDM(e.runnable))
+			return;
 
-			string name = GetStringTrim(ea.a1);
-			object target = GetPlayerTarget(e.runnable);
+		struct EventArguments ea = GetEventArguments(e.serial);
+		int idx = FindSubString(ea.a0, " ");
+		string cmd = GetSubString(ea.a0, 0, idx);
 
-			if (GetIsPC(target) && !GetIsDM(target) &&
-					!GetIsPossessedFamiliar(target)) {
+		if (cmd != "/name")
+			return;
 
-				if (name == "") {
-					unset_for(e.runnable, target);
-					SendMessageToPC(e.runnable, "Name geloescht.");
+		object target = GetPlayerTarget(e.runnable);
 
-				} else {
-					set_for(e.runnable, target, name);
-					SendMessageToPC(e.runnable, "Name gesetzt: " + name);
-				}
+		if (GetIsPC(target) && !GetIsDM(target) &&
+				!GetIsPossessedFamiliar(target)) {
 
-			} else
-				SendMessageToPC(e.runnable, "Das aktuelle Ziel muss ein Spieler sein.");
+			string name = GetStringTrim(GetSubString(ea.a0, idx + 1, 2048));
 
-			event_stop_end();
-		}
+			if (-1 == idx || name == "") {
+				unset_for(e.runnable, target);
+				SendMessageToPC(e.runnable, "Name geloescht.");
+
+			} else {
+				set_for(e.runnable, target, name);
+				SendMessageToPC(e.runnable, "Name gesetzt: " + name);
+			}
+
+		} else
+			SendMessageToPC(e.runnable, "Das aktuelle Ziel muss ein Spieler sein.");
+
+		event_stop_end_suppress();
 	}
 }
