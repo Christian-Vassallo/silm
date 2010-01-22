@@ -1847,6 +1847,8 @@ int CommandTail(object oPC, int iMode) {
 
 int CommandPortrait(object oPC, int iMode) {
 	object oTarget = GetTarget();
+	if ( !amask(oPC, AMASK_GM) )
+		oTarget = oPC;
 
 	if ( !GetIsObjectValid(oTarget) )
 		return NotifyBadTarget("Has to be a valid object.");
