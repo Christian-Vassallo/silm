@@ -1,0 +1,2 @@
+#define SERVER_ADDRESS "188.40.249.18"
+#define SERVER_PLAYER_PASSWORD "icarus"
