@@ -149,10 +149,12 @@ int RunCommand(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias
 
 	if ( GetLocalInt(oPC, "chat_suppress_audit") == 0 ) {
 		string sData = GetLocalString(oPC, "chat_data_audit");
+		SetLocalString(oPC, "chat_data_audit", "");
 		audit(sCommand, oPC, audit_fields("args", ( sData ==
 												   "" ? sRest : sData ), "mode", IntToString(iMode)),
 			"command", GetTarget());
-	}
+	} else
+		SetLocalInt(oPC, "chat_suppress_audit", 0);
 	return 1;
 }
 
