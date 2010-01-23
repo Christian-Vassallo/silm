@@ -1,0 +1,38 @@
+extern("inc_colors")
+extern("inc_description")
+
+#define spat(slot, t, item) if (GetIsObjectValid(item = GetItemInSlot(slot, e.actedon)) && \
+	GetLocalInt(item, "e_description_use") > 0) \
+		newDesc += cpat(t, item);
+#define cpat(t, i) C(t + ":", cOrange) + "\n" + GetDescription(i) + "\n\n"
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "pc_examine" && !GetIsDM(e.actedon) &&
+			!GetIsDMPossessed(e.actedon) &&
+			!GetIsPossessedFamiliar(e.actedon) && GetIsPC(e.actedon)) {
+
+		string playerDesc  = GetPlayerDescription(e.actedon);
+
+		string newDesc;
+		object item;
+
+		spat(INVENTORY_SLOT_HEAD,       GetName(item), item);
+		spat(INVENTORY_SLOT_LEFTHAND,   GetName(item), item);
+		spat(INVENTORY_SLOT_RIGHTHAND,  GetName(item), item);
+		spat(INVENTORY_SLOT_LEFTRING,   GetName(item), item);
+		spat(INVENTORY_SLOT_RIGHTRING,  GetName(item), item);
+		spat(INVENTORY_SLOT_NECK,       GetName(item), item);
+		spat(INVENTORY_SLOT_ARMS,       GetName(item), item);
+		spat(INVENTORY_SLOT_BOOTS,      GetName(item), item);
+		spat(INVENTORY_SLOT_CHEST,      GetName(item), item);
+		spat(INVENTORY_SLOT_CLOAK,      GetName(item), item);
+		spat(INVENTORY_SLOT_BOOTS,      GetName(item), item);
+		
+		newDesc += C("Aussehen:", cTeal) + "\n" + playerDesc;
+
+		SetDescription(e.actedon, newDesc);
+	}
+}
+
