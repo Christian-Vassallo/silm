@@ -5,7 +5,7 @@ void main() {
 	struct EventArguments ea = GetEventArguments(e.serial);
 
 	if (e.ev == "chat_command" && ea.a0 == "relog" && !GetIsDM(e.runnable)) {
-		DelayCommand(2.0, ActivatePortal(e.runnable, SERVER_ADDRESS, SERVER_PLAYER_PASSWORD, "", true));
+		ActivatePortal(e.runnable, SERVER_ADDRESS, SERVER_PLAYER_PASSWORD, "", true);
 		event_stop_end();
 	}
 }
