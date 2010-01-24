@@ -35,7 +35,7 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage) {
 	object oB;
 	string sStart =  ColorTag(cTeal) + "*";
 	string sShortName = GetName(oPC);
-	string sRest = "*" + ColorTagClose() + " " + ColorisePlayerText(oPC, MODE_TALK, sMessage, cWhite);
+	string sRest = "*" + ColorTagClose() + " " + ColorisePlayerText(oPC, CHATMODE_TALK, sMessage, cWhite);
 	string sMessage = sStart + sShortName + sRest;
 
 
@@ -78,19 +78,19 @@ int DelegateOwnToPartners(object oPC, int nMode, string sMessage) {
 	object oB;
 	string sStart =  ColorTag(cOrange) + "*";
 	string sShortName = GetName(oPC);
-	string sDoesWhat = " " + ( nMode & MODE_TALK ? "spricht" : "fluestert" );
+	string sDoesWhat = " " + ( nMode & CHATMODE_TALK ? "spricht" : "fluestert" );
 	string sRest = "*" + ColorTagClose() + " " + ColorisePlayerText(oPC, nMode, sMessage, cWhite);
 	string sMessage = sStart + sShortName + sDoesWhat + sRest;
 
 	pQ("select t_character, shortname from telepathic_bonds where character = " +
-		IntToString(nCID) + " and active='t' and expire <= unixts();");
+		IntToString(nCID) + " and active = true and expire <= unixts();");
 
 	while ( pF() ) {
 		nTCID = StringToInt(pG(1));
 		sShortName = pG(2);
 		oB = GetPCByCID(nTCID);
 
-		if ( GetIsPC(oB) && !hears(oPC, oB, nMode & MODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER) ) {
+		if ( GetIsPC(oB) && !hears(oPC, oB, nMode & CHATMODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER) ) {
 
 			if ( sShortName != "" )
 				sMessage = sStart + sShortName + sDoesWhat + sRest;
@@ -116,20 +116,20 @@ int DelegateHeardToPartners(object oPC, object oSpeakingObject, int nMode, strin
 	object oB;
 	string sStart =  ColorTag(cDarkGrey) + "*";
 	string sShortName = GetName(oSpeakingObject);
-	string sDoesWhat = " " + ( nMode & MODE_TALK ? "spricht" : "fluestert" );
+	string sDoesWhat = " " + ( nMode & CHATMODE_TALK ? "spricht" : "fluestert" );
 	string sRest = "*" + ColorTagClose() + " " + ColorisePlayerText(oSpeakingObject, nMode, sMessage, cWhite);
 
 	string sMessage = sStart + sShortName + sDoesWhat + sRest;
 
 	pQ("select t_character, shortname from telepathic_bonds where character = " +
-		IntToString(nCID) + " and active='t' and expire <= unixts();");
+		IntToString(nCID) + " and active = true and expire <= unixts();");
 
 	while ( pF() ) {
 		nTCID = StringToInt(pG(1));
 		oB = GetPCByCID(nTCID);
 
 		if ( GetIsPC(oB)
-			&& !hears(oB, oSpeakingObject, nMode & MODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER) ) {
+			&& !hears(oB, oSpeakingObject, nMode & CHATMODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER) ) {
 
 			SendMessageToPC(oB, sMessage);
 			nCount++;

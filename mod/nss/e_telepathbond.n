@@ -1,0 +1,69 @@
+extern("inc_telepathbond")
+extern("inc_chat")
+extern("inc_cdb")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "chat_prefilter") {
+		struct EventArguments ea = GetEventArguments(e.serial);
+		string message = ea.a0;
+
+		if (GetStringLeft(message, 1) == "$") {
+			int cid = GetCharacterID(e.runnable);
+			pQ("select id from telepathic_bonds where character = " + pSi(cid) +
+					" and active = true;");
+			if (pF()) {
+				string msg = GetSubString(message, 1, 2048);
+				DelegateTelepathicMessageToPartners(e.runnable, msg);
+				event_stop_end_suppress();
+				return;
+			}
+		}
+
+		object oPC = e.runnable;
+		int iMode = ea.i0;
+		string sText = message;
+
+		// Condition A: It was a player who said something
+		// Condition B: It was a NPC who said something
+		// Condition C: It was a channel that wants to be broadcasted
+		if ( ( iMode & CHATMODE_TALK || iMode & CHATMODE_WHISPER )
+			&& !GetLocalInt(GetArea(oPC), "dont_log")
+		) {
+
+
+			// If it was ourselves and we are not possessing something, send message to all bond partners
+			// DMs do not have bond partners
+			if ( GetIsPC(oPC) && !GetIsDM(oPC) && !GetIsDMPossessed(oPC) && !GetIsPossessedFamiliar(oPC) ) {
+				//SendMessageToAllActiveBondPartners(oPC, sMessage);
+				DelegateOwnToPartners(oPC, iMode, sText);
+			}
+
+
+
+			// Now iterate through all _players_ nearby and send to all bond partners that be
+			int nNth = 1;
+			object oI = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC, oPC, nNth);
+			while ( GetIsObjectValid(oI) ) {
+				// if its too far off drop out
+				if ( iMode & CHATMODE_WHISPER && GetDistanceBetween(oPC, oI) > 8.0 )  // 8 == TALKVOLUME_WHISPER
+					break;
+
+				if ( iMode & CHATMODE_TALK && GetDistanceBetween(oPC, oI) > 20.0 )  // 20 == TALKVOLUME_TALK
+					break;
+
+				if ( oPC != oI && !GetIsDM(oI) && GetObjectHeard(oPC, oI) ) {
+					// Iterate all bond partners and send a text message
+					// SendMessageToAllActiveBondPartners(oI, sMessage, iMode & MODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER, FALSE, oPC);
+					DelegateHeardToPartners(oI, oPC, iMode, sText);
+
+				}
+
+				nNth++;
+				oI = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC, oPC, nNth);
+			}
+		}
+	}
+}
+
