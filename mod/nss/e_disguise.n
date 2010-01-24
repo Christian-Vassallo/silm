@@ -1,0 +1,89 @@
+extern("inc_lists")
+extern("inc_disguise")
+extern("inc_cdb")
+extern("inc_colors")
+
+#define TTT "disguise"
+
+void MkDlg(object oPC);
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	struct EventArguments ea = GetEventArguments(e.serial);
+
+	if (e.ev == "player_login") {
+		int cid = GetCharacterID(e.runnable);
+		if (!cid) return;
+
+		pQ("select disguise from characters where id = " + pSi(cid) + " and disguise is not null;");
+		if (pF()) {
+			int disg = pGi(1);
+			if (!disg) return;
+			struct Disguise dd = disguise_load(disg);
+			disguise_apply(e.runnable, dd);
+		}
+	}
+
+	if (e.ev == "chat_command" && ea.a0 == "disguise") {
+		MkDlg(e.runnable);
+		ClearAllActions(true);
+		ActionStartConversation(e.runnable, "list_select", true, true);
+		event_stop_end();
+	}
+
+	if (e.ev == "chat_prefilter") { //  && ea.a0 == "savedisguise") {
+		int idx = FindSubString(ea.a0, " ");
+		string cmd = GetSubString(ea.a0, 0, idx);
+
+		if (cmd != "/savedisguise")
+			return;
+
+		string name = GetStringTrim(GetSubString(ea.a0, idx + 1, 2048));
+
+		if (-1 == idx || name == "")
+			SendMessageToPC(e.runnable, "Give a name.");
+		else {
+
+			SendMessageToPC(e.runnable, "Saving current disguise as " + name);
+			disguise_save(e.runnable, name);
+		}
+		event_stop_end_suppress();
+	}
+
+}
+
+
+void MkDlg(object oPC) {
+	ClearList(oPC, TTT);
+	int cid = GetCharacterID(oPC);
+	if (!cid) return;
+
+	int current_disguise = disguise_current_id(oPC);
+	string sText = "Select a disguise, or create one from your current appearance via /savedisguise Name. Keep 'Name' very simple and easy to re-type.";
+
+	pQ("select id,name,gender,cid,to_char(updated_on, 'DD.MM.YY HH:MI') from " + DISGUISE_TABLE + " where cid is null or cid = " + pSi(cid) + " order by cid, name asc;");
+	while (pF()) {
+		int id = pGi(1);
+		string name = pGs(2);
+		int gender = pGi(3);
+		int cidd = pGi(4);
+		string upd = pGs(5);
+
+		name += "  " + ColorTag(cLightGrey) + upd;
+
+		if (gender != GetGender(oPC))
+			name += ColorTag(cYellow) + " (will re-log!)";
+
+		if (cidd == 0)
+			name = ColorTag(cOrange) + name;
+		else if (current_disguise == id)
+			name = ColorTag(cGreen) + name;
+
+		name += ColorTag(cLightBlue);
+
+		AddListItem(oPC, TTT, name);
+		SetListInt(oPC, TTT, id);
+	}
+
+	ResetConvList(oPC, oPC, TTT, 50000, "e_disguise_cb", sText, "", "");
+}
