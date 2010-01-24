@@ -1,0 +1,13 @@
+#!/usr/bin/env nwn-dsl
+# vim: ft=ruby
+
+ARGV.each {|f|
+  log "Working on #{f} .."
+  begin
+    t = TwoDA::Table.parse(IO.read(f))
+    puts t.to_2da
+  rescue => ee
+    log ee.to_s
+  end
+
+}
