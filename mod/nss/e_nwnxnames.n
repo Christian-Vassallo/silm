@@ -1,6 +1,7 @@
 extern("inc_nwnx_names")
 extern("inc_playertarget")
 extern("inc_cdb")
+extern("inc_disguise")
 
 #define UNKNOWN_STYLE 3
 
@@ -14,13 +15,27 @@ void show_for(object pc, object target) {
 
 	int cid_pc     = GetCharacterID(pc);
 	int cid_target = GetCharacterID(target);
+
+	int disguise_current = disguise_current_id(target);
+
 	if (cid_pc < 1 || cid_target < 1)
 		return;
 
-	pQ("select name from dynamic_names where player = " + pSi(cid_pc) +
-		" and target = " + pSi(cid_target) + ";");
+	if (disguise_current > 0)
+		pQ("select name from dynamic_names where player = " + pSi(cid_pc) +
+			" and target = " + pSi(cid_target) + " and disguise = " +
+				pSi(disguise_current, true) + " order by disguise desc;");
+	else
+		pQ("select name from dynamic_names where player = " + pSi(cid_pc) +
+			" and target = " + pSi(cid_target) + " and " +
+				"disguise is null order by disguise desc;");
 	if (pF())
 		SetDynamicName(pc, target, pGs(1));
+	else {
+		DeleteDynamicName(pc, target);
+		InitPlayerNameList(pc, UNKNOWN_STYLE);
+		SetNamesEnabled(pc, true);
+	}
 }
 
 void init_for(object pc) {
@@ -48,11 +63,13 @@ void set_for(object pc, object target, string name) {
 	int cid_pc = GetCharacterID(pc);
 	int cid_target = GetCharacterID(target);
 
+	int disguise_current = disguise_current_id(target);
+
 	if (cid_pc > 0 && cid_target > 0) {
 		pQ("delete from dynamic_names where player = " + pSi(cid_pc) +
 			" and target = " + pSi(cid_target) + ";");
-		pQ("insert into dynamic_names (player, target, name) values (" +
-			pSi(cid_pc) + ", " + pSi(cid_target) + ", " + pSs(name) + ");");
+		pQ("insert into dynamic_names (player, target, name, disguise) values (" +
+			pSi(cid_pc) + ", " + pSi(cid_target) + ", " + pSs(name) + "," + pSi(disguise_current, true) + ");");
 	}
 }
 
@@ -76,7 +93,7 @@ void main() {
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "player_login") {
-		init_for(e.runnable);
+		DelayCommand(5.0, init_for(e.runnable));
 	}
 
 	if (e.ev == "chat_command") {
