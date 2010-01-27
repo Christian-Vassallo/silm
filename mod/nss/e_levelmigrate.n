@@ -1,0 +1,41 @@
+// create table level_migrations.migrations (id serial not null, xp_amount int not null, start_date timestamp not null);
+// create table level_migrations.migrated_characters (id serial not null, cid int references public.characters not null, paid_on timestamp not null);
+extern("inc_cdb")
+
+void check(object pc) {
+	int cid = GetCharacterID(pc);
+	if (!cid) {
+		_WARN("no CID!");
+		return;
+	}
+
+
+	pBegin();
+	string migrations = pDeclare("select m.id, m.xp_amount, m.name from " +
+		"level_migrations.migrations m full join characters c on (c.id = " + pSi(cid) + ") " +
+		"full join level_migrations.migrated_characters mc on (mc.migration = m.id and c.id = mc.cid) " +
+		"where mc.id is null and c.create_on < m.start_date and c.status = 'accept';"
+	);
+	while (pCursorFetch(migrations)) {
+		int m_id = pGi(1);
+		int m_xp = pGi(2);
+		string name = pGs(3);
+
+		pQ("insert into level_migrations.migrated_characters (migration, cid, paid_on) " +
+			"values(" + pSi(m_id, false) + ", " + pSi(cid, false) + ", now());");
+
+		SetXP(pc, GetXP(pc) + m_xp);
+		SendMessageToPC(pc, ColorTag(cMagenta) + "Level-Migration: " + itoa(m_xp) + " erhalten wegen: " + name);
+	}
+	pCursorClose(migrations);
+	pCommit();
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev != "player_login" || !GetIsPC(e.runnable) || GetIsDM(e.runnable))
+		return;
+
+	DelayCommand(5.0, check(e.runnable));
+}
