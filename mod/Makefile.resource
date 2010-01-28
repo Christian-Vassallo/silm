@@ -10,9 +10,9 @@ all: $(res)
 	nwn-gff $(EXPORT_FILTERS) -ly -i $< -kg -o $@
 
 run-filters-on-yml:
-	@for x in $(yml); do \
-		echo nwn-gff $(IMPORT_FILTERS) -ly -i $$x -ky -o $$x ; \
-		nwn-gff $(IMPORT_FILTERS) -ly -i $$x -ky -o $$x ; \
+	@for x in $(res); do \
+		echo nwn-gff $(IMPORT_FILTERS) -lg -i $$x -ky -o $$x.yml ; \
+		nwn-gff $(IMPORT_FILTERS) -lg -i $$x -ky -o $$x.yml ; \
 	done
 
 clean:
