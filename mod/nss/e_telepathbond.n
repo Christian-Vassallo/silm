@@ -9,18 +9,6 @@ void main() {
 		struct EventArguments ea = GetEventArguments(e.serial);
 		string message = ea.a0;
 
-		if (GetStringLeft(message, 1) == "$") {
-			int cid = GetCharacterID(e.runnable);
-			pQ("select id from telepathic_bonds where character = " + pSi(cid) +
-					" and active = true;");
-			if (pF()) {
-				string msg = GetSubString(message, 1, 2048);
-				DelegateTelepathicMessageToPartners(e.runnable, msg);
-				event_stop_end_suppress();
-				return;
-			}
-		}
-
 		object oPC = e.runnable;
 		int iMode = ea.i0;
 		string sText = message;
