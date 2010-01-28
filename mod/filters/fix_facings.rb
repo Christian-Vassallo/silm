@@ -13,7 +13,7 @@ self.each_by_flat_path do |label, field|
 	next unless field.is_a?(Gff::Field)
 	next unless field.field_type == :float
 	next unless label =~ %r{\[\d+\]/(Facing|Bearing)$}
-	if field.field_value < 0
+	if field.field_value <= 0
 		field.field_value = field.field_value.abs
 		count += 1
 	end
