@@ -14,7 +14,10 @@ void check(object pc) {
 	string migrations = pDeclare("select m.id, m.xp_amount, m.name from " +
 		"level_migrations.migrations m full join characters c on (c.id = " + pSi(cid) + ") " +
 		"full join level_migrations.migrated_characters mc on (mc.migration = m.id and c.id = mc.cid) " +
-		"where mc.id is null and c.create_on < m.start_date and c.status = 'accept';"
+		"where mc.id is null and " +
+			"(m.start_date is null or c.create_on =< m.start_date) and " +
+			"(m.end_date is null or c.create_on >= m.end_date) and " +
+		"and c.status = 'accept';"
 	);
 	while (pCursorFetch(migrations)) {
 		int m_id = pGi(1);

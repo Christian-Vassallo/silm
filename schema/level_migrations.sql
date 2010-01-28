@@ -3,7 +3,8 @@ create schema level_migrations;
 create table level_migrations.migrations (
     id integer not null,
     xp_amount int not null,
-    start_date timestamp not null,
+    start_date timestamp,
+    end_date timestamp,
     name character varying not null,
 
 	unique(name)
