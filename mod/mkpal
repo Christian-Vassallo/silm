@@ -35,6 +35,11 @@ $do_alphabetically = false
 $do_by_type = true
 $do_by_cpal = true
 
+$tlk = Tlk::TlkSet.new(
+  File.open(ENV['NWNHOME'] + "/dialog.tlk", "r"), nil,
+  File.open(ENV['NWNHOME'] + "/tlk/silm.tlk", "r"), nil
+)
+
 $itp = Gff::Struct.new(4294967295, "ITP", "V3.2")
 $master_list = $itp.add_list 'MAIN', []
 
@@ -57,8 +62,7 @@ ARGV.each {|item|
     name = if nname
       nname
     else
-      #TODO: look up strref
-      "(Str-ref: #{gff['LocalizedName'].str_ref})"
+      "%s [S]" % $tlk[gff['LocalizedName'].str_ref][:text]
     end
 
     name = "%s (%s)" % [name, gff['TemplateResRef'].v]
@@ -69,12 +73,13 @@ ARGV.each {|item|
     lname = gff['LastName'].v
     lname = lname[lname.keys[0]]
 
-    name = "%s %s (%s)" % [fname, lname, gff['TemplateResRef'].v]
+    name = "%s (%s)" % [((fname||"") + " " + (lname||"")).strip, gff['TemplateResRef'].v]
 
   else
     # can't parse this one ..
-    $dropped << item
-    next
+    # $dropped << item
+    # next
+    raise
   end
 
 
