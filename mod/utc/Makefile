@@ -1,6 +1,6 @@
 include ../Makefile.resource
 
-all: $(res) creaturepalcus.itp
+all: $(res) ../itp/creaturepalcus.itp
 
-creaturepalcus.itp: $(res)
+../itp/creaturepalcus.itp: $(res)
 	../mkpal racialtypes Race UTC *.utc.yml > ../itp/creaturepalcus.itp
