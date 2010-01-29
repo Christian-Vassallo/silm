@@ -17,7 +17,7 @@ void check(object pc) {
 		"where mc.id is null and " +
 			"(m.start_date is null or c.create_on =< m.start_date) and " +
 			"(m.end_date is null or c.create_on >= m.end_date) and " +
-		"and c.status = 'accept';"
+		"c.status = 'accept';"
 	);
 	while (pCursorFetch(migrations)) {
 		int m_id = pGi(1);
