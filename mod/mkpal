@@ -204,7 +204,8 @@ twoda = TwoDA::Cache.get($twoda_table)
 
   # ms.add_list 'LIST', [] do |baseitem_list|
 
-    twoda.rows.each {|row|
+    rows = twoda.rows.sort {|a, b| $tlk[a.Name.to_i][:text] <=> $tlk[b.Name.to_i][:text] }
+    rows.each {|row|
       row_id = row.ID
       name  = row.Name
       row.Name.to_i > 0 or begin
