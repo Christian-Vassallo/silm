@@ -13,6 +13,9 @@ create table income.sources (
 	-- set this to a abilities.2da entry ID to give (d20 + ability_mod) * ability_factor copper coins.
 	ability int not null default -1, -- we cant use null, because nwscript doesn't support a distinctive nil datatype
 
+	-- the maximum skill mod applicable
+	ability_max int not null default -1,
+
 	-- set this to true to only use the base ability without feats, items and temporaries.
 	ability_base bool not null default false,
 
@@ -25,6 +28,9 @@ create table income.sources (
 
 	-- set this to true to only use the base skill without feats, items and temporaries.
 	skill_base bool not null default false,
+
+	-- the maximum skill mod applicable
+	skill_max int not null default -1,
 
 	-- multiply the skill check with this value
 	skill_factor float not null default 1.0,
@@ -81,18 +87,22 @@ $$
 	select coalesce((select (
 		copper::float * clamp(income.days_since_last_payment($1, $2), 0.0, $5)
 			+
-		case
-			when s.skill > -1
-		then
-			(10 + $4)::float * s.skill_factor * clamp(income.days_since_last_payment($1, $2), 0.0, $5)
+		case when s.skill > -1 then
+			case when s.skill_max > -1 then
+				(10 + clamp($4, 0, s.skill_max))::float * s.skill_factor * clamp(income.days_since_last_payment($1, $2), 0.0, $5)
+			else
+				(10 + $4)::float * s.skill_factor * clamp(income.days_since_last_payment($1, $2), 0.0, $5)
+			end
 		else
 			0
 		end
 			+
-		case
-			when s.ability > -1
-		then
-			(10 + $3)::float * s.ability_factor * clamp(income.days_since_last_payment($1, $2), 0.0, $5)
+		case when s.ability > -1 then
+			case when s.ability_max > -1 then
+				(10 + clamp($3, 0, s.ability_max))::float * s.ability_factor * clamp(income.days_since_last_payment($1, $2), 0.0, $5)
+			else
+				(10 + $3)::float * s.ability_factor * clamp(income.days_since_last_payment($1, $2), 0.0, $5)
+			end
 		else
 			0
 		end
