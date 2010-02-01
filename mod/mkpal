@@ -94,8 +94,12 @@ ARGV.each {|item|
       cr = "0.0"
       factionname = "Faction"
 
+      classes = gff['ClassList'].v.map {|cls|
+        TwoDA.get("classes")[cls / 'Class$'].Label + (cls / 'ClassLevel$').to_s
+      }.join("/")
+
       [gff['TemplateResRef'].v, name, lambda {|list|
-        list.add_cexostr "NAME", name
+        list.add_cexostr "NAME", name + " " + classes
         list.add_resref "RESREF", gff['TemplateResRef'].v
         list.add_float "CR", 0.0 # gff['CR'].v
         list.add_cexostr "FACTION", gff['FactionID'].v.to_s
