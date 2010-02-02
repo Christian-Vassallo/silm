@@ -220,10 +220,13 @@ $master_list.add_struct 0 do |ms|
 
   ms.add_list 'LIST', [] do |palid_list|
 
-    $pals.keys.each {|palid|
+    p = $pals.sort {|a,b|
+      $palette_id_strref[$palette_type][a[0]] <=> $palette_id_strref[$palette_type][b[0]]
+    }
+    p.each {|palid, items|
       name = $palette_id_strref[$palette_type][palid] || 0 # ID of Palette ID strref ..
 
-      items = $pals[palid] || []
+      items ||= []
 
       next if items.size == 0
 
