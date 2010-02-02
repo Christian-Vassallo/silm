@@ -35,6 +35,8 @@ $do_alphabetically = false
 $do_by_type = true
 $do_by_cpal = true
 
+$reputefac = Gff.read(File.open("../mod/repute.fac.yml", "r"), :yaml)
+
 $tlk = Tlk::TlkSet.new(
   File.open(ENV['NWNHOME'] + "/dialog.tlk", "r"), nil,
   File.open(ENV['NWNHOME'] + "/tlk/silm.tlk", "r"), nil
@@ -95,14 +97,55 @@ ARGV.each {|item|
       factionname = "Faction"
 
       classes = gff['ClassList'].v.map {|cls|
-        TwoDA.get("classes")[cls / 'Class$'].Label + (cls / 'ClassLevel$').to_s
+        case cls / 'Class$'
+          when 0 ; 'Bar'
+          when 1 ; 'Brd'
+          when 2 ; 'Clr'
+          when 3 ; 'Drd'
+          when 4 ; 'Ftr'
+          when 5 ; 'Mnk'
+          when 6 ; 'Pal'
+          when 7 ; 'Rgr'
+          when 8 ; 'Rg'
+          when 9 ; 'Sor'
+          when 10; 'Wiz'
+          when 11; 'Abr'
+          when 12; 'Aml'
+          when 13; 'Con'
+          when 14; 'Hum'
+          when 15; 'Mon'
+          when 16; 'Ele'
+          when 17; 'Fey'
+          when 18; 'Drg'
+          when 19; 'Und'
+          when 20; 'Com'
+          when 21; 'Bst'
+          when 22; 'Gnt'
+          when 23; 'MagBst'
+          when 24; 'Out'
+          when 25; 'Shp'
+          when 26; 'Ver'
+          when 27; 'SD'
+          when 28; 'Hrp'
+          when 29; 'AA'
+          when 30; 'As'
+          when 31; 'BG'
+          when 32; 'Torm'
+          when 33; 'WM'
+          when 34; 'PM'
+          when 35; 'Shft'
+          when 36; 'DDef'
+          when 37; 'DDis'
+          when 41; 'PDK'
+          else  TwoDA.get("classes")[cls / 'Class$'].Label
+        end + (cls / 'ClassLevel$').to_s
       }.join("/")
 
       [gff['TemplateResRef'].v, name, lambda {|list|
-        list.add_cexostr "NAME", name + " " + classes
+        list.add_cexostr "NAME", name + " " + classes + "\n"
         list.add_resref "RESREF", gff['TemplateResRef'].v
         list.add_float "CR", 0.0 # gff['CR'].v
-        list.add_cexostr "FACTION", gff['FactionID'].v.to_s
+        list.add_cexostr "FACTION", $reputefac / "FactionList[#{gff['FactionID'].v}]/FactionName$"
       }]
   end
 
