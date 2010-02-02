@@ -33,7 +33,7 @@ $dropped = []
 
 $do_alphabetically = false
 $do_by_type = true
-$do_by_cpal = false
+$do_by_cpal = true
 
 $tlk = Tlk::TlkSet.new(
   File.open(ENV['NWNHOME'] + "/dialog.tlk", "r"), nil,
@@ -200,13 +200,12 @@ $master_list.add_struct 0 do |ms|
   end
 end if $do_by_cpal
 
-
-twoda = TwoDA::Cache.get($twoda_table)
 # By TwoDA Type ..
-# $master_list.add_struct 0 do |ms|
-  # ms.add_dword 'STRREF', 966 # "Type"
+$master_list.add_struct 0 do |ms|
+  ms.add_dword 'STRREF', 966 # "Type"
 
-  # ms.add_list 'LIST', [] do |baseitem_list|
+  twoda = TwoDA::Cache.get($twoda_table)
+  ms.add_list 'LIST', [] do |baseitem_list|
 
     rows = twoda.rows.sort {|a, b| $tlk[a.Name.to_i][:text] <=> $tlk[b.Name.to_i][:text] }
     rows.each {|row|
@@ -220,7 +219,7 @@ twoda = TwoDA::Cache.get($twoda_table)
 
       next if items.size == 0
 
-      $master_list.add_struct 0 do |ns|
+      baseitem_list.add_struct do |ns|
         # ns.add_byte 'ID', 0
         ns.add_dword 'STRREF', name.to_i
         list = ns.add_list 'LIST', []
@@ -233,8 +232,8 @@ twoda = TwoDA::Cache.get($twoda_table)
       end
     }
 
-  # end
-# end if $do_by_type
+  end
+end if $do_by_type
 
 log "#{count} templates"
 Gff.write($stdout, :gff, $itp)
