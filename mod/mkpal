@@ -142,7 +142,7 @@ ARGV.each {|item|
       }.join("/")
 
       [gff['TemplateResRef'].v, name, lambda {|list|
-        list.add_cexostr "NAME", name + " " + classes + "\n"
+        list.add_cexostr "NAME", name + " " + classes
         list.add_resref "RESREF", gff['TemplateResRef'].v
         list.add_float "CR", 0.0 # gff['CR'].v
         list.add_cexostr "FACTION", $reputefac / "FactionList[#{gff['FactionID'].v}]/FactionName$"
