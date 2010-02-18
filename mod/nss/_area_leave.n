@@ -13,8 +13,8 @@ extern("inc_events")
  */
 
 void main() {
+	object oArea = OBJECT_SELF;
 	object oPC = GetExitingObject();
-	object oArea = GetArea(oPC);
 
 	RunEventScriptsFor(GetEventSerial(), "area_leave", oArea, oPC, oArea, GetLocation(oPC));
 }
