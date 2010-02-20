@@ -66,7 +66,6 @@ void main() {
 	}
 
 	SetLocalObject(oPC, "polymorph_target", oTarget);
-	DeleteLocalString(oPC, "polymorph_type");
 
 
 	int nFemale = GENDER_MALE != GetGender(oTarget);
@@ -122,7 +121,7 @@ void main() {
 	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BAT) ) {
 		AddListItem(oPC, CT, "Fledermaus");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_BAT);
-		SetLocalString(oPC, "polymorph_type", "fly");
+		SetListString(oPC, "polymorph_type", "fly");
 	}
 
 	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_CHICKEN) ) {
@@ -208,13 +207,13 @@ void main() {
 	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_RAVEN) ) {
 		AddListItem(oPC, CT, "Rabe");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_RAVEN);
-		SetLocalString(oPC, "polymorph_type", "fly");
+		SetListString(oPC, "polymorph_type", "fly");
 	}
 
 	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_FALCON) ) {
 		AddListItem(oPC, CT, "Falke");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_FALCON);
-		SetLocalString(oPC, "polymorph_type", "fly");
+		SetListString(oPC, "polymorph_type", "fly");
 	}
 
 	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_PANTHER) ) {

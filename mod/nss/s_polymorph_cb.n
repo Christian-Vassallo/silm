@@ -28,9 +28,7 @@ void main() {
 	iDoWildShapeTransform = GetLocalInt(oPC, "wildshape_transform");
 
 	iSelection = GetListInt(oPC, CT, iSelection);
-
-	string sEffect = GetLocalString(oPC, "polymorph_type");
-	SetLocalString(oPC, "polymorph_type", "");
+	string sEffect = GetListString(oPC, CT, iSelection);
 
 	// Do the actual polymorphing
 
