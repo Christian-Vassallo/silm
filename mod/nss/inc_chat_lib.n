@@ -63,8 +63,23 @@ string ColorisePlayerTextOverride(object oPC, int nMode, string sText, struct Co
 /* implementation! */
 
 string ColorisePlayerText(object oPC, int nMode, string sText) {
+	struct Color
+		cText = colorText,
+		cEmote = colorEmote,
+		cEmphasis = colorEmphasis,
+		cEmphasisInEmote = colorEmphasisInEmote;
+
+	if (GetLocalInt(oPC, "colorOverrideText") > 0)
+		cText = CI(GetLocalInt(oPC, "colorOverrideText"));
+	if (GetLocalInt(oPC, "colorOverrideEmote") > 0)
+		cEmote = CI(GetLocalInt(oPC, "colorOverrideEmote"));
+	if (GetLocalInt(oPC, "colorOverrideEmphasis") > 0)
+		cEmphasis = CI(GetLocalInt(oPC, "colorOverrideEmphasis"));
+	if (GetLocalInt(oPC, "colorOverrideEmphasisEmote") > 0)
+		cEmphasisInEmote = CI(GetLocalInt(oPC, "colorOverrideEmphasisEmote"));
+
 	return ColorisePlayerTextOverride(oPC, nMode, sText,
-		colorText, colorEmote, colorEmphasis, colorEmphasisInEmote);
+		cText, cEmote, cEmphasis, cEmphasisInEmote);
 }
 
 string ColorisePlayerTextOverride(object oPC, int nMode, string sText, struct Color cText,
@@ -144,7 +159,7 @@ void SpeakToMode(object oObject, string sText, int iMode) {
 		_DEBUG("chat", 2, "speaktomode():itemposessor -> yes");
 		prefix = "(" + GetName(oObject) + ") ";
 	}
-	
+
 	// If its a trigger, then we need to spawn some invisible wobbit to do the talking.
 	if (is_trigger(speaker)) {
 		_DEBUG("chat", 2, "speaktomode():is_trigger");
