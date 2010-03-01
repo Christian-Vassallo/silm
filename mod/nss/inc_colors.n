@@ -26,6 +26,11 @@ struct Color {
 // Function: CS
 // Returns struct Color.
 struct Color CS(int r, int g, int b);
+
+// Function: CI
+// Returns struct Color.
+struct Color CI(int rgb);
+
 // Function: CSRand
 // Returns a randomized color.
 struct Color CSRand();
@@ -132,6 +137,13 @@ struct Color CS(int r, int g, int b) {
 	if ( c.g < MIN ) c.g = MIN;
 	if ( c.b < MIN ) c.b = MIN;
 	return c;
+}
+
+struct Color CI(int rgb) {
+	int r = rgb >> 16 & 0xff;
+	int g = rgb >> 8 & 0xff;
+	int b = rgb >> 0 & 0xff;
+	return CS(r, g, b);
 }
 
 struct Color CSRand() {
