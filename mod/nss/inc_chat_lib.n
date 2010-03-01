@@ -16,21 +16,18 @@ SYNTAX = 2,
 FAIL = 3,
 ACCESS = 4;
 
-
-
 struct Color
-cEmote = cOrange,
-cNPCEmote = cDarkMagenta,
-cOOC = cLightGrey;
-
-
+	// colorText = CS(255, 228, 181), // moccasin
+	colorText = CS(189, 171, 140),
+	colorEmote = CS(152, 251, 152), // palegreen
+	colorEmphasis = CS(173, 216, 230), // lightblue
+	colorEmphasisInEmote = CS(135, 206, 250); // lightskyblue
 
 // Function: setsleep
 void setsleep(float fWait);
 
 // Function: getsleep
 float getsleep();
-
 
 void setsleep(float fWait) {
 	SetLocalFloat(GetModule(), "cmd_sleep", fWait);
@@ -55,145 +52,71 @@ void FixFactionsForObject(object oO, object oPC = OBJECT_SELF);
 void ChatHookAudit(object oPC = OBJECT_SELF, int bSuppress = TRUE, string sData = "");
 
 
-
-
-
 // Function: ColorisePlayerText
 // Applies emote colors to the given text.
-// Parses:
-//    *..* - cOrange
-//    _.._ - cLightBlue
-string ColorisePlayerText(object oPC, int nMode, string sText, struct Color cTextColor);
+string ColorisePlayerText(object oPC, int nMode, string sText);
+
+string ColorisePlayerTextOverride(object oPC, int nMode, string sText, struct Color cText,
+		struct Color cEmote, struct Color cEmphasis, struct Color cEmphasisInEmote);
 
 
 /* implementation! */
 
-string ColorisePlayerText(object oPC, int nMode, string sText, struct Color cTextColor) {
+string ColorisePlayerText(object oPC, int nMode, string sText) {
+	return ColorisePlayerTextOverride(oPC, nMode, sText,
+		colorText, colorEmote, colorEmphasis, colorEmphasisInEmote);
+}
+
+string ColorisePlayerTextOverride(object oPC, int nMode, string sText, struct Color cText,
+		struct Color cEmote, struct Color cEmphasis, struct Color cEmphasisInEmote) {
 	int i = 0;
 	string r = "", c = "";
 
-	int bInEmote = 0; // .. *emote* ..
-	int bInYellow = 0; // .. _hilight_ ..
-	int bInBlue = 0; // .. #language text# ..
-	int bInGreen = 0; // .. &green& ..
+	int bInEmote = 0;
+	int bInEmphasis = 0;
 
-	int bInOOC = 0; // (ooc) is gray ..
-
-	if ( nMode & CHATMODE_WHISPER )
-		cTextColor = cDarkGrey;
-
-	//if ( GetSubString(sText, 0, 1) == "(" ) {
-	//	return ColorTag(cOOC) + /*GetStringTrim(sText, "(", ")")*/ sText + ColorTagClose();
-	//}
-
-	struct Color cPEmote = cEmote;
-
-	//if (!GetIsPC(oPC))
-	//    cPEmote = cNPCEmote;
-
-	if ( nMode & CHATMODE_WHISPER ) {
-		cPEmote = Darken(cPEmote, 50);
-		// darken the other colors, too?
+	if (nMode & CHATMODE_WHISPER) {
+		cText = Darken(cText, 75);
+		cEmote = Darken(cEmote, 75);
+		cEmphasis = Darken(cEmphasis, 75);
+		cEmphasisInEmote = Darken(cEmphasisInEmote, 75);
 	}
 
-	r += ColorTagClose() + ColorTag(cTextColor);
+	r += ColorTagClose() + ColorTag(cText);
 
 	for ( i = 0; i < GetStringLength(sText); i++ ) {
 		c = GetSubString(sText, i, 1);
 
-		if ( "*" == c ) {
-			if ( bInEmote == 0 ) {
-				r += ColorTag(cPEmote) + c;
-				bInEmote = 1;
-				continue;
+		if ("*" == c) {
+			bInEmote = !bInEmote;
+			if (bInEmote) {
+				r += ColorTag(cEmote) + c;
+
 			} else {
-				bInEmote = 0;
-				if ( bInYellow )
-					r += "*" + ColorTag(cYellow);
-				else if ( bInBlue )
-					r += "*" + ColorTag(cLightBlue);
-				else if ( bInGreen )
-					r += "*" + ColorTag(cGreen);
+				r += c;
+
+				if (bInEmphasis)
+					r += ColorTag(cEmphasis);
 				else
-					r += "*" + ColorTag(cTextColor);
-				continue;
+					r += ColorTag(cText);
 			}
-		}
 
-		if ( "_" == c ) {
-			if ( bInYellow == 0 ) {
-				r += ColorTag(cYellow);
-				bInYellow = 1;
-				continue;
-			} else {
-				if ( bInEmote )
-					r += ColorTag(cPEmote);
-				else if ( bInBlue )
-					r += ColorTag(cLightBlue);
-				else if ( bInGreen )
-					r += ColorTag(cGreen);
+		} else if ("_" == c) {
+			bInEmphasis = !bInEmphasis;
+			if (bInEmphasis)
+				if (bInEmote)
+					r += ColorTag(cEmphasisInEmote);
 				else
-					r += ColorTag(cTextColor);
-				bInYellow = 0;
-				continue;
-			}
-		}
-
-		if ( "#" == c ) {
-			if ( bInBlue == 0 ) {
-				r += ColorTag(cLightBlue);
-				bInBlue = 1;
-				continue;
-			} else {
-				if ( bInYellow )
-					r += ColorTag(cYellow);
-				else if ( bInGreen )
-					r += ColorTag(cGreen);
-				else if ( bInEmote )
-					r += ColorTag(cPEmote);
+					r += ColorTag(cEmphasis);
+			else
+				if (bInEmote)
+					r += ColorTag(cEmote);
 				else
-					r += ColorTag(cTextColor);
-				bInBlue = 0;
-				continue;
-			}
-		}
+					r += ColorTag(cText);
 
-		if ( "&" == c ) {
-			if ( bInGreen == 0 ) {
-				r += ColorTag(cGreen);
-				bInGreen = 1;
-				continue;
-			} else {
-				if ( bInYellow )
-					r += ColorTag(cYellow);
-				else if ( bInBlue )
-					r += ColorTag(cLightBlue);
-				else if ( bInEmote )
-					r += ColorTag(cPEmote);
-				else
-					r += ColorTag(cTextColor);
-				bInGreen = 0;
-				continue;
-			}
-		}
+		} else
+			r += c;
 
-		/*if ("(" == c && !bInOOC) {
-		 * 	r += ColorTag(cOOC);
-		 * 	bInOOC = 1;
-		 * 	continue;
-		 * }
-		 *
-		 * if (")" == c && bInOOC) {
-		 * 	r += ColorTagClose();
-		 * 	bInOOC = 0;
-		 * 	if (bInYellow)
-		 * 		r += ColorTag(cYellow);
-		 * 	else if (bInEmote)
-		 * 			r += ColorTag(cPEmote);
-		 * 	continue;
-		 * } */
-
-		r += c;
 	}
 	r += ColorTagClose();
 

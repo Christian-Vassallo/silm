@@ -43,7 +43,7 @@ void main() {
 		if (GetHasEffect(EFFECT_TYPE_SILENCE, ei.actor) || actor_is_in_zos) {
 			
 			if (actor_is_in_zos) {
-				string zos_message = GetName(ei.actor) + " (In Zone der Stille): " + ColorisePlayerText(ei.actor, mode, text, cWhite);
+				string zos_message = GetName(ei.actor) + " (In Zone der Stille): " + ColorisePlayerText(ei.actor, mode, text);
 
 				// Send the clear text to all within range.
 				object o = GetFirstObjectInShape(SHAPE_SPHERE, ZONE_OF_SILENCE_RANGE, GetLocation(ei.actor), false, OBJECT_TYPE_CREATURE);
@@ -104,7 +104,7 @@ void main() {
 			if (!actor_is_in_zos && did_dots)
 				SendMessageToPC(ei.actor, "Du kannst nicht sprechen (aufgrund des Effekts Stille). Du sagtest: " + text);
 
-			NWNXChatSpeakToChannel(ei.actor, ChatModeToMsg(mode), ColorisePlayerText(ei.actor, mode, s, cOrange));
+			NWNXChatSpeakToChannel(ei.actor, ChatModeToMsg(mode), ColorisePlayerText(ei.actor, mode, s));
 			event_stop_end_suppress();
 		}
 	}
