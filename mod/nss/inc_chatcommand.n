@@ -84,8 +84,6 @@ int CommandGetRecipe(object oPC, int iMode);
 int CommandCharges(object oPC, int iMode);
 
 
-int CommandOOC(object oPC, int iMode);
-
 int CommandSubRace(object oPC, int iMode);
 int CommandEffect(object oPC, int iMode);
 int CommandWeather(object oPC, int iMode);
@@ -1402,13 +1400,6 @@ int CommandLimbo(object oPC, int iMode) {
 	else
 		Limbo(oTarget);
 
-	return OK;
-}
-
-
-int CommandOOC(object oPC, int iMode) {
-	string sText = getopt_args();
-	SpeakString(ColorTag(cOOC) + sText + ColorTagClose());
 	return OK;
 }
 

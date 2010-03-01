@@ -755,14 +755,6 @@ void RegisterAllCommands() {
 	RHs("eventname script >> Sets script for eventname.");
 	RAF(AMASK_CAN_DO_BACKEND);
 
-	
-	// Chatcommand: ooc
-	// Show text in OOC colors.
-	RegisterCommand("ooc", "");
-	RHs("Gibt einen Text in OOC-Farbe aus.");
-	RAF(AMASK_ANY);
-
-	
 	// Chatcommand: effect
 	// Create an effect on the current target.
 	// Options:
@@ -1234,9 +1226,6 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 	if ( "charges" == sCommand )
 		ret = CommandCharges(oPC, iMode);
-
-	if ( "ooc" == sCommand )
-		ret = CommandOOC(oPC, iMode);
 
 	if ( "effect" == sCommand )
 		ret = CommandEffect(oPC, iMode);
