@@ -1,0 +1,41 @@
+extern("x2_inc_spellhook")
+
+void main() {
+	if (!X2PreSpellCastCode())
+		return;
+
+
+	// Identify the given targeted item.
+
+    //Declare major variables
+    int nLevel = GetCasterLevel(OBJECT_SELF);
+    int nBonus = 10 + nLevel;
+    effect eLore = EffectSkillIncrease(SKILL_LORE, nBonus);
+    effect eVis = EffectVisualEffect(VFX_IMP_MAGICAL_VISION);
+    effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
+    effect eLink = EffectLinkEffects(eVis, eDur);
+    eLink = EffectLinkEffects(eLink, eLore);
+
+
+    
+    int nMetaMagic = GetMetaMagicFeat();
+    int nDuration = 2;
+
+    //Meta-Magic checks
+    if(nMetaMagic == METAMAGIC_EXTEND)
+    {
+        nDuration = 4;
+    }
+
+    //Make sure the spell has not already been applied
+    if(!GetHasSpellEffect(SPELL_IDENTIFY, OBJECT_SELF) || !GetHasSpellEffect(SPELL_LEGEND_LORE, OBJECT_SELF)) //Use Legend Lore constant later
+    {
+        //Fire cast spell at event for the specified target
+        SignalEvent(OBJECT_SELF, EventSpellCastAt(OBJECT_SELF, SPELL_IDENTIFY, FALSE));
+
+         //Apply linked and VFX effects
+         ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, OBJECT_SELF, RoundsToSeconds(nDuration));
+         ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, OBJECT_SELF);
+    }
+}
+
