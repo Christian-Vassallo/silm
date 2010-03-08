@@ -1,0 +1,13 @@
+extern("x2_inc_spellhook")
+extern("inc_identify")
+
+void main() {
+	if (!X2PreSpellCastCode())
+		return;
+
+	object oItem = GetSpellTargetObject();
+	SetItemIdentifiesFor(oItem, OBJECT_SELF);
+	SetIdentified(oItem, true);
+
+	FloatingTextStringOnCreature("Identifiziert: " + GetName(oItem), OBJECT_SELF, false);
+}

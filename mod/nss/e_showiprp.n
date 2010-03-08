@@ -1,20 +1,14 @@
 extern("inc_scorco")
-extern("inc_cdb")
 extern("_gen")
+extern("inc_identify")
 
 void main() {
 	struct EventInfo e = GetEventInfo();
 
 	if ("pc_examine" != e.ev)
 		return;
-
-	int cid;
-	if (!is_item(e.actedon) || (
-		!is_dm(e.actor) &&
-		!GetItemHasItemProperty(e.actedon, ITEM_PROPERTY_SELFIDENTIFYING) &&
-		!(cid = GetCharacterID(e.actor) && GetLocalInt(e.actedon, "identifies_for_" + itoa(cid))) &&
-		!amask(e.actor, AMASK_CAN_DO_BACKEND)
-	))
+	
+	if (!GetItemIdentifiesFor(e.actedon, e.actor))
 		return;
 
 	itemproperty p;

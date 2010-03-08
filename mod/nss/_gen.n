@@ -19,6 +19,9 @@ DTP = DURATION_TYPE_PERMANENT;
 int hears(object oSpeaker, object oListener, int nTalkMode);
 
 int hears(object oSpeaker, object oListener, int nTalkMode) {
+	if (GetArea(oSpeaker) != GetArea(oListener))
+		return 0;
+
 	float fDistance = GetDistanceBetween(oSpeaker, oListener);
 	if ( TALKVOLUME_TALK == nTalkMode && fDistance > 20.0 )
 		return 0;

@@ -1,0 +1,24 @@
+extern("inc_cdb")
+
+/** Returns true if oItem identifies its properties to oCreature. */
+bool GetItemIdentifiesFor(object oItem, object oCreature);
+
+/** Sets that oItem identifies itself to oCreature on examine. */
+void SetItemIdentifiesFor(object oItem, object oCreature);
+
+
+bool GetItemIdentifiesFor(object oItem, object oCreature) {
+	int cid = GetCharacterID(oCreature);
+
+	return is_dm(oCreature) ||
+		GetItemHasItemProperty(oItem, ITEM_PROPERTY_SELFIDENTIFYING) ||
+		(cid && GetLocalInt(oItem, "identifies_for_" + itoa(cid)));
+}
+
+void SetItemIdentifiesFor(object oItem, object oCreature) {
+	int cid = GetCharacterID(oCreature);
+	if (!cid)
+		return;
+
+	SetLocalInt(oItem, "identifies_for_" + itoa(cid), 1);
+}
