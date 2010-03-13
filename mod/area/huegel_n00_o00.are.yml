@@ -6,7 +6,7 @@ ChanceRain: {type: :int, value: 0}
 ChanceSnow: {type: :int, value: 0}
 Comments: {type: :cexostr, value: ""}
 Creator_ID: {type: :int, value: -1}
-DayNightCycle: {type: :byte, value: 1}
+DayNightCycle: {type: :byte, value: 0}
 Expansion_List: 
   type: :list
   value: []
@@ -17,33 +17,33 @@ Height: {type: :int, value: 10}
 ID: {type: :int, value: -1}
 IsNight: {type: :byte, value: 0}
 LightingScheme: {type: :byte, value: 0}
-LoadScreenID: {type: :word, value: 63}
+LoadScreenID: {type: :word, value: 0}
 ModListenCheck: {type: :int, value: 0}
 ModSpotCheck: {type: :int, value: 0}
 MoonAmbientColor: {type: :dword, value: 0}
 MoonDiffuseColor: {type: :dword, value: 0}
-MoonFogAmount: {type: :byte, value: 50}
-MoonFogColor: {type: :dword, value: 0}
+MoonFogAmount: {type: :byte, value: 10}
+MoonFogColor: {type: :dword, value: 6566450}
 MoonShadows: {type: :byte, value: 1}
 Name: 
   type: :cexolocstr
   value: 
-    0: "Weg nach Ascore - H\xFCgelland Nord"
+    0: "Das H\xFCgelland_n00_o00"
 NoRest: {type: :byte, value: 0}
 OnEnter: {type: :resref, value: sr_enter_hills}
 OnExit: {type: :resref, value: _area_leave}
 OnHeartbeat: {type: :resref, value: _area_hb}
 OnUserDefined: {type: :resref, value: _area_udef}
 PlayerVsPlayer: {type: :byte, value: 3}
-ResRef: {type: :resref, value: ascore20}
+ResRef: {type: :resref, value: huegel_n00_o00}
 ShadowOpacity: {type: :byte, value: 50}
-SkyBox: {type: :byte, value: 1}
-SunAmbientColor: {type: :dword, value: 6566450}
+SkyBox: {type: :byte, value: 0}
+SunAmbientColor: {type: :dword, value: 16777215}
 SunDiffuseColor: {type: :dword, value: 16777215}
-SunFogAmount: {type: :byte, value: 20}
-SunFogColor: {type: :dword, value: 9535080}
+SunFogAmount: {type: :byte, value: 10}
+SunFogColor: {type: :dword, value: 16777215}
 SunShadows: {type: :byte, value: 1}
-Tag: {type: :cexostr, value: ascore20}
+Tag: {type: :cexostr, value: huegel_n00_o00}
 Tile_List: 
   type: :list
   value: 
@@ -53,7 +53,7 @@ Tile_List:
     Tile_AnimLoop2: {type: :byte, value: 1}
     Tile_AnimLoop3: {type: :byte, value: 1}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 36}
+    Tile_ID: {type: :int, value: 744}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 2}
@@ -61,11 +61,11 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 33}
+    Tile_ID: {type: :int, value: 325}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 0}
@@ -73,11 +73,23 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 33}
+    Tile_ID: {type: :int, value: 26}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 27}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 0}
@@ -85,23 +97,11 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 39}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 3}
+    Tile_ID: {type: :int, value: 27}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 2}
@@ -109,11 +109,11 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 3}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 27}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 3}
@@ -121,35 +121,11 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 39}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 39}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 30}
+    Tile_ID: {type: :int, value: 27}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 1}
@@ -157,753 +133,9 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 30}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 2}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 30}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 3}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 3}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 2}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 30}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 120}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 2}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 25}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 39}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 2}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 39}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 30}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 30}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 3}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 3}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 14}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 14}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 6}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 105}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 117}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 39}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 3}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 14}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 19}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 19}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 43}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 46}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 52}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 56}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 15}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 2}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 111}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 19}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 61}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 2}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 210}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 210}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 210}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 209}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 46}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 53}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 2}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 203}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 207}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 199}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 46}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 4}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 4}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 2}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 184}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 210}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 43}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 56}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 1}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 1}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 208}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 2}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 16}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 115}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 103}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 2}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 4}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 2}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 210}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 4}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 97}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 31}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 240}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 31}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 242}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 187}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
     Tile_ID: {type: :int, value: 26}
     Tile_MainLight1: {type: :byte, value: 0}
@@ -913,11 +145,11 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 100}
+    Tile_ID: {type: :int, value: 54}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 3}
@@ -925,83 +157,11 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 209}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 210}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 210}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 210}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 210}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 213}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 173}
+    Tile_ID: {type: :int, value: 372}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 0}
@@ -1012,32 +172,8 @@ Tile_List:
     Tile_AnimLoop1: {type: :byte, value: 1}
     Tile_AnimLoop2: {type: :byte, value: 1}
     Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 208}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 0}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 147}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 37}
+    Tile_ID: {type: :int, value: 739}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 2}
@@ -1045,23 +181,107 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 10}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 54}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 0}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
     Tile_ID: {type: :int, value: 28}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 507}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 507}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 2}
     Tile_SrcLight1: {type: :byte, value: 0}
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 4}
+    Tile_ID: {type: :int, value: 55}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 58}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 59}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 59}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 1}
@@ -1073,7 +293,7 @@ Tile_List:
     Tile_AnimLoop2: {type: :byte, value: 1}
     Tile_AnimLoop3: {type: :byte, value: 1}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 4}
+    Tile_ID: {type: :int, value: 739}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 2}
@@ -1081,23 +301,11 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 4}
-    Tile_MainLight1: {type: :byte, value: 0}
-    Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
-    Tile_SrcLight1: {type: :byte, value: 0}
-    Tile_SrcLight2: {type: :byte, value: 0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 4}
+    Tile_ID: {type: :int, value: 98}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 2}
@@ -1105,14 +313,98 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 272}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 274}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 29}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 0}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 29}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 8}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 29}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 0}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 59}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
     Tile_ID: {type: :int, value: 28}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 1}
+    Tile_Orientation: {type: :int, value: 3}
     Tile_SrcLight1: {type: :byte, value: 0}
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
@@ -1121,7 +413,7 @@ Tile_List:
     Tile_AnimLoop2: {type: :byte, value: 1}
     Tile_AnimLoop3: {type: :byte, value: 1}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 242}
+    Tile_ID: {type: :int, value: 741}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 1}
@@ -1129,11 +421,35 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 207}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 274}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 272}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 99}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 0}
@@ -1141,11 +457,47 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
-    Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 235}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 274}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 272}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 274}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 5}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 0}
@@ -1153,11 +505,107 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 7}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 7}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 46}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 321}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 322}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 41}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 270}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 1}
-    Tile_ID: {type: :int, value: 236}
+    Tile_ID: {type: :int, value: 1258}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 83}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 0}
@@ -1165,23 +613,263 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 38}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 39}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 46}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
     Tile_AnimLoop1: {type: :byte, value: 1}
     Tile_AnimLoop2: {type: :byte, value: 1}
     Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 741}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 0}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 8}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 7}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 320}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 275}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 271}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 275}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 322}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 0}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 7}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 7}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 1}
+    Tile_AnimLoop2: {type: :byte, value: 1}
+    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 744}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 97}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 99}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 42}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 322}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
     Tile_ID: {type: :int, value: 37}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 2}
+    Tile_Orientation: {type: :int, value: 1}
     Tile_SrcLight1: {type: :byte, value: 0}
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 106}
+    Tile_ID: {type: :int, value: 321}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 38}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 0}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 82}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 2}
@@ -1189,11 +877,35 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 98}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
     Tile_AnimLoop1: {type: :byte, value: 1}
     Tile_AnimLoop2: {type: :byte, value: 1}
     Tile_AnimLoop3: {type: :byte, value: 1}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 109}
+    Tile_ID: {type: :int, value: 744}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 274}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 1}
@@ -1201,11 +913,35 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 115}
+    Tile_ID: {type: :int, value: 275}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 322}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 0}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 295}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 3}
@@ -1213,11 +949,59 @@ Tile_List:
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 1
-    Tile_AnimLoop1: {type: :byte, value: 1}
-    Tile_AnimLoop2: {type: :byte, value: 1}
-    Tile_AnimLoop3: {type: :byte, value: 1}
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 118}
+    Tile_ID: {type: :int, value: 274}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 272}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 274}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 3}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 99}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 99}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 0}
@@ -1229,10 +1013,118 @@ Tile_List:
     Tile_AnimLoop2: {type: :byte, value: 1}
     Tile_AnimLoop3: {type: :byte, value: 1}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 85}
+    Tile_ID: {type: :int, value: 739}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
-    Tile_Orientation: {type: :int, value: 3}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 10}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 7}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 320}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 0}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 7}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 275}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 101}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 101}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 0}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 275}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 0}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 7}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
     Tile_SrcLight1: {type: :byte, value: 0}
     Tile_SrcLight2: {type: :byte, value: 0}
   - !nwn-lib.elv.es,2008-12/struct 
@@ -1241,13 +1133,121 @@ Tile_List:
     Tile_AnimLoop2: {type: :byte, value: 1}
     Tile_AnimLoop3: {type: :byte, value: 1}
     Tile_Height: {type: :int, value: 0}
-    Tile_ID: {type: :int, value: 9}
+    Tile_ID: {type: :int, value: 739}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 10}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 7}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 321}
     Tile_MainLight1: {type: :byte, value: 0}
     Tile_MainLight2: {type: :byte, value: 0}
     Tile_Orientation: {type: :int, value: 0}
     Tile_SrcLight1: {type: :byte, value: 0}
     Tile_SrcLight2: {type: :byte, value: 0}
-Tileset: {type: :resref, value: tsh01}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 7}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 10}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 97}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 83}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 1}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 274}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 0}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    Tile_AnimLoop1: {type: :byte, value: 0}
+    Tile_AnimLoop2: {type: :byte, value: 0}
+    Tile_AnimLoop3: {type: :byte, value: 0}
+    Tile_Height: {type: :int, value: 0}
+    Tile_ID: {type: :int, value: 7}
+    Tile_MainLight1: {type: :byte, value: 0}
+    Tile_MainLight2: {type: :byte, value: 0}
+    Tile_Orientation: {type: :int, value: 2}
+    Tile_SrcLight1: {type: :byte, value: 0}
+    Tile_SrcLight2: {type: :byte, value: 0}
+Tileset: {type: :resref, value: wsf10}
 Version: {type: :dword, value: 0}
 Width: {type: :int, value: 10}
-WindPower: {type: :int, value: 1}
+WindPower: {type: :int, value: 0}
