@@ -3274,6 +3274,9 @@ int CommandSetVar(object oPC, int iMode) {
 
 int CommandSetAppearance(object oPC, int iMode) {
 	object oTarget = GetTarget();
+	if ( !amask(oPC, AMASK_GM) )
+		oTarget = oPC;
+
 	if ( !is_creature(oTarget) ) {
 		return NotifyBadTarget();
 	}
