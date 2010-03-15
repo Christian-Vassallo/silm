@@ -63,7 +63,7 @@ void main() {
 
 	//Declare major variables
 	int nMetaMagic = GetMetaMagicFeat();
-	int nDuration = GetCasterLevel(OBJECT_SELF);
+	int nDuration = GetCasterLevel(OBJECT_SELF)/2;
 	if ( nDuration < 1 ) {
 		nDuration = 1;
 	}
@@ -75,10 +75,9 @@ void main() {
 	}
 	//Apply the VFX impact and summon effect
 	ApplyEffectAtLocation(DURATION_TYPE_TEMPORARY, eVis, GetSpellTargetLocation());
-	ApplyEffectAtLocation(DURATION_TYPE_TEMPORARY, eSummon, GetSpellTargetLocation(), TurnsToSeconds(
-			nDuration * 10));
+	ApplyEffectAtLocation(DURATION_TYPE_TEMPORARY, eSummon, GetSpellTargetLocation(), TurnsToSeconds(nDuration));
 
 	object oSelf = OBJECT_SELF;
-	DelayCommand(1.0, spellsCreateItemForSummoned(oSelf, TurnsToSeconds(nDuration * 10)));
+	DelayCommand(1.0, spellsCreateItemForSummoned(oSelf, TurnsToSeconds(nDuration)));
 }
 
