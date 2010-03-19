@@ -6,10 +6,10 @@ void main() {
 	object
 	oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
 
-	int
-	iSelection = GetLocalInt(oPC, "ConvList_Select");
-	iSelection = GetListInt(oPC, TT, iSelection);
+	int iSelection = GetLocalInt(oPC, "ConvList_Select");
+	int spellID = GetListInt(oPC, TT, iSelection);
+	object oTarget = GetListObject(oPC, TT, iSelection);
 
 
-	RemoveArcaneBySpellID(oPC, iSelection);
+	RemoveArcaneBySpellID(oPC, oTarget, spellID);
 }

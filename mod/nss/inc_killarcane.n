@@ -4,14 +4,14 @@ extern("_gen")
 const string TT = "killarcane";
 
 
-void KillArcane_BuildDialog(object oPC);
+void KillArcane_BuildDialog(object oPC, object oTarget);
 
 
 
-void RemoveArcaneBySpellID(object oPC, int nID);
+void RemoveArcaneBySpellID(object oPC, object oTarget, int nID);
 
 
-void KillArcane_BuildDialog(object oPC) {
+void KillArcane_BuildDialog(object oPC, object oTarget) {
 	ClearList(oPC, TT);
 
 	int nSpellID = -1;
@@ -19,39 +19,46 @@ void KillArcane_BuildDialog(object oPC) {
 
 	string sAllSpells = " ";
 
-	effect e = GetFirstEffect(oPC);
-	while ( GetIsEffectValid(e) ) {
-		if ( GetEffectSubType(e) == SUBTYPE_MAGICAL && GetEffectType(e) != EFFECT_TYPE_VISUALEFFECT ) {
+	effect e = GetFirstEffect(oTarget);
+	while (GetIsEffectValid(e)) {
+		if (GetEffectCreator(e) == oPC && GetEffectSubType(e) == SUBTYPE_MAGICAL &&
+				GetEffectType(e) != EFFECT_TYPE_VISUALEFFECT) {
+			
 			nSpellID = GetEffectSpellId(e);
-			if ( nSpellID != -1 && - 1 == FindSubString(sAllSpells, IntToString(nSpellID)) ) {
+
+			if (nSpellID != -1 && - 1 == FindSubString(sAllSpells, " " + IntToString(nSpellID) + " ")) {
 				sSpellName = GetSpellName(nSpellID);
 				sAllSpells += IntToString(nSpellID) + " ";
 				AddListItem(oPC, TT, sSpellName);
 				SetListInt(oPC, TT, nSpellID);
+				SetListObject(oPC, TT, oTarget);
 			}
 		}
-		e = GetNextEffect(oPC);
+		e = GetNextEffect(oTarget);
 	}
 
-	string sHeader = "Zu entfernende Arkane waehlen.";
+	string sHeader = "Zu entfernende Arkane waehlen; Ziel: " + GetName(oTarget);
 
 	ResetConvList(oPC, oPC, TT, 50000, "cb_killarcane", sHeader);
 }
 
 
-void RemoveArcaneBySpellID(object oPC, int nID) {
+void RemoveArcaneBySpellID(object oPC, object oTarget, int nID) {
 	int nSpellID;
-	effect e = GetFirstEffect(oPC);
-	while ( GetIsEffectValid(e) ) {
-		if ( GetEffectSubType(e) == SUBTYPE_MAGICAL && GetEffectType(e) != EFFECT_TYPE_VISUALEFFECT ) {
+	effect e = GetFirstEffect(oTarget);
+	while (GetIsEffectValid(e)) {
+		if (GetEffectCreator(e) == oPC && GetEffectSubType(e) == SUBTYPE_MAGICAL &&
+				GetEffectType(e) != EFFECT_TYPE_VISUALEFFECT) {
+
 			nSpellID = GetEffectSpellId(e);
-			if ( nSpellID != -1 && nSpellID == nID ) {
+
+			if (nSpellID != -1 && nSpellID == nID) {
 				SendMessageToPC(oPC, "Removing effect ID " + IntToString(nID));
-				RemoveEffect(oPC, e);
+				RemoveEffect(oTarget, e);
 				break;
 			}
 		}
-		e = GetNextEffect(oPC);
+		e = GetNextEffect(oTarget);
 	}
 
 }
