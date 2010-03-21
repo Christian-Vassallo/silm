@@ -35,6 +35,11 @@ object p_load(int id, location at, object owner = OBJECT_INVALID);
 // Saves the specified object to the specified table. Does not save metadata.
 int p_save(string table, object o, string additional_updates = "");
 
+// Function: p_save_at 
+// 
+// Saves the specified object to the specified table with the given location. Does not save metadata.
+int p_save_at(string table, object o, location at, string additional_updates = "");
+
 // Function: p_delete 
 // 
 // Deletes the referenced object.
@@ -124,8 +129,11 @@ object p_load(int id, location at, object owner = OBJECT_INVALID) {
 }
 
 int p_save(string table, object o, string additional_updates = "") {
+	return p_save_at(table, o, GetLocation(o), additional_updates);
+}
+
+int p_save_at(string table, object o, location at, string additional_updates = "") {
 	int id = p_id(o);
-	location at = GetLocation(o);
 	if (!id) {
 		pSCO("insert into " + normalize_table(table) + " (at,data) values(" + pEscapeLocation(at) + ", %s);", o);
 		id = pLastId(SCORCO_SCHEMA + ".objects", "id");
