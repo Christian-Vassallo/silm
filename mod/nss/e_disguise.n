@@ -24,14 +24,48 @@ void main() {
 		}
 	}
 
-	if (e.ev == "chat_command" && ea.a0 == "disguise") {
+	if (e.ev == "chat_prefilter") {
+		int idx = FindSubString(ea.a0, " ");
+		string cmd = GetSubString(ea.a0, 0, idx);
+
+		if (cmd != "/disguise")
+			return;
+
+
+		string name = GetStringTrim(GetSubString(ea.a0, idx + 1, 2048));
+
+
+		if (-1 != idx && name != "") {
+			int disId = disguise_find(e.runnable, name);
+			if (!disId) {
+				SendMessageToPC(e.runnable, "Cannot find disguise: " + name);
+			} else {
+
+				struct Disguise dd = disguise_load(disId);
+				if (!dd.valid)
+					event_stop_end_suppress();
+
+				int current_disguise = disguise_current_id(e.runnable);
+
+				if (current_disguise != disId)
+					disguise_save(e.runnable, "(previous disguise)");
+
+				SendMessageToPC(e.runnable, "Applying disguise: " + dd.name);
+				disguise_apply(e.runnable, dd);
+
+				int cid = GetCharacterID(e.runnable);
+				pQ("update characters set disguise = " + pSi(dd.id) + " where id = " + pSi(cid));
+				event_stop_end_suppress();
+			}
+		}
+
 		MkDlg(e.runnable);
 		ClearAllActions(true);
 		ActionStartConversation(e.runnable, "list_select", true, true);
-		event_stop_end();
+		event_stop_end_suppress();
 	}
 
-	if (e.ev == "chat_prefilter") { //  && ea.a0 == "savedisguise") {
+	if (e.ev == "chat_prefilter") {
 		int idx = FindSubString(ea.a0, " ");
 		string cmd = GetSubString(ea.a0, 0, idx);
 

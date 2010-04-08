@@ -57,6 +57,20 @@ int disguise_current_id(object on) {
 	return 0;
 }
 
+int disguise_find(object player, string name) {
+	int cid = GetCharacterID(player);
+	if (!cid) {
+		SendMessageToPC(player, "no cid");
+		return 0;
+	}
+
+	pQ("select id from disguise where cid = " + pSi(cid) + " and name = " + pSs(name) + " limit 1;");
+	if (pF())
+		return pGi(1);
+	else
+		return 0;
+}
+
 struct Disguise disguise_load(int id) {
 	struct Disguise ret;
 	ret.valid = false;
