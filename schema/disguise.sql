@@ -6,6 +6,7 @@ create table disguise (
 	name character varying not null,
 	gender integer not null,
 	appearance integer not null,
+	soundset integer not null,
 	head integer not null,
 	wings integer not null,
 	tail integer not null,

@@ -1,4 +1,5 @@
 extern("inc_cdb")
+extern("inc_nwnx_func")
 #include "../server.h"
 
 const string DISGUISE_TABLE = "disguise";
@@ -24,6 +25,8 @@ struct Disguise {
 	int skin;
 	int tattoo1;
 	int tattoo2;
+
+	int soundset;
 };
 
 void disguise_apply(object on, struct Disguise d) {
@@ -39,6 +42,9 @@ void disguise_apply(object on, struct Disguise d) {
 	SetColor(on, COLOR_CHANNEL_TATTOO_2, d.tattoo2);
 	SetPortrait(on, d.portrait);
 	SetLocalString(on, "description_override", d.description);
+
+	if (d.soundset > 0)
+		SetSoundset(on, d.soundset);
 
 	if (GetGender(on) != d.gender) {
 		SetGender(on, d.gender);
@@ -74,7 +80,7 @@ int disguise_find(object player, string name) {
 struct Disguise disguise_load(int id) {
 	struct Disguise ret;
 	ret.valid = false;
-	pQ("select name, appearance, head, wings, tail, hair, skin, tattoo1, tattoo2, cid, portrait, gender, description, id from " + DISGUISE_TABLE + " where id = " + pSi(id));
+	pQ("select name, appearance, head, wings, tail, hair, skin, tattoo1, tattoo2, cid, portrait, gender, description, id, soundset from " + DISGUISE_TABLE + " where id = " + pSi(id));
 	if (pF()) {
 		ret.valid = true;
 		ret.name = pGs(1);
@@ -91,6 +97,7 @@ struct Disguise disguise_load(int id) {
 		ret.gender = pGi(12);
 		ret.description = pGs(13);
 		ret.id = pGi(14);
+		ret.soundset = pGi(15);
 	}
 	return ret;
 }
@@ -112,7 +119,8 @@ void disguise_save(object pc, string name) {
 			"tattoo1 = " + pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_1), false) + ", " +
 			"tattoo2 = " + pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_2), false) + ", " +
 			"portrait = " + pSs(GetPortraitResRef(pc)) + ", " +
-			"gender = " + pSi(GetGender(pc), false) +
+			"gender = " + pSi(GetGender(pc), false) + ", " +
+			"soundset = " + pSi(GetSoundset(pc), false) +
 		" where id = " + pSi(pGi(1)));
 
 	else
@@ -130,6 +138,7 @@ void disguise_save(object pc, string name) {
 		pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_2), false) + ", " +
 		pSs(GetPortraitResRef(pc)) + ", " +
 		"null, " +
-		pSi(GetGender(pc), false) +
+		pSi(GetGender(pc), false) + ", " +
+		pSi(GetSoundset(pc), false) +
 	");");
 }
