@@ -28,64 +28,53 @@ void main() {
 		int idx = FindSubString(ea.a0, " ");
 		string cmd = GetSubString(ea.a0, 0, idx);
 
-		if (cmd != "/disguise")
-			return;
+		if (cmd == "/disguise") {
+			string name = GetStringTrim(GetSubString(ea.a0, idx + 1, 2048));
 
+			if (-1 != idx && name != "") {
+				int disId = disguise_find(e.runnable, name);
+				if (!disId) {
+					SendMessageToPC(e.runnable, "Cannot find disguise: " + name);
+				} else {
 
-		string name = GetStringTrim(GetSubString(ea.a0, idx + 1, 2048));
+					struct Disguise dd = disguise_load(disId);
+					if (!dd.valid)
+						event_stop_end_suppress();
 
+					int current_disguise = disguise_current_id(e.runnable);
 
-		if (-1 != idx && name != "") {
-			int disId = disguise_find(e.runnable, name);
-			if (!disId) {
-				SendMessageToPC(e.runnable, "Cannot find disguise: " + name);
-			} else {
+					if (current_disguise != disId)
+						disguise_save(e.runnable, "(previous disguise)");
 
-				struct Disguise dd = disguise_load(disId);
-				if (!dd.valid)
+					SendMessageToPC(e.runnable, "Applying disguise: " + dd.name);
+					disguise_apply(e.runnable, dd);
+
+					int cid = GetCharacterID(e.runnable);
+					pQ("update characters set disguise = " + pSi(dd.id) + " where id = " + pSi(cid));
 					event_stop_end_suppress();
-
-				int current_disguise = disguise_current_id(e.runnable);
-
-				if (current_disguise != disId)
-					disguise_save(e.runnable, "(previous disguise)");
-
-				SendMessageToPC(e.runnable, "Applying disguise: " + dd.name);
-				disguise_apply(e.runnable, dd);
-
-				int cid = GetCharacterID(e.runnable);
-				pQ("update characters set disguise = " + pSi(dd.id) + " where id = " + pSi(cid));
-				event_stop_end_suppress();
+				}
 			}
+
+			MkDlg(e.runnable);
+			ClearAllActions(true);
+			ActionStartConversation(e.runnable, "list_select", true, true);
+			event_stop_end_suppress();
 		}
 
-		MkDlg(e.runnable);
-		ClearAllActions(true);
-		ActionStartConversation(e.runnable, "list_select", true, true);
-		event_stop_end_suppress();
-	}
+		if (cmd == "/savedisguise") {
+			string name = GetStringTrim(GetSubString(ea.a0, idx + 1, 2048));
 
-	if (e.ev == "chat_prefilter") {
-		int idx = FindSubString(ea.a0, " ");
-		string cmd = GetSubString(ea.a0, 0, idx);
+			if (-1 == idx || name == "")
+				SendMessageToPC(e.runnable, "Give a name.");
+			else {
 
-		if (cmd != "/savedisguise")
-			return;
-
-		string name = GetStringTrim(GetSubString(ea.a0, idx + 1, 2048));
-
-		if (-1 == idx || name == "")
-			SendMessageToPC(e.runnable, "Give a name.");
-		else {
-
-			SendMessageToPC(e.runnable, "Saving current disguise as " + name);
-			disguise_save(e.runnable, name);
+				SendMessageToPC(e.runnable, "Saving current disguise as " + name);
+				disguise_save(e.runnable, name);
+			}
+			event_stop_end_suppress();
 		}
-		event_stop_end_suppress();
 	}
-
 }
-
 
 void MkDlg(object oPC) {
 	ClearList(oPC, TTT);
