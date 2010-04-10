@@ -45,7 +45,8 @@ int Fly_IsPCOK(object oPC) {
 void Fly_TakeOff_Etherealness(object oPC) {
 	if (Fly_IsAirborne(oPC)) {
 		effect ether = EffectEthereal();
-		ether = EffectLinkEffects(EffectVisualEffect(VFX_DUR_CUTSCENE_INVISIBILITY), ether);
+		ether = EffectLinkEffects(EffectVisualEffect(VFX_DUR_INVISIBILITY), ether);
+		ether = EffectLinkEffects(EffectVisualEffect(VFX_DUR_GHOST_TRANSPARENT), ether);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(ether), oPC);
 	}
 }
