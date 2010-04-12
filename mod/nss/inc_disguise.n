@@ -52,13 +52,21 @@ void disguise_apply(object on, struct Disguise d) {
 		DelayCommand(2.0, ActivatePortal(on, SERVER_ADDRESS, SERVER_PLAYER_PASSWORD, "", true));
 	}
 
-	// Try to find the first armor with a matching name
+	// Try to find the first armor or cloak with a matching name
 	if (!GetIsInCombat(on)) {
 		iterate_inventory(on, i,
-			if (GetBaseItemType(i) == BASE_ITEM_ARMOR && GetName(i) == d.name) {
+			if (GetBaseItemType(i) == BASE_ITEM_ARMOR &&
+					GetName(i) == d.name
+			) {
 				SendMessageToPC(on, "Auto-equipping: " + d.name);
 				ActionEquipItem(i, INVENTORY_SLOT_CHEST);
-				break;
+			}
+			
+			if (GetBaseItemType(i) == BASE_ITEM_CLOAK &&
+					GetName(i) == d.name
+			) {
+				SendMessageToPC(on, "Auto-equipping: " + d.name);
+				ActionEquipItem(i, INVENTORY_SLOT_CLOAK);
 			}
 		);
 	}
