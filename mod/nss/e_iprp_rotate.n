@@ -1,0 +1,121 @@
+void applydamage(object actor, object item, int dmgConst, int dmgBonus,
+		int lightConst, int applyVfx) {
+	if (applyVfx > -1)
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(applyVfx), actor);
+	AddItemProperty(DURATION_TYPE_PERMANENT,
+		ItemPropertyLight(IP_CONST_LIGHTBRIGHTNESS_LOW, lightConst), item);
+	AddItemProperty(DURATION_TYPE_PERMANENT,
+		ItemPropertyDamageBonus(dmgConst, dmgBonus), item);
+}
+
+void apply(object item, object actor, string eff) {
+
+	// remove all iprp_rotate effects
+	iterate_iprp(item, iprp,
+		if (GetItemPropertyType(iprp) == ITEM_PROPERTY_VISUALEFFECT ||
+				GetItemPropertyType(iprp) == ITEM_PROPERTY_LIGHT ||
+				GetItemPropertyType(iprp) == ITEM_PROPERTY_DAMAGE_BONUS
+		)
+			RemoveItemProperty(item, iprp);
+	);
+
+	if (eff == "none")
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_CHARM), actor);
+
+	else if (eff == "fire1d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_FIRE, IP_CONST_DAMAGEBONUS_1d6,
+			IP_CONST_LIGHTCOLOR_RED, VFX_IMP_PULSE_FIRE);
+	else if (eff == "cold1d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_COLD, IP_CONST_DAMAGEBONUS_1d6,
+			IP_CONST_LIGHTCOLOR_BLUE, VFX_IMP_PULSE_COLD);
+	else if (eff == "acid1d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_ACID, IP_CONST_DAMAGEBONUS_1d6,
+			IP_CONST_LIGHTCOLOR_GREEN, VFX_IMP_PULSE_NATURE);
+	else if (eff == "elec1d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_ELECTRICAL, IP_CONST_DAMAGEBONUS_1d6,
+			IP_CONST_LIGHTCOLOR_WHITE, VFX_IMP_PULSE_WATER);
+	else if (eff == "mag1d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_MAGICAL, IP_CONST_DAMAGEBONUS_1d6,
+			IP_CONST_LIGHTCOLOR_PURPLE, VFX_IMP_PULSE_NEGATIVE);
+	else if (eff == "neg1d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_NEGATIVE, IP_CONST_DAMAGEBONUS_1d6,
+			IP_CONST_LIGHTCOLOR_RED, VFX_IMP_PULSE_NEGATIVE);
+	else if (eff == "pos1d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_POSITIVE, IP_CONST_DAMAGEBONUS_1d6,
+			IP_CONST_LIGHTCOLOR_RED, VFX_IMP_PULSE_NEGATIVE);
+	else if (eff == "holy1d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_POSITIVE, IP_CONST_DAMAGEBONUS_1d6,
+			IP_CONST_LIGHTCOLOR_YELLOW, VFX_IMP_PULSE_HOLY);
+	else if (eff == "sub1d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_SUBDUAL, IP_CONST_DAMAGEBONUS_1d6,
+			IP_CONST_LIGHTCOLOR_YELLOW, VFX_IMP_PULSE_WATER);
+
+	else if (eff == "fire2d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_FIRE, IP_CONST_DAMAGEBONUS_2d6,
+			IP_CONST_LIGHTCOLOR_RED, VFX_IMP_PULSE_FIRE);
+	else if (eff == "cold2d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_COLD, IP_CONST_DAMAGEBONUS_2d6,
+			IP_CONST_LIGHTCOLOR_BLUE, VFX_IMP_PULSE_COLD);
+	else if (eff == "acid2d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_ACID, IP_CONST_DAMAGEBONUS_2d6,
+			IP_CONST_LIGHTCOLOR_GREEN, VFX_IMP_PULSE_NATURE);
+	else if (eff == "elec2d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_ELECTRICAL, IP_CONST_DAMAGEBONUS_2d6,
+			IP_CONST_LIGHTCOLOR_WHITE, VFX_IMP_PULSE_WATER);
+	else if (eff == "mag2d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_MAGICAL, IP_CONST_DAMAGEBONUS_2d6,
+			IP_CONST_LIGHTCOLOR_PURPLE, VFX_IMP_PULSE_WIND);
+	else if (eff == "neg2d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_NEGATIVE, IP_CONST_DAMAGEBONUS_2d6,
+			IP_CONST_LIGHTCOLOR_RED, VFX_IMP_PULSE_NEGATIVE);
+	else if (eff == "pos2d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_POSITIVE, IP_CONST_DAMAGEBONUS_2d6,
+			IP_CONST_LIGHTCOLOR_RED, VFX_IMP_PULSE_NEGATIVE);
+	else if (eff == "holy2d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_DIVINE, IP_CONST_DAMAGEBONUS_2d6,
+			IP_CONST_LIGHTCOLOR_YELLOW, VFX_IMP_PULSE_HOLY);
+	else if (eff == "sub2d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_SUBDUAL, IP_CONST_DAMAGEBONUS_2d6,
+			IP_CONST_LIGHTCOLOR_YELLOW, -1);
+
+	SetName(item, GetName(item, true) + ": " + eff);
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "item_freeactivate" && GetLocalInt(e.runnable, "iprp_rotate")) {
+		string sequence = GetLocalString(e.runnable, "iprp_rotate_seq");
+		string current = GetLocalString(e.runnable, "iprp_rotate_current");
+
+		SendMessageToPC(e.actor, "ItemProperty rotation on " + GetName(e.runnable));
+		SendMessageToPC(e.actor, " Sequence: " + sequence);
+		SendMessageToPC(e.actor, " Current: " + current);
+
+		int i = 0;
+		bool found = false;
+		string next;
+		pBegin();
+		streach_rx(sequence, ",", "", itx,
+			if (found) {
+				next = itx;
+				break;
+			}
+			
+			if (current != "" && itx == current)
+				found = true;
+
+			// if we can't find the currently selected, go to first
+			if (i == 0)
+				next = itx;
+			i++;
+		);
+		pCommit();
+		
+		SendMessageToPC(e.actor, " Applying: " + next);
+
+		apply(e.runnable, e.actor, next);
+		SetLocalString(e.runnable, "iprp_rotate_current", next);
+		event_stop_end_suppress();
+	}
+}
