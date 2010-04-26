@@ -37,9 +37,12 @@ void apply(object item, object actor, string eff) {
 	else if (eff == "mag1d6")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_MAGICAL, IP_CONST_DAMAGEBONUS_1d6,
 			IP_CONST_LIGHTCOLOR_PURPLE, VFX_IMP_PULSE_NEGATIVE);
-	else if (eff == "neg1d6")
+	else if (eff == "neg1d6") {
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_NEGATIVE, IP_CONST_DAMAGEBONUS_1d6,
 			IP_CONST_LIGHTCOLOR_RED, VFX_IMP_PULSE_NEGATIVE);
+		AddItemProperty(DURATION_TYPE_PERMANENT,
+			ItemPropertyVisualEffect(ITEM_VISUAL_EVIL), item);
+	}
 	else if (eff == "pos1d6")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_POSITIVE, IP_CONST_DAMAGEBONUS_1d6,
 			IP_CONST_LIGHTCOLOR_RED, VFX_IMP_PULSE_NEGATIVE);
@@ -49,6 +52,11 @@ void apply(object item, object actor, string eff) {
 	else if (eff == "sub1d6")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_SUBDUAL, IP_CONST_DAMAGEBONUS_1d6,
 			IP_CONST_LIGHTCOLOR_YELLOW, VFX_IMP_PULSE_WATER);
+	else if (eff == "sonic1d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_SONIC, IP_CONST_DAMAGEBONUS_1d6,
+			IP_CONST_LIGHTCOLOR_WHITE, VFX_IMP_PULSE_WIND);
+
+
 
 	else if (eff == "fire2d6")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_FIRE, IP_CONST_DAMAGEBONUS_2d6,
@@ -65,9 +73,12 @@ void apply(object item, object actor, string eff) {
 	else if (eff == "mag2d6")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_MAGICAL, IP_CONST_DAMAGEBONUS_2d6,
 			IP_CONST_LIGHTCOLOR_PURPLE, VFX_IMP_PULSE_WIND);
-	else if (eff == "neg2d6")
+	else if (eff == "neg2d6") {
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_NEGATIVE, IP_CONST_DAMAGEBONUS_2d6,
 			IP_CONST_LIGHTCOLOR_RED, VFX_IMP_PULSE_NEGATIVE);
+		AddItemProperty(DURATION_TYPE_PERMANENT,
+			ItemPropertyVisualEffect(ITEM_VISUAL_EVIL), item);
+	}
 	else if (eff == "pos2d6")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_POSITIVE, IP_CONST_DAMAGEBONUS_2d6,
 			IP_CONST_LIGHTCOLOR_RED, VFX_IMP_PULSE_NEGATIVE);
@@ -77,6 +88,9 @@ void apply(object item, object actor, string eff) {
 	else if (eff == "sub2d6")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_SUBDUAL, IP_CONST_DAMAGEBONUS_2d6,
 			IP_CONST_LIGHTCOLOR_YELLOW, -1);
+	else if (eff == "sonic2d6")
+		applydamage(actor, item, IP_CONST_DAMAGETYPE_SONIC, IP_CONST_DAMAGEBONUS_2d6,
+			IP_CONST_LIGHTCOLOR_WHITE, VFX_IMP_PULSE_WIND);
 
 	SetName(item, GetName(item, true) + ": " + eff);
 }
@@ -86,6 +100,7 @@ void main() {
 
 	if (e.ev == "item_freeactivate" && GetLocalInt(e.runnable, "iprp_rotate")) {
 		string sequence = GetLocalString(e.runnable, "iprp_rotate_seq");
+		string pwr = GetLocalString(e.runnable, "iprp_rotate_pwr");
 		string current = GetLocalString(e.runnable, "iprp_rotate_current");
 
 		SendMessageToPC(e.actor, "ItemProperty rotation on " + GetName(e.runnable));
@@ -112,10 +127,39 @@ void main() {
 		);
 		pCommit();
 		
-		SendMessageToPC(e.actor, " Applying: " + next);
+		SendMessageToPC(e.actor, " Applying: " + next + pwr);
 
-		apply(e.runnable, e.actor, next);
+		apply(e.runnable, e.actor, next + pwr);
 		SetLocalString(e.runnable, "iprp_rotate_current", next);
 		event_stop_end_suppress();
+	}
+	
+	/** /ea <type> */
+	if (e.ev == "chat_command") {
+		struct EventArguments ea = GetEventArguments(e.serial);
+		if (ea.a0 != "ea")
+			return;
+
+		object wpn = GetItemInSlot(INVENTORY_SLOT_RIGHTHAND, e.runnable);
+		if (GetLocalInt(wpn, "iprp_rotate")) {
+			string sequence = GetLocalString(wpn, "iprp_rotate_seq");
+			string pwr = GetLocalString(wpn, "iprp_rotate_pwr");
+			string type = ea.a1;
+			if (
+				type != "" && (
+					TestStringAgainstPattern("**," + type + ",**", sequence) ||
+					TestStringAgainstPattern(type + ",**", sequence) ||
+					TestStringAgainstPattern("**," + type, sequence)
+				)
+			) {
+				apply(wpn, e.runnable, type + pwr);
+				SetLocalString(wpn, "iprp_rotate_current", type);
+				SendMessageToPC(e.runnable, "Applying: " + type + pwr);
+			} else
+				SendMessageToPC(e.runnable, "No such ea property enchanted, available: " + sequence);
+		} else
+			SendMessageToPC(e.runnable, "No ea-enchanted weapon equipped.");
+
+		event_stop_end();
 	}
 }
