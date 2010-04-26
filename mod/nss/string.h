@@ -33,8 +33,9 @@ string v; int iv = 0; while (iv < strlen(s)) {\
 // Splits the given string *str* split at regular expression *delim*, assigning it to 
 // the named variable *v*, and runs *code* for each iteration.
 // Uses the database.
+// Warning: requires a running transaction
 #define streach_rx(str,delim,flags,v,code) __EBLOCK(\
-	string v; string pcursor = pDeclare("select regexp_split_to_table(str, delim, flags);");\
+	string v; string pcursor = pDeclare("select regexp_split_to_table('" + str + "','" + delim + "','" + flags + "');");\
 	while (pCursorFetch(pcursor)) {\
 		v = pGetStr(1);\
 		code;\
