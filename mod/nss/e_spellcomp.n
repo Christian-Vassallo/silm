@@ -63,7 +63,8 @@ void main() {
 			return;
 
 		if (GetLocalInt(e.actor, "spellcomp_skip")) {
-			SetLocalInt(e.actor, "spellcomp_skip", 0);
+			if (GetLocalInt(e.actor, "spellcomp_skip") < 2)
+				SetLocalInt(e.actor, "spellcomp_skip", 0);
 			return;
 		}
 
