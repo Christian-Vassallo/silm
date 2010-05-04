@@ -67,6 +67,11 @@ void main() {
 			return;
 		}
 
+		object item = NWNXGetEventItem();
+
+		if (GetBaseItemType(item) == BASE_ITEM_POTIONS)
+			return;
+
 		int spell_id     = NWNXGetEventSubType()       & 0xffff;
 		int meta         = NWNXGetEventSubType() >> 16 & 0xff;
 		int flags        = NWNXGetEventSubType() >> 27 & 0x0f; // instant_cast
