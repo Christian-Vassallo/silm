@@ -105,7 +105,9 @@ clean-stale: path
 
 .PHONY: scripts
 scripts: path
-	$(MAKE) -j$(CONCURRENCY_LEVEL) -C nss revupdate all
+	-rm nss/{e_mnxnotify.n*s,git.h}
+	$(MAKE) -C nss revupdate
+	$(MAKE) -j$(CONCURRENCY_LEVEL) -C nss all
 
 clean:
 	@echo Do you really want to clean? This will incur significant rebuild time.
