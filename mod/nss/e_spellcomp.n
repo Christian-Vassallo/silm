@@ -38,11 +38,8 @@ void _show(object caster, int spell, int meta, int flags) {
 }
 
 void _tick(object caster, int spell, int meta, int flags, int remaining = 0) {
-	if (remaining <= 0) {
-		if (!GetIsDead(caster))
-			_INFO("spell timer expired while waiting for caster = " + otoa(caster) + ", spell = " + itoa(spell));
+	if (remaining <= 0)
 		return;
-	}
 
 	if (GetCurrentAction(caster) == ACTION_CASTSPELL &&
 			GetSpellId() == spell && GetMetaMagicFeat() == meta) {
