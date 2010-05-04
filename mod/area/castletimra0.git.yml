@@ -89,8 +89,9 @@ Door List:
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 0}
     AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: 3.1416}
+    Bearing: {type: :float, value: -3.1416}
     CloseLockDC: {type: :byte, value: 0}
+    Comment: {type: :cexostr, value: ""}
     Conversation: {type: :resref, value: ""}
     CurrentHP: {type: :short, value: 40}
     Description: 
@@ -147,8 +148,130 @@ Door List:
     Z: {type: :float, value: -1.6}
 Encounter List: 
   type: :list
-  value: []
+  value: 
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 7
+    Active: {type: :byte, value: 1}
+    CreatureList: 
+      type: :list
+      value: 
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 0
+        Appearance: {type: :int, value: 63}
+        CR: {type: :float, value: 0.5}
+        ResRef: {type: :resref, value: nw_skeleton}
+        SingleSpawn: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 0
+        Appearance: {type: :int, value: 198}
+        CR: {type: :float, value: 1.0}
+        ResRef: {type: :resref, value: nw_zombie01}
+        SingleSpawn: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 0
+        Appearance: {type: :int, value: 195}
+        CR: {type: :float, value: 1.0}
+        ResRef: {type: :resref, value: nw_zombie02}
+        SingleSpawn: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 0
+        Appearance: {type: :int, value: 76}
+        CR: {type: :float, value: 2.0}
+        ResRef: {type: :resref, value: nw_ghoul}
+        SingleSpawn: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 0
+        Appearance: {type: :int, value: 186}
+        CR: {type: :float, value: 3.0}
+        ResRef: {type: :resref, value: nw_allip}
+        SingleSpawn: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 0
+        Appearance: {type: :int, value: 146}
+        CR: {type: :float, value: 3.0}
+        ResRef: {type: :resref, value: nw_shadow}
+        SingleSpawn: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 0
+        Appearance: {type: :int, value: 199}
+        CR: {type: :float, value: 3.0}
+        ResRef: {type: :resref, value: nw_zombtyrant}
+        SingleSpawn: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 0
+        Appearance: {type: :int, value: 74}
+        CR: {type: :float, value: 4.0}
+        ResRef: {type: :resref, value: nw_ghast}
+        SingleSpawn: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 0
+        Appearance: {type: :int, value: 196}
+        CR: {type: :float, value: 4.0}
+        ResRef: {type: :resref, value: nw_zombwarr01}
+        SingleSpawn: {type: :byte, value: 0}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 0
+        Appearance: {type: :int, value: 197}
+        CR: {type: :float, value: 4.0}
+        ResRef: {type: :resref, value: nw_zombwarr02}
+        SingleSpawn: {type: :byte, value: 0}
+    Difficulty: {type: :int, value: 1}
+    DifficultyIndex: {type: :int, value: 2}
+    Faction: {type: :dword, value: 1}
+    Geometry: 
+      type: :list
+      value: 
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 1
+        X: {type: :float, value: -5.0834}
+        Y: {type: :float, value: 5.2851}
+        Z: {type: :float, value: 0.225}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 1
+        X: {type: :float, value: -4.9547}
+        Y: {type: :float, value: -0.0926}
+        Z: {type: :float, value: 0.2225}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 1
+        X: {type: :float, value: 0.0}
+        Y: {type: :float, value: 0.0}
+        Z: {type: :float, value: 0.2225}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 1
+        X: {type: :float, value: 0.0025}
+        Y: {type: :float, value: 5.2605}
+        Z: {type: :float, value: 0.225}
+    LocalizedName: 
+      type: :cexolocstr
+      str_ref: 14515
+      value: {}
 
+    MaxCreatures: {type: :int, value: 6}
+    OnEntered: {type: :resref, value: ""}
+    OnExhausted: {type: :resref, value: ""}
+    OnExit: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    PlayerOnly: {type: :byte, value: 1}
+    RecCreatures: {type: :int, value: 3}
+    Reset: {type: :byte, value: 0}
+    ResetTime: {type: :int, value: 60}
+    Respawns: {type: :int, value: 0}
+    SpawnOption: {type: :int, value: 1}
+    SpawnPointList: 
+      type: :list
+      value: 
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 2
+        Orientation: {type: :float, value: -0.0}
+        X: {type: :float, value: 35.912}
+        Y: {type: :float, value: 59.0547}
+        Z: {type: :float, value: 0.2}
+    Tag: {type: :cexostr, value: NW_UndeadLow}
+    TemplateResRef: {type: :resref, value: nw_undeadlow}
+    XPosition: {type: :float, value: 47.5462}
+    YPosition: {type: :float, value: 18.7308}
+    ZPosition: {type: :float, value: 0.0}
 List: 
   type: :list
   value: []
