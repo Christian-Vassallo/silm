@@ -9,6 +9,7 @@ AreaProperties:
     AmbientSndDayVol: {type: :int, value: 5}
     AmbientSndNight: {type: :int, value: 0}
     AmbientSndNitVol: {type: :int, value: 2}
+    Comment: {type: :cexostr, value: ""}
     EnvAudio: {type: :int, value: 0}
     MusicBattle: {type: :int, value: 0}
     MusicDay: {type: :int, value: 0}
@@ -24,8 +25,81 @@ Door List:
 
 Encounter List: 
   type: :list
-  value: []
-
+  value: 
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 7
+    Active: {type: :byte, value: 1}
+    CreatureList: 
+      type: :list
+      value: 
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 0
+        Appearance: {type: :int, value: 10}
+        CR: {type: :float, value: 0.125}
+        ResRef: {type: :resref, value: fledermaus}
+        SingleSpawn: {type: :byte, value: 0}
+    Difficulty: {type: :int, value: 0}
+    DifficultyIndex: {type: :int, value: 0}
+    Faction: {type: :dword, value: 1}
+    Geometry: 
+      type: :list
+      value: 
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 1
+        X: {type: :float, value: 0.0}
+        Y: {type: :float, value: 0.0}
+        Z: {type: :float, value: 0.275}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 1
+        X: {type: :float, value: 4.2903}
+        Y: {type: :float, value: -2.2161}
+        Z: {type: :float, value: 0.025}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 1
+        X: {type: :float, value: 6.2724}
+        Y: {type: :float, value: 8.5648}
+        Z: {type: :float, value: 0.275}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 1
+        X: {type: :float, value: 1.0318}
+        Y: {type: :float, value: 9.3225}
+        Z: {type: :float, value: 0.275}
+    LocalizedName: 
+      type: :cexolocstr
+      value: 
+        0: Fledermaeuse
+    MaxCreatures: {type: :int, value: 6}
+    OnEntered: {type: :resref, value: ""}
+    OnExhausted: {type: :resref, value: ""}
+    OnExit: {type: :resref, value: ""}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnUserDefined: {type: :resref, value: ""}
+    PlayerOnly: {type: :byte, value: 1}
+    RecCreatures: {type: :int, value: 2}
+    Reset: {type: :byte, value: 1}
+    ResetTime: {type: :int, value: 3600}
+    Respawns: {type: :int, value: -1}
+    SpawnOption: {type: :int, value: 0}
+    SpawnPointList: 
+      type: :list
+      value: 
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 2
+        Orientation: {type: :float, value: -0.0}
+        X: {type: :float, value: 45.5725}
+        Y: {type: :float, value: 35.5148}
+        Z: {type: :float, value: -0.0319}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 2
+        Orientation: {type: :float, value: -0.0}
+        X: {type: :float, value: 45.7756}
+        Y: {type: :float, value: 45.7497}
+        Z: {type: :float, value: -0.0081}
+    Tag: {type: :cexostr, value: Fledermaeuse}
+    TemplateResRef: {type: :resref, value: fledermaeuse}
+    XPosition: {type: :float, value: 31.4085}
+    YPosition: {type: :float, value: 64.9018}
+    ZPosition: {type: :float, value: 0.0}
 List: 
   type: :list
   value: []
@@ -522,6 +596,78 @@ SoundList:
     XPosition: {type: :float, value: 43.6806}
     YPosition: {type: :float, value: 19.9448}
     ZPosition: {type: :float, value: 1.0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 6
+    Active: {type: :byte, value: 1}
+    Continuous: {type: :byte, value: 0}
+    Elevation: {type: :float, value: 1.5}
+    GeneratedType: {type: :dword, value: 0}
+    Hours: {type: :dword, value: 0}
+    Interval: {type: :dword, value: 0}
+    IntervalVrtn: {type: :dword, value: 0}
+    LocName: 
+      type: :cexolocstr
+      str_ref: 68012
+      value: {}
+
+    Looping: {type: :byte, value: 1}
+    MaxDistance: {type: :float, value: 10.0}
+    MinDistance: {type: :float, value: 1.0}
+    PitchVariation: {type: :float, value: 0.0}
+    Positional: {type: :byte, value: 1}
+    Priority: {type: :byte, value: 3}
+    Random: {type: :byte, value: 0}
+    RandomPosition: {type: :byte, value: 0}
+    RandomRangeX: {type: :float, value: 0.0}
+    RandomRangeY: {type: :float, value: 0.0}
+    Sounds: 
+      type: :list
+      value: 
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: al_na_drips1}}
+    Tag: {type: :cexostr, value: WaterDrippingLoop}
+    TemplateResRef: {type: :resref, value: waterdrippingloo}
+    Times: {type: :byte, value: 3}
+    Volume: {type: :byte, value: 127}
+    VolumeVrtn: {type: :byte, value: 0}
+    XPosition: {type: :float, value: 44.6674}
+    YPosition: {type: :float, value: 65.2739}
+    ZPosition: {type: :float, value: 1.39}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 6
+    Active: {type: :byte, value: 1}
+    Continuous: {type: :byte, value: 0}
+    Elevation: {type: :float, value: 1.5}
+    GeneratedType: {type: :dword, value: 0}
+    Hours: {type: :dword, value: 0}
+    Interval: {type: :dword, value: 0}
+    IntervalVrtn: {type: :dword, value: 0}
+    LocName: 
+      type: :cexolocstr
+      str_ref: 67845
+      value: {}
+
+    Looping: {type: :byte, value: 1}
+    MaxDistance: {type: :float, value: 10.0}
+    MinDistance: {type: :float, value: 1.0}
+    PitchVariation: {type: :float, value: 0.0}
+    Positional: {type: :byte, value: 1}
+    Priority: {type: :byte, value: 3}
+    Random: {type: :byte, value: 0}
+    RandomPosition: {type: :byte, value: 0}
+    RandomRangeX: {type: :float, value: 0.0}
+    RandomRangeY: {type: :float, value: 0.0}
+    Sounds: 
+      type: :list
+      value: 
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Sound: {type: :resref, value: al_mg_entrmyst1}}
+    Tag: {type: :cexostr, value: EntranceMysterious}
+    TemplateResRef: {type: :resref, value: entrancemysterio}
+    Times: {type: :byte, value: 3}
+    Volume: {type: :byte, value: 127}
+    VolumeVrtn: {type: :byte, value: 0}
+    XPosition: {type: :float, value: 15.3555}
+    YPosition: {type: :float, value: 13.8142}
+    ZPosition: {type: :float, value: 1.5}
 StoreList: 
   type: :list
   value: []
