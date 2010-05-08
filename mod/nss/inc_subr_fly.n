@@ -78,7 +78,7 @@ void Fly_TakeOff(object oPC) {
 	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDisappear(), oPC);
 
 	DelayCommand(2.5f, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(eEff1), oPC));
-	DelayCommand(12f, Fly_TakeOff_Etherealness(oPC));
+	DelayCommand(4f, Fly_TakeOff_Etherealness(oPC));
 
 	SetLocalInt(oPC, "SR_Airborne", 1);
 }
