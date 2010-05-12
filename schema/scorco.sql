@@ -125,6 +125,16 @@ create trigger objects_update_md
 	on objects.templates for each row
 	execute procedure objects.objects_update_md();
 
+-- Table: buried_items
+-- Items buried below-grounds
+create table objects.buried_items (
+	buried_by_aid int references accounts,
+	buried_by_cid int references characters
+) inherits (objects.objects);
+create trigger objects_update_md
+	before insert or update
+	on objects.buried_items for each row 
+	execute procedure objects.objects_update_md();
 
 -- Items in a public container
 --create table objects.public_container_contents (
