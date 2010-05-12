@@ -121,9 +121,11 @@ struct Disguise disguise_load(int id) {
 	return ret;
 }
 
-void disguise_save(object pc, string name) {
-	int cid = GetCharacterID(pc);
-	if (!cid) return;
+void disguise_save(object pc, string name, int cid = 0) {
+	if (!cid)
+		cid = GetCharacterID(pc);
+	if (!cid)
+		return;
 
 	pQ("select id from " + DISGUISE_TABLE + " where cid = " + pSi(cid, false) + " and name = " + pSs(name));
 	if (pF())
