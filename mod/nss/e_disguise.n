@@ -2,6 +2,7 @@ extern("inc_lists")
 extern("inc_disguise")
 extern("inc_cdb")
 extern("inc_colors")
+extern("inc_playertarget")
 
 #define TTT "disguise"
 
@@ -72,6 +73,22 @@ void main() {
 				disguise_save(e.runnable, name);
 			}
 			event_stop_end_suppress();
+		}
+
+		if (cmd == "/cpdisguise") {
+			string name = GetStringTrim(GetSubString(ea.a0, idx + 1, 2048));
+			object playerTarget = GetPlayerTarget(e.runnable);
+
+			if (-1 == idx || name == "" || !is_creature(playerTarget)) {
+				SendMessageToPC(e.runnable,
+					"Give a name and a valid player as target.");
+			else {
+
+				SendMessageToPC(e.runnable, "Saving " + GetName(playerTarget) +
+					" as disguise " + name);
+				int cidof = GetCharacterID(playerTarget);
+				disguise_save(e.runnable, name, cidof);
+			}
 		}
 	}
 }
