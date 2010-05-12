@@ -11,7 +11,7 @@ void applydamage(object actor, object item, int dmgConst, int dmgBonus,
 		ItemPropertyDamageBonus(dmgConst, dmgBonus), item);
 }
 
-bool apply(object item, object actor, string eff) {
+bool apply(object item, object actor, string eff, bool applyVfx) {
 
 	string dmgtype = "none";
 	string dmgbonus = "";
@@ -69,40 +69,40 @@ bool apply(object item, object actor, string eff) {
 
 	else if (dmgtype == "fire")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_FIRE, bonus,
-			IP_CONST_LIGHTCOLOR_RED, VFX_IMP_PULSE_FIRE);
+			IP_CONST_LIGHTCOLOR_RED, applyVfx ? VFX_IMP_PULSE_FIRE : -1);
 	else if (dmgtype == "cold")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_COLD, bonus,
-			IP_CONST_LIGHTCOLOR_BLUE, VFX_IMP_PULSE_COLD);
+			IP_CONST_LIGHTCOLOR_BLUE, applyVfx ? VFX_IMP_PULSE_COLD : -1);
 	else if (dmgtype == "acid")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_ACID, bonus,
-			IP_CONST_LIGHTCOLOR_GREEN, VFX_IMP_PULSE_NATURE);
+			IP_CONST_LIGHTCOLOR_GREEN, applyVfx ? VFX_IMP_PULSE_NATURE : -1);
 	else if (dmgtype == "elec")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_ELECTRICAL, bonus,
-			IP_CONST_LIGHTCOLOR_WHITE, VFX_IMP_PULSE_WATER);
+			IP_CONST_LIGHTCOLOR_WHITE, applyVfx ? VFX_IMP_PULSE_WATER : -1);
 	else if (dmgtype == "mag")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_MAGICAL, bonus,
-			IP_CONST_LIGHTCOLOR_PURPLE, VFX_IMP_PULSE_NEGATIVE);
+			IP_CONST_LIGHTCOLOR_PURPLE, applyVfx ? VFX_IMP_PULSE_NEGATIVE : -1);
 	else if (dmgtype == "neg") {
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_NEGATIVE, bonus,
-			IP_CONST_LIGHTCOLOR_RED, VFX_IMP_PULSE_NEGATIVE);
+			IP_CONST_LIGHTCOLOR_RED, applyVfx ? VFX_IMP_PULSE_NEGATIVE : -1);
 		AddItemProperty(DURATION_TYPE_PERMANENT,
 			ItemPropertyVisualEffect(ITEM_VISUAL_EVIL), item);
 	} else if (dmgtype == "pos") {
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_POSITIVE, bonus,
-			IP_CONST_LIGHTCOLOR_RED, VFX_IMP_PULSE_NEGATIVE);
+			IP_CONST_LIGHTCOLOR_RED, applyVfx ? VFX_IMP_PULSE_NEGATIVE : -1);
 		AddItemProperty(DURATION_TYPE_PERMANENT,
 			ItemPropertyVisualEffect(ITEM_VISUAL_EVIL), item);
 	} else if (dmgtype == "holy") {
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_DIVINE, bonus,
-			IP_CONST_LIGHTCOLOR_YELLOW, VFX_IMP_PULSE_HOLY);
+			IP_CONST_LIGHTCOLOR_YELLOW, applyVfx ? VFX_IMP_PULSE_HOLY : -1);
 		AddItemProperty(DURATION_TYPE_PERMANENT,
 			ItemPropertyVisualEffect(ITEM_VISUAL_HOLY), item);
 	} else if (dmgtype == "sub")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_SUBDUAL, bonus,
-			-1, VFX_IMP_PULSE_WATER);
+			-1, applyVfx ? VFX_IMP_PULSE_WATER : -1);
 	else if (dmgtype == "sonic")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_SONIC, bonus,
-			IP_CONST_LIGHTCOLOR_WHITE, VFX_IMP_PULSE_WIND);
+			IP_CONST_LIGHTCOLOR_WHITE, applyVfx ? VFX_IMP_PULSE_WIND : -1);
 
 	SetName(item, GetName(item, true) + ": " + eff);
 	return true;
@@ -114,6 +114,7 @@ void main() {
 	if (e.ev == "item_freeactivate" && GetLocalInt(e.runnable, "iprp_rotate")) {
 		string sequence = GetLocalString(e.runnable, "iprp_rotate_seq");
 		string current = GetLocalString(e.runnable, "iprp_rotate_current");
+		bool applyVfx = GetLocalInt(e.runnable, "iprp_rotate_applyVfx");
 
 		SendMessageToPC(e.actor, "ItemProperty rotation on " + GetName(e.runnable));
 		SendMessageToPC(e.actor, " Sequence: " + sequence);
@@ -141,7 +142,7 @@ void main() {
 		
 		SendMessageToPC(e.actor, " Applying: " + next);
 
-		apply(e.runnable, e.actor, next);
+		apply(e.runnable, e.actor, next, applyVfx);
 		SetLocalString(e.runnable, "iprp_rotate_current", next);
 		event_stop_end_suppress();
 	}
@@ -155,6 +156,7 @@ void main() {
 		object wpn = GetItemInSlot(INVENTORY_SLOT_RIGHTHAND, e.runnable);
 		if (GetLocalInt(wpn, "iprp_rotate")) {
 			string sequence = GetLocalString(wpn, "iprp_rotate_seq");
+			bool applyVfx = GetLocalInt(wpn, "iprp_rotate_applyVfx");
 			string type = GetStringTrim(ea.a1);
 			string found = "";
 			if (type != "") {
@@ -171,7 +173,7 @@ void main() {
 			}
 			if (found != "") {
 				SendMessageToPC(e.runnable, "Applying: " + found);
-				if(apply(wpn, e.runnable, found))
+				if(apply(wpn, e.runnable, found, applyVfx))
 					SetLocalString(wpn, "iprp_rotate_current", found);
 			} else
 				SendMessageToPC(e.runnable, "No such ea property enchanted, available: " + sequence);
