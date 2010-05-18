@@ -12,6 +12,7 @@ void main() {
 
 	if (is_valid(oTarget)) {
 		switch (GetObjectType(oTarget)) {
+			case OBJECT_TYPE_TRIGGER:
 			case OBJECT_TYPE_DOOR:
 				object oTransitionTarget = GetTransitionTarget(oTarget);
 
@@ -25,9 +26,10 @@ void main() {
 					lTarget = GetBehindLocation(oTransitionTarget, DISTANCE_SHORT);
 				}
 				break;
+
 			default:
-				_ERROR("unknown target type " + itoa(GetObjectType(oTarget)));
-				return;
+				lTarget = GetLocation(oTarget);
+				break;
 		}
 	} else
 		lTarget = GetSpellTargetLocation();
