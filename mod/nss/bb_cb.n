@@ -1,0 +1,17 @@
+extern("inc_bb")
+
+#define TTT "bb"
+
+void main() {
+	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
+	object oMerc = OBJECT_SELF;
+
+	int nMenuLevel0 = GetMenuLevel(oPC, TTT, 0);
+	int nMenuLevel1 = GetMenuLevel(oPC, TTT, 1);
+	int nSelected   = GetListSelection(oPC);
+
+	if (nMenuLevel0 == 0)
+			SetMenuLevel(oPC, TTT, 0, 1);
+
+	mkdlg(oPC, OBJECT_SELF);
+}

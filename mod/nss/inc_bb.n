@@ -1,0 +1,105 @@
+extern("inc_mysql")
+extern("inc_lists")
+extern("inc_colors")
+extern("inc_chat_lib")
+
+
+const string TTT = "bb";
+
+string StringReplace(string sSource, string sFind, string sReplace)
+{
+    int nFindLength = GetStringLength(sFind);
+    int nPosition = 0;
+    string sRetVal = "";
+
+    // Locate all occurences of sFind.
+    int nFound = FindSubString(sSource, sFind);
+    while ( nFound >= 0 )
+    {
+        // Build the return string, replacing this occurence of sFind with sReplace.
+        sRetVal += GetSubString(sSource, nPosition, nFound - nPosition) + sReplace;
+        nPosition = nFound + nFindLength;
+        nFound = FindSubString(sSource, sFind, nPosition);
+    }
+    // Tack on the end of sSource and return.
+    return sRetVal + GetStringRight(sSource, GetStringLength(sSource) - nPosition);
+}//StringReplace()
+
+
+// strip all BB tags
+// colorise player text
+string parseBBCode(string text) {
+	text = StringReplace(text, "[b]", ColorTag(cOrange));
+	text = StringReplace(text, "[/b]", ColorTag(cWhite));
+	text = StringReplace(text, "[i]", ColorTag(cLightBlue));
+	text = StringReplace(text, "[/i]", ColorTag(cWhite));
+
+	int i;
+	string new;
+	bool tag = false;
+	for (i = 0; i < GetStringLength(text); i++) {
+		string c = GetSubString(text, i, 1);
+		if (c == "[")
+			tag = true;
+		if (c == "]") {
+			tag = false;
+			continue;
+		}
+
+		if (!tag)
+			new += c;
+	}
+	
+	return new;
+}
+
+void mkdlg(object pc, object forumBoard) {
+	int forum = GetLocalInt(forumBoard, "forum_id");
+	if (!forum) {
+		_ERROR("No forum_id defined.");
+		SendMessageToPC(pc, "No forum_id defined (bug).");
+		return;
+	}
+
+	ClearList(pc, TTT);
+
+	int nMenuLevel0 = GetMenuLevel(pc, TTT, 0);
+	int nSelected   = GetListSelection(pc);
+
+	if (nMenuLevel0 == 0) {
+		string sText = "Keine Zettel ausgehangen.";
+		bool found = false;
+		SQLQuery("select p.ID, convert(p.Subject using utf8) from bb_Threads t, bb_Posts p" +
+			" where p.Thread = t.id and t.Forum = " + itoa(forum) +
+			" and t.Options & 2 = 0" + // Not sticky threads.
+			" and t.Options & 1 = 0" + // Not closed threads.
+			" group by p.Thread order by p.Date desc limit 50;");
+		while (SQLFetch()) {
+			int id = atoi(SQLGetData(1));
+			string subject = SQLGetData(2);
+
+			AddListItem(pc, TTT, subject);
+			SetListInt(pc, TTT, id);
+			found = true;
+		}
+		if (found)
+			sText = "Angeschlagene Zettel:";
+
+		ResetConvList(pc, pc, TTT, 50000, "bb_cb", sText, "", "", "",
+			"Zurueck zur Liste");
+
+	} else if (nMenuLevel0 == 1) {
+		int postId = GetListInt(pc, TTT, nSelected);
+		string txt = "(Kein Forenpost gefunden, bug).";
+		// WTF? MySQL won't strip \r with replace()
+		SQLQuery("SELECT convert(unhex(replace(hex(p.Msg), '0D', '')) using utf8) " +
+			"FROM bb_Posts p where p.ID = " + itoa(postId));
+		if (SQLFetch())
+			txt = parseBBCode(SQLGetData(1));
+
+		ResetConvList(pc, pc, TTT, 50000, "bb_cb", txt, "", "", "bb_b2m0",
+			"Zurueck zur Liste");
+	}
+
+
+}
