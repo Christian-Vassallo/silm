@@ -1,0 +1,139 @@
+const string SQL_LIB = "MYSQL";
+const int SQL_ERROR = 0;
+const int SQL_SUCCESS = 1;
+
+// Setup placeholders for ODBC requests and responses
+void SQLInit();
+
+// Alias for SQLExecDirect
+void SQLQuery(string sSQL);
+
+// Returns the last SQL query executed.
+string SQLGetLastQuery();
+
+// Does the NEW, better escaping. Not compatible with SQL*codeSpecialChars().
+string SQLEscape(string sString);
+
+// Position cursor on next row of the resultset
+// Call this before using SQLGetData().
+// returns: SQL_SUCCESS if there is a row
+//          SQL_ERROR if there are no more rows
+int SQLFetch();
+
+// Return value of column iCol in the current row of result set sResultSetName
+string SQLGetData(int iCol);
+
+
+/************************************/
+/* Implementation                   */
+/************************************/
+
+// Functions for initializing APS and working with result sets
+
+void __sql_init() {
+	if (!GetLocalInt(GetModule(), "mysql_init_done")) {
+		SQLInit();
+		SetLocalInt(GetModule(), "mysql_init_done", 1);
+	}
+}
+
+void SQLInit() {
+	int i;
+
+	// Placeholder for ODBC persistence
+	string sMemory;
+
+	for ( i = 0; i < 48; i++ )  // reserve 8*128 bytes
+		sMemory +=
+			"................................................................................................................................";
+	SetLocalString(GetModule(), "NWNX!" + SQL_LIB + "!SPACER", sMemory);
+}
+
+string SQLGetLastQuery() {
+	return GetLocalString(GetModule(), "mysql_last_query");
+}
+
+void SQLExecDirect(string sSQL) {
+	__sql_init();
+	SetLocalString(GetModule(), "mysql_last_query", sSQL);
+	SetLocalString(GetModule(), "NWNX!" + SQL_LIB + "!EXEC", sSQL);
+}
+
+int SQLFetch() {
+	string sRow;
+	object oModule = GetModule();
+
+	SetLocalString(oModule, "NWNX!" + SQL_LIB + "!FETCH",
+		GetLocalString(oModule, "NWNX!" + SQL_LIB + "!SPACER"));
+	sRow = GetLocalString(oModule, "NWNX!" + SQL_LIB + "!FETCH");
+	if ( GetStringLength(sRow) > 0 ) {
+		SetLocalString(oModule, "NWNX_" + SQL_LIB + "_CurrentRow", sRow);
+		return SQL_SUCCESS;
+	} else {
+		SetLocalString(oModule, "NWNX_" + SQL_LIB + "_CurrentRow", "");
+		return SQL_ERROR;
+	}
+}
+
+string SQLGetData(int iCol) {
+	string SEP = "¬";
+	int iPos;
+	string sResultSet = GetLocalString(GetModule(),
+		"NWNX_" + SQL_LIB + "_CurrentRow");
+
+	// find column in current row
+	int iCount = 0;
+	string sColValue = "";
+
+	iPos = FindSubString(sResultSet, SEP);
+	if ( ( iPos == -1 ) && ( iCol == 1 ) ) {
+		// only one column, return value immediately
+		sColValue = sResultSet;
+	} else if ( iPos == -1 ) {
+		// only one column but requested column > 1
+		sColValue = "";
+	} else {
+		// loop through columns until found
+		while ( iCount != iCol ) {
+			iCount++;
+			if ( iCount == iCol )
+				sColValue = GetStringLeft(sResultSet, iPos);
+			else {
+				sResultSet = GetStringRight(sResultSet,
+					GetStringLength(sResultSet) - iPos - 1);
+				iPos = FindSubString(sResultSet, SEP);
+			}
+
+			// special case: last column in row
+			if ( iPos == -1 )
+				iPos = GetStringLength(sResultSet);
+		}
+	}
+
+	return sColValue;
+}
+
+void SQLQuery(string sSQL) {
+	SQLExecDirect(sSQL);
+}
+
+string SQLEscape(string str) {
+	if ( -1 == FindSubString(str, "'") )
+		return "CONCAT('" + str + "')";
+
+	int i = 0, last = 0;
+	int count = 0;
+	string c = "", new = "CONCAT('";
+	for ( i = 0; i < GetStringLength(str); i++ ) {
+		c = GetSubString(str, i, 1);
+
+		if ( c == "'" ) {
+			new += "', char(39), '";
+			last = i + 1;
+			count += 1;
+		} else
+			new += c;
+	}
+	new += "')";
+	return new;
+}
