@@ -196,9 +196,7 @@ void PrepareLoot(object oPC) {
 
 	ClearList(OBJECT_SELF, "Item");
 
-	if ( GetIsObjectValid(oPCC) )
-		EnumerateInventory(oPCC, oBody, iSkill);
-	else
+	if ( !GetIsObjectValid(oPCC) )
 		EnumerateInventory(oBody, OBJECT_INVALID, iSkill);
 
 	ResetConvList(oPC, OBJECT_SELF, "Item", 50000, "cr_dlg_tag");
