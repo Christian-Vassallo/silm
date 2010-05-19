@@ -70,6 +70,12 @@ void main() {
 
 		object item = NWNXGetEventItem();
 
+		if (is_valid(item) && GetLocalInt(item, "spellcomp_skip")) {
+			if (GetLocalInt(item, "spellcomp_skip") < 2)
+				SetLocalInt(item, "spellcomp_skip", 0);
+			return;
+		}
+
 		if (GetBaseItemType(item) == BASE_ITEM_POTIONS)
 			return;
 
