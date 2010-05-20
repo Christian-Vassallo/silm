@@ -54,6 +54,8 @@ create table income.mappings (
 
 	created_at timestamp not null default now(),
 
+	enabled boolean not null default true,
+
 	unique (cid, source)
 );
 

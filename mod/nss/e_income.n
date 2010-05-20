@@ -11,7 +11,7 @@ void check_all_incomes(object runnable) {
 	int cid = GetCharacterID(runnable);
 	struct RealTime ts = GetRealTime();
 	pBegin();
-	string prof_c = pDeclare("select id, source from income.mappings where cid is null or cid = " + pSi(cid) + ";");
+	string prof_c = pDeclare("select id, source from income.mappings where (cid is null or cid = " + pSi(cid) + ") and enabled = true;");
 	while (pCursorFetch(prof_c)) {
 		int mapping_id = pGi(1);
 		int source_id = pGi(2);
