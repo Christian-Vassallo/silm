@@ -10,6 +10,7 @@ string parseBBCode(string text) {
 	string boldColor = ColorTag(cTeal);
 	string italicsColor = ColorTag(cLightBlue);
 	string strikeColor = ColorTag(cLightGrey);
+	string underlineColor = textColor;
 
 	string crimsonColor = ColorTag(cDarkRed);
 	string orangeColor = ColorTag(cOrange);
@@ -40,6 +41,8 @@ string parseBBCode(string text) {
 				new += in_tag_def > 1 ? "*" + textColor : boldColor + "*";
 			if (current_tag == "i")
 				new += in_tag_def > 1 ? "/" + textColor : italicsColor + "/";
+			if (current_tag == "u")
+				new += in_tag_def > 1 ? "_" + textColor : underlineColor + "_";
 			if (current_tag == "s")
 				new += in_tag_def > 1 ? "-" + textColor : strikeColor + "-";
 
@@ -72,6 +75,9 @@ string parseBBCode(string text) {
 
 		if (current_tag == "s" && c == " ")
 			c = "-";
+		if (current_tag == "u" && c == " ")
+			c = "_";
+
 		new += c;
 	}
 	
