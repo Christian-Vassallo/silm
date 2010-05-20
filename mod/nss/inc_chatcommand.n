@@ -1903,33 +1903,28 @@ int CommandCAQ(object oPC, int iMode) {
 
 
 int CommandStatus(object oPC, int iMode) {
-	if ( amask(oPC, AMASK_GLOBAL_GM) ) {
-		SendMessageToPC(oPC, "Players logged in:");
-		object o = GetFirstPC();
-		while ( GetIsObjectValid(o) ) {
-			SendMessageToPC(oPC, PCToString(o));
-			o = GetNextPC();
+	int nDM = 0;
+	string sDM = "";
+	string sPlayer = "";
+	int nPlayer = 0;
+	object o = GetFirstPC();
+	while ( GetIsObjectValid(o) ) {
+		string afk = GetLocalInt(o, "afk") ? " (AFK)" : "";
+		if ( GetIsDM(o) ) {
+			sDM += GetName(o) + afk + ", ";
+			nDM++;
+		} else {
+			sPlayer += GetName(o) + afk + ", ";
+			nPlayer++;
 		}
-		SendMessageToPC(oPC, "End of status.");
-	} else {
-		int nDM = 0;
-		string sDM = "";
-		int nPlayer = 0;
-		object o = GetFirstPC();
-		while ( GetIsObjectValid(o) ) {
-			if ( GetIsDM(o) ) {
-				sDM += GetName(o) + ", ";
-				nDM++;
-			} else
-				nPlayer++;
 
-			o = GetNextPC();
-		}
-		sDM = GetStringLeft(sDM, GetStringLength(sDM) - 2);
-		ToPC("Spieler online: " + IntToString(nPlayer));
-		ToPC("Spielleiter online (" + IntToString(nDM) + "): " + sDM);
-
+		o = GetNextPC();
 	}
+	sPlayer = GetStringLeft(sPlayer, GetStringLength(sPlayer) - 2);
+	sDM = GetStringLeft(sDM, GetStringLength(sDM) - 2);
+	ToPC("Spieler online (" + IntToString(nPlayer) + "): " + sPlayer);
+	ToPC("Spielleiter online (" + IntToString(nDM) + "): " + sDM);
+
 	return OK;
 }
 
