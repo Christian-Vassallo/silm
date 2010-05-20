@@ -3,51 +3,76 @@ extern("inc_lists")
 extern("inc_colors")
 extern("inc_chat_lib")
 
-
 const string TTT = "bb";
 
-string StringReplace(string sSource, string sFind, string sReplace)
-{
-    int nFindLength = GetStringLength(sFind);
-    int nPosition = 0;
-    string sRetVal = "";
-
-    // Locate all occurences of sFind.
-    int nFound = FindSubString(sSource, sFind);
-    while ( nFound >= 0 )
-    {
-        // Build the return string, replacing this occurence of sFind with sReplace.
-        sRetVal += GetSubString(sSource, nPosition, nFound - nPosition) + sReplace;
-        nPosition = nFound + nFindLength;
-        nFound = FindSubString(sSource, sFind, nPosition);
-    }
-    // Tack on the end of sSource and return.
-    return sRetVal + GetStringRight(sSource, GetStringLength(sSource) - nPosition);
-}//StringReplace()
-
-
-// strip all BB tags
-// colorise player text
 string parseBBCode(string text) {
-	text = StringReplace(text, "[b]", ColorTag(cOrange));
-	text = StringReplace(text, "[/b]", ColorTag(cWhite));
-	text = StringReplace(text, "[i]", ColorTag(cLightBlue));
-	text = StringReplace(text, "[/i]", ColorTag(cWhite));
+	string textColor = ColorTag(cWhite);
+	string boldColor = ColorTag(cTeal);
+	string italicsColor = ColorTag(cLightBlue);
+	string strikeColor = ColorTag(cLightGrey);
+
+	string crimsonColor = ColorTag(cDarkRed);
+	string orangeColor = ColorTag(cOrange);
+	string limegreenColor = ColorTag(cGreen);
+	string deepskyblueColor = ColorTag(cLightBlue);
+	string blueColor = ColorTag(cBlue);
+	string darkvioletColor = ColorTag(cDarkMagenta);
+	string grayColor = ColorTag(cDarkGrey);
 
 	int i;
 	string new;
-	bool tag = false;
+	int in_tag_def = 0; // 0: in-tag-body 1: in-open-tag 2: in-close-tag
+	string current_tag = "";
 	for (i = 0; i < GetStringLength(text); i++) {
 		string c = GetSubString(text, i, 1);
-		if (c == "[")
-			tag = true;
-		if (c == "]") {
-			tag = false;
+		if (c == "[") {
+			in_tag_def = 1;
 			continue;
 		}
 
-		if (!tag)
-			new += c;
+		if (c == "/" && in_tag_def) {
+			in_tag_def = 2;
+			continue;
+		}
+		
+		if (c == "]") {
+			if (current_tag == "b")
+				new += in_tag_def > 1 ? "*" + textColor : boldColor + "*";
+			if (current_tag == "i")
+				new += in_tag_def > 1 ? "/" + textColor : italicsColor + "/";
+			if (current_tag == "s")
+				new += in_tag_def > 1 ? "-" + textColor : strikeColor + "-";
+
+			if (current_tag == "color=crimson")
+				new += in_tag_def > 1 ? textColor : crimsonColor;
+			if (current_tag == "color=orange")
+				new += in_tag_def > 1 ? textColor : orangeColor;
+			if (current_tag == "color=limegreen")
+				new += in_tag_def > 1 ? textColor : limegreenColor;
+			if (current_tag == "color=deepskyblue")
+				new += in_tag_def > 1 ? textColor : deepskyblueColor;
+			if (current_tag == "color=blue")
+				new += in_tag_def > 1 ? textColor : blueColor;
+			if (current_tag == "color=darkviolet")
+				new += in_tag_def > 1 ? textColor : darkvioletColor;
+			if (current_tag == "color=gray")
+				new += in_tag_def > 1 ? textColor : grayColor;
+
+			if (in_tag_def > 1)
+				current_tag = "";
+			in_tag_def = 0;
+			continue;
+		}
+		
+		if (in_tag_def == 1)
+			current_tag += c;
+
+		if (in_tag_def)
+			continue;
+
+		if (current_tag == "s" && c == " ")
+			c = "-";
+		new += c;
 	}
 	
 	return new;
@@ -68,8 +93,14 @@ void mkdlg(object pc, object forumBoard) {
 
 	if (nMenuLevel0 == 0) {
 		string sText = "Keine Zettel ausgehangen.";
-		bool found = false;
-		SQLQuery("select p.ID, convert(p.Subject using utf8) from bb_Threads t, bb_Posts p" +
+
+		SQLQuery("select f.Description from bb_Forums f where f.ID = " +
+			itoa(forum));
+		if (SQLFetch())
+			sText = parseBBCode(SQLGetData(1));
+
+		SQLQuery("select p.ID, convert(p.Subject using utf8) " +
+			" from bb_Threads t, bb_Posts p" +
 			" where p.Thread = t.id and t.Forum = " + itoa(forum) +
 			" and t.Options & 2 = 0" + // Not sticky threads.
 			" and t.Options & 1 = 0" + // Not closed threads.
@@ -80,10 +111,7 @@ void mkdlg(object pc, object forumBoard) {
 
 			AddListItem(pc, TTT, subject);
 			SetListInt(pc, TTT, id);
-			found = true;
 		}
-		if (found)
-			sText = "Angeschlagene Zettel:";
 
 		ResetConvList(pc, pc, TTT, 50000, "bb_cb", sText, "", "", "",
 			"Zurueck zur Liste");
@@ -92,7 +120,8 @@ void mkdlg(object pc, object forumBoard) {
 		int postId = GetListInt(pc, TTT, nSelected);
 		string txt = "(Kein Forenpost gefunden, bug).";
 		// WTF? MySQL won't strip \r with replace()
-		SQLQuery("SELECT convert(unhex(replace(hex(p.Msg), '0D', '')) using utf8) " +
+		SQLQuery(
+			"SELECT convert(unhex(replace(hex(p.Msg), '0D', '')) using utf8) " +
 			"FROM bb_Posts p where p.ID = " + itoa(postId));
 		if (SQLFetch())
 			txt = parseBBCode(SQLGetData(1));
