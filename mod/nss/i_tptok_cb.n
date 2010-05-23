@@ -22,22 +22,22 @@ void main() {
 		case -3:
 			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_TYPE_NONE, oPC)) {
 				AssignCommand(oPC, ClearAllActions(1));
-				AssignCommand(oPC, SpellDimensionDoorOrTeleport(GetLocation(oWho)));
+				AssignCommand(oPC, SpellDimensionDoor(GetLocation(oWho)));
 				AssignCommand(oWho, ClearAllActions(1));
-				AssignCommand(oWho, SpellDimensionDoorOrTeleport(GetLocation(oPC)));
+				AssignCommand(oWho, SpellDimensionDoor(GetLocation(oPC)));
 			}
 			break;
 
 		case -2:
 			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_TYPE_NONE, oPC)) {
 				AssignCommand(oWho, ClearAllActions(1));
-				AssignCommand(oWho, SpellDimensionDoorOrTeleport(GetAheadLocation(oPC, DISTANCE_TINY)));
+				AssignCommand(oWho, SpellDimensionDoor(GetAheadLocation(oPC, DISTANCE_TINY)));
 			}
 			break;
 
 		case -1:
 				AssignCommand(oPC, ClearAllActions(1));
-			AssignCommand(oPC, SpellDimensionDoorOrTeleport(GetBehindLocation(oWho, DISTANCE_TINY)));
+			AssignCommand(oPC, SpellDimensionDoor(GetBehindLocation(oWho, DISTANCE_TINY)));
 			break;
 
 
@@ -60,7 +60,7 @@ void main() {
 
 				if (GetIsObjectValid(GetAreaFromLocation(lo))) {
 					AssignCommand(oWho, ClearAllActions(1));
-					AssignCommand(oWho, SpellDimensionDoorOrTeleport(lo));
+					AssignCommand(oWho, SpellDimensionDoor(lo));
 				} else
 					FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
 
