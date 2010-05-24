@@ -235,14 +235,14 @@ Creature List:
     Str: {type: :byte, value: 15}
     Subrace: {type: :cexostr, value: ""}
     Tag: {type: :cexostr, value: startequip}
-    Tail: {type: :byte, value: 0}
+    Tail_New: {type: :dword, value: 0}
     TemplateList: 
       type: :list
       value: []
 
     TemplateResRef: {type: :resref, value: startequip}
     WalkRate: {type: :int, value: 7}
-    Wings: {type: :byte, value: 0}
+    Wings_New: {type: :dword, value: 0}
     Wis: {type: :byte, value: 10}
     XOrientation: {type: :float, value: 0.9239}
     XPosition: {type: :float, value: 14.741}
@@ -267,7 +267,7 @@ Creature List:
         Class: {type: :int, value: 19}
         ClassLevel: {type: :short, value: 10}
     Con: {type: :byte, value: 10}
-    Conversation: {type: :resref, value: ad_pillar_dlg}
+    Conversation: {type: :resref, value: ""}
     CurrentHitPoints: {type: :short, value: 64}
     DecayTime: {type: :dword, value: 5000}
     Deity: {type: :cexostr, value: ""}
@@ -420,7 +420,7 @@ Creature List:
     ScriptAttacked: {type: :resref, value: nw_c2_default5}
     ScriptDamaged: {type: :resref, value: nw_c2_default6}
     ScriptDeath: {type: :resref, value: nw_c2_default7}
-    ScriptDialogue: {type: :resref, value: nw_c2_default4}
+    ScriptDialogue: {type: :resref, value: bb_convc}
     ScriptDisturbed: {type: :resref, value: nw_c2_default8}
     ScriptEndRound: {type: :resref, value: nw_c2_default3}
     ScriptHeartbeat: {type: :resref, value: nw_c2_default1}
@@ -470,14 +470,22 @@ Creature List:
     Str: {type: :byte, value: 12}
     Subrace: {type: :cexostr, value: ""}
     Tag: {type: :cexostr, value: ad_pillar}
-    Tail: {type: :byte, value: 0}
+    Tail_New: {type: :dword, value: 0}
     TemplateList: 
       type: :list
       value: []
 
     TemplateResRef: {type: :resref, value: ad_pillar}
+    VarTable:
+      type: :list
+      value:
+      - !nwn-lib.elv.es,2008-12/struct
+        __struct_id: 0
+        Name: {type: :cexostr, value: forum_id}
+        Type: {type: :dword, value: 1}
+        Value: {type: :int, value: 49}
     WalkRate: {type: :int, value: 2}
-    Wings: {type: :byte, value: 0}
+    Wings_New: {type: :dword, value: 0}
     Wis: {type: :byte, value: 10}
     XOrientation: {type: :float, value: 0.1951}
     XPosition: {type: :float, value: 16.6176}
@@ -1923,14 +1931,14 @@ Creature List:
     Str: {type: :byte, value: 11}
     Subrace: {type: :cexostr, value: ""}
     Tag: {type: :cexostr, value: DerOperateur}
-    Tail: {type: :byte, value: 0}
+    Tail_New: {type: :dword, value: 0}
     TemplateList: 
       type: :list
       value: []
 
     TemplateResRef: {type: :resref, value: creature}
     WalkRate: {type: :int, value: 4}
-    Wings: {type: :byte, value: 0}
+    Wings_New: {type: :dword, value: 0}
     Wis: {type: :byte, value: 12}
     XOrientation: {type: :float, value: 0.7071}
     XPosition: {type: :float, value: 14.7116}
@@ -2052,14 +2060,14 @@ Creature List:
     Str: {type: :byte, value: 20}
     Subrace: {type: :cexostr, value: ""}
     Tag: {type: :cexostr, value: card_trader}
-    Tail: {type: :byte, value: 0}
+    Tail_New: {type: :dword, value: 0}
     TemplateList: 
       type: :list
       value: []
 
     TemplateResRef: {type: :resref, value: card_trader}
     WalkRate: {type: :int, value: 5}
-    Wings: {type: :byte, value: 0}
+    Wings_New: {type: :dword, value: 0}
     Wis: {type: :byte, value: 12}
     XOrientation: {type: :float, value: -0.6344}
     XPosition: {type: :float, value: 14.7954}
@@ -2088,7 +2096,7 @@ Door List:
     DisarmDC: {type: :byte, value: 15}
     Faction: {type: :dword, value: 1}
     Fort: {type: :byte, value: 16}
-    GenericType: {type: :byte, value: 0}
+    GenericType_New: {type: :dword, value: 0}
     HP: {type: :short, value: 80}
     Hardness: {type: :byte, value: 5}
     Interruptable: {type: :byte, value: 1}
@@ -3536,7 +3544,7 @@ Placeable List:
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 1140}
     AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: 3.1416}
+    Bearing: {type: :float, value: -3.1416}
     BodyBag: {type: :byte, value: 0}
     CloseLockDC: {type: :byte, value: 0}
     Conversation: {type: :resref, value: ""}
