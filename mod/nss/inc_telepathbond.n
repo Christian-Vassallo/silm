@@ -1,7 +1,7 @@
 extern("inc_cdb")
 extern("inc_chat")
 extern("inc_chat_lib")
-
+extern("inc_chatlog")
 
 // Delegates a message oPC heard to all
 // of oPCs telepathic partners that are
@@ -31,12 +31,13 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage) {
 
 	int nCount = 0;
 
+	string sMessageRaw = sMessage;
 	int nTCID;
 	object oB;
 	string sStart =  ColorTag(cTeal) + "*";
 	string sShortName = GetName(oPC);
 	string sRest = "*" + ColorTagClose() + " " + ColorisePlayerText(oPC, CHATMODE_TALK, sMessage);
-	string sMessage = sStart + sShortName + sRest;
+	sMessage = sStart + sShortName + sRest;
 
 
 	pQ("select t_character, shortname from telepathic_bonds where character = " +
@@ -54,6 +55,8 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage) {
 			
 			if (gvGetInt("telepathbond_delegate_to_dm"))
 				SendMessageToAllDMs("[TB] " + GetName(oPC) + " > " + GetName(oB) + ": " + sMessage);
+
+			ChatLog(oPC, CHATMODE_TELEPATHIC_BOND, sMessageRaw, oB);
 
 			nCount++;
 		}
