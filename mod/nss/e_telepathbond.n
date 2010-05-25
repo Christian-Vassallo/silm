@@ -35,7 +35,7 @@ void main() {
 			object oI = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC, oPC, nNth);
 			while ( GetIsObjectValid(oI) ) {
 				// if its too far off drop out
-				if ( iMode & CHATMODE_WHISPER && GetDistanceBetween(oPC, oI) > 8.0 )  // 8 == TALKVOLUME_WHISPER
+				if ( iMode & CHATMODE_WHISPER && GetDistanceBetween(oPC, oI) > 3.0 )  // 3 == TALKVOLUME_WHISPER
 					break;
 
 				if ( iMode & CHATMODE_TALK && GetDistanceBetween(oPC, oI) > 20.0 )  // 20 == TALKVOLUME_TALK
