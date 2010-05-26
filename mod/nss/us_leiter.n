@@ -51,6 +51,8 @@ void main() {
 				SetLocalInt(OBJECT_SELF, "done", 1); //als geoeffnet markieren
 			} else {
 				AssignCommand(oPC, JumpToLocation(lLoc));
+				if (GetLocalInt(OBJECT_SELF, "autolock"))
+					SetLocked(OBJECT_SELF, true);
 				ActionPlayAnimation(ANIMATION_PLACEABLE_CLOSE);
 				SetLocalInt(OBJECT_SELF, "done", 0); //als geschlossen markieren
 			}
