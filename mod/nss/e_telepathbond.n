@@ -5,6 +5,36 @@ extern("inc_cdb")
 void main() {
 	struct EventInfo e = GetEventInfo();
 
+	if (e.ev == "nwnx_chat") {
+		SetLocalString(e.runnable, "NWNX!CHAT!TEXT", NWNXChatGetSpacer());
+		string sText = GetLocalString(e.runnable, "NWNX!CHAT!TEXT");
+
+		if ( sText == "" ) {
+			_FATAL("No text.");
+			return;
+		}
+
+		int iMsg = StringToInt(GetStringLeft(sText, 2));
+		int iMode = MsgToChatMode(iMsg);
+
+		// Dont handle silent shouts by NPCs!
+		if (  !GetIsPC(e.runnable) ) return;
+
+		// chompchomp
+		string message = GetSubString(sText, 12, GetStringLength(sText));
+
+		if (GetStringLeft(message, 1) == "$") {
+			int cid = GetCharacterID(e.runnable);
+			pQ("select id from telepathic_bonds where character = " + pSi(cid) +
+					" and active = true;");
+			if (pF()) {
+				string msg = GetSubString(message, 1, 2048);
+				DelegateTelepathicMessageToPartners(e.runnable, msg);
+				event_stop_end_suppress();
+			}
+		}
+	}
+
 	if (e.ev == "chat_prefilter") {
 		struct EventArguments ea = GetEventArguments(e.serial);
 		string message = ea.a0;
