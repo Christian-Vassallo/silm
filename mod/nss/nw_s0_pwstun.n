@@ -1,0 +1,35 @@
+extern("nw_i0_spells")
+extern("x2_inc_spellhook")
+
+void main() {
+	if (!X2PreSpellCastCode())
+		return;
+
+	object oTarget = GetSpellTargetObject();
+	int nHP = GetCurrentHitPoints(oTarget);
+	effect eStun = EffectStunned();
+	effect eMind = EffectVisualEffect(VFX_DUR_MIND_AFFECTING_DISABLED);
+	effect eLink = EffectLinkEffects(eMind, eStun);
+	int nDuration;
+
+	if (nHP >= 151)
+		return;
+	else if (nHP >= 101 && nHP <= 150)
+		nDuration = d4(1);
+	else if (nHP >= 51  && nHP <= 100)
+		nDuration = d4(2);
+	else
+		nDuration = d4(4);
+	
+	//Fire cast spell at event for the specified target
+	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_POWER_WORD_STUN));
+	//Make an SR check
+	if(MyResistSpell(OBJECT_SELF, oTarget))
+		return;
+
+    ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_STUN),
+		oTarget);
+	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget,
+		RoundsToSeconds(nDuration));
+}
+
