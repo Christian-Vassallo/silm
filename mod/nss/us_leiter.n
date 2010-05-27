@@ -42,11 +42,12 @@ void main() {
 	location lLoc = GetLocation(GetWaypointByTag(sTarget));
 
 	// verschliessbare Tuer mit Animation?
-	if ( GetStringLeft(GetTag(OBJECT_SELF), 5) == "DOOR_" ) {
+	if (GetStringLeft(GetTag(OBJECT_SELF), 5) == "DOOR_") {
 		// ist die Tuer nicht verschlossen?
-		if ( GetLocked(OBJECT_SELF) == FALSE ) {
+		if (!GetLocked(OBJECT_SELF) ||
+			is_valid(GetItemPossessedBy(oPC, GetLockKeyTag(OBJECT_SELF)))) {
 			//noch nicht geoeffnet?
-			if ( GetLocalInt(OBJECT_SELF, "done") == 0 ) {
+			if (GetLocalInt(OBJECT_SELF, "done") == 0) {
 				ActionPlayAnimation(ANIMATION_PLACEABLE_OPEN);
 				SetLocalInt(OBJECT_SELF, "done", 1); //als geoeffnet markieren
 			} else {
