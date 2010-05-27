@@ -1,0 +1,20 @@
+extern("x0_i0_spells")
+extern("x2_inc_spellhook")
+
+void main() {
+	if (!X2PreSpellCastCode())
+		return;
+
+	object oTarget = GetSpellTargetObject();
+
+	//Fire cast spell at event for the specified target
+	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_POWER_WORD_KILL));
+	//Check the creatures HP
+	if (GetCurrentHitPoints(oTarget) > 100)
+		return;
+	
+	if (MyResistSpell(OBJECT_SELF, oTarget))
+		return;
+
+	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDeath(), oTarget);
+}

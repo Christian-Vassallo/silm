@@ -68,8 +68,19 @@ level:
   9: welekijr
 ~).freeze
 
+def get_for_spell_override row
+  case row.ID
+    when 131 # Power Word Kill
+      "Lowan." # "Death"
+    when 132 # Power Word Stun
+      "Rerkh." # "crawl~ing"
+    else
+      nil
+  end
+end
+
 def get_for_spell row
-  [
+  get_for_spell_override(row) || [
     $lex['range'][row.Range.upcase],
     $lex['schools'][row.School.upcase] + $lex['level'][ row.ID.to_s[-1,1].to_i ],
 #    $lex['category'][row.Category.to_i],
