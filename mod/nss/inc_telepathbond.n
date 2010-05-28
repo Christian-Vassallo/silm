@@ -72,7 +72,7 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage) {
 
 	}
 	if (!USE_TELL && nCount > 0) {
-		sMessage = sStart + "(TB)" + sRest;
+		sMessage = sStart + "TB" + sRest;
 		SendMessageToPC(oPC, sMessage);
 	}
 	return nCount;
@@ -90,7 +90,7 @@ int DelegateOwnToPartners(object oPC, int nMode, string sMessage) {
 	object oB;
 	string sStart =  ColorTag(cOrange);
 	string sShortName = GetName(oPC);
-	string sRest = ColorTagClose() + " " +
+	string sRest = ColorTagClose() +
 		ColorisePlayerText(oPC, nMode, sMessage);
 	string sMessage = sStart + sShortName + ": " + sRest;
 
@@ -136,7 +136,7 @@ int DelegateHeardToPartners(object oPC, object oSpeakingObject, int nMode,
 	object oB;
 	string sStart =  ColorTag(cLightGrey);
 	string sShortName = GetName(oSpeakingObject);
-	string sRest = ColorTagClose() + " " +
+	string sRest = ColorTagClose() +
 		ColorisePlayerText(oSpeakingObject, nMode, sMessage);
 
 	string sMessage = sStart + sShortName + ": " + sRest;
