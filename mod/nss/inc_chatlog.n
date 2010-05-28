@@ -13,7 +13,7 @@ void ChatLog(object oPC, int nMode, string sMessage, object oTo) {
 	heard_by_aid += "E'{";
 	heard_by_cid += "E'{";
 
-	if (nMode & CHATMODE_PRIVATE) {
+	if (nMode & CHATMODE_PRIVATE || nMode & CHATMODE_TELEPATHIC_BOND) {
 		if (GetCharacterID(oTo))
 			heard_by_cid += itoa(GetCharacterID(oTo));
 		else
