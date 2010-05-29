@@ -8,16 +8,4 @@ void main() {
 	// - stop
 	if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "door_closed", OBJECT_SELF, GetLastClosedBy(), OBJECT_SELF, GetLocation(OBJECT_SELF)))
 		return;
-
-	// ClearAllActions();
-
-//    int nAutoClose = GetLocalInt(oDoor, "autoclose");
-	int nAutoLock = GetLocalInt(oDoor, "autolock");
-
-	if ( nAutoLock < 0 || nAutoLock )
-		ActionDoCommand(SetLocked(OBJECT_SELF, 1));
-
-	if (d10() == 1) {
-		SpeakString("*crrrk*");
-	}
 }

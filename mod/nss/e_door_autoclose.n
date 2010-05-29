@@ -1,0 +1,14 @@
+/**
+ * Automagically close all doors after 60 seconds.
+ */
+
+#define CLOSE_DELAY 60
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "door_open") {
+		ActionWait(IntToFloat(CLOSE_DELAY));
+		ActionCloseDoor(OBJECT_SELF);
+	}
+}

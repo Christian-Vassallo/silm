@@ -12,22 +12,4 @@ void main() {
 		AssignCommand(oDoor, ActionCloseDoor(oDoor));
 		return;
 	}
-
-	if (ret & EVENT_RESULT_STOP)
-		return;
-
-	int nAutoClose = GetLocalInt(oDoor, "autoclose");
-	int nAutoLock = GetLocalInt(oDoor, "autolock");
-
-	if (nAutoClose) {
-		if (nAutoLock) {
-			ActionAutoCloseLock(nAutoClose <= 0 ? 60 : nAutoClose);
-		} else {
-			ActionAutoClose(nAutoClose <= 0 ? 60 : nAutoClose);
-		}
-	}
-
-	if (d10() == 1) {
-		SpeakString("*crrrk*");
-	}
 }
