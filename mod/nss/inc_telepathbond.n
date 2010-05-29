@@ -4,6 +4,7 @@ extern("inc_chat_lib")
 extern("inc_chatlog")
 
 #define USE_TELL false
+#define DARKEN_OWN 0
 
 // Delegates a message oPC heard to all
 // of oPCs telepathic partners that are
@@ -72,7 +73,15 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage) {
 
 	}
 	if (!USE_TELL && nCount > 0) {
-		sMessage = sStart + "TB" + sRest;
+		if (DARKEN_OWN > 0)
+			sRest = ColorTagClose() + " " +
+				ColorisePlayerTextOverride(oPC, CHATMODE_TALK, sMessageRaw,
+					Darken(colorText, DARKEN_OWN),
+					Darken(colorEmote, DARKEN_OWN),
+					Darken(colorEmphasis, DARKEN_OWN),
+					Darken(colorEmphasisInEmote, DARKEN_OWN));
+
+		sMessage = ColorTag(CS(MIN, MI, MI)) + "TB" + sRest;
 		SendMessageToPC(oPC, sMessage);
 	}
 	return nCount;
