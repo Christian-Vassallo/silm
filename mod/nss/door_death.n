@@ -1,6 +1,3 @@
-extern("_gen")
-extern("inc_audit")
-
 void main() {
 	object oDoor = OBJECT_SELF;
 	object oPC = GetLastDamager(oDoor);
@@ -9,17 +6,4 @@ void main() {
 	// - runnable: door
 	// - actor: damager
 	RunEventScriptsFor(GetEventSerial(), "door_death", OBJECT_SELF, oPC, OBJECT_SELF, GetLocation(OBJECT_SELF));
-
-	// D
-	if ( !GetIsObjectValid(oPC) )
-		return;
-
-	string sMsg = "Huah! " +
-				  GetTag(oDoor) +
-				  " wurde von " + GetName(oPC) + " (Account: " + GetPCPlayerName(oPC) + ") eingeschlagselt.";
-	SendMessageToAllDMs(sMsg);
-
-	WriteTimestampedLogEntry(sMsg);
-
-	audit("door_death", oPC, audit_fields("area", GetResRef(GetArea(oPC))), "audit", oDoor);
 }

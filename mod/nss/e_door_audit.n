@@ -1,0 +1,16 @@
+extern("_gen")
+extern("inc_audit")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "door_death") {
+		string pcs = PCToString(e.actor);
+		string msg = GetTag(e.runnable) + " bashed in by " + pcs;
+		SendMessageToAllDMs(msg);
+		WriteTimestampedLogEntry(msg);
+
+		audit("door_death", e.actor, audit_fields("pc", pcs),
+			"audit", e.runnable);
+	}
+}
