@@ -1,0 +1,24 @@
+extern("nw_i0_spells")
+extern("x2_inc_spellhook")
+
+void main() {
+	if (!X2PreSpellCastCode())
+		return;
+
+	object oTarget = GetSpellTargetObject();
+	int nHP = GetCurrentHitPoints(oTarget);
+
+	if (nHP > 50 || nHP < 0)
+		return;
+
+	SignalEvent(oTarget,
+		EventSpellCastAt(OBJECT_SELF, SPELL_POWER_WORD_DISABLE));
+
+	if(MyResistSpell(OBJECT_SELF, oTarget))
+		return;
+
+
+	ApplyEffectToObject(DURATION_TYPE_INSTANT,
+		EffectDamage(nHP, DAMAGE_TYPE_MAGICAL, DAMAGE_POWER_PLUS_TWENTY),
+		oTarget);
+}
