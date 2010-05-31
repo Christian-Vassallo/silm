@@ -1,5 +1,6 @@
 extern("nw_i0_spells")
 extern("x2_inc_spellhook")
+extern("inc_iprp_curses")
 
 void main() {
 	if (!X2PreSpellCastCode())
@@ -15,6 +16,10 @@ void main() {
 
 	object oArmor = GetItemInSlot(INVENTORY_SLOT_CHEST, oTarget);
 	if (!GetIsObjectValid(oArmor))
+		return;
+
+	// Cannot unequip cursed items.
+	if (IPGetIsCursed(oArmor, IP_CONST_CURSED_UNUNEQUIPPABLE))
 		return;
 
 	AssignCommand(oTarget, ClearAllActions(true));
