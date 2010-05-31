@@ -1,0 +1,22 @@
+extern("nw_i0_spells")
+extern("x2_inc_spellhook")
+
+void main() {
+	if (!X2PreSpellCastCode())
+		return;
+
+	object oTarget = GetSpellTargetObject();
+
+	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF,
+		SPELL_POWER_WORD_DISROBE));
+
+	if(MyResistSpell(OBJECT_SELF, oTarget))
+		return;
+
+	object oArmor = GetItemInSlot(INVENTORY_SLOT_CHEST, oTarget);
+	if (!GetIsObjectValid(oArmor))
+		return;
+
+	AssignCommand(oTarget, ClearAllActions(true));
+	AssignCommand(oTarget, ActionUnequipItem(oArmor));
+}
