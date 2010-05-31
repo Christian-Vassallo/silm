@@ -1,0 +1,19 @@
+extern("nw_i0_spells")
+extern("x2_inc_spellhook")
+extern("inc_iprp_curses")
+
+void main() {
+	if (!X2PreSpellCastCode())
+		return;
+
+	object oTarget = GetSpellTargetObject();
+
+	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF,
+		SPELL_POWER_WORD_TRIP));
+
+	if(MyResistSpell(OBJECT_SELF, oTarget))
+		return;
+
+	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectKnockdown(),
+		oTarget, RoundsToSeconds(1));
+}
