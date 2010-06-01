@@ -23,5 +23,9 @@ void main() {
 		return;
 
 	AssignCommand(oTarget, ClearAllActions(true));
+	AssignCommand(oTarget, ActionDoCommand(
+		ApplyEffectToObject(DURATION_TYPE_INSTANT,
+			EffectVisualEffect(VFX_IMP_MAGBLUE), oTarget)
+	));
 	AssignCommand(oTarget, ActionUnequipItem(oArmor));
 }
