@@ -35,7 +35,8 @@ include Makefile.dep
 
 autogen := appearance.h draconic.n
 
-draconic.n: gen_language_file
+draconic.n: gen_language_file ../../hak/client_2da/spells.2ds
+	make -C ../../hak/client_2da/ spells.2ds
 	./gen_language_file > draconic.n
 
 draconic.nss: draconic.n
