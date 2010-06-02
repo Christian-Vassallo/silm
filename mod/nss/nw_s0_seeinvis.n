@@ -10,10 +10,10 @@ void main() {
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF,
 		SPELL_SEE_INVISIBILITY, FALSE));
 
-	int nDuration = 2 * GetCasterLevel(OBJECT_SELF);
+	int nDuration = 10 * GetCasterLevel(OBJECT_SELF);
 	if (GetMetaMagicFeat() == METAMAGIC_EXTEND)
 		nDuration *= 2;
 
 	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eSight, oTarget,
-		TurnsToSeconds(nDuration));
+		60f * nDuration); // 10 minutes per level
 }
