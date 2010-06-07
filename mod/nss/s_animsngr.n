@@ -26,7 +26,10 @@ void main() {
 	int pcs = 0;
 	object pc = GetFirstPC();
 	while (GetIsObjectValid(pc)) {
-		if (pc != oPC) {
+		if (!GetIsDM(pc)
+				&& !GetIsDMPossessed(pc)
+				&& !GetIsPossessedFamiliar(pc)
+				&& pc != oPC) {
 			int cid = GetCharacterID(pc);
 			AddListItem(oPC, TT, GetName(pc));
 			SetListInt(oPC, TT, cid);
