@@ -29,6 +29,11 @@ struct Disguise {
 	int soundset;
 };
 
+void disguise_update_login(object on, struct Disguise d) {
+	if (!d.valid) return;
+	SetLocalString(on, "description_override", d.description);
+}
+
 void disguise_apply(object on, struct Disguise d) {
 	if (!d.valid) return;
 	
