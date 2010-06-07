@@ -1,6 +1,7 @@
 extern("x0_i0_position")
 extern("inc_cdb")
 extern("inc_lists")
+extern("inc_nwnx_func")
 
 void ActionPutTheGoddamnItemDown(object item) {
 	ActionPutDownItem(item);
@@ -10,7 +11,7 @@ void fallback(object item, object deliverTo) {
 	object messenger = OBJECT_SELF;
 	if (!is_valid(messenger))
 		return;
-	
+
 	DestroyObject(messenger, 30f);
 
 	if (messenger != GetItemPossessor(item))
@@ -29,7 +30,7 @@ void GoGoGadget2(object item, object deliverTo) {
 	object messenger = OBJECT_SELF;
 	if (!is_valid(messenger))
 		return;
-	
+
 	SetCommandable(true);
 
 	ClearAllActions(true);
@@ -81,8 +82,28 @@ void main() {
 		return;
 
 	location at = GetRandomLocationAt(GetLocation(oTarget), 2.5f);
-	object m = CreateObject(OBJECT_TYPE_CREATURE, "falke", at);
-	SetName(m, "Der fliegende Bote");
+	string resref;
+	switch(Random(3)) {
+		case 0: resref = "falke"; break;
+		case 1: resref = "rabe"; break;
+		case 2: resref = "adler"; break;
+	}
+	object m = CreateObject(OBJECT_TYPE_CREATURE, resref, at);
+	SetName(m, "Fliegender Bote");
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+		SupernaturalEffect(EffectEthereal()), m);
+
+	SetCreatureEventHandler(m, CREATURE_EVENT_HEARTBEAT, "");
+	SetCreatureEventHandler(m, CREATURE_EVENT_PERCEPTION, "");
+	SetCreatureEventHandler(m, CREATURE_EVENT_SPELLCAST, "");
+	SetCreatureEventHandler(m, CREATURE_EVENT_ATTACKED, "");
+	SetCreatureEventHandler(m, CREATURE_EVENT_DAMAGED, "");
+	SetCreatureEventHandler(m, CREATURE_EVENT_DISTURBED, "");
+	SetCreatureEventHandler(m, CREATURE_EVENT_ENDCOMBAT, "");
+	SetCreatureEventHandler(m, CREATURE_EVENT_CONVERSATION, "");
+	SetCreatureEventHandler(m, CREATURE_EVENT_RESTED, "");
+	SetCreatureEventHandler(m, CREATURE_EVENT_DEATH, "");
+	SetCreatureEventHandler(m, CREATURE_EVENT_BLOCKED, "");
 
 	AssignCommand(m, GoGoGadget(oTarget, pc));
 	AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
