@@ -1,0 +1,45 @@
+extern("nw_i0_spells")
+extern("x2_inc_spellhook")
+extern("inc_lists")
+extern("inc_cdb")
+
+#define TT "animsngr"
+
+void main() {
+	if (!X2PreSpellCastCode())
+		return;
+
+	object oPC = OBJECT_SELF;
+	object oTarget = GetSpellTargetObject();
+
+	if (GetWeight(oTarget) > 40) {
+		FloatingTextStringOnCreature("*" + GetName(oTarget) +
+			": Zu schwer zum transportieren!*", oPC, false);
+		return;
+	}
+
+	ClearList(oPC, TT);
+	SetLocalObject(oPC, "animsngr_target", oTarget);
+	string text = "Waehle den Spieler, zu dem " + GetName(oTarget) +
+		" gebracht werden soll.";
+
+	int pcs = 0;
+	object pc = GetFirstPC();
+	while (GetIsObjectValid(pc)) {
+		if (pc != oPC) {
+			int cid = GetCharacterID(pc);
+			AddListItem(oPC, TT, GetName(pc));
+			SetListInt(oPC, TT, cid);
+			pcs++;
+		}
+		pc = GetNextPC();
+	}
+
+
+	if (pcs < 1)
+		text = "Niemand online, niemand kann benachrichtigt werden.";
+
+	ResetConvList(oPC, oPC, TT, 50000, "s_animsngr_cb", text);
+	AssignCommand(oPC, ClearAllActions(false));
+	AssignCommand(oPC, ActionStartConversation(oPC, "list_select", 1, 0));
+}

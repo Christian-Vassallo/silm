@@ -1,0 +1,89 @@
+extern("x0_i0_position")
+extern("inc_cdb")
+extern("inc_lists")
+
+void ActionPutTheGoddamnItemDown(object item) {
+	ActionPutDownItem(item);
+}
+
+void fallback(object item, object deliverTo) {
+	object messenger = OBJECT_SELF;
+	if (!is_valid(messenger))
+		return;
+	
+	DestroyObject(messenger, 30f);
+
+	if (messenger != GetItemPossessor(item))
+		return;
+
+	SetCommandable(true);
+	ClearAllActions(true);
+	ActionJumpToObject(deliverTo, false);
+	ActionSpeakString("*squiek*");
+	ActionGiveItem(item, deliverTo);
+	ActionDoCommand(DestroyObject(messenger));
+	SetCommandable(false);
+}
+
+void GoGoGadget2(object item, object deliverTo) {
+	object messenger = OBJECT_SELF;
+	if (!is_valid(messenger))
+		return;
+	
+	SetCommandable(true);
+
+	ClearAllActions(true);
+
+	// vector vPosDeliverTo = GetPosition(deliverTo);
+	location nearTo = GetRandomLocationAt(GetLocation(deliverTo), 2.5f);
+	// while (!LineOfSightVector(GetPositionFromLocation(nearTo), vPosDeliverTo))
+	// 	nearTo = GetRandomLocationAt(GetLocation(deliverTo), 10f);
+	ActionJumpToLocation(nearTo);
+	ActionMoveToObject(deliverTo);
+	ActionSpeakString("*squiek*");
+	ActionWait(3.0f);
+
+	// ActionGiveItem(item, deliverTo);
+	ActionDoCommand(ActionPutTheGoddamnItemDown(item));
+
+	// allow time for putting down the item
+	ActionDoCommand(DestroyObject(messenger, 5f));
+}
+
+void GoGoGadget(object item, object deliverTo) {
+	object messenger = OBJECT_SELF;
+
+	DelayCommand(30f, fallback(item, deliverTo));
+
+	ClearAllActions(true);
+	ActionMoveToObject(item);
+	ActionSpeakString("*squiek*");
+	ActionWait(3.0f);
+	ActionPickUpItem(item);
+	ActionDoCommand(DelayCommand(5f, GoGoGadget2(item, deliverTo)));
+	DelayCommand(0.1, SetCommandable(false));
+}
+
+void main() {
+	object
+		oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC"),
+		oTarget = GetLocalObject(oPC, "animsngr_target");
+
+	int
+		iSelection = GetLocalInt(oPC, "ConvList_Select"),
+		cid = GetListInt(oPC, "animsngr", iSelection);
+
+	object pc = GetPCByCID(cid);
+	if (!is_valid(pc))
+		return;
+
+	if (!is_valid(oTarget))
+		return;
+
+	location at = GetRandomLocationAt(GetLocation(oTarget), 2.5f);
+	object m = CreateObject(OBJECT_TYPE_CREATURE, "falke", at);
+	SetName(m, "Der fliegende Bote");
+
+	AssignCommand(m, GoGoGadget(oTarget, pc));
+	AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
+}
