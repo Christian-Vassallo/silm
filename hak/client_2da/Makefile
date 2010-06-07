@@ -41,6 +41,10 @@ parts_chest.2da: parts_chest.2ds
 		echo "make_partstable.sh 0.00 < $@ > chg_`echo $@ | cut -d_ -f2-`";\
 	fi
 
+des_crft_spells.2ds: spells.2ds
+	./update_des_crft_spells.2ds.rb > des_crft_spells_new &&\
+		mv des_crft_spells_new des_crft_spells.2ds
+
 clean-backup:
 	-rm *.*~ *.out
 
