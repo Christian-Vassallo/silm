@@ -12,6 +12,12 @@ void main() {
 	object oPC = OBJECT_SELF;
 	object oTarget = GetSpellTargetObject();
 
+	if (GetItemPossessor(oTarget) != OBJECT_INVALID) {
+		FloatingTextStringOnCreature(
+			"Der Gegenstand muss auf dem Boden liegen.", oPC, false);
+		return;
+	}
+
 	if (GetWeight(oTarget) > 40) {
 		FloatingTextStringOnCreature("*" + GetName(oTarget) +
 			": Zu schwer zum transportieren!*", oPC, false);
