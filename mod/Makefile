@@ -21,9 +21,6 @@ BRANCH=$(shell git branch 2>&1| grep "*" | cut -d " " -f 2)
 # The current commit hash.
 COMMIT=$(shell git-rev-parse --short --verify HEAD)
 
-ifeq "$(CONCURRENCY_LEVEL)" ""
-CONCURRENCY_LEVEL=1
-endif
 
 # This gets packaged into your final module for
 # deployment on a production server.
@@ -67,8 +64,10 @@ ifeq  "$(NWNHOME)" ""
 	exit 1
 endif
 ifeq "$(NWNMODNAME)" ""
-	@echo "env var NWNMODNAME not set."
-	exit 1
+NWNMODNAME="silbermarken"
+endif
+ifeq "$(CONCURRENCY_LEVEL)" ""
+CONCURRENCY_LEVEL=$(cat /proc/cpuinfo | grep processor | wc -l)
 endif
 	@ruby -rubygems -e "gem 'nwn-lib', '>= $(NWNLIB_VERSION)'" || (\
 		echo "Your nwn-lib version is too old. Upgrade at least to $(NWNLIB_VERSION)."; exit 1)
@@ -122,19 +121,23 @@ clean:
 local: resources scripts
 ifeq ($(MAPMASK),)
 	@echo "Packing up all maps."
-	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH).mod area/\*.are area/\*.git $(VALIDEXT)
+	PERLLIB=../build/lib ../build/erfpack.pl \
+		-m -o $(NWNMODNAME)-$(BRANCH).mod area/\*.are area/\*.git $(VALIDEXT)
 else
 	@echo "Packing up maps matching: $(MAPMASK)"
-	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH).mod area/$(MAPMASK).are area/$(MAPMASK).git $(VALIDEXT)
+	PERLLIB=../build/lib ../build/erfpack.pl \
+		-m -o $(NWNMODNAME)-$(BRANCH).mod area/$(MAPMASK).are area/$(MAPMASK).git $(VALIDEXT)
 endif
 
 local-dev:
-	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-dev.mod $(MAPS) $(VALIDEXTDEV)
+	PERLLIB=../build/lib ../build/erfpack.pl \
+		-m -o $(NWNMODNAME)-$(BRANCH)-dev.mod $(MAPS) $(VALIDEXTDEV)
 
 local-player:
 	cp mod/module.ifo override-player
-	cd override-player && update-ifo.pl *.are
-	erfpack.pl -m -o $(NWNMODNAME)-$(BRANCH)-player.mod $(MAPS) $(VALIDEXTPLAYER)
+	cd override-player && PERLLIB=../../build/lib ../../build/update-ifo.pl *.are
+	PERLLIB=../build/lib ../build/erfpack.pl \
+		-m -o $(NWNMODNAME)-$(BRANCH)-player.mod $(MAPS) $(VALIDEXTPLAYER)
 
 tar: local
 	tar -czf $(NWNMODNAME)-$(BRANCH)-dev.tgz $(NWNMODNAME)-$(BRANCH)-dev.mod
