@@ -1,0 +1,43 @@
+extern("nw_i0_spells")
+extern("x2_inc_spellhook")
+extern("inc_subr_fly")
+
+void on_spell_remove(int spell, object oTarget) {
+	if (GetHasSpellEffect(spell))
+		DelayCommand(6.0, on_spell_remove(spell, oTarget));
+	else
+		DeleteLocalInt(oTarget, "cannot_fly");
+}
+
+void main() {
+	if (!X2PreSpellCastCode())
+		return;
+
+	object oTarget = GetSpellTargetObject();
+
+	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_WINGBIND));
+
+	if(MyResistSpell(OBJECT_SELF, oTarget))
+		return;
+
+	if (MySavingThrow(SAVING_THROW_REFLEX, oTarget, GetSpellSaveDC(),
+			SAVING_THROW_TYPE_TRAP))
+		return;
+
+	int duration = GetCasterLevel(OBJECT_SELF);
+
+	if (GetMetaMagicFeat() == METAMAGIC_EXTEND)
+		duration *= 2;
+
+	float fdur = RoundsToSeconds(duration);
+
+	SetLocalInt(oTarget, "cannot_fly", 1);
+	DelayCommand(fdur, DeleteLocalInt(oTarget, "cannot_fly"));
+	Fly_Land(oTarget, true);
+
+	effect eff = EffectVisualEffect(VFX_DUR_AURA_PULSE_GREEN_WHITE);
+	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eff,
+		oTarget, fdur);
+
+	DelayCommand(6.0, on_spell_remove(SPELL_WINGBIND, oTarget));
+}
