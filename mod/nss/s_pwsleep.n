@@ -1,0 +1,21 @@
+extern("nw_i0_spells")
+extern("x2_inc_spellhook")
+
+void main() {
+	if (!X2PreSpellCastCode())
+		return;
+
+	object oTarget = GetSpellTargetObject();
+	int nHP = GetCurrentHitPoints(oTarget);
+
+	if (nHP > 100)
+		return;
+
+	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_POWER_WORD_SLEEP));
+
+	if(MyResistSpell(OBJECT_SELF, oTarget))
+		return;
+
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectSleep(),
+		oTarget);
+}
