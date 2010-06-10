@@ -16,6 +16,7 @@ void main() {
 	if(MyResistSpell(OBJECT_SELF, oTarget))
 		return;
 
-	ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectSleep(),
-		oTarget);
+	effect e = EffectSleep();
+	e = EffectLinkEffects(EffectVisualEffect(VFX_IMP_SLEEP), e);
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT, e, oTarget);
 }
