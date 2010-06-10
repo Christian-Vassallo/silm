@@ -92,8 +92,11 @@ void Fly_Land(object oPC, int iHard = FALSE) {
 	SR_RemoveTempEffect(oPC, EFFECT_TYPE_ETHEREAL);
 	DeleteLocalInt(oPC, "SR_Airborne");
 
-	if ( iHard )
+	if (iHard) {
 		ApplyEffectToObject(DURATION_TYPE_INSTANT,
 			EffectDamage(d10(2), DAMAGE_TYPE_BLUDGEONING), oPC);
+		ApplyEffectToObject(DURATION_TYPE_TEMPORARY,
+			EffectKnockdown(), oPC, 6f);
+	}
 }
 
