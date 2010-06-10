@@ -2438,18 +2438,16 @@ void DoEmoteFunction(int iEmote, object oUser) {
 	switch ( iEmote ) {
 		// auf Boden sitzen
 		case 1: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_SIT_CROSS, 1.0, fDur)); break;
-			// Hinknien
-		case 2: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM3, 1.0, fDur)); break;
+			// crouch
+		case 2: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM17, 1.0, fDur)); break;
 			// Nach Vorne umkippen
 		case 3: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_DEAD_FRONT, 1.0, fDur)); break;
 			// Nach Hinten umkippen
 		case 4: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_DEAD_BACK, 1.0, fDur)); break;
-			// Auf der rechten Seite schlafen
-		case 5: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM7, 1.0, fDur)); break;
-			// Auf der linken Seite schlafen
-		case 6: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM8, 1.0, fDur)); break;
-			// Auf den naechsten Stuhl setzen
-		case 7: SitInNearestChair(oTarget); break;
+			// sleep
+		case 5: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM20, 1.0, fDur)); break;
+			// crossed
+		case 6: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM14, 1.0, fDur)); break;
 
 			//case 8: noch frei
 
@@ -2462,13 +2460,13 @@ void DoEmoteFunction(int iEmote, object oUser) {
 
 			// 9 - Taetigkeiten
 			// Tanzen
-		case 90: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM2, 1.0, fDur)); break;
+		// case 90: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM2, 1.0, fDur)); break;
 			// Anbeten
 		case 91: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_WORSHIP, 1.0, fDur)); break;
 			// Beten
 		case 92: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_MEDITATE, 1.0, fDur)); break;
 			// Meditieren
-		case 93: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM1, 1.0, fDur)); break;
+		// case 93: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM1, 1.0, fDur)); break;
 			// Betteln
 		case 94: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_TALK_PLEADING, 1.0, fDur)); break;
 			// Buecken
@@ -2489,11 +2487,11 @@ void DoEmoteFunction(int iEmote, object oUser) {
 			// Wuetend
 		case 102: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_TALK_FORCEFUL, 1.0, fDur)); break;
 			// Frieren
-		case 103: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM6, 1.0)); break;
+		// case 103: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM6, 1.0)); break;
 			// Zucken
 		case 104: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_SPASM, 1.0, fDur)); break;
 			// Verrueckt
-		case 105: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM5, 1.0, fDur)); break;
+		// case 105: AssignCommand(oTarget, PlayAnimation(ANIMATION_LOOPING_CUSTOM5, 1.0, fDur)); break;
 
 		default: return;
 	}
