@@ -4,6 +4,7 @@ extern("inc_2dacache")
 
 const int
 MAX_COLOR = 175,
+CUST_TYPE_HELMET = 4,
 CUST_TYPE_CLOAK = 3,
 CUST_TYPE_WEAPON = 2,
 CUST_TYPE_ARMOR = 1;
@@ -301,6 +302,27 @@ void PerformModifyCloakCol(object oPC, int iDelta) {
 	}
 }
 
+void PerformModifyHelmetCol(object oPC, int iDelta) {
+	object oHelmet = Assert_Copy_Equipped(oPC, INVENTORY_SLOT_HEAD);
+	object oNew;
+
+	int iColSlot = GetLocalInt(oPC, "CUST_COLOR");
+
+	int iCurrentCol = GetItemAppearance(oHelmet, ITEM_APPR_TYPE_ARMOR_COLOR, iColSlot);
+	SendMessageToPC(oPC, "Altes Modell: " + IntToString(iCurrentCol));
+
+	iCurrentCol += iDelta;
+	if ( iCurrentCol < 0 ) iCurrentCol = MAX_COLOR;
+	if ( iCurrentCol > MAX_COLOR ) iCurrentCol = 0;
+	SendMessageToPC(oPC, "Neues Modell: " + IntToString(iCurrentCol));
+
+	oNew = CopyItemAndModify(oHelmet, ITEM_APPR_TYPE_ARMOR_COLOR, iColSlot, iCurrentCol, TRUE);
+	if ( GetIsObjectValid(oNew) ) {
+		DestroyObject(oHelmet);
+		AssignCommand(oPC, ActionEquipItem(oNew, INVENTORY_SLOT_HEAD));
+	}
+}
+
 void PerformModify(object oPC, int iDelta) {
 	switch ( GetLocalInt(oPC, "CUST_TYPE") ) {
 		case CUST_TYPE_WEAPON:
@@ -324,6 +346,9 @@ void PerformModifyCol(object oPC, int iDelta) {
 			break;
 		case CUST_TYPE_CLOAK:
 			PerformModifyCloakCol(oPC, iDelta);
+			break;
+		case CUST_TYPE_HELMET:
+			PerformModifyHelmetCol(oPC, iDelta);
 			break;
 		default:
 			SendMessageToPC(oPC, "Invalid CUST_TYPE: " + IntToString(GetLocalInt(oPC, "CUST_TYPE")));
