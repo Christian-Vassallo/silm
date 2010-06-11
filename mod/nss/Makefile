@@ -41,8 +41,8 @@ draconic.n: gen_language_file ../../hak/client_2da/spells.2ds
 
 draconic.nss: draconic.n
 
-appearance.h:
-	../generate_appearance_h.rb > appearance.h
+appearance.h: generate_appearance_h
+	./generate_appearance_h > appearance.h
 
 Makefile.dep: $(autogen) $(headers) $(scripts)
 	@echo "Building dependencies: Makefile.dep .."

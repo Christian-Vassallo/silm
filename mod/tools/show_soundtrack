@@ -1,0 +1,11 @@
+#!/usr/bin/env nwn-dsl
+# vim: ft=ruby
+
+for file in ARGV do
+  gff = want file, :git
+
+  for what in %w{AmbientSndDay AmbientSndNight MusicBattle MusicDay MusicNight} do
+    gff / "AreaProperties/#{what}$" > 0 or
+      $stderr.puts " has no #{what}"
+  end
+end
