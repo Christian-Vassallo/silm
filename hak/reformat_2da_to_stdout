@@ -1,0 +1,7 @@
+#!/usr/bin/env nwn-dsl
+# vim: ft=ruby
+
+ARGV.each {|f|
+  t = TwoDA::Table.parse(IO.read(f))
+  puts t.to_2da
+}

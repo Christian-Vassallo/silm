@@ -1,0 +1,79 @@
+#!/usr/bin/env nwn-dsl
+# vim: ft=ruby
+
+def get_resref resref, *want
+  ENV['NWN_LIB_SEARCH_PATH'] or raise "You will need to define NWN_LIB_SEARCH_PATH for this method"
+
+  resref = resref.downcase
+
+  ENV['NWN_LIB_SEARCH_PATH'].split(":").map {|x| x.strip}.each {|k|
+    FileTest.directory?(k) && FileTest.readable?(k) or next
+    Dir[k + "/*"].each {|fn|
+      base = File.basename(fn)
+      ref  = base.split(".", 2)[0].downcase
+      if ref == resref
+        puts "Found: #{fn}"
+        # return NWN::Gff.read(IO.read(fn), NWN::Gff.guess_file_format(fn))
+        return need(fn, *want)
+      end
+    }
+  }
+  nil
+end
+
+def twoda(file)
+  NWN::TwoDA::Cache.get(file)
+end
+
+$storelists = {
+  0 => 'Armor',
+  1 => 'Misc',
+  2 => 'Potions',
+  3 => 'Rings',
+  4 => 'Weapons',
+}
+
+utm = need ARGV.shift, :utm
+
+OptionParser.new do |o|
+  o.on "-l", "--list", "List sold items" do
+    utm['StoreList'].v.each {|sl|
+      # puts "%s (%d):" % [$storelists[sl.struct_id], sl.struct_id]
+      sl['ItemList'].v.each {|item|
+        puts "%s %s" % [item['InventoryRes'].v, (item['Infinite'].v == 1 ? "(Infinite)" : "")]
+      } if sl['ItemList']
+      # puts ""
+    }
+  end
+
+  o.on "-a RESREF", "--add", "add resref (from the search path) to the store" do |resref|
+    puts "Locating Resref #{resref.inspect}"
+    pt = get_resref(resref, :uti) or raise ArgumentError, "Cannot find #{resref} in NWN_LIB_SEARCH_PATH"
+    pt['BaseItem'] && pt['BaseItem'].v  or raise ArgumentError, "Does not have a BaseItem field"
+    base = pt['BaseItem'].v
+    panel = twoda('baseitems').by_row(base).StorePanel or raise ArgumentError,
+      "cannot identify StorePanel"
+    panel = panel.to_i
+    puts "Adding to store panel #{panel.inspect} .. :)"
+
+    sl = utm['StoreList'].v.select {|sll| sll.struct_id == panel} or raise ArgumentError,
+      "No such StoreList"
+
+    new_entry = NWN::Gff.read(%~
+      --- !nwn-lib.elv.es,2008-12/struct
+      __data_type: UTM/StoreList/ItemList
+      __struct_id: #{sl[0]['ItemList'].v[-1].struct_id + 1}
+      Infinite: {type: :byte, value: 1}
+      InventoryRes: {type: :resref, value: #{pt['TemplateResRef'].v}}
+    ~, :yaml)
+
+    sl[0]['ItemList'].v << new_entry
+
+  end
+
+  o.on "-r" , "--remove", "remove resref from store" do
+  end
+
+end.parse!
+
+NWN::Gff.write(File.open("/tmp/test", "w"), :yaml, utm)
