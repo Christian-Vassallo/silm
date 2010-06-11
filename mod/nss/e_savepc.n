@@ -1,25 +1,45 @@
-extern("inc_pc_data")
 extern("inc_horse")
+extern("inc_cdb")
 
-
+void save_player(object pc) {
+	/* DONT save polymorphed characters.
+	 * That re-applies the polymorph effect
+	 * and thus the visuals, and re-sets the TP to Max + 10 */
+	if (GetIsPC(pc) && !GetIsDM(pc) && !GetIsPolymorphed(pc)) {
+		SaveCharacter(pc, 0);
+		ExportSingleCharacter(pc);
+	}
+}
 
 void main() {
 	struct EventInfo e = GetEventInfo();
 
-	if (!is_client(e.runnable))
-		return;
-
 	if ("player_logout" == e.ev) {
-		save_player(OBJECT_SELF);
+		save_player(e.actor);
+	}
+
+	// async
+	if ("module_hb" == e.ev) {
+		// Only run each 5th HB .. 300ish seconds + sched load
+		__nth(5, iterate_players(pc,
+			save_player(pc)
+		));
 	}
 	
 	if ("player_login" == e.ev) {
-		load_player(OBJECT_SELF);
-		DelayCommand(300.0, save_player(OBJECT_SELF, TRUE));
+		DeleteLocalInt(e.actor, "PER_XP_Combat");
+		DeleteLocalInt(e.actor, "PER_Current_LP");
+		DeleteLocalInt(e.actor, "PER_XP_Combat_cap_num");
+		DeleteLocalInt(e.actor, "PER_XP_Combat_cap_month");
 
-		if ( GetIsRidingHorse(OBJECT_SELF) ) {
-			struct Rideable r = GetRideable(OBJECT_SELF);
-			SetLocalString(OBJECT_SELF, "horse_name", r.name);
+		// Allow summoning of animal companion or familiar for
+		// the cases the creature was gone because of logout or crash
+		IncrementRemainingFeatUses(e.actor, FEAT_ANIMAL_COMPANION);
+		IncrementRemainingFeatUses(e.actor, FEAT_SUMMON_FAMILIAR);
+
+		if (GetIsRidingHorse(e.actor)) {
+			struct Rideable r = GetRideable(e.actor);
+			SetLocalString(e.actor, "horse_name", r.name);
 		}
 	}
 }
