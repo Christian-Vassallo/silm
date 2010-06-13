@@ -415,10 +415,12 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 	// Update player position
 	vector v = GetPosition(oPC);
 	string sArea = pE(GetTag(GetArea(oPC)));
-	pQ("update characters set area = " + sArea + ", x = '" + FloatToString(v.x) + "', " +
-		"y = '" +
-		FloatToString(v.y) +
-		"', z = '" + FloatToString(v.z) + "', f = '" + FloatToString(GetFacing(oPC)) + "';");
+	pQ("update characters set area = " + sArea + ", " +
+		"x = '" + FloatToString(v.x) + "', " +
+		"y = '" + FloatToString(v.y) + "', " +
+		"z = '" + FloatToString(v.z) + "', " +
+		"f = '" + FloatToString(GetFacing(oPC)) + "' " +
+		"where id = " + sID + ";");
 
 
 	if ( bIsLogin ) {
