@@ -101,6 +101,14 @@ struct CreatureSkills {
     int sk_ride;
 };
 
+struct Time {
+    int sec;
+    int usec;
+};
+
+/* Returns the current system time */
+struct Time GetTimeOfDay();
+
 void USleep(int delay);
 
 /* Returns TRUE if the target inherently knows a feat (as opposed to
@@ -479,6 +487,21 @@ int NWNXFuncsThree (object oObject, string sFunc, int nVal1, int nVal2, int nVal
 
 void usleep(int delay) {
 	NWNXFuncsOne(GetModule(), "NWNX!USLEEP!USLEEP", delay);
+}
+
+struct Time GetTimeOfDay() {
+    struct Time ret;
+    object oObject = GetModule();
+    string sFunc = "NWNX!FUNCS!GETTIMEOFDAY";
+    SetLocalString(oObject, sFunc, "                                             ");
+    string time = GetLocalString(oObject, sFunc);
+    int idx = FindSubString(time, ".");
+    if (-1 != idx) {
+        ret.sec = StringToInt(GetSubString(time, 0, idx));
+        ret.usec = StringToInt(GetSubString(time, idx + 1, 32));
+        return ret;
+    }
+    return ret;
 }
 
 int SetAbilityScore (object oCreature, int nAbility, int nValue) {

@@ -5,6 +5,8 @@ Functions and data structures centered around time handling and manipulation.
 
 */
 
+extern("inc_nwnx_func")
+
 // Struct: Realtime
 struct RealTime {
 	int ts;
@@ -71,11 +73,8 @@ struct RealTime GetRealTime() {
 
 
 int GetUnixTimestamp() {
-	pQ("select unixts();");
-	if (pF())
-		return pGi(1);
-	else
-		return 0;
+	struct Time ret = GetTimeOfDay();
+	return ret.sec;
 }
 
 string GetTimestampTZ() {
