@@ -25,10 +25,10 @@ if (GetLocalInt(obj,"mtxt_" + name) > 0) { \
 	code; \
 }
 
-// Macro: __nth(n,code)
-// Run *code* only each *n*th evaluation
-#define __nth(n,code) __EBLOCK(\
-string nthname = "__nth_" + __FILE__ + "_" + itoa( __LINE__ ); \
+// Macro: __nthcond(n,code)
+// Run *code* only each *n*th evaluation for equalling tokens
+#define __nthcond(n,token,code) __EBLOCK(\
+string nthname = "__nth_" + __FILE__ + "_" + itoa(__LINE__) + "_" + token; \
 if (GetLocalInt(GetModule(), nthname) >= n) { \
 	SetLocalInt(GetModule(), nthname, 0); \
 	code; \
@@ -36,5 +36,9 @@ if (GetLocalInt(GetModule(), nthname) >= n) { \
 	SetLocalInt(GetModule(), nthname, GetLocalInt(GetModule(), nthname) + 1); \
 }\
 )
+
+// Macro: __nth(n,code)
+// Run *code* only each *n*th evaluation
+#define __nth(n,code) __nthcond(n, "default", code)
 
 #endif
