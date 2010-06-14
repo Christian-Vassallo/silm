@@ -1,0 +1,24 @@
+extern("inc_cdb")
+
+/** Event: player_hb
+ * runnable: the PC
+ * */
+
+void _e(object oPC) {
+	RunEventScriptsFor(GetEventSerial(), "player_hb",
+		oPC, oPC,
+		OBJECT_INVALID, GetLocation(OBJECT_INVALID),
+		EVENT_MODE_DEFER);
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "module_hb") {
+		float f = 0.00;
+		iterate_players(oPC,
+			DelayCommand(f, _e(oPC));
+			f += 0.01;
+		);
+	}
+}

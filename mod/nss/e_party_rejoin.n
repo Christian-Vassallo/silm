@@ -23,14 +23,12 @@ void main() {
 		}
 	}
 
-	if (e.ev == "module_hb") {
+	if (e.ev == "player_hb" && !GetIsDM(e.runnable)) {
 		int ts = GetUnixTimestamp();
 
-		iterate_players(oIterate,
-			if (!GetIsDMPossessed(e.runnable)) {
-				SetLocalInt(oIterate, "faction_id", GetFactionId(oIterate));
-				SetLocalInt(oIterate, "last_activity_at", ts);
-			}
-		);
+		if (!GetIsDMPossessed(e.runnable)) {
+			SetLocalInt(e.runnable, "faction_id", GetFactionId(e.runnable));
+			SetLocalInt(e.runnable, "last_activity_at", ts);
+		}
 	}
 }

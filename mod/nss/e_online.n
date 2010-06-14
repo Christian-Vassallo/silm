@@ -8,12 +8,8 @@ void main() {
 		onlineServerStart();
 	}
 
-	if ("module_hb" == ei.ev) {
-		object oPC = GetFirstPC();
-		while (GetIsPC(oPC)) {
-			onlinePlayerUpdateLocation(oPC);
-			oPC = GetNextPC();
-		}
+	if ("player_hb" == ei.ev) {
+		onlinePlayerUpdateLocation(ei.runnable);
 	}
 
 	if ("player_login" == ei.ev) {

@@ -19,11 +19,9 @@ void main() {
 	}
 
 	// async
-	if ("module_hb" == e.ev) {
+	if ("player_hb" == e.ev) {
 		// Only run each 5th HB .. 300ish seconds + sched load
-		__nth(5, iterate_players(pc,
-			save_player(pc)
-		));
+		__nthcond(5, itoa(GetCharacterID(e.runnable)), save_player(e.runnable));
 	}
 	
 	if ("player_login" == e.ev) {

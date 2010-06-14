@@ -139,24 +139,21 @@ void main() {
 		}
 	}
 
-	if (e.ev == "module_hb") {
-		object pc = GetFirstPC();
+	if (e.ev == "player_hb") {
+		object pc = e.runnable;
 		int ld;
-		while (is_pc(pc)) {
-			if (ld = GetLocalInt(pc, "equipspell_lifedrain")) {
-				int now = GetUnixTimestamp();
-				int offset = GetLocalInt(pc, "equipspell_lifedrain_offset");
-				if (!offset) offset = LIFEDRAIN_OFFSET;
-				int damage = GetLocalInt(pc, "equipspell_lifedrain_damage");
-				if (!damage) damage = LIFEDRAIN_DAMAGE;
+		if (ld = GetLocalInt(pc, "equipspell_lifedrain")) {
+			int now = GetUnixTimestamp();
+			int offset = GetLocalInt(pc, "equipspell_lifedrain_offset");
+			if (!offset) offset = LIFEDRAIN_OFFSET;
+			int damage = GetLocalInt(pc, "equipspell_lifedrain_damage");
+			if (!damage) damage = LIFEDRAIN_DAMAGE;
 
-				if (ld + offset <= now) {
-					effect dam = EffectDamage(damage, DAMAGE_TYPE_MAGICAL, DAMAGE_POWER_ENERGY);
-					SetLocalInt(pc, "equipspell_lifedrain", now);
-					ApplyEffectToObject(DURATION_TYPE_INSTANT, dam, pc);
-				}
+			if (ld + offset <= now) {
+				effect dam = EffectDamage(damage, DAMAGE_TYPE_MAGICAL, DAMAGE_POWER_ENERGY);
+				SetLocalInt(pc, "equipspell_lifedrain", now);
+				ApplyEffectToObject(DURATION_TYPE_INSTANT, dam, pc);
 			}
-			pc = GetNextPC();
 		}
 	}
 

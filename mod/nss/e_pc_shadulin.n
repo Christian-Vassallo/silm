@@ -79,14 +79,8 @@ void hb(object sha) {
 void main() {
 	struct EventInfo e = GetEventInfo();
 
-	if (e.ev == "module_hb") {
-		iterate_players(pc,
-			if (GetCharacterID(pc) == 280) {
-				hb(pc);
-				return;
-			}
-		);
+	if (e.ev == "player_hb") {
+		if (GetCharacterID(e.runnable) == 280)
+			hb(e.runnable);
 	}
-
 }
-
