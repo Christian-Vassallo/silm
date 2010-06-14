@@ -410,24 +410,9 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 	// XXX update nwnx_functions to work with 1.67
 	//pQ("update characters set description = '" + sDesc + "' where id='" + sID + "' limit 1;");
 
-
-
-	// Update player position
-	vector v = GetPosition(oPC);
-	string sArea = pE(GetTag(GetArea(oPC)));
-	pQ("update characters set area = " + sArea + ", " +
-		"x = '" + FloatToString(v.x) + "', " +
-		"y = '" + FloatToString(v.y) + "', " +
-		"z = '" + FloatToString(v.z) + "', " +
-		"f = '" + FloatToString(GetFacing(oPC)) + "' " +
-		"where id = " + sID + ";");
-
-
 	if ( bIsLogin ) {
-
 		// Update last login time
 		pQ("update characters set last_login=now() where id='" + sID + "';");
-
 
 		// Find domains
 		string
