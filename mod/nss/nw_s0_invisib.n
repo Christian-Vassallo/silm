@@ -34,12 +34,12 @@ void main() {
 	//Declare major variables
 	object oTarget = GetSpellTargetObject();
 
-	//effect eVis = EffectVisualEffect(VFX_DUR_INVISIBILITY);
-	effect eInvis = EffectInvisibility(INVISIBILITY_TYPE_NORMAL);
+	effect eInvis = EffectLinkEffects(
+		EffectInvisibility(INVISIBILITY_TYPE_NORMAL),
+		EffectVisualEffect(VFX_DUR_INVISIBILITY)
+	);
 	effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
-
 	effect eLink = EffectLinkEffects(eInvis, eDur);
-	//eLink = EffectLinkEffects(eLink, eVis);
 
 	//Fire cast spell at event for the specified target
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_INVISIBILITY, FALSE));
