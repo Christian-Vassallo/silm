@@ -328,13 +328,12 @@ void PerformModify(object oPC, int iDelta) {
 		case CUST_TYPE_WEAPON:
 			PerformModifyWeapon(oPC, iDelta);
 			break;
-			/*case CUST_TYPE_CLOAK:
-			 * 	PerformModifyCloak(oPC,iDelta);
-			 * 	break;*/
-		default:
-			SendMessageToPC(oPC, "Invalid CUST_TYPE: " + IntToString(GetLocalInt(oPC, "CUST_TYPE")));
 		case CUST_TYPE_ARMOR:
 			PerformModifyArmor(oPC, iDelta);
+			break;
+
+		default:
+			SendMessageToPC(oPC, "Invalid CUST_TYPE: " + IntToString(GetLocalInt(oPC, "CUST_TYPE")));
 			break;
 	}
 }
@@ -350,11 +349,12 @@ void PerformModifyCol(object oPC, int iDelta) {
 		case CUST_TYPE_HELMET:
 			PerformModifyHelmetCol(oPC, iDelta);
 			break;
-		default:
-			SendMessageToPC(oPC, "Invalid CUST_TYPE: " + IntToString(GetLocalInt(oPC, "CUST_TYPE")));
-
 		case CUST_TYPE_ARMOR:
 			PerformModifyArmorCol(oPC, iDelta);
+			break;
+
+		default:
+			SendMessageToPC(oPC, "Invalid CUST_TYPE: " + IntToString(GetLocalInt(oPC, "CUST_TYPE")));
 			break;
 	}
 }
