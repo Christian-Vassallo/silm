@@ -1,0 +1,64 @@
+extern("inc_nwnx_events")
+
+// wait at max N iterations for a spell to be started casting
+// TICK_ITERATIONS * TICK_DELAY / 6.0 is the amount of spells that this
+// can queue, and still catch.
+#define TICK_ITERATIONS 120
+#define TICK_DELAY 1.0
+
+/** Event: creature_castingspell
+ * - runnable: the caster
+ * - actor: the caster
+ * - actedon: the object the spell is being cast on
+ * - actedat: the location the spell is being cast at
+ * - i0: spell_id
+ * - i1: metamagic_*
+ * - i2: nwnx_events flags
+ * - o0: Item from which the spell is being cast
+ */
+
+void _trigger(object caster, object actedon, location actedat, object item,
+		int spell, int meta, int flags) {
+	struct EventArguments ea;
+	ea.i0 = spell;
+	ea.i1 = meta;
+	ea.i2 = flags;
+	ea.o0 = item;
+	RunEventScriptsForWithArgv(GetEventSerial(), "creature_castingspell",
+		caster, caster, actedon, actedat, ea);
+}
+
+void _tick(object caster, object actedon, location actedat, object item,
+		int spell, int meta, int flags, int remaining = 0) {
+	if (remaining <= 0)
+		return;
+
+	if (GetCurrentAction(caster) == ACTION_CASTSPELL &&
+			GetSpellId() == spell && GetMetaMagicFeat() == meta) {
+
+		_trigger(caster, actedon, actedat, item, spell, meta, flags);
+
+	} else {
+		DelayCommand(TICK_DELAY, _tick(caster, actedon, actedat, item,
+			spell, meta, flags, remaining - 1));
+
+	}
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	
+	if (e.ev == "creature_castspell") {
+		if (!is_creature(e.actor))
+			return;
+
+		object item = NWNXGetEventItem();
+
+		int spell_id     = NWNXGetEventSubType()       & 0xffff;
+		int meta         = NWNXGetEventSubType() >> 16 & 0xff;
+		int flags        = NWNXGetEventSubType() >> 27 & 0x0f; // instant_cast
+
+		DelayCommand(TICK_DELAY, _tick(e.actor, e.actedon, e.actedat, item,
+			spell_id, meta, flags, TICK_ITERATIONS));
+	}
+}
