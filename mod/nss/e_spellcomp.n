@@ -1,14 +1,6 @@
-extern("inc_nwnx_events")
 extern("inc_colors")
 extern("inc_spelltools")
 extern("draconic")
-
-// wait at max N iterations for a spell to be started casting
-// TICK_ITERATIONS * TICK_DELAY / 6.0 is the amount of spells that this
-// can queue, and still catch - the rest will emit a warning and simply
-// not say anything.
-#define TICK_ITERATIONS 120
-#define TICK_DELAY 1.0
 
 void _show(object caster, int spell, int meta, int flags) {
 	struct Color c;
@@ -37,57 +29,34 @@ void _show(object caster, int spell, int meta, int flags) {
 	AssignCommand(caster, SpeakString(str));
 }
 
-void _tick(object caster, int spell, int meta, int flags, int remaining = 0) {
-	if (remaining <= 0)
-		return;
-
-	if (GetCurrentAction(caster) == ACTION_CASTSPELL &&
-			GetSpellId() == spell && GetMetaMagicFeat() == meta) {
-
-		_show(caster, spell, meta, flags);
-
-	} else {
-		DelayCommand(TICK_DELAY, _tick(caster, spell, meta, flags, remaining - 1));
-
-	}
-}
-
 void main() {
 	struct EventInfo e = GetEventInfo();
 	
-	if (e.ev == "creature_castspell") {
-		if (!is_creature(e.actor))
-			return;
-
-		if (GetIsDM(e.actor))
-			return;
-
+	if (e.ev == "creature_castingspell") {
 		if (GetLocalInt(e.actor, "spellcomp_skip")) {
 			if (GetLocalInt(e.actor, "spellcomp_skip") < 2)
 				SetLocalInt(e.actor, "spellcomp_skip", 0);
 			return;
 		}
 
-		object item = NWNXGetEventItem();
+		struct EventArguments ea = GetEventArguments(e.serial);
 
-		if (GetBaseItemType(item) == BASE_ITEM_POTIONS)
-			return;
-
-		int spell_id     = NWNXGetEventSubType()       & 0xffff;
-		int meta         = NWNXGetEventSubType() >> 16 & 0xff;
-		int flags        = NWNXGetEventSubType() >> 27 & 0x0f; // instant_cast
+		int spell_id     = ea.i0;
+		int meta         = ea.i1;
+		int flags        = ea.i2;
 		
-		if (flags) // We assume instant spells are scripted events, and not player-cast
+		if (flags) // We assume instant spells are scripted and not player-cast
 			return;
 
-		int is_verbal = -1 != strpos(strlwr(Get2DAString("spells", "VS", spell_id)), "v");
+		int is_verbal = -1 != strpos(strlwr(Get2DAString("spells", "VS",
+				spell_id)), "v");
 
 		if (!is_verbal)
 			return;
 	
 		if (METAMAGIC_SILENT == meta)
 			return;
-		
-		DelayCommand(TICK_DELAY, _tick(e.actor, spell_id, meta, flags, TICK_ITERATIONS));
+
+		_show(e.actor, spell_id, meta, flags);
 	}
 }
