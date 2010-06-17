@@ -23,15 +23,10 @@ void main() {
 		// chompchomp
 		string message = GetSubString(sText, 12, GetStringLength(sText));
 
-		if (GetStringLeft(message, 1) == "$") {
-			int cid = GetCharacterID(e.runnable);
-			pQ("select id from telepathic_bonds where character = " + pSi(cid) +
-					" and active = true;");
-			if (pF()) {
-				string msg = GetSubString(message, 1, 2048);
-				DelegateTelepathicMessageToPartners(e.runnable, msg);
-				event_stop_end_suppress();
-			}
+		if (GetStringLeft(message, 1) == "$" && GetHasActiveBonds(e.runnable)) {
+			string msg = GetSubString(message, 1, 2048);
+			DelegateTelepathicMessageToPartners(e.runnable, msg);
+			event_stop_end_suppress();
 		}
 	}
 
@@ -87,5 +82,25 @@ void main() {
 			}
 		}
 	}
-}
 
+	if (e.ev == "creature_castingspell") {
+		struct EventArguments ea = GetEventArguments(e.serial);
+		string spellname = GetSpellName(ea.i0);
+
+		if (GetHasActiveBonds(e.runnable, "send_spells = true")) {
+			string msg = "*";
+			msg += "zaubert ";
+			msg += spellname;
+
+			if (GetIsObjectValid(ea.o0))
+				msg += " (via " + GetName(ea.o0) + ")";
+
+			if (GetIsObjectValid(e.actedon) && e.actedon != e.runnable)
+				msg += " auf " + GetName(e.actedon);
+
+			msg += "*";
+			DelegateTelepathicMessageToPartners(e.runnable, msg,
+				"send_spells = true");
+		}
+	}
+}

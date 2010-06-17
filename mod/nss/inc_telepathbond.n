@@ -22,13 +22,27 @@ int DelegateOwnToPartners(object oPC, int nMode, string sMessage);
 // oPC sent sMessage over the telepathic link,
 // so send it over.
 // Returns the number of PCs reached
-int DelegateTelepathicMessageToPartners(object oPC, string sMessage);
+int DelegateTelepathicMessageToPartners(object oPC, string sMessage,
+		string addWhere = "1=1");
 
 // Sets bonds active/inactive
 void SetBondsActive(object oPC, int bState);
 
+int GetHasActiveBonds(object oPC, string addWhere = "1=1");
 
-int DelegateTelepathicMessageToPartners(object oPC, string sMessage) {
+int GetHasActiveBonds(object oPC, string addWhere = "1=1") {
+	int nCID = GetCharacterID(oPC);
+	if (!nCID)
+		return false;
+
+	pQ("select id from telepathic_bonds where character = " + pSi(nCID) +
+			" and active = true and" + addWhere + ";");
+	return pF();
+}
+
+int DelegateTelepathicMessageToPartners(object oPC, string sMessage,
+		string addWhere = "1=1") {
+
 	int nCID = GetCharacterID(oPC);
 	if (!nCID)
 		return 0;
@@ -46,7 +60,7 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage) {
 
 
 	pQ("select t_character, shortname from telepathic_bonds where character = " +
-		IntToString(nCID) + " and expire <= unixts();");
+		IntToString(nCID) + " and expire <= unixts() and " + addWhere + ";");
 
 	while (pF()) {
 		nTCID = StringToInt(pG(1));

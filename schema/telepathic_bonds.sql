@@ -6,6 +6,7 @@ CREATE TABLE telepathic_bonds (
     active boolean not null default true,
 	send_heard boolean not null default false,
 	send_spoken boolean not null default false,
+	send_spells boolean not null default false,
     shortname not null character varying,
     expire integer not null defaul t0,
 	
