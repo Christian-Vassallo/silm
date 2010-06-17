@@ -1,0 +1,127 @@
+extern("inc_nwnx_events")
+extern("inc_colors")
+extern("inc_spelltools")
+extern("x2_inc_craft")
+extern("inc_currency")
+
+#define MSG_FAIL_ARCANE_FOCUS ColorTag(cRed) + \
+	"*Ihr besitzt nicht den noetigen Fokus fuer diesen Zauber!*"
+
+#define MSG_FAIL_DIVINE_FOCUS MSG_FAIL_ARCANE_FOCUS
+
+#define MSG_FAIL_COMPONENT    ColorTag(cRed) + \
+	"*Ihr besitzt nicht die noetige Materialkomponente fuer diesen Zauber!*"
+
+#define MSG_FAIL_MONEY        ColorTag(cRed) + \
+	"*Ihr habt nicht genug Gold fuer diesen Zauber!*"
+
+#define MSG_FAIL_XP           ColorTag(cRed) + \
+	"*Ihr habt nicht genug Erfahrung fuer diesen Zauber!*"
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "creature_castspell") {
+		if (!GetIsPC(e.actor) || GetIsPossessedFamiliar(e.actor))
+			return;
+
+		if (GetIsDM(e.actor) || GetIsDMPossessed(e.actor))
+			return;
+
+		int spell_id     = NWNXGetEventSubType()       & 0xffff;
+		int meta         = NWNXGetEventSubType() >> 16 & 0xff;
+		int class_index  = NWNXGetEventSubType() >> 24 & 0x07;
+		int flags        = NWNXGetEventSubType() >> 27 & 0x0f; // instant_cast
+		object target    = NWNXGetEventTarget();
+
+		if (class_index < 0 || class_index > 2) {
+			_FATAL("invalid class index in nwnx_events: " + itoa(class_index));
+			return;
+		}
+
+		int class = GetClassByPosition(1 + class_index);
+		if (class == CLASS_TYPE_INVALID) {
+			_FATAL("invalid class type of index: " + itoa(class_index));
+			return;
+		}
+
+		if (flags) // instant dont count
+			return;
+
+		// only work on real spells, not spellikes
+		if ("1" != Get2DAString("spells", "UserType", spell_id)
+				|| "" == Get2DAString("spells", "Innate", spell_id))
+			return;
+
+		pQ("select component, afocus, copper, xp, target_hd_copper_multi " +
+				"from spellcomp where spell = " + pSi(GetSpellId()));
+		if (!pF())
+			return;
+
+		string comp     = pGs(1);
+		string afocus   = pGs(2);
+		int copper      = pGi(3);
+		int xp          = pGi(4);
+		// float xp_hd_m   = pGf(5);
+
+		if (afocus != ""
+				&& CI_GetClassMagicType(class) == X2_CI_MAGICTYPE_ARCANE) {
+			if (!is_valid(GetItemPossessedBy(e.actor, afocus))) {
+				FloatingTextStringOnCreature(MSG_FAIL_ARCANE_FOCUS,
+					e.actor, false);
+				event_stop_end_suppress();
+			}
+		}
+
+		if ("" != comp) {
+			if (!is_valid(GetItemPossessedBy(e.actor, comp))) {
+				FloatingTextStringOnCreature(MSG_FAIL_COMPONENT,
+					e.actor, false);
+				event_stop_end_suppress();
+			}
+		}
+
+		if (copper > 0) {
+			int money = GetMoney(e.actor);
+			if (copper > money) {
+				FloatingTextStringOnCreature(MSG_FAIL_MONEY,
+					e.actor, false);
+				event_stop_end_suppress();
+			}
+		}
+
+		if (xp > 0) {
+			int lvl = GetHitDice(e.actor);
+			int xp_start = atoi(Get2DAString("exptable", "XP", lvl - 1));
+			if (GetXP(e.actor) - xp < xp_start) {
+				FloatingTextStringOnCreature(MSG_FAIL_XP,
+					e.actor, false);
+				event_stop_end_suppress();
+			}
+		}
+
+
+		if ("" != comp) {
+			object cobj = GetItemPossessedBy(e.actor, comp);
+
+			if (GetItemStackSize(cobj) > 1)
+				SetItemStackSize(cobj, GetItemStackSize(cobj) - 1);
+			else
+				DestroyObject(cobj);
+		}
+
+		if (copper != 0) {
+			if (copper > 0)
+				TakeValueFromCreature(copper, e.actor, true);
+			else
+				GiveValueToCreature(e.actor, - copper);
+		}
+
+		if (xp != 0) {
+			if (xp > 0)
+				SetXP(e.actor, GetXP(e.actor) - xp);
+			else
+				SetXP(e.actor, GetXP(e.actor) + xp);
+		}
+	}
+}
