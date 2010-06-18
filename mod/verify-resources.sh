@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script checks for common mistakes and fixes
 # things that can be fixed automagically.
