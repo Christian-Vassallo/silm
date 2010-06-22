@@ -36,7 +36,7 @@ int GetHasActiveBonds(object oPC, string addWhere = "1=1") {
 		return false;
 
 	pQ("select id from telepathic_bonds where character = " + pSi(nCID) +
-			" and active = true and" + addWhere + ";");
+			" and active = true and " + addWhere + ";");
 	return pF();
 }
 
