@@ -28,7 +28,7 @@ void _trigger(object caster, object actedon, location actedat, object item,
 		caster, caster, actedon, actedat, ea);
 }
 
-void _tick(object caster, object actedon, location actedat, object item,
+void _tick(object caster, object actedon, location actedat,
 		int spell, int meta, int flags, int remaining = 0) {
 	if (remaining <= 0)
 		return;
@@ -36,10 +36,11 @@ void _tick(object caster, object actedon, location actedat, object item,
 	if (GetCurrentAction(caster) == ACTION_CASTSPELL &&
 			GetSpellId() == spell && GetMetaMagicFeat() == meta) {
 
-		_trigger(caster, actedon, actedat, item, spell, meta, flags);
+		_trigger(caster, actedon, actedat, GetSpellCastItem(),
+			spell, meta, flags);
 
 	} else {
-		DelayCommand(TICK_DELAY, _tick(caster, actedon, actedat, item,
+		DelayCommand(TICK_DELAY, _tick(caster, actedon, actedat,
 			spell, meta, flags, remaining - 1));
 
 	}
@@ -52,13 +53,11 @@ void main() {
 		if (!is_creature(e.actor))
 			return;
 
-		object item = NWNXGetEventItem();
-
 		int spell_id     = NWNXGetEventSubType()       & 0xffff;
 		int meta         = NWNXGetEventSubType() >> 16 & 0xff;
 		int flags        = NWNXGetEventSubType() >> 27 & 0x0f; // instant_cast
 
-		DelayCommand(TICK_DELAY, _tick(e.actor, e.actedon, e.actedat, item,
+		DelayCommand(TICK_DELAY, _tick(e.actor, e.actedon, e.actedat,
 			spell_id, meta, flags, TICK_ITERATIONS));
 	}
 }
