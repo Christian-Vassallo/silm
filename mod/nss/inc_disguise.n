@@ -36,6 +36,15 @@ void disguise_update_login(object on, struct Disguise d) {
 
 void disguise_apply(object on, struct Disguise d) {
 	if (!d.valid) return;
+
+	struct EventArguments evarg;
+	evarg.i0 = d.id;
+	int serial = GetEventSerial();
+	int ret = RunEventScriptsForWithArgv(serial, "disguise_apply", on, on, on,
+		GetLocation(on), evarg, EVENT_MODE_SYNC);
+	DeleteEventArguments(serial);
+	if (ret & EVENT_RESULT_SUPPRESS)
+		return;
 	
 	SetCreatureTailType(d.tail, on);
 	SetCreatureWingType(d.wings, on);
