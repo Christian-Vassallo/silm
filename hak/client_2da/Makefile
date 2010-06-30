@@ -28,18 +28,22 @@ tailmodel.2ds:: appearance.2ds
 parts_chest.2da: parts_chest.2ds
 	@echo "$< -> $@"
 	@cat $< | ruby -ne 'print $$_.gsub(/\$$\(([\d]+)\)/) {|x| $$1.to_i + 1 + 0xffffff}' > $@
-	@if [[ "$@" == parts_*.2da ]]; then\
-		make_partstable.sh < $@ > chg_`echo $@ | cut -d_ -f2-` ;\
-		echo "make_partstable.sh < $@ > chg_`echo $@ | cut -d_ -f2-`";\
-	fi
+	@case "$@" in\
+		parts_*.2da)\
+			make_partstable.sh < $@ > chg_`echo $@ | cut -d_ -f2-` ;\
+			echo "make_partstable.sh < $@ > chg_`echo $@ | cut -d_ -f2-`";\
+		;;\
+	esac
 
 %.2da : %.2ds
 	@echo "$< -> $@"
 	@cat $< | ruby -ne 'print $$_.gsub(/\$$\(([\d]+)\)/) {|x| $$1.to_i + 1 + 0xffffff}' > $@
-	@if [[ "$@" == parts_*.2da ]]; then\
-		make_partstable.sh 0.00 < $@ > chg_`echo $@ | cut -d_ -f2-` ;\
-		echo "make_partstable.sh 0.00 < $@ > chg_`echo $@ | cut -d_ -f2-`";\
-	fi
+	@case "$@" in\
+		parts_*.2da)\
+			make_partstable.sh 0.00 < $@ > chg_`echo $@ | cut -d_ -f2-` ;\
+			echo "make_partstable.sh 0.00 < $@ > chg_`echo $@ | cut -d_ -f2-`";\
+		;;\
+	esac
 
 des_crft_spells.2ds: spells.2ds
 	./update_des_crft_spells.2ds.rb > des_crft_spells_new &&\
