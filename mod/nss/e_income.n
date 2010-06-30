@@ -8,11 +8,12 @@ void check_all_incomes(object runnable) {
 		return;
 	}
 
+	int cid = GetCharacterID(runnable);
+
 	pQ("select id from income.exclusion where cid = " + pSi(cid) + " and source is null;");
 	if (pF())
 		return;
 
-	int cid = GetCharacterID(runnable);
 	struct RealTime ts = GetRealTime();
 	pBegin();
 	string prof_c = pDeclare("select id, source from income.mappings where (cid is null or cid = " + pSi(cid) + ") and enabled = true;");
