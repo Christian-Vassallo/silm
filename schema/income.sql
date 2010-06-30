@@ -59,6 +59,14 @@ create table income.mappings (
 	unique (cid, source)
 );
 
+create table income.exclusion (
+	id serial primary key,
+
+	cid int references characters not null,
+
+	source int references income.sources
+);
+
 create table income.payments (
 	id serial primary key,
 

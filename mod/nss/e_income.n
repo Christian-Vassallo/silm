@@ -8,6 +8,10 @@ void check_all_incomes(object runnable) {
 		return;
 	}
 
+	pQ("select id from income.exclusion where cid = " + pSi(cid) + " and source is null;");
+	if (pF())
+		return;
+
 	int cid = GetCharacterID(runnable);
 	struct RealTime ts = GetRealTime();
 	pBegin();
@@ -15,6 +19,10 @@ void check_all_incomes(object runnable) {
 	while (pCursorFetch(prof_c)) {
 		int mapping_id = pGi(1);
 		int source_id = pGi(2);
+
+		pQ("select id from income.exclusion where cid = " + pSi(cid) + " and source = " + pSi(source_id) + ";");
+		if (pF())
+			continue;
 
 		pQ("select name, skill, skill_base, skill_factor, min_days_pay, max_days_backpay, ability, ability_base, ability_factor from income.sources where id = " + pSi(source_id) + ";");
 		pF();
