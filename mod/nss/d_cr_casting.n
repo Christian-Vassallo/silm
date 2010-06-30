@@ -24,8 +24,10 @@ void _trigger(object caster, object actedon, location actedat, object item,
 	ea.i1 = meta;
 	ea.i2 = flags;
 	ea.o0 = item;
-	RunEventScriptsForWithArgv(GetEventSerial(), "creature_castingspell",
+	int serial = GetEventSerial();
+	RunEventScriptsForWithArgv(serial, "creature_castingspell",
 		caster, caster, actedon, actedat, ea);
+	DeleteEventArguments(serial);
 }
 
 void _tick(object caster, object actedon, location actedat,
