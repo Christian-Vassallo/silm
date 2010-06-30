@@ -8,6 +8,9 @@ void check_all_incomes(object runnable) {
 		return;
 	}
 
+	if (!GetLocalInt(runnable, "may_enter_game"))
+		return;
+
 	int cid = GetCharacterID(runnable);
 
 	pQ("select id from income.exclusion where cid = " + pSi(cid) + " and source is null;");
