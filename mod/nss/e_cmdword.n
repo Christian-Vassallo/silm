@@ -45,6 +45,12 @@ void main() {
 			return;
 		}
 
+		if (GetLocalInt(item, "cmdword_skip")) {
+			if (GetLocalInt(item, "cmdword_skip") < 2)
+				SetLocalInt(item, "cmdword_skip", 0);
+			return;
+		}
+
 		_show(e.actor, item, GetSpellId());
 	}
 }
