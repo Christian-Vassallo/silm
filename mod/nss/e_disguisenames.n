@@ -1,0 +1,91 @@
+extern("inc_disguise")
+extern("inc_nwnx_names")
+extern("inc_party")
+
+
+// Makes up appear with the given disguisedName, or the original name
+// if "".
+void update_disguise_names_for(object up, string disguisedName,
+		object only = OBJECT_INVALID) {
+	if (disguisedName == "")
+		disguisedName = GetName(up);
+	
+	if (GetIsObjectValid(only)) {
+		SetDynamicName(only, up, disguisedName);
+		UpdateDynamicName(only, up);
+
+	} else {
+		SendMessageToPC(up, "/disguise: Showing you as '" + disguisedName +
+			"' to other players.");
+
+		iterate_players(pc,
+			if (up != pc/* && !GetIsDM(pc)*/) {
+				SetDynamicName(pc, up, disguisedName);
+				UpdateDynamicName(pc, up);
+				// doesn't update group
+				UpdatePlayerList(pc);
+			}
+		);
+	}
+}
+
+void party_cycle(object pc) {
+	int fid = GetPartyFactionId(pc);
+	if (fid) {
+		RemoveFromParty(pc);
+		object other = GetPartyMemberByFactionId(fid);
+		if (GetIsObjectValid(other)) {
+			other = GetFactionLeader(other);
+			// Delay for 1 second or we'd get black portraits and no names.
+			DelayCommand(1.0, AddToParty(pc, other));
+		}
+		SendMessageToPC(pc,
+			"/disguise: You have been party-cycled to update your displayed name.");
+	}
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "player_login") {
+		/*if (!GetIsDM(e.runnable))
+			return;*/
+
+		// update all players for the given disguise name
+		InitPlayerNameList(e.runnable, 3);
+
+		// player sees modified names
+		SetNamesEnabled(e.runnable, true);
+	
+		if (!GetIsDM(e.runnable)) {
+			string disguisedName =
+				disguise_get_display_name(disguise_current_id(e.runnable));
+
+			update_disguise_names_for(e.runnable, disguisedName);
+		}
+
+		iterate_players(pc,
+			if (GetIsDM(pc))
+				UpdatePlayerList(pc);
+			else {
+				string disguisedName =
+					disguise_get_display_name(disguise_current_id(pc));
+				update_disguise_names_for(pc, disguisedName, e.runnable);
+			}
+		);
+	}
+
+	if (e.ev == "disguise_apply") {
+		if (GetIsDM(e.runnable))
+			return;
+
+		struct EventArguments ea = GetEventArguments(e.serial);
+		string disguisedName = disguise_get_display_name(ea.i0);
+
+		// update all players for the given disguise name
+		update_disguise_names_for(e.runnable, disguisedName);
+
+		// Workaround for nwnx_names not updating the party display
+		DelayCommand(1.2, party_cycle(e.runnable));
+	}
+}

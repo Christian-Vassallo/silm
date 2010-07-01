@@ -13,6 +13,7 @@ struct Disguise {
 	string name;
 	string portrait;
 	string description;
+	string display_name;
 
 	int gender;
 
@@ -110,10 +111,19 @@ int disguise_find(object player, string name) {
 		return 0;
 }
 
+string disguise_get_display_name(int id) {
+	pQ("select display_name from " + DISGUISE_TABLE +
+			" where id = " + pSi(id) + ";");
+	if (pF())
+		return pGs(1);
+	else
+		return "";
+}
+
 struct Disguise disguise_load(int id) {
 	struct Disguise ret;
 	ret.valid = false;
-	pQ("select name, appearance, head, wings, tail, hair, skin, tattoo1, tattoo2, cid, portrait, gender, description, id, soundset from " + DISGUISE_TABLE + " where id = " + pSi(id));
+	pQ("select name, appearance, head, wings, tail, hair, skin, tattoo1, tattoo2, cid, portrait, gender, description, id, soundset, display_name from " + DISGUISE_TABLE + " where id = " + pSi(id));
 	if (pF()) {
 		ret.valid = true;
 		ret.name = pGs(1);
@@ -131,6 +141,7 @@ struct Disguise disguise_load(int id) {
 		ret.description = pGs(13);
 		ret.id = pGi(14);
 		ret.soundset = pGi(15);
+		ret.display_name = pGs(16);
 	}
 	return ret;
 }
