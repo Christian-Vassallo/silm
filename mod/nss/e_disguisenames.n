@@ -19,12 +19,10 @@ void update_disguise_names_for(object up, string disguisedName,
 			"' to other players.");
 
 		iterate_players(pc,
-			if (up != pc/* && !GetIsDM(pc)*/) {
-				SetDynamicName(pc, up, disguisedName);
-				UpdateDynamicName(pc, up);
-				// doesn't update group
-				UpdatePlayerList(pc);
-			}
+			SetDynamicName(pc, up, disguisedName);
+			UpdateDynamicName(pc, up);
+			// doesn't update group
+			UpdatePlayerList(pc);
 		);
 	}
 }
