@@ -64,13 +64,4 @@ tags: $(headers) $(scripts) $(corefiles)
 	@ctags --language-force=c --totals --c-kinds=cdefgmnpstuvx --fields=fksmnSzt $(corefiles) $(scripts) $(headers)
 
 show-stale:
-	@for x in *.ncs *.nss; do \
-		[[ -f "`basename $$x .ncs`.n" ]] || echo $$x; \
-		[[ -f "`basename $$x .nss`.n" ]] || echo $$x; \
-	done | sort -u
-
-clean-stale:
-	@for x in *.ncs *.nss; do \
-		[[ -f "`basename $$x .ncs`.n" ]] || rm -v $$x; \
-		[[ -f "`basename $$x .nss`.n" ]] || rm -v $$x; \
-	done
+	@for x in *.n[cs]s; do [ -f `echo $$x |cut -d. -f1`.n ] || echo $$x; done
