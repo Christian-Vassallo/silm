@@ -1,5 +1,7 @@
 extern("inc_cdb")
 extern("inc_nwnx_func")
+extern("inc_name")
+extern("inc_description")
 #include "../server.h"
 
 const string DISGUISE_TABLE = "disguise";
@@ -32,7 +34,9 @@ struct Disguise {
 
 void disguise_update_login(object on, struct Disguise d) {
 	if (!d.valid) return;
-	SetLocalString(on, "description_override", d.description);
+
+	SetPlayerDescription(on, d.description);
+	SetPlayerName(on, d.display_name, true);
 }
 
 void disguise_apply(object on, struct Disguise d) {
@@ -56,7 +60,8 @@ void disguise_apply(object on, struct Disguise d) {
 	SetColor(on, COLOR_CHANNEL_TATTOO_1, d.tattoo1);
 	SetColor(on, COLOR_CHANNEL_TATTOO_2, d.tattoo2);
 	SetPortrait(on, d.portrait);
-	SetLocalString(on, "description_override", d.description);
+	SetPlayerDescription(on, d.description);
+	SetPlayerName(on, d.display_name);
 
 	if (d.soundset > 0)
 		SetSoundset(on, d.soundset);
@@ -109,15 +114,6 @@ int disguise_find(object player, string name) {
 		return pGi(1);
 	else
 		return 0;
-}
-
-string disguise_get_display_name(int id) {
-	pQ("select display_name from " + DISGUISE_TABLE +
-			" where id = " + pSi(id) + ";");
-	if (pF())
-		return pGs(1);
-	else
-		return "";
 }
 
 struct Disguise disguise_load(int id) {

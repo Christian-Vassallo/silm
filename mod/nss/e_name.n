@@ -1,0 +1,75 @@
+extern("inc_nwnx_names")
+extern("inc_party")
+extern("inc_name")
+
+// Makes up appear with the given disguisedName, or the original name
+// if "".
+void update_names_for(object up, string disguisedName,
+		object only = OBJECT_INVALID) {
+	if (disguisedName == "")
+		disguisedName = GetName(up);
+
+	if (GetIsObjectValid(only)) {
+		SetDynamicName(only, up, disguisedName);
+		UpdateDynamicName(only, up);
+
+	} else {
+		SendMessageToPC(up, "Showing you as '" + disguisedName +
+			"' to other players.");
+
+		iterate_players(pc,
+			SetDynamicName(pc, up, disguisedName);
+			UpdateDynamicName(pc, up);
+			// doesn't update group
+			UpdatePlayerList(pc);
+		);
+	}
+}
+
+void login(object on) {
+	// update all players for the given disguise name
+	InitPlayerNameList(on, 3);
+
+	// player sees modified names
+	SetNamesEnabled(on, true);
+
+	if (!GetIsDM(on)) {
+		string disguisedName = GetPlayerName(on);
+		update_names_for(on, disguisedName);
+	}
+
+	iterate_players(pc,
+		UpdatePlayerList(pc);
+		string disguisedName = GetPlayerName(pc);
+		update_names_for(pc, disguisedName, on);
+	);
+}
+
+void party_cycle(object pc) {
+	if (CycleParty(pc))
+		SendMessageToPC(pc,
+			"You have been party-cycled to update your displayed name.");
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "player_login") {
+		object on = e.runnable;
+		DelayCommand(5.0, login(on));
+	}
+
+	if (e.ev == "player_setname") {
+		if (GetIsDM(e.runnable))
+			return;
+
+		struct EventArguments ea = GetEventArguments(e.serial);
+		string disguisedName = ea.a0;
+
+		// update all players for the given disguise name
+		update_names_for(e.runnable, disguisedName);
+
+		// Workaround for nwnx_names not updating the party display
+		DelayCommand(1.2, party_cycle(e.runnable));
+	}
+}

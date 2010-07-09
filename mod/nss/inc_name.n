@@ -1,0 +1,29 @@
+extern("inc_party")
+
+string GetPlayerName(object player);
+
+bool SetPlayerName(object player, string nameOverride = "", bool noEvent = false);
+
+string GetPlayerName(object player) {
+	string r = GetLocalString(player, "name_override");
+	if (r == "")
+		return GetName(player, true);
+	else
+		return r;
+}
+
+bool SetPlayerName(object player, string nameOverride = "", bool noEvent = false) {
+	if (!noEvent) {
+		struct EventArguments evarg;
+		evarg.a0 = nameOverride;
+		int serial = GetEventSerial();
+		int ret = RunEventScriptsForWithArgv(serial, "player_setname", player, player, player,
+			GetLocation(player), evarg, EVENT_MODE_SYNC);
+		DeleteEventArguments(serial);
+		if (ret & EVENT_RESULT_SUPPRESS)
+			return false;
+	}
+
+	SetLocalString(player, "name_override", nameOverride);
+	return true;
+}
