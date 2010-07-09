@@ -23,6 +23,7 @@ extern("inc_xp_handling")
 extern("x0_i0_anims")
 extern("inc_events_sql")
 extern("inc_chat")
+extern("inc_name")
 
 // extern inc_chat_run
 int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel);
@@ -2638,17 +2639,21 @@ int CommandAnimation(object oPC, string sArg, int iMode) {
 int CommandSetName(object oPC, int iMode) {
 	object oTarget = GetTarget();
 
-	if ( !GetIsObjectValid(oTarget) || GetIsPC(oTarget) ) {
+	if ( !GetIsObjectValid(oTarget) || GetIsDM(oTarget) ) {
 		return NotifyBadTarget();
 	}
 
-	location lO = GetLocation(oTarget);
-
 	if (getopt_arg(0) != "" ) {
-		SetName(oTarget,getopt_arg(0));
+		if (GetIsPC(oTarget))
+			SetPlayerName(oTarget, getopt_arg(0));
+		else
+			SetName(oTarget, getopt_arg(0));
 		SendMessageToPC(oPC, "Okay, luv, Name ist nun '" + GetName(oTarget) + "'.");
 	} else {
-		SetName(oTarget);
+		if (GetIsPC(oTarget))
+			SetPlayerName(oTarget);
+		else
+			SetName(oTarget);
 		SendMessageToPC(oPC, "Okay, luv, Name ist zurueck beim Anfang ..");
 	}
 
