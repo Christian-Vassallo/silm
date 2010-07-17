@@ -2641,18 +2641,19 @@ int CommandSetName(object oPC, int iMode) {
 		return NotifyBadTarget();
 	}
 
-	if (getopt_arg(0) != "" ) {
+	string name = getopt_arg(0);
+	if (name != "") {
 		if (GetIsPC(oTarget))
-			SetPlayerName(oTarget, getopt_arg(0));
+			SetPlayerName(oTarget, name);
 		else
-			SetName(oTarget, getopt_arg(0));
-		SendMessageToPC(oPC, "Okay, luv, Name ist nun '" + GetName(oTarget) + "'.");
+			SetName(oTarget, name);
+		SendMessageToPC(oPC, "Setting name to '" + name + "'.");
 	} else {
 		if (GetIsPC(oTarget))
 			SetPlayerName(oTarget);
 		else
 			SetName(oTarget);
-		SendMessageToPC(oPC, "Okay, luv, Name ist zurueck beim Anfang ..");
+		SendMessageToPC(oPC, "Resetting name.");
 	}
 
 	if ( Limbo(oTarget) )
