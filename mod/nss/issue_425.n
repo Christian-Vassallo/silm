@@ -1,0 +1,23 @@
+/**
+ * NWNX Names hotfix filtering out join messages.
+ * Bug #425
+ */
+extern("inc_colors")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "player_login") {
+		string message = ColorTag(cLightGrey) +
+			GetPCPlayerName(e.runnable) + " ist als ";
+
+		if (GetIsDM(e.runnable))
+			message += "Spielleiter";
+		else
+			message += "Spieler";
+
+		message += " beigetreten.";
+
+		iterate_players(pc, SendMessageToPC(pc, message));
+	}
+}
