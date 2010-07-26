@@ -656,6 +656,15 @@ int CommandAFK(object oPC, int iMode) {
 
 	int nAFK = GetLocalInt(oPC, "afk");
 
+	struct EventArguments evarg;
+	evarg.i0 = !nAFK;
+	int serial = GetEventSerial();
+	int ret = RunEventScriptsForWithArgv(serial, "player_afk", oPC, oPC, oPC,
+		GetLocation(oPC), evarg, EVENT_MODE_SYNC);
+	DeleteEventArguments(serial);
+	if (ret & EVENT_RESULT_SUPPRESS)
+		return false;
+
 	if ( nAFK > 0 ) {
 		SetLocalInt(oPC, "afk", 0);
 

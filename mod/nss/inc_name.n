@@ -6,10 +6,14 @@ bool SetPlayerName(object player, string nameOverride = "", bool noEvent = false
 
 string GetPlayerName(object player) {
 	string r = GetLocalString(player, "name_override");
+
 	if (r == "")
-		return GetName(player, true);
-	else
-		return r;
+		r = GetName(player, true);
+
+	if (GetLocalInt(player, "afk"))
+		r = "[AFK] " + r;
+
+	return r;
 }
 
 bool SetPlayerName(object player, string nameOverride = "", bool noEvent = false) {
