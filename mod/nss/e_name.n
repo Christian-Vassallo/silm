@@ -78,7 +78,7 @@ void main() {
 			return;
 
 		struct EventArguments ea = GetEventArguments(e.serial);
-		string disguisedName = GetPlayerName(e.runnable);
+		string disguisedName = GetPlayerName(e.runnable, ea.i0);
 
 		update_names_for(e.runnable, disguisedName);
 		DelayCommand(1.2, party_cycle(e.runnable));

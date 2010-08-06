@@ -1,16 +1,19 @@
 extern("inc_party")
 
-string GetPlayerName(object player);
+string GetPlayerName(object player, int afkOverride = -1);
 
 bool SetPlayerName(object player, string nameOverride = "", bool noEvent = false);
 
-string GetPlayerName(object player) {
+string GetPlayerName(object player, int afkOverride = -1) {
 	string r = GetLocalString(player, "name_override");
+
+	if (afkOverride == -1)
+		afkOverride = GetLocalInt(player, "afk");
 
 	if (r == "")
 		r = GetName(player, true);
 
-	if (GetLocalInt(player, "afk"))
+	if (afkOverride)
 		r = "[AFK] " + r;
 
 	return r;
