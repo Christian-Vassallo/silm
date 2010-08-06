@@ -680,20 +680,20 @@ int CommandAFK(object oPC, int iMode) {
 			e = GetNextEffect(oPC);
 		}
 		if (!GetIsDM(oPC))
-			NWNXChatSpeakToChannel(oPC, MSG_PARTY, GetName(oPC) + " ist nicht mehr afk.");
+			NWNXChatSpeakToChannel(oPC, MSG_PARTY, GetPlayerName(oPC) + " ist nicht mehr afk.");
 		else
-			SendMessageToAllDMs(GetName(oPC) + " ist nicht mehr afk.");
-		FloatingTextStringOnCreature("*Nicht mehr AFK*", oPC, TRUE);
+			SendMessageToAllDMs(GetPlayerName(oPC) + " ist nicht mehr afk.");
+		FloatingTextStringOnCreature("*Nicht mehr AFK*", oPC, false);
 
 	} else {
 		AssignCommand(oPC, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(
 						VFX_DUR_AFK)), oPC));
 		SetLocalInt(oPC, "afk", 1 /* unix_ts? avoiding sql call for now*/);
-		FloatingTextStringOnCreature("*AFK*", oPC, TRUE);
+		FloatingTextStringOnCreature("*AFK*", oPC, false);
 		if (!GetIsDM(oPC))
-			NWNXChatSpeakToChannel(oPC, MSG_PARTY, GetName(oPC) + " ist afk.");
+			NWNXChatSpeakToChannel(oPC, MSG_PARTY, GetPlayerName(oPC) + " ist afk.");
 		else
-			SendMessageToAllDMs(GetName(oPC) + " ist afk.");
+			SendMessageToAllDMs(GetPlayerName(oPC) + " ist afk.");
 	}
 
 	return OK;
