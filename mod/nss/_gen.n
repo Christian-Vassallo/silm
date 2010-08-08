@@ -23,10 +23,10 @@ int hears(object oSpeaker, object oListener, int nTalkMode) {
 		return 0;
 
 	float fDistance = GetDistanceBetween(oSpeaker, oListener);
-	if ( TALKVOLUME_TALK == nTalkMode && fDistance > 20.0 )
+	if ( TALKVOLUME_TALK == nTalkMode && fDistance > TALKDISTANCE_TALK )
 		return 0;
 
-	if ( TALKVOLUME_WHISPER == nTalkMode && fDistance > 3.0 )
+	if ( TALKVOLUME_WHISPER == nTalkMode && fDistance > TALKDISTANCE_WHISPER )
 		return 0;
 
 	return GetIsDM(oSpeaker) || GetIsDM(oListener) || GetObjectHeard(oSpeaker, oListener);

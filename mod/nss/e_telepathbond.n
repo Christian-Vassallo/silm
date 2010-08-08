@@ -64,11 +64,11 @@ void main() {
 			while (GetIsObjectValid(oI)) {
 				// if its too far off drop out
 				if (iMode & CHATMODE_WHISPER
-						&& GetDistanceBetween(oPC, oI) > 3.0)
+						&& GetDistanceBetween(oPC, oI) > TALKDISTANCE_WHISPER)
 					break;
 
 				if (iMode & CHATMODE_TALK
-					&& GetDistanceBetween(oPC, oI) > 20.0)
+						&& GetDistanceBetween(oPC, oI) > TALKDISTANCE_TALK)
 					break;
 
 				if (oPC != oI && !GetIsDM(oI) && GetObjectHeard(oPC, oI)) {
