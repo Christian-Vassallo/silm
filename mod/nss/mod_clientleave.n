@@ -6,6 +6,8 @@ extern("inc_session")
 void main() {
 	object oExit = GetExitingObject();
 
+	SetLocalObject(oExit, "last_area_entered", OBJECT_INVALID);
+
 	// Event: player_logout
 	// When a player character logs out
 	// - runnable: the player character object
