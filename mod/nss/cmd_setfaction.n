@@ -15,30 +15,7 @@ void main() {
 	
 	struct EventArguments ea = GetEventArguments(e.serial);
 
-	// faction <faction>
-	//
 	// settagfaction <tag> <faction>
-	if (ea.a0 == "faction") {
-		object target = GetTarget();
-		if (!is_creature(target) || GetIsPC(target)) {
-			NotifyBadTarget();
-			event_stop_end();
-		}
-
-		if (ea.a1 != "") {
-			int faction = atoi(ea.a1);
-			SetFactionId(target, faction);
-			SendMessageToPC(e.runnable, otoa(target) +
-				" => faction(" + itoa(faction) + ")");
-		} else {
-			int faction  = GetFactionId(target);
-			SendMessageToPC(e.runnable, otoa(target) +
-				" = faction(" + itoa(faction) + ")");
-		}
-		event_stop();
-	}
-
-
 	if (ea.a0 == "tagfaction") {
 		getopt_reset();
 		if (!getopt_init(ea.a1, " ", e.runnable))
@@ -50,8 +27,13 @@ void main() {
 			event_stop_end();
 		}
 
-		string tag = strlwr(getopt_arg(0));
 		int faction = atoi(getopt_arg(1));
+		if (faction < 1 || faction >= 100) {
+			SendMessageToPC(e.runnable, "<factionId> needs to be > 1 && < 100");
+			event_stop_end();
+		}
+		
+		string tag = strlwr(getopt_arg(0));
 
 		int matched = 0;
 
