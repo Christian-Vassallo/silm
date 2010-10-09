@@ -101,7 +101,7 @@ void MkDlg(object oPC) {
 	int current_disguise = disguise_current_id(oPC);
 	string sText = "Select a disguise, or create one from your current appearance via /savedisguise Name. Keep 'Name' very simple and easy to re-type.";
 
-	pQ("select id,name,gender,cid,to_char(updated_on, 'DD.MM.YY HH:MI') from " + DISGUISE_TABLE + " where cid is null or cid = " + pSi(cid) + " order by cid, name asc;");
+	pQ("select id,name,gender,cid,to_char(updated_on, 'DD.MM.YY HH24:MI') from " + DISGUISE_TABLE + " where cid is null or cid = " + pSi(cid) + " order by cid, name asc;");
 	while (pF()) {
 		int id = pGi(1);
 		string name = pGs(2);
