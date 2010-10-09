@@ -69,6 +69,12 @@ void set_mode(object player, int actionMode, bool showText = true) {
 void automode_check(int actionMode, object creature, int configuredMode) {
 	if (actionMode == configuredMode &&
 			!GetActionMode(creature, actionMode)) {
+
+		// don't activate rapid shot when no weapon is present
+		if (configuredMode == ACTION_MODE_RAPID_SHOT &&
+				!GetIsObjectValid(GetItemInSlot(INVENTORY_SLOT_RIGHTHAND, creature)))
+			return;
+
 		SetActionMode(creature, actionMode, true);
 		SendMessageToPC(creature, ColorTag(cOrange) + "Auto-enabling " +
 			ActionModeToString(actionMode) + ".");
