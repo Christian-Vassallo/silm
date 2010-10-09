@@ -1,0 +1,106 @@
+extern("inc_cdb")
+extern("inc_spbookmgr")
+extern("inc_lists")
+
+#define TTT "spbookmgr"
+
+void MkDlg(object oPC);
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "chat_prefilter") {
+		struct EventArguments ea = GetEventArguments(e.serial);
+
+		int idx = FindSubString(ea.a0, " ");
+		string cmd = GetSubString(ea.a0, 0, idx);
+
+		if (cmd == "/spellbook") {
+			int cid = GetCharacterID(e.runnable);
+			if (!cid) return;
+
+			string name = GetStringTrim(GetSubString(ea.a0, idx + 1, 2048));
+
+			if (-1 != idx && name != "") {
+				pQ("select name from spbookmgr.states where character = " +
+					pSi(cid) + " and name = " + pE(name));
+				if (!pF())
+					SendMessageToPC(e.runnable,
+						"Cannot find spellbook template: " + name);
+				else {
+					load_spellbook(e.runnable, name);
+					event_stop_end_suppress();
+				}
+			}
+
+			MkDlg(e.runnable);
+			ClearAllActions(true);
+			ActionStartConversation(e.runnable, "list_select", true, true);
+			event_stop_end_suppress();
+		}
+
+		if (cmd == "/savespellbook") {
+			string name = GetStringTrim(GetSubString(ea.a0, idx + 1, 2048));
+
+			if (-1 == idx || name == "")
+				SendMessageToPC(e.runnable, "Give a name.");
+			else {
+
+				SendMessageToPC(e.runnable, "Saving current spellbook as " + name);
+				int saved = save_spellbook(e.runnable, name);
+				SendMessageToPC(e.runnable, "Saved " + itoa(saved) +
+					" spell entries.");
+			}
+			event_stop_end_suppress();
+		}
+
+		if (cmd == "/deletespellbook") {
+			string name = GetStringTrim(GetSubString(ea.a0, idx + 1, 2048));
+
+			if (-1 == idx || name == "")
+				SendMessageToPC(e.runnable, "Give a name.");
+			else {
+
+				SendMessageToPC(e.runnable, "Deleting spellbook template " + name);
+				if (delete_spellbook(e.runnable, name))
+					SendMessageToPC(e.runnable, "Deleted!");
+				else
+					SendMessageToPC(e.runnable, "Cannot delete, not found.");
+			}
+			event_stop_end_suppress();
+		}
+
+	}
+}
+
+void MkDlg(object oPC) {
+	ClearList(oPC, TTT);
+	int cid = GetCharacterID(oPC);
+	if (!cid) return;
+
+	string sText = "Select a spellbook template to apply, or create one from " +
+		"your current spellbook via /savespellbook Name. " +
+		"Keep 'Name' very simple and easy to re-type. " +
+		"Only filled spellslots will be saved and again " +
+		"overwritten at the same position on restore.";
+
+	pQ("select s.id, s.name, count(m.spell), " +
+		"to_char(max(s.updated_on), 'DD.MM.YY HH24:MI') from " +
+		"spbookmgr.states s, spbookmgr.memorized m where " +
+		" m.state = s.id and s.character = " + pSi(cid) +
+		" group by s.id, s.name order by s.name asc;");
+	while (pF()) {
+		int id = pGi(1);
+		string name = pGs(2);
+		int spells = pGi(3);
+		string updated = pGs(4);
+
+		name = ColorTag(cOrange) + name +
+			ColorTag(cGreen) + " (" + itoa(spells) + " spells)" +
+			"   " + ColorTag(cLightGrey) + updated;
+
+		AddListItem(oPC, TTT, name);
+		SetListInt(oPC, TTT, id);
+	}
+	ResetConvList(oPC, oPC, TTT, 50000, "e_spbookmgr_cb", sText, "", "");
+}
