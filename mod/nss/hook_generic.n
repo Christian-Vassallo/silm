@@ -122,3 +122,105 @@ void _hook_jump_associates(object obj, location jumpTo, bool as_action) {
 		}
 	}
 }
+
+#undef GetSpellTargetObject
+object Hook_GetSpellTargetObject() {
+	object o = GetLocalObject(GetModule(), __FILE__ + "GetSpellTargetObject");
+	if (is_valid(o))
+		return o;
+	else
+		return GetSpellTargetObject();
+}
+
+#undef GetSpellTargetLocation
+location Hook_GetSpellTargetLocation() {
+	location l = GetLocalLocation(GetModule(),
+		__FILE__ + "GetSpellTargetLocation");
+	if (is_valid(GetAreaFromLocation(l)))
+		return l;
+	else
+		return GetSpellTargetLocation();
+}
+
+#undef GetSpellCastItem
+object Hook_GetSpellCastItem() {
+	object o = GetLocalObject(GetModule(), __FILE__ + "GetSpellCastItem");
+	if (is_valid(o))
+		return o;
+	else
+		return GetSpellCastItem();
+}
+
+#undef GetMetaMagicFeat
+int Hook_GetMetaMagicFeat() {
+	if (GetLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeatEnabled"))
+		return GetLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeat");
+	else
+		return GetMetaMagicFeat();
+}
+
+#undef GetCasterLevel
+int Hook_GetCasterLevel(object creature) {
+	if (GetLocalInt(GetModule(), __FILE__ + "GetCasterLevelEnabled"))
+		return GetLocalInt(GetModule(), __FILE__ + "GetCasterLevel");
+	else
+		return GetCasterLevel(creature);
+}
+
+#undef GetSpellId
+int Hook_GetSpellId() {
+	if (GetLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled"))
+		return GetLocalInt(GetModule(), __FILE__ + "GetSpellId");
+	else
+		return GetSpellId();
+}
+
+#undef ApplyEffectAtLocation
+void Hook_ApplyEffectAtLocation(int nDurationType, effect eEffect,
+		location lLocation, float fDuration=0.0f) {
+
+	if (GetLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled"))
+		SetEffectSpellId(eEffect, GetLocalInt(GetModule(), __FILE__ + "GetSpellId"));
+
+	ApplyEffectAtLocation(nDurationType, eEffect, lLocation, fDuration);
+}
+#undef ApplyEffectToObject
+void Hook_ApplyEffectToObject(int nDurationType, effect eEffect,
+		object oTarget, float fDuration=0.0f) {
+
+	if (GetLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled"))
+		SetEffectSpellId(eEffect, GetLocalInt(GetModule(), __FILE__ + "GetSpellId"));
+
+	ApplyEffectToObject(nDurationType, eEffect, oTarget, fDuration);
+}
+
+void ExecuteSpellScript(object caster, object spellCastItem,
+		int spell, int casterLevel, int metaMagic,
+		object spellTargetObject, location spellTargetLocation) {
+	
+	string spellScript = Get2DAString("spells", "ImpactScript", spell);
+	if (spellScript == "")
+		return;
+
+	SetLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled", 1);
+	SetLocalInt(GetModule(), __FILE__ + "GetSpellId", spell);
+	SetLocalInt(GetModule(), __FILE__ + "GetCasterLevelEnabled", 1);
+	SetLocalInt(GetModule(), __FILE__ + "GetCasterLevel", casterLevel);
+	SetLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeatEnabled", 1);
+	SetLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeat", metaMagic);
+	SetLocalObject(GetModule(), __FILE__ + "GetSpellTargetObject",
+		spellTargetObject);
+	SetLocalLocation(GetModule(), __FILE__ + "GetSpellTargetLocation",
+		spellTargetLocation);
+	SetLocalObject(GetModule(), __FILE__ + "GetSpellCastItem",
+		spellCastItem);
+	
+	ExecuteScript(spellScript, caster);
+
+	DeleteLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled");
+	DeleteLocalInt(GetModule(), __FILE__ + "GetCasterLevelEnabled");
+	DeleteLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeatEnabled");
+	DeleteLocalObject(GetModule(), __FILE__ + "GetSpellTargetObject");
+	DeleteLocalObject(GetModule(), __FILE__ + "GetSpellCastItem");
+	DeleteLocalLocation(GetModule(), __FILE__ + "GetSpellTargetLocation");
+}

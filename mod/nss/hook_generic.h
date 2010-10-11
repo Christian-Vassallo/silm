@@ -1,13 +1,3 @@
-/*
-File: hook_generic.h
-
-This file hooks into some of the original function calls
-and sends out events.
-
-Hooked functions:
-- DestroyObject - EVENT_TYPE_GLOBAL, EVENT_GLOBAL_OBJECT_DESTROY
-- CreateObject - EVENT_TYPE_GLOBAL, EVENT_GLOBAL_OBJECT_CREATE
-*/
 #ifndef HOOK_GENERIC_H
 #define HOOK_GENERIC_H
 
@@ -24,5 +14,15 @@ extern("hook_generic")
 #define ActionJumpToLocation(...) Hook_ActionJumpToLocation(__VA_ARGS__)
 #define JumpToObject(...) Hook_JumpToObject(__VA_ARGS__)
 #define JumpToLocation(...) Hook_JumpToLocation(__VA_ARGS__)
+
+#define GetSpellTargetObject() Hook_GetSpellTargetObject()
+#define GetSpellTargetLocation() Hook_GetSpellTargetLocation()
+#define GetSpellCastItem() Hook_GetSpellCastItem()
+#define GetMetaMagicFeat() Hook_GetMetaMagicFeat()
+#define GetCasterLevel(...) Hook_GetCasterLevel(__VA_ARGS__)
+#define GetSpellId() Hook_GetSpellId()
+
+#define ApplyEffectAtLocation(...) Hook_ApplyEffectAtLocation(__VA_ARGS__)
+#define ApplyEffectToObject(...) Hook_ApplyEffectToObject(__VA_ARGS__)
 
 #endif
