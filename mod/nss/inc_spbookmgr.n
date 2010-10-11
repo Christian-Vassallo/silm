@@ -76,6 +76,8 @@ int save_spellbook_for_class(object creature, string name,
 	int stored = 0;
 	int level; for (level = 0; level <= 9; level++) {
 		int numSlots = GetMaxSpellSlots(creature, class, level);
+		if (numSlots < 1)
+			break;
 
 		int slot; for (slot = 0; slot < numSlots; slot++) {
 			struct MemorizedSpellSlot ms =
