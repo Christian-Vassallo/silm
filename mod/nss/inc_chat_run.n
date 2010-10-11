@@ -616,14 +616,13 @@ void RegisterAllCommands() {
 	
 	// Chatcommand: castspell
 	// Cast a spell.
-	RegisterCommand("castspell", "c f m= c i loc", 1, 1);
-	RH("Casts a spell on the current target");
-	RHs("[--caster=TARGET (omit for self)] [--fake] [--meta=METAMAGIC] [-c] [-i] [--loc] SpellID", 1);
-	RHs("--fake >> Just do the flashy visuals, do not call the spellscript");
-	RHs("-i >> Instant cast.  Do not progress action queue, go directly to jail.");
-	RHs("-c >> Do not require the spell to be memorised");
-	RHs("--loc >> Cast spell on location instead of target");
-	RAF(AMASK_CAN_DO_BACKEND);
+	RegisterCommand("castspell", "i mm= cl= loc", 1, 1);
+	RH("Casts a spell on the current target or location.");
+	RHs("-loc >> Cast spell on location instead of target");
+	RHs("-i >> Instant cast, no action queue.");
+	RHs("-cl=N >> Specify caster level. Defaults to 1.");
+	RHs("-mm=N >> Specify metamagic. empower=1 extend=2 maximize=4");
+	RAF(AMASK_GLOBAL_GM);
 
 	
 	// Chatcommand: getdyepot

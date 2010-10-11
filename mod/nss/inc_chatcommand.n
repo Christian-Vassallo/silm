@@ -953,48 +953,43 @@ int CommandCastSpell(object oPC, int iMode) {
 	if (getopt_opt("loc") && !GetIsObjectValid(GetAreaFromLocation(lTarget)) )
 		return NotifyBadTarget("bad location");
 
-	object oCaster = oPC;
-
-	if (getopt_opt("caster") )
-		oCaster = GetTarget(StringToInt(getopt_optv("caster")));
-
-	if ( !GetIsObjectValid(oCaster) )
-		return NotifyBadTarget("bad caster");
-
-	int nSpell = StringToInt(getopt_arg(0));
-	if ( nSpell < 0 )
-		return NotifyBadTarget("bad spell");
-
 	int nMeta = METAMAGIC_ANY;
-	if (getopt_opt("m") )
-		nMeta = StringToInt(getopt_optv("m"));
+	if (getopt_opt("mm"))
+		nMeta = atoi(getopt_optv("mm"));
 
-	int bCheat = TRUE;
-	if (getopt_opt("c") )
-		bCheat = FALSE;
+	int asAction = true;
+	if (getopt_opt("i"))
+		asAction = false;
 
-	int bInstant = FALSE;
-	if (getopt_opt("i") )
-		bInstant = TRUE;
+	int default_cl = 1;
+	int cl = default_cl;
+	if (getopt_opt("cl"))
+		cl = atoi(getopt_optv("cl"));
+	if (cl < 1 || cl > 80)
+		cl = default_cl;
 
+	if (getopt_opt("loc"))
+		oTarget = OBJECT_INVALID;
 
-	// AssignCommand(oCaster, ClearAllActions(1));
+	int idx; for (idx = 0; idx < getopt_argc(); idx++) {
+		int spell = atoi(getopt_arg(idx));
+		if (spell < 0)
+			continue;
 
-	if (getopt_opt("f") ) {
-		if (getopt_opt("loc") )
-			DelayCommand(getsleep(), AssignCommand(oCaster, ActionCastFakeSpellAtLocation(nSpell, lTarget)));
-		else
-			DelayCommand(getsleep(), AssignCommand(oCaster, ActionCastFakeSpellAtObject(nSpell, oTarget)));
+		if (asAction) {
+			if (is_valid(oTarget))
+				ActionCastFakeSpellAtObject(spell, oTarget);
+			else
+				ActionCastFakeSpellAtLocation(spell, lTarget);
 
-	} else {
-		if (getopt_opt("loc") )
-			DelayCommand(getsleep(), AssignCommand(oCaster, ActionCastSpellAtLocation(nSpell, lTarget, nMeta,
-						bCheat, PROJECTILE_PATH_TYPE_DEFAULT, bInstant)));
-		else
-			DelayCommand(getsleep(), AssignCommand(oCaster, ActionCastSpellAtObject(nSpell, oTarget, nMeta,
-						bCheat, PROJECTILE_PATH_TYPE_DEFAULT, bInstant)));
+			ActionDoCommand(ExecuteSpellScript(oPC, OBJECT_INVALID,
+				spell, cl, nMeta, oTarget, lTarget));
+
+		} else {
+			ExecuteSpellScript(oPC, OBJECT_INVALID,
+				spell, cl, nMeta, oTarget, lTarget);
+		}
 	}
-
 
 	return OK;
 }
