@@ -535,6 +535,8 @@ int CommandRehash(object oPC, int iMode) {
 
 	c = RehashEventScripts();
 	ToDMs("Rehashed " + IntToString(c) + " event scripts.");
+	RunEventScriptsFor(GetEventSerial(), "rehash",
+		oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
 	return OK;
 }
 
