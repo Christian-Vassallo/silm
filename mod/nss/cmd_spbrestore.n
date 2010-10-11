@@ -1,0 +1,62 @@
+extern("inc_cdb")
+extern("inc_nwnx_func")
+extern("inc_target")
+
+void RestoreSpellbookByClass(object creature, int class) {
+	if (
+		GetClassByPosition(1, creature) != class &&
+		GetClassByPosition(2, creature) != class &&
+		GetClassByPosition(3, creature) != class
+	) return;
+
+
+	int level; for (level = 0; level <= 9; level++) {
+		int slots = GetMaxSpellSlots(creature, class, level);
+		if (slots < 1)
+			return;
+
+		int slot; for (slot = 0; slot < slots; slot++) {
+			struct MemorizedSpellSlot ms =
+				GetMemorizedSpell(creature, class, level, slot);
+
+			if (ms.ready || ms.id < 0)
+				continue;
+
+			ms.ready = true;
+			SetMemorizedSpell(creature, class, level, slot, ms);
+		}
+	}
+}
+
+void RestoreSpellbook(object creature) {
+	RestoreSpellbookByClass(creature, CLASS_TYPE_WIZARD);
+	RestoreSpellbookByClass(creature, CLASS_TYPE_CLERIC);
+	RestoreSpellbookByClass(creature, CLASS_TYPE_DRUID);
+	RestoreSpellbookByClass(creature, CLASS_TYPE_RANGER);
+	RestoreSpellbookByClass(creature, CLASS_TYPE_PALADIN);
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "chat_command") {
+		struct EventArguments ea = GetEventArguments(e.serial);
+		if (ea.a0 != "spbrestore")
+			return;
+
+		if (!amask(e.runnable, AMASK_GLOBAL_GM))
+			event_stop();
+
+		object target = GetTarget();
+		if (!is_creature(target)) {
+			NotifyBadTarget();
+			event_stop();
+		}
+
+		RestoreSpellbook(target);
+		SendMessageToPC(e.runnable, "Restored spellbook for " +
+			GetName(target));
+		event_stop();
+	}
+}
+
