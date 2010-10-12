@@ -1,0 +1,46 @@
+extern("_gen")
+extern("inc_cdb")
+extern("inc_target")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	struct EventArguments ea = GetEventArguments(e.serial);
+
+	if (e.ev == "chat_command" && ea.a0 == "party" &&
+			amask(e.runnable, AMASK_GLOBAL_GM) &&
+			GetIsPC(e.runnable) && !GetIsDM(e.runnable)) {
+
+		// join another party
+		if (ea.a1 == "join") {
+			object target = GetTarget();
+
+			if (!GetIsPC(target) || GetIsDM(target)) {
+				SendMessageToPC(e.runnable, "Require player as target.");
+				event_stop();
+			}
+
+			SendMessageToPC(e.runnable, "Trying to join faction of " +
+				GetName(target));
+			AddToParty(e.runnable, target);
+			event_stop();
+		}
+		
+		// make target join your party
+		if (ea.a1 == "grab") {
+			object target = GetTarget();
+
+			if (!GetIsPC(target) || GetIsDM(target)) {
+				SendMessageToPC(e.runnable, "Require player as target.");
+				event_stop();
+			}
+
+			SendMessageToPC(e.runnable, "Trying to force" +
+				GetName(target) + " into your faction.");
+			AddToParty(target, e.runnable);
+			event_stop();
+		}
+
+		SendMessageToPC(e.runnable, "No such command.");
+		event_stop();
+	}
+}
