@@ -980,12 +980,16 @@ int CommandCastSpell(object oPC, int iMode) {
 
 		if (asAction) {
 			if (is_valid(oTarget))
-				ActionCastFakeSpellAtObject(spell, oTarget);
+				AssignCommand(oPC,
+					ActionCastFakeSpellAtObject(spell, oTarget));
 			else
-				ActionCastFakeSpellAtLocation(spell, lTarget);
+				AssignCommand(oPC,
+					ActionCastFakeSpellAtLocation(spell, lTarget));
 
-			ActionDoCommand(ExecuteSpellScript(oPC, OBJECT_INVALID,
-				spell, cl, nMeta, oTarget, lTarget));
+			AssignCommand(oPC,
+				ActionDoCommand(ExecuteSpellScript(oPC, OBJECT_INVALID,
+					spell, cl, nMeta, oTarget, lTarget))
+			);
 
 		} else {
 			ExecuteSpellScript(oPC, OBJECT_INVALID,
