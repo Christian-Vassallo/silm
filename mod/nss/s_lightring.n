@@ -34,7 +34,9 @@ void vfx_glitter_rand(object on, int vfx) {
 
 void spell_hb(object caster, int spell_dc, int remaining,
 		int meta = METAMAGIC_ANY) {
-	//if (GetHasSpellEffect(SPELL_LIGHTNINGRING)) {
+
+	if (!GetHasSpellEffect(SPELL_LIGHTNING_RING, caster))
+		return;
 
 	float f;
 	for (f = 0.0; f < 6.0; f += 0.3f) {
