@@ -194,17 +194,15 @@ void Hook_ApplyEffectToObject(int nDurationType, effect eEffect,
 	ApplyEffectToObject(nDurationType, eEffect, oTarget, fDuration);
 }
 
-void ExecuteSpellScript(object caster, object spellCastItem,
-		int spell, int casterLevel, int metaMagic,
+void ExecuteNamedSpellScript(object caster, object spellCastItem,
+		string spellScript, int spell, int casterLevel, int metaMagic,
 		object spellTargetObject, location spellTargetLocation) {
 	
-	string spellScript = Get2DAString("spells", "ImpactScript", spell);
-	if (spellScript == "")
-		return;
-
 	SetLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled", 1);
-	SetLocalInt(GetModule(), __FILE__ + "GetSpellId", spell);
-	SetLocalInt(GetModule(), __FILE__ + "GetCasterLevelEnabled", 1);
+	if (spell > -1) {
+		SetLocalInt(GetModule(), __FILE__ + "GetSpellId", spell);
+		SetLocalInt(GetModule(), __FILE__ + "GetCasterLevelEnabled", 1);
+	}
 	SetLocalInt(GetModule(), __FILE__ + "GetCasterLevel", casterLevel);
 	SetLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeatEnabled", 1);
 	SetLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeat", metaMagic);
@@ -217,10 +215,23 @@ void ExecuteSpellScript(object caster, object spellCastItem,
 	
 	ExecuteScript(spellScript, caster);
 
-	DeleteLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled");
+	if (spell > -1)
+		DeleteLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled");
 	DeleteLocalInt(GetModule(), __FILE__ + "GetCasterLevelEnabled");
 	DeleteLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeatEnabled");
 	DeleteLocalObject(GetModule(), __FILE__ + "GetSpellTargetObject");
 	DeleteLocalObject(GetModule(), __FILE__ + "GetSpellCastItem");
 	DeleteLocalLocation(GetModule(), __FILE__ + "GetSpellTargetLocation");
+}
+
+void ExecuteSpellScript(object caster, object spellCastItem,
+		int spell, int casterLevel, int metaMagic,
+		object spellTargetObject, location spellTargetLocation) {
+
+	string spellScript = Get2DAString("spells", "ImpactScript", spell);
+	if (spellScript == "")
+		return;
+	
+	ExecuteNamedSpellScript(caster, spellCastItem, spellScript, spell,
+		casterLevel, metaMagic, spellTargetObject, spellTargetLocation);
 }
