@@ -54,16 +54,17 @@ void main() {
 		SetFootstepType(FOOTSTEP_TYPE_NONE, oPC);
 
 		DelayCommand(0.3, SetCommandable(FALSE, oPC));
-		AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_CUSTOM15, 2.5, 5.5));
+		AssignCommand(oPC, ClearAllActions());
+		AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_CUSTOM15, 1.5, 3.5));
 
-		DelayCommand(2.38, SetCommandable(TRUE, oPC));
-		DelayCommand(2.40, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, effTouchupInvis, oPC, 1.0));
+		DelayCommand(4.38, SetCommandable(TRUE, oPC));
+		DelayCommand(4.40, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, effTouchupInvis, oPC, 1.0));
 
-		DelayCommand(2.45, AssignCommand(oPC, ClearAllActions()));
-		DelayCommand(2.49, ActionJumpToLocation(locJumpTo));
-		DelayCommand(2.53, AssignCommand(oPC, ClearAllActions()));
+		DelayCommand(4.45, AssignCommand(oPC, ClearAllActions()));
+		DelayCommand(4.49, ActionJumpToLocation(locJumpTo));
+		DelayCommand(4.53, AssignCommand(oPC, ClearAllActions()));
 
-		DelayCommand(4.0, SetFootstepType(FOOTSTEP_TYPE_DEFAULT, oPC));
+		DelayCommand(5.0, SetFootstepType(FOOTSTEP_TYPE_DEFAULT, oPC));
 	}
 
 	event_stop();
