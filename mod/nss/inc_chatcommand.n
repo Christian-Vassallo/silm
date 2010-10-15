@@ -2506,6 +2506,21 @@ int CommandAnimation(object oPC, string sArg, int iMode) {
 	if ( "victory3" == sArg )
 		iAni = ANIMATION_FIREFORGET_VICTORY3;
 
+	if ( "sitcross" == sArg )
+		iAni = ANIMATION_LOOPING_CUSTOM1;
+	if ( "tapfoot" == sArg )
+		iAni = ANIMATION_LOOPING_CUSTOM2;
+	if ( "kneel" == sArg )
+		iAni = ANIMATION_LOOPING_CUSTOM3;
+	if ( "crazy" == sArg )
+		iAni = ANIMATION_LOOPING_CUSTOM5;
+	if ( "freeze" == sArg )
+		iAni = ANIMATION_LOOPING_CUSTOM6;
+	if ( "lieleft" == sArg )
+		iAni = ANIMATION_LOOPING_CUSTOM7;
+	if ( "lieleft" == sArg )
+		iAni = ANIMATION_LOOPING_CUSTOM8;
+
 	if ( "onward" == sArg )
 		iAni = ANIMATION_LOOPING_CUSTOM11;
 	if ( "thought" == sArg )
@@ -2622,7 +2637,8 @@ int CommandAnimation(object oPC, string sArg, int iMode) {
 		SendMessageToPC(oPC, " bow, dodge_duck, dodge_side, drink, greeting, head_turn_left, head_turn_right, pause_bored, pause_scratch_head, read");
 		SendMessageToPC(oPC, " salute, spasm, steal, taunt, victory1, victory2, victory3");
 		SendMessageToPC(oPC, " conjure1, conjure2,");
-		SendMessageToPC(oPC, " onward, thought, headache, crossed, come, crouch, hang, smash");
+		SendMessageToPC(oPC, " sitcross, kneel, lieleft, lieright, tapfoot, crazy, freeze");
+		SendMessageToPC(oPC, " onward, thought, headache, crossed, come, crouch, hang, sleep, smash");
 
 		return SYNTAX;
 	}
