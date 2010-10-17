@@ -2,7 +2,8 @@ extern("inc_cdb")
 extern("inc_nwnx_func")
 extern("inc_target")
 
-void RestoreSpellbookByClass(object creature, int class) {
+void RestoreSpellbookByClass(object creature, int class,
+		bool spontaneousCaster) {
 	if (
 		GetClassByPosition(1, creature) != class &&
 		GetClassByPosition(2, creature) != class &&
@@ -15,25 +16,33 @@ void RestoreSpellbookByClass(object creature, int class) {
 		if (slots < 1)
 			return;
 
-		int slot; for (slot = 0; slot < slots; slot++) {
-			struct MemorizedSpellSlot ms =
-				GetMemorizedSpell(creature, class, level, slot);
+		if (spontaneousCaster) {
+			SetRemainingSpellSlots(creature, class, level, slots);
 
-			if (ms.ready || ms.id < 0)
-				continue;
+		} else {
+			int slot; for (slot = 0; slot < slots; slot++) {
+				struct MemorizedSpellSlot ms =
+					GetMemorizedSpell(creature, class, level, slot);
 
-			ms.ready = true;
-			SetMemorizedSpell(creature, class, level, slot, ms);
+				if (ms.ready || ms.id < 0)
+					continue;
+
+				ms.ready = true;
+				SetMemorizedSpell(creature, class, level, slot, ms);
+			}
 		}
 	}
 }
 
 void RestoreSpellbook(object creature) {
-	RestoreSpellbookByClass(creature, CLASS_TYPE_WIZARD);
-	RestoreSpellbookByClass(creature, CLASS_TYPE_CLERIC);
-	RestoreSpellbookByClass(creature, CLASS_TYPE_DRUID);
-	RestoreSpellbookByClass(creature, CLASS_TYPE_RANGER);
-	RestoreSpellbookByClass(creature, CLASS_TYPE_PALADIN);
+	RestoreSpellbookByClass(creature, CLASS_TYPE_WIZARD, false);
+	RestoreSpellbookByClass(creature, CLASS_TYPE_CLERIC, false);
+	RestoreSpellbookByClass(creature, CLASS_TYPE_DRUID, false);
+	RestoreSpellbookByClass(creature, CLASS_TYPE_RANGER, false);
+	RestoreSpellbookByClass(creature, CLASS_TYPE_PALADIN, false);
+
+	RestoreSpellbookByClass(creature, CLASS_TYPE_BARD, true);
+	RestoreSpellbookByClass(creature, CLASS_TYPE_SORCERER, true);
 }
 
 void main() {
