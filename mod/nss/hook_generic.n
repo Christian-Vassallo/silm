@@ -198,11 +198,11 @@ void ExecuteNamedSpellScript(object caster, object spellCastItem,
 		string spellScript, int spell, int casterLevel, int metaMagic,
 		object spellTargetObject, location spellTargetLocation) {
 	
-	SetLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled", 1);
 	if (spell > -1) {
 		SetLocalInt(GetModule(), __FILE__ + "GetSpellId", spell);
-		SetLocalInt(GetModule(), __FILE__ + "GetCasterLevelEnabled", 1);
+		SetLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled", 1);
 	}
+	SetLocalInt(GetModule(), __FILE__ + "GetCasterLevelEnabled", 1);
 	SetLocalInt(GetModule(), __FILE__ + "GetCasterLevel", casterLevel);
 	SetLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeatEnabled", 1);
 	SetLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeat", metaMagic);
