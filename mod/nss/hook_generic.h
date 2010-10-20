@@ -21,6 +21,7 @@ extern("hook_generic")
 #define GetMetaMagicFeat() Hook_GetMetaMagicFeat()
 #define GetCasterLevel(...) Hook_GetCasterLevel(__VA_ARGS__)
 #define GetSpellId() Hook_GetSpellId()
+#define GetSpellSaveDC() Hook_GetSpellSaveDC()
 
 #define ApplyEffectAtLocation(...) Hook_ApplyEffectAtLocation(__VA_ARGS__)
 #define ApplyEffectToObject(...) Hook_ApplyEffectToObject(__VA_ARGS__)

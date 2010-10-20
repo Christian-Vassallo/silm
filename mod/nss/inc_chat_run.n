@@ -616,11 +616,12 @@ void RegisterAllCommands() {
 	
 	// Chatcommand: castspell
 	// Cast a spell.
-	RegisterCommand("castspell", "i mm= cl= loc", 1, 1);
+	RegisterCommand("castspell", "i mm= cl= dc= loc", 1, 1);
 	RH("Casts a spell on the current target or location.");
 	RHs("-loc >> Cast spell on location instead of target");
 	RHs("-i >> Instant cast, no action queue.");
 	RHs("-cl=N >> Specify caster level. Defaults to 1.");
+	RHs("-dc=N >> Specify spell save DC. Defaults to engine value.");
 	RHs("-mm=N >> Specify metamagic. empower=1 extend=2 maximize=4");
 	RAF(AMASK_GLOBAL_GM);
 

@@ -973,6 +973,13 @@ int CommandCastSpell(object oPC, int iMode) {
 	if (getopt_opt("loc"))
 		oTarget = OBJECT_INVALID;
 
+	int default_dc = -1;
+	int dc = default_dc;
+	if (getopt_opt("dc"))
+		dc = atoi(getopt_optv("dc"));
+	if (dc < 1 || dc > 0xff)
+		dc = default_dc;
+
 	int idx; for (idx = 0; idx < getopt_argc(); idx++) {
 		int spell = atoi(getopt_arg(idx));
 		if (spell < 0)
@@ -988,12 +995,12 @@ int CommandCastSpell(object oPC, int iMode) {
 
 			AssignCommand(oPC,
 				ActionDoCommand(ExecuteSpellScript(oPC, OBJECT_INVALID,
-					spell, cl, nMeta, oTarget, lTarget))
+					spell, cl, nMeta, dc, oTarget, lTarget))
 			);
 
 		} else {
 			ExecuteSpellScript(oPC, OBJECT_INVALID,
-				spell, cl, nMeta, oTarget, lTarget);
+				spell, cl, nMeta, dc, oTarget, lTarget);
 		}
 	}
 

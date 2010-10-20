@@ -175,6 +175,14 @@ int Hook_GetSpellId() {
 		return GetSpellId();
 }
 
+#undef GetSpellSaveDC
+int Hook_GetSpellSaveDC() {
+	if (GetLocalInt(GetModule(), __FILE__ + "GetSpellSaveDCEnabled"))
+		return GetLocalInt(GetModule(), __FILE__ + "GetSpellSaveDC");
+	else
+		return GetSpellSaveDC();
+}
+
 #undef ApplyEffectAtLocation
 void Hook_ApplyEffectAtLocation(int nDurationType, effect eEffect,
 		location lLocation, float fDuration=0.0f) {
@@ -196,11 +204,15 @@ void Hook_ApplyEffectToObject(int nDurationType, effect eEffect,
 
 void ExecuteNamedSpellScript(object caster, object spellCastItem,
 		string spellScript, int spell, int casterLevel, int metaMagic,
-		object spellTargetObject, location spellTargetLocation) {
+		int spellSaveDC, object spellTargetObject, location spellTargetLocation) {
 	
 	if (spell > -1) {
 		SetLocalInt(GetModule(), __FILE__ + "GetSpellId", spell);
 		SetLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled", 1);
+	}
+	if (spellSaveDC > -1) {
+		SetLocalInt(GetModule(), __FILE__ + "GetSpellSaveDC", spell);
+		SetLocalInt(GetModule(), __FILE__ + "GetSpellSaveDCEnabled", 1);
 	}
 	SetLocalInt(GetModule(), __FILE__ + "GetCasterLevelEnabled", 1);
 	SetLocalInt(GetModule(), __FILE__ + "GetCasterLevel", casterLevel);
@@ -217,6 +229,8 @@ void ExecuteNamedSpellScript(object caster, object spellCastItem,
 
 	if (spell > -1)
 		DeleteLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled");
+	if (spellSaveDC > -1)
+		DeleteLocalInt(GetModule(), __FILE__ + "GetSpellSaveDCEnabled");
 	DeleteLocalInt(GetModule(), __FILE__ + "GetCasterLevelEnabled");
 	DeleteLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeatEnabled");
 	DeleteLocalObject(GetModule(), __FILE__ + "GetSpellTargetObject");
@@ -225,7 +239,7 @@ void ExecuteNamedSpellScript(object caster, object spellCastItem,
 }
 
 void ExecuteSpellScript(object caster, object spellCastItem,
-		int spell, int casterLevel, int metaMagic,
+		int spell, int casterLevel, int metaMagic, int spellSaveDC,
 		object spellTargetObject, location spellTargetLocation) {
 
 	string spellScript = Get2DAString("spells", "ImpactScript", spell);
@@ -233,5 +247,6 @@ void ExecuteSpellScript(object caster, object spellCastItem,
 		return;
 	
 	ExecuteNamedSpellScript(caster, spellCastItem, spellScript, spell,
-		casterLevel, metaMagic, spellTargetObject, spellTargetLocation);
+		casterLevel, metaMagic, spellSaveDC,
+		spellTargetObject, spellTargetLocation);
 }
