@@ -6,10 +6,12 @@ extern("_gen")
 
 bool supernatural_slow_effect(object oPC, int remove_when = false, int add_when_not = false, int amount = 33) {
 	effect e = GetFirstEffect(oPC);
+	int hasEffectAC = GetLocalInt(oPC, __FILE__);
 	while (GetIsEffectValid(e)) {
 		if (GetEffectType(e) == EFFECT_TYPE_MOVEMENT_SPEED_DECREASE &&
 			GetEffectDurationType(e) == DURATION_TYPE_PERMANENT &&
-			GetEffectSubType(e) == SUBTYPE_SUPERNATURAL
+			GetEffectSubType(e) == SUBTYPE_SUPERNATURAL &&
+			GetEffectInteger(e, 0) == hasEffectAC
 			//TODO: check eff int for exact value to have it match
 		) {
 			if (remove_when) {
@@ -25,7 +27,7 @@ bool supernatural_slow_effect(object oPC, int remove_when = false, int add_when_
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT,
 			SupernaturalEffect(EffectMovementSpeedDecrease(amount)),
 		oPC);
-		SetLocalInt(oPC, __FILE__, true);
+		SetLocalInt(oPC, __FILE__, amount);
 		// SendMessageToAllDMs("e_ac_slowdown.n: Adding ac slowdown to " + GetName(oPC));
 	}
 
@@ -35,15 +37,15 @@ bool supernatural_slow_effect(object oPC, int remove_when = false, int add_when_
 void each(object oPC) {
 	object armor = GetItemInSlot(INVENTORY_SLOT_CHEST, oPC);
 
-	int hasEffect = GetLocalInt(oPC, __FILE__);
+	bool hasEffectAC = GetLocalInt(oPC, __FILE__) != false;
 
 	int ac = 0;
 	if (GetIsObjectValid(armor))
 		ac = GetArmorAC(armor); /* nwnx_functions */
 
-	if (ac >= 5 && !hasEffect)
+	if (ac >= 5 && !hasEffectAC)
 		supernatural_slow_effect(oPC, false, true, 33 - (8 - ac) * 5);
-	else if (ac < 5 && hasEffect)
+	else if (ac < 5 && hasEffectAC)
 		supernatural_slow_effect(oPC, true, false);
 }
 
