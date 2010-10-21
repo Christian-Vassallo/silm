@@ -10,9 +10,11 @@ bool supernatural_slow_effect(object oPC, int remove_when = false, int add_when_
 		if (GetEffectType(e) == EFFECT_TYPE_MOVEMENT_SPEED_DECREASE &&
 			GetEffectDurationType(e) == DURATION_TYPE_PERMANENT &&
 			GetEffectSubType(e) == SUBTYPE_SUPERNATURAL
+			//TODO: check eff int for exact value to have it match
 		) {
 			if (remove_when) {
 				// SendMessageToAllDMs("a_ac_slowdown.n: Removing ac slowdown from " + GetName(oPC));
+				SetLocalInt(oPC, __FILE__, false);
 				RemoveEffect(oPC, e);
 			}
 			return true;
@@ -23,35 +25,34 @@ bool supernatural_slow_effect(object oPC, int remove_when = false, int add_when_
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT,
 			SupernaturalEffect(EffectMovementSpeedDecrease(amount)),
 		oPC);
+		SetLocalInt(oPC, __FILE__, true);
 		// SendMessageToAllDMs("e_ac_slowdown.n: Adding ac slowdown to " + GetName(oPC));
 	}
 
 	return false;
 }
 
-void each(object oPC, object eqitem) {
+void each(object oPC) {
 	object armor = GetItemInSlot(INVENTORY_SLOT_CHEST, oPC);
+
+	int hasEffect = GetLocalInt(oPC, __FILE__);
 
 	int ac = 0;
 	if (GetIsObjectValid(armor))
 		ac = GetArmorAC(armor); /* nwnx_functions */
 
-	if (ac >= 5)
+	if (ac >= 5 && !hasEffect)
 		supernatural_slow_effect(oPC, false, true, 33 - (8 - ac) * 5);
-	else
+	else if (ac < 5 && hasEffect)
 		supernatural_slow_effect(oPC, true, false);
 }
 
 void main() {
 	struct EventInfo ei = GetEventInfo();
 
-	if ("item_equip" == ei.ev) {
-		if (BASE_ITEM_ARMOR == GetBaseItemType(ei.actedon))
-			each(ei.actor, ei.actedon);
-	}
+	if ("player_hb" == ei.ev)
+		each(ei.runnable);
 
-	if ("item_unequip" == ei.ev) {
-		if (BASE_ITEM_ARMOR == GetBaseItemType(ei.actedon))
-			each(ei.actor, ei.actedon);
-	}
+	if ("creature_hb" == ei.ev)
+		each(ei.runnable);
 }
