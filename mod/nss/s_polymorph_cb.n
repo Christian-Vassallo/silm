@@ -45,9 +45,8 @@ void main() {
 	ApplyEffectToObject(DTI, eVis, oTarget);
 	ApplyEffectToObject(DTP, eP, oTarget);
 
-	if (iDoWildShapeTransform) {
-		DelayCommand(1.0, DoWildShapeTransForm(oPC, iSelection));
-	}
+	if (iDoWildShapeTransform)
+		DoWildShapeTransForm(oPC, iSelection);
 
 	// And remove the conversation thingy
 	AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
