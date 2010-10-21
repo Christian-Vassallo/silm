@@ -108,9 +108,6 @@ void ToDMs(string sMsg);
 // Function: Floaty
 void Floaty(string sMsg, object oPC = OBJECT_SELF, int nBroadCast = 0);
 
-// Function: GetArmorAC
-int GetArmorAC(object oItem);
-
 string AlignmentToString(int ge, int lc, bool short = false);
 
 // Function: EffectToString
@@ -196,44 +193,6 @@ string AlignmentToString(int ge, int lc, bool short = false) {
 	}
 	return short ? lcs + ges : lcs + " " + ges;
 }
-
-
-int GetArmorAC(object oItem) { 
-     if (!GetIsObjectValid(oItem)) 
-         return 0; 
- 
-     switch (GetBaseItemType(oItem)) { 
-         case BASE_ITEM_SMALLSHIELD: return 1; 
-         case BASE_ITEM_LARGESHIELD: return 2; 
-         case BASE_ITEM_TOWERSHIELD: return 3; 
-         case BASE_ITEM_ARMOR: break; 
-         default: return 0; 
-     } 
- 
-     int bID = GetIdentified(oItem); 
- 
-     SetIdentified(oItem, FALSE); 
- 
-     int nBaseAC = 0; 
- 
-     switch (GetGoldPieceValue(oItem)) { 
-         case 5:    nBaseAC = 1; break;  // Padded 
-         case 10:   nBaseAC = 2; break;  // Leather 
-         case 15:   nBaseAC = 3; break;  // Studded Leather / Hide 
-         case 100:  nBaseAC = 4; break;  // Chain Shirt / Scale Mail 
-         case 150:  nBaseAC = 5; break;  // Chainmail / Breastplate 
-         case 200:  nBaseAC = 6; break;  // Splint Mail / Banded Mail 
-         case 600:  nBaseAC = 7; break;  // Half Plate 
-         case 1500: nBaseAC = 8; break;  // Full Plate 
-    } 
- 
-    SetIdentified(oItem, bID); 
- 
-    return nBaseAC; 
-}
-
-
-
 
 
 void Floaty(string sMsg, object oPC = OBJECT_SELF, int nBroadCast = 0) {
