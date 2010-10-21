@@ -51,6 +51,7 @@ bool GetIsActionModeAllowed(object creature, int actionMode) {
 }
 
 void set_mode(object player, int actionMode, bool showText = true) {
+	int oldMode = get_mode(player);
 	SetLocalInt(player, "auto_mode", actionMode);
 
 	if (actionMode != ACTION_MODE_NONE) {
@@ -60,10 +61,13 @@ void set_mode(object player, int actionMode, bool showText = true) {
 				" auto-mode.");
 
 		automode_check(actionMode, player, actionMode);
-	} else
+	} else {
 		if (showText)
 			SendMessageToPC(player, ColorTag(Darken(cTeal, 60)) +
 				"DISabled auto-mode.");
+
+		SetActionMode(player, oldMode, false);
+	}
 }
 
 /** Makes sure the given actionmode has the configured state on creature. */
