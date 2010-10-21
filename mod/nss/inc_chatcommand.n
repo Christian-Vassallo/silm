@@ -1567,6 +1567,8 @@ int CommandEffect(object oPC, int iMode) {
 				StringToInt(s6));
 	else if ( "polymorph" == sE && getopt_argc() == 3 )
 		e = EffectPolymorph(StringToInt(s1), StringToBool(s2));
+	else if ( "wildshape" == sE && getopt_argc() == 3 )
+		e = EffectWildshape(oT, StringToInt(s1), StringToBool(s2));
 	else if ( "acincrease" == sE && getopt_argc() == 2 )
 		e = EffectACIncrease(StringToInt(s1));
 	else if ( "acdecrease" == sE && getopt_argc() == 2 )
@@ -1621,9 +1623,7 @@ int CommandEffect(object oPC, int iMode) {
 		DelayCommand(getsleep(), ApplyEffectAtLocation(nDurT, e, lT, fDur));
 
 	else {
-		ApplyEffectToObject(nDurT, e, oT, fDur);
-		if ("polymorph" == sE)
-			DoWildShapeTransForm(oT, StringToInt(s1));
+		DelayCommand(getsleep(), ApplyEffectToObject(nDurT, e, oT, fDur));
 	}
 
 	return OK;

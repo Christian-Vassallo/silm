@@ -32,7 +32,7 @@ void main() {
 
 	// Do the actual polymorphing
 
-	effect eP = SupernaturalEffect(EffectPolymorph(iSelection, FALSE));
+	effect eP = SupernaturalEffect(EffectWildshape(oPC, iSelection, FALSE));
 	effect eVis = EffectVisualEffect(VFX_IMP_POLYMORPH);
 
 	if ( sEffect != "" ) {
@@ -41,8 +41,6 @@ void main() {
 
 	ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
 	ApplyEffectToObject(DURATION_TYPE_PERMANENT, eP, oTarget);
-
-	DoWildShapeTransForm(oPC, iSelection);
 
 	// And remove the conversation thingy
 	AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));

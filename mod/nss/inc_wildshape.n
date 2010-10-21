@@ -1,11 +1,8 @@
 extern("inc_nwnx_func")
 
-void DoWildShapeTransForm(object oTarget, int nPolyID);
+effect EffectWildshape(object t, int poly, int locked = false);
 
-int __wsCpProp(object old, object new) {
-	if (!is_valid(old) || !is_valid(new))
-		return 0;
-	
+int __getAC(object old) {
 	int ac = GetArmorAC(old);
 
 	bool found_wild_p = false;
@@ -20,21 +17,21 @@ int __wsCpProp(object old, object new) {
 	if (!found_wild_p)
 		return 0;
 
-	if (ac > 0)
-		AddItemProperty(DURATION_TYPE_PERMANENT, ItemPropertyACBonus(ac), new);
 	return ac;
 }
 
 
-void DoWildShapeTransForm(object oTarget, int nPolyID) {
-	int bArmor = GetLocalInt(GetModule(), "WildshapeMergeAlways") ||
-		atoi(Get2DAString("polymorph", "MergeA", nPolyID));
+effect EffectWildshape(object t, int poly, int locked = false) {
+	 int bArmor = GetLocalInt(GetModule(), "WildshapeMergeAlways") ||
+		atoi(Get2DAString("polymorph", "MergeA", poly));
+	
+	effect ret = EffectPolymorph(poly, locked);
 
 	if (!bArmor)
-		return;
+		return ret;
 
-	object oArmorOld  = GetItemInSlot(INVENTORY_SLOT_CHEST, oTarget);
-	object oShield    = GetItemInSlot(INVENTORY_SLOT_LEFTHAND, oTarget);
+	object oArmorOld  = GetItemInSlot(INVENTORY_SLOT_CHEST, t);
+	object oShield    = GetItemInSlot(INVENTORY_SLOT_LEFTHAND, t);
 
 	if (GetIsObjectValid(oShield)) {
 		if (GetBaseItemType(oShield) !=BASE_ITEM_LARGESHIELD &&
@@ -45,15 +42,15 @@ void DoWildShapeTransForm(object oTarget, int nPolyID) {
 		}
 	}
 
-	object oArmorNew = GetItemInSlot(INVENTORY_SLOT_CARMOUR, OBJECT_SELF);
+	int ac = 0;
+	ac += __getAC(oArmorOld);
+	ac += __getAC(oShield);
 
-	int ac;
-	ac = __wsCpProp(oShield, oArmorNew);
-	if (ac > 0)
-		SendMessageToPC(oTarget, "WildshapeMergeAC: Merged " + itoa(ac) +
-			" AC from " + GetName(oShield));
-	ac = __wsCpProp(oArmorOld, oArmorNew);
-	if (ac > 0)
-		SendMessageToPC(oTarget, "WildshapeMergeAC: Merged " + itoa(ac) +
-			" AC from " + GetName(oArmorOld));
+	if (ac > 0) {
+		effect acBonus = SupernaturalEffect(EffectACIncrease(ac,
+			AC_ARMOUR_ENCHANTMENT_BONUS));
+		ret = EffectLinkEffects(acBonus, ret);
+	}
+
+	return ret;
 }
