@@ -1,7 +1,8 @@
 extern("inc_nwnx_events")
 extern("inc_colors")
 
-const int ACTION_MODE_NONE = -1;
+// This overrides stealth, with is fine for this script
+const int ACTION_MODE_NONE = 0;
 
 /** Makes sure the given actionmode has the configured state on creature. */
 void automode_check(int actionMode, object creature, int configuredMode);
@@ -82,6 +83,9 @@ void automode_check(int actionMode, object creature, int configuredMode) {
 
 void automode_check_combat_modes(object creature) {
 	int configuredMode = get_mode(creature);
+	if (configuredMode == ACTION_MODE_NONE)
+		return;
+
 	if (!GetIsActionModeAllowed(creature, configuredMode)) {
 		set_mode(creature, ACTION_MODE_NONE, false);
 		return;
