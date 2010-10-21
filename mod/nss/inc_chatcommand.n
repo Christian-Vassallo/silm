@@ -24,6 +24,7 @@ extern("x0_i0_anims")
 extern("inc_events_sql")
 extern("inc_chat")
 extern("inc_name")
+extern("inc_wildshape")
 
 // extern inc_chat_run
 int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel);
@@ -1469,6 +1470,9 @@ int CommandXP(object oPC, int iMode) {
 }
 
 
+void _CommandEffectApply(object pc, effect p, int id) {
+}
+
 int CommandEffect(object oPC, int iMode) {
 	object
 	oT = GetTarget();
@@ -1615,8 +1619,12 @@ int CommandEffect(object oPC, int iMode) {
 
 	if (getopt_opt("loc") )
 		DelayCommand(getsleep(), ApplyEffectAtLocation(nDurT, e, lT, fDur));
-	else
-		DelayCommand(getsleep(), ApplyEffectToObject(nDurT, e, oT, fDur));
+
+	else {
+		ApplyEffectToObject(nDurT, e, oT, fDur);
+		if ("polymorph" == sE)
+			DoWildShapeTransForm(oT, StringToInt(s1));
+	}
 
 	return OK;
 }

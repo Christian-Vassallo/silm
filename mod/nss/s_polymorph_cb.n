@@ -1,8 +1,8 @@
-/* warning: this callback hook is both used for polymorph other and polymorph self! */
+/* warning: this callback hook is both used for
+ * polymorph other, polymorph self and wildshape! */
 
-extern("_gen")
 extern("inc_lists")
-extern("inc_nwnx_func")
+extern("inc_wildshape")
 
 const string CT = "polymorph";
 
@@ -26,10 +26,7 @@ void main() {
 	oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC"),
 	oTarget = GetLocalObject(oPC, "polymorph_target");
 
-	int
-	iSelection = GetLocalInt(oPC, "ConvList_Select"),
-	iDoWildShapeTransform = GetLocalInt(oPC, "wildshape_transform");
-
+	int iSelection = GetLocalInt(oPC, "ConvList_Select");
 	iSelection = GetListInt(oPC, CT, iSelection);
 	string sEffect = GetListString(oPC, CT, iSelection);
 
@@ -42,67 +39,11 @@ void main() {
 		eP = EffectLinkEffects(GetEffectBonus(sEffect), eP);
 	}
 
-	ApplyEffectToObject(DTI, eVis, oTarget);
-	ApplyEffectToObject(DTP, eP, oTarget);
+	ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT, eP, oTarget);
 
-	if (iDoWildShapeTransform)
-		DoWildShapeTransForm(oPC, iSelection);
+	DoWildShapeTransForm(oPC, iSelection);
 
 	// And remove the conversation thingy
 	AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
-}
-
-int wsCpProp(object old, object new) {
-	if (!is_valid(old) || !is_valid(new))
-		return 0;
-	
-	int ac = GetArmorAC(old);
-
-	bool found_wild_p = false;
-
-	iterate_iprp(old, p,
-		if (GetItemPropertyType(p) == ITEM_PROPERTY_AC_BONUS)
-			ac += GetItemPropertyCostTableValue(p);
-		if (GetItemPropertyType(p) == ITEM_PROPERTY_WILDSHAPE_MERGE_AC)
-			found_wild_p = true;
-	);
-
-	if (!found_wild_p)
-		return 0;
-
-	if (ac > 0)
-		AddItemProperty(DURATION_TYPE_PERMANENT, ItemPropertyACBonus(ac), new);
-	return ac;
-}
-
-
-void DoWildShapeTransForm(object oTarget, int nPolyID) {
-	int bArmor = atoi(Get2DAString("polymorph", "MergeA", nPolyID));
-
-	if (!bArmor)
-		return;
-
-	object oArmorOld  = GetItemInSlot(INVENTORY_SLOT_CHEST, oTarget);
-	object oShield    = GetItemInSlot(INVENTORY_SLOT_LEFTHAND, oTarget);
-
-	if (GetIsObjectValid(oShield)) {
-		if (GetBaseItemType(oShield) !=BASE_ITEM_LARGESHIELD &&
-			GetBaseItemType(oShield) !=BASE_ITEM_SMALLSHIELD &&
-			GetBaseItemType(oShield) !=BASE_ITEM_TOWERSHIELD)
-		{
-			oShield = OBJECT_INVALID;
-		}
-	}
-
-	object oArmorNew = GetItemInSlot(INVENTORY_SLOT_CARMOUR, OBJECT_SELF);
-
-	int ac;
-	ac = wsCpProp(oShield, oArmorNew);
-	if (ac > 0)
-		SendMessageToPC(oTarget, "WildshapeMergeAC: Merged " + itoa(ac) +
-			" AC from " + GetName(oShield));
-	ac = wsCpProp(oArmorOld, oArmorNew);
-	if (ac > 0)
-		SendMessageToPC(oTarget, "WildshapeMergeAC: Merged " + itoa(ac) +
-			" AC from " + GetName(oArmorOld));
 }

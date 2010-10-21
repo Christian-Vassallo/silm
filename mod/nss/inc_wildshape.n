@@ -1,0 +1,59 @@
+extern("inc_nwnx_func")
+
+void DoWildShapeTransForm(object oTarget, int nPolyID);
+
+int __wsCpProp(object old, object new) {
+	if (!is_valid(old) || !is_valid(new))
+		return 0;
+	
+	int ac = GetArmorAC(old);
+
+	bool found_wild_p = false;
+
+	iterate_iprp(old, p,
+		if (GetItemPropertyType(p) == ITEM_PROPERTY_AC_BONUS)
+			ac += GetItemPropertyCostTableValue(p);
+		if (GetItemPropertyType(p) == ITEM_PROPERTY_WILDSHAPE_MERGE_AC)
+			found_wild_p = true;
+	);
+
+	if (!found_wild_p)
+		return 0;
+
+	if (ac > 0)
+		AddItemProperty(DURATION_TYPE_PERMANENT, ItemPropertyACBonus(ac), new);
+	return ac;
+}
+
+
+void DoWildShapeTransForm(object oTarget, int nPolyID) {
+	int bArmor = GetLocalInt(GetModule(), "WildshapeMergeAlways") ||
+		atoi(Get2DAString("polymorph", "MergeA", nPolyID));
+
+	if (!bArmor)
+		return;
+
+	object oArmorOld  = GetItemInSlot(INVENTORY_SLOT_CHEST, oTarget);
+	object oShield    = GetItemInSlot(INVENTORY_SLOT_LEFTHAND, oTarget);
+
+	if (GetIsObjectValid(oShield)) {
+		if (GetBaseItemType(oShield) !=BASE_ITEM_LARGESHIELD &&
+			GetBaseItemType(oShield) !=BASE_ITEM_SMALLSHIELD &&
+			GetBaseItemType(oShield) !=BASE_ITEM_TOWERSHIELD)
+		{
+			oShield = OBJECT_INVALID;
+		}
+	}
+
+	object oArmorNew = GetItemInSlot(INVENTORY_SLOT_CARMOUR, OBJECT_SELF);
+
+	int ac;
+	ac = __wsCpProp(oShield, oArmorNew);
+	if (ac > 0)
+		SendMessageToPC(oTarget, "WildshapeMergeAC: Merged " + itoa(ac) +
+			" AC from " + GetName(oShield));
+	ac = __wsCpProp(oArmorOld, oArmorNew);
+	if (ac > 0)
+		SendMessageToPC(oTarget, "WildshapeMergeAC: Merged " + itoa(ac) +
+			" AC from " + GetName(oArmorOld));
+}
