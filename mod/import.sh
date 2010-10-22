@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script imports game resources into their proper
 # directories within the mod structure, converting them
