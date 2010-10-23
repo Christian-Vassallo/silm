@@ -6,9 +6,9 @@ AreaProperties:
   value: !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 100
     AmbientSndDay: {type: :int, value: 0}
-    AmbientSndDayVol: {type: :int, value: 36}
+    AmbientSndDayVol: {type: :int, value: 0}
     AmbientSndNight: {type: :int, value: 0}
-    AmbientSndNitVol: {type: :int, value: 15}
+    AmbientSndNitVol: {type: :int, value: 0}
     EnvAudio: {type: :int, value: 0}
     MusicBattle: {type: :int, value: 0}
     MusicDay: {type: :int, value: 0}
@@ -20,8 +20,133 @@ Creature List:
 
 Door List: 
   type: :list
-  value: []
-
+  value: 
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 8
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 0}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 60}
+    Description: 
+      type: :cexolocstr
+      str_ref: 9074
+      value: 
+        0: This heavy stone door is very sturdy.
+    DisarmDC: {type: :byte, value: 20}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 28}
+    GenericType_New: {type: :dword, value: 216}
+    HP: {type: :short, value: 60}
+    Hardness: {type: :byte, value: 8}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LinkedTo: {type: :cexostr, value: ""}
+    LinkedToFlags: {type: :byte, value: 0}
+    LoadScreenID: {type: :word, value: 0}
+    LocName: 
+      type: :cexolocstr
+      str_ref: 14452
+      value: 
+        0: Stone Door 08h
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: door_click}
+    OnClosed: {type: :resref, value: door_closed}
+    OnDamaged: {type: :resref, value: door_damaged}
+    OnDeath: {type: :resref, value: door_death}
+    OnDisarm: {type: :resref, value: door_disarm}
+    OnFailToOpen: {type: :resref, value: door_failtoopen}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: door_lock}
+    OnMeleeAttacked: {type: :resref, value: door_attacked}
+    OnOpen: {type: :resref, value: door_open}
+    OnSpellCastAt: {type: :resref, value: door_spellcast}
+    OnTrapTriggered: {type: :resref, value: door_traptrig}
+    OnUnlock: {type: :resref, value: door_unlock}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 28}
+    Plot: {type: :byte, value: 0}
+    PortraitId: {type: :word, value: 1013}
+    Ref: {type: :byte, value: 0}
+    Tag: {type: :cexostr, value: CTP_StoneDoor_08h}
+    TemplateResRef: {type: :resref, value: ctp_door_08h}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 2}
+    Will: {type: :byte, value: 15}
+    X: {type: :float, value: 65.0}
+    Y: {type: :float, value: 50.0}
+    Z: {type: :float, value: 5.5}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 8
+    AnimationState: {type: :byte, value: 1}
+    Appearance: {type: :dword, value: 0}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -3.1416}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 60}
+    Description: 
+      type: :cexolocstr
+      str_ref: 9074
+      value: 
+        0: This heavy stone door is very sturdy.
+    DisarmDC: {type: :byte, value: 20}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 28}
+    GenericType_New: {type: :dword, value: 216}
+    HP: {type: :short, value: 60}
+    Hardness: {type: :byte, value: 8}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LinkedTo: {type: :cexostr, value: ""}
+    LinkedToFlags: {type: :byte, value: 0}
+    LoadScreenID: {type: :word, value: 0}
+    LocName: 
+      type: :cexolocstr
+      str_ref: 14452
+      value: 
+        0: Stone Door 08h
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: door_click}
+    OnClosed: {type: :resref, value: door_closed}
+    OnDamaged: {type: :resref, value: door_damaged}
+    OnDeath: {type: :resref, value: door_death}
+    OnDisarm: {type: :resref, value: door_disarm}
+    OnFailToOpen: {type: :resref, value: door_failtoopen}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: door_lock}
+    OnMeleeAttacked: {type: :resref, value: door_attacked}
+    OnOpen: {type: :resref, value: door_open}
+    OnSpellCastAt: {type: :resref, value: door_spellcast}
+    OnTrapTriggered: {type: :resref, value: door_traptrig}
+    OnUnlock: {type: :resref, value: door_unlock}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 28}
+    Plot: {type: :byte, value: 0}
+    PortraitId: {type: :word, value: 1013}
+    Ref: {type: :byte, value: 0}
+    Tag: {type: :cexostr, value: CTP_StoneDoor_08h}
+    TemplateResRef: {type: :resref, value: ctp_door_08h}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 2}
+    Will: {type: :byte, value: 15}
+    X: {type: :float, value: 45.0}
+    Y: {type: :float, value: 30.0}
+    Z: {type: :float, value: 5.5}
 Encounter List: 
   type: :list
   value: []
@@ -36,33 +161,31 @@ Placeable List:
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
-    Appearance: {type: :dword, value: 497}
+    Appearance: {type: :dword, value: 1330}
     AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: -0.0}
+    Bearing: {type: :float, value: 0.7854}
     BodyBag: {type: :byte, value: 0}
     CloseLockDC: {type: :byte, value: 0}
     Conversation: {type: :resref, value: ""}
-    CurrentHP: {type: :short, value: 15}
+    CurrentHP: {type: :short, value: 10}
     Description: 
       type: :cexolocstr
-      str_ref: 111958
       value: {}
 
-    DisarmDC: {type: :byte, value: 15}
+    DisarmDC: {type: :byte, value: 0}
     Faction: {type: :dword, value: 1}
-    Fort: {type: :byte, value: 16}
-    HP: {type: :short, value: 50}
+    Fort: {type: :byte, value: 5}
+    HP: {type: :short, value: 10}
     Hardness: {type: :byte, value: 5}
     HasInventory: {type: :byte, value: 0}
-    Interruptable: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
     KeyName: {type: :cexostr, value: ""}
     KeyRequired: {type: :byte, value: 0}
     LocName: 
       type: :cexolocstr
-      str_ref: 111019
-      value: {}
-
-    Lockable: {type: :byte, value: 0}
+      value: 
+        0: Dreck
+    Lockable: {type: :byte, value: 1}
     Locked: {type: :byte, value: 0}
     OnClick: {type: :resref, value: ""}
     OnClosed: {type: :resref, value: ""}
@@ -79,13 +202,13 @@ Placeable List:
     OnUnlock: {type: :resref, value: ""}
     OnUsed: {type: :resref, value: ""}
     OnUserDefined: {type: :resref, value: ""}
-    OpenLockDC: {type: :byte, value: 18}
-    Plot: {type: :byte, value: 0}
-    PortraitId: {type: :word, value: 1163}
+    OpenLockDC: {type: :byte, value: 0}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
     Static: {type: :byte, value: 1}
-    Tag: {type: :cexostr, value: x3_plc_rubble4}
-    TemplateResRef: {type: :resref, value: x3_plc_rubble4}
+    Tag: {type: :cexostr, value: Dreck}
+    TemplateResRef: {type: :resref, value: verschiedenes122}
     TrapDetectDC: {type: :byte, value: 0}
     TrapDetectable: {type: :byte, value: 1}
     TrapDisarmable: {type: :byte, value: 1}
@@ -95,39 +218,37 @@ Placeable List:
     Type: {type: :byte, value: 0}
     Useable: {type: :byte, value: 0}
     Will: {type: :byte, value: 0}
-    X: {type: :float, value: 50.4565}
-    Y: {type: :float, value: 37.0992}
-    Z: {type: :float, value: -0.0}
+    X: {type: :float, value: 71.6851}
+    Y: {type: :float, value: 21.3715}
+    Z: {type: :float, value: 5.0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
-    Appearance: {type: :dword, value: 497}
+    Appearance: {type: :dword, value: 1330}
     AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: -0.9817}
+    Bearing: {type: :float, value: 0.7854}
     BodyBag: {type: :byte, value: 0}
     CloseLockDC: {type: :byte, value: 0}
     Conversation: {type: :resref, value: ""}
-    CurrentHP: {type: :short, value: 15}
+    CurrentHP: {type: :short, value: 10}
     Description: 
       type: :cexolocstr
-      str_ref: 111958
       value: {}
 
-    DisarmDC: {type: :byte, value: 15}
+    DisarmDC: {type: :byte, value: 0}
     Faction: {type: :dword, value: 1}
-    Fort: {type: :byte, value: 16}
-    HP: {type: :short, value: 50}
+    Fort: {type: :byte, value: 5}
+    HP: {type: :short, value: 10}
     Hardness: {type: :byte, value: 5}
     HasInventory: {type: :byte, value: 0}
-    Interruptable: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
     KeyName: {type: :cexostr, value: ""}
     KeyRequired: {type: :byte, value: 0}
     LocName: 
       type: :cexolocstr
-      str_ref: 111019
-      value: {}
-
-    Lockable: {type: :byte, value: 0}
+      value: 
+        0: Dreck
+    Lockable: {type: :byte, value: 1}
     Locked: {type: :byte, value: 0}
     OnClick: {type: :resref, value: ""}
     OnClosed: {type: :resref, value: ""}
@@ -144,13 +265,13 @@ Placeable List:
     OnUnlock: {type: :resref, value: ""}
     OnUsed: {type: :resref, value: ""}
     OnUserDefined: {type: :resref, value: ""}
-    OpenLockDC: {type: :byte, value: 18}
-    Plot: {type: :byte, value: 0}
-    PortraitId: {type: :word, value: 1163}
+    OpenLockDC: {type: :byte, value: 0}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
     Static: {type: :byte, value: 1}
-    Tag: {type: :cexostr, value: x3_plc_rubble4}
-    TemplateResRef: {type: :resref, value: x3_plc_rubble4}
+    Tag: {type: :cexostr, value: Dreck}
+    TemplateResRef: {type: :resref, value: verschiedenes122}
     TrapDetectDC: {type: :byte, value: 0}
     TrapDetectable: {type: :byte, value: 1}
     TrapDisarmable: {type: :byte, value: 1}
@@ -160,39 +281,37 @@ Placeable List:
     Type: {type: :byte, value: 0}
     Useable: {type: :byte, value: 0}
     Will: {type: :byte, value: 0}
-    X: {type: :float, value: 50.7007}
-    Y: {type: :float, value: 31.5696}
-    Z: {type: :float, value: -0.0}
+    X: {type: :float, value: 58.5489}
+    Y: {type: :float, value: 21.1376}
+    Z: {type: :float, value: 5.0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
-    Appearance: {type: :dword, value: 497}
+    Appearance: {type: :dword, value: 1330}
     AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: -0.7854}
+    Bearing: {type: :float, value: -2.5525}
     BodyBag: {type: :byte, value: 0}
     CloseLockDC: {type: :byte, value: 0}
     Conversation: {type: :resref, value: ""}
-    CurrentHP: {type: :short, value: 15}
+    CurrentHP: {type: :short, value: 10}
     Description: 
       type: :cexolocstr
-      str_ref: 111958
       value: {}
 
-    DisarmDC: {type: :byte, value: 15}
+    DisarmDC: {type: :byte, value: 0}
     Faction: {type: :dword, value: 1}
-    Fort: {type: :byte, value: 16}
-    HP: {type: :short, value: 50}
+    Fort: {type: :byte, value: 5}
+    HP: {type: :short, value: 10}
     Hardness: {type: :byte, value: 5}
     HasInventory: {type: :byte, value: 0}
-    Interruptable: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
     KeyName: {type: :cexostr, value: ""}
     KeyRequired: {type: :byte, value: 0}
     LocName: 
       type: :cexolocstr
-      str_ref: 111019
-      value: {}
-
-    Lockable: {type: :byte, value: 0}
+      value: 
+        0: Dreck
+    Lockable: {type: :byte, value: 1}
     Locked: {type: :byte, value: 0}
     OnClick: {type: :resref, value: ""}
     OnClosed: {type: :resref, value: ""}
@@ -209,13 +328,13 @@ Placeable List:
     OnUnlock: {type: :resref, value: ""}
     OnUsed: {type: :resref, value: ""}
     OnUserDefined: {type: :resref, value: ""}
-    OpenLockDC: {type: :byte, value: 18}
-    Plot: {type: :byte, value: 0}
-    PortraitId: {type: :word, value: 1163}
+    OpenLockDC: {type: :byte, value: 0}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
     Static: {type: :byte, value: 1}
-    Tag: {type: :cexostr, value: x3_plc_rubble4}
-    TemplateResRef: {type: :resref, value: x3_plc_rubble4}
+    Tag: {type: :cexostr, value: Dreck}
+    TemplateResRef: {type: :resref, value: verschiedenes122}
     TrapDetectDC: {type: :byte, value: 0}
     TrapDetectable: {type: :byte, value: 1}
     TrapDisarmable: {type: :byte, value: 1}
@@ -225,39 +344,37 @@ Placeable List:
     Type: {type: :byte, value: 0}
     Useable: {type: :byte, value: 0}
     Will: {type: :byte, value: 0}
-    X: {type: :float, value: 50.3211}
-    Y: {type: :float, value: 25.6105}
-    Z: {type: :float, value: -0.0}
+    X: {type: :float, value: 58.8862}
+    Y: {type: :float, value: 28.3446}
+    Z: {type: :float, value: 5.0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
-    Appearance: {type: :dword, value: 497}
+    Appearance: {type: :dword, value: 1330}
     AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: 1.1781}
+    Bearing: {type: :float, value: -2.3562}
     BodyBag: {type: :byte, value: 0}
     CloseLockDC: {type: :byte, value: 0}
     Conversation: {type: :resref, value: ""}
-    CurrentHP: {type: :short, value: 15}
+    CurrentHP: {type: :short, value: 10}
     Description: 
       type: :cexolocstr
-      str_ref: 111958
       value: {}
 
-    DisarmDC: {type: :byte, value: 15}
+    DisarmDC: {type: :byte, value: 0}
     Faction: {type: :dword, value: 1}
-    Fort: {type: :byte, value: 16}
-    HP: {type: :short, value: 50}
+    Fort: {type: :byte, value: 5}
+    HP: {type: :short, value: 10}
     Hardness: {type: :byte, value: 5}
     HasInventory: {type: :byte, value: 0}
-    Interruptable: {type: :byte, value: 0}
+    Interruptable: {type: :byte, value: 1}
     KeyName: {type: :cexostr, value: ""}
     KeyRequired: {type: :byte, value: 0}
     LocName: 
       type: :cexolocstr
-      str_ref: 111019
-      value: {}
-
-    Lockable: {type: :byte, value: 0}
+      value: 
+        0: Dreck
+    Lockable: {type: :byte, value: 1}
     Locked: {type: :byte, value: 0}
     OnClick: {type: :resref, value: ""}
     OnClosed: {type: :resref, value: ""}
@@ -274,13 +391,13 @@ Placeable List:
     OnUnlock: {type: :resref, value: ""}
     OnUsed: {type: :resref, value: ""}
     OnUserDefined: {type: :resref, value: ""}
-    OpenLockDC: {type: :byte, value: 18}
-    Plot: {type: :byte, value: 0}
-    PortraitId: {type: :word, value: 1163}
+    OpenLockDC: {type: :byte, value: 0}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
     Static: {type: :byte, value: 1}
-    Tag: {type: :cexostr, value: x3_plc_rubble4}
-    TemplateResRef: {type: :resref, value: x3_plc_rubble4}
+    Tag: {type: :cexostr, value: Dreck}
+    TemplateResRef: {type: :resref, value: verschiedenes122}
     TrapDetectDC: {type: :byte, value: 0}
     TrapDetectable: {type: :byte, value: 1}
     TrapDisarmable: {type: :byte, value: 1}
@@ -290,22 +407,22 @@ Placeable List:
     Type: {type: :byte, value: 0}
     Useable: {type: :byte, value: 0}
     Will: {type: :byte, value: 0}
-    X: {type: :float, value: 46.9609}
-    Y: {type: :float, value: 30.8534}
-    Z: {type: :float, value: -0.0}
+    X: {type: :float, value: 71.6295}
+    Y: {type: :float, value: 27.4958}
+    Z: {type: :float, value: 5.0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
-    Appearance: {type: :dword, value: 343}
+    Appearance: {type: :dword, value: 820}
     AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: -2.7489}
+    Bearing: {type: :float, value: -1.3744}
     BodyBag: {type: :byte, value: 0}
     CloseLockDC: {type: :byte, value: 0}
     Conversation: {type: :resref, value: ""}
     CurrentHP: {type: :short, value: 15}
     Description: 
       type: :cexolocstr
-      str_ref: 68811
+      str_ref: 6792
       value: {}
 
     DisarmDC: {type: :byte, value: 15}
@@ -319,7 +436,7 @@ Placeable List:
     KeyRequired: {type: :byte, value: 0}
     LocName: 
       type: :cexolocstr
-      str_ref: 68810
+      str_ref: 111343
       value: {}
 
     Lockable: {type: :byte, value: 0}
@@ -341,11 +458,11 @@ Placeable List:
     OnUserDefined: {type: :resref, value: ""}
     OpenLockDC: {type: :byte, value: 18}
     Plot: {type: :byte, value: 0}
-    PortraitId: {type: :word, value: 778}
+    PortraitId: {type: :word, value: 1213}
     Ref: {type: :byte, value: 0}
     Static: {type: :byte, value: 1}
-    Tag: {type: :cexostr, value: X0_CITYRUBBLE1}
-    TemplateResRef: {type: :resref, value: x0_cityrubble1}
+    Tag: {type: :cexostr, value: x3_plc_pedestal}
+    TemplateResRef: {type: :resref, value: x3_plc_pedestal}
     TrapDetectDC: {type: :byte, value: 0}
     TrapDetectable: {type: :byte, value: 1}
     TrapDisarmable: {type: :byte, value: 1}
@@ -355,139 +472,9 @@ Placeable List:
     Type: {type: :byte, value: 0}
     Useable: {type: :byte, value: 0}
     Will: {type: :byte, value: 0}
-    X: {type: :float, value: 54.6383}
-    Y: {type: :float, value: 27.622}
-    Z: {type: :float, value: -0.0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 9
-    AnimationState: {type: :byte, value: 0}
-    Appearance: {type: :dword, value: 497}
-    AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: -0.0}
-    BodyBag: {type: :byte, value: 0}
-    CloseLockDC: {type: :byte, value: 0}
-    Conversation: {type: :resref, value: ""}
-    CurrentHP: {type: :short, value: 15}
-    Description: 
-      type: :cexolocstr
-      str_ref: 111958
-      value: {}
-
-    DisarmDC: {type: :byte, value: 15}
-    Faction: {type: :dword, value: 1}
-    Fort: {type: :byte, value: 16}
-    HP: {type: :short, value: 50}
-    Hardness: {type: :byte, value: 5}
-    HasInventory: {type: :byte, value: 0}
-    Interruptable: {type: :byte, value: 0}
-    KeyName: {type: :cexostr, value: ""}
-    KeyRequired: {type: :byte, value: 0}
-    LocName: 
-      type: :cexolocstr
-      str_ref: 111019
-      value: {}
-
-    Lockable: {type: :byte, value: 0}
-    Locked: {type: :byte, value: 0}
-    OnClick: {type: :resref, value: ""}
-    OnClosed: {type: :resref, value: ""}
-    OnDamaged: {type: :resref, value: ""}
-    OnDeath: {type: :resref, value: ""}
-    OnDisarm: {type: :resref, value: ""}
-    OnHeartbeat: {type: :resref, value: ""}
-    OnInvDisturbed: {type: :resref, value: ""}
-    OnLock: {type: :resref, value: ""}
-    OnMeleeAttacked: {type: :resref, value: ""}
-    OnOpen: {type: :resref, value: ""}
-    OnSpellCastAt: {type: :resref, value: ""}
-    OnTrapTriggered: {type: :resref, value: ""}
-    OnUnlock: {type: :resref, value: ""}
-    OnUsed: {type: :resref, value: ""}
-    OnUserDefined: {type: :resref, value: ""}
-    OpenLockDC: {type: :byte, value: 18}
-    Plot: {type: :byte, value: 0}
-    PortraitId: {type: :word, value: 1163}
-    Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
-    Tag: {type: :cexostr, value: x3_plc_rubble4}
-    TemplateResRef: {type: :resref, value: x3_plc_rubble4}
-    TrapDetectDC: {type: :byte, value: 0}
-    TrapDetectable: {type: :byte, value: 1}
-    TrapDisarmable: {type: :byte, value: 1}
-    TrapFlag: {type: :byte, value: 0}
-    TrapOneShot: {type: :byte, value: 1}
-    TrapType: {type: :byte, value: 0}
-    Type: {type: :byte, value: 0}
-    Useable: {type: :byte, value: 0}
-    Will: {type: :byte, value: 0}
-    X: {type: :float, value: 49.868}
-    Y: {type: :float, value: 37.388}
-    Z: {type: :float, value: 4.9288}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 9
-    AnimationState: {type: :byte, value: 0}
-    Appearance: {type: :dword, value: 497}
-    AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: -0.0}
-    BodyBag: {type: :byte, value: 0}
-    CloseLockDC: {type: :byte, value: 0}
-    Conversation: {type: :resref, value: ""}
-    CurrentHP: {type: :short, value: 15}
-    Description: 
-      type: :cexolocstr
-      str_ref: 111958
-      value: {}
-
-    DisarmDC: {type: :byte, value: 15}
-    Faction: {type: :dword, value: 1}
-    Fort: {type: :byte, value: 16}
-    HP: {type: :short, value: 50}
-    Hardness: {type: :byte, value: 5}
-    HasInventory: {type: :byte, value: 0}
-    Interruptable: {type: :byte, value: 0}
-    KeyName: {type: :cexostr, value: ""}
-    KeyRequired: {type: :byte, value: 0}
-    LocName: 
-      type: :cexolocstr
-      str_ref: 111019
-      value: {}
-
-    Lockable: {type: :byte, value: 0}
-    Locked: {type: :byte, value: 0}
-    OnClick: {type: :resref, value: ""}
-    OnClosed: {type: :resref, value: ""}
-    OnDamaged: {type: :resref, value: ""}
-    OnDeath: {type: :resref, value: ""}
-    OnDisarm: {type: :resref, value: ""}
-    OnHeartbeat: {type: :resref, value: ""}
-    OnInvDisturbed: {type: :resref, value: ""}
-    OnLock: {type: :resref, value: ""}
-    OnMeleeAttacked: {type: :resref, value: ""}
-    OnOpen: {type: :resref, value: ""}
-    OnSpellCastAt: {type: :resref, value: ""}
-    OnTrapTriggered: {type: :resref, value: ""}
-    OnUnlock: {type: :resref, value: ""}
-    OnUsed: {type: :resref, value: ""}
-    OnUserDefined: {type: :resref, value: ""}
-    OpenLockDC: {type: :byte, value: 18}
-    Plot: {type: :byte, value: 0}
-    PortraitId: {type: :word, value: 1163}
-    Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
-    Tag: {type: :cexostr, value: x3_plc_rubble4}
-    TemplateResRef: {type: :resref, value: x3_plc_rubble4}
-    TrapDetectDC: {type: :byte, value: 0}
-    TrapDetectable: {type: :byte, value: 1}
-    TrapDisarmable: {type: :byte, value: 1}
-    TrapFlag: {type: :byte, value: 0}
-    TrapOneShot: {type: :byte, value: 1}
-    TrapType: {type: :byte, value: 0}
-    Type: {type: :byte, value: 0}
-    Useable: {type: :byte, value: 0}
-    Will: {type: :byte, value: 0}
-    X: {type: :float, value: 43.6812}
-    Y: {type: :float, value: 33.1583}
-    Z: {type: :float, value: -0.0}
+    X: {type: :float, value: 64.5344}
+    Y: {type: :float, value: 25.1958}
+    Z: {type: :float, value: 5.25}
 SoundList: 
   type: :list
   value: []
@@ -510,39 +497,39 @@ TriggerList:
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
+        PointX: {type: :float, value: -2.31494903564453}
+        PointY: {type: :float, value: 0.120731353759766}
+        PointZ: {type: :float, value: 8.77254581451416}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 3
+        PointX: {type: :float, value: -0.00890350341796875}
+        PointY: {type: :float, value: 0.0244240760803223}
+        PointZ: {type: :float, value: 8.80026245117188}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: 0.0}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointZ: {type: :float, value: 8.80237197875977}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: 1.01949310302734}
-        PointY: {type: :float, value: 0.0133628845214844}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointX: {type: :float, value: 0.0997276306152344}
+        PointY: {type: :float, value: 0.729475021362305}
+        PointZ: {type: :float, value: 8.58066272735596}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: 1.06674957275391}
-        PointY: {type: :float, value: 13.9321269989014}
-        PointZ: {type: :float, value: 0.025000000372529}
-      - !nwn-lib.elv.es,2008-12/struct 
-        __struct_id: 3
-        PointX: {type: :float, value: 0.011383056640625}
-        PointY: {type: :float, value: 14.0563297271729}
-        PointZ: {type: :float, value: 0.0250000599771738}
-      - !nwn-lib.elv.es,2008-12/struct 
-        __struct_id: 3
-        PointX: {type: :float, value: 0.072052001953125}
-        PointY: {type: :float, value: -0.0120887756347656}
-        PointZ: {type: :float, value: 0.0250000599771738}
+        PointX: {type: :float, value: -2.27045440673828}
+        PointY: {type: :float, value: 0.753434181213379}
+        PointZ: {type: :float, value: 8.58673286437988}
     HighlightHeight: {type: :float, value: 0.0}
     KeyName: {type: :cexostr, value: ""}
-    LinkedTo: {type: :cexostr, value: wp_druldan_drwest01}
-    LinkedToFlags: {type: :byte, value: 2}
+    LinkedTo: {type: :cexostr, value: drquarters2_ktunnel100}
+    LinkedToFlags: {type: :byte, value: 1}
     LoadScreenID: {type: :word, value: 0}
     LocalizedName: 
       type: :cexolocstr
       str_ref: 14760
       value: 
-        0: drwest01_druldan
+        0: "Neuer Gebiets\xFCbergang"
     OnClick: {type: :resref, value: ""}
     OnDisarm: {type: :resref, value: ""}
     OnTrapTriggered: {type: :resref, value: ""}
@@ -551,7 +538,7 @@ TriggerList:
     ScriptOnEnter: {type: :resref, value: ""}
     ScriptOnExit: {type: :resref, value: ""}
     ScriptUserDefine: {type: :resref, value: ""}
-    Tag: {type: :cexostr, value: drwest01_druldan}
+    Tag: {type: :cexostr, value: ktunnel100_drquarters2}
     TemplateResRef: {type: :resref, value: newtransition}
     TrapDetectDC: {type: :byte, value: 0}
     TrapDetectable: {type: :byte, value: 1}
@@ -561,9 +548,71 @@ TriggerList:
     TrapType: {type: :byte, value: 0}
     Type: {type: :int, value: 1}
     XOrientation: {type: :float, value: 0.0}
-    XPosition: {type: :float, value: 98.9133}
+    XPosition: {type: :float, value: 36.1169}
     YOrientation: {type: :float, value: 0.0}
-    YPosition: {type: :float, value: 22.9917}
+    YPosition: {type: :float, value: 5.5166}
+    ZOrientation: {type: :float, value: 0.0}
+    ZPosition: {type: :float, value: 0.0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 1
+    AutoRemoveKey: {type: :byte, value: 0}
+    Cursor: {type: :byte, value: 1}
+    DisarmDC: {type: :byte, value: 0}
+    Faction: {type: :dword, value: 1}
+    Geometry: 
+      type: :list
+      value: 
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 3
+        PointX: {type: :float, value: 0.0}
+        PointY: {type: :float, value: 0.0}
+        PointZ: {type: :float, value: 5.52500009536743}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 3
+        PointX: {type: :float, value: 3.814697265625e-06}
+        PointY: {type: :float, value: -0.923225402832031}
+        PointZ: {type: :float, value: 5.52500009536743}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 3
+        PointX: {type: :float, value: 4.30837249755859}
+        PointY: {type: :float, value: -1.02249908447266}
+        PointZ: {type: :float, value: 5.52500009536743}
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 3
+        PointX: {type: :float, value: 4.32822799682617}
+        PointY: {type: :float, value: -0.0198516845703125}
+        PointZ: {type: :float, value: 5.52500009536743}
+    HighlightHeight: {type: :float, value: 0.0}
+    KeyName: {type: :cexostr, value: ""}
+    LinkedTo: {type: :cexostr, value: WP_ktunnel101_ktunnel100}
+    LinkedToFlags: {type: :byte, value: 2}
+    LoadScreenID: {type: :word, value: 0}
+    LocalizedName: 
+      type: :cexolocstr
+      str_ref: 14760
+      value: 
+        0: "Neuer Gebiets\xFCbergang"
+    OnClick: {type: :resref, value: ""}
+    OnDisarm: {type: :resref, value: ""}
+    OnTrapTriggered: {type: :resref, value: ""}
+    PortraitId: {type: :word, value: 0}
+    ScriptHeartbeat: {type: :resref, value: ""}
+    ScriptOnEnter: {type: :resref, value: ""}
+    ScriptOnExit: {type: :resref, value: ""}
+    ScriptUserDefine: {type: :resref, value: ""}
+    Tag: {type: :cexostr, value: ktunnel100_ktunnel101}
+    TemplateResRef: {type: :resref, value: newtransition}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Type: {type: :int, value: 1}
+    XOrientation: {type: :float, value: 0.0}
+    XPosition: {type: :float, value: 42.9487}
+    YOrientation: {type: :float, value: 0.0}
+    YPosition: {type: :float, value: 99.9232}
     ZOrientation: {type: :float, value: 0.0}
     ZPosition: {type: :float, value: 0.0}
 WaypointList: 
@@ -580,18 +629,42 @@ WaypointList:
     LinkedTo: {type: :cexostr, value: ""}
     LocalizedName: 
       type: :cexolocstr
-      str_ref: 14817
-      value: 
-        0: wp_drwest01_druldan
+      value: {}
+
     MapNote: 
       type: :cexolocstr
       value: {}
 
-    MapNoteEnabled: {type: :byte, value: 1}
-    Tag: {type: :cexostr, value: wp_drwest01_druldan}
-    TemplateResRef: {type: :resref, value: nw_waypoint001}
-    XOrientation: {type: :float, value: -0.9973}
-    XPosition: {type: :float, value: 99.3308}
-    YOrientation: {type: :float, value: -0.0736}
-    YPosition: {type: :float, value: 30.117}
-    ZPosition: {type: :float, value: 0.0}
+    MapNoteEnabled: {type: :byte, value: 0}
+    Tag: {type: :cexostr, value: WP_ktunnel100_drquarters2}
+    TemplateResRef: {type: :resref, value: ""}
+    XOrientation: {type: :float, value: 0.0}
+    XPosition: {type: :float, value: 35.0093}
+    YOrientation: {type: :float, value: 1.0}
+    YPosition: {type: :float, value: 5.8933}
+    ZPosition: {type: :float, value: 8.7635}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 5
+    Appearance: {type: :byte, value: 1}
+    Description: 
+      type: :cexolocstr
+      value: {}
+
+    HasMapNote: {type: :byte, value: 0}
+    LinkedTo: {type: :cexostr, value: ""}
+    LocalizedName: 
+      type: :cexolocstr
+      value: {}
+
+    MapNote: 
+      type: :cexolocstr
+      value: {}
+
+    MapNoteEnabled: {type: :byte, value: 0}
+    Tag: {type: :cexostr, value: WP_ktunnel100_ktunnel101}
+    TemplateResRef: {type: :resref, value: ""}
+    XOrientation: {type: :float, value: 0.0}
+    XPosition: {type: :float, value: 45.1128}
+    YOrientation: {type: :float, value: 1.0}
+    YPosition: {type: :float, value: 99.412}
+    ZPosition: {type: :float, value: 5.525}
