@@ -15,7 +15,7 @@ appearance.rows[app_start .. -1].each {|x|
   next if already_tailmodel.index(x.RACE.downcase)
 
   newmodels += 1
-  tailmodel.rows << [ x.LABEL, x.RACE, x.ENVMAP ]
+  tailmodel.rows << [ x.LABEL, x.RACE, x.ENVMAP, x.ID ]
 }
 
 puts tailmodel.to_2da
