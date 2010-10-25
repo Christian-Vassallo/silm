@@ -1206,7 +1206,7 @@ void dmwand_SkillCheck(int nSkill, int nSecret = TRUE) {
 		case SKILL_LISTEN:
 			sSkill = "Lauschen"; break;
 		case SKILL_LORE:
-			sSkill = "Sagenkunde"; break;
+			sSkill = "Wissen"; break;
 		case SKILL_MOVE_SILENTLY:
 			sSkill = "Leise Bewegen"; break;
 		case SKILL_OPEN_LOCK:
@@ -1216,9 +1216,9 @@ void dmwand_SkillCheck(int nSkill, int nSecret = TRUE) {
 		case SKILL_PERFORM:
 			sSkill = "Auftreten"; break;
 		case SKILL_PERSUADE:
-			sSkill = "Überzeugen"; break;
+			sSkill = "Diplomatie"; break;
 		case SKILL_PICK_POCKET:
-			sSkill = "Taschendiebstahl"; break;
+			sSkill = "Fingerfertigkeit"; break;
 		case SKILL_SEARCH:
 			sSkill = "Suchen"; break;
 		case SKILL_SET_TRAP:
@@ -1798,7 +1798,7 @@ int dmw_conv_DoRoll(int nCurrent, int nChoice, string sParams = "") {
 		case 14:
 			nCurrent = 14;
 			if ( TestStringAgainstPattern(sStatOrSkill, "skill__") ) {
-				sText =       "Sagenkunde.";
+				sText =       "Wissen.";
 				sCall =       "func_SkillCheck";
 				sCallParams = sPrivate + IntToString(SKILL_LORE);
 				break;
@@ -1838,7 +1838,7 @@ int dmw_conv_DoRoll(int nCurrent, int nChoice, string sParams = "") {
 		case 19:
 			nCurrent = 19;
 			if ( TestStringAgainstPattern(sStatOrSkill, "skill__") ) {
-				sText =       "Überzeugen.";
+				sText =       "Diplomatie.";
 				sCall =       "func_SkillCheck";
 				sCallParams = sPrivate + IntToString(SKILL_PERSUADE);
 				break;
@@ -1846,7 +1846,7 @@ int dmw_conv_DoRoll(int nCurrent, int nChoice, string sParams = "") {
 		case 20:
 			nCurrent = 20;
 			if ( TestStringAgainstPattern(sStatOrSkill, "skill__") ) {
-				sText =       "Taschendiebstahl.";
+				sText =       "Fingerfertigkeit.";
 				sCall =       "func_SkillCheck";
 				sCallParams = sPrivate + IntToString(SKILL_PICK_POCKET);
 				break;
