@@ -142,11 +142,15 @@ struct Disguise disguise_load(int id) {
 	return ret;
 }
 
-void disguise_save(object pc, string name, int cid = 0) {
+void disguise_save(object pc, string name, int cid = 0, bool saveDescription = false) {
 	if (!cid)
 		cid = GetCharacterID(pc);
 	if (!cid)
 		return;
+
+	string desc = "null";
+	if (saveDescription)
+		desc = pSs(GetPlayerDescription(pc));
 
 	pQ("select id from " + DISGUISE_TABLE + " where cid = " + pSi(cid, false) + " and name = " + pSs(name));
 	if (pF())
@@ -179,7 +183,7 @@ void disguise_save(object pc, string name, int cid = 0) {
 		pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_1), false) + ", " +
 		pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_2), false) + ", " +
 		pSs(GetPortraitResRef(pc)) + ", " +
-		"null, " +
+		desc + ", " +
 		pSi(GetGender(pc), false) + ", " +
 		pSi(GetSoundset(pc), false) +
 	");");
