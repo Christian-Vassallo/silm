@@ -86,8 +86,8 @@ void main() {
 
 				SendMessageToPC(e.runnable, "Saving " + GetName(playerTarget) +
 					" as disguise " + name);
-				int cidof = GetCharacterID(playerTarget);
-				disguise_save(e.runnable, name, cidof);
+				int cidof = GetCharacterID(e.runnable);
+				disguise_save(playerTarget, name, cidof);
 			}
 		}
 	}
