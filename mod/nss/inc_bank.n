@@ -7,6 +7,8 @@ string
 	cGold   = ColorTag(cOrange),
 	cSilver = ColorTag(Darken(cWhite, 30)),
 	cCopper = ColorTag(Darken(cYellow, 30)),
+	cPos    = ColorTag(Darken(cGreen, 10)),
+	cNeg    = ColorTag(cRed),
 	cClose  = ColorTagClose();
 
 
@@ -28,9 +30,9 @@ string BankMoneyToString(int value) {
 		ret += cCopper + itoa(cp) + "cp" + cClose + " ";
 	
 	if (value < 0)
-		ret = ColorTag(cRed) + "- " + ret;
+		ret = cNeg + "- " + ret;
 	if (value > 0)
-		ret = ColorTag(cGreen) + "+ " + ret;
+		ret = cPos + "+ " + ret;
 
 	ret = GetStringLeft(ret, GetStringLength(ret) - 1);
 	ret += cClose;
@@ -69,9 +71,9 @@ void MakeBankDialog(object oPC, object oBank) {
 
 			string account = itoa(bankid) + "-" + itoa(accid);
 			string balanceString = BankMoneyToString(balance);
-			AddListItem(oPC, TTT, account + ": " + balanceString);
+			AddListItem(oPC, TTT, ColorTag(cLightGrey) + account + ": " +
+					balanceString);
 			SetListInt(oPC, TTT, axid);
-			SetListDisplayMode(oPC, TTT, balance);
 			count++;
 
 		}
@@ -95,8 +97,8 @@ void MakeBankDialog(object oPC, object oBank) {
 			pQ("update bank.accounts set accessed_on = now() where id = "
 					+ pSi(accid));
 
-			pQ("select c.character from characters c, bank.access x where " +
-				"x.account = " + pSi(accid) + " and c.id = x.cid");
+			pQ("select c.character from bank.access x left join characters c " +
+				"on c.id = x.cid where x.account = " + pSi(accid) + ";");
 			string who;
 			while (pF())
 				who += pGs(1) + ", ";
