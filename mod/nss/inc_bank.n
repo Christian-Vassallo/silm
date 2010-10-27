@@ -67,7 +67,7 @@ void MakeBankDialog(object oPC, object oBank) {
 			int balance = pGi(4);
 			bankname    = pGs(5);
 
-			string account = itoa(bankid) + "-" + itoa(accid) + "-" + itoa(axid);
+			string account = itoa(bankid) + "-" + itoa(accid);
 			string balanceString = BankMoneyToString(balance);
 			AddListItem(oPC, TTT, account + ": " + balanceString);
 			SetListInt(oPC, TTT, axid);
@@ -75,8 +75,8 @@ void MakeBankDialog(object oPC, object oBank) {
 			count++;
 
 		}
-		sText = "Willkommen bei " + bankname + "! Ihr habt Zugriff auf "
-			+ itoa(count) + " Konten.";
+		sText = "Willkommen bei " + cGold + bankname + cClose +
+			"! Ihr habt Zugriff auf " + itoa(count) + " Konten.";
 
 		ResetConvList(oPC, oPC, TTT, 50000, "bank_cb", sText, "", "");
 	} else {
