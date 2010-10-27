@@ -11,6 +11,8 @@ alter sequence bank.banks_id_seq restart with 1000;
 create table bank.accounts (
 	id serial primary key,
 	created_on timestamp not null default now(),
+	accessed_on timestamp not null default now(),
+	updated_on timestamp not null default now(),
 	bank int references bank.banks not null,
 
 	balance int not null default 0

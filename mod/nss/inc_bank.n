@@ -87,6 +87,8 @@ void MakeBankDialog(object oPC, object oBank) {
 			string createdOn = pGs(3);
 
 			int playerMoney = Money2Value(CountInventoryMoney(oPC));
+			pQ("update bank.accounts set accessed_on = now() where id = "
+					+ pSi(accid));
 
 			pQ("select c.character from characters c, bank.access x where " +
 				"x.account = " + pSi(accid) + " and c.id = x.cid");

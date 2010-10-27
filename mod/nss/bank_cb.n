@@ -56,7 +56,7 @@ void main() {
 					pQ("insert into bank.tx (account, cid, value) values(" +
 						pSi(account) + "," + pSi(cid) + "," + pSi(tx) + ")");
 					pQ("update bank.accounts set balance = balance+" + pSi(tx) +
-							" where id = " + pSi(account));
+							", updated_on = now() where id = " + pSi(account));
 					ClearAllActions();
 					AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
 					SendMessageToPC(oPC, "Transaktion abgeschlossen.");
