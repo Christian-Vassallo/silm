@@ -1,0 +1,97 @@
+extern("inc_audit")
+extern("inc_bank")
+extern("inc_currency")
+extern("inc_colors")
+
+void main() {
+	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
+	object oBank = OBJECT_SELF;
+
+	int nMenuLevel0 = GetMenuLevel(oPC, TTT, 0);
+	int nMenuLevel1 = GetMenuLevel(oPC, TTT, 1);
+	int nSelected   = GetListSelection(oPC);
+
+	if (0 == nMenuLevel0) { // Mainmenu
+		int acc = GetListInt(oPC, TTT, nSelected);
+		SetMenuLevel(oPC, TTT, 0, 1);
+		SetLocalInt(oPC, "bank_axid_selection", acc);
+
+	} else {
+		// SetMenuLevel(oPC, TTT, 0, 0);
+		int axid = GetLocalInt(oPC, "bank_axid_selection");
+		int tx = GetListInt(oPC, TTT, nSelected);
+		string act = GetListString(oPC, TTT, nSelected);
+		if (act == "tx") {
+
+			pQ("select x.account, x.cid from bank.access x where x.id = "
+					+ pSi(axid));
+			if (pF()) {
+				int account = pGi(1);
+				int cid = pGi(2);
+
+				bool didTX = false;
+				if (tx > 0) { // put money into bank
+					int has = Money2Value(CountInventoryMoney(oPC, false));
+					if (tx > has)
+						SendMessageToPC(oPC, "Nicht genug Gold!");
+
+					else {
+						didTX = true;
+						// take the money
+						int has = Money2Value(CountInventoryMoney(oPC, true));
+						has -= tx;
+						DelayCommand(0.1f, GiveValueToCreature(oPC, has));
+					}
+				}
+
+				if (tx < 0) {
+					didTX = true;
+					// give the money
+					int has = Money2Value(CountInventoryMoney(oPC, true));
+					has -= tx;
+					DelayCommand(0.1f, GiveValueToCreature(oPC, has));
+				}
+
+				if (didTX) {
+					pQ("insert into bank.tx (account, cid, value) values(" +
+						pSi(account) + "," + pSi(cid) + "," + pSi(tx) + ")");
+					pQ("update bank.accounts set balance = balance+" + pSi(tx) +
+							" where id = " + pSi(account));
+					ClearAllActions();
+					AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
+					SendMessageToPC(oPC, "Transaktion abgeschlossen.");
+				}
+			}
+
+		} else if (act == "hist") {
+			pQ("select t.value, to_char(t.created_on, 'DD.MM.YY HH24:MI'), " +
+			" ch.character from " +
+			"bank.banks b, bank.accounts a, bank.access x, bank.tx t, " +
+			"characters ch where " +
+			"b.id = a.bank and x.account = a.id and t.account = a.id and " +
+			"x.id = " + pSi(axid) + " and ch.id = t.cid " +
+			"order by t.created_on asc;");
+			int shown = 0;
+			while (pF()) {
+				int txvalue = pGi(1);
+				string on = pGs(2);
+				string by = pGs(3);
+				string txv = itoa(txvalue);
+
+				SendMessageToPC(oPC,
+					ColorTag(cLightGrey) + on + ": " +
+
+					(txvalue > 0 ? ColorTag(cGreen) : ColorTag(cRed)) +
+						BankMoneyToString(txvalue) +
+
+					(txvalue > 0 ? (" <= " + by) : (" => " + by))
+				);
+				shown++;
+			}
+			if (!shown)
+				SendMessageToPC(oPC, "Keine Ein-/Auszahlungen");
+		}
+	}
+
+	MakeBankDialog(oPC, oBank);
+}

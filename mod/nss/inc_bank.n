@@ -1,0 +1,124 @@
+extern("inc_cdb")
+extern("inc_lists")
+extern("inc_currency")
+
+
+string BankMoneyToString(int value, bool colorise = false) {
+	int av = abs(value);
+	int pp = av / 1000;
+	int gp = (av - pp * 1000) / 100;
+	int sp = (av - pp * 1000 - gp * 100) / 10;
+	int cp = av % 10;
+
+	string ret;
+	if (pp != 0)
+		ret += itoa(pp) + "pp ";
+	if (gp != 0)
+		ret += itoa(gp) + "gp ";
+	if (sp != 0)
+		ret += itoa(sp) + "sp ";
+	if (value == 0 || cp != 0)
+		ret += itoa(cp) + "cp ";
+	
+	if (value < 0)
+		ret = "- " + ret;
+
+	if (colorise)
+		if (value < 0)
+			ret = ColorTag(cRed) + ret;
+		else if (value > 0)
+			ret = ColorTag(cGreen) + ret;
+
+	return GetStringLeft(ret, GetStringLength(ret) - 1);
+}
+
+const string TTT = "bank";
+
+void MakeBankDialog(object oPC, object oBank) {
+	int bankId = GetLocalInt(oBank, "bank_id");
+	if (!bankId) return;
+
+	ClearList(oPC, TTT);
+
+	int nMenuLevel0 = GetMenuLevel(oPC, TTT, 0);
+	int nSelected   = GetListSelection(oPC);
+
+	int cid = GetCharacterID(oPC);
+
+
+	if (nMenuLevel0 == 0) {
+		string sText = "no text given";
+		string bankname;
+		int count = 0;
+
+		pQ("select b.id, a.id, x.id, a.balance, b.name from " +
+			"bank.banks b, bank.accounts a, bank.access x where " +
+			"b.id = a.bank and x.account = a.id and b.id = " + pSi(bankId) +
+			" and x.cid = " + pSi(cid) + " order by x.id asc;");
+		while (pF()) {
+			int bankid  = pGi(1);
+			int accid   = pGi(2);
+			int axid    = pGi(3);
+			int balance = pGi(4);
+			bankname    = pGs(5);
+
+			string account = itoa(bankid) + "-" + itoa(accid) + "-" + itoa(axid);
+			string balanceString = BankMoneyToString(balance);
+			AddListItem(oPC, TTT, account + ": " + balanceString);
+			SetListInt(oPC, TTT, axid);
+			SetListDisplayMode(oPC, TTT, balance);
+			count++;
+
+		}
+		sText = "Willkommen bei " + bankname + "! Ihr habt Zugriff auf "
+			+ itoa(count) + " Konten.";
+
+		ResetConvList(oPC, oPC, TTT, 50000, "bank_cb", sText, "", "");
+	} else {
+		string sText = "hwat?";
+
+		int axid = GetLocalInt(oPC, "bank_axid_selection");
+		pQ("select a.balance from bank.accounts a, bank.access x where " +
+			"a.id = x.account and x.id = " + pSi(axid));
+		if (pF()) {
+			int balance = pGi(1);
+
+			int playerMoney = Money2Value(CountInventoryMoney(oPC));
+			sText = "Aktueller Kontostand: " + BankMoneyToString(balance) + "\n" +
+				"Eigenes Gold: " + BankMoneyToString(playerMoney);
+
+			int smallMoney = playerMoney % 1000;
+
+#define rem(title, intval) if (balance > 0 && balance >= intval) {\
+	AddListItem(oPC, TTT, title); SetListInt(oPC, TTT, -  intval); \
+	SetListString(oPC, TTT, "tx"); \
+	SetListDisplayMode(oPC, TTT, intval); }
+
+#define add(title, intval) if (playerMoney > 0 && playerMoney >= intval) {\
+	AddListItem(oPC, TTT, title); SetListInt(oPC, TTT,  + intval); \
+	SetListString(oPC, TTT, "tx"); \
+	SetListDisplayMode(oPC, TTT, intval); }
+
+			rem("Abheben: 5pp",       5000);
+			rem("Abheben: 50pp",     50000);
+			rem("Abheben: 100pp",   100000);
+			rem("Abheben: 250pp",   250000);
+			rem("Abheben: 500pp",   500000);
+			rem("Abheben: alles (" + BankMoneyToString(balance) + ")", balance);
+
+			add("Einzahlen: 5pp",     5000);
+			add("Einzahlen: 50pp",   50000);
+			add("Einzahlen: 100pp", 100000);
+			add("Einzahlen: 250pp", 250000);
+			add("Einzahlen: 500pp", 500000);
+			add("Einzahlen: alles (" + BankMoneyToString(playerMoney) + ")", playerMoney);
+			add("Einzahlen: alles Kleingold (" + BankMoneyToString(smallMoney) + ")", smallMoney);
+
+			AddListItem(oPC, TTT, "Historie");
+			SetListString(oPC, TTT, "hist");
+		}
+
+		ResetConvList(oPC, oPC, TTT, 50000, "bank_cb", sText, "", "",
+				"bank_m0", "Zurueck");
+	}
+}
