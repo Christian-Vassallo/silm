@@ -33,7 +33,8 @@ create table bank.tx (
 	created_on timestamp not null default now(),
 
 	account int references bank.accounts not null,
-	cid int references characters not null,
+	cid int references characters,
+	name varchar,
 	
 	value int not null
 );

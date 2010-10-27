@@ -53,8 +53,10 @@ void main() {
 				}
 
 				if (didTX) {
-					pQ("insert into bank.tx (account, cid, value) values(" +
-						pSi(account) + "," + pSi(cid) + "," + pSi(tx) + ")");
+					string name = GetName(oPC);
+					pQ("insert into bank.tx (account, cid, name, value) values(" +
+						pSi(account) + "," + pSi(cid) + "," +
+						pSs(name) + "," + pSi(tx) + ")");
 					pQ("update bank.accounts set balance = balance+" + pSi(tx) +
 							", updated_on = now() where id = " + pSi(account));
 					ClearAllActions();
@@ -65,12 +67,11 @@ void main() {
 
 		} else if (act == "hist") {
 			pQ("select t.value, to_char(t.created_on, 'DD.MM.YY HH24:MI'), " +
-			" ch.character from " +
-			"bank.banks b, bank.accounts a, bank.access x, bank.tx t, " +
-			"characters ch where " +
+			" coalesce(t.name, 'Unbekannter Eintrag') from " +
+			"bank.banks b, bank.accounts a, bank.access x, bank.tx t " +
+			"where " +
 			"b.id = a.bank and x.account = a.id and t.account = a.id and " +
-			"x.id = " + pSi(axid) + " and ch.id = t.cid " +
-			"order by t.created_on asc;");
+			"x.id = " + pSi(axid) + "order by t.created_on asc;");
 			int shown = 0;
 			while (pF()) {
 				int txvalue = pGi(1);
