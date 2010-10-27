@@ -12,10 +12,6 @@ struct Money {
 string MoneyToString(struct Money m);
 
 
-// Function: GetMoneyBag 
-// Returns the money bag of the given creature, or the creature itself.
-object GetMoneyBag(object oPC);
-
 // Function: AdjustCreatureMoney 
 // Adjust this creatures money by the given amount.
 void AdjustCreatureMoney(object oPC, struct Money stDifference);
@@ -52,7 +48,23 @@ int GetMoney(object oWithInventory) {
 	return Money2Value(CountInventoryMoney(oWithInventory, false));
 }
 
-//
+object __GetMoneyBag(object oPC) {
+	object oItem = GetFirstItemInInventory(oPC);
+	while ( GetIsObjectValid(oItem) ) {
+		string sTag = GetTag(oItem);
+		if ( sTag == "Muenzbeutel" )
+			return oItem;
+		oItem = GetNextItemInInventory(oPC);
+	}
+	return OBJECT_INVALID;
+}
+
+void CreateMoney(string ref, object pc, int stack) {
+	object money = CreateItemOnObject(ref, pc, stack);
+	object bag = __GetMoneyBag(pc);
+	if (is_valid(bag))
+		AssignCommand(pc, ActionGiveItem(money, bag));
+}
 
 string MoneyToString(struct Money m) {
 	string r = "";
@@ -71,18 +83,7 @@ string MoneyToString(struct Money m) {
 	return GetStringLeft(r, GetStringLength(r) - 1);
 }
 
-object GetMoneyBag(object oPC) {
-	object oItem = GetFirstItemInInventory(oPC);
-	while ( GetIsObjectValid(oItem) ) {
-		string sTag = GetTag(oItem);
-		if ( sTag == "Muenzbeutel" )
-			return oItem;
-		oItem = GetNextItemInInventory(oPC);
-	}
-	return oPC;
-}
-
-int AdjustObject(object oMoneyBag, object oWhat, int iDifference) {
+int AdjustObject(object oPC, object oWhat, int iDifference) {
 	int iStack = GetItemStackSize(oWhat);
 
 	if ( iDifference < 0 ) {
@@ -95,42 +96,41 @@ int AdjustObject(object oMoneyBag, object oWhat, int iDifference) {
 		}
 	} else {
 		while ( iDifference > 500 ) {
-			CreateItemOnObject(GetStringLowerCase(GetTag(oWhat)), oMoneyBag, 500);
+			CreateMoney(GetStringLowerCase(GetTag(oWhat)), oPC, 500);
 			iDifference -= 500;
 		}
 		if ( iDifference )
-			CreateItemOnObject(GetStringLowerCase(GetTag(oWhat)), oMoneyBag, iDifference);
+			CreateMoney(GetStringLowerCase(GetTag(oWhat)), oPC, iDifference);
 		return 0;
 	}
 }
 
 
 void AdjustCreatureMoney(object oPC, struct Money stDifference) {
-	object oMoneyBag = GetMoneyBag(oPC);
 	object oItem = GetFirstItemInInventory(oPC);
 
 	while ( GetIsObjectValid(oItem) ) {
 		string sTag = GetTag(oItem);
 
 		if ( sTag == "COIN_0001" )
-			stDifference.copper = AdjustObject(oMoneyBag, oItem, stDifference.copper);
+			stDifference.copper = AdjustObject(oPC, oItem, stDifference.copper);
 		else if ( sTag == "COIN_0010" )
-			stDifference.silver = AdjustObject(oMoneyBag, oItem, stDifference.silver);
+			stDifference.silver = AdjustObject(oPC, oItem, stDifference.silver);
 		else if ( sTag == "COIN_0100" )
-			stDifference.gold = AdjustObject(oMoneyBag, oItem, stDifference.gold);
+			stDifference.gold = AdjustObject(oPC, oItem, stDifference.gold);
 		else if ( sTag == "COIN_1000" )
-			stDifference.platinum = AdjustObject(oMoneyBag, oItem, stDifference.platinum);
+			stDifference.platinum = AdjustObject(oPC, oItem, stDifference.platinum);
 		oItem = GetNextItemInInventory(oPC);
 	}
 	/* Remainings are positive and no matching item found */
 	if ( stDifference.copper > 0 )
-		CreateItemOnObject("coin_0001", oMoneyBag, stDifference.copper);
+		CreateMoney("coin_0001", oPC, stDifference.copper);
 	if ( stDifference.silver > 0 )
-		CreateItemOnObject("coin_0010", oMoneyBag, stDifference.silver);
+		CreateMoney("coin_0010", oPC, stDifference.silver);
 	if ( stDifference.gold > 0 )
-		CreateItemOnObject("coin_0100", oMoneyBag, stDifference.gold);
+		CreateMoney("coin_0100", oPC, stDifference.gold);
 	if ( stDifference.platinum > 0 )
-		CreateItemOnObject("coin_1000", oMoneyBag, stDifference.platinum);
+		CreateMoney("coin_1000", oPC, stDifference.platinum);
 }
 
 
@@ -191,16 +191,15 @@ int GetValue(object oPC) {
 }
 
 void GiveMoneyToCreature(object oPC, struct Money stCoins) {
-	object oMoneyBag = GetMoneyBag(oPC);
 	int iBatch;
 
 	iBatch = stCoins.platinum;
 	while ( iBatch ) {
 		if ( iBatch > 500 ) {
-			CreateItemOnObject("coin_1000", oMoneyBag, 500);
+			CreateMoney("coin_1000", oPC, 500);
 			iBatch -= 500;
 		} else {
-			CreateItemOnObject("coin_1000", oMoneyBag, iBatch);
+			CreateMoney("coin_1000", oPC, iBatch);
 			iBatch = 0;
 		}
 	}
@@ -208,10 +207,10 @@ void GiveMoneyToCreature(object oPC, struct Money stCoins) {
 	iBatch = stCoins.gold;
 	while ( iBatch ) {
 		if ( iBatch > 500 ) {
-			CreateItemOnObject("coin_0100", oMoneyBag, 500);
+			CreateMoney("coin_0100", oPC, 500);
 			iBatch -= 500;
 		} else {
-			CreateItemOnObject("coin_0100", oMoneyBag, iBatch);
+			CreateMoney("coin_0100", oPC, iBatch);
 			iBatch = 0;
 		}
 	}
@@ -219,10 +218,10 @@ void GiveMoneyToCreature(object oPC, struct Money stCoins) {
 	iBatch = stCoins.silver;
 	while ( iBatch ) {
 		if ( iBatch > 500 ) {
-			CreateItemOnObject("coin_0010", oMoneyBag, 500);
+			CreateMoney("coin_0010", oPC, 500);
 			iBatch -= 500;
 		} else {
-			CreateItemOnObject("coin_0010", oMoneyBag, iBatch);
+			CreateMoney("coin_0010", oPC, iBatch);
 			iBatch = 0;
 		}
 	}
@@ -230,10 +229,10 @@ void GiveMoneyToCreature(object oPC, struct Money stCoins) {
 	iBatch = stCoins.copper;
 	while ( iBatch ) {
 		if ( iBatch > 500 ) {
-			CreateItemOnObject("coin_0001", oMoneyBag, 500);
+			CreateMoney("coin_0001", oPC, 500);
 			iBatch -= 500;
 		} else {
-			CreateItemOnObject("coin_0001", oMoneyBag, iBatch);
+			CreateMoney("coin_0001", oPC, iBatch);
 			iBatch = 0;
 		}
 	}
