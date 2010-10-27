@@ -78,14 +78,25 @@ void MakeBankDialog(object oPC, object oBank) {
 		string sText = "hwat?";
 
 		int axid = GetLocalInt(oPC, "bank_axid_selection");
-		pQ("select a.balance from bank.accounts a, bank.access x where " +
+		pQ("select a.balance, a.id from bank.accounts a, bank.access x where " +
 			"a.id = x.account and x.id = " + pSi(axid));
 		if (pF()) {
 			int balance = pGi(1);
+			int accid = pGi(2);
 
 			int playerMoney = Money2Value(CountInventoryMoney(oPC));
+
+			pQ("select c.character from characters c, bank.access x where " +
+				"x.account = " + pSi(accid) + " and c.id = x.cid");
+			string who;
+			while (pF())
+				who += pGs(1) + ", ";
+			if (GetStringLength(who) > 0)
+				who = GetStringLeft(who, GetStringLength(who) - 2);
+			
 			sText = "Aktueller Kontostand: " + BankMoneyToString(balance) + "\n" +
-				"Eigenes Gold: " + BankMoneyToString(playerMoney);
+				"Eigenes Gold: " + BankMoneyToString(playerMoney) + "\n" +
+				"Zugriff hat: " + who;
 
 			int smallMoney = playerMoney % 1000;
 
