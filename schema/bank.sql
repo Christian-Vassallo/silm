@@ -15,6 +15,7 @@ create table bank.accounts (
 	updated_on timestamp not null default now(),
 	bank int references bank.banks not null,
 
+	credit int not null default 0,
 	balance int not null default 0
 );
 alter sequence bank.accounts_id_seq restart with 1000;
@@ -35,7 +36,8 @@ create table bank.tx (
 	account int references bank.accounts not null,
 	cid int references characters,
 	name varchar,
-	
-	value int not null
+
+	value int not null,
+	balance_after int not null
 );
 alter sequence bank.tx_id_seq restart with 1000;

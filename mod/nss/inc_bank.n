@@ -85,13 +85,15 @@ void MakeBankDialog(object oPC, object oBank) {
 		string sText = "hwat?";
 
 		int axid = GetLocalInt(oPC, "bank_axid_selection");
-		pQ("select a.balance, a.id, to_char(a.created_on, 'DD.MM.YY HH24:MI') " +
+		pQ("select a.balance, a.id, to_char(a.created_on, 'DD.MM.YY HH24:MI'), " +
+			"a.credit " +
 			"from bank.accounts a, bank.access x where " +
 			"a.id = x.account and x.id = " + pSi(axid));
 		if (pF()) {
 			int balance = pGi(1);
 			int accid = pGi(2);
 			string createdOn = pGs(3);
+			int credit = pGi(4);
 
 			int playerMoney = Money2Value(CountInventoryMoney(oPC));
 			pQ("update bank.accounts set accessed_on = now() where id = "
@@ -106,13 +108,16 @@ void MakeBankDialog(object oPC, object oBank) {
 				who = GetStringLeft(who, GetStringLength(who) - 2);
 			
 			sText = "Aktueller Kontostand: " + BankMoneyToString(balance) + "\n" +
+				"Maximaler Kredit: " + BankMoneyToString(credit) + "\n" +
 				"Eigenes Gold: " + BankMoneyToString(playerMoney) + "\n" +
 				"Zugriff hat: " + who + "\n" +
 				"Erstellt am: " + createdOn;
 
 			int smallMoney = playerMoney % 1000;
 
-#define rem(title, intval) if (balance > 0 && balance >= intval) {\
+			int allowance = balance + credit;
+
+#define rem(title, intval) if (allowance > 0 && allowance >= intval) {\
 	AddListItem(oPC, TTT, title); SetListInt(oPC, TTT, -  intval); \
 	SetListString(oPC, TTT, "tx"); \
 	SetListDisplayMode(oPC, TTT, intval); }
@@ -128,7 +133,12 @@ void MakeBankDialog(object oPC, object oBank) {
 			rem("Abheben: 250pp",     250000);
 			rem("Abheben: 500pp",     500000);
 			rem("Abheben: 1000pp",   1000000);
-			rem("Abheben: alles (" + BankMoneyToString(balance) + ")", balance);
+			if (balance > 0)
+				rem("Abheben: alles (" +
+					BankMoneyToString(balance) + ")", balance);
+			if (credit > 0)
+				rem("Abheben: alles mit Kredit (" +
+					BankMoneyToString(allowance) + ")", allowance);
 
 			add("Einzahlen: 5pp",       5000);
 			add("Einzahlen: 50pp",     50000);
@@ -138,6 +148,8 @@ void MakeBankDialog(object oPC, object oBank) {
 			add("Einzahlen: 1000pp", 1000000);
 			add("Einzahlen: alles (" + BankMoneyToString(playerMoney) + ")", playerMoney);
 			add("Einzahlen: alles Kleingold (" + BankMoneyToString(smallMoney) + ")", smallMoney);
+			if (balance < 0)
+				add("Einzahlen: auf 0 (" + BankMoneyToString(- balance) + ")", - balance);
 
 			AddListItem(oPC, TTT, "Historie");
 			SetListString(oPC, TTT, "hist");

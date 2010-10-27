@@ -23,11 +23,12 @@ void main() {
 		string act = GetListString(oPC, TTT, nSelected);
 		if (act == "tx") {
 
-			pQ("select x.account, x.cid from bank.access x where x.id = "
-					+ pSi(axid));
+			pQ("select x.account, x.cid, a.balance from bank.access x, bank.accounts a " +
+				"where a.id = x.account and x.id = " + pSi(axid));
 			if (pF()) {
 				int account = pGi(1);
 				int cid = pGi(2);
+				int balance = pGi(3);
 
 				bool didTX = false;
 				if (tx > 0) { // put money into bank
@@ -54,9 +55,9 @@ void main() {
 
 				if (didTX) {
 					string name = GetName(oPC);
-					pQ("insert into bank.tx (account, cid, name, value) values(" +
+					pQ("insert into bank.tx (account, cid, name, value, balance_after) values(" +
 						pSi(account) + "," + pSi(cid) + "," +
-						pSs(name) + "," + pSi(tx) + ")");
+						pSs(name) + "," + pSi(tx) + "," + pSi(balance + tx) + ")");
 					pQ("update bank.accounts set balance = balance+" + pSi(tx) +
 							", updated_on = now() where id = " + pSi(account));
 					ClearAllActions();
