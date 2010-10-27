@@ -2,8 +2,15 @@ extern("inc_cdb")
 extern("inc_lists")
 extern("inc_currency")
 
+string
+	cPlatin = ColorTag(cTeal),
+	cGold   = ColorTag(cOrange),
+	cSilver = ColorTag(Darken(cWhite, 30)),
+	cCopper = ColorTag(Darken(cYellow, 30)),
+	cClose  = ColorTagClose();
 
-string BankMoneyToString(int value, bool colorise = false) {
+
+string BankMoneyToString(int value) {
 	int av = abs(value);
 	int pp = av / 1000;
 	int gp = (av - pp * 1000) / 100;
@@ -12,24 +19,22 @@ string BankMoneyToString(int value, bool colorise = false) {
 
 	string ret;
 	if (pp != 0)
-		ret += itoa(pp) + "pp ";
+		ret += cPlatin + itoa(pp) + "pp" + cClose + " ";
 	if (gp != 0)
-		ret += itoa(gp) + "gp ";
+		ret += cGold + itoa(gp) + "gp" + cClose + " ";
 	if (sp != 0)
-		ret += itoa(sp) + "sp ";
+		ret += cSilver + itoa(sp) + "sp" + cClose + " ";
 	if (value == 0 || cp != 0)
-		ret += itoa(cp) + "cp ";
+		ret += cCopper + itoa(cp) + "cp" + cClose + " ";
 	
 	if (value < 0)
-		ret = "- " + ret;
+		ret = ColorTag(cRed) + "- " + ret;
+	if (value > 0)
+		ret = ColorTag(cGreen) + "+ " + ret;
 
-	if (colorise)
-		if (value < 0)
-			ret = ColorTag(cRed) + ret;
-		else if (value > 0)
-			ret = ColorTag(cGreen) + ret;
-
-	return GetStringLeft(ret, GetStringLength(ret) - 1);
+	ret = GetStringLeft(ret, GetStringLength(ret) - 1);
+	ret += cClose;
+	return ret;
 }
 
 const string TTT = "bank";
