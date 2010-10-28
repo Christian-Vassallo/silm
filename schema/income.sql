@@ -49,6 +49,7 @@ create table income.mappings (
 	id serial primary key,
 
 	cid int references characters,
+	bank_account int references bank.accounts,
 
 	source int references income.sources not null,
 

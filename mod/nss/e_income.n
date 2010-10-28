@@ -1,6 +1,7 @@
 extern("inc_time")
 extern("inc_cdb")
 extern("inc_currency")
+extern("inc_bank")
 
 void check_all_incomes(object runnable) {
 	if (!is_valid(runnable)) {
@@ -19,10 +20,11 @@ void check_all_incomes(object runnable) {
 
 	struct RealTime ts = GetRealTime();
 	pBegin();
-	string prof_c = pDeclare("select id, source from income.mappings where (cid is null or cid = " + pSi(cid) + ") and enabled = true;");
+	string prof_c = pDeclare("select id, source, bank_account from income.mappings where (cid is null or cid = " + pSi(cid) + ") and enabled = true;");
 	while (pCursorFetch(prof_c)) {
 		int mapping_id = pGi(1);
 		int source_id = pGi(2);
+		int bank_account = pGi(3);
 
 		pQ("select id from income.exclusion where cid = " + pSi(cid) + " and source = " + pSi(source_id) + ";");
 		if (pF())
@@ -61,7 +63,12 @@ void check_all_incomes(object runnable) {
 				ColorTag(cTeal) + name + ": " +
 				ColorTag(cOrange) + desc;
 
-			GiveValueToCreature(runnable, copper, true);
+			if (bank_account > 0) {
+				bank_deposit(bank_account, copper, 0, name);
+				msg += " (auf Bank-Konto gezahlt)";
+			} else {
+				GiveValueToCreature(runnable, copper, true);
+			}
 
 			pQ("insert into income.payments (cid, mapping, copper) values(" + pSi(cid) + ", " + pSi(mapping_id) + "," + pSi(copper, false) + ");");
 
