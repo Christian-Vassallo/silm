@@ -185,7 +185,8 @@ void MakeBankDialog(object oPC, object oBank) {
 			add("Einzahlen: 500pp",   500000);
 			add("Einzahlen: 1000pp", 1000000);
 			add("Einzahlen: alles (" + BankMoneyToString(playerMoney) + ")", playerMoney);
-			add("Einzahlen: alles Kleingold (" + BankMoneyToString(smallMoney) + ")", smallMoney);
+			if (smallMoney > 0)
+				add("Einzahlen: alles Kleingold (" + BankMoneyToString(smallMoney) + ")", smallMoney);
 			if (balance < 0)
 				add("Einzahlen: auf 0 (" + BankMoneyToString(- balance) + ")", - balance);
 
