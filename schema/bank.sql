@@ -15,6 +15,8 @@ create table bank.accounts (
 	updated_on timestamp not null default now(),
 	bank int references bank.banks not null,
 
+	name varchar,
+
 	credit int not null default 0,
 	balance int not null default 0
 );

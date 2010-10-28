@@ -58,7 +58,7 @@ void MakeBankDialog(object oPC, object oBank) {
 		string bankname;
 		int count = 0;
 
-		pQ("select b.id, a.id, x.id, a.balance, b.name from " +
+		pQ("select b.id, a.id, x.id, a.balance, b.name, a.name from " +
 			"bank.banks b, bank.accounts a, bank.access x where " +
 			"b.id = a.bank and x.account = a.id and b.id = " + pSi(bankId) +
 			" and x.cid = " + pSi(cid) + " order by x.id asc;");
@@ -68,8 +68,11 @@ void MakeBankDialog(object oPC, object oBank) {
 			int axid    = pGi(3);
 			int balance = pGi(4);
 			bankname    = pGs(5);
+			string account = pGs(6);
 
-			string account = itoa(bankid) + "-" + itoa(accid);
+			if (account == "")
+				account = itoa(bankid) + "-" + itoa(accid);
+				
 			string balanceString = BankMoneyToString(balance);
 			AddListItem(oPC, TTT, ColorTag(cLightGrey) + account + ": " +
 					balanceString);
@@ -87,14 +90,21 @@ void MakeBankDialog(object oPC, object oBank) {
 
 		int axid = GetLocalInt(oPC, "bank_axid_selection");
 		pQ("select a.balance, a.id, to_char(a.created_on, 'DD.MM.YY HH24:MI'), " +
-			"a.credit " +
-			"from bank.accounts a, bank.access x where " +
-			"a.id = x.account and x.id = " + pSi(axid));
+			"a.credit, a.name, b.id " +
+			"from bank.accounts a, bank.access x, bank.banks b where " +
+			"a.id = x.account and b.id = a.bank and x.id = " + pSi(axid));
 		if (pF()) {
 			int balance = pGi(1);
 			int accid = pGi(2);
 			string createdOn = pGs(3);
 			int credit = pGi(4);
+			string accountName = pGs(5);
+			int bankid = pGi(6);
+	
+			if (accountName == "")
+				accountName = itoa(bankid) + "-" + itoa(accid);
+			else
+				accountName += " (" + itoa(bankid) + "-" + itoa(accid) + ")";
 
 			int playerMoney = Money2Value(CountInventoryMoney(oPC));
 			pQ("update bank.accounts set accessed_on = now() where id = "
@@ -108,11 +118,12 @@ void MakeBankDialog(object oPC, object oBank) {
 			if (GetStringLength(who) > 0)
 				who = GetStringLeft(who, GetStringLength(who) - 2);
 			
-			sText = "Aktueller Kontostand: " + BankMoneyToString(balance) + "\n" +
+			sText = "Konto: " + accountName + "\n" +
+				"Aktueller Kontostand: " + BankMoneyToString(balance) + "\n" +
 				"Maximaler Kredit: " + BankMoneyToString(credit) + "\n" +
 				"Eigenes Gold: " + BankMoneyToString(playerMoney) + "\n" +
 				"Zugriff hat: " + who + "\n" +
-				"Erstellt am: " + createdOn;
+				"Konto erstellt am: " + createdOn;
 
 			int smallMoney = playerMoney % 1000;
 
