@@ -81,7 +81,7 @@ void MakeBankDialog(object oPC, object oBank) {
 			"x.allow_read, x.allow_withdraw, x.allow_deposit from " +
 			"bank.banks b, bank.accounts a, bank.access x where " +
 			"b.id = a.bank and x.account = a.id and b.id = " + pSi(bankId) +
-			" and (x.cid = " + pSi(cid) + " or x.cid is null) order by x.id asc;");
+			" and (x.cid = " + pSi(cid) + " or x.cid is null) order by x.cid, a.name asc;");
 		while (pF()) {
 			int bankid  = pGi(1);
 			int accid   = pGi(2);
