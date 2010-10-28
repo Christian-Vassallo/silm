@@ -12,6 +12,63 @@ string
 	cClose  = ColorTagClose();
 
 
+/**
+ * Deposit money worth "value" in the given account.
+ * Optionally give byCid or byName to elaborate in the tx log.
+ * value is always a positive number.
+ * Returns true on success, false on invalid account.
+ */
+bool bank_deposit(int accountId, int value,
+		int byCid = 0, string byName = "");
+
+/**
+ * Withdraw money worth "value" from the given account.
+ * Does not observe credit limits.
+ * value is always a positive number.
+ * Optionally give byCid or byName to elaborate in the tx log.
+ * Returns true on success, false on invalid account.
+ */
+bool bank_withdraw(int accountId, int value,
+		int byCid = 0, string byName = "");
+
+bool bank_tx(int accountId, int value,
+		int byCid = 0, string byName = "");
+
+bool bank_withdraw(int accountId, int value,
+		int byCid = 0, string byName = "") {
+	if (value < 1)
+		return false;
+
+	return bank_tx(accountId, - value, byCid, byName);
+}
+
+bool bank_deposit(int accountId, int value,
+		int byCid = 0, string byName = "") {
+	if (value < 1)
+		return false;
+	
+	return bank_tx(accountId, value, byCid, byName);
+}
+
+bool bank_tx(int accountId, int value,
+		int byCid = 0, string byName = "") {
+	pQ("select balance from bank.accounts where id = " + pSi(accountId));
+	if (!pF())
+		return false;
+
+	int balance = pGi(1);
+
+	pQ("insert into bank.tx (account, cid, name, value, balance_after) values(" +
+		pSi(accountId) + "," + pSi(byCid) + "," +
+		pSs(byName) + "," + pSi(value, false) + "," +
+		pSi(balance + value, false) + ");");
+	pQ("update bank.accounts set balance = balance+" + pSi(value, false) +
+			", updated_on = now() where id = " + pSi(accountId));
+
+	return true;
+}
+
+
 string BankMoneyToString(int value) {
 	int av = abs(value);
 	int pp = av / 1000;

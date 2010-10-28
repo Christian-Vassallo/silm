@@ -55,11 +55,9 @@ void main() {
 
 				if (didTX) {
 					string name = GetName(oPC);
-					pQ("insert into bank.tx (account, cid, name, value, balance_after) values(" +
-						pSi(account) + "," + pSi(cid) + "," +
-						pSs(name) + "," + pSi(tx, false) + "," + pSi(balance + tx, false) + ")");
-					pQ("update bank.accounts set balance = balance+" + pSi(tx, false) +
-							", updated_on = now() where id = " + pSi(account));
+					if (!bank_tx(account, tx, cid, name))
+						SendMessageToPC(oPC, "Transaktion gescheitert.");
+
 					ClearAllActions();
 					AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
 					SendMessageToPC(oPC, "Transaktion abgeschlossen.");
