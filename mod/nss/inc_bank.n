@@ -54,7 +54,7 @@ void MakeBankDialog(object oPC, object oBank) {
 
 
 	if (nMenuLevel0 == 0) {
-		string sText = "no text given";
+		string sText = "Willommen. Ihr habt hier leider kein Konto.";
 		string bankname;
 		int count = 0;
 
@@ -77,8 +77,9 @@ void MakeBankDialog(object oPC, object oBank) {
 			count++;
 
 		}
-		sText = "Willkommen bei " + cGold + bankname + cClose +
-			"! Ihr habt Zugriff auf " + itoa(count) + " Konten.";
+		if (count > 0)
+			sText = "Willkommen bei " + cGold + bankname + cClose +
+				"! Ihr habt Zugriff auf " + itoa(count) + " Konten.";
 
 		ResetConvList(oPC, oPC, TTT, 50000, "bank_cb", sText, "", "");
 	} else {
