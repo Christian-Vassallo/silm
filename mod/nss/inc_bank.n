@@ -2,16 +2,6 @@ extern("inc_cdb")
 extern("inc_lists")
 extern("inc_currency")
 
-string
-	cPlatin = ColorTag(cTeal),
-	cGold   = ColorTag(cOrange),
-	cSilver = ColorTag(Darken(cWhite, 30)),
-	cCopper = ColorTag(Darken(cYellow, 30)),
-	cPos    = ColorTag(Darken(cGreen, 10)),
-	cNeg    = ColorTag(cRed),
-	cClose  = ColorTagClose();
-
-
 /**
  * Deposit money worth "value" in the given account.
  * Optionally give byCid or byName to elaborate in the tx log.
@@ -68,34 +58,6 @@ bool bank_tx(int accountId, int value,
 	return true;
 }
 
-
-string BankMoneyToString(int value) {
-	int av = abs(value);
-	int pp = av / 1000;
-	int gp = (av - pp * 1000) / 100;
-	int sp = (av - pp * 1000 - gp * 100) / 10;
-	int cp = av % 10;
-
-	string ret;
-	if (pp != 0)
-		ret += cPlatin + itoa(pp) + "pp" + cClose + " ";
-	if (gp != 0)
-		ret += cGold + itoa(gp) + "gp" + cClose + " ";
-	if (sp != 0)
-		ret += cSilver + itoa(sp) + "sp" + cClose + " ";
-	if (value == 0 || cp != 0)
-		ret += cCopper + itoa(cp) + "cp" + cClose + " ";
-	
-	if (value < 0)
-		ret = cNeg + "- " + ret;
-	if (value > 0)
-		ret = cPos + "+ " + ret;
-
-	ret = GetStringLeft(ret, GetStringLength(ret) - 1);
-	ret += cClose;
-	return ret;
-}
-
 const string TTT = "bank";
 
 void MakeBankDialog(object oPC, object oBank) {
@@ -135,7 +97,7 @@ void MakeBankDialog(object oPC, object oBank) {
 				account = itoa(bankid) + "-" + itoa(accid);
 				
 			if (allow_read) {
-				string balanceString = BankMoneyToString(balance);
+				string balanceString = ValueToString(balance);
 				AddListItem(oPC, TTT, ColorTag(cLightGrey) + account + ": " +
 						balanceString);
 				SetListInt(oPC, TTT, axid);
@@ -201,9 +163,9 @@ void MakeBankDialog(object oPC, object oBank) {
 			sText = "Konto: " + accountName;
 			if (allow_read) {
 			sText += "\n" +
-				"Aktueller Kontostand: " + BankMoneyToString(balance) + "\n" +
-				"Maximaler Kredit: " + BankMoneyToString(credit) + "\n" +
-				"Eigenes Gold: " + BankMoneyToString(playerMoney) + "\n" +
+				"Aktueller Kontostand: " + ValueToString(balance) + "\n" +
+				"Maximaler Kredit: " + ValueToString(credit) + "\n" +
+				"Eigenes Gold: " + ValueToString(playerMoney) + "\n" +
 				"Zugriff hat: " + who + "\n" +
 				"Konto erstellt am: " + createdOn;
 			}
@@ -230,10 +192,10 @@ void MakeBankDialog(object oPC, object oBank) {
 			rem("Abheben: 1000pp",   1000000);
 			if (balance > 0)
 				rem("Abheben: alles (" +
-					BankMoneyToString(balance) + ")", balance);
+					ValueToString(balance) + ")", balance);
 			if (credit > 0)
 				rem("Abheben: alles mit Kredit (" +
-					BankMoneyToString(allowance) + ")", allowance);
+					ValueToString(allowance) + ")", allowance);
 
 			add("Einzahlen: 5pp",       5000);
 			add("Einzahlen: 50pp",     50000);
@@ -241,11 +203,11 @@ void MakeBankDialog(object oPC, object oBank) {
 			add("Einzahlen: 250pp",   250000);
 			add("Einzahlen: 500pp",   500000);
 			add("Einzahlen: 1000pp", 1000000);
-			add("Einzahlen: alles (" + BankMoneyToString(playerMoney) + ")", playerMoney);
+			add("Einzahlen: alles (" + ValueToString(playerMoney) + ")", playerMoney);
 			if (smallMoney > 0)
-				add("Einzahlen: alles Kleingold (" + BankMoneyToString(smallMoney) + ")", smallMoney);
+				add("Einzahlen: alles Kleingold (" + ValueToString(smallMoney) + ")", smallMoney);
 			if (balance < 0)
-				add("Einzahlen: auf 0 (" + BankMoneyToString(- balance) + ")", - balance);
+				add("Einzahlen: auf 0 (" + ValueToString(- balance) + ")", - balance);
 
 			if (allow_read) {
 				AddListItem(oPC, TTT, "Historie");

@@ -12,6 +12,17 @@ const string
 	ref_gp = "m_gp0",
 	ref_pp = "m_pp0";
 
+extern("inc_colors")
+
+string
+	cPlatin = ColorTag(cTeal),
+	cGold   = ColorTag(cOrange),
+	cSilver = ColorTag(Darken(cWhite, 30)),
+	cCopper = ColorTag(Darken(cYellow, 30)),
+	cPos    = ColorTag(Darken(cGreen, 10)),
+	cNeg    = ColorTag(cRed),
+	cClose  = ColorTagClose();
+
 // Function: MoneyToString 
 // Converts the given struct to "xx Platin xx Gold xx Silber xx Kupfer"-format
 string MoneyToString(struct Money m);
@@ -79,21 +90,35 @@ void CreateMoney(string ref, object pc, int stack) {
 		AssignCommand(pc, ActionGiveItem(money, bag));
 }
 
+string ValueToString(int value) {
+	int av = abs(value);
+	int pp = av / 1000;
+	int gp = (av - pp * 1000) / 100;
+	int sp = (av - pp * 1000 - gp * 100) / 10;
+	int cp = av % 10;
+
+	string ret;
+	if (pp != 0)
+		ret += cPlatin + itoa(pp) + "pp" + cClose + " ";
+	if (gp != 0)
+		ret += cGold + itoa(gp) + "gp" + cClose + " ";
+	if (sp != 0)
+		ret += cSilver + itoa(sp) + "sp" + cClose + " ";
+	if (value == 0 || cp != 0)
+		ret += cCopper + itoa(cp) + "cp" + cClose + " ";
+	
+	if (value < 0)
+		ret = cNeg + "- " + ret;
+	if (value > 0)
+		ret = cPos + "+ " + ret;
+
+	ret = GetStringLeft(ret, GetStringLength(ret) - 1);
+	ret += cClose;
+	return ret;
+}
+
 string MoneyToString(struct Money m) {
-	string r = "";
-	if ( m.platinum > 0 )
-		r += IntToString(m.platinum) + " Platin ";
-	if ( m.gold > 0 )
-		r += IntToString(m.gold) + " Gold ";
-	if ( m.silver > 0 )
-		r += IntToString(m.silver) + " Silber ";
-	if ( m.copper > 0 )
-		r += IntToString(m.copper) + " Kupfer ";
-
-	if ("" == r)
-		r = "(Keine Summe angegeben) ";
-
-	return GetStringLeft(r, GetStringLength(r) - 1);
+	return ValueToString(Money2Value(m));
 }
 
 int AdjustObject(object oPC, object oWhat, int iDifference) {
