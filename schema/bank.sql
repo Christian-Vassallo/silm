@@ -27,7 +27,11 @@ create table bank.access (
 	created_on timestamp not null default now(),
 
 	account int references bank.accounts not null,
-	cid int references characters not null
+	cid int references characters not null,
+
+	allow_read bool not null default true,
+	allow_withdraw bool not null default false,
+	allow_deposit bool not null default false
 );
 alter sequence bank.access_id_seq restart with 1000;
 
