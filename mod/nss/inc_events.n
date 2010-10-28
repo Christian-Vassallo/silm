@@ -453,8 +453,7 @@ void SetEventArguments(event_id_t serial, struct EventArguments ea) {
 	SetLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l2", ea.l2);
 }
 
-
-void DeleteEventArguments(event_id_t serial) {
+void DeleteEventArgumentsAsync(event_id_t serial) {
 	string serial_s = itoa(serial) + "_";
 	DeleteLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a0");
 	DeleteLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a1");
@@ -473,3 +472,6 @@ void DeleteEventArguments(event_id_t serial) {
 	DeleteLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l2");
 }
 
+void DeleteEventArguments(event_id_t serial) {
+	DelayCommand(5f, DeleteEventArgumentsAsync(serial));
+}
