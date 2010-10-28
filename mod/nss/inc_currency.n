@@ -6,6 +6,11 @@ struct Money {
 	int platinum;
 };
 
+const string
+	ref_cp = "m_cp0",
+	ref_sp = "m_sp0",
+	ref_gp = "m_gp0",
+	ref_pp = "m_pp0";
 
 // Function: MoneyToString 
 // Converts the given struct to "xx Platin xx Gold xx Silber xx Kupfer"-format
@@ -57,6 +62,14 @@ object __GetMoneyBag(object oPC) {
 		oItem = GetNextItemInInventory(oPC);
 	}
 	return OBJECT_INVALID;
+}
+
+object GetMoneyInventory(object oPC) {
+	object bag = __GetMoneyBag(oPC);
+	if (!is_valid(bag))
+		return oPC;
+	else
+		return bag;
 }
 
 void CreateMoney(string ref, object pc, int stack) {
@@ -124,13 +137,13 @@ void AdjustCreatureMoney(object oPC, struct Money stDifference) {
 	}
 	/* Remainings are positive and no matching item found */
 	if ( stDifference.copper > 0 )
-		CreateMoney("coin_0001", oPC, stDifference.copper);
+		CreateMoney(ref_cp, oPC, stDifference.copper);
 	if ( stDifference.silver > 0 )
-		CreateMoney("coin_0010", oPC, stDifference.silver);
+		CreateMoney(ref_sp, oPC, stDifference.silver);
 	if ( stDifference.gold > 0 )
-		CreateMoney("coin_0100", oPC, stDifference.gold);
+		CreateMoney(ref_gp, oPC, stDifference.gold);
 	if ( stDifference.platinum > 0 )
-		CreateMoney("coin_1000", oPC, stDifference.platinum);
+		CreateMoney(ref_pp, oPC, stDifference.platinum);
 }
 
 
@@ -196,10 +209,10 @@ void GiveMoneyToCreature(object oPC, struct Money stCoins) {
 	iBatch = stCoins.platinum;
 	while ( iBatch ) {
 		if ( iBatch > 500 ) {
-			CreateMoney("coin_1000", oPC, 500);
+			CreateMoney(ref_pp, oPC, 500);
 			iBatch -= 500;
 		} else {
-			CreateMoney("coin_1000", oPC, iBatch);
+			CreateMoney(ref_pp, oPC, iBatch);
 			iBatch = 0;
 		}
 	}
@@ -207,10 +220,10 @@ void GiveMoneyToCreature(object oPC, struct Money stCoins) {
 	iBatch = stCoins.gold;
 	while ( iBatch ) {
 		if ( iBatch > 500 ) {
-			CreateMoney("coin_0100", oPC, 500);
+			CreateMoney(ref_gp, oPC, 500);
 			iBatch -= 500;
 		} else {
-			CreateMoney("coin_0100", oPC, iBatch);
+			CreateMoney(ref_gp, oPC, iBatch);
 			iBatch = 0;
 		}
 	}
@@ -218,10 +231,10 @@ void GiveMoneyToCreature(object oPC, struct Money stCoins) {
 	iBatch = stCoins.silver;
 	while ( iBatch ) {
 		if ( iBatch > 500 ) {
-			CreateMoney("coin_0010", oPC, 500);
+			CreateMoney(ref_sp, oPC, 500);
 			iBatch -= 500;
 		} else {
-			CreateMoney("coin_0010", oPC, iBatch);
+			CreateMoney(ref_sp, oPC, iBatch);
 			iBatch = 0;
 		}
 	}
@@ -229,10 +242,10 @@ void GiveMoneyToCreature(object oPC, struct Money stCoins) {
 	iBatch = stCoins.copper;
 	while ( iBatch ) {
 		if ( iBatch > 500 ) {
-			CreateMoney("coin_0001", oPC, 500);
+			CreateMoney(ref_cp, oPC, 500);
 			iBatch -= 500;
 		} else {
-			CreateMoney("coin_0001", oPC, iBatch);
+			CreateMoney(ref_cp, oPC, iBatch);
 			iBatch = 0;
 		}
 	}
