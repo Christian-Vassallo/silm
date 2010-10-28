@@ -64,7 +64,8 @@ void check_all_incomes(object runnable) {
 				ColorTag(cOrange) + desc;
 
 			if (bank_account > 0) {
-				bank_deposit(bank_account, copper, 0, name);
+				bank_deposit(bank_account, copper, 0,
+						name + "(" + GetName(runnable) + ")");
 				msg += " (auf Bank-Konto gezahlt)";
 			} else {
 				GiveValueToCreature(runnable, copper, true);
