@@ -7,7 +7,11 @@ void main() {
 
 	//Declare major variables
 	object oTarget = GetSpellTargetObject();
-	effect eDom = EffectDominated();
+	effect eDom;
+	if (GetIsPC(oTarget))
+		eDom = EffectVisualEffect(VFX_DUR_MIND_AFFECTING_NEGATIVE);
+	else
+		eDom = EffectDominated();
 
 	int nMetaMagic = GetMetaMagicFeat();
 	int nCasterLevel = GetCasterLevel(OBJECT_SELF);
