@@ -153,8 +153,8 @@ void disguise_save(object pc, string name, int cid = 0, bool saveDescription = f
 		desc = pSs(GetPlayerDescription(pc));
 
 	pQ("select id from " + DISGUISE_TABLE + " where cid = " + pSi(cid, false) + " and name = " + pSs(name));
-	if (pF())
-		pQ("update " + DISGUISE_TABLE + " set updated_on = now(), " +
+	if (pF()) {
+		string q = "update " + DISGUISE_TABLE + " set updated_on = now(), " +
 			"name = " + pSs(name) + ", " +
 			"appearance = " + pSi(GetAppearanceType(pc), false) + ", " +
 			"head = " + pSi(GetCreatureBodyPart(CREATURE_PART_HEAD, pc), false) + ", " +
@@ -165,9 +165,13 @@ void disguise_save(object pc, string name, int cid = 0, bool saveDescription = f
 			"tattoo1 = " + pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_1), false) + ", " +
 			"tattoo2 = " + pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_2), false) + ", " +
 			"portrait = " + pSs(GetPortraitResRef(pc)) + ", " +
-			"gender = " + pSi(GetGender(pc), false) + ", " +
-			"soundset = " + pSi(GetSoundset(pc), false) +
-		" where id = " + pSi(pGi(1)));
+			"gender = " + pSi(GetGender(pc), false) + ", ";
+		if (saveDescription)
+			q += "description = " + desc + ", ";
+		q += "soundset = " + pSi(GetSoundset(pc), false) +
+			" where id = " + pSi(pGi(1));
+		pQ(q);
+	}
 
 	else
 
