@@ -58,6 +58,13 @@ bool bank_tx(int accountId, int value,
 	return true;
 }
 
+int bank_calculate_interest(int accountId) {
+	pQ("select bank.interest_for(" + pSi(accountId) + ");");
+	if (pF())
+		return pGi(1);
+	return 0;
+}
+
 const string TTT = "bank";
 
 void MakeBankDialog(object oPC, object oBank) {
@@ -77,12 +84,13 @@ void MakeBankDialog(object oPC, object oBank) {
 		string bankname;
 		int count = 0;
 
-		pQ("select b.id, a.id, x.id, a.balance, b.name, a.name, " +
+		pBegin();
+		string cA = pDeclare("select b.id, a.id, x.id, a.balance, b.name, a.name, " +
 			"x.allow_read, x.allow_withdraw, x.allow_deposit from " +
 			"bank.banks b, bank.accounts a, bank.access x where " +
 			"b.id = a.bank and x.account = a.id and b.id = " + pSi(bankId) +
 			" and (x.cid = " + pSi(cid) + " or x.cid is null) order by x.cid, a.name asc;");
-		while (pF()) {
+		while (pCursorFetch(cA)) {
 			int bankid  = pGi(1);
 			int accid   = pGi(2);
 			int axid    = pGi(3);
@@ -105,9 +113,27 @@ void MakeBankDialog(object oPC, object oBank) {
 				AddListItem(oPC, TTT, ColorTag(cLightGrey) + account);
 				SetListInt(oPC, TTT, axid);
 			}
-			count++;
 
+			int interest = bank_calculate_interest(accid);
+			if (abs(interest) > 10) {
+				pQ("select to_char(t.created_on, 'DD.MM.YY HH24:MI') from " +
+					"bank.tx as t where account = " + pSi(accid) +
+					" order by id desc limit 1;");
+				pF();
+				string since = pGs(1);
+				SendMessageToPC(oPC,
+					ColorTag(cLightGrey) +
+					account + " (Zinsen seit " + since + "): " +
+					ValueToString(interest)
+				);
+				bank_tx(accid, interest, 0, "Zinsen seit " + since);
+			}
+
+			count++;
 		}
+		pCursorClose(cA);
+		pCommit();
+
 		if (count > 0)
 			sText = "Willkommen bei " + cGold + bankname + cClose +
 				"! Ihr habt Zugriff auf " + itoa(count) + " Konten.";
@@ -118,7 +144,8 @@ void MakeBankDialog(object oPC, object oBank) {
 
 		int axid = GetLocalInt(oPC, "bank_axid_selection");
 		pQ("select a.balance, a.id, to_char(a.created_on, 'DD.MM.YY HH24:MI'), " +
-			"a.credit, a.name, b.id, x.allow_read, x.allow_withdraw, x.allow_deposit " +
+			"a.credit, a.name, b.id, x.allow_read, x.allow_withdraw, x.allow_deposit, " +
+			"a.interest, a.credit_interest " +
 			"from bank.accounts a, bank.access x, bank.banks b where " +
 			"a.id = x.account and b.id = a.bank and x.id = " + pSi(axid));
 		if (pF()) {
@@ -132,6 +159,9 @@ void MakeBankDialog(object oPC, object oBank) {
 			bool allow_read = pGb(7),
 				allow_withdraw = pGb(8),
 				allow_deposit = pGb(9);
+
+			float interest = pGf(10),
+				credit_interest = pGf(11);
 	
 			if (accountName == "")
 				accountName = itoa(bankid) + "-" + itoa(accid);
@@ -165,6 +195,10 @@ void MakeBankDialog(object oPC, object oBank) {
 			sText += "\n" +
 				"Aktueller Kontostand: " + ValueToString(balance) + "\n" +
 				"Maximaler Kredit: " + ValueToString(credit) + "\n" +
+				"Jahreszins p/a: " + ColorTag(cGreen) +
+					itoa(ftoi(interest * 100)) + "%\n" + ColorTagClose() +
+				"Schuldzins p/a: " + ColorTag(cRed) +
+					itoa(ftoi(credit_interest * 100)) + "%\n" + ColorTagClose() +
 				"Eigenes Gold: " + ValueToString(playerMoney) + "\n" +
 				"Zugriff hat: " + who + "\n" +
 				"Konto erstellt am: " + createdOn;
