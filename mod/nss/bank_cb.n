@@ -21,14 +21,14 @@ void main() {
 		if (act == "createPrimary") {
 			pBegin();
 			pQ("insert into bank.accounts (bank, name) values(" +
-				pSi(bankid) + ", 'Privatkonto');");
+				pSi(bankid) + ", " + pSs("Privatkonto: " + GetName(oPC)) + ");");
 			int newAccId = pLastId("bank.accounts");
 			pQ("insert into bank.access (account, cid, allow_read, " +
 				"allow_withdraw, allow_deposit) values(" +
 				pSi(newAccId) + "," + pSi(cid) + ",true,true,true)");
 
 			pQ("insert into bank.accounts (bank, name) values(" +
-				pSi(bankid) + ", 'Geschäftskonto');");
+				pSi(bankid) + ", " + pSs("Geschäftskonto: " + GetName(oPC)) + ");");
 			newAccId = pLastId("bank.accounts");
 			pQ("insert into bank.access (account, cid, allow_read, " +
 				"allow_withdraw, allow_deposit, default_income) values(" +
@@ -36,8 +36,8 @@ void main() {
 			pCommit();
 
 			SendMessageToPC(oPC, "Ihre Konten wurden angelegt. Willkommen! " +
-				"Fuer spezielle Anforderungen bitten wir, das " +
-				"Management anzusprechen.");
+				"Fuer spezielle Anforderungen bitten wir, die " +
+				"Verwaltung anzusprechen.");
 
 			ClearAllActions();
 			AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
