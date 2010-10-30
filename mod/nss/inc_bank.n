@@ -22,7 +22,12 @@ bool bank_withdraw(int accountId, int value,
 		int byCid = 0, string byName = "");
 
 bool bank_tx(int accountId, int value,
-		int byCid = 0, string byName = "");
+		int byCid = 0, string byName = "", bool interest = false);
+
+int bank_pay_interest(int accid, int border = 0,
+		object oNotify = OBJECT_INVALID);
+
+int bank_calculate_interest(int accountId);
 
 bool bank_withdraw(int accountId, int value,
 		int byCid = 0, string byName = "") {
@@ -41,17 +46,24 @@ bool bank_deposit(int accountId, int value,
 }
 
 bool bank_tx(int accountId, int value,
-		int byCid = 0, string byName = "") {
+		int byCid = 0, string byName = "", bool interest = false) {
+
+	// Always pay interest before doing txn
+	if (!interest)
+		bank_pay_interest(accountId);
+
 	pQ("select balance from bank.accounts where id = " + pSi(accountId));
 	if (!pF())
 		return false;
-
 	int balance = pGi(1);
 
-	pQ("insert into bank.tx (account, cid, name, value, balance_after) values(" +
-		pSi(accountId) + "," + pSi(byCid) + "," +
-		pSs(byName) + "," + pSi(value, false) + "," +
-		pSi(balance + value, false) + ");");
+	pQ("insert into bank.tx (account, cid, name, value, balance_after, interest)" +
+		"values(" +
+			pSi(accountId) + "," + pSi(byCid) + "," +
+			pSs(byName) + "," + pSi(value, false) + "," +
+			pSi(balance + value, false) + "," + pSb(interest) +
+		");"
+	);
 	pQ("update bank.accounts set balance = balance+" + pSi(value, false) +
 			", updated_on = now() where id = " + pSi(accountId));
 
@@ -63,6 +75,31 @@ int bank_calculate_interest(int accountId) {
 	if (pF())
 		return pGi(1);
 	return 0;
+}
+
+int bank_pay_interest(int accid, int border = 0,
+		object oNotify = OBJECT_INVALID) {
+	pQ("select name from bank.accounts where id = " + pSi(accid));
+	if (!pF())
+		return 0;
+	string account = pGs(1);
+
+	int interest = bank_calculate_interest(accid);
+	if (abs(interest) > abs(border)) {
+		pQ("select to_char(t.created_on, 'DD.MM.YY HH24:MI') from " +
+			"bank.tx as t where account = " + pSi(accid) +
+			" order by id desc limit 1;");
+		pF();
+		string since = pGs(1);
+		if (is_valid(oNotify))
+			SendMessageToPC(oNotify,
+				ColorTag(cLightGrey) +
+				account + " (Zinsen seit " + since + "): " +
+				ValueToString(interest)
+			);
+		bank_tx(accid, interest, 0, "Zinsen seit " + since, true);
+	}
+	return interest;
 }
 
 const string TTT = "bank";
@@ -85,7 +122,6 @@ void MakeBankDialog(object oPC, object oBank) {
 		string sText = "Willommen! Ihr habt noch keine Konten bei uns, " +
 			"doch eine Einrichtung ist rasch geschehen und kostet Euch nichts.";
 		string bankname;
-		int count = 0;
 		int owningCount = 0;
 
 		pBegin();
@@ -120,34 +156,20 @@ void MakeBankDialog(object oPC, object oBank) {
 			}
 
 			if (allow_read) {
-				int interest = bank_calculate_interest(accid);
-				if (abs(interest) > 10) {
-					pQ("select to_char(t.created_on, 'DD.MM.YY HH24:MI') from " +
-						"bank.tx as t where account = " + pSi(accid) +
-						" order by id desc limit 1;");
-					pF();
-					string since = pGs(1);
-					SendMessageToPC(oPC,
-						ColorTag(cLightGrey) +
-						account + " (Zinsen seit " + since + "): " +
-						ValueToString(interest)
-					);
-					bank_tx(accid, interest, 0, "Zinsen seit " + since);
-				}
+				// Only pay interest on view if more than limit gold.
+				bank_pay_interest(accid, 100, oPC);
 
 				owningCount++;
 			}
-
-			count++;
 		}
 		pCursorClose(cA);
 		pCommit();
 
-		if (count > 0)
+		if (owningCount > 0)
 			sText = "Willkommen bei " + cGold + bankname + cClose +
 				"! Ihr habt Zugriff auf folgende Konten:";
 
-		if (!owningCount) {
+		else {
 			AddListItem(oPC, TTT, "Standardkonten anlegen");
 			SetListString(oPC, TTT, "createPrimary");
 			SetListInt(oPC, TTT, 0);

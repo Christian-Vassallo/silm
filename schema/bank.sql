@@ -17,6 +17,9 @@ create table bank.accounts (
 
 	name varchar,
 
+	interest float not null default 0.05,
+	credit_interest float not null default 0.36,
+
 	suspended bool default false not null,
 
 	credit int not null default 0,
@@ -45,11 +48,10 @@ create table bank.tx (
 	cid int references characters,
 	name varchar,
 
-	interest float not null default 0.05,
-	credit_interest float not null default 0.36,
-
 	value int not null,
 	balance_after int not null,
+
+	interest bool not null default false,
 
 	item int references objects.objects
 );
