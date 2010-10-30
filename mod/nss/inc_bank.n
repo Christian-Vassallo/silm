@@ -24,6 +24,9 @@ bool bank_withdraw(int accountId, int value,
 bool bank_tx(int accountId, int value,
 		int byCid = 0, string byName = "", bool interest = false);
 
+bool bank_tx_2(int accountFrom, int accountTo, int value,
+		int byCid = 0, string byName = "");
+
 int bank_pay_interest(int accid, int border = 0,
 		object oNotify = OBJECT_INVALID);
 
@@ -68,6 +71,18 @@ bool bank_tx(int accountId, int value,
 			", updated_on = now() where id = " + pSi(accountId));
 
 	return true;
+}
+
+bool bank_tx_2(int accountFrom, int accountTo, int value,
+		int byCid = 0, string byName = "") {
+
+	if (value < 1)
+		return false;
+
+	if (bank_withdraw(accountFrom, value, byCid, byName))
+		return bank_deposit(accountTo, value, byCid, byName);
+	else
+		return false;
 }
 
 int bank_calculate_interest(int accountId) {
