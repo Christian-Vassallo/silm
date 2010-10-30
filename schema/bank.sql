@@ -34,6 +34,8 @@ create table bank.access (
 	account int references bank.accounts not null,
 	cid int references characters not null,
 
+	default_income bool not null default false,
+
 	allow_read bool not null default true,
 	allow_withdraw bool not null default false,
 	allow_deposit bool not null default false

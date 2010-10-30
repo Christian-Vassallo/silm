@@ -120,7 +120,10 @@ void MakeBankDialog(object oPC, object oBank) {
 
 	if (nMenuLevel0 == 0) {
 		string sText = "Willommen! Ihr habt noch keine Konten bei uns, " +
-			"doch eine Einrichtung ist rasch geschehen und kostet Euch nichts.";
+			"doch eine Einrichtung ist rasch geschehen und kostet Euch nichts. " +
+			"Sobald Ihr ein Geschäftskonto bei uns führt, wird all Euer Berufsgold " +
+			"auf dieses eingezahlt, anstelle ins Inventar - und Ihr profitiert von " +
+			"den exzellenten Zins-Konditionen!";
 		string bankname;
 		int owningCount = 0;
 
@@ -209,17 +212,19 @@ void MakeBankDialog(object oPC, object oBank) {
 			pQ("update bank.accounts set accessed_on = now() where id = "
 					+ pSi(accid));
 
-			pQ("select c.character, allow_read, allow_withdraw, allow_deposit" +
+			pQ("select c.character, allow_read, allow_withdraw, allow_deposit, default_income" +
 				" from bank.access x left join characters c" +
 				" on c.id = x.cid where x.account = " + pSi(accid) + ";");
 			string who;
 			while (pF()) {
 				string cname = pGs(1);
-				bool read = pGb(2), withdraw = pGb(3), deposit = pGb(4);
+				bool read = pGb(2), withdraw = pGb(3), deposit = pGb(4),
+						default_income = pGb(5);
 				cname += "(";
 				if (read) cname += "h";
 				if (withdraw) cname += "a";
 				if (deposit) cname += "e";
+				if (default_income) cname += "i";
 				cname += ")";
 				who += cname + ", ";
 			}
@@ -227,18 +232,19 @@ void MakeBankDialog(object oPC, object oBank) {
 			if (GetStringLength(who) > 0)
 				who = GetStringLeft(who, GetStringLength(who) - 2);
 			
-			sText = "Konto: " + accountName;
+			string cs = ColorTag(cLightGrey);
+			sText = cs+"Konto: " + ColorTag(cOrange) + accountName;
 			if (allow_read) {
-			sText += "\n" +
-				"Aktueller Kontostand: " + ValueToString(balance) + "\n" +
-				"Maximaler Kredit: " + ValueToString(credit) + "\n" +
-				"Jahreszins p/a: " + ColorTag(cGreen) +
+				sText += "\n" +
+				cs+"Aktueller Kontostand: " + ValueToString(balance) + "\n" +
+				cs+"Maximaler Kredit: " + ValueToString(credit) + "\n" +
+				cs+"Jahreszins p.a.: " + ColorTag(cGreen) +
 					itoa(ftoi(interest * 100)) + "%\n" + ColorTagClose() +
-				"Schuldzins p/a: " + ColorTag(cRed) +
+				cs+"Schuldzins p.a.: " + ColorTag(cRed) +
 					itoa(ftoi(credit_interest * 100)) + "%\n" + ColorTagClose() +
-				"Eigenes Gold: " + ValueToString(playerMoney) + "\n" +
-				"Zugriff hat: " + who + "\n" +
-				"Konto erstellt am: " + createdOn;
+				cs+"Eigenes Gold: " + ValueToString(playerMoney) + "\n" +
+				cs+"Zugriff hat: " + who + "\n" +
+				cs+"Konto erstellt am: " + createdOn;
 			}
 
 			int smallMoney = playerMoney % 1000;

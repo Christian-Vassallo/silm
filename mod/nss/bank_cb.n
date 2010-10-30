@@ -31,8 +31,8 @@ void main() {
 				pSi(bankid) + ", 'Geschäftskonto');");
 			newAccId = pLastId("bank.accounts");
 			pQ("insert into bank.access (account, cid, allow_read, " +
-				"allow_withdraw, allow_deposit) values(" +
-				pSi(newAccId) + "," + pSi(cid) + ",true,true,true)");
+				"allow_withdraw, allow_deposit, default_income) values(" +
+				pSi(newAccId) + "," + pSi(cid) + ",true,true,true,true)");
 			pCommit();
 
 			SendMessageToPC(oPC, "Ihre Konten wurden angelegt. Willkommen! " +

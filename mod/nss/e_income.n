@@ -26,6 +26,14 @@ void check_all_incomes(object runnable) {
 		int source_id = pGi(2);
 		int bank_account = pGi(3);
 
+		if (!bank_account) {
+			// See if this cid as an access entry defaulting to income money
+			pQ("select account from bank.access where " +
+				"default_income = true and cid = " + pSi(cid));
+			if (pF())
+				bank_account = pGi(1);
+		}
+
 		pQ("select id from income.exclusion where cid = " + pSi(cid) + " and source = " + pSi(source_id) + ";");
 		if (pF())
 			continue;
