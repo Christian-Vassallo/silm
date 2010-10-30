@@ -83,6 +83,7 @@ void MakeBankDialog(object oPC, object oBank) {
 		string sText = "Willommen. Ihr habt hier leider kein Konto.";
 		string bankname;
 		int count = 0;
+		int owningCount = 0;
 
 		pBegin();
 		string cA = pDeclare("select b.id, a.id, x.id, a.balance, b.name, a.name, " +
@@ -130,6 +131,8 @@ void MakeBankDialog(object oPC, object oBank) {
 					);
 					bank_tx(accid, interest, 0, "Zinsen seit " + since);
 				}
+
+				owningCount++;
 			}
 
 			count++;
@@ -140,6 +143,12 @@ void MakeBankDialog(object oPC, object oBank) {
 		if (count > 0)
 			sText = "Willkommen bei " + cGold + bankname + cClose +
 				"! Ihr habt Zugriff auf " + itoa(count) + " Konten.";
+
+		if (!owningCount) {
+			AddListItem(oPC, TTT, "Privatkonto anlegen");
+			SetListString(oPC, TTT, "createPrimary");
+			SetListInt(oPC, TTT, 0);
+		}
 
 		ResetConvList(oPC, oPC, TTT, 50000, "bank_cb", sText, "", "");
 	} else {

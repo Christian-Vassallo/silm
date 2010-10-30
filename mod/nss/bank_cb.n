@@ -11,8 +11,31 @@ void main() {
 	int nMenuLevel1 = GetMenuLevel(oPC, TTT, 1);
 	int nSelected   = GetListSelection(oPC);
 
+	int bankid = GetLocalInt(oBank, "bank_id");
+	if (!bankid) return;
+
 	if (0 == nMenuLevel0) { // Mainmenu
 		int acc = GetListInt(oPC, TTT, nSelected);
+		string act = GetListString(oPC, TTT, nSelected);
+		int cid = GetCharacterID(oPC);
+		if (act == "createPrimary") {
+			pBegin();
+			pQ("insert into bank.accounts (bank, name) values(" +
+				pSi(bankid) + ", 'Privatkonto');");
+			int newAccId = pLastId("bank.accounts");
+			pQ("insert into bank.access (account, cid, allow_read, " +
+				"allow_withdraw, allow_deposit) values(" +
+				pSi(newAccId) + "," + pSi(cid) + ",true,true,true)"
+			);
+			pCommit();
+			SendMessageToPC(oPC, "Konto angelegt. Willkommen. " +
+				"Fuer spezielle Kontowuensche bitten wir das " +
+				"Management anzusprechen.");
+
+			ClearAllActions();
+			AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
+			return;
+		}
 		SetMenuLevel(oPC, TTT, 0, 1);
 		SetLocalInt(oPC, "bank_axid_selection", acc);
 
