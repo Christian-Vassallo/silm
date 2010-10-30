@@ -201,7 +201,7 @@ void MakeBankDialog(object oPC, object oBank) {
 		int axid = GetLocalInt(oPC, "bank_axid_selection");
 		pQ("select a.balance, a.id, to_char(a.created_on, 'DD.MM.YY HH24:MI'), " +
 			"a.credit, a.name, b.id, x.allow_read, x.allow_withdraw, x.allow_deposit, " +
-			"coalsece(a.interest, b.interest), coalesce(a.credit_interest, b.credit_interest) " +
+			"coalesce(a.interest, b.interest), coalesce(a.credit_interest, b.credit_interest) " +
 			"from bank.accounts a, bank.access x, bank.banks b where " +
 			"a.id = x.account and b.id = a.bank and x.id = " + pSi(axid));
 		if (pF()) {
