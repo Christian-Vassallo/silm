@@ -78,9 +78,12 @@ void MakeBankDialog(object oPC, object oBank) {
 
 	int cid = GetCharacterID(oPC);
 
+	if (!cid)
+		return;
 
 	if (nMenuLevel0 == 0) {
-		string sText = "Willommen. Ihr habt hier leider kein Konto.";
+		string sText = "Willommen! Ihr habt noch keine Konten bei uns, " +
+			"doch eine Einrichtung ist rasch geschehen und kostet Euch nichts.";
 		string bankname;
 		int count = 0;
 		int owningCount = 0;
@@ -142,10 +145,10 @@ void MakeBankDialog(object oPC, object oBank) {
 
 		if (count > 0)
 			sText = "Willkommen bei " + cGold + bankname + cClose +
-				"! Ihr habt Zugriff auf " + itoa(count) + " Konten.";
+				"! Ihr habt Zugriff auf folgende Konten:";
 
 		if (!owningCount) {
-			AddListItem(oPC, TTT, "Privatkonto anlegen");
+			AddListItem(oPC, TTT, "Standardkonten anlegen");
 			SetListString(oPC, TTT, "createPrimary");
 			SetListInt(oPC, TTT, 0);
 		}

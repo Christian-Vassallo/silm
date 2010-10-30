@@ -25,11 +25,18 @@ void main() {
 			int newAccId = pLastId("bank.accounts");
 			pQ("insert into bank.access (account, cid, allow_read, " +
 				"allow_withdraw, allow_deposit) values(" +
-				pSi(newAccId) + "," + pSi(cid) + ",true,true,true)"
-			);
+				pSi(newAccId) + "," + pSi(cid) + ",true,true,true)");
+
+			pQ("insert into bank.accounts (bank, name) values(" +
+				pSi(bankid) + ", 'Geschäftskonto');");
+			newAccId = pLastId("bank.accounts");
+			pQ("insert into bank.access (account, cid, allow_read, " +
+				"allow_withdraw, allow_deposit) values(" +
+				pSi(newAccId) + "," + pSi(cid) + ",true,true,true)");
 			pCommit();
-			SendMessageToPC(oPC, "Konto angelegt. Willkommen. " +
-				"Fuer spezielle Kontowuensche bitten wir das " +
+
+			SendMessageToPC(oPC, "Ihre Konten wurden angelegt. Willkommen! " +
+				"Fuer spezielle Anforderungen bitten wir, das " +
 				"Management anzusprechen.");
 
 			ClearAllActions();
