@@ -115,19 +115,21 @@ void MakeBankDialog(object oPC, object oBank) {
 				SetListInt(oPC, TTT, axid);
 			}
 
-			int interest = bank_calculate_interest(accid);
-			if (abs(interest) > 10) {
-				pQ("select to_char(t.created_on, 'DD.MM.YY HH24:MI') from " +
-					"bank.tx as t where account = " + pSi(accid) +
-					" order by id desc limit 1;");
-				pF();
-				string since = pGs(1);
-				SendMessageToPC(oPC,
-					ColorTag(cLightGrey) +
-					account + " (Zinsen seit " + since + "): " +
-					ValueToString(interest)
-				);
-				bank_tx(accid, interest, 0, "Zinsen seit " + since);
+			if (allow_read) {
+				int interest = bank_calculate_interest(accid);
+				if (abs(interest) > 10) {
+					pQ("select to_char(t.created_on, 'DD.MM.YY HH24:MI') from " +
+						"bank.tx as t where account = " + pSi(accid) +
+						" order by id desc limit 1;");
+					pF();
+					string since = pGs(1);
+					SendMessageToPC(oPC,
+						ColorTag(cLightGrey) +
+						account + " (Zinsen seit " + since + "): " +
+						ValueToString(interest)
+					);
+					bank_tx(accid, interest, 0, "Zinsen seit " + since);
+				}
 			}
 
 			count++;
