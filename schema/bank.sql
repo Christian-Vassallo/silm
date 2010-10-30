@@ -4,6 +4,9 @@ create table bank.banks (
 	id serial primary key,
 	created_on timestamp not null default now(),
 
+	interest float not null default 0.05,
+	credit_interest float not null default 0.36,
+
 	name varchar not null
 );
 alter sequence bank.banks_id_seq restart with 1000;
@@ -17,8 +20,8 @@ create table bank.accounts (
 
 	name varchar,
 
-	interest float not null default 0.05,
-	credit_interest float not null default 0.36,
+	interest float,
+	credit_interest float,
 
 	suspended bool default false not null,
 
@@ -65,12 +68,15 @@ select
 	-- days passed: extract(epoch from now() - tx.created_on) / 3600 / 24
 	-- fraction fo year: days_passed / 365
 	(
-	tx.balance_after * (case when tx.balance_after >= 0
-			then a.interest else a.credit_interest end) *
+	tx.balance_after * (case when tx.balance_after >= 0 then
+			coalesce(a.interest, b.interest)
+		else
+			coalesce(a.credit_interest, b.credit_interest) end) *
 	(extract(epoch from now() - tx.created_on) / 3600 / 24) / 365
 	)::int
 
 	from bank.tx as tx
 	left join bank.accounts as a on a.id = tx.account
+	left join bank.banks as b on b.id = a.bank
 	where account = $1 order by tx.id desc limit 1;
 $$ language sql stable;
