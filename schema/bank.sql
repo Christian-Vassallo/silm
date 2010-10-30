@@ -17,6 +17,8 @@ create table bank.accounts (
 
 	name varchar,
 
+	suspended bool default false not null,
+
 	credit int not null default 0,
 	balance int not null default 0
 );
