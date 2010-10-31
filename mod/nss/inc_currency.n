@@ -1,11 +1,5 @@
 #define money_t int
 
-const string
-	ref_cp = "m_cp0",
-	ref_sp = "m_sp0",
-	ref_gp = "m_gp0",
-	ref_pp = "m_pp0";
-
 extern("inc_colors")
 
 string
@@ -34,7 +28,7 @@ money_t GetCoinValue(object coin);
 
 // Creates a coin(stack) on the given pc and tries to put
 // it into the creatures' money bag.
-object CreateMoney(string ref, object pc, int stack);
+void CreateMoney(string ref, object pc, int stack);
 
 
 object __GetMoneyBag(object oPC) {
@@ -56,14 +50,19 @@ object GetMoneyInventory(object oPC) {
 		return bag;
 }
 
-object CreateMoney(string ref, object pc, int stack) {
+void CreateEitherMoney(string ref_a, string ref_b, object pc, int stack) {
+	int part_b = Random(stack);
+	CreateMoney(ref_a, pc, stack - part_b);
+	CreateMoney(ref_b, pc, part_b);
+}
+
+void CreateMoney(string ref, object pc, int stack) {
 	if (stack < 1)
-		return OBJECT_INVALID;
+		return;
 	object money = CreateItemOnObject(ref, pc, stack);
 	object bag = __GetMoneyBag(pc);
 	if (is_valid(bag))
 		AssignCommand(pc, ActionGiveItem(money, bag));
-	return money;
 }
 
 string MoneyToString(money_t value) {
@@ -111,15 +110,47 @@ money_t CountInventoryMoney(object oWithInventory, bool destroy = false) {
 
 void GiveMoneyToCreature(object oPC, money_t value) {
 	int av = abs(value);
+
+	// Standard denomination
 	int pp = av / 1000;
 	int gp = (av - pp * 1000) / 100;
 	int sp = (av - pp * 1000 - gp * 100) / 10;
 	int cp = av % 10;
 
-	CreateMoney(ref_pp, oPC, pp);
-	CreateMoney(ref_gp, oPC, gp);
-	CreateMoney(ref_sp, oPC, sp);
-	CreateMoney(ref_cp, oPC, cp);
+	// Seed some X if we have more than n X-1
+	if (pp > 5 && gp == 0) {
+		pp -= 1; gp += 10;
+	}
+	if (gp > 7 && sp == 0) {
+		gp -= 1; sp += 10;
+	}
+	if (sp > 5 && cp == 0) {
+		sp -= 1; cp += 10;
+	}
+
+	// Special denomination:
+	int ep = 0;
+	// 1 in 4 pp p is a tricrown or blueeye
+	ep = (pp / 4) * 2;
+	pp -= ep / 2;
+
+	int toal = 0;
+	// 1 in 4 gold pieces is a toal.
+	toal = (gp / 4) / 2;
+	gp -= toal * 2;
+
+	CreateMoney("m_pp0", oPC, pp);
+	CreateEitherMoney("m_tricrown", "m_ep0", oPC, ep);
+
+	CreateEitherMoney("m_toal", "m_toalh", oPC, toal);
+	CreateEitherMoney("m_gp0", "m_gp1", oPC, gp);
+
+	CreateEitherMoney("m_sp0", "m_sp1", oPC, sp);
+
+	int cp_a = cp / 2;
+	cp -= cp_a;
+	CreateEitherMoney("m_cp0", "m_cp1", oPC, cp_a);
+	CreateEitherMoney("m_cp2", "m_cp3", oPC, cp);
 }
 
 void TakeMoneyFromCreature(object oPC, money_t value) {
