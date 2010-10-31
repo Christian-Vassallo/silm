@@ -168,9 +168,11 @@ void MakeBankDialog(object oPC, object oBank) {
 				string balanceString = ValueToString(balance);
 				AddListItem(oPC, TTT, ColorTag(cLightGrey) + account + ": " +
 						balanceString);
+				SetListString(oPC, TTT, "");
 				SetListInt(oPC, TTT, axid);
 			} else if (allow_withdraw || allow_deposit) {
 				AddListItem(oPC, TTT, ColorTag(cLightGrey) + account);
+				SetListString(oPC, TTT, "");
 				SetListInt(oPC, TTT, axid);
 			}
 
