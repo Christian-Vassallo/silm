@@ -145,10 +145,16 @@ void GiveMoneyToCreature(object oPC, money_t value) {
 	CreateEitherMoney("m_toal", "m_toalh", oPC, toal);
 	CreateEitherMoney("m_gp0", "m_gp1", oPC, gp);
 
+	int sp_patina = sp / 4;
+	sp -= sp_patina;
 	CreateEitherMoney("m_sp0", "m_sp1", oPC, sp);
+	CreateMoney("m_sp2", oPC, sp_patina);
 
+	int cp_green = cp / 4;
+	cp -= cp_green;
 	int cp_a = cp / 2;
 	cp -= cp_a;
+	CreateMoney("m_cp4", oPC, cp_green);
 	CreateEitherMoney("m_cp0", "m_cp1", oPC, cp_a);
 	CreateEitherMoney("m_cp2", "m_cp3", oPC, cp);
 }
