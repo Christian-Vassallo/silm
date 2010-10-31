@@ -6,7 +6,7 @@ void main() {
 	SetLocalInt(OBJECT_SELF, "OLD_PRICE", iPrice);
 	DeleteLocalInt(OBJECT_SELF, "PRICE");
 
-	TakeValueFromCreature(iPrice, GetPCSpeaker(), TRUE);
+	TakeMoneyFromCreature(GetPCSpeaker(), iPrice);
 	ExecuteScript("pack_ox_tame", OBJECT_SELF);
 
 	audit("buy", GetPCSpeaker(), audit_fields("vendor", GetTag(OBJECT_SELF)), "pack_ox");

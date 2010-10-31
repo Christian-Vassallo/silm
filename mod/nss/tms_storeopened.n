@@ -43,7 +43,7 @@ void main() {
 	object oPC = GetLastOpenedBy();
 
 	/* Convert the money into the gold piece value */
-	GiveGoldToCreature(oPC, Money2Value(CountInventoryMoney(oPC, TRUE)));
+	GiveGoldToCreature(oPC, CountInventoryMoney(oPC, TRUE));
 
 	if ( !GetLocalInt(OBJECT_SELF, "Store_Initialized") ) {
 		TagStoreInventory();

@@ -63,7 +63,7 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		fAppraiseMod = 0.1;
 
 
-	int nPCMoney = Money2Value(CountInventoryMoney(oPC, 0));
+	int nPCMoney = CountInventoryMoney(oPC);
 
 
 	// Main menue.
@@ -123,7 +123,7 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 
 			AddListItem(oPC, TTT, GetName(oSell) +
 				( nMax == 0 ? " (gut bestockt)" : " (" + IntToString(nWant) + " auf Lager)" ) +
-				": " + MoneyToString(Value2Money(nPrice)));
+				": " + MoneyToString(nPrice));
 			SetListString(oPC, TTT, sResRef);
 			SetListInt(oPC, TTT, nPrice);
 			SetListFloat(oPC, TTT, IntToFloat(nMax));
@@ -209,7 +209,7 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 				( nMax ==
 				 0 ? " (immer gesucht)" : " (" +
 				 IntToString(nCount) + " im Inventar, " + IntToString(nMax - nWant) + " gesucht)" ) +
-				": " + MoneyToString(Value2Money(nPrice)));
+				": " + MoneyToString(nPrice));
 			SetListString(oPC, TTT, sResRef);
 			SetListInt(oPC, TTT, nPrice);
 			SetListFloat(oPC, TTT, IntToFloat(nMax));

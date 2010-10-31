@@ -88,6 +88,6 @@ void FakeRestore(object oTarget) {
 void main() {
 	object oPC = GetPCSpeaker();
 
-	TakeValueFromCreature(GetLocalInt(OBJECT_SELF, "CURRENT_PRICE"), oPC);
+	TakeMoneyFromCreature(oPC, GetLocalInt(OBJECT_SELF, "CURRENT_PRICE"));
 	DelayCommand(1.0f, _DoRestore(oPC));
 }

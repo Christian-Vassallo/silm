@@ -1,10 +1,4 @@
-// Struct: Money
-struct Money {
-	int copper;
-	int silver;
-	int gold;
-	int platinum;
-};
+#define money_t int
 
 const string
 	ref_cp = "m_cp0",
@@ -23,52 +17,31 @@ string
 	cNeg    = ColorTag(cRed),
 	cClose  = ColorTagClose();
 
-// Function: MoneyToString 
 // Converts the given struct to "xx Platin xx Gold xx Silber xx Kupfer"-format
-string MoneyToString(struct Money m);
+string MoneyToString(money_t money);
 
-
-// Function: AdjustCreatureMoney 
-// Adjust this creatures money by the given amount.
-void AdjustCreatureMoney(object oPC, struct Money stDifference);
-
-// Function Value2Money
-// Converts the given integer (in copper coins) to a Money struct.
-struct Money Value2Money(int iValue, int iBestCoinage = TRUE);
-
-// Function: Money2Value 
-// Converts the given Money struct to int (in copper coins)
-int Money2Value(struct Money stCoins);
-
-// Function: CountInventoryMoney
 // Counts all ITEM money that is in oWithInventory
 // optionally destroying it along the way.
-struct Money CountInventoryMoney(object oWithInventory, int iDestroy = FALSE);
+money_t CountInventoryMoney(object oWithInventory, bool destroy = false);
 
-// Function: GiveValueToCreature 
 // Gives money (in coin items) to a creature.
-void GiveValueToCreature(object oPC, int iValue, int iBestCoinage = TRUE);
+void GiveMoneyToCreature(object oPC, money_t value);
 
-// Function: TakeValueFromCreature 
 // Takes money from a creature.
-void TakeValueFromCreature(int iValue, object oPC, int bDestroy = FALSE);
+void TakeMoneyFromCreature(object oPC, money_t value);
 
+money_t GetCoinValue(object coin);
 
-// Function: GiveMoneyToCreature 
-// Gives money (in coin items) to a creature.
-void GiveMoneyToCreature(object oPC, struct Money stCoins);
+// Creates a coin(stack) on the given pc and tries to put
+// it into the creatures' money bag.
+object CreateMoney(string ref, object pc, int stack);
 
-int GetMoney(object oWithInventory);
-
-int GetMoney(object oWithInventory) {
-	return Money2Value(CountInventoryMoney(oWithInventory, false));
-}
 
 object __GetMoneyBag(object oPC) {
 	object oItem = GetFirstItemInInventory(oPC);
-	while ( GetIsObjectValid(oItem) ) {
+	while (GetIsObjectValid(oItem)) {
 		string sTag = GetTag(oItem);
-		if ( sTag == "Muenzbeutel" )
+		if (sTag == "Muenzbeutel")
 			return oItem;
 		oItem = GetNextItemInInventory(oPC);
 	}
@@ -83,14 +56,17 @@ object GetMoneyInventory(object oPC) {
 		return bag;
 }
 
-void CreateMoney(string ref, object pc, int stack) {
+object CreateMoney(string ref, object pc, int stack) {
+	if (stack < 1)
+		return OBJECT_INVALID;
 	object money = CreateItemOnObject(ref, pc, stack);
 	object bag = __GetMoneyBag(pc);
 	if (is_valid(bag))
 		AssignCommand(pc, ActionGiveItem(money, bag));
+	return money;
 }
 
-string ValueToString(int value) {
+string MoneyToString(money_t value) {
 	int av = abs(value);
 	int pp = av / 1000;
 	int gp = (av - pp * 1000) / 100;
@@ -117,215 +93,52 @@ string ValueToString(int value) {
 	return ret;
 }
 
-string MoneyToString(struct Money m) {
-	return ValueToString(Money2Value(m));
-}
+money_t CountInventoryMoney(object oWithInventory, bool destroy = false) {
+	money_t sum = 0;
 
-int AdjustObject(object oPC, object oWhat, int iDifference) {
-	int iStack = GetItemStackSize(oWhat);
-
-	if ( iDifference < 0 ) {
-		if ( -iDifference >= iStack ) {
-			DestroyObject(oWhat);
-			return iDifference + iStack;
-		} else {
-			SetItemStackSize(oWhat, iDifference + iStack);
-			return 0;
-		}
-	} else {
-		while ( iDifference > 500 ) {
-			CreateMoney(GetStringLowerCase(GetTag(oWhat)), oPC, 500);
-			iDifference -= 500;
-		}
-		if ( iDifference )
-			CreateMoney(GetStringLowerCase(GetTag(oWhat)), oPC, iDifference);
-		return 0;
-	}
-}
-
-
-void AdjustCreatureMoney(object oPC, struct Money stDifference) {
-	object oItem = GetFirstItemInInventory(oPC);
-
-	while ( GetIsObjectValid(oItem) ) {
-		string sTag = GetTag(oItem);
-
-		if ( sTag == "COIN_0001" )
-			stDifference.copper = AdjustObject(oPC, oItem, stDifference.copper);
-		else if ( sTag == "COIN_0010" )
-			stDifference.silver = AdjustObject(oPC, oItem, stDifference.silver);
-		else if ( sTag == "COIN_0100" )
-			stDifference.gold = AdjustObject(oPC, oItem, stDifference.gold);
-		else if ( sTag == "COIN_1000" )
-			stDifference.platinum = AdjustObject(oPC, oItem, stDifference.platinum);
-		oItem = GetNextItemInInventory(oPC);
-	}
-	/* Remainings are positive and no matching item found */
-	if ( stDifference.copper > 0 )
-		CreateMoney(ref_cp, oPC, stDifference.copper);
-	if ( stDifference.silver > 0 )
-		CreateMoney(ref_sp, oPC, stDifference.silver);
-	if ( stDifference.gold > 0 )
-		CreateMoney(ref_gp, oPC, stDifference.gold);
-	if ( stDifference.platinum > 0 )
-		CreateMoney(ref_pp, oPC, stDifference.platinum);
-}
-
-
-struct Money Value2Money(int iValue, int iBestCoinage = TRUE) {
-	struct Money New;
-
-	New.platinum = iValue / 1000;
-	if ( !iBestCoinage ) New.platinum = Random(New.platinum + 1);
-	iValue -= New.platinum * 1000;
-
-	New.gold = iValue / 100;
-	if ( !iBestCoinage ) New.gold = Random(New.gold + 1);
-	iValue -= New.gold * 100;
-
-	New.silver = iValue / 10;
-	if ( !iBestCoinage ) New.silver = Random(New.silver + 1);
-	iValue -= New.silver * 10;
-
-	New.copper = iValue;
-
-	return New;
-}
-
-int Money2Value(struct Money stCoins) {
-	return stCoins.platinum * 1000 + stCoins.gold * 100 + stCoins.silver * 10 +
-		   stCoins.copper;
-}
-
-struct Money CountInventoryMoney(object oWithInventory, int iDestroy = FALSE) {
-	struct Money stSum;
-	
 	object oItem = GetFirstItemInInventory(oWithInventory);
+	while (GetIsObjectValid(oItem)) {
+		money_t val = GetCoinValue(oItem);
+		sum += val;
+		if (val > 0 && destroy)
+			DestroyObject(oItem);
 
-	while ( GetIsObjectValid(oItem) ) {
-		string sTag = strupper(GetTag(oItem));
-
-		if ( sTag == "COIN_1000" ) {
-			stSum.platinum += GetItemStackSize(oItem);
-			if ( iDestroy ) DestroyObject(oItem);
-		} else if ( sTag == "COIN_0100" ) {
-			stSum.gold += GetItemStackSize(oItem);
-			if ( iDestroy ) DestroyObject(oItem);
-		} else if ( sTag == "COIN_0010" ) {
-			stSum.silver += GetItemStackSize(oItem);
-			if ( iDestroy ) DestroyObject(oItem);
-		} else if ( sTag == "COIN_0001" ) {
-			stSum.copper += GetItemStackSize(oItem);
-			if ( iDestroy ) DestroyObject(oItem);
-		}
 		oItem = GetNextItemInInventory(oWithInventory);
 	}
 
-	return stSum;
+	return sum;
 }
 
-int GetValue(object oPC) {
-	return Money2Value(CountInventoryMoney(oPC));
+void GiveMoneyToCreature(object oPC, money_t value) {
+	int av = abs(value);
+	int pp = av / 1000;
+	int gp = (av - pp * 1000) / 100;
+	int sp = (av - pp * 1000 - gp * 100) / 10;
+	int cp = av % 10;
+
+	CreateMoney(ref_pp, oPC, pp);
+	CreateMoney(ref_gp, oPC, gp);
+	CreateMoney(ref_sp, oPC, sp);
+	CreateMoney(ref_cp, oPC, cp);
 }
 
-void GiveMoneyToCreature(object oPC, struct Money stCoins) {
-	int iBatch;
-
-	iBatch = stCoins.platinum;
-	while ( iBatch ) {
-		if ( iBatch > 500 ) {
-			CreateMoney(ref_pp, oPC, 500);
-			iBatch -= 500;
-		} else {
-			CreateMoney(ref_pp, oPC, iBatch);
-			iBatch = 0;
-		}
-	}
-
-	iBatch = stCoins.gold;
-	while ( iBatch ) {
-		if ( iBatch > 500 ) {
-			CreateMoney(ref_gp, oPC, 500);
-			iBatch -= 500;
-		} else {
-			CreateMoney(ref_gp, oPC, iBatch);
-			iBatch = 0;
-		}
-	}
-
-	iBatch = stCoins.silver;
-	while ( iBatch ) {
-		if ( iBatch > 500 ) {
-			CreateMoney(ref_sp, oPC, 500);
-			iBatch -= 500;
-		} else {
-			CreateMoney(ref_sp, oPC, iBatch);
-			iBatch = 0;
-		}
-	}
-
-	iBatch = stCoins.copper;
-	while ( iBatch ) {
-		if ( iBatch > 500 ) {
-			CreateMoney(ref_cp, oPC, 500);
-			iBatch -= 500;
-		} else {
-			CreateMoney(ref_cp, oPC, iBatch);
-			iBatch = 0;
-		}
-	}
+void TakeMoneyFromCreature(object oPC, money_t value) {
+	money_t current = CountInventoryMoney(oPC, true);
+	if (current > value)
+		GiveMoneyToCreature(oPC, current - value);
 }
 
-void GiveValueToCreature(object oPC, int iValue, int iBestCoinage = TRUE) {
-	GiveMoneyToCreature(oPC, Value2Money(iValue, iBestCoinage));
+money_t GetCoinValue(object coin) {
+	string tag = GetTag(coin);
+	if (GetStringLeft(tag, 5) != "COIN_")
+		return 0;
+	
+	string vs = GetStringRight(tag, GetStringLength(tag) - 5);
+	int val = atoi(vs);
+
+	int stack = GetItemStackSize(coin);
+	if (stack < 1)
+		stack = 1;
+
+	return stack * val;
 }
-
-void TakeValueFromCreature(int iValue, object oPC, int bDestroy = FALSE) {
-	struct Money stDifference = CountInventoryMoney(oPC);
-
-	struct Money stAmount = stDifference;
-
-	stAmount.copper -= iValue;
-
-	if ( stAmount.copper < 0 ) {
-		stAmount.silver += stAmount.copper / 10;
-		stAmount.copper = stAmount.copper % 10;
-
-		if ( stAmount.copper < 0 ) {
-			stAmount.silver--;
-			stAmount.copper += 10;
-		}
-	}
-
-	if ( stAmount.silver < 0 ) {
-		stAmount.gold += stAmount.silver / 10;
-		stAmount.silver = stAmount.silver % 10;
-
-		if ( stAmount.silver < 0 ) {
-			stAmount.gold--;
-			stAmount.silver += 10;
-		}
-	}
-
-	if ( stAmount.gold < 0 ) {
-		stAmount.platinum += stAmount.gold / 10;
-		stAmount.gold = stAmount.gold % 10;
-
-		if ( stAmount.gold < 0 ) {
-			stAmount.platinum--;
-			stAmount.gold += 10;
-		}
-	}
-
-	stDifference.copper = stAmount.copper - stDifference.copper;
-	stDifference.silver = stAmount.silver - stDifference.silver;
-	stDifference.gold = stAmount.gold - stDifference.gold;
-	stDifference.platinum = stAmount.platinum - stDifference.platinum;
-
-	AdjustCreatureMoney(oPC, stDifference);
-
-	if ( !bDestroy )
-		GiveValueToCreature(OBJECT_SELF, iValue, TRUE);
-}
-
-

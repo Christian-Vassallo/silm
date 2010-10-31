@@ -1,5 +1,5 @@
 extern("inc_currency")
 
 int StartingConditional() {
-	return GetValue(GetPCSpeaker()) >= GetLocalInt(OBJECT_SELF, "CURRENT_PRICE");
+	return CountInventoryMoney(GetPCSpeaker()) >= GetLocalInt(OBJECT_SELF, "CURRENT_PRICE");
 }

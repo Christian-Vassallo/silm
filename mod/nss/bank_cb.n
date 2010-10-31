@@ -62,25 +62,25 @@ void main() {
 
 				bool didTX = false;
 				if (tx > 0) { // put money into bank
-					int has = Money2Value(CountInventoryMoney(oPC, false));
+					int has = CountInventoryMoney(oPC);
 					if (tx > has)
 						SendMessageToPC(oPC, "Nicht genug Gold!");
 
 					else {
 						didTX = true;
 						// take the money
-						int has = Money2Value(CountInventoryMoney(oPC, true));
+						int has = CountInventoryMoney(oPC, true);
 						has -= tx;
-						DelayCommand(0.1f, GiveValueToCreature(oPC, has));
+						DelayCommand(0.1f, GiveMoneyToCreature(oPC, has));
 					}
 				}
 
 				if (tx < 0) {
 					didTX = true;
 					// give the money
-					int has = Money2Value(CountInventoryMoney(oPC, true));
+					int has = CountInventoryMoney(oPC, true);
 					has -= tx;
-					DelayCommand(0.1f, GiveValueToCreature(oPC, has));
+					DelayCommand(0.1f, GiveMoneyToCreature(oPC, has));
 				}
 
 				if (didTX) {
@@ -111,7 +111,7 @@ void main() {
 				SendMessageToPC(oPC,
 					ColorTag(cLightGrey) + on + ": " +
 					(txvalue > 0 ? ColorTag(cGreen) : ColorTag(cRed)) +
-						ValueToString(txvalue) +
+						MoneyToString(txvalue) +
 					ColorTag(cLightGrey) +
 					(txvalue > 0 ? (" <= " + by) : (" => " + by))
 				);

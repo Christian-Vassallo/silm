@@ -20,6 +20,6 @@ void main() {
 	object oCorpse;
 	if ( !GetIsObjectValid(oCorpse = GetLocalObject(OBJECT_SELF, "CURRENT_CORPSE")) ) return;
 
-	TakeValueFromCreature(GetLocalInt(OBJECT_SELF, "CURRENT_PRICE"), GetPCSpeaker());
+	TakeMoneyFromCreature(GetPCSpeaker(), GetLocalInt(OBJECT_SELF, "CURRENT_PRICE"));
 	DelayCommand(0.2f, _TryResurrect(oCorpse));
 }

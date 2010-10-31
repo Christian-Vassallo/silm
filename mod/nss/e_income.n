@@ -65,8 +65,7 @@ void check_all_incomes(object runnable) {
 			continue;
 
 		if (copper > 0) {
-			struct Money val = Value2Money(copper);
-			string desc = MoneyToString(val);
+			string desc = MoneyToString(copper);
 			string msg =
 				ColorTag(cTeal) + name + ": " +
 				ColorTag(cOrange) + desc;
@@ -76,7 +75,7 @@ void check_all_incomes(object runnable) {
 						name + " (" + GetName(runnable) + ")");
 				msg += " (auf Bank-Konto gezahlt)";
 			} else {
-				GiveValueToCreature(runnable, copper, true);
+				GiveMoneyToCreature(runnable, copper);
 			}
 
 			pQ("insert into income.payments (cid, mapping, copper) values(" + pSi(cid) + ", " + pSi(mapping_id) + "," + pSi(copper, false) + ");");

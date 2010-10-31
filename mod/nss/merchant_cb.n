@@ -30,7 +30,7 @@ void main() {
 	sTextMercNoMoney = pG(2);
 
 	int nMercMoney = pGi(3),
-		nPCMoney = Money2Value(CountInventoryMoney(oPC)),
+		nPCMoney = CountInventoryMoney(oPC),
 		bLimitedMoney = pGi(4);
 
 
@@ -84,7 +84,7 @@ void main() {
 
 			} else {
 				// Take Money
-				TakeValueFromCreature(nPCPaysHowMuch, oPC, TRUE);
+				TakeMoneyFromCreature(oPC, nPCPaysHowMuch);
 
 				// Update DB
 				if ( 0.0 != fMax )
@@ -135,7 +135,7 @@ void main() {
 						IntToString(nMercPaysHowMuch)), "merchant");
 
 				// give player the muneeh
-				GiveMoneyToCreature(oPC, Value2Money(nMercPaysHowMuch));
+				GiveMoneyToCreature(oPC, nMercPaysHowMuch);
 			}
 		}
 	

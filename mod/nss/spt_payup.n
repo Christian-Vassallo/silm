@@ -3,6 +3,6 @@ extern("inc_currency")
 void main() {
 	object oPC = GetPCSpeaker();
 
-	TakeValueFromCreature(GetLocalInt(oPC, "SPECIAL_PRICE") * 100, oPC, TRUE);
+	TakeMoneyFromCreature(oPC, GetLocalInt(oPC, "SPECIAL_PRICE") * 100);
 
 }

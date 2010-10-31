@@ -82,7 +82,7 @@ void main() {
 		}
 
 		if (copper > 0) {
-			int money = GetMoney(e.actor);
+			int money = CountInventoryMoney(e.actor);
 			if (copper > money) {
 				FloatingTextStringOnCreature(MSG_FAIL_MONEY,
 					e.actor, false);
@@ -112,9 +112,9 @@ void main() {
 
 		if (copper != 0) {
 			if (copper > 0)
-				TakeValueFromCreature(copper, e.actor, true);
+				TakeMoneyFromCreature(e.actor, copper);
 			else
-				GiveValueToCreature(e.actor, - copper);
+				GiveMoneyToCreature(e.actor, - copper);
 		}
 
 		if (xp != 0) {

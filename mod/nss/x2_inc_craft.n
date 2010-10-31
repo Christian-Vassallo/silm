@@ -360,7 +360,7 @@ int CICraftCheckScribeScroll(object oSpellTarget, object oCaster)
 	// -------------------------------------------------------------------------
 	// Does Player have enough gold?
 	// -------------------------------------------------------------------------
-	if (GetMoney(oCaster) < nGoldCost)  //  enough gold?
+	if (CountInventoryMoney(oCaster) < nGoldCost)  //  enough gold?
 	{
 	    FloatingTextStrRefOnCreature(3786, oCaster); // Item Creation Failed - not enough gold!
 		return TRUE;
@@ -397,7 +397,7 @@ int CICraftCheckScribeScroll(object oSpellTarget, object oCaster)
 		SendMessageToPC(oCaster, "Kosten in Goldmuenzen: " + itoa(nGoldCost));
 		SendMessageToPC(oCaster, "XP-Kosten: " + itoa(nExperienceCost));
 		if (!GetLocalInt(oCaster, "craft_override")) {
-			TakeValueFromCreature(nGoldCost, oCaster, TRUE);
+			TakeMoneyFromCreature(oCaster, nGoldCost);
 			SetXP(oCaster, nNewXP);
 			DestroyObject (oSpellTarget);
 		}
@@ -467,7 +467,7 @@ int CICraftCheckCraftWand(object oSpellTarget, object oCaster)
 	// -------------------------------------------------------------------------
 	// Does Player have enough gold?
 	// -------------------------------------------------------------------------
-	if (GetMoney(oCaster) < nGoldCost)  //  enough gold?
+	if (CountInventoryMoney(oCaster) < nGoldCost)  //  enough gold?
 	{
 		FloatingTextStrRefOnCreature(3786, oCaster); // Item Creation Failed - not enough gold!
 		return TRUE;
@@ -501,7 +501,7 @@ int CICraftCheckCraftWand(object oSpellTarget, object oCaster)
 		SendMessageToPC(oCaster, "XP-Kosten: " + itoa(nExperienceCost));
 
 		if (!GetLocalInt(oCaster, "craft_override")) {
-			TakeValueFromCreature(nGoldCost, oCaster, TRUE);
+			TakeMoneyFromCreature(oCaster, nGoldCost);
 			SetXP(oCaster, nNewXP);
 			DestroyObject (oSpellTarget);
 		}

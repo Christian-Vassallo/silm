@@ -10,7 +10,7 @@ void _Store_HB(object oPC) {
 
 	if ( GetDistanceBetween(oPC, OBJECT_SELF) > 5.0f ) {
 		int iValue = GetGold(oPC);
-		GiveValueToCreature(oPC, iValue);
+		GiveMoneyToCreature(oPC, iValue);
 		TakeGoldFromCreature(iValue, oPC, TRUE);
 		return;
 	}
@@ -58,7 +58,7 @@ void main() {
 	object oPC = GetLastOpenedBy();
 
 	/* Convert the money into the gold piece value */
-	GiveGoldToCreature(oPC, Money2Value(CountInventoryMoney(oPC, TRUE)));
+	GiveGoldToCreature(oPC, CountInventoryMoney(oPC, true));
 
 	if ( !GetLocalInt(OBJECT_SELF, "Store_Initialized") ) {
 		TagStoreInventory();

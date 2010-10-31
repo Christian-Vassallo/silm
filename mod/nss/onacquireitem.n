@@ -12,10 +12,8 @@ object GetHerbalBag(object oPC) {
 
 
 void _TransformMoney(object oPC, int iValue) {
-	struct Money New;
 	TakeGoldFromCreature(iValue, oPC, TRUE);
-	New = Value2Money(iValue, TRUE);
-	GiveMoneyToCreature(oPC, New);
+	GiveMoneyToCreature(oPC, iValue);
 }
 
 void main() {

@@ -110,7 +110,7 @@ int bank_pay_interest(int accid, int border = 0,
 			SendMessageToPC(oNotify,
 				ColorTag(cLightGrey) +
 				account + " (Zinsen seit " + since + "): " +
-				ValueToString(interest)
+				MoneyToString(interest)
 			);
 		bank_tx(accid, interest, 0, "Zinsen seit " + since, true);
 	}
@@ -165,7 +165,7 @@ void MakeBankDialog(object oPC, object oBank) {
 				account = itoa(bankid) + "-" + itoa(accid);
 				
 			if (allow_read) {
-				string balanceString = ValueToString(balance);
+				string balanceString = MoneyToString(balance);
 				AddListItem(oPC, TTT, ColorTag(cLightGrey) + account + ": " +
 						balanceString);
 				SetListString(oPC, TTT, "");
@@ -226,7 +226,7 @@ void MakeBankDialog(object oPC, object oBank) {
 			else
 				accountName += " (" + itoa(bankid) + "-" + itoa(accid) + ")";
 
-			int playerMoney = Money2Value(CountInventoryMoney(oPC));
+			int playerMoney = CountInventoryMoney(oPC);
 			pQ("update bank.accounts set accessed_on = now() where id = "
 					+ pSi(accid));
 
@@ -254,13 +254,13 @@ void MakeBankDialog(object oPC, object oBank) {
 			sText = cs+"Konto: " + ColorTag(cOrange) + accountName;
 			if (allow_read) {
 				sText += "\n" +
-				cs+"Aktueller Kontostand: " + ValueToString(balance) + "\n" +
-				cs+"Maximaler Kredit: " + ValueToString(credit) + "\n" +
+				cs+"Aktueller Kontostand: " + MoneyToString(balance) + "\n" +
+				cs+"Maximaler Kredit: " + MoneyToString(credit) + "\n" +
 				cs+"Jahreszins p.a.: " + ColorTag(cGreen) +
 					itoa(ftoi(interest * 100)) + "%\n" + ColorTagClose() +
 				cs+"Schuldzins p.a.: " + ColorTag(cRed) +
 					itoa(ftoi(credit_interest * 100)) + "%\n" + ColorTagClose() +
-				cs+"Eigenes Gold: " + ValueToString(playerMoney) + "\n" +
+				cs+"Eigenes Gold: " + MoneyToString(playerMoney) + "\n" +
 				cs+"Zugriff hat: " + who + "\n" +
 				cs+"Konto erstellt am: " + createdOn;
 			}
@@ -287,10 +287,10 @@ void MakeBankDialog(object oPC, object oBank) {
 			rem("Abheben: 1000pp",   1000000);
 			if (balance > 0)
 				rem("Abheben: alles (" +
-					ValueToString(balance) + ")", balance);
+					MoneyToString(balance) + ")", balance);
 			if (credit > 0)
 				rem("Abheben: alles mit Kredit (" +
-					ValueToString(allowance) + ")", allowance);
+					MoneyToString(allowance) + ")", allowance);
 
 			add("Einzahlen: 5pp",       5000);
 			add("Einzahlen: 50pp",     50000);
@@ -298,11 +298,11 @@ void MakeBankDialog(object oPC, object oBank) {
 			add("Einzahlen: 250pp",   250000);
 			add("Einzahlen: 500pp",   500000);
 			add("Einzahlen: 1000pp", 1000000);
-			add("Einzahlen: alles (" + ValueToString(playerMoney) + ")", playerMoney);
+			add("Einzahlen: alles (" + MoneyToString(playerMoney) + ")", playerMoney);
 			if (smallMoney > 0)
-				add("Einzahlen: alles Kleingold (" + ValueToString(smallMoney) + ")", smallMoney);
+				add("Einzahlen: alles Kleingold (" + MoneyToString(smallMoney) + ")", smallMoney);
 			if (balance < 0)
-				add("Einzahlen: auf 0 (" + ValueToString(- balance) + ")", - balance);
+				add("Einzahlen: auf 0 (" + MoneyToString(- balance) + ")", - balance);
 
 			if (allow_read) {
 				AddListItem(oPC, TTT, "Historie");
