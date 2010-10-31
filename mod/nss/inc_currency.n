@@ -28,7 +28,7 @@ money_t GetCoinValue(object coin);
 
 // Creates a coin(stack) on the given pc and tries to put
 // it into the creatures' money bag.
-void CreateMoney(string ref, object pc, int stack);
+void CreateMoney(string ref, object pc, int stack, int valueOverride = 0);
 
 
 object __GetMoneyBag(object oPC) {
@@ -56,10 +56,13 @@ void CreateEitherMoney(string ref_a, string ref_b, object pc, int stack) {
 	CreateMoney(ref_b, pc, part_b);
 }
 
-void CreateMoney(string ref, object pc, int stack) {
+void CreateMoney(string ref, object pc, int stack, int valueOverride = 0) {
 	if (stack < 1)
 		return;
-	object money = CreateItemOnObject(ref, pc, stack);
+	string newTag = "";
+	if (valueOverride > 0)
+		newTag = "COIN_" + itoa(valueOverride);
+	object money = CreateItemOnObject(ref, pc, stack, newTag);
 	object bag = __GetMoneyBag(pc);
 	if (is_valid(bag))
 		AssignCommand(pc, ActionGiveItem(money, bag));
@@ -128,6 +131,11 @@ void GiveMoneyToCreature(object oPC, money_t value) {
 		sp -= 1; cp += 10;
 	}
 
+	// bank notes, IOUs
+	int notes = 0;
+	notes = pp / 50;
+	pp -= notes * 50;
+
 	// Special denomination:
 	int ep = 0;
 	// 1 in 4 pp p is a tricrown or blueeye
@@ -138,6 +146,8 @@ void GiveMoneyToCreature(object oPC, money_t value) {
 	// 1 in 4 gold pieces is a toal.
 	toal = (gp / 4) / 2;
 	gp -= toal * 2;
+
+	CreateMoney("m_note0", oPC, notes);
 
 	CreateMoney("m_pp0", oPC, pp);
 	CreateEitherMoney("m_tricrown", "m_ep0", oPC, ep);
