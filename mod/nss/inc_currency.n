@@ -146,13 +146,13 @@ void GiveMoneyToCreature(object oPC, money_t value,
 
 	if (flags & CURRENCY_FEATHER) {
 		// Seed some X if we have more than n X-1
-		if (pp > 5 && gp == 0) {
+		if (pp > 2 && gp == 0) {
 			pp -= 1; gp += 10;
 		}
-		if (gp > 7 && sp == 0) {
+		if (gp > 2 && sp == 0) {
 			gp -= 1; sp += 10;
 		}
-		if (sp > 5 && cp == 0) {
+		if (sp > 2 && cp == 0) {
 			sp -= 1; cp += 10;
 		}
 	}
@@ -162,8 +162,13 @@ void GiveMoneyToCreature(object oPC, money_t value,
 	int letter50  = 0;
 	if (flags & CURRENCY_LETTERS) {
 		letter250 = pp / 250;
+		if (flags & CURRENCY_FEATHER && letter250 > 0)
+			letter250--;
 		pp -= letter250 * 250;
+
 		letter50 = pp / 50;
+		if (flags & CURRENCY_FEATHER && letter50 > 0)
+			letter50--;
 		pp -= letter50 * 50;
 	}
 
