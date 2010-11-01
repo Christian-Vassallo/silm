@@ -12,6 +12,9 @@ string
 	cClose  = ColorTagClose();
 
 const int
+	CURRENCY_MAX_STACKSIZE = 1000;
+
+const int
 	CURRENCY_FEATHER = 1 << 0, // split up large money into some smaller chunks
 	CURRENCY_LETTERS = 1 << 1, // use currency letters, blood notes, etc
 	CURRENCY_TOAL    = 1 << 2, // pay out waterkeep toals
@@ -29,16 +32,18 @@ string MoneyToString(money_t money);
 
 // Counts all ITEM money that is in oWithInventory
 // optionally destroying it along the way.
-money_t CountInventoryMoney(object oWithInventory, bool destroy = false);
+money_t CountInventoryMoney(object oWithInventory, bool destroy = false,
+		object oPayee = OBJECT_INVALID);
 
 // Gives money (in coin items) to a creature.
 void GiveMoneyToCreature(object oPC, money_t value,
-		int flags = CURRENCY_CREATE_DEFAULT);
+		int flags = CURRENCY_CREATE_DEFAULT, object oPayer = OBJECT_INVALID);
 
 // Takes money from a creature.
-void TakeMoneyFromCreature(object oPC, money_t value);
+void TakeMoneyFromCreature(object oPC, money_t value,
+		object oPayee = OBJECT_INVALID);
 
-money_t GetCoinValue(object coin);
+money_t GetCoinValue(object coin, object oPayee = OBJECT_INVALID);
 
 // Creates a coin(stack) on the given pc and tries to put
 // it into the creatures' money bag.
@@ -83,11 +88,16 @@ void CreateMoney(string ref, object pc, int stack, int valueOverride = 0) {
 	
 	object bag = __GetMoneyBag(pc);
 
-	int stSize;
-	for (stSize = 0; stSize < stack; stSize += 100) {
-		object money = CreateItemOnObject(ref, pc, stack, newTag);
+	int toCreate = stack;
+	while (toCreate > 0) {
+		int stSize = toCreate > CURRENCY_MAX_STACKSIZE ?
+			CURRENCY_MAX_STACKSIZE : toCreate;
+
+		object money = CreateItemOnObject(ref, pc, stSize, newTag);
 		if (is_valid(bag))
 			AssignCommand(pc, ActionGiveItem(money, bag));
+
+		toCreate -= stSize;
 	}
 }
 
@@ -118,12 +128,13 @@ string MoneyToString(money_t value) {
 	return ret;
 }
 
-money_t CountInventoryMoney(object oWithInventory, bool destroy = false) {
+money_t CountInventoryMoney(object oWithInventory, bool destroy = false,
+		object oPayee = OBJECT_INVALID) {
 	money_t sum = 0;
 
 	object oItem = GetFirstItemInInventory(oWithInventory);
 	while (GetIsObjectValid(oItem)) {
-		money_t val = GetCoinValue(oItem);
+		money_t val = GetCoinValue(oItem, oPayee);
 		sum += val;
 		if (val > 0 && destroy)
 			DestroyObject(oItem);
@@ -135,7 +146,8 @@ money_t CountInventoryMoney(object oWithInventory, bool destroy = false) {
 }
 
 void GiveMoneyToCreature(object oPC, money_t value,
-		int flags = CURRENCY_CREATE_DEFAULT) {
+		int flags = CURRENCY_CREATE_DEFAULT,
+		object oPayer = OBJECT_INVALID) {
 	int av = abs(value);
 
 	// Standard denomination
@@ -210,13 +222,14 @@ void GiveMoneyToCreature(object oPC, money_t value,
 	CreateEitherMoney("m_cp2", "m_cp3", oPC, cp);
 }
 
-void TakeMoneyFromCreature(object oPC, money_t value) {
+void TakeMoneyFromCreature(object oPC, money_t value,
+		object oPayee = OBJECT_INVALID) {
 	money_t current = CountInventoryMoney(oPC, true);
 	if (current > value)
 		GiveMoneyToCreature(oPC, current - value);
 }
 
-money_t GetCoinValue(object coin) {
+money_t GetCoinValue(object coin, object oPayee = OBJECT_INVALID) {
 	string tag = GetTag(coin);
 	if (GetStringLeft(tag, 5) != "COIN_")
 		return 0;
