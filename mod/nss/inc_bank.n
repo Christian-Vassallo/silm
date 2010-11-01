@@ -130,8 +130,11 @@ void MakeBankDialog(object oPC, object oBank) {
 
 	int cid = GetCharacterID(oPC);
 
-	if (!cid)
+	if (!cid) {
+		string sText = "Kein Zugriff.";
+		ResetConvList(oPC, oPC, TTT, 50000, "bank_cb", sText, "", "");
 		return;
+	}
 
 	if (nMenuLevel0 == 0) {
 		string sText = "Willommen! Ihr habt noch keine Konten bei uns, " +

@@ -13,6 +13,8 @@ void main() {
 
 	int bankid = GetLocalInt(oBank, "bank_id");
 	if (!bankid) return;
+	int cid = GetCharacterID(oPC);
+	if (!cid) return;
 
 	if (0 == nMenuLevel0) { // Mainmenu
 		int acc = GetListInt(oPC, TTT, nSelected);
