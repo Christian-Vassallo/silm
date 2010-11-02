@@ -80,3 +80,52 @@ select
 	left join bank.banks as b on b.id = a.bank
 	where account = $1 order by tx.id desc limit 1;
 $$ language sql stable;
+
+create function bank.pay_interest_for(acc int) returns int as $$
+declare
+	interest int;
+	since varchar;
+begin
+	-- select bank.interest_for(acc)
+	select bank.interest_for(acc) into interest;
+	select 'Zinsen seit ' || to_char(t.created_on, 'DD.MM.YY HH24:MI') from bank.tx as t
+		where account = acc order by id desc limit 1 into since;
+
+	if interest != 0 then
+		perform bank.txn(acc, interest, null, since, true);
+	end if;
+
+	return interest;
+end;
+$$ language plpgsql;
+
+
+create function bank.txn(acc int, val int, bycid int, byname varchar, isinteresttx bool) returns int as $
+declare
+	balanceval integer;
+begin
+	select "balance" from bank.accounts where id = acc into balanceval;
+	if val != 0 then
+		if isinteresttx = false then
+			perform bank.pay_interest_for(acc);
+		end if;
+		insert into bank.tx ("account", "cid", "name", "value", "balance_after", "interest")
+		values(
+			acc, bycid, byname, val, balanceval + val, isinteresttx
+		);
+
+		update bank.accounts set "balance" = "balance" + val, updated_on = now()
+			where id = acc;
+	end if;
+
+	return balanceval + val;
+end;
+$$ language plpgsql;
+
+create function bank.txn2(accfrom int, val int, accto int, bycid int, byname varchar) returns int as $$
+begin
+	perform bank.txn(accfrom, - val, bycid, byname, false);
+	perform bank.txn(accto,   + val, bycid, byname, false);
+	return val;
+end;
+$$ language plpgsql;
