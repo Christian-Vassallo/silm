@@ -129,3 +129,11 @@ begin
 	return val;
 end;
 $$ language plpgsql;
+
+-- Returns the canonical, unique printable account identifier
+-- of the given account.
+create function bank.canonical_account_name(accid int) returns varchar as $$
+	select b.id::varchar || '-' || a.id::varchar
+	from bank.banks b, bank.accounts a
+	where a.bank = b.id and a.id = $1;
+$$ language sql stable;
