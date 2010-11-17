@@ -13,7 +13,7 @@ fullcommit := $(shell git log --decorate -n 1|head -1|cut -d' ' -f2-)
 commitdate := $(shell git log --decorate -n 1|grep Date|cut -f4- -d' ')
 builddate := $(shell date "+%Y-%m-%d %X %z (%a, %d %b %Y)")
 
-corefiles := $(wildcard $(NWNHOME)/original_resources/*.nss)
+corefiles := $(wildcard ../../gamedata/override/*.nss)
 
 headers := $(wildcard *.h *.nh)
 scripts := $(wildcard *.n)
@@ -56,7 +56,7 @@ revupdate:
 		gpp +z -C +n --nostdinc -Iglobal -I. --include "gpp.h" > `basename $< .n`.nss)
 
 %.ncs:
-	$(NCC) $(NCCFLAGS) $(NWNHOME) $<
+	$(NCC) $(NCCFLAGS) ../../gamedata $<
 
 compile: Makefile.dep $(preprocessed) $(objects)
 
