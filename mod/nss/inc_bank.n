@@ -51,26 +51,9 @@ bool bank_deposit(int accountId, int value,
 bool bank_tx(int accountId, int value,
 		int byCid = 0, string byName = "", bool interest = false) {
 
-	// Always pay interest before doing txn
-	if (!interest)
-		bank_pay_interest(accountId);
-
-	pQ("select balance from bank.accounts where id = " + pSi(accountId));
-	if (!pF())
-		return false;
-	int balance = pGi(1);
-
-	pQ("insert into bank.tx (account, cid, name, value, balance_after, interest)" +
-		"values(" +
-			pSi(accountId) + "," + pSi(byCid) + "," +
-			pSs(byName) + "," + pSi(value, false) + "," +
-			pSi(balance + value, false) + "," + pSb(interest) +
-		");"
-	);
-	pQ("update bank.accounts set balance = balance+" + pSi(value, false) +
-			", updated_on = now() where id = " + pSi(accountId));
-
-	return true;
+	pQ("select bank.txn(" + pSi(accountId) + "," + pSi(value, false) + "," +
+		pSi(byCid) + "," + pSs(byName) + "," + pSb(interest) + ");");
+	return pF();
 }
 
 bool bank_tx_2(int accountFrom, int accountTo, int value,
