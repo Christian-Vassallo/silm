@@ -191,14 +191,6 @@ void EventUseItem(object oPC, object oItem, object oTarget, location lTarget) {
 	string sTag = GetTag(oItem);
 
 	if ("choose_target" == sTag) {
-		if ( !amask(oPC, AMASK_GM) &&
-			!amask(oPC, AMASK_FORCETALK) &&
-			!amask(oPC, AMASK_GLOBAL_FORCETALK)
-		) {
-			SendMessageToPC(oPC, "Nicht genuegend Rechte um " + GetName(oItem) + " zu benutzen.");
-			return;
-		}
-
 		int nSlot = TARGET_DEFAULT_SLOT;
 		if ( GetName(oItem) == "Zielwahl: 1" )
 			nSlot = 1;

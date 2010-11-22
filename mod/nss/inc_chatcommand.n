@@ -2682,6 +2682,14 @@ int CommandSetName(object oPC, int iMode) {
 		return NotifyBadTarget();
 	}
 
+	if (!amask(oPC, AMASK_GLOBAL_GM)) {
+		if (GetPlotFlag(oTarget))
+			return NotifyBadTarget();
+
+		if (oPC != oTarget && GetItemPossessor(oTarget) != oPC)
+			return NotifyBadTarget();
+	}
+
 	string name = getopt_arg(0);
 	if (name != "") {
 		if (GetIsPC(oTarget))
@@ -2790,11 +2798,11 @@ int CommandFixFactions(object oPC, int iMode) {
 
 
 int CommandGetTargetChooser(object oPC, int iMode) {
-	object oCh = GetItemPossessedBy(oPC, "choose_target");
+	object oCh = GetItemPossessedBy(oPC, "choose_target_1");
 	if ( GetIsObjectValid(oCh) )
 		DestroyObject(oCh);
 	else
-		CreateItemOnObject("choose_target", oPC, 1);
+		CreateItemOnObject("choose_target_1", oPC, 1);
 
 	return OK;
 }

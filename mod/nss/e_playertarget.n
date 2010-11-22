@@ -1,18 +1,16 @@
-extern("inc_playertarget")
 extern("inc_nwnx_events")
 
 void main() {
 	struct EventInfo e = GetEventInfo();
 
-	if (e.ev == "item_freeactivate" && GetTag(e.runnable) == "player_target") {
-		SetPlayerTarget(e.actor, e.actedon);
-		NWNXBypassEvent();
-	}
-
 	if (e.ev == "player_login" && !GetIsDM(e.runnable)) {
 		object x = GetItemPossessedBy(e.runnable, "player_target");
+		if (GetIsObjectValid(x))
+			DestroyObject(x);
+
+		x = GetItemPossessedBy(e.runnable, "choose_target_1");
 		if (!GetIsObjectValid(x))
-			CreateItemOnObject("player_target", e.runnable, 1);
+			CreateItemOnObject("choose_target_1", e.runnable, 1);
 	}
 }
 

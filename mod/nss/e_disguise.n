@@ -2,7 +2,7 @@ extern("inc_lists")
 extern("inc_disguise")
 extern("inc_cdb")
 extern("inc_colors")
-extern("inc_playertarget")
+extern("inc_target")
 
 #define TTT "disguise"
 
@@ -77,7 +77,7 @@ void main() {
 
 		if (cmd == "/cpdisguise") {
 			string name = GetStringTrim(GetSubString(ea.a0, idx + 1, 2048));
-			object playerTarget = GetPlayerTarget(e.runnable);
+			object playerTarget = GetTarget(TARGET_DEFAULT_SLOT, e.runnable);
 
 			if (-1 == idx || name == "" || !is_creature(playerTarget)) {
 				SendMessageToPC(e.runnable,
