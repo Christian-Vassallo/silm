@@ -1034,7 +1034,10 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	}
 
 	getopt_reset(oPC);
-	getopt_init(sArg, "h t= sleep= " + sOpt, oPC);
+	if (!getopt_init(sArg, "h t= sleep= " + sOpt, oPC)) {
+		ToPC("Error parsing arguments.");
+		return SYNTAX;
+	}
 
 	if ( getopt_opt("h") && GetLocalInt(GetModule(), "cmd_" + sCommand) && (
 			( nArgMin > -1 && getopt_argc() < nArgMin )
