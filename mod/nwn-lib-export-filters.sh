@@ -1,5 +1,5 @@
-#!/bin/sh
+#!/bin/bash
 
-modroot=$(readlink -f `dirname $0`)
+modroot=$(dirname $0)
 
 echo ""

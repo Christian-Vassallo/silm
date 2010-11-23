@@ -4,7 +4,7 @@
 # directories within the mod structure, converting them
 # appropriately.
 
-modroot=$(readlink -f `dirname $0`)
+modroot=$(dirname $0)
 
 run() {
 	echo "$@"
