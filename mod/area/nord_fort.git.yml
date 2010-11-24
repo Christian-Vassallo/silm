@@ -278,7 +278,7 @@ Door List:
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 0}
     AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: 3.1416}
+    Bearing: {type: :float, value: -3.1416}
     CloseLockDC: {type: :byte, value: 0}
     Conversation: {type: :resref, value: ""}
     CurrentHP: {type: :short, value: 20}
@@ -3164,7 +3164,7 @@ Placeable List:
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 729}
     AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: 3.1416}
+    Bearing: {type: :float, value: -3.1416}
     BodyBag: {type: :byte, value: 0}
     CloseLockDC: {type: :byte, value: 0}
     Conversation: {type: :resref, value: ""}
@@ -4200,7 +4200,7 @@ Placeable List:
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 721}
     AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: -3.1416}
+    Bearing: {type: :float, value: 3.1416}
     BodyBag: {type: :byte, value: 0}
     CloseLockDC: {type: :byte, value: 0}
     Conversation: {type: :resref, value: ""}
@@ -8308,8 +8308,8 @@ TriggerList:
         PointZ: {type: :float, value: 0.025000000372529}
     HighlightHeight: {type: :float, value: 0.0}
     KeyName: {type: :cexostr, value: ""}
-    LinkedTo: {type: :cexostr, value: ""}
-    LinkedToFlags: {type: :byte, value: 0}
+    LinkedTo: {type: :cexostr, value: WP_nord_wildnis03_ruin}
+    LinkedToFlags: {type: :byte, value: 2}
     LoadScreenID: {type: :word, value: 0}
     LocalizedName: 
       type: :cexolocstr
@@ -8324,7 +8324,7 @@ TriggerList:
     ScriptOnEnter: {type: :resref, value: ""}
     ScriptOnExit: {type: :resref, value: ""}
     ScriptUserDefine: {type: :resref, value: ""}
-    Tag: {type: :cexostr, value: nordruin_2_outdoor}
+    Tag: {type: :cexostr, value: nord_ruin_fort}
     TemplateResRef: {type: :resref, value: newtransition}
     TrapDetectDC: {type: :byte, value: 0}
     TrapDetectable: {type: :byte, value: 1}
@@ -8341,5 +8341,30 @@ TriggerList:
     ZPosition: {type: :float, value: 0.0}
 WaypointList: 
   type: :list
-  value: []
+  value: 
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 5
+    Appearance: {type: :byte, value: 1}
+    Description: 
+      type: :cexolocstr
+      value: {}
 
+    HasMapNote: {type: :byte, value: 0}
+    LinkedTo: {type: :cexostr, value: ""}
+    LocalizedName: 
+      type: :cexolocstr
+      str_ref: 14817
+      value: {}
+
+    MapNote: 
+      type: :cexolocstr
+      value: {}
+
+    MapNoteEnabled: {type: :byte, value: 1}
+    Tag: {type: :cexostr, value: WP_nord_ruin_fort}
+    TemplateResRef: {type: :resref, value: nw_waypoint001}
+    XOrientation: {type: :float, value: 1.0}
+    XPosition: {type: :float, value: 40.2335}
+    YOrientation: {type: :float, value: 0.0}
+    YPosition: {type: :float, value: 9.8856}
+    ZPosition: {type: :float, value: -0.0}
