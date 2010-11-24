@@ -3,7 +3,7 @@
 # This script checks for common mistakes and fixes
 # things that can be fixed automagically.
 
-modroot=$(readlink -f `dirname $0`)
+modroot=$(dirname $0)
 
 too_long_files=$(find $modroot/{ut*,area,dlg,itp,mod,nss,ssf}/ -maxdepth 1 -iname \*.\* | cut -d'.' -f2 | cut -d'/' -f3- | sort -u | egrep '/.{17,}$')
 
