@@ -72,11 +72,6 @@ void main() {
 		SignalEvent(OBJECT_SELF, EventUserDefined(1007));
 	}
 
-	if ( GetLocalInt(OBJECT_SELF, "summoncard") == TRUE ) {
-		if ( GetIsObjectValid(ImprintCard(oKiller, OBJECT_SELF)) )
-			FloatingTextStringOnCreature("Der Geist dieser Kreatur ist gefangen!", oKiller, FALSE);
-	}
-
 	if ( !GetLocalInt(OBJECT_SELF, "no_xp") )
 		GiveKillXP();
 

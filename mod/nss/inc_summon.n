@@ -131,55 +131,6 @@ object PickCard(object oPC, int iMaxLevel, int iReturnBlanks = FALSE) {
 	return oCard;
 }
 
-//Creatures which are no PCs or DMs and don't belong to the goodly races
-//are valid captures
-int GetValidCapture(object oCreature) {
-	int iRT = GetRacialType(oCreature);
-	if ( GetIsPC(oCreature) || GetIsDM(oCreature) ) return FALSE;
-
-	if ( GetPlotFlag(oCreature) || GetLocalInt(oCreature, "PLOT_FLAG") ) return FALSE;
-
-	if ( Get2DAString("racialtypes", "PlayerRace", iRT) != "0" ) return FALSE;
-
-	return TRUE;
-}
-
-//Imprint one of the PC's blank cards with the spirit of the given creature,
-//return the new card object of successful.
-object ImprintCard(object oPC, object oCreature) {
-	object oCard;
-	object oCard2;
-	int iCrLevel;
-
-	if ( !GetValidCapture(oCreature) ) return OBJECT_INVALID;
-
-	//Fail if there is no empty card in the player's stash
-	if ( !GetIsObjectValid(oCard = PickCard(oPC, 0, TRUE)) )
-		return OBJECT_INVALID;
-
-	iCrLevel = FloatToInt(GetChallengeRating(oCreature) + 0.5f);
-	if ( GetHitDice(oCreature) > iCrLevel )
-		iCrLevel = GetHitDice(oCreature);
-	iCrLevel = ( iCrLevel + 2 ) / 2;
-	if ( iCrLevel < 1 ) iCrLevel = 1;
-	else if ( iCrLevel > 9 ) iCrLevel = 9;
-
-	DestroyObject(oCard);
-	//Create a new card with the correct creature summoning level
-	oCard = CreateItemOnObject("sum_cardf00" + IntToString(iCrLevel), oPC);
-
-	oCard2 = CopyObject(oCard, GetLocation(oPC), oPC, "CCST_" +
-				 IntToString(iCrLevel) + "_" + GetResRef(oCreature));
-	DestroyObject(oCard);
-	oCard = oCard2;
-
-	/*SetDescription(oCard,
-	 * "Diese ehemals leere Karte beinhaltet einen "+GetName(oCreature)+"-Geist. "+
-	 * "Man kann diese Kart nun direkt benutzen, um die gebundene Kreatur zu beschwoeren oder "+
-	 * "implizit, indem man sie in die Kartentasche steckt und einen Beschwoerungszauber spricht.");*/
-	return oCard;
-}
-
 //Get the calculation level of the summoning spell
 int GetSpellLevel(int nSpell) {
 	switch ( nSpell ) {
