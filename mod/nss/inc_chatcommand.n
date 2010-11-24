@@ -2690,7 +2690,7 @@ int CommandSetName(object oPC, int iMode) {
 			return NotifyBadTarget();
 	}
 
-	string name = getopt_arg(0);
+	string name = getopt_argall();
 	if (name != "") {
 		if (GetIsPC(oTarget))
 			SetPlayerName(oTarget, name);
