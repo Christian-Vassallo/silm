@@ -1033,8 +1033,8 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 		return ACCESS;
 	}
 
-	getopt_reset(oPC);
-	if (!getopt_init(sArg, "h t= sleep= " + sOpt, oPC)) {
+	getopt_reset();
+	if (!getopt_init(sArg, "h t= sleep= " + sOpt)) {
 		ToPC("Error parsing arguments.");
 		return SYNTAX;
 	}
