@@ -277,16 +277,11 @@ int GetSummonEffect(object oPC, int nSpell) {
 int GetBestSummoningSpell(object oPC, int iTargetedLevel) {
 	int i;
 
-	//Be on the safe side: Search from targeted level up
 	for ( i = iTargetedLevel; i < 10; i++ ) {
 		int iSpell = GetSpellForLevel(i);
 		if ( GetHasSpell(iSpell, oPC) ) return iSpell;
 	}
-	//Getting dangerous: Search from targeted level downwards
-	for ( i = iTargetedLevel; i > 0; i-- ) {
-		int iSpell = GetSpellForLevel(i);
-		if ( GetHasSpell(iSpell, oPC) ) return iSpell;
-	}
+
 	//Has no summoning spells at all!
 	return -1;
 }
@@ -324,10 +319,9 @@ void SummonPerCard(object oPC, object oCard, location lLocation) {
 	int iLevel = GetCardLevel(oCard);
 	string sSummon = GetCardMonster(oCard);
 	int iBestSpell = GetBestSummoningSpell(oPC, iLevel);
-	int iDelta;
 
 	if ( iBestSpell < 0 ) {
-		FloatingTextStringOnCreature("Man muss einen Herbeirufungszauber kennen.", oPC, FALSE);
+		FloatingTextStringOnCreature("Man muss einen Herbeirufungszauber gleicher oder hoeherer Stufe kennen.", oPC, FALSE);
 		return;
 	}
 
@@ -336,38 +330,11 @@ void SummonPerCard(object oPC, object oCard, location lLocation) {
 					  ? HoursToSeconds(24)
 					  : IntToFloat(iSPL) * 600.0;
 
-	iDelta = iLevel - iSPL;
-
 	DecrementRemainingSpellUses(oPC, iBestSpell);
-
-	if ( iDelta > 0 ) {
-		int iEff = Random(iDelta + 2);
-
-		if ( iEff ) {
-			if ( iEff < 3 ) {
-				FloatingTextStringOnCreature("Nichts passiert.", oPC, FALSE);
-			} else if ( iEff < 7 ) {
-				object oCreat;
-
-				FloatingTextStringOnCreature("Die beschworene Kreatur wendet sich gegen Euch!", oPC);
-				oCreat = CreateObject(OBJECT_TYPE_CREATURE, sSummon, GetLocation(oPC));
-				ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_SUMMON_MONSTER_1),
-					oCreat);
-				ChangeToStandardFaction(oCreat, STANDARD_FACTION_HOSTILE);
-			} else {
-				FloatingTextStringOnCreature("Die Karte explodiert!", oPC, FALSE);
-				ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDamage(d6(iEff)), oPC);
-				ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_FIREBALL), oPC);
-			}
-		}
-		DestroyObject(oCard);
-		return;
-	}
 
 	DoSummonCreature(oPC, lLocation, fDuration,
 		GetSummonEffect(oPC, iBestSpell),
 		sSummon);
-	if ( iDelta > 0 ) DestroyObject(oCard);
 }
 
 int ActivateSummonItem(object oPC, object oItem, location lTarget, object oTarget) {
