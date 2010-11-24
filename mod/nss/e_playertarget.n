@@ -11,6 +11,8 @@ void main() {
 		x = GetItemPossessedBy(e.runnable, "choose_target");
 		if (!GetIsObjectValid(x))
 			CreateItemOnObject("choose_target_1", e.runnable, 1);
+		else
+			SetPlotFlag(x, true);
 	}
 }
 
