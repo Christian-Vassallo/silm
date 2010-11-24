@@ -16,11 +16,11 @@ void main() {
 			substr(ea.a0, 0, 10) + " ..", ei.runnable, false);
 	}
 
+	string mode = itoa(ea.i0);
 	string aid = itoa(GetAccountID(ei.actor));
 	string cid = itoa(GetCharacterID(ei.actor));
-	SetLocalString(GetModule(),  "last_chat_message_text_" + aid + "_" + cid, ea.a0);
-	SetLocalInt(GetModule(), "last_chat_message_mode_" + aid + "_" + cid, ea.i0);
-	SetLocalObject(GetModule(), "last_chat_message_on_" + aid + "_" + cid, ei.actedon);
+	SetLocalString(GetModule(),  "last_chat_message_text_" + mode + "_" + aid + "_" + cid, ea.a0);
+	SetLocalObject(GetModule(), "last_chat_message_on_" + mode + "_" + aid + "_" + cid, ei.actedon);
 
 	ChatLog(ei.actor, ea.i0, ea.a0, ei.actedon);
 }
