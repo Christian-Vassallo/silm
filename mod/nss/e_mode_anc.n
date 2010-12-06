@@ -1,0 +1,21 @@
+extern("inc_nwnx_events")
+extern("inc_colors")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "pc_togglemode") {
+		int mode = NWNXGetEventSubType();
+		int state = GetActionMode(e.runnable, mode);
+
+		string msg = ColorTag(cLightGrey) + GetName(e.runnable) +
+			(!state ? " enters " : " leaves ");
+
+		if (mode == ACTION_MODE_STEALTH)
+			msg += "stealth mode.";
+		else
+			return;
+
+		SendMessageToAllDMs(msg);
+	}
+}
