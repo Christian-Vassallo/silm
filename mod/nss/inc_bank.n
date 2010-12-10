@@ -131,11 +131,11 @@ void MakeBankDialog(object oPC, object oBank) {
 
 		pBegin();
 		string cA = pDeclare("select b.id, a.id, x.id, a.balance, b.name, a.name, " +
-			"x.allow_read, x.allow_withdraw, x.allow_deposit from " +
+			"x.allow_read, x.allow_withdraw, x.allow_deposit, a.suspended from " +
 			"bank.banks b, bank.accounts a, bank.access x where " +
 			"b.id = a.bank and x.account = a.id and b.id = " + pSi(bankId) +
 			" and (x.cid = " + pSi(cid) + " or x.cid is null) " +
-			"and a.suspended = false order by x.cid, a.name asc;");
+			"order by x.cid, a.name asc;");
 		while (pCursorFetch(cA)) {
 			int bankid  = pGi(1);
 			int accid   = pGi(2);
@@ -146,9 +146,12 @@ void MakeBankDialog(object oPC, object oBank) {
 			bool allow_read = pGb(7);
 			bool allow_withdraw = pGb(8);
 			bool allow_deposit = pGb(9);
+			bool suspended = pGb(10);
 
 			if (account == "")
 				account = itoa(bankid) + "-" + itoa(accid);
+			if (suspended)
+				account += ColorTag(cRed)  + " [gesperrt]";
 				
 			if (allow_read) {
 				string balanceString = MoneyToString(balance);
@@ -189,7 +192,8 @@ void MakeBankDialog(object oPC, object oBank) {
 		int axid = GetLocalInt(oPC, "bank_axid_selection");
 		pQ("select a.balance, a.id, to_char(a.created_on, 'DD.MM.YY HH24:MI'), " +
 			"a.credit, a.name, b.id, x.allow_read, x.allow_withdraw, x.allow_deposit, " +
-			"coalesce(a.interest, b.interest), coalesce(a.credit_interest, b.credit_interest) " +
+			"coalesce(a.interest, b.interest), coalesce(a.credit_interest, b.credit_interest), " +
+			"a.suspended " +
 			"from bank.accounts a, bank.access x, bank.banks b where " +
 			"a.id = x.account and b.id = a.bank and x.id = " + pSi(axid));
 		if (pF()) {
@@ -206,11 +210,15 @@ void MakeBankDialog(object oPC, object oBank) {
 
 			float interest = pGf(10),
 				credit_interest = pGf(11);
+
+			bool suspended = pGb(12);
 	
 			if (accountName == "")
 				accountName = itoa(bankid) + "-" + itoa(accid);
 			else
 				accountName += " (" + itoa(bankid) + "-" + itoa(accid) + ")";
+			if (suspended)
+				accountName += ColorTag(cRed)  + " [gesperrt]";
 
 			int playerMoney = CountInventoryMoney(oPC);
 			pQ("update bank.accounts set accessed_on = now() where id = "
@@ -255,12 +263,12 @@ void MakeBankDialog(object oPC, object oBank) {
 
 			int allowance = balance + credit;
 
-#define rem(title, intval) if (allow_withdraw && allowance > 0 && allowance >= intval) {\
+#define rem(title, intval) if (!suspended && allow_withdraw && allowance > 0 && allowance >= intval) {\
 	AddListItem(oPC, TTT, title); SetListInt(oPC, TTT, -  intval); \
 	SetListString(oPC, TTT, "tx"); \
 	SetListDisplayMode(oPC, TTT, intval); }
 
-#define add(title, intval) if (allow_deposit && playerMoney > 0 && playerMoney >= intval) {\
+#define add(title, intval) if (!suspended && allow_deposit && playerMoney > 0 && playerMoney >= intval) {\
 	AddListItem(oPC, TTT, title); SetListInt(oPC, TTT,  + intval); \
 	SetListString(oPC, TTT, "tx"); \
 	SetListDisplayMode(oPC, TTT, intval); }
