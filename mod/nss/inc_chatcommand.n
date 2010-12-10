@@ -218,7 +218,9 @@ int CommandRepeat(object oPC, int iMode) {
 	string mode = itoa(iMode);
 	string aidcid = itoa(GetAccountID(oPC)) + "_" + itoa(GetCharacterID(oPC));
 	string message = GetLocalString(GetModule(), "last_chat_message_text_" + mode + "_" + aidcid);
-	if ((iMode & CHATMODE_TALK || iMode & CHATMODE_WHISPER) && message != "") {
+	if ((iMode & CHATMODE_TALK || iMode & CHATMODE_WHISPER ||
+			iMode & CHATMODE_PARTY || iMode & CHATMODE_DM ||
+			iMode & CHATMODE_SHOUT) && message != "") {
 		SpeakToMode(oPC, message, iMode);
 		return OK;
 	} else {
