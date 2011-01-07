@@ -16,8 +16,8 @@ void main() {
 	int iValue;
 
 	
-	if ( !GetIsObjectValid(oItem = GetItemPossessedBy(e.runnable, "dmfi_pc_emote")) )
-		oItem = CreateItemOnObject("dmfi_pc_emote", e.runnable);
+	if (GetIsObjectValid(oItem = GetItemPossessedBy(e.runnable, "dmfi_pc_emote")))
+		DestroyObject(oItem);
 
 	// Don't let them start out on the verge of starving to death
 	if ( GetLocalDecay(e.runnable, "Resting_Food") < 60 )
