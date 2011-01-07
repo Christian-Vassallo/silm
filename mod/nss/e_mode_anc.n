@@ -16,6 +16,10 @@ void main() {
 		else
 			return;
 
-		SendMessageToAllDMs(msg);
+
+		iterate_players(pc,
+			if (GetIsDM(pc) && GetArea(pc) == GetArea(e.runnable))
+				SendMessageToPC(pc, msg);
+		);
 	}
 }
