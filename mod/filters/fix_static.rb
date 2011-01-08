@@ -5,7 +5,8 @@ want :git
 count = 0
 
 (self / 'Placeable List$').each {|item|
-  if (item / 'Useable$') == 0 && (item / 'Static$') == 0
+  if (item / 'Useable$') == 0 && (item / 'Static$') == 0 &&
+      (item / 'TemplateResRef$') !~ /^pvq_/
     (item / 'Static').v = 1
     count += 1
   end
