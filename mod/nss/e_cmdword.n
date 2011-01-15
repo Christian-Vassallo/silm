@@ -51,6 +51,7 @@ void main() {
 			return;
 		}
 
-		_show(e.actor, item, GetSpellId());
+		if (GetLocalInt(item, "cmdword") > 0)
+			_show(e.actor, item, GetSpellId());
 	}
 }
