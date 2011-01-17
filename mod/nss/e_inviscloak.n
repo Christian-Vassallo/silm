@@ -28,9 +28,7 @@ void main() {
 			EffectInvisibility(INVISIBILITY_TYPE_NORMAL),
 			EffectVisualEffect(VFX_DUR_INVISIBILITY)
 		);
-		effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
-		effect eLink = EffectLinkEffects(eInvis, eDur);
 
-		ApplyEffectToObject(DURATION_TYPE_PERMANENT, eLink, pc);
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, eInvis, pc);
 	}
 }
