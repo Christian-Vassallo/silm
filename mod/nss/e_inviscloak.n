@@ -1,0 +1,34 @@
+void main() {
+	struct EventInfo e = GetEventInfo();
+	
+	if (e.ev != "item_activate" && e.ev != "item_freeactivate")
+		return;
+	
+	object item = e.runnable;
+	object pc = e.actor;
+
+	bool found = false;
+	effect invis;
+	iterate_effects(pc, eff,
+		if (GetEffectType(eff) == EFFECT_TYPE_INVISIBILITY &&
+				GetEffectSubType(eff) == SUBTYPE_MAGICAL &&
+				GetEffectDurationType(eff) == DURATION_TYPE_PERMANENT) {
+			invis = eff;
+			found = true;
+			break;
+		}
+	);
+
+	if (e.ev == "item_freeactivate" && found) {
+		RemoveEffect(pc, invis);
+		event_stop_end_suppress();
+	}
+	if (e.ev == "item_activate" && !found) {
+		effect eInvis = EffectLinkEffects(
+			EffectInvisibility(INVISIBILITY_TYPE_NORMAL),
+			EffectVisualEffect(VFX_DUR_INVISIBILITY)
+		);
+
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, eInvis, pc);
+	}
+}
