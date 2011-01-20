@@ -9,6 +9,10 @@ void main() {
 
 	//Fire cast spell at event for the specified target
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_POWER_WORD_KILL));
+
+	if (GetIsImmune(oTarget, IMMUNITY_TYPE_MIND_SPELLS, OBJECT_SELF))
+		return;
+
 	//Check the creatures HP
 	if (GetCurrentHitPoints(oTarget) > 100)
 		return;

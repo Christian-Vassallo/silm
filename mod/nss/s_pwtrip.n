@@ -11,9 +11,12 @@ void main() {
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF,
 		SPELL_POWER_WORD_TRIP));
 
-	if(MyResistSpell(OBJECT_SELF, oTarget))
+	if (GetIsImmune(oTarget, IMMUNITY_TYPE_MIND_SPELLS, OBJECT_SELF))
 		return;
 
+	if(MyResistSpell(OBJECT_SELF, oTarget))
+		return;
+	
 	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectKnockdown(),
 		oTarget, RoundsToSeconds(1));
 }
