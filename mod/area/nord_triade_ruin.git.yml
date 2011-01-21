@@ -28,7 +28,6 @@ Door List:
     AutoRemoveKey: {type: :byte, value: 0}
     Bearing: {type: :float, value: -3.1416}
     CloseLockDC: {type: :byte, value: 0}
-    Comment: {type: :cexostr, value: ""}
     Conversation: {type: :resref, value: ""}
     CurrentHP: {type: :short, value: 15}
     Description: 
@@ -85,6 +84,78 @@ Door List:
     X: {type: :float, value: 20.0}
     Y: {type: :float, value: 2.69}
     Z: {type: :float, value: -0.01}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 8
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 0}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: 1.5708}
+    CloseLockDC: {type: :byte, value: 30}
+    Comment: {type: :cexostr, value: ""}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 50}
+    Description: 
+      type: :cexolocstr
+      str_ref: 9077
+      value: 
+        0: "Die Schnitzereien auf der T\xFCr sind sehr kantig und ge\xF6lt, so dass sie besonders stark hervortreten und die Maserung des Holzes zur Geltung bringen."
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    GenericType_New: {type: :dword, value: 7}
+    HP: {type: :short, value: 50}
+    Hardness: {type: :byte, value: 10}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: key_official}
+    KeyRequired: {type: :byte, value: 0}
+    LinkedTo: {type: :cexostr, value: WP_nord_triade_ruin_ug_2_og}
+    LinkedToFlags: {type: :byte, value: 2}
+    LoadScreenID: {type: :word, value: 0}
+    LocName: 
+      type: :cexolocstr
+      str_ref: 5349
+      value: 
+        0: "T\xFCr einer oeffentlichen Einrichtung"
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: door_click}
+    OnClosed: {type: :resref, value: door_closed}
+    OnDamaged: {type: :resref, value: door_damaged}
+    OnDeath: {type: :resref, value: door_death}
+    OnDisarm: {type: :resref, value: door_disarm}
+    OnFailToOpen: {type: :resref, value: door_failtoopen}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: door_lock}
+    OnMeleeAttacked: {type: :resref, value: door_attacked}
+    OnOpen: {type: :resref, value: door_open}
+    OnSpellCastAt: {type: :resref, value: door_spellcast}
+    OnTrapTriggered: {type: :resref, value: door_traptrig}
+    OnUnlock: {type: :resref, value: door_unlock}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 36}
+    Plot: {type: :byte, value: 0}
+    PortraitId: {type: :word, value: 0}
+    Ref: {type: :byte, value: 0}
+    Tag: {type: :cexostr, value: nord_triade_ruin_eg_2_ug}
+    TemplateResRef: {type: :resref, value: house_door001}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    VarTable: 
+      type: :list
+      value: 
+      - !nwn-lib.elv.es,2008-12/struct 
+        __struct_id: 0
+        Name: {type: :cexostr, value: wache}
+        Type: {type: :dword, value: 3}
+        Value: {type: :cexostr, value: sl_}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 2.66}
+    Y: {type: :float, value: 31.0}
+    Z: {type: :float, value: 0.19}
 Encounter List: 
   type: :list
   value: 
@@ -2726,7 +2797,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_2217}
     TemplateResRef: {type: :resref, value: pvq_2217}
     TrapDetectDC: {type: :byte, value: 0}
@@ -2789,7 +2860,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1937}
     TemplateResRef: {type: :resref, value: pvq_1937}
     TrapDetectDC: {type: :byte, value: 0}
@@ -2852,7 +2923,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1937}
     TemplateResRef: {type: :resref, value: pvq_1937}
     TrapDetectDC: {type: :byte, value: 0}
@@ -2915,7 +2986,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1937}
     TemplateResRef: {type: :resref, value: pvq_1937}
     TrapDetectDC: {type: :byte, value: 0}
@@ -3045,7 +3116,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1994}
     TemplateResRef: {type: :resref, value: pvq_1994}
     TrapDetectDC: {type: :byte, value: 0}
@@ -3108,7 +3179,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1994}
     TemplateResRef: {type: :resref, value: pvq_1994}
     TrapDetectDC: {type: :byte, value: 0}
@@ -3171,7 +3242,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1784}
     TemplateResRef: {type: :resref, value: pvq_1784}
     TrapDetectDC: {type: :byte, value: 0}
@@ -3234,7 +3305,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1784}
     TemplateResRef: {type: :resref, value: pvq_1784}
     TrapDetectDC: {type: :byte, value: 0}
@@ -3297,7 +3368,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_2221}
     TemplateResRef: {type: :resref, value: pvq_2221}
     TrapDetectDC: {type: :byte, value: 0}
@@ -3360,7 +3431,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_2224}
     TemplateResRef: {type: :resref, value: pvq_2224}
     TrapDetectDC: {type: :byte, value: 0}
@@ -3423,7 +3494,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_2222}
     TemplateResRef: {type: :resref, value: pvq_2222}
     TrapDetectDC: {type: :byte, value: 0}
@@ -10961,7 +11032,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_2224}
     TemplateResRef: {type: :resref, value: pvq_2224}
     TrapDetectDC: {type: :byte, value: 0}
@@ -11024,7 +11095,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_2224}
     TemplateResRef: {type: :resref, value: pvq_2224}
     TrapDetectDC: {type: :byte, value: 0}
@@ -11802,7 +11873,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_2220}
     TemplateResRef: {type: :resref, value: pvq_2220}
     TrapDetectDC: {type: :byte, value: 0}
@@ -11865,7 +11936,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_2220}
     TemplateResRef: {type: :resref, value: pvq_2220}
     TrapDetectDC: {type: :byte, value: 0}
@@ -11928,7 +11999,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_2222}
     TemplateResRef: {type: :resref, value: pvq_2222}
     TrapDetectDC: {type: :byte, value: 0}
@@ -11991,7 +12062,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1656}
     TemplateResRef: {type: :resref, value: pvq_1656}
     TrapDetectDC: {type: :byte, value: 0}
@@ -12119,7 +12190,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1656}
     TemplateResRef: {type: :resref, value: pvq_1656}
     TrapDetectDC: {type: :byte, value: 0}
@@ -12247,7 +12318,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1937}
     TemplateResRef: {type: :resref, value: pvq_1937}
     TrapDetectDC: {type: :byte, value: 0}
@@ -12327,71 +12398,6 @@ Placeable List:
     X: {type: :float, value: 3.0023}
     Y: {type: :float, value: 16.7624}
     Z: {type: :float, value: -0.0}
-  - !nwn-lib.elv.es,2008-12/struct 
-    __struct_id: 9
-    AnimationState: {type: :byte, value: 0}
-    Appearance: {type: :dword, value: 497}
-    AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: 1.3736}
-    BodyBag: {type: :byte, value: 0}
-    CloseLockDC: {type: :byte, value: 0}
-    Conversation: {type: :resref, value: ""}
-    CurrentHP: {type: :short, value: 15}
-    Description: 
-      type: :cexolocstr
-      str_ref: 111958
-      value: {}
-
-    DisarmDC: {type: :byte, value: 15}
-    Faction: {type: :dword, value: 1}
-    Fort: {type: :byte, value: 16}
-    HP: {type: :short, value: 50}
-    Hardness: {type: :byte, value: 5}
-    HasInventory: {type: :byte, value: 0}
-    Interruptable: {type: :byte, value: 0}
-    KeyName: {type: :cexostr, value: ""}
-    KeyRequired: {type: :byte, value: 0}
-    LocName: 
-      type: :cexolocstr
-      str_ref: 111019
-      value: {}
-
-    Lockable: {type: :byte, value: 0}
-    Locked: {type: :byte, value: 0}
-    OnClick: {type: :resref, value: ""}
-    OnClosed: {type: :resref, value: ""}
-    OnDamaged: {type: :resref, value: ""}
-    OnDeath: {type: :resref, value: ""}
-    OnDisarm: {type: :resref, value: ""}
-    OnHeartbeat: {type: :resref, value: ""}
-    OnInvDisturbed: {type: :resref, value: ""}
-    OnLock: {type: :resref, value: ""}
-    OnMeleeAttacked: {type: :resref, value: ""}
-    OnOpen: {type: :resref, value: ""}
-    OnSpellCastAt: {type: :resref, value: ""}
-    OnTrapTriggered: {type: :resref, value: ""}
-    OnUnlock: {type: :resref, value: ""}
-    OnUsed: {type: :resref, value: ""}
-    OnUserDefined: {type: :resref, value: ""}
-    OpenLockDC: {type: :byte, value: 18}
-    Plot: {type: :byte, value: 0}
-    PortraitId: {type: :word, value: 1163}
-    Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
-    Tag: {type: :cexostr, value: x3_plc_rubble4}
-    TemplateResRef: {type: :resref, value: x3_plc_rubble4}
-    TrapDetectDC: {type: :byte, value: 0}
-    TrapDetectable: {type: :byte, value: 1}
-    TrapDisarmable: {type: :byte, value: 1}
-    TrapFlag: {type: :byte, value: 0}
-    TrapOneShot: {type: :byte, value: 1}
-    TrapType: {type: :byte, value: 0}
-    Type: {type: :byte, value: 0}
-    Useable: {type: :byte, value: 0}
-    Will: {type: :byte, value: 0}
-    X: {type: :float, value: 0.0}
-    Y: {type: :float, value: 31.42}
-    Z: {type: :float, value: 2.0}
   - !nwn-lib.elv.es,2008-12/struct 
     __struct_id: 9
     AnimationState: {type: :byte, value: 0}
@@ -12570,7 +12576,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1936}
     TemplateResRef: {type: :resref, value: pvq_1936}
     TrapDetectDC: {type: :byte, value: 0}
@@ -12633,7 +12639,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1931}
     TemplateResRef: {type: :resref, value: pvq_1931}
     TrapDetectDC: {type: :byte, value: 0}
@@ -12696,7 +12702,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1931}
     TemplateResRef: {type: :resref, value: pvq_1931}
     TrapDetectDC: {type: :byte, value: 0}
@@ -12759,7 +12765,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1970}
     TemplateResRef: {type: :resref, value: pvq_1970}
     TrapDetectDC: {type: :byte, value: 0}
@@ -12822,7 +12828,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1970}
     TemplateResRef: {type: :resref, value: pvq_1970}
     TrapDetectDC: {type: :byte, value: 0}
@@ -12885,7 +12891,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1973}
     TemplateResRef: {type: :resref, value: pvq_1973}
     TrapDetectDC: {type: :byte, value: 0}
@@ -12948,7 +12954,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1973}
     TemplateResRef: {type: :resref, value: pvq_1973}
     TrapDetectDC: {type: :byte, value: 0}
@@ -13011,7 +13017,7 @@ Placeable List:
     Plot: {type: :byte, value: 0}
     PortraitId: {type: :word, value: 0}
     Ref: {type: :byte, value: 0}
-    Static: {type: :byte, value: 1}
+    Static: {type: :byte, value: 0}
     Tag: {type: :cexostr, value: pvq_1974}
     TemplateResRef: {type: :resref, value: pvq_1974}
     TrapDetectDC: {type: :byte, value: 0}
