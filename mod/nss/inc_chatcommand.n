@@ -679,7 +679,8 @@ int CommandAFK(object oPC, int iMode) {
 		while ( GetIsEffectValid(e) ) {
 			if ( GetEffectCreator(e) == oPC && GetEffectDurationType(e) == DURATION_TYPE_PERMANENT
 				&& GetEffectType(e) == EFFECT_TYPE_VISUALEFFECT
-				&& GetEffectSubType(e) == SUBTYPE_SUPERNATURAL ) {
+				&& GetEffectSubType(e) == SUBTYPE_SUPERNATURAL
+				&& GetEffectInteger(e, 0) == VFX_DUR_AFK) {
 				RemoveEffect(oPC, e);
 				break;
 			}
