@@ -26,4 +26,6 @@ extern("hook_generic")
 #define ApplyEffectAtLocation(...) Hook_ApplyEffectAtLocation(__VA_ARGS__)
 #define ApplyEffectToObject(...) Hook_ApplyEffectToObject(__VA_ARGS__)
 
+#define SendMessageToPC(...) Hook_SendMessageToPC(__VA_ARGS__)
+
 #endif

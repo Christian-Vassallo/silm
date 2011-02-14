@@ -1,4 +1,5 @@
 extern("inc_events")
+extern("inc_jvm")
 
 #undef DestroyObject
 void Hook_DestroyObject(object oObject, float fDelay = 0.0) {
@@ -121,6 +122,13 @@ void _hook_jump_associates(object obj, location jumpTo, bool as_action) {
 			assoc = GetAssociate(ASSOCIATE_TYPE_HENCHMAN, obj, i);
 		}
 	}
+}
+
+#undef SendMessageToPC
+void Hook_SendMessageToPC(object oPC, string sMessage) {
+	SetLocalString(GetModule(), "combatlog_message", sMessage);
+	JVM_EVENT("combatlog_message", oPC);
+	SendMessageToPC(oPC, sMessage);
 }
 
 #undef GetSpellTargetObject
