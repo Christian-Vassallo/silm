@@ -1,6 +1,5 @@
 extern("_gen")
 extern("inc_horse")
-extern("inc_torches")
 extern("inc_events")
 
 void main() {
@@ -8,10 +7,6 @@ void main() {
 	object oItem = GetPCItemLastEquipped();
 
 	CheckRideWithWeapons(oPC);
-
-	if ( GetTag(oItem) == "NW_IT_TORCH001" )
-		EquippedTorch(oPC, oItem);
-
 
 	int nNow = GetUnixTimestamp();
 	int nSh = 0;

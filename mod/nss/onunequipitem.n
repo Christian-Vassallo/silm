@@ -1,5 +1,4 @@
 extern("inc_events")
-extern("inc_torches")
 
 //Destroy the work-in-progress items if it's unequipped during
 //manufacturing and clear the conversation
@@ -19,9 +18,6 @@ void main() {
 		DelayCommand(0.5f, _StopCustomizing(oPC, oItem));
 		return;
 	}
-
-	if ( GetTag(oItem) == "NW_IT_TORCH001" )
-		UnequippedTorch(oPC, oItem);
 
 	// Event: item_unequip
 	// Creature unequips item
