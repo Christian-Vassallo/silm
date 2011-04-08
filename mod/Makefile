@@ -104,7 +104,7 @@ clean-stale: path
 
 .PHONY: scripts
 scripts: path
-	-rm nss/{e_mnxnotify.n*s,git.h}
+	-rm nss/git.h
 	$(MAKE) -C nss revupdate
 	$(MAKE) -j$(CONCURRENCY_LEVEL) -C nss all
 
