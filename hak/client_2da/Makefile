@@ -7,6 +7,8 @@ VALIDEXT=*.2da *.itp
 
 twoda := $(addsuffix .2da, $(basename $(wildcard *.2ds)))
 
+include ../Makefile.hak
+
 all: $(twoda) $(TARGET)
 
 path:
@@ -49,17 +51,5 @@ des_crft_spells.2ds: spells.2ds
 	./update_des_crft_spells.2ds.rb > des_crft_spells_new &&\
 		mv des_crft_spells_new des_crft_spells.2ds
 
-clean-backup:
-	-rm *.*~ *.out
-
-clean: clean-backup
-	-rm *.2da *.hak
-	
-$(TARGET): $(twoda)
-	erfpack.pl -H -o $@ $(VALIDEXT)
-
-install: path $(TARGET)
-	@cp -v $(TARGET) $(NWNHOME)/hak/
-
-publish: $(TARGET)
-	rsync -Pzva --chmod=go+r $(TARGET) silbermarken@miyeritar:rsync/nwn/hak/
+clean:: clean-backup
+	-rm *.2da
