@@ -200,6 +200,8 @@ int CommandRepeat(object oPC, int iMode);
 
 int CommandBodyOperator(object oPC, int iMode);
 
+int CommandPlaySound(object oPC, int iMode);
+
 /* implementation */
 
 // This is a stub you can copypaste to implement your own command.
@@ -211,6 +213,33 @@ int CommandBodyOperator(object oPC, int iMode);
 // Note that the executing object is oPC itself; it is merely passed
 // in as a convenience.
 int CommandStub(object oPC, int iMode) {
+	return OK;
+}
+
+int CommandPlaySound(object oPC, int iMode) {
+	object oTarget = GetTarget();
+	if (!amask(oPC, AMASK_GLOBAL_GM))
+		oTarget = oPC;
+
+	string sound = getopt_arg(0);
+	sound = substr(sound, 0, 16);
+
+	AssignCommand(oTarget, PlaySound(sound));
+
+	string snddesc;
+	if (oTarget == oPC)
+		snddesc = GetName(oPC) + " plays sound '" + sound + "'.";
+	else
+		snddesc = GetName(oPC) + " plays sound '" + sound +
+			"' on " + GetName(oTarget) + ".";
+
+	iterate_near_object(OBJECT_TYPE_CREATURE, oTarget, oi,
+		if (GetIsPC(oi))
+			SendMessageToPC(oi, snddesc);
+
+		if (GetDistanceBetween(oi, oTarget) > 32f)
+			break;
+	);
 	return OK;
 }
 

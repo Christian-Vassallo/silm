@@ -972,6 +972,10 @@ void RegisterAllCommands() {
 	// Make the targeted creature walk randomly.
 	RegisterCommand("rwalk", "");
 	RHs(">> Makes a creature walk randomly.", 1);
+
+	RegisterCommand("playsound", "", 1, 1);
+	RHs(">> Plays a sound file at your character location.");
+	RAF(AMASK_ANY);
 }
 
 
@@ -1396,6 +1400,9 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 	if ( "rwalk" == sCommand )
 		ret = CommandRandomWalk(oPC, iMode);
+
+	if ("playsound" == sCommand)
+		ret = CommandPlaySound(oPC, iMode);
 	
 	SetLocalString(GetModule(), "chat_current_command_name", "");
 
