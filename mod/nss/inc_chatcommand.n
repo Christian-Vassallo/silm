@@ -233,6 +233,9 @@ int CommandPlaySound(object oPC, int iMode) {
 		snddesc = GetName(oPC) + " plays sound '" + sound +
 			"' on " + GetName(oTarget) + ".";
 
+	SendMessageToPC(oPC, snddesc);
+	if (oPC != oTarget)
+		SendMessageToPC(oTarget, snddesc);
 	iterate_near_object(OBJECT_TYPE_CREATURE, oTarget, oi,
 		if (GetIsPC(oi))
 			SendMessageToPC(oi, snddesc);
