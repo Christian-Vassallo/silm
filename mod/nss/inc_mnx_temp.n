@@ -94,6 +94,10 @@ struct Weather ParseWeatherString(struct Weather w, string s);
 
 struct Weather GetWeatherFor(object oArea, int nYear, int nMonth, int nDay, int nHour, int nMinute) {
 	struct Weather w;
+	string localWeatherOvr = GetLocalString(oArea, "local_weather_raw");
+	if (localWeatherOvr != "")
+		return ParseWeatherString(w, localWeatherOvr);
+
 	string
 	sAreaResRef = GetResRef(oArea),
 	sTilesetResRef = GetTilesetResRef(oArea);
