@@ -1475,14 +1475,9 @@ int CommandXP(object oPC, int iMode) {
 			return FAIL;
 		}
 
-		int bIsCAPXP = getopt_opt("cap");
 		int bIsTimeXP = getopt_opt("time");
 
-		if ( bIsCAPXP ) {
-			AddCombatXP(oT, nXP);
-			SendMessageToPC(oPC, "XP is: " + IntToString(GetXP(oT)));
-
-		} else if ( bIsTimeXP ) {
+		if ( bIsTimeXP ) {
 			GiveTimeXP(oT, nXP);
 			SendMessageToPC(oPC, "XP is: " + IntToString(GetXP(oT)));
 
@@ -1494,13 +1489,6 @@ int CommandXP(object oPC, int iMode) {
 
 		return OK;
 
-	} else if (getopt_opt("levelup") ) {
-		int nClassType = CLASS_TYPE_INVALID;
-		if (getopt_opt("class") )
-			nClassType = StringToInt(getopt_optv("class"));
-
-		LevelUpHenchman(oT, nClassType, TRUE);
-		return OK;
 	}
 
 	return SYNTAX;
