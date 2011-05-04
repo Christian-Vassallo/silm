@@ -50,12 +50,10 @@ void main()
     eAC2 = EffectACIncrease(5, AC_DEFLECTION_BONUS);
     eAC3 = EffectACIncrease(5, AC_DODGE_BONUS);
     eAC4 = EffectACIncrease(5, AC_NATURAL_BONUS);
-    effect eDur = EffectVisualEffect(VFX_DUR_SANCTUARY);
 
     effect eLink = EffectLinkEffects(eAC1, eAC2);
     eLink = EffectLinkEffects(eLink, eAC3);
     eLink = EffectLinkEffects(eLink, eAC4);
-    eLink = EffectLinkEffects(eLink, eDur);
 
     RemoveEffectsFromSpell(oTarget, GetSpellId());
 
