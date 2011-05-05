@@ -2,13 +2,6 @@
 # Set this in your env.
 # NWNMODNAME=www.sternenfall.org
 
-# The current working branch in git.
-BRANCH=$(shell git branch 2>&1| grep "*" | cut -d " " -f 2)
-
-# The current commit hash.
-COMMIT=$(shell git-rev-parse --short --verify HEAD)
-
-
 # This gets packaged into your final module for
 # deployment on a production server.
 VALIDEXT= \
@@ -105,26 +98,26 @@ local: resources scripts
 ifeq ($(MAPMASK),)
 	@echo "Packing up all maps."
 	PERLLIB=../build/lib ../build/erfpack.pl \
-		-m -o $(NWNMODNAME)-$(BRANCH).mod area/\*.are area/\*.git $(VALIDEXT)
+		-m -o $(NWNMODNAME).mod area/\*.are area/\*.git $(VALIDEXT)
 else
 	@echo "Packing up maps matching: $(MAPMASK)"
 	PERLLIB=../build/lib ../build/erfpack.pl \
-		-m -o $(NWNMODNAME)-$(BRANCH).mod area/$(MAPMASK).are area/$(MAPMASK).git $(VALIDEXT)
+		-m -o $(NWNMODNAME).mod area/$(MAPMASK).are area/$(MAPMASK).git $(VALIDEXT)
 endif
 
 local-dev:
 	PERLLIB=../build/lib ../build/erfpack.pl \
-		-m -o $(NWNMODNAME)-$(BRANCH)-dev.mod $(MAPS) $(VALIDEXTDEV)
+		-m -o $(NWNMODNAME)-dev.mod $(MAPS) $(VALIDEXTDEV)
 
 local-player:
 	cp mod/module.ifo override-player
 	cd override-player && PERLLIB=../../build/lib ../../build/update-ifo.pl *.are
 	PERLLIB=../build/lib ../build/erfpack.pl \
-		-m -o $(NWNMODNAME)-$(BRANCH)-player.mod $(MAPS) $(VALIDEXTPLAYER)
+		-m -o $(NWNMODNAME)-player.mod $(MAPS) $(VALIDEXTPLAYER)
 
 tar: local
-	tar -czf $(NWNMODNAME)-$(BRANCH)-dev.tgz $(NWNMODNAME)-$(BRANCH)-dev.mod
-	tar -czf $(NWNMODNAME)-$(BRANCH)-player.tgz $(NWNMODNAME)-$(BRANCH)-player.mod
+	tar -czf $(NWNMODNAME)-dev.tgz $(NWNMODNAME)-dev.mod
+	tar -czf $(NWNMODNAME)-player.tgz $(NWNMODNAME)-player.mod
 
 # generates a new package with the current commit
 package: local
