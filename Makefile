@@ -1,3 +1,5 @@
+.PHONY: mod documentation hak
+
 mod:
 	make -C mod all
 
