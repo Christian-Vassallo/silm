@@ -1,6 +1,6 @@
 #!/usr/bin/env nwn-dsl
 
-app = TwoDA::Cache.get('appearance')
+app = TwoDA::Table.parse(IO.read("../../hak/client_2da/appearance.2ds"))
 mask = "#define APPEARANCE_TYPE_%s %d"
 
 app.rows.each do |row|
