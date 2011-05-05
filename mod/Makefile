@@ -1,16 +1,3 @@
-# This Makefile depends on some of NWNs resource files.
-# In order to compile anything, you need NWN installed,
-# and set this environment variable to the path. You can
-# do this outside of make by exporting it in your shell
-# environment. Example:
-# export NWNHOME=/home/elven/nwn
-
-# Also, to build anything useful, this Makefile depends on
-# the path 'build' in this repository to be accessible
-# through $PATH, $PERLLIB and $CLASSPATH.
-
-# Settings below:
-
 # The name of the module that is being built.
 # Set this in your env.
 # NWNMODNAME=www.sternenfall.org
@@ -56,13 +43,9 @@ NWNLIB_VERSION=0.4.6
 # Now type "make all" and hope for the best. :)
 
 .PHONY: all path
-all: package
+all: path package
 
 path:
-ifeq  "$(NWNHOME)" ""
-	@echo "env var NWNHOME not set."
-	exit 1
-endif
 ifeq "$(NWNMODNAME)" ""
 NWNMODNAME="silbermarken"
 endif
@@ -144,11 +127,7 @@ tar: local
 	tar -czf $(NWNMODNAME)-$(BRANCH)-player.tgz $(NWNMODNAME)-$(BRANCH)-player.mod
 
 # generates a new package with the current commit
-package: path local
+package: local
 
 package-dev: path local-dev
 package-player: path local-player
-
-# installs all packaged in the relevant directories
-install:
-	cp -v $(NWNMODNAME)-$(BRANCH).mod $(NWNMODNAME)-$(BRANCH)-dev.mod $(NWNMODNAME)-$(BRANCH)-player.mod $(NWNHOME)/modules/
