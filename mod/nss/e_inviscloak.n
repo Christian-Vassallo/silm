@@ -19,16 +19,30 @@ void main() {
 		}
 	);
 
+
+	bool is_free_action = GetLocalInt(item, "free_action");
+	int invis_type = GetLocalInt(item, "invis_type");
+	if (!invis_type)
+		invis_type = INVISIBILITY_TYPE_NORMAL;
+
 	if (e.ev == "item_freeactivate" && found) {
 		RemoveEffect(pc, invis);
 		event_stop_end_suppress();
 	}
-	if (e.ev == "item_activate" && !found) {
+
+	if ((
+			(is_free_action && e.ev == "item_freeactivate") ||
+			(!is_free_action && e.ev == "item_activate")
+		)&& !found) {
+
 		effect eInvis = EffectLinkEffects(
-			EffectInvisibility(INVISIBILITY_TYPE_NORMAL),
+			EffectInvisibility(invis_type),
 			EffectVisualEffect(VFX_DUR_INVISIBILITY)
 		);
 
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, eInvis, pc);
+
+		if (is_free_action)
+			event_stop_end_suppress();
 	}
 }
