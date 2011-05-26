@@ -458,8 +458,15 @@ int CommandGo(object oPC, int iMode) {
 		col2 = cLightBlue;
 	int color_swap = 1;
 
+#define LOCHDR  "select area, x, y, z, f, name from locations where "
+
+	string amask_cond = "1=1";
+
+	if (!amask(oPC, AMASK_GM))
+		amask_cond = "restricted=false";
+
 	// Direct matches go first
-	pQ("select area,x,y,z,f,name from locations where name = " + pSs(loc) + " limit 1;");
+	pQ(LOCHDR + " name = " + pSs(loc) + " and " + amask_cond + " limit 1;");
 
 	if (pF()) {
 		area = pGs(1); x = pGf(2); y = pGf(3); z = pGf(4); f = pGf(5); name = pGs(6);
@@ -468,7 +475,8 @@ int CommandGo(object oPC, int iMode) {
 	
 		string matches = "";
 		int count = 0;
-		pQ("select area,x,y,z,f, name from locations where name like " + pSs("%" + loc + "%") + " order by name asc;");
+		pQ(LOCHDR + " name like " + pSs("%" + loc + "%") + " and " +
+			amask_cond + " order by name asc;");
 		
 		while (pF()) {
 			area = pGs(1); x = pGf(2); y = pGf(3); z = pGf(4); f = pGf(5); name = pGs(6);
