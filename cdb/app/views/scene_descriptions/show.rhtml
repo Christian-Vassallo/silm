@@ -1,8 +1,0 @@
-<% for column in SceneDescription.content_columns %>
-<p>
-  <b><%= column.human_name %>:</b> <%=h @scene_description.send(column.name) %>
-</p>
-<% end %>
-
-<%= link_to 'Edit', :action => 'edit', :id => @scene_description %> |
-<%= link_to 'Back', :action => 'list' %>

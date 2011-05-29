@@ -1,15 +1,9 @@
-.PHONY: mod documentation hak
+.PHONY: mod hak
+
+all: mod hak
 
 mod:
 	make -C mod all
-
-documentation:
-	naturaldocs -o framedhtml generated-doc -i . \
-		-xi generated-doc \
-		-xi naturaldocs-project \
-		-xi build \
-		-xi linnwnx2 \
-	-s sternenfall -p naturaldocs-project
 
 hak:
 	make -C hak all

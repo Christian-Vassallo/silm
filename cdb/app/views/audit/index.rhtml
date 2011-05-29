@@ -1,9 +1,0 @@
-<h1>Audit trail</h1>
-
-<%= pagination_links @audit_pages, :window_size => 50 %>
-<table width="100%">
-<% for a in @audit do %>
-<%= render :partial => "audit_event", :locals => {:a => a, :complete => true}%>
-<% end %>
-</table>
-<%= pagination_links @audit_pages, :window_size => 50 %>
