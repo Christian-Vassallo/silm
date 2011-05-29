@@ -6,3 +6,5 @@ TARGET=silm_cep2c.hak
 VALIDEXT=*.dds *.mdl *.plt *.ssf *.tga *.wav
 
 include ../Makefile.hak
+
+all: $(TARGET)

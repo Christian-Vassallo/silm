@@ -3,8 +3,6 @@
 
 resources := $(wildcard $(VALIDEXT))
 
-all: $(TARGET)
-
 path:
 ifeq  "$(NWNHOME)" ""
 	@echo "env var NWNHOME not set."
@@ -19,9 +17,6 @@ clean:: clean-backup
 	
 $(TARGET): $(resources)
 	erfpack.pl -H -o $@ $(VALIDEXT)
-
-install: path $(TARGET)
-	@cp -v $(TARGET) $(NWNHOME)/hak/
 
 publish: $(TARGET)
 	rsync -Pzva --chmod=go+r $(TARGET) silbermarken@miyeritar:rsync/nwn/hak/ &&\
