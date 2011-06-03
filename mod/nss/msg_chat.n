@@ -26,11 +26,6 @@ void __chatlog(object runnable, object actor, object actedon, struct EventArgume
 void main() {
 	object oSpeaker = OBJECT_SELF;
 	
-	if (GetLocalInt(GetModule(), "msg_chat_suppress")) {
-		SetLocalInt(GetModule(), "msg_chat_suppress", 0);
-		return;
-	}
-
 	int ret = RunEventScriptsFor(GetEventSerial(), "nwnx_chat", oSpeaker,
 		oSpeaker, OBJECT_INVALID, GetLocation(oSpeaker));
 	if (ret & EVENT_RESULT_SUPPRESS) {
@@ -103,7 +98,6 @@ void main() {
 		evarg.a0 = ColorisePlayerText(oSpeaker, evarg.i0, evarg.a0);
 
 		NWNXChatSpeakToChannel(oSpeaker, ChatModeToMsg(evarg.i0), evarg.a0);
-		SetLocalInt(GetModule(), "msg_chat_suppress", 1);
 		NWNXChatSuppress();
 	}
 	
