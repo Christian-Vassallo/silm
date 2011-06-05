@@ -16,7 +16,8 @@ clean:: clean-backup
 	-rm *.hak
 	
 $(TARGET): $(resources)
-	../../build/erfpack.pl -H -o $@ $(VALIDEXT)
+	PERLLIB=../../build/lib ../../build/erfpack.pl \
+		-H -o $@ $(VALIDEXT)
 
 publish: $(TARGET)
 	rsync -Pzva --chmod=go+r $(TARGET) silbermarken@miyeritar:rsync/nwn/hak/ &&\
