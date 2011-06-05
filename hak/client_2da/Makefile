@@ -32,7 +32,7 @@ parts_chest.2da: parts_chest.2ds
 	@cat $< | ruby -ne 'print $$_.gsub(/\$$\(([\d]+)\)/) {|x| $$1.to_i + 1 + 0xffffff}' > $@
 	@case "$@" in\
 		parts_*.2da)\
-			make_partstable.sh < $@ > chg_`echo $@ | cut -d_ -f2-` ;\
+			../../build/make_partstable.sh < $@ > chg_`echo $@ | cut -d_ -f2-` ;\
 			echo "make_partstable.sh < $@ > chg_`echo $@ | cut -d_ -f2-`";\
 		;;\
 	esac
@@ -42,7 +42,7 @@ parts_chest.2da: parts_chest.2ds
 	@cat $< | ruby -ne 'print $$_.gsub(/\$$\(([\d]+)\)/) {|x| $$1.to_i + 1 + 0xffffff}' > $@
 	@case "$@" in\
 		parts_*.2da)\
-			make_partstable.sh 0.00 < $@ > chg_`echo $@ | cut -d_ -f2-` ;\
+			../../build/make_partstable.sh 0.00 < $@ > chg_`echo $@ | cut -d_ -f2-` ;\
 			echo "make_partstable.sh 0.00 < $@ > chg_`echo $@ | cut -d_ -f2-`";\
 		;;\
 	esac

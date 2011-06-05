@@ -16,7 +16,7 @@ clean:: clean-backup
 	-rm *.hak
 	
 $(TARGET): $(resources)
-	erfpack.pl -H -o $@ $(VALIDEXT)
+	../../build/erfpack.pl -H -o $@ $(VALIDEXT)
 
 publish: $(TARGET)
 	rsync -Pzva --chmod=go+r $(TARGET) silbermarken@miyeritar:rsync/nwn/hak/ &&\
