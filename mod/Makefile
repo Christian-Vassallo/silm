@@ -105,11 +105,11 @@ else
 		-m -o $(NWNMODNAME).mod area/$(MAPMASK).are area/$(MAPMASK).git $(VALIDEXT)
 endif
 
-local-dev:
+local-dev: resources
 	PERLLIB=../build/lib ../build/erfpack.pl \
 		-m -o $(NWNMODNAME)-dev.mod $(MAPS) $(VALIDEXTDEV)
 
-local-player:
+local-player: resources
 	cp mod/module.ifo override-player
 	cd override-player && PERLLIB=../../build/lib ../../build/update-ifo.pl *.are
 	PERLLIB=../build/lib ../build/erfpack.pl \
@@ -122,5 +122,5 @@ tar: local
 # generates a new package with the current commit
 package: local
 
-package-dev: path local-dev
-package-player: path local-player
+package-dev: local-dev
+package-player: local-player
