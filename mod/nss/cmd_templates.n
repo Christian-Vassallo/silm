@@ -56,6 +56,14 @@ void main() {
 		ToPC("Saving " + otoa(target) + " as " + name);
 
 		if (!is_creature(target) && !is_item(target)) {
+
+			if (GetIsPC(target) || GetIsDMPossessed(target) ||
+					GetIsDM(target) || GetIsPossessedFamiliar(target)) {
+				SetEventResult(EVENT_RESULT_STOP | EVENT_RESULT_FAIL);
+				ToPC("Cannot persist player characters.");
+				return;
+			}
+
 			ToPC("Cannot persist the current target.");
 			fail = true;
 		} else {

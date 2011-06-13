@@ -2045,6 +2045,10 @@ int CommandCopyObject(object oPC, int iMode) {
 	if ( !GetIsObjectValid(oT) )
 		return NotifyBadTarget();
 
+	if (GetIsPC(oT) || GetIsDMPossessed(oT) || GetIsDM(oT) || GetIsPossessedFamiliar(oT)) {
+		return NotifyBadTarget();
+	}
+
 	string t_eval;
 
 	int amount = 1;
