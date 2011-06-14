@@ -2485,11 +2485,11 @@ int CommandVoiceChat(object oPC, string sArg, int iMode) {
 
 int CommandDice(object oPC, int iMode) {
 	int
-	iNum = StringToInt(getopt_arg(0)),
-	iDie = StringToInt(getopt_arg(1));
+		iNum = StringToInt(getopt_arg(0)),
+		iDie = StringToInt(getopt_arg(1));
 
 	if ( iDie < 2 )
-		iDie = 2;
+		iDie = 20;
 	if ( iDie > 2000 )
 		iDie = 2000;
 	if ( iNum < 1 )
@@ -2505,6 +2505,7 @@ int CommandDice(object oPC, int iMode) {
 	}
 	r += " = " + IntToString(total);
 
+	r = ColorTag(cPink) + r;
 	SpeakToMode(oPC, r, iMode);
 	return OK;
 }
