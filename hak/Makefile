@@ -1,6 +1,6 @@
-all: client_2da client_cep2c
+all: client_2da client_cep2c client_merge
 
-.PHONY: client_2da client_cep2c clean
+.PHONY: client_2da client_cep2c client_merge clean
 
 client_2da:
 	make -C client_2da all
@@ -8,6 +8,10 @@ client_2da:
 client_cep2c:
 	make -C client_cep2c all
 
+client_merge:
+	make -C client_merge all
+
 clean:
 	make -C client_2da clean
 	make -C client_cep2c clean
+	make -C client_merge clean
