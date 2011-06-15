@@ -2508,7 +2508,8 @@ int CommandDice(object oPC, int iMode) {
 	r = ColorTag(cPink) + r;
 	SpeakToMode(oPC, r, iMode);
 	int d = Random(2);
-	AssignCommand(oPC, PlaySound("dice" + itoa(d)));
+	if (!GetIsDM(oPC))
+		AssignCommand(oPC, PlaySound("dice" + itoa(d)));
 	return OK;
 }
 
