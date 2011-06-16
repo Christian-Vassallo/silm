@@ -6,4 +6,4 @@ clean:
 	-rm *.tlk
 
 %.tlk : %.tlk.source
-	tlkencode.pl -o $@ $<
+	PERLLIB=../build/lib ../build/tlkencode.pl -o $@ $<
