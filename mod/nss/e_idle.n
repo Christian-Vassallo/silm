@@ -1,0 +1,33 @@
+extern("inc_idle")
+
+bool cmploc(location a, location b) {
+	if (GetAreaFromLocation(a) !=
+			GetAreaFromLocation(b))
+		return true;
+	
+	if (GetFacingFromLocation(a) !=
+			GetFacingFromLocation(b))
+		return true;
+
+	return false;
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "chat_prefilter") {
+		markPlayerActivity(e.runnable);
+		return;
+	}
+
+	if (e.ev == "player_hb") {
+		location last = GetLocalLocation(e.runnable, "idle_loc");
+		location current = GetLocation(e.runnable);
+		
+		if (cmploc(current, last))
+			markPlayerActivity(e.runnable);
+
+		SetLocalLocation(e.runnable, "idle_loc", current);
+		return;
+	}
+}
