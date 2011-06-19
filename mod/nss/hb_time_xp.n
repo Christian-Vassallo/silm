@@ -6,33 +6,27 @@
 extern("_gen")
 extern("inc_xp_handling")
 
+extern("inc_idle")
 
 void main() {
-	int nPlayerCount = GetPCCount(OBJECT_INVALID, 0) - GetPCCount(OBJECT_INVALID, 1); 
 	int nTS = GetUnixTimestamp();
-	int nLastForPlayer = 0;
-	int nPlayerLastSaid = 0;
-	location lLastPlayerLocation;
-	location lPlayerLocation;
-
-	// Do not give XP for being alone. Hard but true.
-	//if (0 == GetLocalInt(GetModule(), "time_xp_ovr") && nPlayerCount == 1)
-	//	return;
+	int nPlayerCount = GetPCCount(OBJECT_INVALID, false);
 
 	object oPC = GetFirstPC();
 	while (GetIsObjectValid(oPC)) {
-		
-		// Do /*not*/ give XP for being AFK.
-		if (!GetIsDM(oPC) /*&& !GetLocalInt(oPC, "afk")*/) {
-			nLastForPlayer = GetLocalInt(oPC, "last_time_xp_given");
-			// nPlayerLastSaid = gvGetInt("time_xp_max_message_time") == 0 ? nTS : GetLocalInt(oPC,"last_message");
-			/*lLastPlayerLocation = GetLocalLocation(oPC, "last_time_xp_location");
-			lPlayerPosition = GetLocation(oPC);*/
-			
+		if (!GetIsDM(oPC)) {
+			int nLastForPlayer = GetLocalInt(oPC, "last_time_xp_given");
 
-			if ( 
-				(nTS - gvGetInt("time_xp_interval") > nLastForPlayer) /*&&
-				(nTS - gvGetInt("time_xp_interval") <= nPlayerLastSaid) */
+			if (
+				// only give XP if the player was active in the last interval,
+				// or no other players are present
+				(
+					nPlayerCount == 1 ||
+					(nPlayerCount > 1 &&
+						GetPlayerIdleTime(oPC) <= gvGetInt("time_xp_interval"))
+				) &&
+				// and if the defined interval has passed
+				(nTS - gvGetInt("time_xp_interval") > nLastForPlayer)
 			) {
 				
 				SetLocalInt(oPC, "last_time_xp_given", nTS);
@@ -44,7 +38,6 @@ void main() {
 					SetLocalInt(oPC, "last_time_xp_given", nTS);
 				}
 			}
-
 		}
 
 		oPC = GetNextPC();
