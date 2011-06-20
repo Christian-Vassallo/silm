@@ -21,7 +21,10 @@ string GetPlayerName(object player, int afkOverride = -1) {
 
 bool SetPlayerName(object player, string nameOverride = "", bool noEvent = false) {
 	string oldNameOverride = GetLocalString(player, "name_override");
+
 	// Don't trigger event if the name doesn't actually change.
+	if (oldNameOverride == "" && GetName(player, true) == nameOverride)
+		return true;
 	if (oldNameOverride == nameOverride)
 		return true;
 
