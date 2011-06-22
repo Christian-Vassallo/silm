@@ -20,12 +20,27 @@ clean:
 
 show-stale:
 	@for x in *.*; do \
-		[[ $$x == *.yml ]] && continue; \
-		[[ -f $$x.yml ]] || echo $$x; \
+		case "$$x" in \
+			*.yml) \
+				;; \
+			*) \
+				if [ ! -f "$$x.yml" ]; then \
+					echo "$$x"; \
+				fi \
+				;; \
+		esac \
 	done
 
 clean-stale:
 	@for x in *.*; do \
-		[[ $$x == *.yml ]] && continue; \
-		[[ -f $$x.yml ]] || rm $$x; \
+		case "$$x" in \
+			*.yml) \
+				;; \
+			*) \
+				if [ ! -f "$$x.yml" ]; then \
+					echo "Removing stale: $$x"; \
+					rm $$x; \
+				fi \
+				;; \
+		esac \
 	done
