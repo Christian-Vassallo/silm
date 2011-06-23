@@ -1,0 +1,11 @@
+extern("inc_map")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "player_login")
+		RestoreMapPinsForPlayer(e.runnable);
+
+	if (e.ev == "player_logout")
+		SaveMapPinsForPlayer(e.runnable);
+}
