@@ -12,15 +12,6 @@ VALIDEXT= \
 	`find uti -iname \*.uti` \
  	nss/\*.ncs
 
-# This gets packaged into a developer package, which has
-# ALL content.
-VALIDEXTDEV=area/\*.git area/\*.are \
-	dlg/\*.dlg utm/\*.utm utp/\*.utp uts/\*.uts utt/\*.utt utw/\*.utw \
-	utc/\*.utc utd/\*.utd ute/\*.ute \
-	`find uti -iname \*.uti` \
-	itp/\*.itp ssf/\*.ssf \
-	mod/\*.fac mod/\*.ifo mod/\*.jrl
-
 # The player package is a leightweight module variant for
 # players to build their own areas, items, etc.
 VALIDEXTPLAYER=utp/\*.utp \
@@ -105,22 +96,13 @@ else
 		-m -o $(NWNMODNAME).mod area/$(MAPMASK).are area/$(MAPMASK).git $(VALIDEXT)
 endif
 
-local-dev: resources
-	PERLLIB=../build/lib ../build/erfpack.pl \
-		-m -o $(NWNMODNAME)-dev.mod $(MAPS) $(VALIDEXTDEV)
-
 local-player: resources
 	cp mod/module.ifo override-player
 	cd override-player && PERLLIB=../../build/lib ../../build/update-ifo.pl *.are
 	PERLLIB=../build/lib ../build/erfpack.pl \
 		-m -o $(NWNMODNAME)-player.mod $(MAPS) $(VALIDEXTPLAYER)
 
-tar: local
-	tar -czf $(NWNMODNAME)-dev.tgz $(NWNMODNAME)-dev.mod
-	tar -czf $(NWNMODNAME)-player.tgz $(NWNMODNAME)-player.mod
-
 # generates a new package with the current commit
 package: local
 
-package-dev: local-dev
 package-player: local-player
