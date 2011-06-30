@@ -4,6 +4,7 @@
 # miniscule floating point differences in version control diffs.
 
 PRECISION = 4
+PIBEARINGFIX = 3.1416
 
 count = 0
 
@@ -16,6 +17,9 @@ self.each_by_flat_path do |label, field|
 
 	field.field_value =
 		("%.#{PRECISION}f" % field.field_value).to_f
+
+  field.field_value = PIBEARINGFIX if field.field_value == - PIBEARINGFIX
+
 	count += 1
 end
 
