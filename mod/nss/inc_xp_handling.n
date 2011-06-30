@@ -179,47 +179,11 @@ void SetCategoryXPForDay(object oPC, string sCategory, int nXP, int nYear, int n
 }
 
 
-
-//returns Quest EP
-int GetQuestXP(object oPC) {
-	return GetXP(oPC) - GetCombatXP(oPC);
-}
-
-
 //Get the number of XP the character has to spend
 int GetFreeXP(object oPC) {
 	int iFreeXP = GetXP(oPC) - GetBaseXPForLevel(GetHitDice(oPC));
 //  if(iFreeXP > GetCombatXP(oPC)) iFreeXP = GetCombatXP(oPC);
 	return iFreeXP;
-}
-
-void XP_LoseXP(object oPC, int iHowMuch, int iSilently = TRUE, int iOnlyFree = FALSE) {
-	int iCombXP = GetLegacyCombatXP(oPC);
-
-	if ( iOnlyFree && iHowMuch > GetFreeXP(oPC) )
-		iHowMuch = GetFreeXP(oPC);
-
-	/* "XP-Verlust" */
-	if ( !iSilently )
-		DelayCommand(4.0, FloatingTextStrRefOnCreature(58299, oPC, FALSE));
-
-	SetXP(oPC, GetXP(oPC) - iHowMuch);
-
-	/* Lost XP will be subtracted from the combat XP */
-	SetLocalInt(oPC, "XP_Combat", iCombXP - iHowMuch);
-}
-
-void XP_RewardQuestXP(object oPC, int iXP) {
-	int iQuestXP = GetQuestXP(oPC);
-
-
-	iXP = ModifyXP(oPC, iXP);
-
-	//Award at least one XP
-	if ( !iXP ) iXP = 1;
-
-	GiveXP(oPC, iXP);
-	ExportSingleCharacter(oPC);
 }
 
 /*
