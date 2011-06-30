@@ -1,0 +1,34 @@
+extern("inc_cdb")
+
+struct XPLock {
+	int active;
+	int xp;
+};
+
+bool GetIsPlayerXPLocked(object player);
+
+struct XPLock GetPlayerXPLock(object player);
+
+struct XPLock GetPlayerXPLock(object player) {
+	struct XPLock ret;
+	int cid = GetCharacterID(player);
+
+	pQ("select xp from xplock where cid = " + pSi(cid));
+	if (pF()) {
+		ret.xp     = pGi(1);
+		ret.active = true;
+	}
+
+	return ret;
+}
+
+bool GetIsPlayerXPLocked(object player) {
+	struct XPLock lock = GetPlayerXPLock(player);
+	if (!lock.active)
+		return false;
+
+	if (GetXP(player) >= lock.xp)
+		return true;
+	
+	return false;
+}

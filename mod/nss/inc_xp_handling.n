@@ -7,6 +7,7 @@ extern("inc_decay")
 extern("inc_cdb")
 extern("inc_persist")
 extern("inc_setting")
+extern("inc_xplock")
 
 // Function: AddCombatXP
 // Gives oPC nValue EP
@@ -69,11 +70,13 @@ int GetCombatXPForMonth(object oPC, int nYear, int nMonth);
 void SetCombatXPForMonth(object oPC, int nXP, int nYear, int nMonth);
 
 
-
 int GiveXP(object oPlayer, int nXP, int bMultiClassPenalties = TRUE) {
 	if (nXP < 0 || !GetIsPC(oPlayer) || GetIsDM(oPlayer))
 			return 0;
-	
+
+	if (GetIsPlayerXPLocked(oPlayer))
+		return 0;
+
 	int now = GetXP(oPlayer);
 	if (bMultiClassPenalties)
 		GiveXPToCreature(oPlayer, nXP);
@@ -248,6 +251,9 @@ void GiveKillXP() {
 int GiveTimeXP(object oPC, int nAmount) {
 	if ( GetIsDM(oPC) )
 		return 0;
+
+	if (GetIsPlayerXPLocked(oPC))
+		return 0;
 	
 	struct RealTime r = GetRealTime();
 	if (r.error)
@@ -280,6 +286,9 @@ int GiveTimeXP(object oPC, int nAmount) {
 //Now go away.
 void AddCombatXP(object oPC, int nValue, int bNoWarn = FALSE) {
 	if ( GetIsDM(oPC) )
+		return;
+
+	if (GetIsPlayerXPLocked(oPC))
 		return;
 
 	int iCombXP = GetLegacyCombatXP(oPC);
