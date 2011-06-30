@@ -3,4 +3,15 @@ extern("inc_jvm")
 
 void main() {
 	JVM_EVENT("dmaction");
+
+	object dm = OBJECT_SELF;
+	object target = oGetDMAction_Target();
+	vector t = vGetDMAction_Position();
+	location loc = Location(GetArea(dm), t, 0f);
+
+	int ret = RunEventScriptsFor(GetEventSerial(), "dmaction",
+		dm, dm, target, loc);
+	
+	if (ret & EVENT_RESULT_SUPPRESS) 
+		PreventDMAction();
 }
