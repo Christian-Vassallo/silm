@@ -36,16 +36,6 @@ void main() {
 		SendMessageToPC(e.runnable, "Subrasse " + sChosen_SR + " erkannt und gesetzt.");
 	}
 
-	if ("player_hb" == e.ev) {
-		if (Fly_IsAirborne(e.runnable)) {
-			iterate_effects(e.runnable, eff,
-				if (GetEffectType(eff) == EFFECT_TYPE_ETHEREAL)
-					return;
-				Fly_TakeOff_Etherealness(e.runnable);
-			);
-		}
-	}
-
 	if ("item_equip" == e.ev) {
 		// If he is flying, dont allow equipping medium or heavy.
 		object armor = GetItemInSlot(INVENTORY_SLOT_CHEST, e.actor);
