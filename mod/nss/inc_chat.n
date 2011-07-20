@@ -159,3 +159,13 @@ object NWNXChatGetPC(int nID) {
 void NWNXChatSuppress(object oPC = OBJECT_SELF) {
 	SetLocalString(oPC, "NWNX!CHAT!SUPRESS", "1");
 }
+
+int NWNXChatGetCCMessageType() {
+	SetLocalString(GetModule(), "NWNX!CHAT!TYPE", "  ");
+	return StringToInt(GetLocalString(GetModule(), "NWNX!CHAT!TYPE"));
+}
+
+int NWNXChatGetCCMessagSubtype() {
+	SetLocalString(GetModule(), "NWNX!CHAT!SUBTYPE", "  ");
+	return StringToInt(GetLocalString(GetModule(), "NWNX!CHAT!SUBTYPE"));
+}

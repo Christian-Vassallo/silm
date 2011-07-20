@@ -160,6 +160,15 @@ string GetScript(object oTarget, int nScript) {
     return sRet;
 }
 
+object CreateGenericTriggerOnLocation(location lLocation, float fSize=2.0f,  string sTag="") {
+    object oTrigger = CreateTrapAtLocation(1, lLocation, fSize, sTag);
+    if(GetIsObjectValid(oTrigger)) {
+        SetLocalString(oTrigger, "NWNX!FUNCSEXT!SETISGENERICTRIGGER", "          ");
+        DeleteLocalString(oTrigger, "NWNX!FUNCSEXT!SETISGENERICTRIGGER");
+    }
+    return oTrigger;
+}
+
 object CreateAreaTransitionOnLocation(location lLocation, int nLinkType=AREA_TRANSITION_LINK_NONE, string sTargetTag="", float fSize=2.0f,  string sTag="") {
     object oTrigger = CreateTrapAtLocation(1, lLocation, fSize, sTag);
     if(GetIsObjectValid(oTrigger)) {
