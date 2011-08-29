@@ -61,7 +61,8 @@ void main() {
 		int spell_id     = NWNXGetEventSubType()       & 0xffff;
 		int meta         = NWNXGetEventSubType() >> 16 & 0xff;
 		int flags        = NWNXGetEventSubType() >> 27 & 0x0f; // instant_cast
-		int class        = NWNXGetEventSubType() >> 24 & 0x07;
+		int classIndex   = NWNXGetEventSubType() >> 24 & 0x07;
+		int class        = GetClassByPosition(classIndex + 1);
 
 		DelayCommand(TICK_DELAY, _tick(e.actor, e.actedon, e.actedat,
 			class, spell_id, meta, flags, TICK_ITERATIONS));
