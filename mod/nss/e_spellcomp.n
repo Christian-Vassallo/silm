@@ -2,7 +2,7 @@ extern("inc_colors")
 extern("inc_spelltools")
 extern("draconic")
 
-void _show(object caster, int spell, int meta, int flags) {
+void _show(object caster, int class, int spell, int meta, int flags) {
 	struct Color c;
 	switch (Random(7)) {
 		case 0: c = cRed; break;
@@ -44,6 +44,7 @@ void main() {
 		int spell_id     = ea.i0;
 		int meta         = ea.i1;
 		int flags        = ea.i2;
+		int class        = atoi(ea.a0);
 		
 		if (flags) // We assume instant spells are scripted and not player-cast
 			return;
@@ -57,6 +58,29 @@ void main() {
 		if (METAMAGIC_SILENT == meta)
 			return;
 
-		_show(e.actor, spell_id, meta, flags);
+		switch (class) {
+			// divine
+			case CLASS_TYPE_CLERIC:
+			case CLASS_TYPE_PALADIN:
+			case CLASS_TYPE_PALEMASTER:
+				// todo: divine incantations
+				_show(e.actor, class, spell_id, meta, flags);
+				break;
+
+			// bard
+			case CLASS_TYPE_BARD:
+				ApplyEffectToObject(DURATION_TYPE_TEMPORARY,
+					SupernaturalEffect(EffectVisualEffect(277)),
+					e.runnable,
+					2.0);
+				break;
+
+			// arcane/draconic
+			default:
+			// case CLASS_TYPE_SORCERER:
+			// case CLASS_TYPE_WIZARD:
+				_show(e.actor, class, spell_id, meta, flags);
+				break;
+		}
 	}
 }
