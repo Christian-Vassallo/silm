@@ -18,12 +18,15 @@ extern("inc_nwnx_events")
  */
 
 void _trigger(object caster, object actedon, location actedat, object item,
-		int spell, int meta, int flags) {
+		int class, int spell, int meta, int flags) {
+
 	struct EventArguments ea;
 	ea.i0 = spell;
 	ea.i1 = meta;
 	ea.i2 = flags;
+	ea.a0 = itoa(class);
 	ea.o0 = item;
+
 	int serial = GetEventSerial();
 	RunEventScriptsForWithArgv(serial, "creature_castingspell",
 		caster, caster, actedon, actedat, ea);
@@ -31,7 +34,7 @@ void _trigger(object caster, object actedon, location actedat, object item,
 }
 
 void _tick(object caster, object actedon, location actedat,
-		int spell, int meta, int flags, int remaining = 0) {
+		int class, int spell, int meta, int flags, int remaining = 0) {
 	if (remaining <= 0)
 		return;
 
@@ -39,11 +42,11 @@ void _tick(object caster, object actedon, location actedat,
 			GetSpellId() == spell && GetMetaMagicFeat() == meta) {
 
 		_trigger(caster, actedon, actedat, GetSpellCastItem(),
-			spell, meta, flags);
+			class, spell, meta, flags);
 
 	} else {
 		DelayCommand(TICK_DELAY, _tick(caster, actedon, actedat,
-			spell, meta, flags, remaining - 1));
+			class, spell, meta, flags, remaining - 1));
 
 	}
 }
@@ -58,8 +61,9 @@ void main() {
 		int spell_id     = NWNXGetEventSubType()       & 0xffff;
 		int meta         = NWNXGetEventSubType() >> 16 & 0xff;
 		int flags        = NWNXGetEventSubType() >> 27 & 0x0f; // instant_cast
+		int class        = NWNXGetEventSubType() >> 24 & 0x07;
 
 		DelayCommand(TICK_DELAY, _tick(e.actor, e.actedon, e.actedat,
-			spell_id, meta, flags, TICK_ITERATIONS));
+			class, spell_id, meta, flags, TICK_ITERATIONS));
 	}
 }
