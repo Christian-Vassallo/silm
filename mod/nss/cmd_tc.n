@@ -1,0 +1,13 @@
+void main() {
+	struct EventInfo e = GetEventInfo();
+	struct EventArguments ea = GetEventArguments(e.serial);
+
+	if (e.ev == "chat_command" && ea.a0 == "tc") {
+		SetCommandable(!GetCommandable());
+
+		SendMessageToPC(e.runnable, "Now commandable: " +
+			(GetCommandable() ? "Yes" : "No"));
+
+		event_stop();
+	}
+}
