@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+ENCODING = 'ISO-8859-15'
+
 require 'optparse'
 
 $global_includes = []
@@ -14,7 +16,7 @@ def get_includes_and_externs_for(file)
   includes = []
   externs = []
 
-  IO.readlines(file).each {|line|
+  IO.readlines(file, :encoding => ENCODING).each {|line|
     case line.strip
       when /^#include "(.*)"\s*$/
         dep = $1.downcase
@@ -29,7 +31,7 @@ def get_includes_and_externs_for(file)
 end
 
 def get_is_compileable(file)
-  data = IO.read(file)
+  data = IO.read(file, :encoding => ENCODING)
   return data =~ /^\s*void\s+main\s*\(\)/ ||
     data =~ /^\s*int\s+StartingConditional\s*\(\)/
 end
