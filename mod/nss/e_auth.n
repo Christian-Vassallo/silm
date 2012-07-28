@@ -1,0 +1,28 @@
+extern("inc_cdb")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "player_login") {
+		int cid = GetCharacterID(e.runnable);
+		pQ("select create_key from characters where id = " + pSi(cid));
+		if (!pF()) { // No entry: Should never happen.
+			SendMessageToPC(e.runnable, "pubverify: No entry.");
+			return;
+		}
+
+		string storedKey = pGs(1);
+		if (storedKey == "") {
+			SendMessageToPC(e.runnable, "pubverify: No entry (2).");
+			return; // should never happen.
+		}
+
+		// Boot the player if the cd key doesn't match up.
+		if (storedKey != GetPCPublicCDKey(e.runnable)) {
+			BootPCWithMessage(e.runnable, 0xffffff + 188);
+			event_stop_end();
+		} else {
+			SendMessageToPC(e.runnable, "pubverify: OK.");
+		}
+	}
+}
