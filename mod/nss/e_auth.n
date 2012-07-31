@@ -1,28 +1,85 @@
 extern("inc_cdb")
+extern("inc_colors")
+
+/**
+ -> if no password has been set, warn and require setting a password.
+ -> for existing characters, still verify cd keys!
+ -> if a password has been set, the MS has already accepted it. All ok.
+ */
+
+/** Returns false if the account was here before, and the pubkey doesn't match. */
+bool verifyLegacyKey();
+
+void warnPw() {
+	FloatingTextStringOnCreature(C("Kein Passwort gesetzt! Dieser Account ist " +
+		"UNSICHER. Bitte setze ein Passwort mit /password <deinPW>, und verwende dieses " +
+		"Passwort zum Login bei NWN/Multiplayer. Mehr Informationen und Problemloesung " +
+		"findest du auf silbermarken.de/auth.", cRed), OBJECT_SELF, false);
+}
 
 void main() {
 	struct EventInfo e = GetEventInfo();
+	struct EventArguments ea = GetEventArguments(e.serial);
+
+	object pc = e.runnable;
+	string acc= pSs(GetPCPlayerName(pc));
 
 	if (e.ev == "player_login") {
-		int cid = GetCharacterID(e.runnable);
-		pQ("select create_key from characters where id = " + pSi(cid));
-		if (!pF()) { // No entry: Should never happen.
-			SendMessageToPC(e.runnable, "pubverify: No entry.");
-			return;
-		}
-
-		string storedKey = pGs(1);
-		if (storedKey == "") {
-			SendMessageToPC(e.runnable, "pubverify: No entry (2).");
-			return; // should never happen.
-		}
-
-		// Boot the player if the cd key doesn't match up.
-		if (storedKey != GetPCPublicCDKey(e.runnable)) {
-			BootPCWithMessage(e.runnable, 0xffffff + 188);
-			event_stop_end();
+		pQ("select id from auth.accounts where account = " + acc);
+		if (!pF()) {
+			if (!verifyLegacyKey())
+				event_stop_end();
+			DelayCommand(10f, warnPw());
 		} else {
-			SendMessageToPC(e.runnable, "pubverify: OK.");
+			SendMessageToPC(pc, "auth: OK.");
 		}
+		return;
+	}
+
+	if (e.ev == "chat_command" && (ea.a0 == "password" || ea.a0 == "passwort" || ea.a0 == "passwd")) {
+		string pw = pSs(ea.a1);
+		pQ("select count(id) from auth.accounts where account = " + acc);
+		pF(); if (pGi(1) > 0)
+			pQ("update auth.accounts set password = md5(" + pw + ") where account = " + acc);
+		else
+			pQ("insert into auth.accounts (account, password) values(" + acc + ",md5(" + pw + "));");
+
+		// Also update the legacy password.
+		pQ("update accounts set password = sha1(" + pw + ") where account = " + acc);
+
+		SendMessageToPC(pc, "Passwort gesetzt.");
+		SendMessageToPC(pc, "Bitte logge dich nun neu ein, und vergiss nicht " +
+			"das Passwort auch im Gamespy-Dialog anzugeben.");
+		event_stop_end();
+		return;
+	}
+}
+
+bool verifyLegacyKey() {
+	object pc  = OBJECT_SELF;
+	string aid = pSi(GetAccountID(pc));
+	string cid = pSi(GetCharacterID(pc));
+	string key = pSs(GetPCPublicCDKey(pc));
+
+	if ("0" == cid) // internal bug? Won't happen :D
+		return false;
+
+	pQ("select create_key from characters where id = " + cid);
+	if (!pF()) // no key set: Won't happen either. new chars get the current one.
+		return false;
+
+	string storedKey = pGs(1);
+	
+	if (GetPCPublicCDKey(pc) == storedKey) {
+		WriteTimestampedLogEntry("auth: " + cid + " -> " + key + ": OK.");
+		return true;
+
+	} else {
+		WriteTimestampedLogEntry("auth: key mismatch for aid = " + aid +
+			": " + GetName(pc) +
+			" (" + GetPCPlayerName(pc) + ")");
+		WriteTimestampedLogEntry(" (stored) != " + key);
+		BootPCWithMessage(pc, 0xffffff + 188);
+		return false;
 	}
 }
