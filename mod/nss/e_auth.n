@@ -27,8 +27,10 @@ void main() {
 	if (e.ev == "player_login") {
 		pQ("select id from auth.accounts where account = " + acc);
 		if (!pF()) {
-			if (!verifyLegacyKey())
+			if (!verifyLegacyKey()) {
+				BootPCWithMessage(pc, 0xffffff + 188);
 				event_stop_end();
+			}
 			DelayCommand(10f, warnPw());
 		} else {
 			SendMessageToPC(pc, "auth: OK.");
@@ -79,7 +81,6 @@ bool verifyLegacyKey() {
 			": " + GetName(pc) +
 			" (" + GetPCPlayerName(pc) + ")");
 		WriteTimestampedLogEntry(" (stored) != " + key);
-		BootPCWithMessage(pc, 0xffffff + 188);
 		return false;
 	}
 }
