@@ -1179,20 +1179,27 @@ void spellsGenericAreaOfEffect(object oCaster, location lTargetLoc, int nShape, 
 void spellApplyMindBlank(object oTarget, int nSpellId, float fDelay = 0.0) {
 	effect eLink = EffectImmunity(IMMUNITY_TYPE_MIND_SPELLS);
 
-	effect eSearch = GetFirstEffect(oTarget);
-	int bValid;
-	int nDuration = 24; // GetCasterLevel(OBJECT_SELF);
+	float nDuration = 0.0;
+	switch (nSpellId) {
+		case SPELL_LESSER_MIND_BLANK:
+			nDuration = 60.0 * GetCasterLevel(OBJECT_SELF);
+			break;
 
-	int nMetaMagic = GetMetaMagicFeat();
-	if ( nMetaMagic == METAMAGIC_EXTEND ) {
-		nDuration = nDuration * 2; //Duration is +100%
+		default:
+			nDuration = HoursToSeconds(24);
+			break;
 	}
+
+	if ( GetMetaMagicFeat() == METAMAGIC_EXTEND )
+		nDuration *= 2;
 
 	//Fire cast spell at event for the specified target
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, nSpellId, FALSE));
+
 	//Search through effects
+	effect eSearch = GetFirstEffect(oTarget);
 	while ( GetIsEffectValid(eSearch) ) {
-		bValid = FALSE;
+		int bValid = FALSE;
 		//Check to see if the effect matches a particular type defined below
 		if ( GetEffectType(eSearch) == EFFECT_TYPE_DAZED ) {
 			bValid = TRUE;
@@ -1223,8 +1230,8 @@ void spellApplyMindBlank(object oTarget, int nSpellId, float fDelay = 0.0) {
 	}
 
 	//After effects are removed we apply the immunity to mind spells to the target
-	DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, HoursToSeconds(
-				nDuration)));
+	DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink,
+			oTarget, nDuration));
 
 }
 //::///////////////////////////////////////////////
