@@ -53,7 +53,9 @@ void main()
     int nDuration = GetCasterLevel(OBJECT_SELF);
     int nMetaMagic = GetMetaMagicFeat();
 
-     object oMyWeapon   =  IPGetTargetedOrEquippedMeleeWeapon();
+    object oMyWeapon   =  IPGetTargetedOrEquippedMeleeWeapon();
+    if(oMyWeapon == OBJECT_INVALID)
+        oMyWeapon   =  IPGetTargetedOrEquippedRangedWeapon();
 
     if (nMetaMagic == METAMAGIC_EXTEND)
     {

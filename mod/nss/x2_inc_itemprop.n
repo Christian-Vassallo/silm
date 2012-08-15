@@ -964,7 +964,49 @@ object IPGetTargetedOrEquippedMeleeWeapon()
 
 }
 
+object IPGetTargetedOrEquippedRangedWeapon()
+{
+  object oTarget = GetSpellTargetObject();
+  if(GetIsObjectValid(oTarget) && GetObjectType(oTarget) == OBJECT_TYPE_ITEM)
+  {
+    if (IPGetIsRangedWeapon(oTarget))
+    {
+        return oTarget;
+    }
+    else
+    {
+        return OBJECT_INVALID;
+    }
 
+  }
+
+  object oWeapon1 = GetItemInSlot(INVENTORY_SLOT_RIGHTHAND, oTarget);
+  if (GetIsObjectValid(oWeapon1) && IPGetIsRangedWeapon(oWeapon1))
+  {
+    return oWeapon1;
+  }
+
+  oWeapon1 = GetItemInSlot(INVENTORY_SLOT_LEFTHAND, oTarget);
+  if (GetIsObjectValid(oWeapon1) && IPGetIsRangedWeapon(oWeapon1))
+  {
+    return oWeapon1;
+  }
+
+  oWeapon1 = GetItemInSlot(INVENTORY_SLOT_CWEAPON_R, oTarget);
+  if (GetIsObjectValid(oWeapon1))
+  {
+    return oWeapon1;
+  }
+
+  oWeapon1 = GetItemInSlot(INVENTORY_SLOT_CWEAPON_B, oTarget);
+  if (GetIsObjectValid(oWeapon1))
+  {
+    return oWeapon1;
+  }
+
+  return OBJECT_INVALID;
+
+}
 
 object IPGetTargetedOrEquippedArmor(int bAllowShields = FALSE)
 {

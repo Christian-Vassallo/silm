@@ -61,7 +61,9 @@ void main()
         nCasterLvl = 5;
     }
 
-     object oMyWeapon   =  IPGetTargetedOrEquippedMeleeWeapon();
+    object oMyWeapon   =  IPGetTargetedOrEquippedMeleeWeapon();
+    if(oMyWeapon == OBJECT_INVALID)
+        oMyWeapon   =  IPGetTargetedOrEquippedRangedWeapon();
 
     if (nMetaMagic == METAMAGIC_EXTEND)
     {
