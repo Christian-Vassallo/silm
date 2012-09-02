@@ -39,8 +39,10 @@ void main() {
 		eP = EffectLinkEffects(GetEffectBonus(sEffect), eP);
 	}
 
+	int duration = GetCasterLevel(oPC);
+
 	ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
-	ApplyEffectToObject(DURATION_TYPE_PERMANENT, eP, oTarget);
+	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eP, oTarget, 60f * duration);
 
 	// And remove the conversation thingy
 	AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
