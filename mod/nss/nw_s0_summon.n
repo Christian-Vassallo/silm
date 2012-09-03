@@ -38,7 +38,7 @@ void main() {
 
 	//Declare major variables
 	int nSpellID = GetSpellId();
-	float fDuration = GetCasterLevel(OBJECT_SELF) * 600.0;
+	float fDuration = RoundsToSeconds(GetCasterLevel(OBJECT_SELF));
 
 	//Make metamagic check for extend
 	int nMetaMagic = GetMetaMagicFeat();
