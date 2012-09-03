@@ -39,11 +39,10 @@ void main() {
 	if ( nMetaMagic == METAMAGIC_EXTEND ) {
 		nDuration = nDuration * 2; //Duration is +100%
 	}
-	// nDuration = 2;
 	//Apply the VFX impact and effects
 	ApplyEffectToObject(DURATION_TYPE_INSTANT, eImpact, oTarget);
 
-	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, TurnsToSeconds(nDuration));
+	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, RoundsToSeconds(nDuration));
 }
 
 
