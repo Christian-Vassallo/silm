@@ -1,0 +1,49 @@
+#define LIMIT_ABILITYMOD 8
+#define LIMIT_SKILLMOD 40
+
+struct Count {
+	int ability;
+	int skill;
+};
+
+struct Count countModItem(struct Count count, object item) {
+	iterate_iprp(item, p,
+		if (GetItemPropertyType(p) == ITEM_PROPERTY_ABILITY_BONUS)
+			count.ability += GetItemPropertyCostTableValue(p);
+		if (GetItemPropertyType(p) == ITEM_PROPERTY_SKILL_BONUS)
+			count.skill += GetItemPropertyCostTableValue(p);
+	);
+	return count;
+}
+
+struct Count countMod(object creature) {
+	struct Count count;
+	int i;
+	for (i = 0; i < NUM_INVENTORY_SLOTS; i++) {
+		object item = GetItemInSlot(i, creature);
+		if (is_valid(item))
+			count = countModItem(count, item);
+	}
+	return count;
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	struct EventArguments ea = GetEventArguments(e.serial);
+
+	if (e.ev == "item_equip") {
+		object item = e.runnable;
+		object pc = e.actor;
+
+		struct Count curr = countMod(pc);
+
+		if (curr.ability > LIMIT_ABILITYMOD) {
+			SendMessageToPC(pc, GetName(item) + ": Dieser Gegenstand hebt deinen gesamten Ability-Mod ueber das Maximum (" + itoa(LIMIT_ABILITYMOD) + ").");
+			AssignCommand(pc, ActionUnequipItem(item));
+		} else if (curr.skill > LIMIT_SKILLMOD) {
+			SendMessageToPC(pc, GetName(item) + ": Dieser Gegenstand hebt deinen gesamten Skill-Mod ueber das Maximum (" + itoa(LIMIT_SKILLMOD) + ").");
+			AssignCommand(pc, ActionUnequipItem(item));
+		}
+			
+	}
+}
