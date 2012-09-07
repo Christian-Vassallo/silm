@@ -11,8 +11,11 @@
 //:: Created On: Sept 27, 2001
 //:://////////////////////////////////////////////
 
-void main()
-{
+extern("inc_events")
+
+void main() {
     //Yep thats it
     SummonAnimalCompanion();
+	RunEventScriptsFor(GetEventSerial(), "companion_summon", OBJECT_SELF,
+		OBJECT_INVALID, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
 }
