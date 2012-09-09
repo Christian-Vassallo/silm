@@ -165,6 +165,7 @@ Creature List:
       - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Rank: {type: :byte, value: 0}}
       - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Rank: {type: :byte, value: 0}}
       - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Rank: {type: :byte, value: 0}}
+      - !nwn-lib.elv.es,2008-12/struct {__struct_id: 0, Rank: {type: :byte, value: 0}}
     SoundSetFile: {type: :word, value: 27}
     SpecAbilityList: 
       type: :list
@@ -174,14 +175,14 @@ Creature List:
     Str: {type: :byte, value: 13}
     Subrace: {type: :cexostr, value: ""}
     Tag: {type: :cexostr, value: Hund}
-    Tail: {type: :byte, value: 0}
+    Tail_New: {type: :dword, value: 0}
     TemplateList: 
       type: :list
       value: []
 
     TemplateResRef: {type: :resref, value: hund}
     WalkRate: {type: :int, value: 5}
-    Wings: {type: :byte, value: 0}
+    Wings_New: {type: :dword, value: 0}
     Wis: {type: :byte, value: 12}
     XOrientation: {type: :float, value: 0.9495}
     XPosition: {type: :float, value: 46.9942}
@@ -210,7 +211,7 @@ Door List:
     DisarmDC: {type: :byte, value: 0}
     Faction: {type: :dword, value: 1}
     Fort: {type: :byte, value: 5}
-    GenericType: {type: :byte, value: 0}
+    GenericType_New: {type: :dword, value: 0}
     HP: {type: :short, value: 10}
     Hardness: {type: :byte, value: 5}
     Interruptable: {type: :byte, value: 1}
@@ -271,7 +272,7 @@ Door List:
     DisarmDC: {type: :byte, value: 0}
     Faction: {type: :dword, value: 1}
     Fort: {type: :byte, value: 5}
-    GenericType: {type: :byte, value: 0}
+    GenericType_New: {type: :dword, value: 0}
     HP: {type: :short, value: 10}
     Hardness: {type: :byte, value: 5}
     Interruptable: {type: :byte, value: 1}
@@ -321,7 +322,7 @@ Door List:
     AnimationState: {type: :byte, value: 0}
     Appearance: {type: :dword, value: 0}
     AutoRemoveKey: {type: :byte, value: 0}
-    Bearing: {type: :float, value: -3.1416}
+    Bearing: {type: :float, value: 3.1416}
     CloseLockDC: {type: :byte, value: 0}
     Conversation: {type: :resref, value: ""}
     CurrentHP: {type: :short, value: 10}
@@ -332,7 +333,7 @@ Door List:
     DisarmDC: {type: :byte, value: 0}
     Faction: {type: :dword, value: 1}
     Fort: {type: :byte, value: 5}
-    GenericType: {type: :byte, value: 0}
+    GenericType_New: {type: :dword, value: 0}
     HP: {type: :short, value: 10}
     Hardness: {type: :byte, value: 5}
     Interruptable: {type: :byte, value: 1}
@@ -393,7 +394,7 @@ Door List:
     DisarmDC: {type: :byte, value: 0}
     Faction: {type: :dword, value: 1}
     Fort: {type: :byte, value: 5}
-    GenericType: {type: :byte, value: 0}
+    GenericType_New: {type: :dword, value: 0}
     HP: {type: :short, value: 10}
     Hardness: {type: :byte, value: 5}
     Interruptable: {type: :byte, value: 1}
@@ -454,7 +455,7 @@ Door List:
     DisarmDC: {type: :byte, value: 0}
     Faction: {type: :dword, value: 1}
     Fort: {type: :byte, value: 5}
-    GenericType: {type: :byte, value: 0}
+    GenericType_New: {type: :dword, value: 0}
     HP: {type: :short, value: 10}
     Hardness: {type: :byte, value: 5}
     Interruptable: {type: :byte, value: 1}
@@ -499,6 +500,129 @@ Door List:
     X: {type: :float, value: 52.3}
     Y: {type: :float, value: 17.5}
     Z: {type: :float, value: 3.9}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 8
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 0}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: 1.4661}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 10}
+    Description: 
+      type: :cexolocstr
+      value: {}
+
+    DisarmDC: {type: :byte, value: 0}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 5}
+    GenericType_New: {type: :dword, value: 0}
+    HP: {type: :short, value: 10}
+    Hardness: {type: :byte, value: 5}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: xyz}
+    KeyRequired: {type: :byte, value: 1}
+    LinkedTo: {type: :cexostr, value: ""}
+    LinkedToFlags: {type: :byte, value: 0}
+    LoadScreenID: {type: :word, value: 0}
+    LocName: 
+      type: :cexolocstr
+      value: 
+        0: "Haust\xFCr (unbreakable)"
+    Lockable: {type: :byte, value: 1}
+    Locked: {type: :byte, value: 1}
+    OnClick: {type: :resref, value: door_click}
+    OnClosed: {type: :resref, value: door_closed}
+    OnDamaged: {type: :resref, value: door_damaged}
+    OnDeath: {type: :resref, value: door_death}
+    OnDisarm: {type: :resref, value: door_disarm}
+    OnFailToOpen: {type: :resref, value: door_failtoopen}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: door_lock}
+    OnMeleeAttacked: {type: :resref, value: door_attacked}
+    OnOpen: {type: :resref, value: door_open}
+    OnSpellCastAt: {type: :resref, value: door_spellcast}
+    OnTrapTriggered: {type: :resref, value: door_traptrig}
+    OnUnlock: {type: :resref, value: door_unlock}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 0}
+    Plot: {type: :byte, value: 1}
+    PortraitId: {type: :word, value: 558}
+    Ref: {type: :byte, value: 0}
+    Tag: {type: :cexostr, value: Haustrunbreakable}
+    TemplateResRef: {type: :resref, value: door_unbreak}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 18.99}
+    Y: {type: :float, value: 65.1}
+    Z: {type: :float, value: 4.0}
+  - !nwn-lib.elv.es,2008-12/struct 
+    __struct_id: 8
+    AnimationState: {type: :byte, value: 0}
+    Appearance: {type: :dword, value: 2}
+    AutoRemoveKey: {type: :byte, value: 0}
+    Bearing: {type: :float, value: -0.0}
+    CloseLockDC: {type: :byte, value: 0}
+    Conversation: {type: :resref, value: ""}
+    CurrentHP: {type: :short, value: 80}
+    Description: 
+      type: :cexolocstr
+      value: {}
+
+    DisarmDC: {type: :byte, value: 15}
+    Faction: {type: :dword, value: 1}
+    Fort: {type: :byte, value: 16}
+    GenericType_New: {type: :dword, value: 0}
+    HP: {type: :short, value: 80}
+    Hardness: {type: :byte, value: 5}
+    Interruptable: {type: :byte, value: 1}
+    KeyName: {type: :cexostr, value: ""}
+    KeyRequired: {type: :byte, value: 0}
+    LinkedTo: {type: :cexostr, value: ""}
+    LinkedToFlags: {type: :byte, value: 0}
+    LoadScreenID: {type: :word, value: 0}
+    LocName: 
+      type: :cexolocstr
+      str_ref: 5349
+      value: {}
+
+    Lockable: {type: :byte, value: 0}
+    Locked: {type: :byte, value: 0}
+    OnClick: {type: :resref, value: door_click}
+    OnClosed: {type: :resref, value: door_closed}
+    OnDamaged: {type: :resref, value: door_damaged}
+    OnDeath: {type: :resref, value: door_death}
+    OnDisarm: {type: :resref, value: door_disarm}
+    OnFailToOpen: {type: :resref, value: door_failtoopen}
+    OnHeartbeat: {type: :resref, value: ""}
+    OnLock: {type: :resref, value: door_lock}
+    OnMeleeAttacked: {type: :resref, value: door_attacked}
+    OnOpen: {type: :resref, value: door_open}
+    OnSpellCastAt: {type: :resref, value: door_spellcast}
+    OnTrapTriggered: {type: :resref, value: door_traptrig}
+    OnUnlock: {type: :resref, value: door_unlock}
+    OnUserDefined: {type: :resref, value: ""}
+    OpenLockDC: {type: :byte, value: 18}
+    Plot: {type: :byte, value: 0}
+    PortraitId: {type: :word, value: 0}
+    Ref: {type: :byte, value: 0}
+    Tag: {type: :cexostr, value: Wall2Gate}
+    TemplateResRef: {type: :resref, value: nw_door_ttr_02}
+    TrapDetectDC: {type: :byte, value: 0}
+    TrapDetectable: {type: :byte, value: 1}
+    TrapDisarmable: {type: :byte, value: 1}
+    TrapFlag: {type: :byte, value: 0}
+    TrapOneShot: {type: :byte, value: 1}
+    TrapType: {type: :byte, value: 0}
+    Will: {type: :byte, value: 0}
+    X: {type: :float, value: 45.0}
+    Y: {type: :float, value: 5.0}
+    Z: {type: :float, value: 4.0}
 Encounter List: 
   type: :list
   value: []
@@ -4629,22 +4753,22 @@ TriggerList:
         __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: 0.0}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointZ: {type: :float, value: 0.02500000037252903}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: 0.0798999965190887}
-        PointY: {type: :float, value: -2.61610007286072}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointX: {type: :float, value: 0.07989999651908875}
+        PointY: {type: :float, value: -2.6161000728607178}
+        PointZ: {type: :float, value: 0.02500000037252903}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: 33.442798614502}
-        PointY: {type: :float, value: -2.94000005722046}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointX: {type: :float, value: 33.44279861450195}
+        PointY: {type: :float, value: -2.940000057220459}
+        PointZ: {type: :float, value: 0.02500000037252903}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: 33.5694007873535}
-        PointY: {type: :float, value: -0.044599998742342}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointX: {type: :float, value: 33.569400787353516}
+        PointY: {type: :float, value: -0.044599998742341995}
+        PointZ: {type: :float, value: 0.02500000037252903}
     HighlightHeight: {type: :float, value: 0.0}
     KeyName: {type: :cexostr, value: ""}
     LinkedTo: {type: :cexostr, value: WP_gabel_s2_2_suedhof2_2}
@@ -4689,24 +4813,24 @@ TriggerList:
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: -28.6532001495361}
-        PointY: {type: :float, value: -2.70370006561279}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointX: {type: :float, value: -28.653200149536133}
+        PointY: {type: :float, value: -2.703700065612793}
+        PointZ: {type: :float, value: 0.02500000037252903}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: 0.101000003516674}
-        PointY: {type: :float, value: -2.7688000202179}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointX: {type: :float, value: 0.10100000351667404}
+        PointY: {type: :float, value: -2.7688000202178955}
+        PointZ: {type: :float, value: 0.02500000037252903}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: 0.0}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointZ: {type: :float, value: 0.02500000037252903}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: -28.5100994110107}
-        PointY: {type: :float, value: -0.234599992632866}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointX: {type: :float, value: -28.510099411010742}
+        PointY: {type: :float, value: -0.2345999926328659}
+        PointZ: {type: :float, value: 0.02500000037252903}
     HighlightHeight: {type: :float, value: 0.0}
     KeyName: {type: :cexostr, value: ""}
     LinkedTo: {type: :cexostr, value: WP_gabel_s2_2_suedhof2_1}
@@ -4751,24 +4875,24 @@ TriggerList:
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: -0.209700003266335}
-        PointY: {type: :float, value: -32.4207000732422}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointX: {type: :float, value: -0.20970000326633453}
+        PointY: {type: :float, value: -32.42070007324219}
+        PointZ: {type: :float, value: 0.02500000037252903}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: 2.20350003242493}
-        PointY: {type: :float, value: -32.4207000732422}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointX: {type: :float, value: 2.2035000324249268}
+        PointY: {type: :float, value: -32.42070007324219}
+        PointZ: {type: :float, value: 0.02500000037252903}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: 2.09850001335144}
+        PointX: {type: :float, value: 2.0985000133514404}
         PointY: {type: :float, value: -0.0}
-        PointZ: {type: :float, value: 0.0226000007241964}
+        PointZ: {type: :float, value: 0.022600000724196434}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: 0.0}
-        PointZ: {type: :float, value: 0.0226000007241964}
+        PointZ: {type: :float, value: 0.022600000724196434}
     HighlightHeight: {type: :float, value: 0.0}
     KeyName: {type: :cexostr, value: ""}
     LinkedTo: {type: :cexostr, value: WP_suedhof_2_suedhof2_2}
@@ -4813,24 +4937,24 @@ TriggerList:
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: -45.1445007324219}
-        PointY: {type: :float, value: 2.36739993095398}
-        PointZ: {type: :float, value: 4.02500009536743}
+        PointX: {type: :float, value: -45.144500732421875}
+        PointY: {type: :float, value: 2.3673999309539795}
+        PointZ: {type: :float, value: 4.025000095367432}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: -45.1072006225586}
-        PointY: {type: :float, value: -0.299800008535385}
-        PointZ: {type: :float, value: 4.02500009536743}
+        PointX: {type: :float, value: -45.107200622558594}
+        PointY: {type: :float, value: -0.29980000853538513}
+        PointZ: {type: :float, value: 4.025000095367432}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: 0.0}
-        PointZ: {type: :float, value: 4.02500009536743}
+        PointZ: {type: :float, value: 4.025000095367432}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: -0.0373000018298626}
-        PointY: {type: :float, value: 2.66720008850098}
-        PointZ: {type: :float, value: 4.02500009536743}
+        PointX: {type: :float, value: -0.037300001829862595}
+        PointY: {type: :float, value: 2.6672000885009766}
+        PointZ: {type: :float, value: 4.025000095367432}
     HighlightHeight: {type: :float, value: 0.0}
     KeyName: {type: :cexostr, value: ""}
     LinkedTo: {type: :cexostr, value: WP_gabel_s3_2_suedhof2_1}
@@ -4875,24 +4999,24 @@ TriggerList:
       value: 
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: -0.0878999978303909}
-        PointY: {type: :float, value: 33.853199005127}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointX: {type: :float, value: -0.08789999783039093}
+        PointY: {type: :float, value: 33.85319900512695}
+        PointZ: {type: :float, value: 0.02500000037252903}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: 0.0}
-        PointZ: {type: :float, value: -0.0666999965906143}
+        PointZ: {type: :float, value: -0.06669999659061432}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: 1.66849994659424}
+        PointX: {type: :float, value: 1.6684999465942383}
         PointY: {type: :float, value: -0.0608999989926815}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointZ: {type: :float, value: 0.02500000037252903}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: 1.59539997577667}
-        PointY: {type: :float, value: 33.853199005127}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointX: {type: :float, value: 1.5953999757766724}
+        PointY: {type: :float, value: 33.85319900512695}
+        PointZ: {type: :float, value: 0.02500000037252903}
     HighlightHeight: {type: :float, value: 0.0}
     KeyName: {type: :cexostr, value: ""}
     LinkedTo: {type: :cexostr, value: WP_suedhof_2_suedhof2_1}
@@ -4938,23 +5062,23 @@ TriggerList:
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
         PointX: {type: :float, value: -0.0}
-        PointY: {type: :float, value: 1.97590005397797}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointY: {type: :float, value: 1.9759000539779663}
+        PointZ: {type: :float, value: 0.02500000037252903}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
         PointX: {type: :float, value: 0.0}
         PointY: {type: :float, value: 0.0}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointZ: {type: :float, value: 0.02500000037252903}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: 29.0534992218018}
-        PointY: {type: :float, value: -0.14640000462532}
-        PointZ: {type: :float, value: 0.025000000372529}
+        PointX: {type: :float, value: 29.053499221801758}
+        PointY: {type: :float, value: -0.14640000462532043}
+        PointZ: {type: :float, value: 0.02500000037252903}
       - !nwn-lib.elv.es,2008-12/struct 
         __struct_id: 3
-        PointX: {type: :float, value: 29.0534992218018}
-        PointY: {type: :float, value: 1.97590005397797}
-        PointZ: {type: :float, value: -0.00100000004749745}
+        PointX: {type: :float, value: 29.053499221801758}
+        PointY: {type: :float, value: 1.9759000539779663}
+        PointZ: {type: :float, value: -0.0010000000474974513}
     HighlightHeight: {type: :float, value: 0.0}
     KeyName: {type: :cexostr, value: ""}
     LinkedTo: {type: :cexostr, value: WP_gabel_s3_2_suedhof2_2}
