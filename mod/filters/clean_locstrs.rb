@@ -27,7 +27,9 @@ self.each_by_flat_path do |label, field|
 
   # Remove all duplicate values.
   val.each {|k,v|
-    val.select {|kk,vv| vv == v}[0..-2].each {|kk,vv| val.delete(kk) }
+    ppx = val.select {|kk,vv| vv == v}[0..-2]
+    next if ppx == nil
+    ppx.each {|kk,vv| val.delete(kk) }
   }
 
   compactable = val.size < 2
