@@ -19,9 +19,9 @@ struct Count countModItem(struct Count count, object item) {
 struct Count countMod(object creature) {
 	struct Count count;
 	int i;
-	for (i = 0; i < NUM_INVENTORY_SLOTS; i++) {
+	for (i = 0; i < 14 /* cweapon_l */; i++) {
 		object item = GetItemInSlot(i, creature);
-		if (is_valid(item))
+		if (is_valid(item) && GetLocalInt(item, "ignore_limits") < 1)
 			count = countModItem(count, item);
 	}
 	return count;
@@ -34,9 +34,6 @@ void main() {
 	if (e.ev == "item_equip") {
 		object item = e.runnable;
 		object pc = e.actor;
-
-		if (GetLocalInt(item, "ignore_limits"))
-			return;
 
 		struct Count curr = countMod(pc);
 
