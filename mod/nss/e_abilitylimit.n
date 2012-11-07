@@ -35,6 +35,9 @@ void main() {
 		object item = e.runnable;
 		object pc = e.actor;
 
+		if (GetLocalInt(item, "ignore_limits"))
+			return;
+
 		struct Count curr = countMod(pc);
 
 		if (curr.ability > LIMIT_ABILITYMOD) {
