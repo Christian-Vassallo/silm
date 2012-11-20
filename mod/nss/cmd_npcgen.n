@@ -1,0 +1,37 @@
+extern("inc_cdb")
+extern("inc_target")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	struct EventArguments ea = GetEventArguments(e.serial);
+
+	if (e.ev != "chat_command" || ea.a0 != "levelup")
+		return;
+
+	if (!amask(e.runnable, AMASK_GM))
+		return;
+
+	object target = GetTarget();
+	if (!is_creature(target) || GetIsPC(target)) {
+		SendMessageToPC(e.runnable, "Invalid target");
+		event_stop();
+	};
+
+	pBegin();
+	streach_rx(ea.a1, " +", "", partial,
+		int cls = atoi(partial);
+		int pkg = PACKAGE_INVALID;
+
+		int ret = LevelUpHenchman(target, cls, true, pkg);
+		if (ret == 0) {
+			SendMessageToPC(e.runnable, "Failed to level class " + itoa(cls) + ", aborting.");
+			break;
+		} else {
+			SendMessageToPC(e.runnable, "partial: " + partial + " -> " + itoa(ret) + " = OK");
+		}
+	);
+	pRollback();
+
+	event_stop();
+}
+
