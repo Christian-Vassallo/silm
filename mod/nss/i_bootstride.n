@@ -1,0 +1,23 @@
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev != "player_hb")
+		return;
+
+	object boots = GetItemInSlot(INVENTORY_SLOT_BOOTS, e.runnable);
+	bool hasBoots = GetIsObjectValid(boots) && GetLocalInt(boots, "striding");
+
+	iterate_effects(e.runnable, eff,
+		if (GetEffectType(eff) == EFFECT_TYPE_MOVEMENT_SPEED_INCREASE &&
+				GetEffectSubType(eff) == SUBTYPE_SUPERNATURAL &&
+				GetEffectInteger(eff, 0) == 110) {
+			if (!hasBoots) RemoveEffect(e.runnable, eff);
+			return;
+		};
+	);
+
+	if (hasBoots)
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+			SupernaturalEffect(EffectMovementSpeedIncrease(10)), e.runnable);
+
+}
