@@ -6,11 +6,13 @@ void main() {
 
 	object boots = GetItemInSlot(INVENTORY_SLOT_BOOTS, e.runnable);
 	bool hasBoots = GetIsObjectValid(boots) && GetLocalInt(boots, "striding");
+	int speedBonus = GetLocalInt(boots, "striding_speed");
+	if (speedBonus == 0) speedBonus = 10;
 
 	iterate_effects(e.runnable, eff,
 		if (GetEffectType(eff) == EFFECT_TYPE_MOVEMENT_SPEED_INCREASE &&
 				GetEffectSubType(eff) == SUBTYPE_SUPERNATURAL &&
-				GetEffectInteger(eff, 0) == 110) {
+				GetEffectInteger(eff, 0) == (100 + speedBonus)) {
 			if (!hasBoots) RemoveEffect(e.runnable, eff);
 			return;
 		};
@@ -18,6 +20,6 @@ void main() {
 
 	if (hasBoots)
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT,
-			SupernaturalEffect(EffectMovementSpeedIncrease(10)), e.runnable);
+			SupernaturalEffect(EffectMovementSpeedIncrease(speedBonus)), e.runnable);
 
 }
