@@ -18,10 +18,10 @@ void tweakByMaster(object master, int associate) {
 	string portrait = pGs(4);
 	string desc = pGs(5);
 
-	if (tail > 0)
-		SetCreatureTailType(tail, assoc);
 	if (app > 0)
-		SetCreatureAppearanceType(assoc, app);
+		DelayCommand(0.2, SetCreatureAppearanceType(assoc, app));
+	if (tail > 0)
+		DelayCommand(0.3, SetCreatureTailType(tail, assoc));
 	if (name != "")
 		SetName(assoc, name);
 	if (desc != "")
