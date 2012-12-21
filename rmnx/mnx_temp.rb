@@ -128,9 +128,9 @@ class CommandTemperature < RMNX::CommandSpace
 	def get_temp_range t
 		x = case t
 			when T_X
-				[-20,0]
+				[-25,-15]
 			when T_C
-				[0,5]
+				[-15,5]
 			when T_M
 				[5,15]
 			when T_W
@@ -385,14 +385,18 @@ class CommandTemperature < RMNX::CommandSpace
 
 	def get_season(year, month, day)
 		return case month
-			when 1..2
-				S_WINTER
-			when 3..4
-				S_SPRING
-			when 5..9
-				S_SUMMER
-			when 10..12
-				S_FALL
+			when 10; S_FALL
+			when 11, 12, 1; S_WINTER
+			when 2; S_SPRING
+			when 3, 4, 5, 6, 7, 8, 9; S_SUMMER
+			#when 1..2
+			#	S_WINTER
+			#when 3..4
+			#	S_SPRING
+			#when 5..9
+			#	S_SUMMER
+			#when 10..12
+			#	S_FALL
 		end
 	end
 	
