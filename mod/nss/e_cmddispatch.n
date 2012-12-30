@@ -34,6 +34,16 @@ void main() {
 			SendMessageToPC(ei.actor, second + ": Kein gueltiges Ziel.");
 			return;
 		}
+
+		if (is_pc(oTarget)) {
+			SendMessageToPC(ei.actor, "Du kannst keine Spielercharaktere sprechen lassen.");
+			return;
+		}
+
+		if (!GetObjectSeen(oTarget, ei.actor)) {
+			SendMessageToPC(ei.actor, "Du kannst nur Ziele sprechen lassen, die du siehst.");
+			return;
+		}
 		
 		//ea.i0 |= CHATMODE_FORCED;
 		//SetEventArguments(ei.serial, ea);
