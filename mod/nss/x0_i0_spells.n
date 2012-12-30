@@ -1547,6 +1547,16 @@ void spellsDispelMagic(object oTarget, int nCasterLevel, effect eVis, effect eIm
 		return;
 	}
 
+	// ItemPropertyDispelAdjustment
+	int casterLevelAdjust = 0;
+	iterate_equipped(oTarget, nTSlot, oTargetInv,
+		casterLevelAdjust += GetLocalInt(oTargetInv, "dispelTargetCLAdjust");
+	);
+	if (casterLevelAdjust != 0) {
+		nCasterLevel += casterLevelAdjust;
+		if (nCasterLevel < 1) nCasterLevel = 1;
+	}
+
 	effect eDispel;
 	float fDelay = GetRandomDelay(0.1, 0.3);
 	int nId = GetSpellId();
