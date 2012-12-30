@@ -40,7 +40,7 @@ void main() {
 	int nCasterLevel = GetCasterLevel(OBJECT_SELF);
 	int nBonus;
 	int nMetaMagic = GetMetaMagicFeat();
-	float fDuration = HoursToSeconds(nCasterLevel);
+	float fDuration = nCasterLevel * 60f * 10f;
 	// effect eVis = EffectVisualEffect(VFX_DUR_PROT_BARKSKIN);
 	effect eHead = EffectVisualEffect(VFX_IMP_HEAD_NATURE);
 	effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
