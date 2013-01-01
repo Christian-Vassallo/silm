@@ -38,7 +38,7 @@ void main()
     //Declare major variables
     int nMetaMagic = GetMetaMagicFeat();
     int nTargets = GetCasterLevel(OBJECT_SELF) / 4;
-    int nDuration = GetCasterLevel(OBJECT_SELF) * 60 * 10;
+    int nDuration = GetCasterLevel(OBJECT_SELF) * 10;
     if(nTargets == 0)
     {
         nTargets = 1;
@@ -70,13 +70,13 @@ void main()
             SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_PROTECTION_FROM_SPELLS, FALSE));
             //Apply the VFX impact and effects
             DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget));
-            DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, IntToFloat(nDuration)));
+            DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, TurnsToSeconds(nDuration)));
             nTargets--;
         }
         //Get next target in spell area
         oTarget = GetNextObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_MEDIUM, lLoc, FALSE);
     }
     DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, OBJECT_SELF));
-    DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, OBJECT_SELF, IntToFloat(nDuration)));
+    DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, OBJECT_SELF, TurnsToSeconds(nDuration)));
 }
 
