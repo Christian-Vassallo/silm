@@ -1177,6 +1177,8 @@ int CommandCreateKey(object oPC, int iMode) {
 	else
 		SetName(oKey, "Key for " + sTag);
 
+	SetPlotFlag(oKey, true);
+
 	ToPC("Done.");
 	return OK;
 }
@@ -2215,8 +2217,9 @@ int CommandCreate(object oPC, int iMode) {
 
 	SendMessageToPC(oPC, "Attempting to create '" + sRes + "' ..");
 
+	object o;
 	if ( nLoc == 2 ) {
-		object o = CreateObject(nObjType, sRes, GetTargetLocation(), FALSE, sTag);
+		o = CreateObject(nObjType, sRes, GetTargetLocation(), FALSE, sTag);
 		if ( GetIsObjectValid(o) )
 			SendMessageToPC(oPC, "Okay, created on location.");
 		else {
@@ -2224,16 +2227,18 @@ int CommandCreate(object oPC, int iMode) {
 			return FAIL;
 		}
 	} else {
-		object o = CreateItemOnObject(sRes, GetTarget(), iStackSize, sTag);
+		o = CreateItemOnObject(sRes, GetTarget(), iStackSize, sTag);
 		if ( GetIsObjectValid(o) )
 			SendMessageToPC(oPC, "Okay, created on " + GetName(GetTarget()));
 		else {
 			SendMessageToPC(oPC, "Failed creating on creature '" + GetName(GetTarget()) + "'.");
 			return FAIL;
-		}
-	}
-	return OK;
+		}}
 
+	if (nObjType == OBJECT_TYPE_ITEM)
+		SetPlotFlag(o, true);
+
+	return OK;
 }
 
 
