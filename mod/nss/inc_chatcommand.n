@@ -762,6 +762,7 @@ int CommandItem(object oPC, int iMode) {
 	int weight = -1;
 	int drop = -1;
 	int value = -1;
+	int plot = -1;
 
 	if (getopt_opt("weight"))
 		weight = StringToInt(getopt_optv("weight"));
@@ -769,7 +770,8 @@ int CommandItem(object oPC, int iMode) {
 		drop = StringToBool(getopt_optv("droppable"));
 	if (getopt_opt("value"))
 		value = StringToInt(getopt_optv("value"));
-
+	if (getopt_opt("plot"))
+		plot = StringToInt(getopt_optv("plot"));
 
 	if (-1 != weight)
 		SetItemWeight(oTarget, weight);
@@ -777,6 +779,8 @@ int CommandItem(object oPC, int iMode) {
 		SetDroppableFlag(oTarget, drop);
 	if (-1 != value)
 		SetGoldPieceValue(oTarget, value);
+	if (-1 != plot)
+		SetPlotFlag(oTarget, plot);
 
 	ToPC("Droppable: " + IntToString(GetDroppableFlag(oTarget)));
 	ToPC("Weight: " + IntToString(GetWeight(oTarget)));
@@ -944,7 +948,22 @@ int CommandShowWeather(object oPC, int iMode) {
 int CommandDescription(object oPC, int iMode) {
 	object oTarget = GetTarget();
 
-	string sT =getopt_arg(0);
+	if (!GetIsObjectValid(oTarget) || GetIsDM(oTarget) || GetIsPC(oTarget)) {
+		return NotifyBadTarget();
+	}
+
+	if (!amask(oPC, AMASK_GLOBAL_GM)) {
+		if (GetPlotFlag(oTarget))
+			return NotifyBadTarget();
+
+		if (!is_item(oTarget))
+			return NotifyBadTarget();
+
+		if (GetItemPossessor(oTarget) != oPC)
+			return NotifyBadTarget();
+	}
+
+	string sT = getopt_argall();
 	if ( sT != "" ) {
 		ToPC("Setting description ..");
 		SetDescription(oTarget, sT);
