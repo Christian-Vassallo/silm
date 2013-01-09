@@ -21,7 +21,10 @@ struct Count countMod(object creature) {
 	int i;
 	for (i = 0; i < 14 /* cweapon_l */; i++) {
 		object item = GetItemInSlot(i, creature);
-		if (is_valid(item) && GetLocalInt(item, "ignore_limits") < 1)
+		if (is_valid(item)
+				&& GetLocalInt(item, "ignore_limits") < 1
+				&& substr(GetResRef(item), 0, 3) != "ebs"
+			)
 			count = countModItem(count, item);
 	}
 	return count;
