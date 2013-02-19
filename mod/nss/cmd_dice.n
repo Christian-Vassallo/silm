@@ -1,0 +1,196 @@
+extern("inc_nwnx_func")
+extern("inc_nwnx_structs")
+extern("inc_colors")
+
+int throw_dice(object creature, int count, int faces, int mod, string descriptor) {
+	if (count < 1) count = 1;
+	if (count > 20) count = 20;
+	if (faces < 2) faces = 2;
+	if (faces > 1000) faces = 1000;
+	if (mod < -1000) mod = -1000;
+	if (mod > 1000) mod = 1000;
+
+	if (descriptor == "")
+		descriptor = itoa(count) + "d" + itoa(faces);
+
+	int total = mod;
+
+	string fstrdetail = "";
+	int i; for (i = 0; i < count; i++) {
+		int res = 1 + Random(faces);
+		total += res;
+		fstrdetail += itoa(res) + " ";
+	}
+	fstrdetail = substr(fstrdetail, 0, strlen(fstrdetail) - 1); // om nom " "
+
+	string msg = ColorTag(cLightGrey) + "[" + descriptor + "]";
+	if (mod != 0) {
+		msg += " ";
+		if (mod > 0) msg += "+";
+		msg += itoa(mod);
+	}
+	msg += " = " + ColorTag(cPink) + itoa(total);
+	if (mod != 0 || count > 1)
+		msg += ColorTag(cDarkGrey) + " // " + fstrdetail;
+
+	AssignCommand(creature, SpeakString(msg));
+	if (!is_dm(creature))
+		AssignCommand(creature, PlaySound("dice" + itoa(Random(2))));
+
+	return total;
+}
+
+int parse_alias(object creature, string alias) {
+	alias = strlwr(alias);
+	int i;
+
+#define base(matchalias,descriptor,mod) if (alias == matchalias) return\
+	throw_dice(creature, 1, 20, mod, descriptor)
+
+#define a(descriptor,ability) base(descriptor,descriptor,\
+	GetAbilityModifier(ability, creature))
+#define s(matchalias,descriptor,skill) base(matchalias,descriptor,\
+	GetSkillRank(skill, creature))
+#define sv(descriptor,save) base(descriptor,descriptor,\
+	GetSkillRank(skill, creature))
+
+	base("ini", "ini",
+		GetAbilityModifier(ABILITY_DEXTERITY, creature) + 
+		(GetHasFeat(FEAT_IMPROVED_INITIATIVE, creature) ? 4 : 0)
+	);
+
+	if (alias == "ab" || alias == "attack") {
+		// todo: get AB for full round attack, get current wpn damage
+		// - probably needs nwnx patching or 2da work
+		// - require target to be another creature and get appropriate
+		//   AC value from there
+		SendMessageToPC(creature, "Not implemented");
+		return 1;
+	}
+
+	a("str", 0); a("dex", 1); a("con", 2);
+	a("int", 3); a("wis", 4); a("cha", 5);
+
+	base("fort", "fort", GetReflexSavingThrow(creature));
+	base("ref", "ref", GetFortitudeSavingThrow(creature));
+	base("will", "will", GetWillSavingThrow(creature));
+
+	for (i = 0; i < 50; i++) {
+		string label = Get2DAString("skills", "Label", i);
+		if (label == "")
+			break;
+		// Because we're cheap we're just cutting of everything after the
+		// second upcase char and using the first part as an alias.
+		int k; for (k = 1; k < strlen(label); k++) {
+			string chr = substr(label, k, 1);
+			if (strlwr(chr) != chr) break;
+		}
+		label = strlwr(label);
+		string shortlabel = substr(label, 0, k);
+		string descadd = "";
+		if (GetSkillRank(i, creature, true) == 0 &&
+				Get2DAString("skills", "Untrained", i) == "0") {
+			descadd = " (untrained)";
+		}
+		s(shortlabel, shortlabel + descadd, i);
+		s(label, shortlabel + descadd, i);
+	}
+
+	return 0;
+}
+
+int parse_single(object creature, string dstr) {
+	int count = 1,
+		faces = 20,
+		mod = 0;
+
+	if (dstr != "") {
+		if (	// xdy
+				TestStringAgainstPattern("*n(w|d)*n", dstr) ||
+				// dy
+				TestStringAgainstPattern("d*n", dstr) ||
+				// +n -n
+				TestStringAgainstPattern("(+|-)*n", dstr) ||
+				// dy+n dy-n
+				TestStringAgainstPattern("d*n(+|-)*n", dstr) ||
+				// xdy+n xdy-n
+				TestStringAgainstPattern("*n(w|d)*n(+|-)*n", dstr)) {
+
+			int dpos = strpos(dstr, "d");
+			if (dpos == -1) dpos = strpos(dstr, "w");
+			if (dpos != -1) {
+				if (dpos > 0) // count is optional
+					count = atoi(substr(dstr, 0, dpos));
+				if (0 == count) return 0;
+				faces = atoi(substr(dstr, dpos + 1, 4));
+				if (0 == faces) return 0;
+			}
+
+			if ((dpos = strpos(dstr, "+")) != -1)
+				mod = atoi(substr(dstr, dpos + 1, 4));
+			else if ((dpos = strpos(dstr, "-")) != -1)
+				mod = -atoi(substr(dstr, dpos + 1, 4));
+
+		} else if (TestStringAgainstPattern("*n", dstr) ||
+				TestStringAgainstPattern("*n *n", dstr) ||
+				TestStringAgainstPattern("*n *n *n", dstr) ||
+				TestStringAgainstPattern("*n *n (+|-)*n", dstr)) {
+
+			int w0 = FindSubString(dstr, " ", 0); // between count and faces
+			int w1 = FindSubString(dstr, " ", w0 + 1); // between faces and mod
+
+			count = atoi(substr(dstr, 0, w0 != -1 ? w0 : 10));
+			if (w0 > -1) faces = atoi(substr(dstr, w0 + 1, w1 == -1 ? 10 : w1));
+			if (w1 > -1) mod = atoi(substr(dstr, w1 + 1, 10));
+		
+		} else return 0;
+	}
+
+	return throw_dice(creature, count, faces, mod, "");
+}
+
+void parse_dice(object creature, string str) {
+	if (parse_single(creature, str) || parse_alias(creature, str))
+		return;
+
+	string skills = GetLocalString(GetModule(), "cmd_dice_skills");
+	if (skills == "") {
+		int i; for (i = 0; i < 50; i++) {
+			string label = Get2DAString("skills", "Label", i);
+			if (label == "")
+				break;
+			// Because we're cheap we're just cutting of everything after the
+			// second upcase char and using the first part as an alias.
+			int k; for (k = 1; k < strlen(label); k++) {
+				string chr = substr(label, k, 1);
+				if (strlwr(chr) != chr) break;
+			}
+			label = strlwr(label);
+			string shortlabel = substr(label, 0, k);
+			string rem = substr(label, k, 100);
+			skills += shortlabel;
+			if (rem != "") skills += "(" + rem + ")";
+			skills += " ";
+		}
+		SetLocalString(GetModule(), "cmd_dice_skills", skills);
+	}
+
+	SendMessageToPC(creature, "Invalid syntax. How about this:");
+	SendMessageToPC(creature, " freeform: d6, 1d4+6, +4, -3, 4 20, 6");
+	SendMessageToPC(creature, " basics: ini");
+	SendMessageToPC(creature, " saves: fort ref will");
+	SendMessageToPC(creature, " attrib: str dex con int wis cha");
+	SendMessageToPC(creature, " skills: " + skills);
+}
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	if (e.ev == "chat_command") {
+		struct EventArguments ea = GetEventArguments(e.serial);
+
+		if (ea.a0 == "d" || ea.a0 == "die" || ea.a0 == "dice") {
+			parse_dice(e.runnable, ea.a1);
+			event_stop();
+		}
+	}
+}
