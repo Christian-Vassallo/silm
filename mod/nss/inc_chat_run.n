@@ -350,17 +350,6 @@ void RegisterAllCommands() {
 	RegisterCommand("unignore", "", 1, 1);
 	RAF(AMASK_ANY);
 	
-	// Chatcommand: dice
-	// Rolls dice.
-	// Parameters:
-	// - number of die
-	// - number of eyes on each die
-	// Example:
-	// /dice 3 6
-	RegisterCommand("dice", "", 1, 1);
-	RHs("<Anzahl Wuerfel> <Augenzahl Wuerfel> ( Beispiel: /d 3 6 = > 3d6 )");
-	RAF(AMASK_ANY);
-
 	// Chatcommand: uptime
 	// Shows server uptime.
 	RegisterCommand("uptime", "");
@@ -1369,9 +1358,6 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 	if ( "fx" == sCommand )
 		ret = CommandFX(oPC, iMode);
-
-	if ( "die" == sCommand || "dice" == sCommand )
-		ret = CommandDice(oPC, iMode);
 
 
 	if ( "fetch" == sCommand )
