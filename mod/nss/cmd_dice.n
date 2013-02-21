@@ -1,51 +1,11 @@
-extern("inc_nwnx_func")
-extern("inc_nwnx_structs")
-extern("inc_colors")
-
-int throw_dice(object creature, int count, int faces, int mod, string descriptor) {
-	if (count < 1) count = 1;
-	if (count > 20) count = 20;
-	if (faces < 2) faces = 2;
-	if (faces > 1000) faces = 1000;
-	if (mod < -1000) mod = -1000;
-	if (mod > 1000) mod = 1000;
-
-	if (descriptor == "")
-		descriptor = itoa(count) + "d" + itoa(faces);
-
-	int total = mod;
-
-	string fstrdetail = "";
-	int i; for (i = 0; i < count; i++) {
-		int res = 1 + Random(faces);
-		total += res;
-		fstrdetail += itoa(res) + " ";
-	}
-	fstrdetail = substr(fstrdetail, 0, strlen(fstrdetail) - 1); // om nom " "
-
-	string msg = ColorTag(cLightGrey) + "[" + descriptor + "]";
-	if (mod != 0) {
-		msg += " ";
-		if (mod > 0) msg += "+";
-		msg += itoa(mod);
-	}
-	msg += " = " + ColorTag(cPink) + itoa(total);
-	if (mod != 0 || count > 1)
-		msg += ColorTag(cDarkGrey) + " // " + fstrdetail;
-
-	AssignCommand(creature, SpeakString(msg));
-	if (!is_dm(creature))
-		AssignCommand(creature, PlaySound("dice" + itoa(Random(2))));
-
-	return total;
-}
+extern("inc_dice")
 
 int parse_alias(object creature, string alias) {
 	alias = strlwr(alias);
 	int i;
 
 #define base(matchalias,descriptor,mod) if (alias == matchalias) return\
-	throw_dice(creature, 1, 20, mod, descriptor)
+	dice_throw(creature, 1, 20, mod, descriptor)
 
 #define a(descriptor,ability) base(descriptor,descriptor,\
 	GetAbilityModifier(ability, creature))
@@ -146,7 +106,7 @@ int parse_single(object creature, string dstr) {
 		} else return 0;
 	}
 
-	return throw_dice(creature, count, faces, mod, "");
+	return dice_throw(creature, count, faces, mod, "");
 }
 
 void parse_dice(object creature, string str) {
