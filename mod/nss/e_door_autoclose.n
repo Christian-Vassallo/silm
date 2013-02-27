@@ -4,11 +4,16 @@
 
 #define CLOSE_DELAY 15 * 60
 
+void closeDoor() {
+	if (GetIsOpen(OBJECT_SELF))
+		ActionCloseDoor(OBJECT_SELF);
+}
+
 void main() {
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "door_open") {
 		ActionWait(IntToFloat(CLOSE_DELAY));
-		ActionCloseDoor(OBJECT_SELF);
+		ActionDoCommand(closeDoor());
 	}
 }
