@@ -16,7 +16,8 @@ int parse_alias(object creature, string alias) {
 
 	base("ini", "ini",
 		GetAbilityModifier(ABILITY_DEXTERITY, creature) + 
-		(GetHasFeat(FEAT_IMPROVED_INITIATIVE, creature) ? 4 : 0)
+		(GetHasFeat(FEAT_IMPROVED_INITIATIVE, creature) ? 4 : 0) +
+		(GetHasFeat(FEAT_EPIC_SUPERIOR_INITIATIVE, creature) ? 4 : 0)
 	);
 
 	if (alias == "ab" || alias == "attack") {
