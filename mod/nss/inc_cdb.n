@@ -355,7 +355,7 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 	}
 
 
-	pQ("select id, create_key, other_keys, status from characters where account=" +
+	pQ("select id, create_key, other_keys from characters where account=" +
 		sAID + " and character=" + sChar + " limit 1;");
 	pF();
 
@@ -363,8 +363,7 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 	string
 	sID = pG(1),     // IntToString(StringToInt(GetMaxID("characters"))),
 	sCreateKey = pG(2),
-	sOtherKeys = pG(3),
-	sStatus = pG(4);
+	sOtherKeys = pG(3);
 
 	if ( sID == "" ) {
 		audit("error", oPC, audit_fields("info", "Cannot find or create character"), "cdb");

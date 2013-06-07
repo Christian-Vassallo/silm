@@ -16,10 +16,9 @@ void main() {
 	int nAID = GetAccountID(oPC);
 	string sAID = IntToString(nAID);
 
-	pQ("select status,amask from accounts where id='" + sAID + "';");
+	pQ("select amask from accounts where id='" + sAID + "';");
 	pF();
-	string sAccountStatus = pG(1);
-	int namask = StringToInt(pG(2));
+	int namask = StringToInt(pG(1));
 
 	string sAcc = GetPCName(oPC);
 	if ( sAcc != "" )
@@ -35,6 +34,4 @@ void main() {
 	} else {
 		pSCO("insert into " + p_normalize_table("characters") + " (character_id, data) values(" + pSi(nCID) + ", %s);", oPC);
 	}
-
-	pQ("update characters set status = 'accept' where id = " + pSi(nCID) + ";");
 }
