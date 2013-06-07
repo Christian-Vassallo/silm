@@ -13,17 +13,6 @@ void main() {
 
 	int nCID = SaveCharacter(oPC, TRUE);
 
-	int nAID = GetAccountID(oPC);
-	string sAID = IntToString(nAID);
-
-	pQ("select amask from accounts where id='" + sAID + "';");
-	pF();
-	int namask = StringToInt(pG(1));
-
-	string sAcc = GetPCName(oPC);
-	if ( sAcc != "" )
-		SetLocalInt(GetModule(), sAcc + "_amask", namask);
-	
 	if ( GetIsDM(oPC) || nCID == 0 )
 		return;
 	

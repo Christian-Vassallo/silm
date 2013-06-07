@@ -90,7 +90,6 @@ int amask(object oPC, int nAMask) {
 	pQ("select amask from accounts where id = " + pSi(nCID));
 	pF();
     int nMask = pGi(1);
-	//GetLocalInt(GetModule(), sAcc + "_amask");
 
 	if (GetIsDM(oPC) && nMask & AMASK_GM && nAMask & AMASK_GLOBAL_GM)
 		return 1;
