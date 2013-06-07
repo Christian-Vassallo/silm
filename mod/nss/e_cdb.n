@@ -16,8 +16,6 @@ void main() {
 
 	if ("player_logout" == e.ev) {
 		ExecuteScript("_mod_clleave_cdb", e.runnable);
-		if (!is_dm(e.runnable))
-			UpdateMessageCount(e.runnable, GetLocalInt(e.runnable, "message_count"));
 		session_end(e.runnable);
 	}
 

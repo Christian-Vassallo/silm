@@ -27,11 +27,6 @@ int GetOrCreateCharacterID(object oPC);
 // 
 int GetAccountIsDM(object oPC);
 
-
-// Function: UpdateMessageCount 
-// 
-void UpdateMessageCount(object oPC, int nMessages);
-
 // Function: GetPCByAID 
 // 
 object GetPCByAID(int nAID);
@@ -99,18 +94,6 @@ int amask(object oPC, int nAMask) {
 
     return
            ( nMask & nAMask ) > 0;
-}
-
-
-
-
-void UpdateMessageCount(object oPC, int nMessages) {
-	int nCID = GetCharacterID(oPC);
-	if (!nCID)
-		return;
-
-	pQ("update characters set messages = messages + " + IntToString(nMessages) + 
-		" where id = " + IntToString(nCID) + ";");
 }
 
 object GetPCByAID(int nAID) {
