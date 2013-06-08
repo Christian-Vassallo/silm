@@ -40,6 +40,7 @@ void main() {
 		oPC = GetNextPC();
 	}
 
+	pQ("update live.hb set ping = now();");
 
 	RunEventScriptsFor(GetEventSerial(), "module_hb", oMod, oMod, oMod, GetLocation(OBJECT_INVALID), EVENT_MODE_DEFER);
 
