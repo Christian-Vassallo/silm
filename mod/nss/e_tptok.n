@@ -82,7 +82,7 @@ int MakeDialog(object oPC, object oTeleportWhom, bool allow_others, bool allow_t
 		string area, name, lpt;
 		float x,y,z,f;
 		int id;
-		pQ("select l.area,x,y,z,f,l.name,l.id,a.name from locations l,areas a where a.tag = l.area order by a.name asc;");
+		pQ("select l.area,x,y,z,f,l.name,l.id,a.name from locations l,live.areas a where a.tag = l.area order by a.name asc;");
 
 		while (pF()) {
 			area = pGs(1); x = pGf(2); y = pGf(3); z = pGf(4); f = pGf(5); name = pGs(8); id = pGi(7); lpt = pGs(6);
