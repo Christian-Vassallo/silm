@@ -1,5 +1,6 @@
 /* New weather system */
 extern("_gen")
+extern("inc_nwnx_ruby")
 
 struct Weather {
 	string area_type; // one of (river, open, north)
@@ -110,11 +111,11 @@ struct Weather GetWeatherFor(object oArea, int nYear, int nMonth, int nDay, int 
 	if ( GetIsAreaInterior(oArea) )
 		nMask += A_INTERIOR;
 
-	if (pQ("select convert_from(weather.getweather(" + pSs(sAreaResRef) + ", " + pSs(sTilesetResRef) + ", " +
+	string ret = ruby_eval("Weather.getweather(" + pSs(sAreaResRef) + ", " + pSs(sTilesetResRef) + ", " +
 			pSi(nMask, false) + ", " + pSi(nYear, false) + ", " + pSi(nMonth, false) + ", " + pSi(nDay, false) + ", " +
-			pSi(nHour, false) + ", " + pSi(nMinute, false) + "), 'latin1');") && pF()
-	) {
-		string ret = pG(1);
+			pSi(nHour, false) + ", " + pSi(nMinute, false) + ");");
+
+	if (ret != "") {
 		w = ParseWeatherString(w, ret);
 
 		w.mask = nMask;
