@@ -1,4 +1,4 @@
-
+extern("inc_nwnx_ruby")
 
 // Function: getopt_init
 // 
@@ -69,23 +69,16 @@ string commandget(int index);
 //
 
 string getopt_errstr() {
-	return pErrStr();
+	return "";
 }
 
 int commandsplit(string sText, string sSplitAt) {
-	pQ("select getopt.commandsplit(" + pSs(sText) + ", " + pSs(sSplitAt) + ")");
-	if (pF())
-		return pGi(1);
-	else
-		return 0;
+	string r = ruby_eval("Getopt.commandsplit(" + pSs(sText) + ", " + pSs(sSplitAt) + ");");
+	return atoi(r);
 }
 
 string commandget(int index) {
-	pQ("select getopt.commandget(" + pSi(index, false) +");");
-	if (pF())
-		return pGs(1);
-	else
-		return "";
+	return ruby_eval("Getopt.commandget(" + pSi(index, false) +");");
 }
 
 
@@ -95,7 +88,7 @@ string getopt_args() {
 
 int getopt_init(string str, string opts = "") {
 	SetLocalString(MODULE, "getopt_argstr", str);
-	int ret = pQ("select getopt.init(" + pSs(str) + ", " + pSs(opts) + ");");
+	int ret = atoi(ruby_eval("Getopt.init(" + pSs(str) + ", " + pSs(opts) + ");"));
 	if (!ret)
 		_WARN("getopt.init failed!");
 	return ret;
@@ -111,39 +104,26 @@ string getopt_argall() {
 }
 
 int getopt_argc() {
-	pQ("select getopt.argc();");
-	if (pF()) 
-		return pGi(1);
-	else
-		return 0;
+	return atoi(ruby_eval("Getopt.argc();"));
 }
 
 string getopt_arg(int n) {
-	pQ("select getopt.arg(" + pSi(n, false) + ");");
-	if (!pF())
-		return "";
-	return pGs(1);
+	return ruby_eval("Getopt.arg(" + pSi(n, false) + ");");
 }
 
 
 int getopt_opt(string n) {
-	pQ("select getopt.opt(" + pSs(n) + ");");
-	if (!pF())
-		return 0;
-	return pGb(1);
+	return atoi(ruby_eval("Getopt.opt(" + pSs(n) + ");"));
 }
 
 string getopt_optv(string n) {
-	pQ("select getopt.optv(" + pSs(n) + ");");
-	if (!pF())
-		return "";
-	return pGs(1);
+	return ruby_eval("Getopt.optv(" + pSs(n) + ");");
 }
 
 
 
 int getopt_reset() {
 	SetLocalString(MODULE, "getopt_argstr", "");
-	int ret = pQ("select getopt.reset();");
-	return ret;
+	ruby_eval("Getopt.reset();");
+	return true;
 }
