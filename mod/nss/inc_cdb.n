@@ -392,9 +392,6 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 	//pQ("update characters set description = '" + sDesc + "' where id='" + sID + "' limit 1;");
 
 	if ( bIsLogin ) {
-		// Update last login time
-		pQ("update characters set last_login=now() where id='" + sID + "';");
-
 		// Find domains
 		string
 		sDomain1,
