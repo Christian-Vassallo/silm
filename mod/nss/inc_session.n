@@ -25,7 +25,9 @@ void session_cleanup() {
 void session_start(object player = OBJECT_SELF) {
 	int aid = GetAccountID(player);
 	int cid = GetCharacterID(player);
-	pQ("insert into sessions.sessions (session_start, aid, cid) values(now(), " + pSi(aid) + ", " + pSi(cid) + ");");
+	string ip = GetPCIPAddress(player);
+	pQ("insert into sessions.sessions (session_start, aid, cid, ipv4) values(now(), " +
+		pSi(aid) + ", " + pSi(cid) + ", " + pSs(ip) + ");");
 	int key = pLastId("sessions.sessions");
 	SetLocalInt(player, "session_key", key);
 }
