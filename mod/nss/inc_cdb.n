@@ -287,26 +287,10 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 		return 0;
 
 	string
-	sChar = pE(GetName(oPC)),
-	sAccount = pE(GetPCName(oPC)),
-	sKey = GetPCPublicCDKey(oPC),
-	sIP = GetPCIPAddress(oPC),
-	sDesc = "",    //pE(GetDescription(oPC));
-	sGender = "";
-	switch ( GetGender(oPC) ) {
-		case GENDER_FEMALE:
-			sGender = "f";
-			break;
-		case GENDER_MALE:
-			sGender = "m";
-			break;
-		case GENDER_BOTH:
-		case GENDER_NONE:
-		case GENDER_OTHER:
-			sGender = "n";
-			break;
-	}
-
+		sChar = pE(GetName(oPC)),
+		sAccount = pE(GetPCName(oPC)),
+		sKey = GetPCPublicCDKey(oPC),
+		sIP = GetPCIPAddress(oPC);
 
 	/* ACCOUNT */
 
@@ -343,9 +327,9 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 
 
 	string
-	sID = pG(1),     // IntToString(StringToInt(GetMaxID("characters"))),
-	sCreateKey = pG(2),
-	sOtherKeys = pG(3);
+		sID = pG(1),
+		sCreateKey = pG(2),
+		sOtherKeys = pG(3);
 
 	if ( sID == "" ) {
 		audit("error", oPC, audit_fields("info", "Cannot find or create character"), "cdb");
@@ -361,100 +345,7 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 	string sDMFlag = GetIsDM(oPC) ? "dm_" : "";
 	SetLocalInt(GetModule(), GetPCName(oPC) + sDMFlag + "_cid", nCID);
 
-	int nGold = CountInventoryMoney(oPC);
-	// Update base data
-	pQ("update characters set " +
-		"portrait = " + pE(GetPortraitResRef(oPC)) + ", " +
-		"race = " + pE(RaceToString(oPC)) + ", " +
-		"subrace = " + pE(GetSubRace(oPC)) + ", " +
-		"alignment_moral = '" + IntToString(GetAlignmentGoodEvil(oPC)) + "', " +
-		"alignment_ethical = '" + IntToString(GetAlignmentLawChaos(oPC)) + "', " +
-		"xp = '" + IntToString(GetXP(oPC)) + "', gold = '" + IntToString(nGold) + "', " +
-
-		"sex = '" + sGender + "', " +
-		"age = '" + IntToString(GetAge(oPC)) + "', " +
-		"deity = " + pE(GetDeity(oPC)) + ", " +
-
-		"str = '" + IntToString(GetAbilityScore(oPC, ABILITY_STRENGTH, 1))  + "', " +
-		"dex = '" + IntToString(GetAbilityScore(oPC, ABILITY_DEXTERITY, 1))  + "', " +
-		"con = '" + IntToString(GetAbilityScore(oPC, ABILITY_CONSTITUTION, 1))  + "', " +
-		"wis = '" + IntToString(GetAbilityScore(oPC, ABILITY_WISDOM, 1))  + "', " +
-		"int = '" + IntToString(GetAbilityScore(oPC, ABILITY_INTELLIGENCE, 1))  + "', " +
-		"chr = '" + IntToString(GetAbilityScore(oPC, ABILITY_CHARISMA, 1))  + "', " +
-
-		"reflex = '" + IntToString(GetReflexSavingThrow(oPC))  + "', " +
-		"fortitude = '" + IntToString(GetFortitudeSavingThrow(oPC))  + "', " +
-		"will = '" + IntToString(GetWillSavingThrow(oPC))  + "'" +
-
-		" where id='" + sID + "';");
-
-	// XXX update nwnx_functions to work with 1.67
-	//pQ("update characters set description = '" + sDesc + "' where id='" + sID + "' limit 1;");
-
-	if ( bIsLogin ) {
-		// Find domains
-		string
-		sDomain1,
-		sDomain2;
-
-		if ( GetHasFeat(FEAT_AIR_DOMAIN_POWER, oPC) )
-			sDomain1 = "Luft";
-		if ( GetHasFeat(FEAT_ANIMAL_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Tiere" ) : ( sDomain1 = "Tiere" );
-		if ( GetHasFeat(FEAT_DEATH_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Tod" ) : ( sDomain1 = "Tod" );
-		if ( GetHasFeat(FEAT_DESTRUCTION_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Zerstoerung" ) : ( sDomain1 = "Zerstoerung" );
-		if ( GetHasFeat(FEAT_EARTH_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Erde" ) : ( sDomain1 = "Erde" );
-		if ( GetHasFeat(FEAT_EVIL_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Boeses" ) : ( sDomain1 = "Boeses" );
-		if ( GetHasFeat(FEAT_FIRE_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Feuer" ) : ( sDomain1 = "Feuer" );
-		if ( GetHasFeat(FEAT_GOOD_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Gutes" ) : ( sDomain1 = "Gutes" );
-		if ( GetHasFeat(FEAT_HEALING_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Heilung" ) : ( sDomain1 = "Heilung" );
-		if ( GetHasFeat(FEAT_KNOWLEDGE_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Wissen" ) : ( sDomain1 = "Wissen" );
-		if ( GetHasFeat(FEAT_LUCK_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Glueck" ) : ( sDomain1 = "Glueck" );
-		if ( GetHasFeat(FEAT_MAGIC_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Magie" ) : ( sDomain1 = "Magie" );
-		if ( GetHasFeat(FEAT_PLANT_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Pflanzen" ) : ( sDomain1 = "Pflanzen" );
-		if ( GetHasFeat(FEAT_PROTECTION_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Schutz" ) : ( sDomain1 = "Schutz" );
-		if ( GetHasFeat(FEAT_STRENGTH_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Staerke" ) : ( sDomain1 = "Staerke" );
-		if ( GetHasFeat(FEAT_SUN_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Sonne" ) : ( sDomain1 = "Sonne" );
-		if ( GetHasFeat(FEAT_TRAVEL_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Reisen" ) : ( sDomain1 = "Reisen" );
-		if ( GetHasFeat(FEAT_TRICKERY_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Tricks" ) : ( sDomain1 = "Tricks" );
-		if ( GetHasFeat(FEAT_WAR_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Krieg" ) : ( sDomain1 = "Krieg" );
-		if ( GetHasFeat(FEAT_WATER_DOMAIN_POWER, oPC) )
-			( sDomain1 != "" ) ? ( sDomain2 = "Wasser" ) : ( sDomain1 = "Wasser" );
-
-		// Update classes and stuff
-		pQ("update characters set " +
-			"class1 = " + pE(ClassToString(GetClassByPosition(1, oPC))) + ", " +
-			"class1_level = '" + IntToString(GetLevelByClass(GetClassByPosition(1, oPC), oPC)) + "', " +
-			"class2 = " + pE(ClassToString(GetClassByPosition(2, oPC))) + ", " +
-			"class2_level = '" + IntToString(GetLevelByClass(GetClassByPosition(2, oPC), oPC)) + "', " +
-			"class3 = " + pE(ClassToString(GetClassByPosition(3, oPC))) + ", " +
-			"class3_level = '" + IntToString(GetLevelByClass(GetClassByPosition(3, oPC), oPC)) + "', " +
-
-			"familiar_class = " + pE(FamiliarToString(oPC)) + ", " +
-			"familiar_name = " + pE(GetFamiliarName(oPC)) + ", " +
-
-			"domain1 = '" + sDomain1 + "', domain2='" + sDomain2 + "' " +
-
-			" where id='" + sID + "';");
-
-
+	if (bIsLogin) {
 		// Update keys, if necessary.
 		if ( sCreateKey != sKey && !TestStringAgainstPattern("**" + sKey + "**", sOtherKeys) ) {
 			if ( sOtherKeys != "" )
@@ -463,8 +354,6 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 			pQ("update characters set other_keys='" +
 				sOtherKeys + "' where id='" + sID + "';");
 		}
-
-//		pQ("update characters set login_time = now() where id='" + sID + "' limit 1;");
 	}
 
 	return nCID;
