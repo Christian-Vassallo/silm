@@ -127,7 +127,6 @@ void _hook_jump_associates(object obj, location jumpTo, bool as_action) {
 #undef SendMessageToPC
 void Hook_SendMessageToPC(object oPC, string sMessage) {
 	SetLocalString(GetModule(), "combatlog_message", sMessage);
-	JVM_EVENT("combatlog_message", oPC);
 	SendMessageToPC(oPC, sMessage);
 }
 
