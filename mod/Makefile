@@ -21,7 +21,7 @@ VALIDEXTPLAYER=utp/\*.utp \
 
 RESOURCEDIRS=area dlg ssf utc utd ute uti utm utp uts utt utw mod itp
 
-NWNLIB_VERSION=0.4.6
+NWNLIB_VERSION=0.6.0
 
 # End of settings.
 # Now type "make all" and hope for the best. :)

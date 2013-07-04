@@ -11,8 +11,8 @@ all: $(res)
 
 run-filters-on-yml:
 	@for x in $(res); do \
-		echo nwn-gff $(IMPORT_FILTERS) -lg -i $$x -ky -o $$x.yml ; \
-		nwn-gff $(IMPORT_FILTERS) -lg -i $$x -ky -o $$x.yml ; \
+		echo nwn-gff --encoding=windows-1252 $(IMPORT_FILTERS) -lg -i $$x -ky -o $$x.yml ; \
+		nwn-gff --encoding=windows-1252 $(IMPORT_FILTERS) -lg -i $$x -ky -o $$x.yml ; \
 	done
 
 clean:

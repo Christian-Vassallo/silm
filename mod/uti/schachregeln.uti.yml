@@ -1,55 +1,106 @@
---- !nwn-lib.elv.es,2008-12/struct 
+--- !nwn-lib.elv.es,2013-07:struct
 __data_type: UTI
 __struct_id: 4294967295
-AddCost: {type: :dword, value: 0}
-BaseItem: {type: :int, value: 74}
-Charges: {type: :byte, value: 0}
-Comment: {type: :cexostr, value: ""}
-Cost: {type: :dword, value: 0}
-Cursed: {type: :byte, value: 0}
-DescIdentified: 
-  type: :cexolocstr
-  value: 
-    0: "Grundstellung\n\n\
-      Jeder der beiden Spieler besitzt zu Beginn des Spieles 16 Steine. Es sind jeweils acht Bauern und acht Figuren. Die Figuren umfassen jeweils zwei T\xC3\xBCrme, zwei Springer, zwei L\xC3\xA4ufer, eine Dame und einen K\xC3\xB6nig. Die L\xC3\xA4ufer und Springer werden Leichtfiguren, T\xC3\xBCrme und Dame Schwerfiguren genannt. Leicht- und Schwerfiguren werden unter der Bezeichnung Offiziere zusammengefasst.\n\n\
-      Das Schachbrett wird so zwischen den Spielern positioniert, dass sich aus der Sicht eines jeden Spielers unten rechts ein wei\xC3\x9Fes Feld befindet. Die Steine werden, wie im Bild gezeigt, zu beiden Seiten des Brettes aufgestellt, in der vorletzten Reihe die Bauern, in der letzten Reihe die Figuren in der Reihenfolge (von links nach rechts f\xC3\xBCr Wei\xC3\x9F, f\xC3\xBCr Schwarz umgekehrt): Turm, Springer, L\xC3\xA4ufer, Dame, K\xC3\xB6nig, L\xC3\xA4ufer, Springer, Turm. Dabei kommt die Dame bei beiden Seiten auf einem Feld ihrer eigenen Farbe zu stehen (lat. \"regina regit colorem\", auf deutsch etwa \"Die Dame bestimmt die Farbe [des Feldes]!\").\n\n\
-      Die Spieler ziehen abwechselnd mit den Steinen, wobei der Spieler mit den wei\xC3\x9Fen Steinen beginnt. Die Bewegung eines Steines durch einen Spieler nennt man einen Halbzug. Haben beide Spieler einen Halbzug ausgef\xC3\xBChrt, spricht man von einem Zug.\n\n\
-      Auf einem Feld darf immer nur ein Stein stehen. Ein Stein blockiert dabei das Feld f\xC3\xBCr alle Steine der eigenen Farbe, nicht jedoch f\xC3\xBCr die gegnerischen: Trifft ein Stein in einem Feld auf einen gegnerischen, so wird dieser gegnerische Stein vom Spielfeld genommen. Man sagt, der Stein wird geschlagen.\n\n\
-      Kann ein wei\xC3\x9Fer Stein theoretisch im n\xC3\xA4chsten Zug geschlagen werden (gibt es also einen schwarzen, der im n\xC3\xA4chsten Zug auf das von dem wei\xC3\x9Fen Stein eingenommene Feld ziehen kann), so ist der Stein bedroht (altert\xC3\xBCmlich: er steht en prise). Gibt es einen wei\xC3\x9Fen Stein, der gegebenenfalls im darauf folgenden Halbzug den schlagenden schwarzen Stein zur\xC3\xBCckschlagen kann, so ist der urspr\xC3\xBCngliche wei\xC3\x9Fe Stein gedeckt. Mit vertauschten Farben gilt das entsprechend.\n\n\
-      Ist einer der K\xC3\xB6nige bedroht, spricht man davon, dass er im Schach steht, daf\xC3\xBCr ist die Warnung \"Schach!\" \xC3\xBCblich, jedoch nicht mehr vorgeschrieben.\n\n\n\
-      Spielende\n\n\
-      Es gewinnt der Spieler, der den gegnerischen K\xC3\xB6nig schlagen k\xC3\xB6nnte, ohne dass der Gegner dies verhindern kann. Diese Situation hei\xC3\x9Ft Schachmatt (persisch: Schah mat = \"Der K\xC3\xB6nig ist tot\"). Der Zug, in dem der K\xC3\xB6nig geschlagen werden k\xC3\xB6nnte, wird dabei nicht mehr ausgef\xC3\xBChrt. Eine weitere M\xC3\xB6glichkeit zum Spielgewinn ist die Aufgabe des Gegners - es steht jedem Spieler frei, jederzeit das Handtuch zu werfen. Ebenso verliert ein Spieler die Partie, wenn er seine Bedenkzeit \xC3\xBCberschreitet (es sei denn, sein Gegner kann selbst gegen ungeschicktestes Spiel nicht mehr mattsetzen, in diesem Fall endet die Partie remis).\n\n\
-      Kann ein Spieler keinen regelgem\xC3\xA4\xC3\x9Fen Zug mehr ausf\xC3\xBChren und steht sein K\xC3\xB6nig nicht im Schach, so spricht man von einem Patt, die Partie endet in diesem Fall remis (unentschieden).\n\n\
-      Ein Spiel endet auch dann remis,\n\
-      * wenn es keinem der beiden Spieler selbst bei ungeschicktestem Spiel des Gegners mehr m\xC3\xB6glich ist, Matt zu setzen (tote Stellung),\n\
-      * wenn sich die beiden Spieler darauf einigen,\n\
-      * wenn 50 Z\xC3\xBCge lang keine Figur geschlagen und kein Bauer bewegt wurde (50-Z\xC3\xBCge-Regel) und ein Spieler dies reklamiert,\n\
-      * # bei dreimaliger Wiederholung (nicht unbedingt hintereinander) derselben Stellung mit demselben Spieler am Zug und den gleichen Zugm\xC3\xB6glichkeiten (Rochade, en passant), wenn ein Spieler dies reklamiert,\n\
-      * unter bestimmten Umst\xC3\xA4nden, wenn die Zeit beider Spieler abgelaufen ist:\n  * in einer Blitz- oder Schnellpartie unabh\xC3\xA4ngig davon, wer die Zeit zuerst \xC3\xBCberschritten hat, sobald ein Spieler darauf hinweist.\n  * in einer Turnierpartie, wenn es nicht nachweisbar ist, wer die Zeit zuerst \xC3\xBCberschritten hat (ansonsten verliert der Spieler, der als erster die Zeit \xC3\xBCberschritten hat) und wenn es sich um die Endspurtphase handelt (ansonsten wird die Partie fortgesetzt).\n\n\n\
-      Zugregeln\n\n\
-      Die Steine d\xC3\xBCrfen nur nach bestimmten Regeln gezogen werden:\n * Steine d\xC3\xBCrfen einander grunds\xC3\xA4tzlich nicht \xC3\xBCberspringen (Ausnahmen gelten f\xC3\xBCr den Springer sowie bei der Rochade). Sie d\xC3\xBCrfen also immer nur h\xC3\xB6chstens soweit gezogen werden, wie sie nicht durch einen eigenen Stein in ihrer Bewegung blockiert werden (dann m\xC3\xBCssen sie sp\xC3\xA4testens vor dem entsprechenden Feld stoppen), oder bis auf das Feld, auf dem der erste gegnerische Stein in der Bahn steht. In diesem Falle schlagen sie den gegnerischen Stein und kommen auf dessen Feld zu stehen.\n * Wird ein K\xC3\xB6nig von mindestens einem gegnerischen Stein bedroht (die diesen K\xC3\xB6nig also im n\xC3\xA4chsten Zug schlagen k\xC3\xB6nnte), so steht dieser K\xC3\xB6nig im Schach. Der Spieler, dem dieser K\xC3\xB6nig geh\xC3\xB6rt, muss diese Situation bereinigen, er darf also keinen Zug w\xC3\xA4hlen, nach dem der K\xC3\xB6nig weiterhin im Schach st\xC3\xBCnde. Kann er das nicht, so ist er schachmatt und hat das Spiel verloren. Der Spieler muss also entweder den Schach bietenden Stein schlagen, einen seiner Steine zwischen den K\xC3\xB6nig und die Schach bietende Figur ziehen (diese M\xC3\xB6glichkeit entf\xC3\xA4llt bei einem Springer- und Doppelschach) oder den K\xC3\xB6nig aus dem Schach ziehen. Steht der K\xC3\xB6nig im Schach darf er auch nicht mittels der Rochade aus diesem entfliehen.\n \n\
-      Fuer genauere Zugregeln siehe die entsprechende Literatur im Regal.\n\n\n\
-      Etikette\n\n\
-      [..]\n\
-      Das Zur\xC3\xBCcknehmen bereits ausgef\xC3\xBChrter Z\xC3\xBCge ist nicht gestattet. Wenn ein Spieler eine eigene Figur ber\xC3\xBChrt, muss er einen Zug mit ihr ausf\xC3\xBChren (ber\xC3\xBChrt - gef\xC3\xBChrt), wenn es eine regelgerechte M\xC3\xB6glichkeit gibt. Dies gilt auch, wenn eine gegnerische Figur ber\xC3\xBChrt wird - diese muss geschlagen werden. Will er stattdessen die Figur lediglich zurechtr\xC3\xBCcken, muss er das vorher bekanntgeben. Daf\xC3\xBCr hat sich der franz\xC3\xB6sische Ausdruck J'adoube eingeb\xC3\xBCrgert. Ausnahmen zum ber\xC3\xBChrt - gef\xC3\xBChrt gibt es beim Blindenschach und beim Fernschach.\n\n\
-      Quelle: wikipedia"
-Description: 
-  type: :cexolocstr
-  value: 
-    4: ""
-Identified: {type: :byte, value: 1}
-LocalizedName: 
-  type: :cexolocstr
-  value: 
-    0: "Schach, Ein verst\xC3\xA4ndliches Regelwerk: Grundbegriffe, Spielbrett und Spielfiguren"
-ModelPart1: {type: :byte, value: 6}
-PaletteID: {type: :byte, value: 60}
-Plot: {type: :byte, value: 0}
-PropertiesList: 
-  type: :list
+AddCost: {type: dword, value: 0}
+BaseItem: {type: int, value: 74}
+Charges: {type: byte, value: 0}
+Comment: {type: cexostr, value: ''}
+Cost: {type: dword, value: 0}
+Cursed: {type: byte, value: 0}
+DescIdentified:
+  type: cexolocstr
+  value:
+    0: "Grundstellung\n\nJeder der beiden Spieler besitzt zu Beginn des Spieles 16
+      Steine. Es sind jeweils acht Bauern und acht Figuren. Die Figuren umfassen jeweils
+      zwei Türme, zwei Springer, zwei Läufer, eine Dame und einen König. Die Läufer
+      und Springer werden Leichtfiguren, Türme und Dame Schwerfiguren genannt. Leicht-
+      und Schwerfiguren werden unter der Bezeichnung Offiziere zusammengefasst.\n\nDas
+      Schachbrett wird so zwischen den Spielern positioniert, dass sich aus der Sicht
+      eines jeden Spielers unten rechts ein weißes Feld befindet. Die Steine werden,
+      wie im Bild gezeigt, zu beiden Seiten des Brettes aufgestellt, in der vorletzten
+      Reihe die Bauern, in der letzten Reihe die Figuren in der Reihenfolge (von links
+      nach rechts für Weiß, für Schwarz umgekehrt): Turm, Springer, Läufer, Dame,
+      König, Läufer, Springer, Turm. Dabei kommt die Dame bei beiden Seiten auf einem
+      Feld ihrer eigenen Farbe zu stehen (lat. \"regina regit colorem\", auf deutsch
+      etwa \"Die Dame bestimmt die Farbe [des Feldes]!\").\n\nDie Spieler ziehen abwechselnd
+      mit den Steinen, wobei der Spieler mit den weißen Steinen beginnt. Die Bewegung
+      eines Steines durch einen Spieler nennt man einen Halbzug. Haben beide Spieler
+      einen Halbzug ausgeführt, spricht man von einem Zug.\n\nAuf einem Feld darf
+      immer nur ein Stein stehen. Ein Stein blockiert dabei das Feld für alle Steine
+      der eigenen Farbe, nicht jedoch für die gegnerischen: Trifft ein Stein in einem
+      Feld auf einen gegnerischen, so wird dieser gegnerische Stein vom Spielfeld
+      genommen. Man sagt, der Stein wird geschlagen.\n\nKann ein weißer Stein theoretisch
+      im nächsten Zug geschlagen werden (gibt es also einen schwarzen, der im nächsten
+      Zug auf das von dem weißen Stein eingenommene Feld ziehen kann), so ist der
+      Stein bedroht (altertümlich: er steht en prise). Gibt es einen weißen Stein,
+      der gegebenenfalls im darauf folgenden Halbzug den schlagenden schwarzen Stein
+      zurückschlagen kann, so ist der ursprüngliche weiße Stein gedeckt. Mit vertauschten
+      Farben gilt das entsprechend.\n\nIst einer der Könige bedroht, spricht man davon,
+      dass er im Schach steht, dafür ist die Warnung \"Schach!\" üblich, jedoch nicht
+      mehr vorgeschrieben.\n\n\nSpielende\n\nEs gewinnt der Spieler, der den gegnerischen
+      König schlagen könnte, ohne dass der Gegner dies verhindern kann. Diese Situation
+      heißt Schachmatt (persisch: Schah mat = \"Der König ist tot\"). Der Zug, in
+      dem der König geschlagen werden könnte, wird dabei nicht mehr ausgeführt. Eine
+      weitere Möglichkeit zum Spielgewinn ist die Aufgabe des Gegners - es steht jedem
+      Spieler frei, jederzeit das Handtuch zu werfen. Ebenso verliert ein Spieler
+      die Partie, wenn er seine Bedenkzeit überschreitet (es sei denn, sein Gegner
+      kann selbst gegen ungeschicktestes Spiel nicht mehr mattsetzen, in diesem Fall
+      endet die Partie remis).\n\nKann ein Spieler keinen regelgemäßen Zug mehr ausführen
+      und steht sein König nicht im Schach, so spricht man von einem Patt, die Partie
+      endet in diesem Fall remis (unentschieden).\n\nEin Spiel endet auch dann remis,\n*
+      wenn es keinem der beiden Spieler selbst bei ungeschicktestem Spiel des Gegners
+      mehr möglich ist, Matt zu setzen (tote Stellung),\n* wenn sich die beiden Spieler
+      darauf einigen,\n* wenn 50 Züge lang keine Figur geschlagen und kein Bauer bewegt
+      wurde (50-Züge-Regel) und ein Spieler dies reklamiert,\n* # bei dreimaliger
+      Wiederholung (nicht unbedingt hintereinander) derselben Stellung mit demselben
+      Spieler am Zug und den gleichen Zugmöglichkeiten (Rochade, en passant), wenn
+      ein Spieler dies reklamiert,\n* unter bestimmten Umständen, wenn die Zeit beider
+      Spieler abgelaufen ist:\n  * in einer Blitz- oder Schnellpartie unabhängig davon,
+      wer die Zeit zuerst überschritten hat, sobald ein Spieler darauf hinweist.\n
+      \ * in einer Turnierpartie, wenn es nicht nachweisbar ist, wer die Zeit zuerst
+      überschritten hat (ansonsten verliert der Spieler, der als erster die Zeit überschritten
+      hat) und wenn es sich um die Endspurtphase handelt (ansonsten wird die Partie
+      fortgesetzt).\n\n\nZugregeln\n\nDie Steine dürfen nur nach bestimmten Regeln
+      gezogen werden:\n * Steine dürfen einander grundsätzlich nicht überspringen
+      (Ausnahmen gelten für den Springer sowie bei der Rochade). Sie dürfen also immer
+      nur höchstens soweit gezogen werden, wie sie nicht durch einen eigenen Stein
+      in ihrer Bewegung blockiert werden (dann müssen sie spätestens vor dem entsprechenden
+      Feld stoppen), oder bis auf das Feld, auf dem der erste gegnerische Stein in
+      der Bahn steht. In diesem Falle schlagen sie den gegnerischen Stein und kommen
+      auf dessen Feld zu stehen.\n * Wird ein König von mindestens einem gegnerischen
+      Stein bedroht (die diesen König also im nächsten Zug schlagen könnte), so steht
+      dieser König im Schach. Der Spieler, dem dieser König gehört, muss diese Situation
+      bereinigen, er darf also keinen Zug wählen, nach dem der König weiterhin im
+      Schach stünde. Kann er das nicht, so ist er schachmatt und hat das Spiel verloren.
+      Der Spieler muss also entweder den Schach bietenden Stein schlagen, einen seiner
+      Steine zwischen den König und die Schach bietende Figur ziehen (diese Möglichkeit
+      entfällt bei einem Springer- und Doppelschach) oder den König aus dem Schach
+      ziehen. Steht der König im Schach darf er auch nicht mittels der Rochade aus
+      diesem entfliehen.\n \nFuer genauere Zugregeln siehe die entsprechende Literatur
+      im Regal.\n\n\nEtikette\n\n[..]\nDas Zurücknehmen bereits ausgeführter Züge
+      ist nicht gestattet. Wenn ein Spieler eine eigene Figur berührt, muss er einen
+      Zug mit ihr ausführen (berührt - geführt), wenn es eine regelgerechte Möglichkeit
+      gibt. Dies gilt auch, wenn eine gegnerische Figur berührt wird - diese muss
+      geschlagen werden. Will er stattdessen die Figur lediglich zurechtrücken, muss
+      er das vorher bekanntgeben. Dafür hat sich der französische Ausdruck J'adoube
+      eingebürgert. Ausnahmen zum berührt - geführt gibt es beim Blindenschach und
+      beim Fernschach.\n\nQuelle: wikipedia"
+Description:
+  type: cexolocstr
+  value:
+    4: ''
+Identified: {type: byte, value: 1}
+LocalizedName:
+  type: cexolocstr
+  value:
+    0: 'Schach, Ein verständliches Regelwerk: Grundbegriffe, Spielbrett und Spielfiguren'
+ModelPart1: {type: byte, value: 6}
+PaletteID: {type: byte, value: 60}
+Plot: {type: byte, value: 0}
+PropertiesList:
+  type: list
   value: []
-
-StackSize: {type: :word, value: 1}
-Stolen: {type: :byte, value: 0}
-Tag: {type: :cexostr, value: schachregeln}
-TemplateResRef: {type: :resref, value: schachregeln}
+StackSize: {type: word, value: 1}
+Stolen: {type: byte, value: 0}
+Tag: {type: cexostr, value: schachregeln}
+TemplateResRef: {type: resref, value: schachregeln}
