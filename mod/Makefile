@@ -33,9 +33,6 @@ path:
 ifeq "$(NWNMODNAME)" ""
 NWNMODNAME="silbermarken"
 endif
-ifeq "$(CONCURRENCY_LEVEL)" ""
-CONCURRENCY_LEVEL=$(cat /proc/cpuinfo | grep processor | wc -l)
-endif
 	@ruby -rubygems -e "gem 'nwn-lib', '>= $(NWNLIB_VERSION)'" || (\
 		echo "Your nwn-lib version is too old. Upgrade at least to $(NWNLIB_VERSION)."; exit 1)
 
@@ -47,13 +44,13 @@ mandatory-verify:
 .PHONY: resources
 resources: path mandatory-verify
 	@for res in $(RESOURCEDIRS); do \
-		$(MAKE) -j$(CONCURRENCY_LEVEL) -C $$res all ;\
+		$(MAKE) -C $$res all ;\
 	done
 
 .PHONY: refilter-resources
 refilter-resources: path mandatory-verify
 	@for res in $(RESOURCEDIRS); do \
-		$(MAKE) -j$(CONCURRENCY_LEVEL) -C $$res run-filters-on-yml ;\
+		$(MAKE) -C $$res run-filters-on-yml ;\
 	done
 
 .PHONY: show-stale
@@ -73,7 +70,7 @@ clean-stale: path
 scripts: path
 	-rm nss/git.h
 	$(MAKE) -C nss revupdate
-	$(MAKE) -j$(CONCURRENCY_LEVEL) -C nss all
+	$(MAKE) -C nss all
 
 clean:
 	@echo Do you really want to clean? This will incur significant rebuild time.
