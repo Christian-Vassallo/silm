@@ -36,7 +36,7 @@ void main() {
 	AssignCommand(oLight, ActionForceFollowObject(oTarget, 1.0));
 	SetLocalInt(oLight, "follow", 1);
 
-	float fDuration = 60f;
+	float fDuration = HoursToSeconds(nLevel);
 
 	if ( METAMAGIC_EXTEND == nMeta )
 		fDuration *= 2.0;
