@@ -20,6 +20,10 @@ struct Count countMod(object creature) {
 	struct Count count;
 	int i;
 	for (i = 0; i < 14 /* cweapon_l */; i++) {
+		// Don't count left/righthand slots.
+		if (i == INVENTORY_SLOT_RIGHTHAND || i == INVENTORY_SLOT_LEFTHAND)
+			continue;
+
 		object item = GetItemInSlot(i, creature);
 		if (is_valid(item)
 				&& GetLocalInt(item, "ignore_limits") < 1
