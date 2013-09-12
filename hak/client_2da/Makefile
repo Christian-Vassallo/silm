@@ -51,5 +51,9 @@ des_crft_spells.2ds: spells.2ds
 	./update_des_crft_spells.2ds.rb > des_crft_spells_new &&\
 		mv des_crft_spells_new des_crft_spells.2ds
 
+iprp_feats.2ds: feat.2ds
+	./update_iprp_feats.2ds.rb > iprp_feats_new &&\
+		mv iprp_feats_new iprp_feats.2ds
+
 clean:: clean-backup
 	-rm *.2da
