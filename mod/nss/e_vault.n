@@ -1,0 +1,34 @@
+extern("inc_cdb")
+
+const string warning = "Warning: Could not read your bic filename! " +
+	"Your character is NOT being associated with your account. Contact Staff!";
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+
+	if (e.ev == "player_login") {
+		if (GetIsDM(e.runnable)) return;
+
+		string acc = GetPCPlayerName(e.runnable);
+		string bicname = GetPCFileName(e.runnable);
+		int cid = GetCharacterID(e.runnable);
+		if (acc == "" || bicname == "" || !cid) {
+			SendMessageToPC(e.runnable, warning);
+			return;
+		}
+
+		pQ("select id from vault.characters where account = " + pSs(acc) +
+			" and filename = " + pSs(bicname) + " limit 1;");
+		if (!pF()) {
+			SendMessageToPC(e.runnable, warning);
+			return;
+		}
+		int vaultid = pGi(1); if (!vaultid) return;
+
+		pQ("update characters set charfile = " + pSi(vaultid) +
+			" where id = " + pSi(cid));
+
+		SendMessageToPC(e.runnable, "Updated your charfile id (no worries mate).");
+	}
+}
