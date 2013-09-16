@@ -40,7 +40,7 @@ void main() {
 			return;
 		}
 
-		if (!is_dm(ei.runnable) && !GetObjectSeen(oTarget, ei.actor)) {
+		if (GetArea(ei.runnable) != GetArea(oTarget)) {
 			SendMessageToPC(ei.actor, "Du kannst nur Ziele sprechen lassen, die du siehst.");
 			return;
 		}
