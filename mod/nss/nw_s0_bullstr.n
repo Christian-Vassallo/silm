@@ -33,7 +33,7 @@ void main() {
 	effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
 	int nCasterLvl = GetCasterLevel(OBJECT_SELF);
 	int nModify = 4; // d4() + 1;
-	float fDuration = TurnsToSeconds(nCasterLvl);
+	float fDuration = TurnsToSeconds(10 * nCasterLvl);
 	int nMetaMagic = GetMetaMagicFeat();
 	//Signal the spell cast at event
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_BULLS_STRENGTH, FALSE));

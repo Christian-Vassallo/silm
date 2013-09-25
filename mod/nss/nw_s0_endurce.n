@@ -34,7 +34,7 @@ void main() {
 
 	int nCasterLvl = GetCasterLevel(OBJECT_SELF);
 	int nModify = 4; //d4() + 1;
-	float fDuration = TurnsToSeconds(nCasterLvl);
+	float fDuration = TurnsToSeconds(10 * nCasterLvl);
 	int nMetaMagic = GetMetaMagicFeat();
 	//Fire cast spell at event for the specified target
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_ENDURANCE, FALSE));
