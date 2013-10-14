@@ -66,6 +66,9 @@ int commandsplit(string sText, string sSplitAt);
 // call to commandsplit.
 string commandget(int index);
 
+int shellwords(string sText);
+string shellwordget(int index);
+
 //
 
 string getopt_errstr() {
@@ -80,6 +83,17 @@ int commandsplit(string sText, string sSplitAt) {
 string commandget(int index) {
 	return ruby_eval("Getopt.commandget(" + pSi(index, false) +");");
 }
+
+int shellwords(string sText) {
+	string r = ruby_eval("Getopt.shellwords(" + pSs(sText) + ");");
+	return atoi(r);
+}
+
+string shellwordget(int index) {
+	return ruby_eval("Getopt.shellwordget(" + pSi(index, false) +");");
+}
+
+
 
 
 string getopt_args() {
