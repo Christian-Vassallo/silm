@@ -1,0 +1,18 @@
+extern("inc_session")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	struct EventArguments ea = GetEventArguments(e.serial);
+
+	if (e.ev == "chat_command" && ea.a0 == "slabel") {
+		string label = ea.a1;
+		if (label == "")
+			SendMessageToPC(e.runnable, "Removing session label.");
+		else
+			SendMessageToPC(e.runnable, "Setting session label: " + label);
+
+		session_set_label(label);
+
+		event_stop();
+	}
+}
