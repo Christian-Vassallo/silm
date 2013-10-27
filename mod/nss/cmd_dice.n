@@ -32,8 +32,8 @@ int parse_alias(object creature, string alias) {
 	a("str", 0); a("dex", 1); a("con", 2);
 	a("int", 3); a("wis", 4); a("cha", 5);
 
-	base("fort", "fort", GetReflexSavingThrow(creature));
-	base("ref", "ref", GetFortitudeSavingThrow(creature));
+	base("fort", "fort", GetFortitudeSavingThrow(creature));
+	base("ref", "ref", GetReflexSavingThrow(creature));
 	base("will", "will", GetWillSavingThrow(creature));
 
 	for (i = 0; i < 50; i++) {
