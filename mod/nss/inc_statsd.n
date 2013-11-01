@@ -1,0 +1,34 @@
+extern("inc_nwnx_ruby")
+
+
+const string STATSD_PREFIX = "nwn.server.";
+
+// increment, decrement, count
+void statsd_count(string key, int value);
+void statsd_increment(string key);
+void statsd_decrement(string key);
+
+// timing
+void statsd_start_timing(string key);
+void statsd_stop_timing(string key);
+
+// gauge
+// ?
+
+
+void statsd_count(string key, int value) {
+	ruby_eval("$statsd.count '" + STATSD_PREFIX + key + "', " + itoa(value) + ";");
+}
+void statsd_increment(string key) {
+	statsd_count(key, +1);
+}
+void statsd_decrement(string key) {
+	statsd_count(key, -1);
+}
+
+void statsd_start_timing(string key) {
+	ruby_eval("$statsd.start_timing '" + STATSD_PREFIX + key + "';");
+}
+void statsd_stop_timing(string key) {
+	ruby_eval("$statsd.stop_timing '" + STATSD_PREFIX + key + "';");
+}

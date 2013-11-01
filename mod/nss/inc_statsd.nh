@@ -1,0 +1,20 @@
+#ifndef STATSD_H
+#define STATSD_H
+
+// timing
+#define st(key, block) __EBLOCK( \
+	statsd_start_timing(key); \
+	block; \
+	statsd_stop_timing(key); \
+)
+
+// increment, decrement, count
+#define si(key) statsd_increment(key)
+#define sd(key) statsd_decrement(key)
+#define sc(key,value) statsd_count(key,value)
+
+// gauge
+
+extern("inc_statsd")
+
+#endif
