@@ -13,7 +13,7 @@ void statsd_start_timing(string key);
 void statsd_stop_timing(string key);
 
 // gauge
-// ?
+void statsd_gauge(string key, int value);
 
 
 void statsd_count(string key, int value) {
@@ -31,4 +31,8 @@ void statsd_start_timing(string key) {
 }
 void statsd_stop_timing(string key) {
 	ruby_eval("$statsd.stop_timing '" + STATSD_PREFIX + key + "';");
+}
+
+void statsd_gauge(string key, int value) {
+	ruby_eval("$statsd.gauge '" + STATSD_PREFIX + key + "', " + itoa(value) + ";");
 }
