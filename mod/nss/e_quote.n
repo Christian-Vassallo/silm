@@ -1,0 +1,15 @@
+extern("inc_colors")
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	// struct EventArguments ea = GetEventArguments(e.serial);
+
+	if (e.ev == "player_login") {
+		pQ("select quote from quotes order by random() limit 1;");
+		if (pF()) {
+			string text = ColorTag(cOrange) + "Quote of the moment: " + ColorTag(cWhite) + pGs(1);
+			DelayCommand(5f, FloatingTextStringOnCreature(text, e.runnable, false));
+		}
+	}
+}
+
