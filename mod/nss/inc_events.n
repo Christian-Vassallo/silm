@@ -258,6 +258,9 @@ int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, 
 
 	int total_ret = 0;
 
+
+	st("event." + ev + ".all",
+
 	for (i = 0; i < count; i++) {
 		si = IntToString(i);
 		
@@ -341,6 +344,8 @@ int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, 
 		defer_time += 0.01;
 	}
 
+	); // st(event.allscripts)
+
 	return total_ret;
 }
 
@@ -375,7 +380,11 @@ int RunEventScript(string sScript, int nEventMode, event_id_t serial, event_t ev
 	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retmask", retMask);
 
 	DeleteLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retvar");
-	ExecuteScript(sScript, oRunnable);
+	st("event." + ev + ".script." + sScript +
+			(nEventMode == EVENT_MODE_SYNC ? ".sync" :
+				(nEventMode == EVENT_MODE_DEFER ? ".defer" : ".any")),
+		ExecuteScript(sScript, oRunnable)
+	);
 	string sRet = GetLocalString(GetModule(), EVENTS_LVAR_PREFIX + "retvar");
 
 	int nRet = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retvar");
