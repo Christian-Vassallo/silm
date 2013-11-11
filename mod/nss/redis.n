@@ -1,0 +1,140 @@
+extern("inc_getopt")
+extern("inc_chat")
+extern("inc_cdb")
+extern("inc_disguise")
+extern("inc_events_sql")
+extern("inc_er")
+
+/*
+live.command ->
+	creature.color <oid> <type> <idx>
+	creature.bodyPart <oid> <bp> <idx>
+*/
+
+
+void main() {
+	string channel = redisGetEventChannel();
+	string message = redisGetEventMessage();
+	
+	/*
+	struct EventArguments evarg;
+	evarg.a0 = channel;
+	evarg.a1 = message;
+
+	int serial = GetEventSerial();
+	RunEventScriptsForWithArgv(serial, "pubsub", GetModule(),
+		OBJECT_INVALID, OBJECT_INVALID, GetLocation(OBJECT_INVALID), evarg,
+		EVENT_MODE_DEFER);
+	*/
+
+	if (channel == "live.command") {
+		int argc = shellwords(message);
+		if (argc < 2) return;
+
+		string command = shellwordget(0);
+		object obj = StringToObject(shellwordget(1));
+
+		if (command == "script.rehash") {
+			RehashEventScripts();
+			return;
+		}
+
+		if (argc == 3 && command == "disguise.apply") {
+			if (!is_pc(obj))
+				return;
+			int disguise_id = atoi(shellwordget(2)); 
+			if (disguise_id < 1) return;
+
+			struct Disguise dd = disguise_load(disguise_id);
+
+			disguise_apply(obj, dd);
+			er_touch(obj);
+			return;
+		}
+
+		if (argc == 3 && command == "object.name") {
+			if (!is_valid(obj))
+				return;
+
+			er_touch(obj);
+			return;
+		}
+
+		if (argc == 4 && command == "creature.color") {
+			if (!is_valid(obj) || !is_creature(obj))
+				return;
+
+			int colorType = atoi(shellwordget(2));
+			if (colorType < 0 || colorType > 3) return;
+			int idx = atoi(shellwordget(3));
+			if (idx < 0 || idx > 175) return;
+
+			SetColor(obj, colorType, idx);
+			er_touch(obj);
+			return;
+		}
+		
+		if (argc == 4 && command == "creature.bodyPart") {
+			if (!is_valid(obj) || !is_creature(obj))
+				return;
+
+			int bodyPart = atoi(shellwordget(2));
+			if (bodyPart != 20 && (bodyPart < 0 || bodyPart > 17)) return;
+			int idx = atoi(shellwordget(3));
+			if (idx < 0) return;
+
+			SetCreatureBodyPart(bodyPart, idx, obj);
+			er_touch(obj);
+			return;
+		}
+
+		if (argc == 4 && command == "creature.speak") {
+			if (!is_valid(obj) || !is_creature(obj))
+				return;
+
+			int channel = atoi(shellwordget(2));
+			if (channel > 14 || channel < 1) return;
+
+			string text = shellwordget(3);
+			if (text == "") return;
+
+			NWNXChatSpeakToChannel(obj, channel, text);
+
+			return;
+		}
+
+		return;
+	}
+	if (channel == "live.download") {
+		object o = StringToObject(message);
+		if (!is_valid(o)) return;
+
+		switch (GetObjectType(o)) {
+			case OBJECT_TYPE_CREATURE:
+			case OBJECT_TYPE_ITEM:
+				redisSCO("set er:gff:" + message + " %b", o);
+				EXPIRE("er:gff:"+message, "12");
+				break;
+		}
+
+		return;
+	}
+
+	if (channel == "live.upload") {
+		int cid = atoi(message);
+		object pc = GetPCByCID(cid);
+		if (!is_valid(pc))
+			return;
+
+		string key = "upload:" + itoa(cid);
+		int length = atoi(SCARD(key));
+
+		SendMessageToPC(pc, "Starting live.upload of " + itoa(length) + " object(s) on key " + key + ":");
+
+		while (length > 0) {
+			redisRCO("SPOP " + key, GetLocation(pc), pc);
+			length--;
+		}
+		SendMessageToPC(pc, "Upload complete?");		
+	}
+}

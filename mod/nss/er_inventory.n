@@ -1,0 +1,32 @@
+extern("inc_inventory")
+extern("inc_er")
+
+/*
+void update_inventory_for_player(object player) {
+		er_touch(player);
+
+		string spec = "";
+		int slot = 0; for (slot = 0; slot < 14; slot++)
+			spec += ObjectToString(GetItemInSlot(slot, player)) + " ";
+		HSET(er_key(player), "equip", spec);
+}*/
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+	// struct EventArguments ea = GetEventArguments(e.serial);
+	
+	if (e.ev == "item_equip") {
+		er_touch(e.actor);
+		/*object player = e.actor;
+		object item = e.runnable;
+
+		update_inventory_for_player(player);
+		er_touch(item);*/
+	}
+
+	if (e.ev == "item_unequip") {
+		er_touch(e.actor);
+		//update_inventory_for_player(e.actor);
+	}
+ }
+

@@ -1,0 +1,185 @@
+extern("inc_time")
+extern("inc_cdb")
+extern("inc_nwnx_def")
+
+/* Keeps object associations and types in redis, like so:
+
+obj:0xf7abcdef:namespace -> sub namespaces for modules
+
+obj:id:type
+
+
+  // player info:
+  // er:p:cid ~ id -> objid
+
+  // generic object info:
+  // er:o:0xID ~ type -> objtype
+
+  // Creatures (type = 1)
+  // er:o:0xID ~ bodyParts -> bodypart id list, 0 to 20
+  // er:o:0xID ~ colors -> color id list, 0 to 3
+  // er:o:0xID ~ equip -> objId list, 0 to 14
+
+  // Items (type = ?)
+  // er:o:0xID ~ baseItem -> baseItemType
+  // er:o:0xID ~ armorParts -> "0 1 2 3 4 5 .."
+  // er:o:0xID ~ ...
+	
+
+}
+
+*/
+
+// Default TTL is 10 heartbeats.
+const int ER_DEFAULT_TTL = 60;
+
+// Put the object at the given key. Usually called internally.
+void er_put(object obj, string key);
+
+// Touch the given object, creating it if it doesn't exist.
+void er_touch(object obj, int ttl = ER_DEFAULT_TTL);
+
+void er_purge(object obj);
+
+// Returns the key for the given object hash.
+string er_key(object obj);
+
+string er_key(object obj) {
+  string plObjId = ObjectToString(obj);
+  return "er:o:" + plObjId;
+}
+
+void er_touch(object obj, int ttl = ER_DEFAULT_TTL) {
+  if (!is_valid(obj)) return;
+
+  string key = er_key(obj);
+  int objType = GetObjectType(obj);
+
+  er_put(obj,key);
+
+  // Touch items in inventory if it's a creature.
+  if (objType == OBJECT_TYPE_CREATURE && GetIsPC(obj)) {
+    int slot = 0; for (slot = 0; slot < 14; slot++)
+      er_touch(GetItemInSlot(slot, obj));
+  }
+
+  if (ttl > 0)
+    EXPIRE(key, itoa(ttl));
+
+  PUBLISH("er.touch", ObjectToString(obj));
+}
+
+
+void er_put(object obj, string key) {
+  int objType = GetObjectType(obj);
+
+  bool new = "1" != EXISTS(key);
+
+  HSET(key, ".updated_on", itoa(GetUnixTimestamp()));
+
+  // Set unchanging keys only if it doesn't exist yet.
+  if (new) {
+    HSET(key, "type", itoa(objType));
+    if(GetResRef(obj) != "")
+      HSET(key, "resref", GetResRef(obj));
+    if(GetTag(obj) != "")
+      HSET(key, "tag", GetTag(obj));
+  }
+
+  HSET(key, "name", GetName(obj));
+
+  string spec; int i;
+
+  if (objType == OBJECT_TYPE_ITEM) {
+    if (new) HSET(key, "baseItem", itoa(GetBaseItemType(obj)));
+
+    HSET(key, "possessor", ObjectToString(GetItemPossessor(obj)));
+
+    if (GetBaseItemType(obj) == BASE_ITEM_ARMOR) {
+      spec = ""; for (i = 0; i < 19; i++)
+        spec += itoa(GetItemAppearance(obj, ITEM_APPR_TYPE_ARMOR_MODEL, i)) + " ";
+      HSET(key, "armorParts", spec);
+
+      spec = ""; for (i = 0; i < 6; i++)
+        spec += itoa(GetItemAppearance(obj, ITEM_APPR_TYPE_ARMOR_COLOR, i)) + " ";
+      HSET(key, "colors", spec);
+    }
+    /*
+	 if (GetBaseItemType(obj) == BASE_ITEM_RING) {
+		HSET(key, "simpleModel", itoa(GetItemAppearance(obj, ITEM_APPR_TYPE_SIMPLE_MODEL, 0)));
+	}
+	*/
+    return;
+  }
+
+  // Set body part specifiers and colors.
+  if (objType == OBJECT_TYPE_CREATURE && GetIsPC(obj)) {
+	if (new) HSET(key, "aid", itoa(GetAccountID(obj)));
+	if (new) HSET(key, "cid", itoa(GetCharacterID(obj)));
+
+    HSET(key, "commandable", itoa(GetCommandable(obj)));
+
+    spec = ""; for (i = 0; i < 21; i++) {
+      if (i == 18 || i == 19) continue;
+	  spec += itoa(GetCreatureBodyPart(i, obj)) + " ";
+    }
+	HSET(key, "bodyParts", spec);
+
+    spec = ""; for (i = 0; i < 4; i++)
+      spec += itoa(GetColor(obj, i)) + " ";
+    HSET(key, "colors", spec);
+
+    spec = ""; for (i = 0; i < 14; i++) {
+      object item = GetItemInSlot(i, obj);
+      spec += ObjectToString(item) + " ";
+      //er_touch(item);
+    }
+    HSET(key, "equip", spec);
+
+	// Abilities with mods
+	spec = ""; for (i = 0; i < 6; i++)
+      spec += itoa(GetAbilityScore(obj, i, false)) + " ";
+	HSET(key, "abilities", spec);
+	
+	// Abilities without mods
+	//spec = ""; for (i = 0; i < 6; i++)
+    //  spec += itoa(GetAbilityScore(obj, i, true)) + " ";
+	//HSET(key, "abilitiesBase", spec);
+	
+	// skills with mods
+	spec = ""; for (i = 0; i < SKILLS_2DA_MAX_ID + 1; i++)
+      spec += itoa(GetSkillRank(i, obj, false)) + " ";
+	HSET(key, "skills", spec);
+
+	/*
+	const int AC_STRENGTH_BONUS                               = -15;
+	const int AC_DEXTERITY_BONUS                              = -14;
+	const int AC_CONSTITUTION_BONUS                           = -13;
+	const int AC_INTELLIGENCE_BONUS                           = -12;
+	const int AC_CHARISMA_BONUS                               = -11;
+	const int AC_EQUIP_BONUS                                  = -10;
+	const int AC_SKILL_BONUS                                  =  -9;
+	const int AC_CLASS_BONUS                                  =  -8;
+	const int AC_FEAT_BONUS                                   =  -7;
+	const int AC_WISDOM_BONUS                                 =  -6;
+	const int AC_OTHER_BONUS                                  =  -5;
+	const int AC_TOUCH_BASE                                   =  -4;
+	const int AC_SHIELD_BASE                                  =  -3;
+	const int AC_ARMOUR_BASE                                  =  -2;
+	const int AC_NATURAL_BASE                                 =  -1;
+	*/
+	
+	spec = ""; spec += itoa(GetAC(obj)) + " ";
+	for (i = -15; i < 0; i++)
+      spec += itoa(GetACByType(obj, i)) + " ";
+	HSET(key, "ac", spec);
+
+	//HSET(key, "ac", itoa(GetAC(obj)));
+
+    return;
+  }
+}
+
+void er_purge(object obj) {
+  DEL(er_key(obj));
+}

@@ -1,0 +1,23 @@
+extern("inc_er")
+extern("inc_cdb")
+
+/*
+Keeps players in ER.
+*/
+
+void main() {
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "player_hb") {
+		int cid = GetCharacterID(e.runnable);
+		if (!cid) return;
+
+		er_touch(e.runnable);
+
+		string key = "cache:character:" + itoa(cid) + ":live";
+		HSET(key, "oid", ObjectToString(e.runnable));
+		EXPIRE(key, itoa(60));
+		return;
+	}
+
+}
