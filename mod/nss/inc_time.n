@@ -31,6 +31,11 @@ struct RealTime GetRealTime();
 // Function: GetUnixTimestamp
 int GetUnixTimestamp();
 
+// Function: GetTimeMS
+//
+// Returns current time as ms (as a string, since it would overflow nwvm int).
+string GetTimeMS();
+
 // Function: GetTimestampTZ
 string GetTimestampTZ();
 
@@ -71,6 +76,10 @@ struct RealTime GetRealTime() {
 
 }
 
+string GetTimeMS() {
+	struct Timeval ret = GetTimeOfDay();
+	return itoa(ret.sec) + itoa(ret.usec / 1000);
+}
 
 int GetUnixTimestamp() {
 	struct Timeval ret = GetTimeOfDay();

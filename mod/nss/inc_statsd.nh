@@ -7,6 +7,7 @@
 	block; \
 	statsd_stop_timing(key); \
 )
+#define stt(key,ms) statsd_send_timing(key,ms)
 
 // increment, decrement, count
 #define si(key) statsd_increment(key)
