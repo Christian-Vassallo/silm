@@ -123,8 +123,11 @@ int p_id(object o) {
 }
 
 object p_load(int id, location at, object owner = OBJECT_INVALID) {
-	object o = pRCO("select data from " + normalize_table("objects") + " where id = " + pSi(id), at, owner);
+	object o;
+st("scorco.p_load",
+	o = pRCO("select data from " + normalize_table("objects") + " where id = " + pSi(id), at, owner);
 	p_set_p_id(o, id);
+);
 	return o;
 }
 
@@ -134,6 +137,7 @@ int p_save(string table, object o, string additional_updates = "") {
 
 int p_save_at(string table, object o, location at, string additional_updates = "") {
 	int id = p_id(o);
+st("scorco.p_save." + table,	
 	if (!id) {
 		pSCO("insert into " + normalize_table(table) + " (at,data) values(" + pEscapeLocation(at) + ", %s);", o);
 		id = pLastId(SCORCO_SCHEMA + ".objects", "id");
@@ -156,6 +160,7 @@ int p_save_at(string table, object o, location at, string additional_updates = "
 
 		pSCO(q, o);
 	}
+);
 	return id;
 }
 
@@ -166,6 +171,7 @@ bool p_delete(string table, object o) {
 		return 0;
 	}
 	
+st("scorco.p_delete." + table,	
 	// Workaround: we cannot use DELETE ONLY, because nwnx_odmbc does not support
 	// proper DELETE RETURNING statement parsing.
 	pQ("select id from " + normalize_table(table) + " where id = " + pSi(p_id(o)) + ";");
@@ -173,6 +179,7 @@ bool p_delete(string table, object o) {
 		pQ("delete from " + normalize_table(table) + " where id = " + pSi(p_id(o)) + ";");
 		p_set_p_id(o, 0);
 	}
+);
 	return 1;
 }
 
@@ -255,11 +262,14 @@ int p_load_to_inventory(string table, string conditions, object inventory) {
 	int id;
 	int total = 0;
     
+st("scorco.p_load_to_inventory." + table,	
 	pQ("select id  from " + normalize_table(table) + " where " + conditions);
     while (pF()) {
         id = pGi(1);
         
+st("scorco.p_load_to_inventory." + table + ".item",	
 		o = pRCO("select data from " + normalize_table(table) + " where id = " + pSi(id) + ";", GetLocation(inventory), inventory);
+);
 
 		if (!GetIsObjectValid(o)) {
 			_WARN("Tried to load a object which did not instanciate: " + pSi(id));
@@ -268,6 +278,7 @@ int p_load_to_inventory(string table, string conditions, object inventory) {
 
         total += 1;
     }
+);
 
     return total;
 }
