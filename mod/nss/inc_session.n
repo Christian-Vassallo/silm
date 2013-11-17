@@ -24,6 +24,9 @@ void session_set_label(string label, object player = OBJECT_SELF);
 
 void session_cleanup() {
 	pQ("update sessions.sessions set session_end = (select ping from live.hb), session_failed = true where session_end is null;");
+	
+	RunEventScriptsFor(GetEventSerial(), "session_cleanup", GetModule(),
+		GetModule(), OBJECT_INVALID, GetLocation(OBJECT_INVALID));
 }
 
 void session_start(object player = OBJECT_SELF) {

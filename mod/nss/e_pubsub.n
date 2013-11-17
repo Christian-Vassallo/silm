@@ -77,6 +77,11 @@ void main() {
 		PUBLISH("player.session.end", IntToString(ea.i0));
 		return;
 	}
+	if (e.ev == "session_cleanup") {
+		PUBLISH("player.session.cleaanup", "1");
+		PUBLISH("server.start", "1");
+		return;
+	}
 
 	// server.*	
 	if (e.ev == "module_hb") {
