@@ -15,12 +15,33 @@ object Hook_CreateObject(int nObjectType, string sTemplate, location lLocation,
 	object o = CreateObject(nObjectType, sTemplate, lLocation,
 		bUseAppearAnimation, sNewTag);
 
-/*	if (is_valid(o)) {
-		int ret = RunEventScriptsFor(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_OBJECT_CREATE,
-			o, o, OBJECT_INVALID, GetLocation(o), EVENT_MODE_SYNC);
-		if (EVENT_RESULT_STOP & ret) 
-			DestroyObject(o);
-	}*/
+	SetLocalString(GetModule(), otox(o) + "_audit_d_callstack", GetRunningScriptCallStack());
+	SetLocalObject(GetModule(), otox(o) + "_audit_d_callstack", OBJECT_SELF);
+
+	return o;
+}
+
+#undef CopyObject
+object Hook_CopyObject(object oSource, location locLocation,
+		object oOwner = OBJECT_INVALID, string sNewTag = "") {
+	
+	object o = CopyObject(oSource, locLocation, oOwner, sNewTag);
+
+	SetLocalString(GetModule(), otox(o) + "_audit_d_callstack", GetRunningScriptCallStack());
+	SetLocalObject(GetModule(), otox(o) + "_audit_d_callstack", OBJECT_SELF);
+
+	return o;
+}
+
+
+#undef CreateItemOnObject
+object Hook_CreateItemOnObject(string sItemTemplate, object oTarget = OBJECT_SELF,
+	    int nStackSize = 1, string sNewTag = "") {
+	
+	object o = CreateItemOnObject(sItemTemplate, oTarget, nStackSize, sNewTag);
+
+	SetLocalString(GetModule(), otox(o) + "_audit_d_callstack", GetRunningScriptCallStack());
+	SetLocalObject(GetModule(), otox(o) + "_audit_d_callstack", OBJECT_SELF);
 
 	return o;
 }
@@ -48,6 +69,10 @@ object Hook_CopyItemAndModify(object oItem, int nType, int nIndex, int nNewValue
 	object oNew = CopyItemAndModify(oItem, nType, nIndex, nNewValue, bCopyVars);
 	if (GetDescription(oItem, false) != GetDescription(oItem, true))
 		SetDescription(oNew, GetDescription(oItem));
+
+	SetLocalString(GetModule(), otox(oNew) + "_audit_d_callstack", GetRunningScriptCallStack());
+	SetLocalObject(GetModule(), otox(oNew) + "_audit_d_callstack", OBJECT_SELF);
+
 	return oNew;
 }
 
@@ -56,6 +81,10 @@ object Hook_CopyItem(object oItem, object oTarget = OBJECT_INVALID, int copy = F
 	object oNew = CopyItem(oItem, oTarget, copy);
 	if (GetDescription(oItem, false) != GetDescription(oItem, true))
 		SetDescription(oNew, GetDescription(oItem));
+
+	SetLocalString(GetModule(), otox(oNew) + "_audit_d_callstack", GetRunningScriptCallStack());
+	SetLocalObject(GetModule(), otox(oNew) + "_audit_d_callstack", OBJECT_SELF);
+
 	return oNew;
 }
 
