@@ -15,8 +15,9 @@ object Hook_CreateObject(int nObjectType, string sTemplate, location lLocation,
 	object o = CreateObject(nObjectType, sTemplate, lLocation,
 		bUseAppearAnimation, sNewTag);
 
-	SetLocalString(GetModule(), otox(o) + "_audit_d_callstack", GetRunningScriptCallStack());
-	SetLocalObject(GetModule(), otox(o) + "_audit_d_callstack", OBJECT_SELF);
+	SetLocalString(o, "audit_origin_trace", "CreateObject(..)");
+	SetLocalString(o, "audit_origin_callstack", GetRunningScriptCallStack());
+	SetLocalObject(o, "audit_origin_callstack", OBJECT_SELF);
 
 	return o;
 }
@@ -27,8 +28,9 @@ object Hook_CopyObject(object oSource, location locLocation,
 	
 	object o = CopyObject(oSource, locLocation, oOwner, sNewTag);
 
-	SetLocalString(GetModule(), otox(o) + "_audit_d_callstack", GetRunningScriptCallStack());
-	SetLocalObject(GetModule(), otox(o) + "_audit_d_callstack", OBJECT_SELF);
+	SetLocalString(o, "audit_origin_trace", "CopyObject(..)");
+	SetLocalString(o, "audit_origin_callstack", GetRunningScriptCallStack());
+	SetLocalObject(o, "audit_origin_callstack", OBJECT_SELF);
 
 	return o;
 }
@@ -40,8 +42,9 @@ object Hook_CreateItemOnObject(string sItemTemplate, object oTarget = OBJECT_SEL
 	
 	object o = CreateItemOnObject(sItemTemplate, oTarget, nStackSize, sNewTag);
 
-	SetLocalString(GetModule(), otox(o) + "_audit_d_callstack", GetRunningScriptCallStack());
-	SetLocalObject(GetModule(), otox(o) + "_audit_d_callstack", OBJECT_SELF);
+	SetLocalString(o, "audit_origin_trace", "CreateItemOnObject(..)");
+	SetLocalString(o, "audit_origin_callstack", GetRunningScriptCallStack());
+	SetLocalObject(o, "audit_origin_callstack", OBJECT_SELF);
 
 	return o;
 }
@@ -70,8 +73,9 @@ object Hook_CopyItemAndModify(object oItem, int nType, int nIndex, int nNewValue
 	if (GetDescription(oItem, false) != GetDescription(oItem, true))
 		SetDescription(oNew, GetDescription(oItem));
 
-	SetLocalString(GetModule(), otox(oNew) + "_audit_d_callstack", GetRunningScriptCallStack());
-	SetLocalObject(GetModule(), otox(oNew) + "_audit_d_callstack", OBJECT_SELF);
+	SetLocalString(oNew, "audit_origin_trace", "CopyItemAndModify(..)");
+	SetLocalString(oNew, "audit_origin_callstack", GetRunningScriptCallStack());
+	SetLocalObject(oNew, "audit_origin_callstack", OBJECT_SELF);
 
 	return oNew;
 }
@@ -82,8 +86,9 @@ object Hook_CopyItem(object oItem, object oTarget = OBJECT_INVALID, int copy = F
 	if (GetDescription(oItem, false) != GetDescription(oItem, true))
 		SetDescription(oNew, GetDescription(oItem));
 
-	SetLocalString(GetModule(), otox(oNew) + "_audit_d_callstack", GetRunningScriptCallStack());
-	SetLocalObject(GetModule(), otox(oNew) + "_audit_d_callstack", OBJECT_SELF);
+	SetLocalString(oNew, "audit_origin_trace", "CopyItem(..)");
+	SetLocalString(oNew, "audit_origin_callstack", GetRunningScriptCallStack());
+	SetLocalObject(oNew, "audit_origin_callstack", OBJECT_SELF);
 
 	return oNew;
 }
