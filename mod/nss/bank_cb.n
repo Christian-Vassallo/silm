@@ -95,32 +95,6 @@ void main() {
 					SendMessageToPC(oPC, "Transaktion abgeschlossen.");
 				}
 			}
-
-		} else if (act == "hist") {
-			pQ("select t.value, to_char(t.created_on, 'DD.MM.YY HH24:MI'), " +
-			" coalesce(t.name, 'Unbekannter Eintrag') from " +
-			"bank.banks b, bank.accounts a, bank.access x, bank.tx t " +
-			"where " +
-			"b.id = a.bank and x.account = a.id and t.account = a.id and " +
-			"x.id = " + pSi(axid) + "order by t.created_on asc;");
-			int shown = 0;
-			while (pF()) {
-				int txvalue = pGi(1);
-				string on = pGs(2);
-				string by = pGs(3);
-				string txv = itoa(txvalue);
-
-				SendMessageToPC(oPC,
-					ColorTag(cLightGrey) + on + ": " +
-					(txvalue > 0 ? ColorTag(cGreen) : ColorTag(cRed)) +
-						MoneyToString(txvalue) +
-					ColorTag(cLightGrey) +
-					(txvalue > 0 ? (" <= " + by) : (" => " + by))
-				);
-				shown++;
-			}
-			if (!shown)
-				SendMessageToPC(oPC, "Keine Ein-/Auszahlungen");
 		}
 	}
 

@@ -297,11 +297,6 @@ void MakeBankDialog(object oPC, object oBank) {
 				add("Einzahlen: alles Kleingold (" + MoneyToString(smallMoney) + ")", smallMoney);
 			if (balance < 0)
 				add("Einzahlen: auf 0 (" + MoneyToString(- balance) + ")", - balance);
-
-			if (allow_read) {
-				AddListItem(oPC, TTT, "Historie");
-				SetListString(oPC, TTT, "hist");
-			}
 		}
 
 		ResetConvList(oPC, oPC, TTT, 50000, "bank_cb", sText, "", "",
