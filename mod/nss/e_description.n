@@ -1,3 +1,4 @@
+extern("inc_cdb")
 extern("inc_colors")
 extern("inc_description")
 
@@ -35,6 +36,37 @@ void main() {
 			spat(INVENTORY_SLOT_CHEST,      GetName(item), item);
 			spat(INVENTORY_SLOT_CLOAK,      GetName(item), item);
 			spat(INVENTORY_SLOT_BOOTS,      GetName(item), item);
+
+			int cid = GetCharacterID(e.actedon);
+			pQ("select weight, height from characters where id = " + pSi(cid));
+			pF();
+			int height = pGi(2);
+			int weight = pGi(1);
+			if (weight > 0 || height > 0) {
+				newDesc += C("Merkmale:" , cLightBlue) + "\n";
+				
+				if (height > 0) {
+					float inch = height * 0.393701;
+					float feet = inch / 12;
+					inch = 10 * (inch - ftoi(inch));
+
+					string ft = itoa(ftoi(feet));
+					string in = itoa(ftoi(inch));
+					newDesc += "Grösse: " + itoa(height) + " cm " + C(
+						("(" + ft + " ft. " + in + " in.)"), cLightGrey
+					) + "\n";
+				}
+
+				if (weight > 0) {
+					string lb = itoa(ftoi(weight * 2.204));
+					string st = itoa(ftoi(weight * 0.157));
+					newDesc += "Gewicht: " + itoa(weight) + " kg " + C(
+						("(" + lb + " lb., " + st + " st.)"), cLightGrey
+					) + "\n";
+				}
+
+				newDesc += "\n";
+			}
 
 			newDesc += C("Aussehen:", cTeal) + "\n" + playerDesc;
 		}
