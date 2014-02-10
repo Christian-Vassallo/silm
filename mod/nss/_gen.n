@@ -565,35 +565,6 @@ string AreaToString(object oArea) {
 }
 
 
-/*int IsDM(object oPC = OBJECT_SELF, int bAllowPossess = FALSE) {
- * 	if (GetIsDM(oPC))
- * 		return 1;
- *
- * 	//if (GetLocalInt(oPC, "dm"))
- * 	//
- *
- * 	// Allow possesses too?
- * 	if (bAllowPossess && GetIsDMPossessed(oPC))
- * 		return 1;
- *
- * 	string sName = GetStringLowerCase(GetPCPlayerName(oPC));
- * 	if (
- * 		// Bernhard
- * 		sName == "kyareth" ||
- * 		sName == "gm elven" ||
- * 		sName == "asthiae" ||
- * 		sName == "esthae" ||
- *
- * 		// ||-Catcher
- * 		sName == "kyareth" // Weil ich faul bin mit || oben.
- * 	)
- * 		return 1;
- *
- * 	return 0;
- * }*/
-
-
-
 object FindPCByAccount(string sAccount, int bCheckNameToo = TRUE) {
 	object o = GetFirstPC();
 	while ( GetIsObjectValid(o) ) {
