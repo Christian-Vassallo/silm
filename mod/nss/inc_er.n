@@ -125,6 +125,9 @@ void er_put(object obj, string key) {
     }
 	HSET(key, "bodyParts", spec);
 
+	HSET(key, "hpCur", itoa(GetCurrentHitPoints(obj)));
+	HSET(key, "hpMax", itoa(GetMaxHitPoints(obj)));
+
     spec = ""; for (i = 0; i < 4; i++)
       spec += itoa(GetColor(obj, i)) + " ";
     HSET(key, "colors", spec);
