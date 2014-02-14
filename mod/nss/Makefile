@@ -52,7 +52,7 @@ revupdate:
 	@echo '#define GIT_COMMIT "$(commit)"'       >> git.h
 
 %.nss:
-	@set -e; (gcc -undef -Wall -fextended-identifiers -P -E -nostdinc -include stddef.h -I . -include _const.nh -x c -std=c99 $< |\
+	@set -e; (gcc -undef -Wall -P -E -nostdinc -include stddef.h -I . -include _const.nh -x c -std=c99 $< |\
 		gpp +z -C +n --nostdinc -Iglobal -I. --include "gpp.h" > `basename $< .n`.nss)
 
 %.ncs:
@@ -60,8 +60,8 @@ revupdate:
 
 compile: Makefile.dep $(preprocessed) $(objects)
 
-tags: $(headers) $(scripts) $(corefiles)
-	@ctags --language-force=c --totals --c-kinds=cdefgmnpstuvx --fields=fksmnSzt $(corefiles) $(scripts) $(headers)
+.tags: $(headers) $(scripts) $(corefiles)
+	@ctags --language-force=c --totals --c-kinds=cdefgmnpstuvx --fields=fksmnSzt $(corefiles) $(scripts) $(headers) .tags
 
 show-stale:
 	@for x in *.n[cs]s; do [ -f `echo $$x |cut -d. -f1`.n ] || echo $$x; done
