@@ -1,6 +1,8 @@
 #!/usr/bin/env nwn-dsl
 # vim: ft=ruby
 
+require 'yaml'
+
 spells = TwoDA::Table.parse(IO.read("../../hak/client_2da/spells.2ds"))
 
 # (metamagic +) range + spellschool-#{last_digit_of_id} + innate + hostile + has_projectile?
