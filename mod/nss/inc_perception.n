@@ -1,0 +1,156 @@
+/**
+ * Listener can read what speaker sends on the given channel.
+ * This is purely for chat distance checks, and does not take
+ * deafness or actual hearing into account.
+ *
+ * Return value (0.0 -> 1.0) indicates a how "loud" the emission is - for
+ * example, to be used for coloring the whole line.
+ *
+ * Returns values that correspond to nwserver default values
+ * for the following channels:
+ *     PARTY, DM
+ */
+float reads_f(int mode, object speaker, object listener);
+
+/**
+ * Boolean helper that wraps reads_f();
+ */
+bool reads(int mode, object speaker, object listener);
+
+/**
+ * Listener can hear what speaker says on the given channel.
+ * This is for actual spoken text, not emotes or meta, and as
+ * such only works for directional channels like TALK and WHISPER.
+ *
+ * Returns a factor from 0.0 to 1.0 indicating how "loud" the
+ * emission is, with 0.1 being barely audible and 1.0 directly
+ * next to you.
+ *
+ * This takes listening skills, deafness and so on into account, so
+ * do not apply this result to non-spoken text.
+ */
+float hears_f(int mode, object speaker, object listener);
+
+/**
+ * Boolean helper that wraps hears_f();
+ */
+bool hears(int mode, object speaker, object listener);
+
+/**
+ * Returns the maximum reading distance for the given mode mask, not
+ * taking skill adjustments or effects into account.
+ */
+float read_distance_for_channel(int mode);
+
+float read_get_skill_adjustment(int mode, object listener);
+
+#define READ_DISTANCE_TALK_LOUD 60f
+#define READ_DISTANCE_TALK 20f
+#define READ_DISTANCE_WHISPER 3f
+
+/* Experimental: Listen skill affects reading range:
+ * For each skill score, we give additional % of the total range for the given channel.
+ *
+ * Examples for ADJUSTMENT = 2f:
+ * - A listen distance of 60, and a skill of 15 will yield a total listen distance of 78
+ * - A listen distance of 20, and a skill of 15 will yield a total listen distance of 26
+ * - A listen distance of  3, and a skill of 15 will yield a total listen distance of  3.9
+ * If HEAR_SKILL_ADJUSTMENT_NEGATIVE:
+ * - A listen distance of 20, and a skill of -5 will yield a total listen distance of 15.4
+ */
+#define READ_SKILL_ADJUSTMENT_PER 2f
+/* Should negative Listen mods have negative effect on range? */
+#define READ_SKILL_ADJUSTMENT_NEGATIVE false
+/* A total cap in percent on what additional listen skill gives. */
+#define READ_SKILL_ADJUSTMENT_CAP 20f
+
+
+float reads_f(int mode, object speaker, object listener)
+{
+	if (speaker == listener)
+		return 1f;
+
+	if (mode & CHATMODE_PARTY && (GetIsDM(listener) ||
+								  GetFactionId(speaker) == GetFactionId(listener)))
+		return 1f;
+
+	if (mode & CHATMODE_DM)
+		return (GetIsDM(listener)) ? 1f : 0f;
+
+	if (GetArea(speaker) != GetArea(listener))
+		return 0f;
+
+	float dist = GetDistanceBetween(listener, speaker);
+	float maxDistance = read_distance_for_channel(mode);
+
+	maxDistance += read_get_skill_adjustment(mode, listener);
+
+	if (maxDistance > 0f)
+		return clamp(0.01 * (100f - (dist / (maxDistance / 100f))), 0f, 1f);
+
+	return 0f;
+}
+
+float hears_f(int mode, object speaker, object listener)
+{
+	if (speaker == listener)
+		return 1f;
+
+	if (GetArea(speaker) != GetArea(listener))
+		return 0f;
+
+	if (GetHasEffectOfTrueType(EFFECT_TRUETYPE_DEAF, listener))
+		return 0f;
+
+	float dist = GetDistanceBetween(listener, speaker);
+	float maxDistance = read_distance_for_channel(mode);
+
+	maxDistance += read_get_skill_adjustment(mode, listener);
+
+	if (maxDistance > 0f)
+		return clamp(0.01 * (100 - (dist / (maxDistance / 100.0))), 0f, 1f);
+
+	return 0f;
+}
+
+
+float read_get_skill_adjustment(int mode, object listener)
+{
+	int skill = GetSkillRank(SKILL_LISTEN, listener, false);
+
+	if (!READ_SKILL_ADJUSTMENT_NEGATIVE && skill <= 0)
+		return 0f;
+
+	float percentOfChannel = (read_distance_for_channel(mode) / 100f) * READ_SKILL_ADJUSTMENT_PER;
+
+	float ret = skill * percentOfChannel;
+
+	if (ret > READ_SKILL_ADJUSTMENT_CAP)
+		ret = READ_SKILL_ADJUSTMENT_CAP;
+
+	return ret;
+}
+
+float read_distance_for_channel(int mode)
+{
+	if (mode & CHATMODE_WHISPER)
+		return READ_DISTANCE_WHISPER;
+
+	if (mode & CHATMODE_TALK && mode & CHATMODE_LOUD)
+		return READ_DISTANCE_TALK_LOUD;
+
+	if (mode & CHATMODE_TALK)
+		return READ_DISTANCE_TALK;
+
+	return 0f;
+}
+
+bool reads(int mode, object speaker, object listener)
+{
+	return reads_f(mode, speaker, listener) > 0f;
+}
+
+bool hears(int mode, object speaker, object listener)
+{
+	return hears_f(mode, speaker, listener) > 0f;
+}

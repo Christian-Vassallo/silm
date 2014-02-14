@@ -1,0 +1,11 @@
+struct EventArguments handle_shout(object oSpeaker, struct EventArguments evarg)
+{
+	// Experimental: map SHOUT to TALK+LOUD for extra range, but only for players.
+	if (!GetIsDM(oSpeaker) && evarg.i0 & CHATMODE_SHOUT) {
+		evarg.i0 &= ~CHATMODE_SHOUT;
+		evarg.i0 |= (CHATMODE_TALK | CHATMODE_LOUD);
+		evarg.a0  = C("[Laut] ", cRed) + evarg.a0;
+	}
+
+	return evarg;
+}

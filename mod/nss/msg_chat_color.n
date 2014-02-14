@@ -1,0 +1,131 @@
+extern("inc_chat")
+extern("inc_colors")
+extern("inc_perception")
+
+// Applies emote colors to the given text.
+string ColorisePlayerText(object oPC, int nMode, string sText, object oListener = OBJECT_INVALID);
+
+string ColorisePlayerTextOverride(object oPC, int nMode, string sText, struct Color cText,
+								  struct Color cEmote, struct Color cEmphasis, struct Color cEmphasisInEmote,
+								  object oListener = OBJECT_INVALID);
+
+struct Color
+colorText = CS(189, 171, 140),
+colorTextLoud = CS(255, 140, 140),
+colorEmote = CS(135, 168, 178),
+colorEmphasis = CS(152, 251, 152),
+colorEmphasisInEmote = CS(135, 206, 250);
+
+/* implementation! */
+
+string ColorisePlayerText(object oPC, int nMode, string sText, object oListener = OBJECT_INVALID)
+{
+	struct Color
+			cText = colorText,
+			cEmote = colorEmote,
+			cEmphasis = colorEmphasis,
+			cEmphasisInEmote = colorEmphasisInEmote;
+
+	if (GetLocalInt(oPC, "colorOverrideText") > 0)
+		cText = CI(GetLocalInt(oPC, "colorOverrideText"));
+
+	if (GetLocalInt(oPC, "colorOverrideEmote") > 0)
+		cEmote = CI(GetLocalInt(oPC, "colorOverrideEmote"));
+
+	if (GetLocalInt(oPC, "colorOverrideEmphasis") > 0)
+		cEmphasis = CI(GetLocalInt(oPC, "colorOverrideEmphasis"));
+
+	if (GetLocalInt(oPC, "colorOverrideEmphasisEmote") > 0)
+		cEmphasisInEmote = CI(GetLocalInt(oPC, "colorOverrideEmphasisEmote"));
+
+	return ColorisePlayerTextOverride(oPC, nMode, sText,
+									  cText, cEmote, cEmphasis, cEmphasisInEmote, oListener);
+}
+
+string ColorisePlayerTextOverride(object oPC, int nMode, string sText, struct Color cText,
+								  struct Color cEmote, struct Color cEmphasis, struct Color cEmphasisInEmote,
+								  object oListener = OBJECT_INVALID)
+{
+	int i = 0;
+	string r = "", c = "";
+
+	int bInEmote = 0;
+	int bInEmphasis = 0;
+
+	if (nMode & CHATMODE_TALK && nMode & CHATMODE_LOUD) {
+		cText = colorTextLoud;
+	}
+
+	if (nMode & CHATMODE_WHISPER) {
+		cText =  ColorPercentage(cText, 75);
+		cEmote = ColorPercentage(cEmote, 75);
+		cEmphasis = ColorPercentage(cEmphasis, 75);
+		cEmphasisInEmote = ColorPercentage(cEmphasisInEmote, 75);
+	}
+
+	if (GetIsObjectValid(oListener) && (nMode & CHATMODE_TALK || nMode & CHATMODE_WHISPER)) {
+		if (oListener == oPC || GetMaster(oPC) == oListener) {
+			// Don't do this for now.
+			// cText = colorTextSelf;
+		} else {
+			float d = reads_f(nMode, oPC, oListener);
+			int percentage = ftoi(100.0 * d);
+
+			// Cap percentage to keep readability.
+			if (percentage < 25)
+				percentage = 25;
+
+			cText = ColorPercentage(cText, percentage);
+			cEmote = ColorPercentage(cEmote, percentage);
+			cEmphasis = ColorPercentage(cEmphasis, percentage);
+			cEmphasisInEmote = ColorPercentage(cEmphasisInEmote, percentage);
+		}
+	}
+
+
+	r += ColorTagClose() + ColorTag(cText);
+
+	for (i = 0; i < GetStringLength(sText); i++) {
+		c = GetSubString(sText, i, 1);
+
+		if ("*" == c) {
+			bInEmote = !bInEmote;
+
+			if (bInEmote) {
+				r += ColorTag(cEmote) + c;
+
+			} else {
+				r += c;
+
+				if (bInEmphasis)
+					r += ColorTag(cEmphasis);
+
+				else
+					r += ColorTag(cText);
+			}
+
+		} else if ("_" == c) {
+			bInEmphasis = !bInEmphasis;
+
+			if (bInEmphasis)
+				if (bInEmote)
+					r += ColorTag(cEmphasisInEmote);
+
+				else
+					r += ColorTag(cEmphasis);
+
+			else if (bInEmote)
+				r += ColorTag(cEmote);
+
+			else
+				r += ColorTag(cText);
+
+		} else
+			r += c;
+
+	}
+
+	r += ColorTagClose();
+
+	return r;
+}

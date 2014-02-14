@@ -1,0 +1,12 @@
+void handle_dm(object oSpeaker, struct EventArguments evarg)
+{
+	if (!GetIsDM(oSpeaker)) {
+		string selfMsg = ColorTag(cLightBlue) + "[DM] " + evarg.a0;
+		NWNXChatSendMessageSingle(MSG_TALK, oSpeaker, oSpeaker, selfMsg);
+	}
+
+	if (evarg.i0 & CHATMODE_DM && !GetIsDM(oSpeaker) && !GetIsDMOnline())
+		SendMessageToPC(oSpeaker, "Derzeit ist kein SL im Spiel online " +
+						"und deine Nachricht wurde von niemandem gelesen.");
+
+}

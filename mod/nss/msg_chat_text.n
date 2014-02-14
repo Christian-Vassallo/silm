@@ -1,0 +1,74 @@
+/* Garble some text according to a factor, where 0.0 is unintelligible,
+ * and 1.0 is fully readable. Will not garble *emotes*, and take _highlights_
+ * or SHOUTING into consideration.
+ */
+string chat_garble_text(string text, float factor);
+
+
+#define HARSH_SOUNDS "TSDGCHXZtsdgchxz"
+#define IsHarshSound(c) strpos(HARSH_SOUNDS, c) > -1
+#define CONSONANTS "BCDFGGHJKLMNPQRSTVXZbcdfgghjklmnpqrstvxz"
+#define IsConsonant(c) strpos(CONSONANTS, c) > -1
+#define UPCASE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#define IsUpcase(c) strpos(UPCASE, c) > -1
+
+string chat_garble_text(string text, float factor)
+{
+	string ret;
+
+	if (factor <= 0f)
+		return text;
+
+	float addFactorNext = 0f;
+
+	int bInEmote = 0, bInEmphasis = 0;
+	string c; int i;
+
+	for (i = 0; i < GetStringLength(text); i++) {
+		c = GetSubString(text, i, 1);
+
+		// Some situations give a bonus factor;
+		float addFactor = 0f;
+
+		addFactor += addFactorNext;
+		addFactorNext = 0f;
+
+		if (bInEmphasis)
+			// Emphasis _like this_ is probably easier to understand.
+			addFactor += 0.4;
+
+		if (IsUpcase(c))
+			// Upcase is also easier (ASSUMING THIS, or Really Now)
+			addFactor += 0.2;
+
+		// harsh sounds get a bonus, also the following
+		if (IsHarshSound(c)) {
+			addFactor += 0.2;
+			addFactorNext += 0.2;
+		}
+
+		// Consonants get a small bonus as well
+		if (IsConsonant(c))
+			addFactor += 0.1;
+
+		// Never garble emotes or control chars.
+		if (bInEmote || c == "*" || c == "_")
+			ret += c;
+
+		// bold-spoken text has a bonus to being heard.
+		else if (Random(100) >= ftoi((addFactor + factor) * 100))
+			ret += c;
+		else if (Random(10) >= 2)
+			ret += ".";
+		else ret += " ";
+
+		if ("*" == c) {
+			bInEmote = !bInEmote;
+
+		} else if ("_" == c) {
+			bInEmphasis = !bInEmphasis;
+		}
+	}
+
+	return ret;
+}

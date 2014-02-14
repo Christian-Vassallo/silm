@@ -1,7 +1,8 @@
 extern("inc_events")
-extern("inc_chat_lib")
+extern("msg_chat_color")
 extern("_gen")
 extern("x0_i0_match")
+extern("inc_perception")
 
 #define ZONE_OF_SILENCE_RANGE 1.5f
 
@@ -69,7 +70,7 @@ void main()
 				while (is_valid(dm)) {
 					if (GetIsDM(dm) && !GetIsDMPossessed(dm) &&
 							GetDistanceBetween(dm, ei.actor) >= ZONE_OF_SILENCE_RANGE &&
-							hears(ei.actor, dm, ea.i0 & CHATMODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER))
+							reads(ea.i0, ei.actor, dm))
 						SendMessageToPC(dm, zos_message);
 
 					dm = GetNextPC();

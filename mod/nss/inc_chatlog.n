@@ -1,6 +1,7 @@
 extern("inc_cdb")
 extern("inc_chat")
 extern("inc_session")
+extern("inc_perception")
 
 void ChatLog(object oPC, int nMode, string sMessage, object oTo);
 
@@ -23,24 +24,7 @@ void ChatLog(object oPC, int nMode, string sMessage, object oTo)
 
 	} else {
 		iterate_players(oIterate,
-
-		if (oPC != oIterate) {
-		bool did_hear = false;
-
-		if (nMode & CHATMODE_SHOUT)
-				did_hear = true;
-
-			else if (nMode & CHATMODE_PARTY)
-				did_hear = (GetIsDM(oIterate) || GetFactionId(oPC) == GetFactionId(oIterate));
-
-			else if (nMode & CHATMODE_DM || nMode & CHATMODE_SERVER)
-				did_hear = GetIsDM(oIterate);
-
-			else if ((nMode & CHATMODE_TALK || nMode & CHATMODE_WHISPER) &&
-					 hears(oPC, oIterate, nMode & CHATMODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER))
-				did_hear = true;
-
-			if (did_hear) {
+			if (oPC != oIterate && reads(nMode, oPC, oIterate)) {
 				if (GetCharacterID(oIterate) > 0) {
 					nheard_by_cid += 1;
 					heard_by_cid += itoa(GetCharacterID(oIterate));
@@ -52,8 +36,7 @@ void ChatLog(object oPC, int nMode, string sMessage, object oTo)
 					heard_by_aid += ",";
 				}
 			}
-		}
-					   );
+		);
 	}
 
 	if (nheard_by_aid > 0)

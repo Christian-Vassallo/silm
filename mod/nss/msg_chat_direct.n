@@ -1,0 +1,75 @@
+extern("inc_perception")
+
+/* Just a void wrapper for Assign/Delay. */
+void __NWNXChatSendMessageSingle(int mode, object o1, object o2, string m)
+{
+	NWNXChatSendMessageSingle(mode, o1, o2, m);
+}
+
+/* Handle directional messages, like TALK and WHISPER. */
+void handle_directional(object oSpeaker, struct EventArguments evarg)
+{
+	object oProxy = self_or_proxy(oSpeaker);
+
+#define NWNX_CHAT_EXPERIMENTAL
+#ifdef NWNX_CHAT_EXPERIMENTAL
+
+	object oTargetPC = GetFirstPC();
+
+	while (GetIsObjectValid(oTargetPC)) {
+
+		/* oTargetPC is sometimes possessing creature, like a DM-possessed NPC
+		 * or a familiar. This takes care of actually doing the listening check
+		 * against that instead of the PC object, which may be somewhere completely
+		 * different.
+		 */
+		object oListener = NWNXChatGetActualGameObjectForPC(oTargetPC);
+
+		if (reads(evarg.i0, oSpeaker, oListener)) {
+			string indvMsg = evarg.a0;
+
+			/* DM persons are always readable at full volume. */
+			if (GetIsDM(oSpeaker) && !GetIsDMPossessed(oSpeaker))
+				indvMsg = ColorisePlayerText(oSpeaker, evarg.i0, indvMsg);
+			else
+				indvMsg = ColorisePlayerText(oSpeaker, evarg.i0, indvMsg, oListener);
+
+			int targetMode = 0;
+
+			if (evarg.i0 & CHATMODE_TALK)
+				targetMode = MSG_TALK;
+			else if (evarg.i0 & CHATMODE_WHISPER)
+				targetMode = MSG_WHISPER;
+
+			if (GetIsDM(oSpeaker))
+				targetMode += MSG_MODE_DM;
+
+			/* Wait for the object to be created & synced to all clients,
+			 * otherwise some players won't see the text.
+			 * 300ms seems about right-ish.
+			 */
+			if (oListener != oSpeaker && oProxy != oSpeaker)
+				DelayCommand(0.3, __NWNXChatSendMessageSingle(targetMode, oTargetPC, oSpeaker, indvMsg));
+			else
+				NWNXChatSendMessageSingle(targetMode, oTargetPC, oSpeaker, indvMsg);
+		}
+
+		oTargetPC = GetNextPC();
+	}
+
+#else
+
+	evarg.a0 = ColorisePlayerText(oSpeaker, evarg.i0, evarg.a0);
+
+	/* Wait for the object to be created & synced to all clients,
+	 * otherwise some players won't see the text.
+	 * 300ms seems about right-ish. */
+	if (oProxy != oSpeaker)
+		DelayCommand(0.3, NWNXChatSpeakToChannel(oProxy, ChatModeToMsg(evarg.i0), evarg.a0));
+	else
+		NWNXChatSpeakToChannel(oSpeaker, ChatModeToMsg(evarg.i0), evarg.a0);
+
+#endif
+
+	NWNXChatSuppress();
+}

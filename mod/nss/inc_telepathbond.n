@@ -1,7 +1,8 @@
 extern("inc_cdb")
 extern("inc_chat")
-extern("inc_chat_lib")
+extern("msg_chat_color")
 extern("inc_chatlog")
+extern("inc_perception")
 
 #define USE_TELL false
 #define DARKEN_OWN 0
@@ -135,9 +136,7 @@ int DelegateOwnToPartners(object oPC, int nMode, string sMessage)
 		sShortName = pG(2);
 		oB = GetPCByCID(nTCID);
 
-		if (GetIsPC(oB)
-				&& !hears(oPC, oB, nMode & CHATMODE_TALK ?
-						  TALKVOLUME_TALK : TALKVOLUME_WHISPER)) {
+		if (GetIsPC(oB) && !reads(nMode, oPC, oB)) {
 
 			if (sShortName != "")
 				sMessage = sStart + sShortName + ": " + sRest;
@@ -185,9 +184,7 @@ int DelegateHeardToPartners(object oPC, object oSpeakingObject, int nMode,
 		nTCID = StringToInt(pG(1));
 		oB = GetPCByCID(nTCID);
 
-		if (GetIsPC(oB)
-				&& !hears(oB, oSpeakingObject, nMode & CHATMODE_TALK ?
-						  TALKVOLUME_TALK : TALKVOLUME_WHISPER)) {
+		if (GetIsPC(oB) && !reads(nMode, oSpeakingObject, oB)) {
 
 			if (USE_TELL)
 				NWNXChatSpeakToChannel(oPC, MSG_PRIVATE, sMessage, oB);

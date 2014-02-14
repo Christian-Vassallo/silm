@@ -28,7 +28,9 @@ CHATMODE_DM_MODE = 1 << 8,
 
 CHATMODE_FORCED = 1 << 9,
 
-CHATMODE_TELEPATHIC_BOND = 1 << 10;
+CHATMODE_TELEPATHIC_BOND = 1 << 10,
+
+CHATMODE_LOUD = 1 << 11;
 
 const string
 LIST_ITEM_NAME = "chatPC_",
@@ -38,8 +40,11 @@ PC_ID_NAME = "chatID";
 void NWNXChatSpeakToChannel(object oSender, int nChannel, string sMessage,
 							object oRecipient = OBJECT_INVALID);
 
+int NWNXChatSendMessageSingle(int mode, object sendTo, object oSender, string sMessage);
+
 // Returns the PC with the given player ID, or OBJECT_INVALID if invalid ..
 object NWNXChatGetPC(int nID);
+int NWNXChatGetPCID(object pc);
 
 // Returns the actual game object for a client, for example possessed familiars for players,
 // or DM-possessed creatures for DMs.
@@ -150,6 +155,38 @@ void NWNXChatSpeakToChannel(object oSender, int nChannel, string sMessage,
 				   "¬" + ObjectToString(oRecipient) + "¬" + IntToString(nChannel) + "¬" + sMessage);
 }
 
+int NWNXChatSendMessageSingle(int mode, object sendTo, object oSender, string sMessage)
+{
+	WriteTimestampedLogEntry(itoa(mode) + " sendTo=" + otoa(sendTo) +
+							 " oSender=" + otoa(oSender) + " msg=" + sMessage);
+
+	if (!GetIsObjectValid(sendTo)) {
+		WriteTimestampedLogEntry("FAILED because sendTo !valid");
+		return FALSE;
+	}
+
+	int oSendToID = NWNXChatGetPCID(sendTo);
+
+	if (!GetIsObjectValid(oSender)) {
+		WriteTimestampedLogEntry("FAILED because oSender !valid");
+		return FALSE;
+	}
+
+	SetLocalString(oSender, "NWNX!CHAT!SENDMSGSINGLE",
+				   IntToString(mode) + "¬" +
+				   IntToString(oSendToID) + "¬" +
+				   ObjectToString(oSender) + "¬" +
+				   sMessage);
+
+	if (GetLocalString(oSender, "NWNX!CHAT!SENDMSGSINGLE") == "1")
+		return TRUE;
+	else {
+		WriteTimestampedLogEntry("FAILED (0)");
+		return FALSE;
+	}
+}
+
+
 
 void NWNXChatInit()
 {
@@ -205,6 +242,11 @@ void NWNXChatPCout(object oPC)
 object NWNXChatGetPC(int nID)
 {
 	return GetLocalObject(GetModule(), LIST_ITEM_NAME + IntToString(nID));
+}
+
+int NWNXChatGetPCID(object pc)
+{
+	return GetLocalInt(pc, PC_ID_NAME);
 }
 
 void NWNXChatSuppress(object oPC = OBJECT_SELF)

@@ -1,0 +1,8 @@
+void handle_private(object oSpeaker, object oTo, struct EventArguments evarg)
+{
+	if (oSpeaker == oTo)
+		FloatingTextStringOnCreature("Warnung: Diese Nachricht ging an dich " +
+									 "selbst (falsch geklickt?): " + substr(evarg.a0, 0, 10) + " ..",
+									 oSpeaker, false);
+
+}

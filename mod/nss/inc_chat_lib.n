@@ -1,9 +1,10 @@
 extern("_gen")
 extern("inc_chat")
-extern("inc_target")
+// extern("inc_target")
 extern("inc_colors")
 extern("inc_limbo")
-extern("inc_scorco")
+// extern("inc_scorco")
+extern("inc_perception")
 
 
 const int
@@ -16,12 +17,6 @@ SYNTAX = 2,
 FAIL = 3,
 ACCESS = 4;
 
-struct Color
-		// colorText = CS(255, 228, 181), // moccasin
-colorText = CS(189, 171, 140),
-colorEmote = CS(135, 168, 178),
-colorEmphasis = CS(152, 251, 152), // palegreen
-colorEmphasisInEmote = CS(135, 206, 250); // lightskyblue
 
 void setsleep(float fWait);
 
@@ -47,104 +42,6 @@ void FixFactionsForObject(object oO, object oPC = OBJECT_SELF);
 
 
 void ChatHookAudit(object oPC = OBJECT_SELF, int bSuppress = TRUE, string sData = "");
-
-
-// Applies emote colors to the given text.
-string ColorisePlayerText(object oPC, int nMode, string sText);
-
-string ColorisePlayerTextOverride(object oPC, int nMode, string sText, struct Color cText,
-								  struct Color cEmote, struct Color cEmphasis, struct Color cEmphasisInEmote);
-
-
-/* implementation! */
-
-string ColorisePlayerText(object oPC, int nMode, string sText)
-{
-	struct Color
-			cText = colorText,
-			cEmote = colorEmote,
-			cEmphasis = colorEmphasis,
-			cEmphasisInEmote = colorEmphasisInEmote;
-
-	if (GetLocalInt(oPC, "colorOverrideText") > 0)
-		cText = CI(GetLocalInt(oPC, "colorOverrideText"));
-
-	if (GetLocalInt(oPC, "colorOverrideEmote") > 0)
-		cEmote = CI(GetLocalInt(oPC, "colorOverrideEmote"));
-
-	if (GetLocalInt(oPC, "colorOverrideEmphasis") > 0)
-		cEmphasis = CI(GetLocalInt(oPC, "colorOverrideEmphasis"));
-
-	if (GetLocalInt(oPC, "colorOverrideEmphasisEmote") > 0)
-		cEmphasisInEmote = CI(GetLocalInt(oPC, "colorOverrideEmphasisEmote"));
-
-	return ColorisePlayerTextOverride(oPC, nMode, sText,
-									  cText, cEmote, cEmphasis, cEmphasisInEmote);
-}
-
-string ColorisePlayerTextOverride(object oPC, int nMode, string sText, struct Color cText,
-								  struct Color cEmote, struct Color cEmphasis, struct Color cEmphasisInEmote)
-{
-	int i = 0;
-	string r = "", c = "";
-
-	int bInEmote = 0;
-	int bInEmphasis = 0;
-
-	if (nMode & CHATMODE_WHISPER) {
-		cText = Darken(cText, 75);
-		cEmote = Darken(cEmote, 75);
-		cEmphasis = Darken(cEmphasis, 75);
-		cEmphasisInEmote = Darken(cEmphasisInEmote, 75);
-	}
-
-	r += ColorTagClose() + ColorTag(cText);
-
-	for (i = 0; i < GetStringLength(sText); i++) {
-		c = GetSubString(sText, i, 1);
-
-		if ("*" == c) {
-			bInEmote = !bInEmote;
-
-			if (bInEmote) {
-				r += ColorTag(cEmote) + c;
-
-			} else {
-				r += c;
-
-				if (bInEmphasis)
-					r += ColorTag(cEmphasis);
-
-				else
-					r += ColorTag(cText);
-			}
-
-		} else if ("_" == c) {
-			bInEmphasis = !bInEmphasis;
-
-			if (bInEmphasis)
-				if (bInEmote)
-					r += ColorTag(cEmphasisInEmote);
-
-				else
-					r += ColorTag(cEmphasis);
-
-			else if (bInEmote)
-				r += ColorTag(cEmote);
-
-			else
-				r += ColorTag(cText);
-
-		} else
-			r += c;
-
-	}
-
-	r += ColorTagClose();
-
-	return r;
-}
-
 
 
 void SpeakToMode(object oObject, string sText, int iMode)

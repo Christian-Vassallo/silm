@@ -1,6 +1,7 @@
 extern("inc_cdb")
 extern("inc_session")
 extern("inc_chat")
+extern("inc_perception")
 
 /* NAMESPACES
 
@@ -37,27 +38,9 @@ string heard_by_session(object oPC, int nMode)
 {
 	string ret;
 	iterate_players(oIterate,
-
-	if (oPC != oIterate) {
-	bool did_hear = false;
-
-	if (nMode & CHATMODE_SHOUT)
-			did_hear = true;
-
-		else if (nMode & CHATMODE_PARTY)
-			did_hear = (GetIsDM(oIterate) || GetFactionId(oPC) == GetFactionId(oIterate));
-
-		else if (nMode & CHATMODE_DM || nMode & CHATMODE_SERVER)
-			did_hear = GetIsDM(oIterate);
-
-		else if ((nMode & CHATMODE_TALK || nMode & CHATMODE_WHISPER) &&
-				 hears(oPC, oIterate, nMode & CHATMODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER))
-			did_hear = true;
-
-		if (did_hear)
+		if (oPC != oIterate && reads(nMode, oPC, oIterate))
 			ret += itoa(session_get(oIterate)) + ",";
-	}
-				   );
+	);
 
 	if (strlen(ret) > 0)
 		ret = substr(ret, 0, strlen(ret) - 1);

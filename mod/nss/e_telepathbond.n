@@ -64,19 +64,8 @@ void main()
 										   PLAYER_CHAR_IS_PC, oPC, nNth);
 
 			while (GetIsObjectValid(oI)) {
-				// if its too far off drop out
-				if (iMode & CHATMODE_WHISPER
-						&& GetDistanceBetween(oPC, oI) > TALKDISTANCE_WHISPER)
-					break;
-
-				if (iMode & CHATMODE_TALK
-						&& GetDistanceBetween(oPC, oI) > TALKDISTANCE_TALK)
-					break;
-
-				if (oPC != oI && !GetIsDM(oI) && GetObjectHeard(oPC, oI)) {
-					// Iterate all bond partners and send a text message
+				if (oPC != oI && !GetIsDM(oI) && reads(iMode, oPC, oI))
 					DelegateHeardToPartners(oI, oPC, iMode, sText);
-				}
 
 				nNth++;
 				oI = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR,

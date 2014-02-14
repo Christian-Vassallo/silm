@@ -1,41 +1,23 @@
 extern("inc_cdb")
 extern("inc_chatlog")
 extern("inc_chat")
-extern("inc_chat_lib")
 extern("inc_events")
-extern("msg_chat_lib")
+extern("msg_chat_proxy")
+extern("msg_chat_text")
+extern("msg_chat_color")
+extern("msg_chat_direct")
+extern("msg_chat_dm")
+extern("msg_chat_private")
+extern("msg_chat_shout")
+extern("msg_chat_party")
+extern("inc_telepathbond")
 
-void handle_directional(object oSpeaker, struct EventArguments evarg)
-{
-	object oProxy = self_or_proxy(oSpeaker);
-
-	evarg.a0 = ColorisePlayerText(oSpeaker, evarg.i0, evarg.a0);
-
-	/* Wait for the object to be created & synced to all clients,
-	 * otherwise some players won't see the text.
-	 * 300ms seems about right-ish. */
-	if (oProxy != oSpeaker)
-		DelayCommand(0.3, NWNXChatSpeakToChannel(oProxy, ChatModeToMsg(evarg.i0), evarg.a0));
-	else
-		NWNXChatSpeakToChannel(oSpeaker, ChatModeToMsg(evarg.i0), evarg.a0);
-
-	NWNXChatSuppress();
-}
+/* Internal chatlogging helper. */
+void __chatlog(object runnable, object actor, object actedon, struct EventArguments ea);
 
 void main()
 {
 	object oSpeaker = OBJECT_SELF;
-
-	int ret = RunEventScriptsFor(GetEventSerial(), "nwnx_chat", oSpeaker,
-								 oSpeaker, OBJECT_INVALID, GetLocation(oSpeaker));
-
-	if (ret & EVENT_RESULT_SUPPRESS) {
-		NWNXChatSuppress();
-		return;
-	}
-
-	if (ret & EVENT_RESULT_STOP)
-		return;
 
 	SetLocalString(oSpeaker, "NWNX!CHAT!TEXT", NWNXChatGetSpacer());
 	string sText = GetLocalString(oSpeaker, "NWNX!CHAT!TEXT");
@@ -61,6 +43,13 @@ void main()
 		return;
 	}
 
+	if (GetStringLeft(sText, 1) == "$" && GetHasActiveBonds(oSpeaker)) {
+		string msg = GetSubString(sText, 1, 2048);
+		DelegateTelepathicMessageToPartners(oSpeaker, msg);
+		NWNXChatSuppress();
+		return;
+	}
+
 	struct EventArguments evarg;
 
 	evarg.a0 = sText;
@@ -79,22 +68,40 @@ void main()
 		DeleteEventArguments(serial);
 		return;
 	}
-
 	evarg = GetEventArguments(serial);
+
+	DeleteEventArguments(serial);
 
 	__chatlog(oSpeaker, oSpeaker, oTo, evarg);
 
-	if (evarg.i0 & CHATMODE_DM && !GetIsDM(oSpeaker) && !GetIsDMOnline())
-		SendMessageToPC(oSpeaker, "Derzeit ist kein SL im Spiel online " +
-						"und deine Nachricht wurde von niemandem gelesen.");
+	if (evarg.i0 & CHATMODE_SHOUT)
+		evarg = handle_shout(oSpeaker,  evarg);
 
-	if (oSpeaker == oTo)
-		FloatingTextStringOnCreature("Warnung: Diese Nachricht ging an dich " +
-									 "selbst (falsch geklickt?): " + substr(evarg.a0, 0, 10) + " ..",
-									 oSpeaker, false);
+	if (evarg.i0 & CHATMODE_PARTY)
+		evarg = handle_party(oSpeaker, evarg);
+
+	if (evarg.i0 & CHATMODE_DM)
+		handle_dm(oSpeaker, evarg);
+
+	if (evarg.i0 & CHATMODE_PRIVATE)
+		handle_private(oSpeaker, oTo, evarg);
 
 	if (evarg.i0 & CHATMODE_TALK || evarg.i0 & CHATMODE_WHISPER)
 		handle_directional(oSpeaker, evarg);
+}
 
-	DeleteEventArguments(serial);
+void __chatlog(object runnable, object actor, object actedon, struct EventArguments ea)
+{
+	int logmode = ea.i0;
+
+	if (logmode & CHATMODE_DM_MODE)
+		logmode -= CHATMODE_DM_MODE;
+
+	string mode = itoa(logmode);
+	string aid = itoa(GetAccountID(actor));
+	string cid = itoa(GetCharacterID(actor));
+	SetLocalString(GetModule(), "last_chat_message_text_" + mode + "_" + aid + "_" + cid, ea.a0);
+	SetLocalObject(GetModule(), "last_chat_message_on_" + mode + "_" + aid + "_" + cid, actedon);
+
+	ChatLog(actor, logmode, ea.a0, actedon);
 }
