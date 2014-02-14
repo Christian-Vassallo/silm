@@ -4,32 +4,23 @@ File: inc_objset.n
 Object-Sets are collections of objects that can be easily iterated and modified.
 */
 
-// Function: AddToSet
 void AddToSet(string sSetName, object oObj, object oPC = OBJECT_INVALID);
 
-// Function: GetFromSet
 object GetFromSet(string sSetName, int nIndex, object oPC = OBJECT_INVALID);
 
-// Function: GetSetSize
 int GetSetSize(string sSetName, object oPC = OBJECT_INVALID);
 
-// Function: ClearSet
 void ClearSet(string sSetName, object oPC = OBJECT_INVALID);
 
 // Removes nIndex from set sSetName, shuffling all following
 //// Function: RemoveFromSet
 int RemoveFromSet(string sSetName, int nIndex);
 
-// Function: GetCurrentSet
 string GetCurrentSet(object oPC = OBJECT_INVALID);
-// Function: SetCurrentSet
 void SetCurrentSet(string sSetName, object oPC = OBJECT_INVALID);
 
-// Function: GetIsInSet
 int GetIsInSet(string sSetName, object oTest, object oPC = OBJECT_INVALID);
 
-// Macro: IterateSet(setname,owner,object_name,code)
-//
 // Iterates the named set *setname* on *owner* and executes *code* for each
 // named after the variable *object_name*.
 //

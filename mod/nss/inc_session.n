@@ -1,23 +1,18 @@
 extern("inc_cdb")
 
-// Function: session_start
 // Registers a new player session.
 void session_start(object player = OBJECT_SELF);
 
-// Function: session_end
 // Terminates a player session.
 void session_end(object player = OBJECT_SELF);
 
-// Function: session_get
 // Returns this sessions' serial.
 int session_get(object player = OBJECT_SELF);
 
-// Function: session_cleanup
 // Cleans up stale sessions that were still active before the last restart/crash.
 // Call on mod_load
 void session_cleanup();
 
-// Function: session_set_label
 // Allows setting of a human-readable label for search & indexing.
 // Give "" to unset label.
 void session_set_label(string label, object player = OBJECT_SELF);

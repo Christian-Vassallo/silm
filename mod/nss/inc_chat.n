@@ -34,25 +34,20 @@ const string
 LIST_ITEM_NAME = "chatPC_",
 PC_ID_NAME = "chatID";
 
-// Function: SpeakToChannel
 // Makes oSender speak to oRecipient on nChannel = MSG_*.
 void NWNXChatSpeakToChannel(object oSender, int nChannel, string sMessage,
 							object oRecipient = OBJECT_INVALID);
 
-// Function: GetPC
 // Returns the PC with the given player ID, or OBJECT_INVALID if invalid ..
 object NWNXChatGetPC(int nID);
 
-// Function: Suppress
 // Suppress the last chat message. ONLY usable
 // in the chat script.
 void NWNXChatSuppress(object oPC = OBJECT_SELF);
 
-// Function: ChatModeToMsg
 // Converts CHATMODE_* to MSG_*
 int ChatModeToMsg(int mode);
 
-// Function: MsgToChatMode
 // Converts MSG_* to CHATMODE_*
 int MsgToChatMode(int msg);
 

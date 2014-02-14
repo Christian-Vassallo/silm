@@ -71,7 +71,6 @@ const int EVENT_MODE_SYNC = 1 << 1;
 const int EVENT_MODE_DEFER = 1 << 2;
 
 
-// Struct: EventInfo
 // A struct containing various information
 // relating the event.
 struct EventInfo {
@@ -122,7 +121,6 @@ struct EventInfo {
 };
 
 
-// Struct: EventArguments
 // A struct containing arguments passed by the
 // event source. Refer to the individual event
 // documentation to find out the meaning and
@@ -152,8 +150,6 @@ struct EventArguments {
 
 
 
-// Function: RunEventScriptsFor
-//
 // Runs all scripts that are registered for nEvent
 // Returns:
 // - mask of EVENT_RESULT_*
@@ -161,8 +157,6 @@ int RunEventScriptsFor(event_id_t serial, event_t ev, object oRunnable, object o
 					   object oActedOn,
 					   location lActedAt, int nRequireMode = EVENT_MODE_ANY);
 
-// Function: RunEventScriptsForWithArgv
-//
 // Runs all scripts that are registered for nEvent
 // Returns:
 // - mask of EVENT_RESULT_*
@@ -170,8 +164,6 @@ int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, 
 							   object oActedOn,
 							   location lActedAt, struct EventArguments evArgs, int nRequireMode = EVENT_MODE_ANY);
 
-// Function: RunEventScript
-//
 // Runs the named event script on oRunnable
 // Returns:
 // - mask of EVENT_RESULT_*
@@ -179,8 +171,6 @@ int RunEventScript(string sScript, int nEventMode, event_id_t serial, event_t ev
 				   object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime,
 				   int retMask);
 
-// Function: RunEventScriptAsync
-//
 // Wrapper around RunEventScript, for delayed execution
 void RunEventScriptAsync(string sScript, int nEventMode, event_id_t serial, event_t ev,
 						 object oRunnable,
@@ -192,11 +182,9 @@ void RunEventScriptAsync(string sScript, int nEventMode, event_id_t serial, even
 // Returns EventInfo
 struct EventInfo GetEventInfo();
 
-// Function: SetEventArguments
 // Used internally to set the event arguments.
 void SetEventArguments(event_id_t serial, struct EventArguments ea);
 
-// Function: GetEventArguments
 // Returns all event-specific arguments that have been passed to the event.
 struct EventArguments GetEventArguments(event_id_t serial);
 
@@ -204,14 +192,11 @@ struct EventArguments GetEventArguments(event_id_t serial);
 void DeleteEventArguments(event_id_t serial);
 
 
-// Function: SetEventScriptReturnValue
-//
 // Sets the return value for scripts.
 // - mask of EVENT_RESULT_*
 void SetEventResult(int nValue, string sStatus = "");
 
 
-// Function: GetEventSerial
 // Returns the next serial.
 event_id_t GetEventSerial();
 

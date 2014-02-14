@@ -1,7 +1,5 @@
 extern("inc_nwnx_ruby")
 
-// Function: getopt_init
-//
 // Initialize getopt.
 // Parameters:
 // - str: The string to parse
@@ -10,43 +8,28 @@ extern("inc_nwnx_ruby")
 //   Example: "help visual=" to allow --help, and --visual=5
 int getopt_init(string str, string opts = "");
 
-// Function: getopt_errstr
 // Returns the error string that getopt_init yielded
 string getopt_errstr();
 
-// Function: getopt_reset
-//
 // Resets all options.
 int getopt_reset();
 
-// Function: getopt_arg
-//
 // Returns argument n, starting at 0.
 string getopt_arg(int n);
 
-// Function: getopt_argc
-//
 // Returns the argument count.
 int getopt_argc();
 
-// Function: getopt_argall
-//
 // Returns all arguments concatenated with single spacing, with
 // options parsed out already.
 string getopt_argall();
 
-// Function: getopt_opt
-//
 // Returns a boolean indicating the presence of option n.
 int getopt_opt(string n);
 
-// Function: getopt_optv
-//
 // Returns the value of option n, or an empty string.
 string getopt_optv(string n);
 
-// Function: getopt_args
-//
 // Returns the complete, unparsed string, including all options.
 string getopt_args();
 
@@ -54,14 +37,12 @@ string getopt_args();
 // string getoptarga();
 
 
-// Function: commandsplit
 // Splits the given text with shell-like command parsing, and
 // returns the count of individual commands.
 // Example:
 // - "aa && b && c && 'd && e'" returns 4
 int commandsplit(string sText, string sSplitAt);
 
-// Function: commandget
 // Returns the argument at index (starting at 0) from the last
 // call to commandsplit.
 string commandget(int index);

@@ -7,42 +7,24 @@ TABLE_ACCOUNTS = "accounts",
 TABLE_CHARACTERS = "characters";
 
 
-// Function: GetAccountID
-//
 int GetAccountID(object oPC);
 
-// Function: GetOrCreateAccountID
-//
 int GetOrCreateAccountID(object oPC);
 
-// Function: GetCharacterID
-//
 int GetCharacterID(object oPC);
 
-// Function: GetOrCreateCharacterID
-//
 int GetOrCreateCharacterID(object oPC);
 
-// Function: GetAccountIsDM
-//
 int GetAccountIsDM(object oPC);
 
-// Function: GetPCByAID
-//
 object GetPCByAID(int nAID);
 
-// Function: GetPCByCID
-//
 object GetPCByCID(int nCID);
 
-// Function: CharacterError
-//
 // notifies oPC about his character not in the database,
 // and does some log output
 void CharacterError(object oPC, string sLog = "Character not found");
 
-// Function: SaveCharacter
-//
 // Saves oPC into the database, updating all statistics and stuff.
 // Returns the character ID, or 0 on failure.
 int SaveCharacter(object oPC, int bIsLogin = FALSE);
@@ -61,8 +43,6 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE);
 //
 //  * amask(oPC, AMASK_GLOBAL_GM) => 1
 //   if oPC has an amask of AMASK_GLOBAL_GM
-//
-// Function: amask
 //
 int amask(object oPC, int nAMask);
 

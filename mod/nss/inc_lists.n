@@ -9,91 +9,66 @@ DISPLAYMODE_NORMAL = 0,
 DISPLAYMODE_GREEN = 1,
 DISPLAYMODE_RED = -1;
 
-// Function: GetListSelection
 // Returns the selected list item.
 int GetListSelection(object oPC);
 
-// Function: ClearList
 // Clears a list from the object
 void ClearList(object oHolder, string sListTag);
 
-// Function: ClearMenuLevel
 // Clears menu level?
 void ClearMenuLevel(object oHolder, string sListTag, int nLevel);
 
-// Function: GetMenuLevel
 int GetMenuLevel(object oHolder, string sListTag, int nLevel);
 
-// Function: SetMenuLevel
 void SetMenuLevel(object oHolder, string sListTag, int nLevel, int nValue);
 
-// Function: GetListCount
 //Returns the number of elements in the list
 int GetListCount(object oHolder, string sListTag);
 
-// Function: AddListItem
 //Adds an item to the list. 'ListTitle' would show up in the conversation
 void AddListItem(object oHolder, string sListTag, string sListTitle);
 
-// Function: SetListInt
 void SetListInt(object oHolder, string sListTag, int iValue);
 
-// Function: SetListString
 void SetListString(object oHolder, string sListTag, string sValue);
 
-// Function: SetListLocation
 void SetListLocation(object oHolder, string sListTag, location lValue);
 
-// Function: SetListObject
 void SetListObject(object oHolder, string sListTag, object oValue);
 
-// Function: SetListFloat
 void SetListFloat(object oHolder, string sListTag, float fValue);
 
-// Function: SetListDisplayMode
 //With the proper dialogue tree, iDispMode > 0 means the entry is shown in green,
 // < 0 means the entry is shown in red
 void SetListDisplayMode(object oHolder, string sListTag, int iDispMode, int iInd = -1);
 
-// Function: GetListInt
 int GetListInt(object oHolder, string sListTag, int iEntry);
 
-// Function: GetListString
 string GetListString(object oHolder, string sListTag, int iEntry);
 
-// Function: GetListLocation
 location GetListLocation(object oHolder, string sListTag, int iEntry);
 
-// Function: GetListObject
 object GetListObject(object oHolder, string sListTag, int iEntry);
 
-// Function: GetListFloat
 float GetListFloat(object oHolder, string sListTag, int iEntry);
 
-// Function: GetListDisplayMode
 int GetListDisplayMode(object oHolder, string sListTag, int iEntry);
 
-// Function: ResetConvList
 //Start a new selection list
 void ResetConvList(object oPC, object oHolder, string sListTag, int iStartToken,
 				   string sCallback = "",
 				   string sHeading = "", string sProceed = "", string sPrCap = "Weiter", string sRevert = "",
 				   string sRevCap = "Zurueck");
 
-// Function: BuildConvListPage
 //Build up the current conversation page
 void BuildConvListPage(object oPC);
 
-// Function: HasNextPage
 int HasNextPage(object oPC);
 
-// Function: HasPrevPage
 int HasPrevPage(object oPC);
 
-// Function: SwitchPage
 void SwitchPage(object oPC, int iDirection = 0);
 
-// Function: GetConvListEntry
 int GetConvListEntry(object oPC, int iIndex);
 
 /*

@@ -15,7 +15,6 @@ LO = 80,
 MIN = 1,
 MAX = 210;
 
-// Struct: Color
 // Contains the R, G, B components as ints.
 struct Color {
 	int r;
@@ -23,45 +22,34 @@ struct Color {
 	int b;
 };
 
-// Function: CS
 // Returns struct Color.
 struct Color CS(int r, int g, int b);
 
-// Function: CI
 // Returns struct Color.
 struct Color CI(int rgb);
 
-// Function: CSRand
 // Returns a randomized color.
 struct Color CSRand();
 
-// Function: Lighten
 // Lightens the given color by the given amount.
 struct Color Lighten(struct Color c, int nAmount);
-// Function: Darken
 // Darkens the given color by the given amount.
 struct Color Darken(struct Color c, int nAmount);
 
-// Function: RainbowText
 // Returns sText rainbowified.
 // Warning, long text and low step size will
 // produce obscene amounts of traffic.
 string RainbowText(string sText, int nStepSize = 2, int bCheatCloseTags = TRUE);
 
-// Function: C
 // Returns a colorised version of text.
 string C(string text, struct Color c);
 
-// Function: ColorTagClose
 // Returns a close-tag.
 string ColorTagClose();
-// Function: ColorTag
 // Returns a color-tag for the given color.
 string ColorTag(struct Color c);
 
-// Function: GetLocalColor
 struct Color GetLocalColor(object oPC, string sName);
-// Function: SetLocalColor
 void SetLocalColor(object oPC, string sName, struct Color cC);
 
 /* predefined colors */

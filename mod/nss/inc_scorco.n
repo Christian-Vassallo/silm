@@ -6,82 +6,53 @@ extern("inc_cdb")
 
 #define normalize_table(table) (SCORCO_SCHEMA + "." + SCORCO_TABLE_PREFIX + table + SCORCO_TABLE_POSTFIX)
 
-// Function: p_id
-//
 // Returns this objects' id if it is persistent,
 // false otherwise.
 int p_id(object o);
 
-// Function: p_normalize_table
 // Used internally.
 string p_normalize_table(string table);
 
 
-// Function: p_set_p_id
 // Sets the objects persist-id.
 int p_set_p_id(object o, int id);
-// Function: p_get_p_id
 // Returns the objects persist-id.
 int p_get_p_id(object o);
 
-// Function: p_load
-//
 // load the specified ID at a location.
 // Returns the object loaded, or O_I.
 object p_load(int id, location at, object owner = OBJECT_INVALID);
 
-// Function: p_save
-//
 // Saves the specified object to the specified table. Does not save metadata.
 int p_save(string table, object o, string additional_updates = "");
 
-// Function: p_save_at
-//
 // Saves the specified object to the specified table with the given location. Does not save metadata.
 int p_save_at(string table, object o, location at, string additional_updates = "");
 
-// Function: p_delete
-//
 // Deletes the referenced object.
 int p_delete(string table, object o);
 
-// Function: p_destroy
-//
 // Deletes the referenced object and destroys the in-game instance.
 bool p_destroy(string table, object o);
 
-// Function: p_delayed_rco_finalizer
-//
 // Sets p_id or warns if RCO did fail.
 void p_delayed_rco_finalizer(int p_id, object o);
 
-// Function: p_load_to_location_metadata
-//
 // Loads all objects stored in table matching conditions to
 // the stored location metadata.
 int p_load_to_location_metadata(string table, string conditions);
 
-// Function: p_load_to_location_metadata_void
-//
 // Wrapper for *_chunks.
 void p_load_to_location_metadata_void(string table, string conditions);
 
-// Function: p_load_to_location_metadata_in_chunks
-//
 int p_load_to_location_metadata_in_chunks(string table, string conditions, int chunksize = 100);
 
-// Function: p_load_to_location_metadata_in_chunks_for_area
-//
 int p_load_to_location_metadata_in_chunks_for_area(string table, object area, int chunksize = 100);
 
-// Function: p_load_to_inventory
-//
 // Loads all objects stored in table matching conditions to
 // the inventory of the given object.
 int p_load_to_inventory(string table, string conditions, object inventory);
 
-// Function: p_canpersist
-//
 // Returns true if this object can be persisted. This is only
 // considering the technical aspects, it does not have to make
 // sense.

@@ -7,7 +7,6 @@ Functions and data structures centered around time handling and manipulation.
 
 extern("inc_nwnx_func")
 
-// Struct: Realtime
 struct RealTime {
 	int ts;
 	int weekday;
@@ -22,21 +21,15 @@ struct RealTime {
 	int error;
 };
 
-// Function: GetRealTime
-//
 // Returns the current walltime.
 struct RealTime GetRealTime();
 
 
-// Function: GetUnixTimestamp
 int GetUnixTimestamp();
 
-// Function: GetTimeMS
-//
 // Returns current time as ms (as a string, since it would overflow nwvm int).
 string GetTimeMS();
 
-// Function: GetTimestampTZ
 string GetTimestampTZ();
 
 

@@ -15,7 +15,6 @@ DTI = DURATION_TYPE_INSTANT,
 DTP = DURATION_TYPE_PERMANENT;
 
 
-// Function: hears
 int hears(object oSpeaker, object oListener, int nTalkMode);
 
 int hears(object oSpeaker, object oListener, int nTalkMode)
@@ -35,21 +34,17 @@ int hears(object oSpeaker, object oListener, int nTalkMode)
 }
 
 
-// Function: bug
 void bug(string sMessage);
 
 
-// Function: MakeThrow
 // Makes a generic throw and displays the results
 // to the user and all nearby DMs.
 int MakeThrow(int nDC, int nDFaces, int nDCount, int nMod, int bDisplayToAll = FALSE);
 
-// Function: GetElevationBetween
 // Returns the height difference between oA and oB.
 // oB.z - oA.z = fElevation
 float GetElevationBetween(object oA, object oB);
 
-// Function: EffectUnconscious
 // A simulated concussion.
 // Can be resisted by having immunity
 // or saving throws.
@@ -57,18 +52,15 @@ float GetElevationBetween(object oA, object oB);
 //  (Enemies ignore unconcious/down people)
 effect EffectUnconscious(int bConceal = FALSE);
 
-// Function: EffectFreedomOfMovement
 // Freedom Of Movement
 effect EffectFreedomOfMovement();
 
-// Function: SecondsToTimeDesc
 // Converts seconds to a time descriptor.
 // Example:
 //  65 -> "1 minute and 5 seconds"
 string SecondsToTimeDesc(int nSeconds);
 
 
-// Function: IsDM
 // Returns true if oPC is a DM by
 // arbitary criteria.
 // This is intended to allow DMs logged
@@ -78,28 +70,23 @@ string SecondsToTimeDesc(int nSeconds);
 int IsDM(object oPC = OBJECT_SELF, int bAllowPossess = TRUE);
 
 
-// Function: GetIsPolymorphed
 int GetIsPolymorphed(object oCreature);
 
 
-// Function: FindPCByAccount
 // Returns the player object to which sAccount matches; either
 // the CharName or the Accoutname.
 // case-insensitive.
 object FindPCByAccount(string sAccount, int bCheckNameToo = TRUE);
 
 
-// Function: GetTotalLevel
 // Returns the total level of oCreature (all class levels combined).
 // Returns 0 if not a creature.
 int GetTotalLevel(object oCreature);
 
 
-// Function: GetModStartup
 // Returns the unix ts when the mod was started
 int GetModStartup();
 
-// Function: random
 // returns a random float between fStart and fEnd,
 // or 0.0 on error
 float random(float fStart, float fEnd);
@@ -107,16 +94,12 @@ float random(float fStart, float fEnd);
 //// Function: ToDMs
 void ToDMs(string sMsg);
 
-// Function: Floaty
 void Floaty(string sMsg, object oPC = OBJECT_SELF, int nBroadCast = 0);
 
 string AlignmentToString(int ge, int lc, bool short = false);
 
-// Function: EffectToString
 string EffectToString(effect e);
 
-// Function: ItemPropertyToString
-//
 // Returns p formatted as following:
 // Name (Subtype), Param1Value: CostValue
 string ItemPropertyToString(itemproperty p);
@@ -227,33 +210,25 @@ void Floaty(string sMsg, object oPC = OBJECT_SELF, int nBroadCast = 0)
 }
 
 
-// Function: RemoveAllEffects
 int RemoveAllEffects(object oObj, int effect_type = -1, int subtype = -1);
 
-// Function: GetStringTrim
 // Returns s trimmed.
 // Read the short source code to understand sTrim.
 string GetStringTrim(string s, string sTrimLeft = " ", string sTrimRight = " ");
 
-// Function: PCToString
 // Returns oPC as a unique string representation
 string PCToString(object oPC, int bShort = FALSE);
 
-// Function: AreaToString
 string AreaToString(object oPC);
 
-// Function: LocationToStringPrintable
 string LocationToStringPrintable(location lo);
 
 
-// Function: ObjectTypeToString
 string ObjectTypeToString(int nO);
 
 
-// Function: CountNearestObjectByTag
 int CountNearestObjectByTag(string sTag);
 
-// Function: GetNearestRandomObjectByTag
 object GetNearestRandomObjectByTag(string sTag);
 
 // Returns the nNth(start=1) nearest nObjectType to oNearTo
@@ -266,46 +241,33 @@ object GetNearestObjectToObject(int nObjectType, object oNearTo, string sTag = "
 
 
 
-// Function: GetIsPlayerInArea
 // Returns true if there is a player in the same area the caller is (or if the caller is a PC)
 int GetIsPlayerInArea();
 
-// Function: GetIsDMOnline
 // Returns true if a DM is online
 int GetIsDMOnline();
 
 
-// Function: ClassToString
 string ClassToString(int nClass);
-// Function: FamiliarToString
 string FamiliarToString(object oPC);
-// Function: RaceToString
 string RaceToString(object oPC);
 
-// Function: KillInventory
 void KillInventory(object oC);
 
-// Function: GetItemResRefPossessedBy
 object GetItemResRefPossessedBy(object oInv, string sResRef);
 
-// Function: GetItemCountByResRef
 int GetItemCountByResRef(object oInv, string sTag);
 
-// Function: GetItemCountByTag
 int GetItemCountByTag(object oInv, string sTag);
 
 
 
-// Function: GetPCCount
 int GetPCCount(object oArea = OBJECT_INVALID, int bOnlyDMs = FALSE);
 
-// Function: GetPCPartyCount
 int GetPCPartyCount(object oPC);
 
-// Function: round
 int round(float f, int nPrecision);
 
-// Function: ToPC
 void ToPC(string sMsg, object oPC = OBJECT_SELF);
 
 /* impl */
