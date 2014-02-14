@@ -1,8 +1,11 @@
-void main() {
+void main()
+{
 	// Event: door_unlock
 	// - runnable: door
 	// - stop
-	if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "door_unlock", OBJECT_SELF, GetLastUnlocked(), OBJECT_SELF, GetLocation(OBJECT_SELF)))
+	if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "door_unlock", OBJECT_SELF,
+			GetLastUnlocked(), OBJECT_SELF,
+			GetLocation(OBJECT_SELF)))
 		return;
 
 	ExecuteScript("door_lockunlock", OBJECT_SELF);

@@ -3,54 +3,71 @@ extern("inc_2dacache")
 
 // Sets up an effect for the duration of eEffect.
 // Stops reminding when eEffect gets removed.
-void SetupReminder(object oRemindWho, object oEffectHolder, string sReminderName, float fDuration, effect eEffect);
+void SetupReminder(object oRemindWho, object oEffectHolder, string sReminderName, float fDuration,
+				   effect eEffect);
 
 
-void DoRemind(object oRemindWho, object oEffectHolder, string sReminderName, effect eEffect, int nSeconds);
+void DoRemind(object oRemindWho, object oEffectHolder, string sReminderName, effect eEffect,
+			  int nSeconds);
 
 
 
 
 
-void SetupReminder(object oRemindWho, object oEffectHolder, string sReminderName, float fDuration, effect eEffect) {
+void SetupReminder(object oRemindWho, object oEffectHolder, string sReminderName, float fDuration,
+				   effect eEffect)
+{
 	DoRemind(oRemindWho, oEffectHolder, sReminderName, eEffect, FloatToInt(fDuration));
 
-	if ( fDuration > 3600.0 )
+	if (fDuration > 3600.0)
 		DelayCommand(fDuration - 3600.0, DoRemind(oRemindWho, oEffectHolder, sReminderName, eEffect, 3600));
-	if ( fDuration > 1200.0 )
+
+	if (fDuration > 1200.0)
 		DelayCommand(fDuration - 1200.0, DoRemind(oRemindWho, oEffectHolder, sReminderName, eEffect, 1200));
-	if ( fDuration > 600.0 )
+
+	if (fDuration > 600.0)
 		DelayCommand(fDuration - 600.0, DoRemind(oRemindWho, oEffectHolder, sReminderName, eEffect, 600));
-	if ( fDuration > 120.0 )
+
+	if (fDuration > 120.0)
 		DelayCommand(fDuration - 120.0, DoRemind(oRemindWho, oEffectHolder, sReminderName, eEffect, 120));
-	if ( fDuration > 60.0 )
+
+	if (fDuration > 60.0)
 		DelayCommand(fDuration - 60.0, DoRemind(oRemindWho, oEffectHolder, sReminderName, eEffect, 60));
-	if ( fDuration > 30.0 )
+
+	if (fDuration > 30.0)
 		DelayCommand(fDuration - 30.0, DoRemind(oRemindWho, oEffectHolder, sReminderName, eEffect, 30));
-	if ( fDuration > 15.0 )
+
+	if (fDuration > 15.0)
 		DelayCommand(fDuration - 15.0, DoRemind(oRemindWho, oEffectHolder, sReminderName, eEffect, 15));
-	if ( fDuration > 5.0 )
+
+	if (fDuration > 5.0)
 		DelayCommand(fDuration - 5.0, DoRemind(oRemindWho, oEffectHolder, sReminderName, eEffect, 5));
 }
 
-void DoRemind(object oRemindWho, object oEffectHolder, string sReminderName, effect eEffect, int nSeconds) {
+void DoRemind(object oRemindWho, object oEffectHolder, string sReminderName, effect eEffect,
+			  int nSeconds)
+{
 	if (GetIsDead(oEffectHolder))
 		return;
 
 	int nFound = 0;
 	effect e = GetFirstEffect(oEffectHolder);
-	while ( GetIsEffectValid(e) ) {
-		if ( e == eEffect ) {
+
+	while (GetIsEffectValid(e)) {
+		if (e == eEffect) {
 			nFound = 1;
 			break;
 		}
+
 		e = GetNextEffect(oEffectHolder);
 	}
 
-	if ( nFound ) {
+	if (nFound) {
 		string msg = "Eure Arkane " + sReminderName + " loest sich in " + SecondsToTimeDesc(nSeconds);
+
 		if (nSeconds <= 120)
 			FloatingTextStringOnCreature(msg, oRemindWho, false);
+
 		else
 			SendMessageToPC(oRemindWho, msg);
 	}

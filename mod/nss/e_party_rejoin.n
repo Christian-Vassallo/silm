@@ -3,7 +3,8 @@ extern("inc_party")
 
 #define PARTY_REJOIN_DIFF 600
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "player_login") {
@@ -16,6 +17,7 @@ void main() {
 
 		if (p && ts_then > 0 && (ts_now - ts_then) < PARTY_REJOIN_DIFF) {
 			object other = GetPartyMemberByFactionId(p);
+
 			if (is_valid(other)) {
 				AddToParty(e.runnable, other);
 				SendMessageToPC(e.runnable, "Du wurdest automagisch in deine alte Gruppe gebracht.");

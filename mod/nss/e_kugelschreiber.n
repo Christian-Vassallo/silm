@@ -3,16 +3,17 @@ extern("inc_events")
 
 void tick(object oPen);
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev != "item_activate")
 		return;
 
 	object
-		pen = e.runnable,
-		oPC = e.actor,
-		oTarget = e.actedon;
+	pen = e.runnable,
+	oPC = e.actor,
+	oTarget = e.actedon;
 
 	if (GetTag(pen) != "kugelschreiber")
 		return;
@@ -21,7 +22,7 @@ void main() {
 
 	if (!GetLocalInt(pen, "ticking") && d20() > 10) {
 		// Start ticking.
-		
+
 		SetLocalInt(pen, "ticking", 1);
 		SetLocalInt(pen, "ticks", 0);
 		tick(OBJECT_SELF);
@@ -35,17 +36,19 @@ void main() {
 		return;
 	}
 
-	
+
 	FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
 }
 
 
-void tick(object oPen) {
+void tick(object oPen)
+{
 
 	if (!GetLocalInt(oPen, "ticking"))
 		return;
 
 	object ospeak = GetItemPossessor(oPen);
+
 	if (!GetIsObjectValid(ospeak))
 		ospeak = oPen;
 
@@ -53,27 +56,29 @@ void tick(object oPen) {
 
 	if (ticks % 2 == 0 && d2() > 0)
 		AssignCommand(ospeak, ActionSpeakString("Kugelschreiber: *tick*", TALKVOLUME_WHISPER));
+
 	else
 		AssignCommand(ospeak, ActionSpeakString("Kugelschreiber: *TACK*", TALKVOLUME_WHISPER));
 
 	// Stop ticking.
-	if (Random(50) < 5) { 
-		
+	if (Random(50) < 5) {
+
 		switch (Random(20)) {
-			case 0:
-				if (GetIsPC(ospeak))
-					GiveXPToCreature(ospeak, d20());
-				break;
+		case 0:
+			if (GetIsPC(ospeak))
+				GiveXPToCreature(ospeak, d20());
 
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-				AssignCommand(ospeak, ActionSpeakString("Kugelschreiber: *ticktack*", TALKVOLUME_WHISPER));
-				break;
+			break;
 
-			default:
-				break;
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+			AssignCommand(ospeak, ActionSpeakString("Kugelschreiber: *ticktack*", TALKVOLUME_WHISPER));
+			break;
+
+		default:
+			break;
 		}
 
 		return;

@@ -23,74 +23,70 @@ extern("x2_inc_spellhook")
 void main()
 {
 
-    //--------------------------------------------------------------------------
-    /*
-      Spellcast Hook Code
-      Added 2003-06-20 by Georg
-      If you want to make changes to all spells,
-      check x2_inc_spellhook.nss to find out more
-    */
-    //--------------------------------------------------------------------------
-    if (!X2PreSpellCastCode())
-    {
-        return;
-    }
-    // End of Spell Cast Hook
+	//--------------------------------------------------------------------------
+	/*
+	  Spellcast Hook Code
+	  Added 2003-06-20 by Georg
+	  If you want to make changes to all spells,
+	  check x2_inc_spellhook.nss to find out more
+	*/
+	//--------------------------------------------------------------------------
+	if (!X2PreSpellCastCode()) {
+		return;
+	}
 
-     effect  eVis        = EffectVisualEffect(VFX_IMP_HEAD_ODD);
-    effect   eImpact     = EffectVisualEffect(VFX_FNF_DISPEL_DISJUNCTION);
-    object   oTarget     = GetSpellTargetObject();
-    location lLocal      = GetSpellTargetLocation();
-    int      nCasterLevel= GetCasterLevel(OBJECT_SELF);
+	// End of Spell Cast Hook
+
+	effect  eVis        = EffectVisualEffect(VFX_IMP_HEAD_ODD);
+	effect   eImpact     = EffectVisualEffect(VFX_FNF_DISPEL_DISJUNCTION);
+	object   oTarget     = GetSpellTargetObject();
+	location lLocal      = GetSpellTargetLocation();
+	int      nCasterLevel = GetCasterLevel(OBJECT_SELF);
 
 
-    //--------------------------------------------------------------------------
-    // Mord's is not capped anymore as we can go past level 20 now
-    //--------------------------------------------------------------------------
-    /*
-        if(nCasterLevel > 20)
-        {
-            nCasterLevel = 20;
-        }
-    */
+	//--------------------------------------------------------------------------
+	// Mord's is not capped anymore as we can go past level 20 now
+	//--------------------------------------------------------------------------
+	/*
+	    if(nCasterLevel > 20)
+	    {
+	        nCasterLevel = 20;
+	    }
+	*/
 
-    if (GetIsObjectValid(oTarget))
-    {
-        //----------------------------------------------------------------------
-        // Targeted Dispel - Dispel all
-        //----------------------------------------------------------------------
-        spellsDispelMagic(oTarget, nCasterLevel, eVis, eImpact,TRUE,TRUE);
-    }
-    else
-    {
-        //----------------------------------------------------------------------
-        // Area of Effect - Only dispel best effect
-        //----------------------------------------------------------------------
+	if (GetIsObjectValid(oTarget)) {
+		//----------------------------------------------------------------------
+		// Targeted Dispel - Dispel all
+		//----------------------------------------------------------------------
+		spellsDispelMagic(oTarget, nCasterLevel, eVis, eImpact, TRUE, TRUE);
 
-        //Apply the VFX impact and effects
-        ApplyEffectAtLocation(DURATION_TYPE_INSTANT, eImpact, GetSpellTargetLocation());
-        oTarget = GetFirstObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_LARGE, lLocal, FALSE, OBJECT_TYPE_CREATURE | OBJECT_TYPE_AREA_OF_EFFECT | OBJECT_TYPE_PLACEABLE );
-        while (GetIsObjectValid(oTarget))
-        {
-            if(GetObjectType(oTarget) == OBJECT_TYPE_AREA_OF_EFFECT)
-            {
-                //--------------------------------------------------------------
-                // Handle Area of Effects
-                //--------------------------------------------------------------
-                spellsDispelAoE(oTarget, OBJECT_SELF,nCasterLevel);
+	} else {
+		//----------------------------------------------------------------------
+		// Area of Effect - Only dispel best effect
+		//----------------------------------------------------------------------
 
-            }
-            else if (GetObjectType(oTarget) == OBJECT_TYPE_PLACEABLE)
-            {
-                SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, GetSpellId()));
-            }
-            else
-            {
-                spellsDispelMagic(oTarget, nCasterLevel, eVis, eImpact, FALSE,TRUE);
-            }
+		//Apply the VFX impact and effects
+		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, eImpact, GetSpellTargetLocation());
+		oTarget = GetFirstObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_LARGE, lLocal, FALSE,
+										OBJECT_TYPE_CREATURE | OBJECT_TYPE_AREA_OF_EFFECT | OBJECT_TYPE_PLACEABLE);
 
-           oTarget = GetNextObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_LARGE,lLocal, FALSE, OBJECT_TYPE_CREATURE | OBJECT_TYPE_AREA_OF_EFFECT | OBJECT_TYPE_PLACEABLE);
-        }
-    }
+		while (GetIsObjectValid(oTarget)) {
+			if (GetObjectType(oTarget) == OBJECT_TYPE_AREA_OF_EFFECT) {
+				//--------------------------------------------------------------
+				// Handle Area of Effects
+				//--------------------------------------------------------------
+				spellsDispelAoE(oTarget, OBJECT_SELF, nCasterLevel);
+
+			} else if (GetObjectType(oTarget) == OBJECT_TYPE_PLACEABLE) {
+				SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, GetSpellId()));
+
+			} else {
+				spellsDispelMagic(oTarget, nCasterLevel, eVis, eImpact, FALSE, TRUE);
+			}
+
+			oTarget = GetNextObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_LARGE, lLocal, FALSE,
+										   OBJECT_TYPE_CREATURE | OBJECT_TYPE_AREA_OF_EFFECT | OBJECT_TYPE_PLACEABLE);
+		}
+	}
 }
 

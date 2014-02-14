@@ -1,10 +1,12 @@
-void Teleport_Object(object oObject, object oTarget) {
-	if ( GetIsObjectValid(oObject) )
+void Teleport_Object(object oObject, object oTarget)
+{
+	if (GetIsObjectValid(oObject))
 		AssignCommand(oObject, JumpToObject(oTarget));
 }
 
 
-void main() {
+void main()
+{
 	object oClicker = GetClickingObject();
 	object oTarget = GetTransitionTarget(OBJECT_SELF);
 
@@ -12,7 +14,7 @@ void main() {
 
 	Teleport_Object(oClicker, oTarget);
 
-	if ( GetArea(OBJECT_SELF) == GetArea(oTarget) ) {
+	if (GetArea(OBJECT_SELF) == GetArea(oTarget)) {
 		Teleport_Object(GetAssociate(ASSOCIATE_TYPE_ANIMALCOMPANION, oClicker), oTarget);
 		Teleport_Object(GetAssociate(ASSOCIATE_TYPE_DOMINATED, oClicker), oTarget);
 		Teleport_Object(GetAssociate(ASSOCIATE_TYPE_FAMILIAR, oClicker), oTarget);

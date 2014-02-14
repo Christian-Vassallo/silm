@@ -2,29 +2,33 @@
 // Gibt man mehrere Eichenhlzer hinein landen alle bis auf eines wieder im Inventar.
 // Somit kann nur jeweils eines gleichzeitig bearbeitet werden.
 
-void UnlockSawbuck(object oSawbuck) {
+void UnlockSawbuck(object oSawbuck)
+{
 	AssignCommand(oSawbuck, PlayAnimation(ANIMATION_PLACEABLE_DEACTIVATE));
 	SetLocked(oSawbuck, FALSE);
 }
 
-void LockSawbuck(object oSawbuck) {
+void LockSawbuck(object oSawbuck)
+{
 	AssignCommand(oSawbuck, PlayAnimation(ANIMATION_PLACEABLE_ACTIVATE));
 	SetLocked(oSawbuck, TRUE);
 }
 
-void _DoSawing(object oSawbuck) {
+void _DoSawing(object oSawbuck)
+{
 	CreateItemOnObject("bm_holzbalken", oSawbuck);
 	UnlockSawbuck(oSawbuck);
 }
 
-void DoSawing(object oPC, object oSawbuck) {
+void DoSawing(object oPC, object oSawbuck)
+{
 	object oItm = GetFirstItemInInventory(oSawbuck);
 	object oPC = GetLastClosedBy();
 	int i;
 
-	if ( GetTag(oItm) == "CS_MA20" ) {
+	if (GetTag(oItm) == "CS_MA20") {
 
-		while ( GetIsObjectValid(oItm) ) {
+		while (GetIsObjectValid(oItm)) {
 
 			DestroyObject(oItm);
 			oItm = GetNextItemInInventory(oSawbuck);
@@ -32,7 +36,7 @@ void DoSawing(object oPC, object oSawbuck) {
 
 		}
 
-		while ( i > 1 ) {
+		while (i > 1) {
 
 			CreateItemOnObject("cs_ma20", oPC);
 			i--;
@@ -48,8 +52,9 @@ void DoSawing(object oPC, object oSawbuck) {
 	}
 }
 
-void main() {
-	if ( !GetIsObjectValid(GetFirstItemInInventory(OBJECT_SELF)) ) return;
+void main()
+{
+	if (!GetIsObjectValid(GetFirstItemInInventory(OBJECT_SELF))) return;
 
 	DoSawing(GetLastClosedBy(), OBJECT_SELF);
 }

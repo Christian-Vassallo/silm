@@ -1,23 +1,27 @@
 extern("inc_ice")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	string ev = e.ev;
 	int retval = ICE_EVENT(ev);
 	int mask = 0;
+
 	switch (retval) {
-		case ICE_STOP:
-			mask |= EVENT_RESULT_STOP;
-			break;
-		case ICE_SUPPRESS:
-			mask |= EVENT_RESULT_SUPPRESS;
-			break;
-		case ICE_ERROR:
-			_ERROR("ICE oops.");
-			break;
+	case ICE_STOP:
+		mask |= EVENT_RESULT_STOP;
+		break;
+
+	case ICE_SUPPRESS:
+		mask |= EVENT_RESULT_SUPPRESS;
+		break;
+
+	case ICE_ERROR:
+		_ERROR("ICE oops.");
+		break;
 	}
-	
+
 	if (mask > 0)
 		event_ret(mask);
 }

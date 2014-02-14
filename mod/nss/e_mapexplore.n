@@ -1,20 +1,25 @@
-bool is_area_explored_by(object area, object player) {
+bool is_area_explored_by(object area, object player)
+{
 	return GetLocalInt(area, "always_explored")
-		|| GetLocalInt(player, "always_explored");
+		   || GetLocalInt(player, "always_explored");
 }
 
-void update_status(object pc) {
+void update_status(object pc)
+{
 	object area = GetArea(pc);
+
 	if (GetIsObjectValid(area)
-		&& !GetIsDM(pc)
-		&& !GetIsPossessedFamiliar(pc)
-		&& !GetIsDMPossessed(pc)
-	)
+			&& !GetIsDM(pc)
+			&& !GetIsPossessedFamiliar(pc)
+			&& !GetIsDMPossessed(pc)
+	   )
 		ExploreAreaForPlayer(area, pc, is_area_explored_by(area, pc));
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
+
 	if (e.ev == "player_hb")
 		update_status(e.runnable);
 }

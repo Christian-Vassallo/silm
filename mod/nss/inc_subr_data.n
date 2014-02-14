@@ -12,7 +12,8 @@ struct Subrace {
 };
 
 //Return the subrace base data for a given sub race
-struct Subrace GetSubraceData(string sIdentifier) {
+struct Subrace GetSubraceData(string sIdentifier)
+{
 	struct Subrace new;
 	object oMod = GetModule();
 
@@ -29,18 +30,20 @@ struct Subrace GetSubraceData(string sIdentifier) {
 	return new;
 }
 
-string GetSubraceAlias(string sSubRace, int iRacialType) {
+string GetSubraceAlias(string sSubRace, int iRacialType)
+{
 	return GetLocalString(GetModule(), "SR_Alias_" + IntToString(iRacialType) + "_" + sSubRace);
 }
 
-string GetSubraceIdentifier(string sSubRace, int iRacialType) {
+string GetSubraceIdentifier(string sSubRace, int iRacialType)
+{
 	string s;
 
 	sSubRace = GetStringLowerCase(sSubRace);
 
 	s = GetSubraceAlias(sSubRace, iRacialType);
 
-	if ( s != "" ) return s;
+	if (s != "") return s;
 
 	return GetSubraceAlias(sSubRace, RACIAL_TYPE_ALL);
 }
@@ -49,14 +52,16 @@ string GetSubraceIdentifier(string sSubRace, int iRacialType) {
 //Returns 1 if there is a valid subrace to be set
 //Returns 2 if there is a valid subrace with a missing permission
 //Returns 3 if there is a valid subrace and permission is present
-int GetSubraceGranted(string sSubrace, int iRacialType, int iGotPermission = 0) {
+int GetSubraceGranted(string sSubrace, int iRacialType, int iGotPermission = 0)
+{
 	struct Subrace this;
 	string sIdent;
 
-	if ( ( sIdent = GetSubraceIdentifier(sSubrace, iRacialType) ) == "" ) return 0;
+	if ((sIdent = GetSubraceIdentifier(sSubrace, iRacialType)) == "") return 0;
 
 	this = GetSubraceData(sIdent);
-	if ( !this.iRestricted ) return 1;
+
+	if (!this.iRestricted) return 1;
 
 	return iGotPermission ? 3 : 2;
 }

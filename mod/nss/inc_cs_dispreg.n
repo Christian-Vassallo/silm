@@ -1,25 +1,28 @@
 extern("inc_misc")
 
-void Parse_TagPart(string sPref, string sPart) {
+void Parse_TagPart(string sPref, string sPart)
+{
 	object oWhat = GetModule();
 
 	string sKey = GetStringLeft(sPart, 3);
 	string sVal = GetSubString(sPart, 3, 99);
 
-	if ( ( sKey == "OB1" ) || ( sKey == "OB2" ) || ( sKey == "RES" )
-		|| ( sKey == "SCR" ) || ( sKey == "TSK" ) || ( sKey == "TO1" )
-		|| ( sKey == "TO2" ) || ( sKey == "MIS" ) || ( sKey == "EXH" ) )
+	if ((sKey == "OB1") || (sKey == "OB2") || (sKey == "RES")
+			|| (sKey == "SCR") || (sKey == "TSK") || (sKey == "TO1")
+			|| (sKey == "TO2") || (sKey == "MIS") || (sKey == "EXH"))
 		SetLocalString(oWhat, sPref + sKey, sVal);
+
 	else
 		SetLocalInt(oWhat, sPref + sKey, StringToInt(sVal));
 }
 
-void Register_Dispenser(string sPref, string sTag) {
+void Register_Dispenser(string sPref, string sTag)
+{
 	object oWhat = GetModule();
 	string sPart = StrTok(sTag, ";");
 	int iNUM, iMAX;
 
-	while ( sPart != "" ) {
+	while (sPart != "") {
 		Parse_TagPart(sPref, sPart);
 		sPart = StrTok("", ";");
 	}
@@ -30,26 +33,29 @@ void Register_Dispenser(string sPref, string sTag) {
 	iNUM = iBMI + Random(iBMA - iBMI + 1);
 	SetLocalInt(oWhat, sPref + "NUM", iNUM);
 
-	if ( ( iMAX = GetLocalInt(oWhat, sPref + "MAX") ) < 0 )
-		SetLocalInt(oWhat, sPref + "MAX", -( iMAX * iNUM ));
+	if ((iMAX = GetLocalInt(oWhat, sPref + "MAX")) < 0)
+		SetLocalInt(oWhat, sPref + "MAX", -(iMAX * iNUM));
 }
 
 string sCurr_ObGrp;
 
-void Register_ObjGrp(string sGrpName) {
+void Register_ObjGrp(string sGrpName)
+{
 	object oMod = GetModule();
 
 	SetLocalInt(oMod, "GRP_CNT_" + sGrpName, 0);
 	sCurr_ObGrp = sGrpName;
 }
 
-void Register_GrpMember(string sResRef, int iProb) {
+void Register_GrpMember(string sResRef, int iProb)
+{
 	object oMod = GetModule();
 	int iCount = GetLocalInt(oMod, "GRP_CNT_" + sCurr_ObGrp);
 	int iOProb;
 
-	if ( iCount )
+	if (iCount)
 		iOProb = GetLocalInt(oMod, "GRP_" + IntToString(iCount - 1) + "PR_" + sCurr_ObGrp);
+
 	SetLocalInt(oMod, "GRP_" + IntToString(iCount) + "PR_" + sCurr_ObGrp, iOProb + iProb);
 	SetLocalString(oMod, "GRP_" + IntToString(iCount) + "RR_" + sCurr_ObGrp, sResRef);
 

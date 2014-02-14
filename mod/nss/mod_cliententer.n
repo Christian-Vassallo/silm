@@ -3,7 +3,8 @@
 extern("inc_chat")
 extern("inc_session")
 
-void main() {
+void main()
+{
 	object oPC = GetEnteringObject();
 
 	SetLocalString(oPC, "player_name", GetPCPlayerName(oPC));
@@ -13,5 +14,6 @@ void main() {
 	// Event: player_login
 	// When a player character logs in.
 	// - runnable: the player character object
-	RunEventScriptsFor(GetEventSerial(), "player_login", oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+	RunEventScriptsFor(GetEventSerial(), "player_login", oPC, oPC, OBJECT_INVALID,
+					   GetLocation(OBJECT_INVALID));
 }

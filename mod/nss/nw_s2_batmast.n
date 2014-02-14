@@ -26,42 +26,42 @@
 
 void main()
 {
-    //Determine bonus amount
-    int nBonus = GetLevelByClass(CLASS_TYPE_CLERIC);
-    nBonus /= 5;
-    nBonus = nBonus + 1;
+	//Determine bonus amount
+	int nBonus = GetLevelByClass(CLASS_TYPE_CLERIC);
+	nBonus /= 5;
+	nBonus = nBonus + 1;
 
-    // Have to seperate damage due to epic levels.
-    int nDamBonus = nBonus;
-    if (nDamBonus > 5)
-    {
-        nDamBonus += 10;
-    }
+	// Have to seperate damage due to epic levels.
+	int nDamBonus = nBonus;
 
-    //Declare effects
-    effect eAttack = EffectAttackIncrease(nBonus);
-    effect eCon = EffectAbilityIncrease(ABILITY_CONSTITUTION, nBonus);
-    effect eDex = EffectAbilityIncrease(ABILITY_DEXTERITY, nBonus);
-    effect eDam = EffectDamageIncrease(nDamBonus, DAMAGE_TYPE_BLUDGEONING);
-    nBonus *= 2;
-    effect eDamRed = EffectDamageReduction(nBonus, DAMAGE_POWER_PLUS_FIVE);
-    effect eVis = EffectVisualEffect(VFX_IMP_HOLY_AID);
-    effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
+	if (nDamBonus > 5) {
+		nDamBonus += 10;
+	}
 
-    //Link effects
-    effect eLink = EffectLinkEffects(eAttack, eCon);
-    eLink = EffectLinkEffects(eLink, eDex);
-    eLink = EffectLinkEffects(eLink, eDam);
-    eLink = EffectLinkEffects(eLink, eDamRed);
-    eLink = EffectLinkEffects(eLink, eDur);
-    //Fire cast spell at event for the specified target
-    SignalEvent(OBJECT_SELF, EventSpellCastAt(OBJECT_SELF, SPELLABILITY_BATTLE_MASTERY, FALSE));
+	//Declare effects
+	effect eAttack = EffectAttackIncrease(nBonus);
+	effect eCon = EffectAbilityIncrease(ABILITY_CONSTITUTION, nBonus);
+	effect eDex = EffectAbilityIncrease(ABILITY_DEXTERITY, nBonus);
+	effect eDam = EffectDamageIncrease(nDamBonus, DAMAGE_TYPE_BLUDGEONING);
+	nBonus *= 2;
+	effect eDamRed = EffectDamageReduction(nBonus, DAMAGE_POWER_PLUS_FIVE);
+	effect eVis = EffectVisualEffect(VFX_IMP_HOLY_AID);
+	effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
 
-    //Determined duration
-    int nDuration = GetAbilityModifier(ABILITY_CHARISMA) + 5;
-    //Apply effects
-    ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, OBJECT_SELF);
-    ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, OBJECT_SELF, RoundsToSeconds(nDuration));
+	//Link effects
+	effect eLink = EffectLinkEffects(eAttack, eCon);
+	eLink = EffectLinkEffects(eLink, eDex);
+	eLink = EffectLinkEffects(eLink, eDam);
+	eLink = EffectLinkEffects(eLink, eDamRed);
+	eLink = EffectLinkEffects(eLink, eDur);
+	//Fire cast spell at event for the specified target
+	SignalEvent(OBJECT_SELF, EventSpellCastAt(OBJECT_SELF, SPELLABILITY_BATTLE_MASTERY, FALSE));
+
+	//Determined duration
+	int nDuration = GetAbilityModifier(ABILITY_CHARISMA) + 5;
+	//Apply effects
+	ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, OBJECT_SELF);
+	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, OBJECT_SELF, RoundsToSeconds(nDuration));
 
 }
 

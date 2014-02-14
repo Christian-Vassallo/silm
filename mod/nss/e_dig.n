@@ -10,19 +10,21 @@ extern("inc_iprp_curses")
 
 bool surface_allowed(location at);
 
-void _ActionDigAt1(object digger, location at) {
+void _ActionDigAt1(object digger, location at)
+{
 	vector p = GetPositionFromLocation(at);
-	
+
 	pBegin();
 	string cursor = pDeclare(
-		"select id from objects.buried_items where (at).area.tag = " + pE(GetTag(GetAreaFromLocation(at))) +
-		" and ((at).position.x between " + ftoa(p.x - DIG_RADIUS ) + " and " + ftoa(p.x + DIG_RADIUS ) + ")" +
-		" and ((at).position.y between " + ftoa(p.y - DIG_RADIUS ) + " and " + ftoa(p.y + DIG_RADIUS ) + ")" +
-		" and ((at).position.z between " + ftoa(p.z - DIG_RADIUS ) + " and " + ftoa(p.z + DIG_RADIUS ) + ")" +
-		";"
-	);
+						"select id from objects.buried_items where (at).area.tag = " + pE(GetTag(GetAreaFromLocation(at))) +
+						" and ((at).position.x between " + ftoa(p.x - DIG_RADIUS) + " and " + ftoa(p.x + DIG_RADIUS) + ")" +
+						" and ((at).position.y between " + ftoa(p.y - DIG_RADIUS) + " and " + ftoa(p.y + DIG_RADIUS) + ")" +
+						" and ((at).position.z between " + ftoa(p.z - DIG_RADIUS) + " and " + ftoa(p.z + DIG_RADIUS) + ")" +
+						";"
+					);
 
 	int count = 0;
+
 	while (pCursorFetch(cursor)) {
 		count += 1;
 		int id = pGi(1);
@@ -30,11 +32,13 @@ void _ActionDigAt1(object digger, location at) {
 		p_load_to_inventory(DIG_TABLE, "id = " + itoa(id), digger);
 		pQ("delete from objects." + DIG_TABLE + " where id = " + itoa(id));
 	}
+
 	pCursorClose(cursor);
 	pCommit();
 
 	if (count == 0) {
 		pQ("select resref from dig_loot where chance >= random() limit 3;");
+
 		while (pF()) {
 			string resref = pG(1);
 			SendMessageToPC(digger, "Ihr findet:");
@@ -47,9 +51,10 @@ void _ActionDigAt1(object digger, location at) {
 		SendMessageToPC(digger, "Ihr grabt, und findet nichts.");
 }
 
-void ActionDigAt(location at) {
+void ActionDigAt(location at)
+{
 	object digger = OBJECT_SELF;
-	
+
 	ActionMoveToLocation(at);
 
 	// Step one to successful digging: inspect the ground to be dug
@@ -61,6 +66,7 @@ void ActionDigAt(location at) {
 	if (!surface_allowed(at)) {
 		ActionDoCommand(SendMessageToPC(digger, "Hier kann nicht gegraben werden."));
 		return;
+
 	} else {
 		ActionDoCommand(SendMessageToPC(digger, ".. .. grabe .. .."));
 	}
@@ -68,19 +74,22 @@ void ActionDigAt(location at) {
 	// Step two: do the work
 	if (!GetIsDM(digger))
 		ActionPlayAnimation(ANIMATION_LOOPING_CUSTOM19 /* "smash" */, 1.5f, DIG_DIG_TIME);
+
 	ActionDoCommand(_ActionDigAt1(digger, at));
 }
 
-void _ActionBuryAt1(object digger, object burywhat, location at) {
+void _ActionBuryAt1(object digger, object burywhat, location at)
+{
 	p_save_at(DIG_TABLE, burywhat, at,
-		"buried_by_cid = " + pSi(GetCharacterID(digger)) +
-		", buried_by_aid = " + pSi(GetAccountID(digger)));
+			  "buried_by_cid = " + pSi(GetCharacterID(digger)) +
+			  ", buried_by_aid = " + pSi(GetAccountID(digger)));
 
 	SendMessageToPC(digger, "Ihr vergrabt " + GetName(burywhat) + " ..");
 	DestroyObject(burywhat, 0f);
 }
 
-void ActionBuryAt(object burywhat, location at) {
+void ActionBuryAt(object burywhat, location at)
+{
 	object digger = OBJECT_SELF;
 
 	ActionMoveToLocation(at);
@@ -94,6 +103,7 @@ void ActionBuryAt(object burywhat, location at) {
 	if (!surface_allowed(at)) {
 		ActionDoCommand(SendMessageToPC(digger, "Hier kann nichts veregraben werden."));
 		return;
+
 	} else {
 		ActionDoCommand(SendMessageToPC(digger, ".. .. vergrabe " + GetName(burywhat) + " .. .."));
 	}
@@ -101,10 +111,12 @@ void ActionBuryAt(object burywhat, location at) {
 	// Step two: do the work
 	if (!GetIsDM(digger))
 		ActionPlayAnimation(ANIMATION_LOOPING_CUSTOM19 /* "smash" */, 1.5f, DIG_DIG_TIME);
+
 	ActionDoCommand(_ActionBuryAt1(digger, burywhat, at));
 }
 
-bool surface_allowed(location at) {
+bool surface_allowed(location at)
+{
 	int surface = GetSurface(at);
 
 	return
@@ -117,14 +129,16 @@ bool surface_allowed(location at) {
 		surface == SURFACE_MATERIAL_SAND;
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "item_activate" && GetTag(e.runnable) == "tool_shovel") {
-		
+
 		// bury at current location
 		if (is_item(e.actedon) && GetItemPossessor(e.actedon) == e.actor) {
 			location at = GetLocation(e.actor);
+
 			if (e.actedon == e.runnable) {
 				SendMessageToPC(e.actor, "Klaatu barada nikto!");
 				return;

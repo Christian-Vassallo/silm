@@ -30,82 +30,96 @@ string SQLGetData(int iCol);
 
 // Functions for initializing APS and working with result sets
 
-void __sql_init() {
+void __sql_init()
+{
 	if (!GetLocalInt(GetModule(), "mysql_init_done")) {
 		SQLInit();
 		SetLocalInt(GetModule(), "mysql_init_done", 1);
 	}
 }
 
-void SQLInit() {
+void SQLInit()
+{
 	int i;
 
 	// Placeholder for ODBC persistence
 	string sMemory;
 
-	for ( i = 0; i < 160; i++ )  // reserve 8*128 bytes
+	for (i = 0; i < 160; i++)    // reserve 8*128 bytes
 		sMemory +=
 			"................................................................................................................................";
+
 	SetLocalString(GetModule(), "NWNX!" + SQL_LIB + "!SPACER", sMemory);
 }
 
-string SQLGetLastQuery() {
+string SQLGetLastQuery()
+{
 	return GetLocalString(GetModule(), "mysql_last_query");
 }
 
-void SQLExecDirect(string sSQL) {
+void SQLExecDirect(string sSQL)
+{
 	__sql_init();
 	SetLocalString(GetModule(), "mysql_last_query", sSQL);
 	SetLocalString(GetModule(), "NWNX!" + SQL_LIB + "!EXEC", sSQL);
 }
 
-int SQLFetch() {
+int SQLFetch()
+{
 	string sRow;
 	object oModule = GetModule();
 
 	SetLocalString(oModule, "NWNX!" + SQL_LIB + "!FETCH",
-		GetLocalString(oModule, "NWNX!" + SQL_LIB + "!SPACER"));
+				   GetLocalString(oModule, "NWNX!" + SQL_LIB + "!SPACER"));
 	sRow = GetLocalString(oModule, "NWNX!" + SQL_LIB + "!FETCH");
-	if ( GetStringLength(sRow) > 0 ) {
+
+	if (GetStringLength(sRow) > 0) {
 		SetLocalString(oModule, "NWNX_" + SQL_LIB + "_CurrentRow", sRow);
 		return SQL_SUCCESS;
+
 	} else {
 		SetLocalString(oModule, "NWNX_" + SQL_LIB + "_CurrentRow", "");
 		return SQL_ERROR;
 	}
 }
 
-string SQLGetData(int iCol) {
+string SQLGetData(int iCol)
+{
 	string SEP = "¬";
 	int iPos;
 	string sResultSet = GetLocalString(GetModule(),
-		"NWNX_" + SQL_LIB + "_CurrentRow");
+									   "NWNX_" + SQL_LIB + "_CurrentRow");
 
 	// find column in current row
 	int iCount = 0;
 	string sColValue = "";
 
 	iPos = FindSubString(sResultSet, SEP);
-	if ( ( iPos == -1 ) && ( iCol == 1 ) ) {
+
+	if ((iPos == -1) && (iCol == 1)) {
 		// only one column, return value immediately
 		sColValue = sResultSet;
-	} else if ( iPos == -1 ) {
+
+	} else if (iPos == -1) {
 		// only one column but requested column > 1
 		sColValue = "";
+
 	} else {
 		// loop through columns until found
-		while ( iCount != iCol ) {
+		while (iCount != iCol) {
 			iCount++;
-			if ( iCount == iCol )
+
+			if (iCount == iCol)
 				sColValue = GetStringLeft(sResultSet, iPos);
+
 			else {
 				sResultSet = GetStringRight(sResultSet,
-					GetStringLength(sResultSet) - iPos - 1);
+											GetStringLength(sResultSet) - iPos - 1);
 				iPos = FindSubString(sResultSet, SEP);
 			}
 
 			// special case: last column in row
-			if ( iPos == -1 )
+			if (iPos == -1)
 				iPos = GetStringLength(sResultSet);
 		}
 	}
@@ -113,27 +127,32 @@ string SQLGetData(int iCol) {
 	return sColValue;
 }
 
-void SQLQuery(string sSQL) {
+void SQLQuery(string sSQL)
+{
 	SQLExecDirect(sSQL);
 }
 
-string SQLEscape(string str) {
-	if ( -1 == FindSubString(str, "'") )
+string SQLEscape(string str)
+{
+	if (-1 == FindSubString(str, "'"))
 		return "CONCAT('" + str + "')";
 
 	int i = 0, last = 0;
 	int count = 0;
 	string c = "", new = "CONCAT('";
-	for ( i = 0; i < GetStringLength(str); i++ ) {
+
+	for (i = 0; i < GetStringLength(str); i++) {
 		c = GetSubString(str, i, 1);
 
-		if ( c == "'" ) {
+		if (c == "'") {
 			new += "', char(39), '";
 			last = i + 1;
 			count += 1;
+
 		} else
 			new += c;
 	}
+
 	new += "')";
 	return new;
 }

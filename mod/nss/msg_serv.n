@@ -1,7 +1,8 @@
 extern("inc_chat")
 extern("inc_events")
 
-void main() {
+void main()
+{
 	object o = GetModule();
 	SetLocalString(o, "NWNX!CHAT!TEXT", NWNXChatGetSpacer());
 	string sText = GetLocalString(o, "NWNX!CHAT!TEXT");
@@ -13,7 +14,8 @@ void main() {
 	struct EventArguments ea;
 	ea.a0 = sText;
 	int serial = GetEventSerial();
-	int ret = RunEventScriptsForWithArgv(serial, "chat_server", o, o, OBJECT_INVALID, GetLocation(o), ea);
+	int ret = RunEventScriptsForWithArgv(serial, "chat_server", o, o, OBJECT_INVALID, GetLocation(o),
+										 ea);
 	DeleteEventArguments(serial);
 
 	if (ret & EVENT_RESULT_SUPPRESS)

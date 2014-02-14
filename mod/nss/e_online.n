@@ -1,7 +1,8 @@
 extern("inc_events")
 extern("inc_online")
 
-void main() {
+void main()
+{
 	struct EventInfo ei = GetEventInfo();
 
 	if ("module_load" == ei.ev) {
@@ -15,7 +16,7 @@ void main() {
 	if ("player_login" == ei.ev) {
 		onlinePlayerEnter(ei.actor);
 	}
-	
+
 	if ("player_logout" == ei.ev) {
 		onlinePlayerLeave(ei.actor);
 	}

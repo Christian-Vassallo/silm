@@ -19,60 +19,62 @@
 extern("nw_i0_spells")
 extern("x0_i0_spells")
 
-extern("x2_inc_spellhook") 
+extern("x2_inc_spellhook")
 
 void main()
 {
 
-/* 
-  Spellcast Hook Code 
-  Added 2003-07-07 by Georg Zoeller
-  If you want to make changes to all spells,
-  check x2_inc_spellhook.nss to find out more
-  
-*/
+	/*
+	  Spellcast Hook Code
+	  Added 2003-07-07 by Georg Zoeller
+	  If you want to make changes to all spells,
+	  check x2_inc_spellhook.nss to find out more
 
-    if (!X2PreSpellCastCode())
-    {
-	// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
-        return;
-    }
+	*/
+
+	if (!X2PreSpellCastCode()) {
+		// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
+		return;
+	}
 
 // End of Spell Cast Hook
 
 
-    //Declare major variables
+	//Declare major variables
 	object oTarget;
 	effect eVis = EffectVisualEffect(VFX_IMP_DEATH_WARD);
-    effect eVis2 = EffectVisualEffect(VFX_FNF_METEOR_SWARM);
-    effect eDamage;
-    effect eLink;
-    int nDamage;
+	effect eVis2 = EffectVisualEffect(VFX_FNF_METEOR_SWARM);
+	effect eDamage;
+	effect eLink;
+	int nDamage;
 
-    //Apply Spell Effects
-    ApplyEffectAtLocation(DURATION_TYPE_INSTANT, eVis2, GetLocation(OBJECT_SELF));
+	//Apply Spell Effects
+	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, eVis2, GetLocation(OBJECT_SELF));
 
-    //ApplyDamage and Effects to all targets in area
-    oTarget = GetFirstObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_COLOSSAL, GetLocation(OBJECT_SELF), FALSE, OBJECT_TYPE_CREATURE);
-    float fDelay;
-    while(GetIsObjectValid(oTarget))
-    {
-        fDelay = GetRandomDelay();
-        //Fire cast spell at event for the specified target
-        SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, GetSpellId()));
-        nDamage = d100();
-        if (nDamage < 30)
-        {
-            nDamage = 30;
-        }
-        //Set damage type and amount
-        eDamage = EffectDamage(nDamage, DAMAGE_TYPE_DIVINE);
-        //Link visual and damage effects
-        eLink = EffectLinkEffects(eVis, eDamage);
-        //Apply effects to oTarget
-        DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_INSTANT, eLink, oTarget));
-        
-        //Get next target in shape
-        oTarget = GetNextObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_COLOSSAL, GetLocation(OBJECT_SELF), FALSE, OBJECT_TYPE_CREATURE);
-    }
+	//ApplyDamage and Effects to all targets in area
+	oTarget = GetFirstObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_COLOSSAL, GetLocation(OBJECT_SELF), FALSE,
+									OBJECT_TYPE_CREATURE);
+	float fDelay;
+
+	while (GetIsObjectValid(oTarget)) {
+		fDelay = GetRandomDelay();
+		//Fire cast spell at event for the specified target
+		SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, GetSpellId()));
+		nDamage = d100();
+
+		if (nDamage < 30) {
+			nDamage = 30;
+		}
+
+		//Set damage type and amount
+		eDamage = EffectDamage(nDamage, DAMAGE_TYPE_DIVINE);
+		//Link visual and damage effects
+		eLink = EffectLinkEffects(eVis, eDamage);
+		//Apply effects to oTarget
+		DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_INSTANT, eLink, oTarget));
+
+		//Get next target in shape
+		oTarget = GetNextObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_COLOSSAL, GetLocation(OBJECT_SELF), FALSE,
+									   OBJECT_TYPE_CREATURE);
+	}
 }

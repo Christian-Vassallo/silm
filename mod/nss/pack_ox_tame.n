@@ -1,9 +1,11 @@
 extern("inc_scorco")
 
-void main() {
+void main()
+{
 	SetLocalObject(OBJECT_SELF, "PACK_OWNER", GetPCSpeaker());
 	SetLocalInt(OBJECT_SELF, "PACK_MODE", 1); // Follow
 	ActionForceFollowObject(GetLocalObject(OBJECT_SELF, "PACK_OWNER"), 3.0);
+
 	if (!p_id(OBJECT_SELF)) {
 		p_save("critters", OBJECT_SELF);
 	}

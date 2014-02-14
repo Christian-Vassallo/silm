@@ -2,14 +2,15 @@ extern("inc_telepathbond")
 extern("inc_chat")
 extern("inc_cdb")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "nwnx_chat") {
 		SetLocalString(e.runnable, "NWNX!CHAT!TEXT", NWNXChatGetSpacer());
 		string sText = GetLocalString(e.runnable, "NWNX!CHAT!TEXT");
 
-		if ( sText == "" ) {
+		if (sText == "") {
 			_FATAL("No text.");
 			return;
 		}
@@ -18,7 +19,7 @@ void main() {
 		int iMode = MsgToChatMode(iMsg);
 
 		// Dont handle silent shouts by NPCs!
-		if (  !GetIsPC(e.runnable) ) return;
+		if (!GetIsPC(e.runnable)) return;
 
 		// chompchomp
 		string message = GetSubString(sText, 12, GetStringLength(sText));
@@ -43,7 +44,7 @@ void main() {
 		// Condition C: It was a channel that wants to be broadcasted
 		if ((iMode & CHATMODE_TALK || iMode & CHATMODE_WHISPER)
 				&& !GetLocalInt(GetArea(oPC), "dont_log")
-		) {
+		   ) {
 
 			// If it was ourselves and we are not possessing something,
 			// send message to all bond partners
@@ -60,7 +61,8 @@ void main() {
 			// send to all bond partners that be
 			int nNth = 1;
 			object oI = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR,
-				PLAYER_CHAR_IS_PC, oPC, nNth);
+										   PLAYER_CHAR_IS_PC, oPC, nNth);
+
 			while (GetIsObjectValid(oI)) {
 				// if its too far off drop out
 				if (iMode & CHATMODE_WHISPER
@@ -78,7 +80,7 @@ void main() {
 
 				nNth++;
 				oI = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR,
-					PLAYER_CHAR_IS_PC, oPC, nNth);
+										PLAYER_CHAR_IS_PC, oPC, nNth);
 			}
 		}
 	}
@@ -100,7 +102,7 @@ void main() {
 
 			msg += "*";
 			DelegateTelepathicMessageToPartners(e.runnable, msg,
-				"send_spells = true");
+												"send_spells = true");
 		}
 	}
 }

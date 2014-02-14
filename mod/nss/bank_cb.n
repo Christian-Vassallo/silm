@@ -3,7 +3,8 @@ extern("inc_bank")
 extern("inc_currency")
 extern("inc_colors")
 
-void main() {
+void main()
+{
 	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
 	object oBank = OBJECT_SELF;
 
@@ -12,39 +13,44 @@ void main() {
 	int nSelected   = GetListSelection(oPC);
 
 	int bankid = GetLocalInt(oBank, "bank_id");
+
 	if (!bankid) return;
+
 	int cid = GetCharacterID(oPC);
+
 	if (!cid) return;
 
 	if (0 == nMenuLevel0) { // Mainmenu
 		int acc = GetListInt(oPC, TTT, nSelected);
 		string act = GetListString(oPC, TTT, nSelected);
 		int cid = GetCharacterID(oPC);
+
 		if (act == "createPrimary") {
 			pBegin();
 			pQ("insert into bank.accounts (bank, name) values(" +
-				pSi(bankid) + ", " + pSs("Privatkonto: " + GetName(oPC)) + ");");
+			   pSi(bankid) + ", " + pSs("Privatkonto: " + GetName(oPC)) + ");");
 			int newAccId = pLastId("bank.accounts");
 			pQ("insert into bank.access (account, cid, allow_read, " +
-				"allow_withdraw, allow_deposit) values(" +
-				pSi(newAccId) + "," + pSi(cid) + ",true,true,true)");
+			   "allow_withdraw, allow_deposit) values(" +
+			   pSi(newAccId) + "," + pSi(cid) + ",true,true,true)");
 
 			pQ("insert into bank.accounts (bank, name) values(" +
-				pSi(bankid) + ", " + pSs("Geschäftskonto: " + GetName(oPC)) + ");");
+			   pSi(bankid) + ", " + pSs("Geschäftskonto: " + GetName(oPC)) + ");");
 			newAccId = pLastId("bank.accounts");
 			pQ("insert into bank.access (account, cid, allow_read, " +
-				"allow_withdraw, allow_deposit, default_income) values(" +
-				pSi(newAccId) + "," + pSi(cid) + ",true,true,true,true)");
+			   "allow_withdraw, allow_deposit, default_income) values(" +
+			   pSi(newAccId) + "," + pSi(cid) + ",true,true,true,true)");
 			pCommit();
 
 			SendMessageToPC(oPC, "Ihre Konten wurden angelegt. Willkommen! " +
-				"Fuer spezielle Anforderungen bitten wir, die " +
-				"Verwaltung anzusprechen.");
+							"Fuer spezielle Anforderungen bitten wir, die " +
+							"Verwaltung anzusprechen.");
 
 			AssignCommand(oPC, ClearAllActions());
 			AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
 			return;
 		}
+
 		SetMenuLevel(oPC, TTT, 0, 1);
 		SetLocalInt(oPC, "bank_axid_selection", acc);
 
@@ -53,18 +59,22 @@ void main() {
 		int axid = GetLocalInt(oPC, "bank_axid_selection");
 		int tx = GetListInt(oPC, TTT, nSelected);
 		string act = GetListString(oPC, TTT, nSelected);
+
 		if (act == "tx") {
 
 			pQ("select x.account, x.cid, a.balance from bank.access x, bank.accounts a " +
-				"where a.id = x.account and x.id = " + pSi(axid));
+			   "where a.id = x.account and x.id = " + pSi(axid));
+
 			if (pF()) {
 				int account = pGi(1);
 				int cid = pGi(2);
 				int balance = pGi(3);
 
 				bool didTX = false;
+
 				if (tx > 0) { // put money into bank
 					int has = CountInventoryMoney(oPC);
+
 					if (tx > has)
 						SendMessageToPC(oPC, "Nicht genug Gold!");
 
@@ -87,6 +97,7 @@ void main() {
 
 				if (didTX) {
 					string name = GetName(oPC);
+
 					if (!bank_tx(account, tx, cid, name))
 						SendMessageToPC(oPC, "Transaktion gescheitert.");
 

@@ -12,17 +12,19 @@ void LeaveArea(int bRun = FALSE);
 void WorkOnNPC(object oNPC, int bNight = FALSE);
 
 
-void main() {
+void main()
+{
 	SetupMyPeople();
 
-	if ( NoPlayerInArea() == TRUE )
+	if (NoPlayerInArea() == TRUE)
 		return; // * don't run this if no one is around
 
 	object oCreature = OBJECT_INVALID;
 	int i = 0;
 
 	oCreature = GetLocalObject(OBJECT_SELF, "dno_" + IntToString(i));
-	while ( GetIsObjectValid(oCreature) == TRUE ) {
+
+	while (GetIsObjectValid(oCreature) == TRUE) {
 		DelayCommand(IntToFloat(Random(1)), WorkOnNPC(oCreature, GetIsNight()));
 		i++;
 		oCreature = GetLocalObject(OBJECT_SELF, "dno_" + IntToString(i));
@@ -30,15 +32,16 @@ void main() {
 }
 
 
-void WorkOnNPC(object oNPC, int bNight = FALSE) {
+void WorkOnNPC(object oNPC, int bNight = FALSE)
+{
 	object oLimbo = GetArea(GetObjectByTag(LIMBO_WAYPOINT));
 
 	//if (GetAILevel(oNPC) <= AI_LEVEL_LOW)
 	//    return;
 
-	if ( bNight ) {
+	if (bNight) {
 		/* npc has to be in night area */
-		if ( oLimbo == GetArea(oNPC) )
+		if (oLimbo == GetArea(oNPC))
 			return;
 
 		SetLocalLocation(oNPC, "oldloc", GetLocation(oNPC));
@@ -47,7 +50,7 @@ void WorkOnNPC(object oNPC, int bNight = FALSE) {
 		//DelayCommand(10.
 
 	} else {
-		if ( oLimbo != GetArea(oNPC) )
+		if (oLimbo != GetArea(oNPC))
 			return;
 
 		Unlimbo(oNPC, 0);
@@ -59,10 +62,11 @@ void WorkOnNPC(object oNPC, int bNight = FALSE) {
 
 
 
-void LeaveArea(int bRun = FALSE) {
+void LeaveArea(int bRun = FALSE)
+{
 	object oWP = GetNearestRandomObjectByTag("NW_EXIT");
 
-	if ( !GetIsObjectValid(oWP) || GetArea(oWP) != GetArea(OBJECT_SELF) )
+	if (!GetIsObjectValid(oWP) || GetArea(oWP) != GetArea(OBJECT_SELF))
 		return;
 
 	ClearAllActions();
@@ -71,8 +75,9 @@ void LeaveArea(int bRun = FALSE) {
 
 
 // * Stores the triggers object on everyone in trigger, once only at start
-void SetupMyPeople() {
-	if ( GetLocalInt(OBJECT_SELF, "setup") )
+void SetupMyPeople()
+{
+	if (GetLocalInt(OBJECT_SELF, "setup"))
 		return; // * already setup
 
 	SetLocalInt(OBJECT_SELF, "setup", 1);
@@ -81,11 +86,13 @@ void SetupMyPeople() {
 	int i = 0;
 
 	oCreature = GetFirstInPersistentObject();
-	while ( GetIsObjectValid(oCreature) == TRUE ) {
-		if ( GetIsPC(oCreature) == FALSE ) {
+
+	while (GetIsObjectValid(oCreature) == TRUE) {
+		if (GetIsPC(oCreature) == FALSE) {
 			SetLocalObject(OBJECT_SELF, "dno_" + IntToString(i), oCreature);
 			i++;
 		}
+
 		oCreature = GetNextInPersistentObject();
 	}
 }

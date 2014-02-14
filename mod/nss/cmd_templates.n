@@ -9,7 +9,8 @@ extern("inc_cdb")
 
 */
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 	struct EventArguments a = GetEventArguments(e.serial);
 
@@ -22,6 +23,7 @@ void main() {
 //	current_cmd("tpl");
 
 	getopt_reset();
+
 	if (!getopt_init(a.a1, " ")) {
 		SetEventResult(EVENT_RESULT_STOP | EVENT_RESULT_FAIL);
 		return;
@@ -37,9 +39,11 @@ void main() {
 	if (a0 == "") {
 		ToPC("Persisted templates: ");
 		pQ("select name, to_char(coalesce(update_on,create_on), 'DD.MM.YY HH:MI'), tag, resref from objects.templates order by update_on asc, create_on asc;");
+
 		while (pF()) {
 			ToPC(pGs(1) + "/" + pGs(3) + "/" + pGs(4) + " (" + pGs(2) + ")");
 		}
+
 		ToPC("End of list.");
 		SetEventResult(EVENT_RESULT_END | EVENT_RESULT_STOP);
 		return;
@@ -60,34 +64,39 @@ void main() {
 			ToPC("Cannot persist player characters.");
 			return;
 		}
-		
+
 		ToPC("Saving " + otoa(target) + " as " + name);
 
 		if (!is_creature(target) && !is_item(target)) {
 
 			ToPC("Cannot persist the current target.");
 			fail = true;
+
 		} else {
 			pQ("select id from objects.templates where name = " + pSs(name));
+
 			if (pF())
 				pSCO("update objects.templates set data = %s, tag = " +
-					pSs(GetTag(target)) + ", resref = " + pSs(GetResRef(target)) + 
-					" where name = " + pSs(name), target);
+					 pSs(GetTag(target)) + ", resref = " + pSs(GetResRef(target)) +
+					 " where name = " + pSs(name), target);
+
 			else
 				pSCO("insert into objects.templates (name, tag, resref, data) values(" +
-					pSs(name) + ", " + pSs(GetTag(target)) + ", " + pSs(GetResRef(target)) +
-					", %s);", target);
+					 pSs(name) + ", " + pSs(GetTag(target)) + ", " + pSs(GetResRef(target)) +
+					 ", %s);", target);
 		}
 
 	} else if (a0 == "get") {
 		ToPC("Retrieving " + name);
-		object retr = pRCO("select data from objects.templates where name = " + pSs(name), GetLocation(e.runnable), e.runnable);
+		object retr = pRCO("select data from objects.templates where name = " + pSs(name),
+						   GetLocation(e.runnable), e.runnable);
 		ToPC("Retrieved: " + otoa(retr));
 
 	} else if (a0 == "del") {
 		name = itoa(GetAccountID(e.runnable)) + "_" + name;
 		ToPC("Deleting " + name);
 		pQ("delete from objects.templates where name = " + pSs(name));
+
 	} else {
 		ToPC("No such subcommand.");
 		fail = true;
@@ -95,6 +104,7 @@ void main() {
 
 	if (fail)
 		SetEventResult(EVENT_RESULT_STOP | EVENT_RESULT_END);
+
 	else
 		SetEventResult(EVENT_RESULT_STOP);
 }

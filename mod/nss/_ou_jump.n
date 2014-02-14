@@ -45,7 +45,8 @@ extern("_gen")
 #define DC_CLIMB_MAX 50
 
 
-void main() {
+void main()
+{
 	object oJumper = GetLastUsedBy();
 
 	string sTag = GetTag(OBJECT_SELF);
@@ -57,10 +58,10 @@ void main() {
 
 	int has_rope = GetIsObjectValid(GetItemPossessedBy(oJumper, "rope"));
 	int has_hook = GetIsObjectValid(GetItemPossessedBy(oJumper, "hook"));
-	
 
 
-	if ( !GetIsObjectValid(oTarget) ) {
+
+	if (!GetIsObjectValid(oTarget)) {
 		SpeakString("Kein Zielpunkt in der Naehe.");
 		return;
 	}
@@ -75,7 +76,7 @@ void main() {
 	// 3.28: feet!
 	float fDistance = GetDistanceBetween(OBJECT_SELF, oTarget) * 3.28;
 	float fElevation = GetElevationBetween(OBJECT_SELF, oTarget) * 3.28;
-	
+
 	// 1 = up, 0 = down
 	int climbing_up = (fElevation > 0.0);
 
@@ -87,14 +88,14 @@ void main() {
 		player_skill += 2;
 
 
-	if ( "pjump" == sTag ) {
-		
+	if ("pjump" == sTag) {
+
 		nDC = BASE_DC_JUMP;
 
 		nDC += abs(FloatToInt(fDistance)) +
 			   FloatToInt(fElevation * 4); // can have neg values: jumping down is easier!
 
-	} else if ( "pclimb" == sTag ) {
+	} else if ("pclimb" == sTag) {
 
 		nDC = BASE_DC_CLIMB;
 
@@ -103,6 +104,7 @@ void main() {
 
 		if (has_rope && has_hook)
 			nDC += DC_ROPEHOOK_ADJUST;
+
 		else if (has_rope)
 			nDC += DC_ROPE_ADJUST;
 
@@ -114,58 +116,66 @@ void main() {
 		SpeakString("Unnown plasie, dis. Do no now wad do do! :(");
 		return;
 	}
-	
-	
+
+
 	SendMessageToPC(oJumper, "SG fuer diesen Kletterpunkt: " + itoa(nDC));
 	SendMessageToPC(oJumper, "Distanz (in Fuss): " + FloatToString(fDistance));
 	SendMessageToPC(oJumper, "Erhoehung (in Fuss): " + FloatToString(fElevation));
 
-	
+
 	int success = false;
 
 	// Take10?
 	if (10 + player_skill >= nDC) {
 		SendMessageToPC(oJumper, name + " Take10: Erfolg.");
 		success = true;
+
 	} else {
-		//MakeThrow(int nDC, int nDFaces, int nDCount, int nMod, int bDisplayToAll = FALSE);		
+		//MakeThrow(int nDC, int nDFaces, int nDCount, int nMod, int bDisplayToAll = FALSE);
 		int throw = d20();
-	
+
 		if (throw + player_skill >= nDC) {
-			SendMessageToPC(oJumper, name + " 1d20: (" + itoa(throw) + " + " + itoa(player_skill) + " vs " + itoa(nDC) + "): Erfolg.");
+			SendMessageToPC(oJumper, name + " 1d20: (" + itoa(throw) + " + " + itoa(
+								player_skill) + " vs " + itoa(
+								nDC) + "): Erfolg.");
 			success = true;
+
 		} else {
-			SendMessageToPC(oJumper, name + " 1d20: (" + itoa(throw) + " + " + itoa(player_skill) + " vs " + itoa(nDC) + "): Fehlschlag.");
+			SendMessageToPC(oJumper, name + " 1d20: (" + itoa(throw) + " + " + itoa(
+								player_skill) + " vs " + itoa(
+								nDC) + "): Fehlschlag.");
 		}
-	
+
 
 	}
 
 
-	
+
 	// no aq exploits
 	AssignCommand(oJumper, ClearAllActions());
 
 	if (success) {
 		AssignCommand(oJumper, JumpToObject(oTarget));
+
 	} else {
 		// Fail and/or fall back down.
 		if (climbing_up) {
-			
+
 		} else {
 			AssignCommand(oJumper, JumpToObject(oTarget));
 		}
+
 		AssignCommand(oJumper, ActionPlayAnimation(ANIMATION_LOOPING_DEAD_FRONT, 1.0, 20.0));
-		
+
 		// Dazed for one round
 		ApplyEffectToObject(DTT, EffectDazed(), oJumper, 6.0);
-	
+
 		int ielevation = ftoi(fElevation /= 10.0);
 		int damage = d3(clamp(ielevation, 1, 4));
 
 		// Dont hurt to kill.
 		damage = clamp(damage, 0, GetCurrentHitPoints(oJumper) - 1);
-	
+
 		ApplyEffectToObject(DTI, EffectDamage(damage, DAMAGE_TYPE_BLUDGEONING), oJumper);
 
 	}

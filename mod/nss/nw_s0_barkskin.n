@@ -17,17 +17,18 @@
 
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 
-/*
- * Spellcast Hook Code
- * Added 2003-06-23 by GeorgZ
- * If you want to make changes to all spells,
- * check x2_inc_spellhook.nss to find out more
- *
- */
+	/*
+	 * Spellcast Hook Code
+	 * Added 2003-06-23 by GeorgZ
+	 * If you want to make changes to all spells,
+	 * check x2_inc_spellhook.nss to find out more
+	 *
+	 */
 
-	if ( !X2PreSpellCastCode() ) {
+	if (!X2PreSpellCastCode()) {
 		// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
 		return;
 	}
@@ -47,20 +48,24 @@ void main() {
 	effect eAC;
 	//Signal spell cast at event
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_BARKSKIN, FALSE));
+
 	//Enter Metamagic conditions
-	if ( nMetaMagic == METAMAGIC_EXTEND )
+	if (nMetaMagic == METAMAGIC_EXTEND)
 		nDuration *= 2;
 
 	//Determine AC Bonus based Level.
-	if ( nCasterLevel <= 6 ) {
+	if (nCasterLevel <= 6) {
 		nBonus = 3;
+
 	} else {
-		if ( nCasterLevel <= 12 ) {
+		if (nCasterLevel <= 12) {
 			nBonus = 4;
+
 		} else {
 			nBonus = 5;
 		}
 	}
+
 	//Make sure the Armor Bonus is of type Natural
 	eAC = EffectACIncrease(nBonus, AC_NATURAL_BONUS);
 	//effect eLink = EffectLinkEffects(eVis, eAC);

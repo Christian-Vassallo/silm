@@ -15,32 +15,32 @@
 //:://////////////////////////////////////////////
 extern("x0_i0_spells")
 
-void main() {
+void main()
+{
 
-    //Declare major variables including Area of Effect Object
-    effect eDur1 = EffectVisualEffect(VFX_IMP_SILENCE);
+	//Declare major variables including Area of Effect Object
+	effect eDur1 = EffectVisualEffect(VFX_IMP_SILENCE);
 
-    effect eDur2 = EffectVisualEffect(VFX_DUR_CESSATE_NEGATIVE);
-    effect eSilence = EffectSilence();
-    effect eImmune = EffectDamageImmunityIncrease(DAMAGE_TYPE_SONIC, 100);
+	effect eDur2 = EffectVisualEffect(VFX_DUR_CESSATE_NEGATIVE);
+	effect eSilence = EffectSilence();
+	effect eImmune = EffectDamageImmunityIncrease(DAMAGE_TYPE_SONIC, 100);
 
-    effect eLink = EffectLinkEffects(eDur2, eSilence);
-    eLink = EffectLinkEffects(eLink, eImmune);
+	effect eLink = EffectLinkEffects(eDur2, eSilence);
+	eLink = EffectLinkEffects(eLink, eImmune);
 
-    object oTarget = GetEnteringObject();
-    object oCaster = GetAreaOfEffectCreator();
+	object oTarget = GetEnteringObject();
+	object oCaster = GetAreaOfEffectCreator();
 
-    if (spellsIsTarget(oTarget, SPELL_TARGET_STANDARDHOSTILE, oCaster))
-    {
-          int bHostile;
-          if(!MyResistSpell(oCaster,oTarget))
-          {
-                bHostile = GetIsEnemy(oTarget);
-                //Fire cast spell at event for the specified target
-                SignalEvent(oTarget, EventSpellCastAt(oCaster, SPELL_SILENCE,bHostile));
-                ApplyEffectToObject(DURATION_TYPE_PERMANENT, eLink, oTarget);
-          }
-     }
+	if (spellsIsTarget(oTarget, SPELL_TARGET_STANDARDHOSTILE, oCaster)) {
+		int bHostile;
+
+		if (!MyResistSpell(oCaster, oTarget)) {
+			bHostile = GetIsEnemy(oTarget);
+			//Fire cast spell at event for the specified target
+			SignalEvent(oTarget, EventSpellCastAt(oCaster, SPELL_SILENCE, bHostile));
+			ApplyEffectToObject(DURATION_TYPE_PERMANENT, eLink, oTarget);
+		}
+	}
 
 }
 

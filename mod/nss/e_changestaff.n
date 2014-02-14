@@ -3,29 +3,31 @@ extern("inc_summonai")
 
 #define CHANGESTAFF_REF "changestaff"
 
-void treant_unsummon(object treant, bool give_staff_back = true) {
+void treant_unsummon(object treant, bool give_staff_back = true)
+{
 	if (give_staff_back) {
 		string ref = GetLocalString(treant, "changestaff_staff_ref");
 		CreateObject(OBJECT_TYPE_ITEM, ref, GetLocation(treant));
 	}
 
 	effect vfx = EffectLinkEffects(EffectVisualEffect(VFX_IMP_UNSUMMON),
-		EffectVisualEffect(VFX_FNF_SUMMON_MONSTER_2));
+								   EffectVisualEffect(VFX_FNF_SUMMON_MONSTER_2));
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, vfx, GetLocation(treant));
 	DestroyObject(treant, 0.2);
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if ("item_activate" == e.ev) {
 		if (!GetLocalInt(e.runnable, "changestaff"))
 			return;
-		
+
 		location loc = e.actedat;
 		object treant = CreateObject(OBJECT_TYPE_CREATURE, CHANGESTAFF_REF, loc);
 		effect vfx = EffectLinkEffects(EffectVisualEffect(VFX_FNF_NATURES_BALANCE),
-			EffectVisualEffect(VFX_FNF_SUMMON_MONSTER_3));
+									   EffectVisualEffect(VFX_FNF_SUMMON_MONSTER_3));
 		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, vfx, loc);
 		AddHenchman(e.actor, treant);
 		SetLocalString(treant, "changestaff_staff_ref", GetResRef(e.runnable));
@@ -41,6 +43,7 @@ void main() {
 
 		if (ASSOCIATE_COMMAND_LEAVEPARTY == nCommand) {
 			treant_unsummon(e.runnable, true);
+
 		} else {
 			Sum_RespondShout(master, nCommand);
 		}

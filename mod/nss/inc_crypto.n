@@ -48,7 +48,8 @@ CRYPTO_DEFAULT_DELIM = "|";
 // Function: CryptoMonoalphabeticSubstitution
 // Implement a general monoalphabetic substitution cipther.
 // The default is set to do ROT13.
-string CryptoMonoalphabeticSubstitution(string sInStr, string sLexIn = "abcdefghijklmnopqrstuvwxyz", string sLexOut = "nopqrstuvwxyzabcdefghijklm",
+string CryptoMonoalphabeticSubstitution(string sInStr, string sLexIn = "abcdefghijklmnopqrstuvwxyz",
+										string sLexOut = "nopqrstuvwxyzabcdefghijklm",
 										int nBehaviour = CRYPTO_BEHAVIOUR_DEFAULTFLAG);
 
 // Function: CryptoHomophonicSubstitution
@@ -60,7 +61,9 @@ string CryptoMonoalphabeticSubstitution(string sInStr, string sLexIn = "abcdefgh
 //
 // Note that this is a unpimped version of the homophonic cipher class.  It does NOT do
 // two-way decryption.  Used for racial languages initially.
-string CryptoHomophonicSubstitution(string sInStr, string sLexIn = "abcdefghijklmnopqrstuvwxyz", string sLexOut = "n|o|p|q|r|s|t|u|v|w|x|y|z|a|b|c|d|e|f|g|h|i|j|k|l|m", string sFieldDelimiter = "|",
+string CryptoHomophonicSubstitution(string sInStr, string sLexIn = "abcdefghijklmnopqrstuvwxyz",
+									string sLexOut = "n|o|p|q|r|s|t|u|v|w|x|y|z|a|b|c|d|e|f|g|h|i|j|k|l|m",
+									string sFieldDelimiter = "|",
 									int nBehaviour = CRYPTO_BEHAVIOUR_DEFAULTFLAG);
 
 
@@ -83,19 +86,22 @@ string c_GetField(string sFieldA, int nField, string sFDelim = "|");
 /* Implementation below */
 
 
-string CryptoMonoalphabeticSubstitution(string sInStr, string sLexIn = "abcdefghijklmnopqrstuvwxyz", string sLexOut = "nopqrstuvwxyzabcdefghijklm",
-										int nBehaviour = CRYPTO_BEHAVIOUR_DEFAULTFLAG) {
+string CryptoMonoalphabeticSubstitution(string sInStr, string sLexIn = "abcdefghijklmnopqrstuvwxyz",
+										string sLexOut = "nopqrstuvwxyzabcdefghijklm",
+										int nBehaviour = CRYPTO_BEHAVIOUR_DEFAULTFLAG)
+{
 
-	if ( CRYPTO_BEHAVIOUR_DEFAULTFLAG == nBehaviour )
-		nBehaviour = CRYPTO_BEHAVIOUR_EXTRACHAR_KEEP | CRYPTO_BEHAVIOUR_CASEMAP | CRYPTO_BEHAVIOUR_CASEIGNORE;
+	if (CRYPTO_BEHAVIOUR_DEFAULTFLAG == nBehaviour)
+		nBehaviour = CRYPTO_BEHAVIOUR_EXTRACHAR_KEEP | CRYPTO_BEHAVIOUR_CASEMAP |
+					 CRYPTO_BEHAVIOUR_CASEIGNORE;
 
-	if ( GetStringLength(sLexIn) != GetStringLength(sLexOut) && !( nBehaviour & CRYPTO_BEHAVIOUR_WRAP ) )
+	if (GetStringLength(sLexIn) != GetStringLength(sLexOut) && !(nBehaviour & CRYPTO_BEHAVIOUR_WRAP))
 		return "";
 
 	string sRes = "";
 	string sIn = sInStr;
 
-	if ( nBehaviour & CRYPTO_BEHAVIOUR_CASEIGNORE ) {
+	if (nBehaviour & CRYPTO_BEHAVIOUR_CASEIGNORE) {
 		sIn = GetStringLowerCase(sInStr);
 		sLexIn = GetStringLowerCase(sLexIn);
 		sLexOut = GetStringLowerCase(sLexOut);
@@ -105,40 +111,47 @@ string CryptoMonoalphabeticSubstitution(string sInStr, string sLexIn = "abcdefgh
 	int i = 0;
 	int ipA = -1;
 	string cC = "";
-	for ( i = 0; i < GetStringLength(sInStr); i++ ) {
+
+	for (i = 0; i < GetStringLength(sInStr); i++) {
 		cC = GetSubString(sIn, i, 1);
 		ipA = FindSubString(sLexIn, cC);
 
-		if ( -1 == ipA ) {
-			if ( nBehaviour & CRYPTO_BEHAVIOUR_EXTRACHAR_KEEP )
+		if (-1 == ipA) {
+			if (nBehaviour & CRYPTO_BEHAVIOUR_EXTRACHAR_KEEP)
 				sRes += cC;
+
 			else
 				continue;
 		}
 
-		if ( nBehaviour & CRYPTO_BEHAVIOUR_CASEMAP ) {
+		if (nBehaviour & CRYPTO_BEHAVIOUR_CASEMAP) {
 			cC = GetSubString(sInStr, i, 1);
 			sRes += GetCaseConv(GetSubString(sLexOut, ipA, 1), GetIsUpcase(cC));
+
 		} else {
 			sRes += GetSubString(sLexOut, ipA, 1);
 		}
 
 	}
+
 	return sRes;
 }
 
 
-string CryptoHomophonicSubstitution(string sInStr, string sLexIn = "abcdefghijklmnopqrstuvwxyz", string sLexOut = "n|o|p|q|r|s|t|u|v|w|x|y|z|a|b|c|d|e|f|g|h|i|j|k|l|m", string sFieldDelimiter = "|",
-									int nBehaviour = CRYPTO_BEHAVIOUR_DEFAULTFLAG) {
+string CryptoHomophonicSubstitution(string sInStr, string sLexIn = "abcdefghijklmnopqrstuvwxyz",
+									string sLexOut = "n|o|p|q|r|s|t|u|v|w|x|y|z|a|b|c|d|e|f|g|h|i|j|k|l|m",
+									string sFieldDelimiter = "|",
+									int nBehaviour = CRYPTO_BEHAVIOUR_DEFAULTFLAG)
+{
 
-	if ( CRYPTO_BEHAVIOUR_DEFAULTFLAG == nBehaviour )
+	if (CRYPTO_BEHAVIOUR_DEFAULTFLAG == nBehaviour)
 		nBehaviour = CRYPTO_BEHAVIOUR_EXTRACHAR_KEEP | CRYPTO_BEHAVIOUR_CASEIGNORE;
 
 	string sRes = "";
 	string sIn = sInStr;
 	int i = 0;
 
-	if ( nBehaviour & CRYPTO_BEHAVIOUR_CASEIGNORE ) {
+	if (nBehaviour & CRYPTO_BEHAVIOUR_CASEIGNORE) {
 		sIn = GetStringLowerCase(sInStr);
 		sLexIn = GetStringLowerCase(sLexIn);
 		sLexOut = GetStringLowerCase(sLexOut);
@@ -150,36 +163,40 @@ string CryptoHomophonicSubstitution(string sInStr, string sLexIn = "abcdefghijkl
 	int nfa = GetStringLength(sLexIn);
 	int nfb = c_GetFieldCount(sLexOut) - 1;
 
-	if ( nfa != nfb || nfa == 0 )  // TODO: check for warp
+	if (nfa != nfb || nfa == 0)    // TODO: check for warp
 		return "";
 
 	object oMod = GetModule();
 
 	/* now it gets ugly. */
-	for ( i = 0; i < nfb; i++ )
+	for (i = 0; i < nfb; i++)
 		SetLocalString(oMod, "_chsb" + IntToString(i), c_GetField(sLexOut, i, sFieldDelimiter));
+
 	int iLen = GetStringLength(sIn);
 	int iIdx = -1;
 	string cC, cCa;
 
-	for ( i = 0; i < iLen; i++ ) {
+	for (i = 0; i < iLen; i++) {
 		cC = GetSubString(sIn, i, 1);
 		iIdx = FindSubString(sLexIn, cC);
 
-		if ( -1 == iIdx ) {
-			if ( nBehaviour & CRYPTO_BEHAVIOUR_EXTRACHAR_KEEP )
+		if (-1 == iIdx) {
+			if (nBehaviour & CRYPTO_BEHAVIOUR_EXTRACHAR_KEEP)
 				sRes += cC;
+
 			else
 				continue;
 		}
 
 
 		cC = GetLocalString(oMod, "_chsb" + IntToString(iIdx));
-		if ( cC != "" ) {
+
+		if (cC != "") {
 			cCa = GetSubString(sInStr, i, 1);
 			sRes += GetCaseConv(cC, GetIsUpcase(cCa));
 		}
 	}
+
 	/* de-ugly our variable tables. */
 	//for (i = 0; i < nfb; i++)
 	//    DeleteLocalString(oMod, "_chsb" + IntToString(i));
@@ -188,23 +205,26 @@ string CryptoHomophonicSubstitution(string sInStr, string sLexIn = "abcdefghijkl
 	return sRes;
 }
 
-int GetIsUpcase(string sChar) {
+int GetIsUpcase(string sChar)
+{
 	return -1 != FindSubString(CRYPTO_UPCASE_DEF, GetSubString(sChar, 0, 1));
 }
 
 
-string GetCaseConv(string sChar, int bCase = TRUE) {
+string GetCaseConv(string sChar, int bCase = TRUE)
+{
 	int bAlreadyCase = GetIsUpcase(sChar);
 
-	if ( ( bAlreadyCase && bCase ) || ( !bAlreadyCase && !bCase ) )
+	if ((bAlreadyCase && bCase) || (!bAlreadyCase && !bCase))
 		return sChar;
 
 	string sRest = GetSubString(sChar, 1, CRYPTO_MAX_STRING_LENGTH);
 
-	if ( bCase ) {
+	if (bCase) {
 		/* Assume because of check above we want upcase and have lowercase */
 		int iPos = FindSubString(CRYPTO_LOCASE_DEF, sChar);
 		return GetSubString(CRYPTO_UPCASE_DEF, iPos, 1) + sRest;
+
 	} else {
 		int iPos = FindSubString(CRYPTO_UPCASE_DEF, sChar);
 		return GetSubString(CRYPTO_UPCASE_DEF, iPos, 1) + sRest;
@@ -215,11 +235,13 @@ string GetCaseConv(string sChar, int bCase = TRUE) {
 
 
 
-int c_GetFieldCount(string sFieldA, string sFDelim = "|") {
+int c_GetFieldCount(string sFieldA, string sFDelim = "|")
+{
 	int c = 1;
 
 	int iPos = FindSubString(sFieldA, sFDelim);
-	while ( iPos != -1 ) {
+
+	while (iPos != -1) {
 
 		sFieldA = GetSubString(sFieldA, iPos + 1, CRYPTO_MAX_STRING_LENGTH); // chomp off and add
 		iPos = FindSubString(sFieldA, sFDelim);
@@ -231,19 +253,20 @@ int c_GetFieldCount(string sFieldA, string sFDelim = "|") {
 
 
 
-string c_GetField(string sFieldA, int nField, string sFDelim = "|") {
+string c_GetField(string sFieldA, int nField, string sFDelim = "|")
+{
 	int nCurrentField = 0;
 	int nPos = FindSubString(sFieldA, sFDelim);
 	string sCurrentField = "";
 
-	while ( -1 != nPos ) {
-		if ( nCurrentField > nField )
+	while (-1 != nPos) {
+		if (nCurrentField > nField)
 			return ""; // no match
 
 		sCurrentField = GetSubString(sFieldA, 0, nPos);
 		sFieldA = GetSubString(sFieldA, nPos + 1, CRYPTO_MAX_STRING_LENGTH);
 
-		if ( nCurrentField == nField )
+		if (nCurrentField == nField)
 			return sCurrentField;
 
 

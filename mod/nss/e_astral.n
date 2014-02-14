@@ -1,7 +1,8 @@
 extern("inc_corpse")
 extern("inc_xp_handling")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "door_click") {
@@ -10,13 +11,13 @@ void main() {
 			object oTarget = GetTransitionTarget(e.runnable);
 			SetAreaTransitionBMP(AREA_TRANSITION_RANDOM);
 
-			if ( GetIsPC(oClicker) ) {
+			if (GetIsPC(oClicker)) {
 				ReincarnatePC(oClicker);
 			}
 
 			//FIXME: RespawnTarget
 			AssignCommand(oClicker, JumpToObject(GetObjectByTag("RESPAWN_LOC")));
-			
+
 			event_stop();
 		}
 	}

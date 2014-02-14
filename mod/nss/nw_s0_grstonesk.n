@@ -19,17 +19,18 @@ extern("nw_i0_spells")
 
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 
-/*
- * Spellcast Hook Code
- * Added 2003-06-20 by Georg
- * If you want to make changes to all spells,
- * check x2_inc_spellhook.nss to find out more
- *
- */
+	/*
+	 * Spellcast Hook Code
+	 * Added 2003-06-20 by Georg
+	 * If you want to make changes to all spells,
+	 * check x2_inc_spellhook.nss to find out more
+	 *
+	 */
 
-	if ( !X2PreSpellCastCode() ) {
+	if (!X2PreSpellCastCode()) {
 		// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
 		return;
 	}
@@ -45,11 +46,13 @@ void main() {
 	//Fire cast spell at event for the specified target
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_GREATER_STONESKIN, FALSE));
 
-	if ( nAmount > 15 ) {
+	if (nAmount > 15) {
 		nAmount = 15;
 	}
+
 	int nDamage = nAmount * 10;
-	if ( GetMetaMagicFeat() == METAMAGIC_EXTEND ) {
+
+	if (GetMetaMagicFeat() == METAMAGIC_EXTEND) {
 		nDuration *= 2;
 	}
 

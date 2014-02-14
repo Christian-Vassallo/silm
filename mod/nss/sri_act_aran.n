@@ -1,9 +1,10 @@
 extern("_gen")
 
-void main() {
+void main()
+{
 	int app = GetAppearanceType(OBJECT_SELF);
 	app = app == 6 ? APPEARANCE_TYPE_SPIDER_DIRE : 6;
 	SetCreatureAppearanceType(OBJECT_SELF, app);
 	ApplyEffectToObject(DURATION_TYPE_INSTANT,
-		EffectVisualEffect(VFX_IMP_POLYMORPH), OBJECT_SELF);
+						EffectVisualEffect(VFX_IMP_POLYMORPH), OBJECT_SELF);
 }

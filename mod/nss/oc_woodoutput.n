@@ -1,26 +1,30 @@
-void UnlockWoodOutput(object oWoodOutput) {
+void UnlockWoodOutput(object oWoodOutput)
+{
 	AssignCommand(oWoodOutput, PlayAnimation(ANIMATION_PLACEABLE_DEACTIVATE));
 	SetLocked(oWoodOutput, FALSE);
 }
 
-void LockWoodOutput(object oWoodOutput) {
+void LockWoodOutput(object oWoodOutput)
+{
 	AssignCommand(oWoodOutput, PlayAnimation(ANIMATION_PLACEABLE_ACTIVATE));
 	SetLocked(oWoodOutput, TRUE);
 }
 
-void _DoWoodOutput(object oWoodOutput) {
+void _DoWoodOutput(object oWoodOutput)
+{
 	CreateItemOnObject("cs_ma20", oWoodOutput);
 	UnlockWoodOutput(oWoodOutput);
 }
 
-void DoWoodOutput(object oPC, object oWoodOutput) {
+void DoWoodOutput(object oPC, object oWoodOutput)
+{
 	object oItm = GetFirstItemInInventory(oWoodOutput);
 	object oPC = GetLastClosedBy();
 	int iNum;
 
-	if ( GetTag(oItm) == "BM_Woodcredit" ) {
+	if (GetTag(oItm) == "BM_Woodcredit") {
 
-		while ( GetIsObjectValid(oItm) ) {
+		while (GetIsObjectValid(oItm)) {
 
 			DestroyObject(oItm);
 			iNum += GetItemStackSize(oItm);
@@ -28,7 +32,7 @@ void DoWoodOutput(object oPC, object oWoodOutput) {
 
 		}
 
-		if ( iNum > 1 ) {
+		if (iNum > 1) {
 
 
 			CreateItemOnObject("bm_woodcredit", oPC, iNum - 1);
@@ -44,8 +48,9 @@ void DoWoodOutput(object oPC, object oWoodOutput) {
 	}
 }
 
-void main() {
-	if ( !GetIsObjectValid(GetFirstItemInInventory(OBJECT_SELF)) ) return;
+void main()
+{
+	if (!GetIsObjectValid(GetFirstItemInInventory(OBJECT_SELF))) return;
 
 	DoWoodOutput(GetLastClosedBy(), OBJECT_SELF);
 }

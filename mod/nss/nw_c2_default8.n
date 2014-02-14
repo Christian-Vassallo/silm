@@ -13,11 +13,15 @@ extern("nw_i0_generic")
 extern("inc_summonai")
 extern("inc_events")
 
-void main() {
+void main()
+{
 
 	// Event: creature_disturbed
 	// - actor: GetLastDisturbed()
-	int ret = RunEventScriptsFor(GetEventSerial(), "creature_disturbed", OBJECT_SELF, GetLastDisturbed(), OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+	int ret = RunEventScriptsFor(GetEventSerial(), "creature_disturbed", OBJECT_SELF,
+								 GetLastDisturbed(), OBJECT_INVALID,
+								 GetLocation(OBJECT_INVALID));
+
 	if (ret & EVENT_RESULT_STOP)
 		return;
 
@@ -25,13 +29,13 @@ void main() {
 
 	// If we've been disturbed and are not already fighting,
 	// attack our disturber.
-	if ( GetIsObjectValid(oTarget) && !GetIsFighting(OBJECT_SELF)
-		&& GetShouldAttack() ) {
+	if (GetIsObjectValid(oTarget) && !GetIsFighting(OBJECT_SELF)
+			&& GetShouldAttack()) {
 		DetermineCombatRound(oTarget);
 	}
 
 	// Send the disturbed flag if appropriate.
-	if ( GetSpawnInCondition(NW_FLAG_DISTURBED_EVENT) ) {
+	if (GetSpawnInCondition(NW_FLAG_DISTURBED_EVENT)) {
 		SignalEvent(OBJECT_SELF, EventUserDefined(EVENT_DISTURBED));
 	}
 }

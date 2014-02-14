@@ -3,19 +3,22 @@ extern("inc_cdb")
 #define ONLINE_TABLE "online"
 #define LASTLOCATION_TABLE "last_location"
 
-void onlineServerStart() {
+void onlineServerStart()
+{
 	pQ("truncate " + ONLINE_TABLE);
 }
 
-void onlinePlayerUpdateLocation(object oPC) {
+void onlinePlayerUpdateLocation(object oPC)
+{
 	pQ("update " + ONLINE_TABLE + " set " +
-		"at = " + pEscapeLocation(GetLocation(oPC)) + ", " +
-		"afk = " + pEscapeBool(GetLocalInt(oPC, "afk")) + " " + 
-		"where aid = " + pSi(GetAccountID(oPC))
-	);
+	   "at = " + pEscapeLocation(GetLocation(oPC)) + ", " +
+	   "afk = " + pEscapeBool(GetLocalInt(oPC, "afk")) + " " +
+	   "where aid = " + pSi(GetAccountID(oPC))
+	  );
 }
 
-void onlinePlayerEnter(object oPC) {
+void onlinePlayerEnter(object oPC)
+{
 
 	string q =
 		"insert into " + ONLINE_TABLE + " (aid, cid, account, character, dm, at, afk) values";
@@ -23,25 +26,31 @@ void onlinePlayerEnter(object oPC) {
 	q += "(" +
 		 pSi(GetAccountID(oPC), true) + "," +
 		 pSi(GetCharacterID(oPC), true) + "," +
-		 pSs(GetPCName(oPC)) + "," + 
-		 pSs(GetName(oPC)) + "," + 
-		 pSb(GetIsDM(oPC)) + "," + 
-		 pEscapeLocation(GetLocation(oPC)) + "," + 
+		 pSs(GetPCName(oPC)) + "," +
+		 pSs(GetName(oPC)) + "," +
+		 pSb(GetIsDM(oPC)) + "," +
+		 pEscapeLocation(GetLocation(oPC)) + "," +
 		 pSb(GetLocalInt(oPC, "afk")) +
-	")";
+		 ")";
 
 	pQ(q);
 }
 
-void onlinePlayerLeave(object oPC) {
+void onlinePlayerLeave(object oPC)
+{
 	int id = GetCharacterID(oPC);
-	
+
 	if (!GetIsDM(oPC)) {
 		pQ("select id from " + LASTLOCATION_TABLE + " where cid = " + pSi(id) + ";");
+
 		if (pF()) {
-			pQ("update "  + LASTLOCATION_TABLE + " set at = online.at from online where " +  LASTLOCATION_TABLE + ".cid = " + pSi(id) + " and online.cid = " + pSi(id) + ";");
+			pQ("update "  + LASTLOCATION_TABLE + " set at = online.at from online where " +  LASTLOCATION_TABLE
+			   + ".cid = " + pSi(
+				   id) + " and online.cid = " + pSi(id) + ";");
+
 		} else {
-			pQ("insert into " + LASTLOCATION_TABLE + " (cid,at) (select cid,at from online where cid = " + pSi(id) + ");");
+			pQ("insert into " + LASTLOCATION_TABLE + " (cid,at) (select cid,at from online where cid = " + pSi(
+				   id) + ");");
 		}
 	}
 
@@ -49,19 +58,25 @@ void onlinePlayerLeave(object oPC) {
 }
 
 
-location GetLastLocation(object oPC) {
+location GetLastLocation(object oPC)
+{
 	int id = GetCharacterID(oPC);
 	location ret;
 
 	if (!id)
 		return GetLocation(oPC);
 
-	pQ("select ((at).position).x,((at).position).y,((at).position).z,((at).area).tag from " + LASTLOCATION_TABLE + " where cid = " + IntToString(id) + ";");
+	pQ("select ((at).position).x,((at).position).y,((at).position).z,((at).area).tag from " +
+	   LASTLOCATION_TABLE +
+	   " where cid = " + IntToString(id) + ";");
+
 	if (pF()) {
 		vector position = Vector(pGf(1), pGf(2), pGf(3));
 		object area = GetObjectByTag(pGs(4));
+
 		if (!GetIsObjectValid(area))
 			return GetLocation(oPC);
+
 		ret = Location(area, position, 0.0);
 	}
 

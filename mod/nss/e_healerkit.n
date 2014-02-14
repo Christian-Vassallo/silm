@@ -2,7 +2,8 @@ extern("inc_events")
 extern("inc_healerkit")
 extern("inc_scorco")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "player_login") {
@@ -16,8 +17,10 @@ void main() {
 
 		if ("bandage" == ref) {
 			AddBandage(e.actor, e.actedon, e.runnable);
+
 		} else if ("healerkit" == ref) {
 			UseHealerKit(e.actor, e.actedon, e.runnable);
+
 		} else if ("medicine" == ref) {
 			AddMedicine(e.actor, e.actedon, e.runnable);
 		}

@@ -1,14 +1,17 @@
 extern("c_chessinc")
 
-int StartingConditional() {
+int StartingConditional()
+{
 	int l_iResult;
 
-	l_iResult = ( GetLocalInt(OBJECT_SELF, "movef1r2") == 1 );
-	if ( l_iResult ) {
+	l_iResult = (GetLocalInt(OBJECT_SELF, "movef1r2") == 1);
+
+	if (l_iResult) {
 		object oGM = GetNearestObjectByTag("c_gamemaster");
 		int nPos = GetLocalInt(OBJECT_SELF, "nPosition");
 		int nTurn = GetLocalInt(oGM, "Turn");
-		SetCustomToken(103, MovePositions(nPos, nPos + ( 10 * nTurn )));
+		SetCustomToken(103, MovePositions(nPos, nPos + (10 * nTurn)));
 	}
+
 	return l_iResult;
 }

@@ -27,7 +27,8 @@ extern("inc_name")
 extern("inc_wildshape")
 
 // extern inc_chat_run
-int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel);
+int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias,
+				int nRunModLevel);
 
 int CommandSCO(object oPC, int iMode);
 int CommandRCO(object oPC, int iMode);
@@ -209,12 +210,15 @@ int CommandPlaySound(object oPC, int iMode);
 //   Refer to the header of "_chat" for a list.
 // Note that the executing object is oPC itself; it is merely passed
 // in as a convenience.
-int CommandStub(object oPC, int iMode) {
+int CommandStub(object oPC, int iMode)
+{
 	return OK;
 }
 
-int CommandPlaySound(object oPC, int iMode) {
+int CommandPlaySound(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
+
 	if (!amask(oPC, AMASK_GLOBAL_GM))
 		oTarget = oPC;
 
@@ -224,42 +228,52 @@ int CommandPlaySound(object oPC, int iMode) {
 	AssignCommand(oTarget, PlaySound(sound));
 
 	string snddesc;
+
 	if (oTarget == oPC)
 		snddesc = GetName(oPC) + " plays sound '" + sound + "'.";
+
 	else
 		snddesc = GetName(oPC) + " plays sound '" + sound +
-			"' on " + GetName(oTarget) + ".";
+				  "' on " + GetName(oTarget) + ".";
 
 	SendMessageToPC(oPC, snddesc);
+
 	if (oPC != oTarget)
 		SendMessageToPC(oTarget, snddesc);
-	iterate_near_object(OBJECT_TYPE_CREATURE, oTarget, oi,
-		if (GetIsPC(oi))
-			SendMessageToPC(oi, snddesc);
 
-		if (GetDistanceBetween(oi, oTarget) > 32f)
-			break;
-	);
+	iterate_near_object(OBJECT_TYPE_CREATURE, oTarget, oi,
+
+						if (GetIsPC(oi))
+						SendMessageToPC(oi, snddesc);
+
+						if (GetDistanceBetween(oi, oTarget) > 32f)
+							break;
+						   );
+
 	return OK;
 }
 
-int CommandRepeat(object oPC, int iMode) {
+int CommandRepeat(object oPC, int iMode)
+{
 	string mode = itoa(iMode);
 	string aidcid = itoa(GetAccountID(oPC)) + "_" + itoa(GetCharacterID(oPC));
 	string message = GetLocalString(GetModule(), "last_chat_message_text_" + mode + "_" + aidcid);
+
 	if ((iMode & CHATMODE_TALK || iMode & CHATMODE_WHISPER ||
 			iMode & CHATMODE_PARTY || iMode & CHATMODE_DM ||
 			iMode & CHATMODE_SHOUT) && message != "") {
 		SpeakToMode(oPC, message, iMode);
 		return OK;
+
 	} else {
 		ToPC("Nothing to /repeat.");
 		return FAIL;
 	}
 }
 
-int CommandSCO(object oPC, int iMode) {
-	string query =getopt_arg(0);
+int CommandSCO(object oPC, int iMode)
+{
+	string query = getopt_arg(0);
 	object o = GetTarget();
 
 	if (!GetIsObjectValid(o))
@@ -270,38 +284,45 @@ int CommandSCO(object oPC, int iMode) {
 	return OK;
 }
 
-int CommandRCO(object oPC, int iMode) {
-	string query =getopt_arg(0);
+int CommandRCO(object oPC, int iMode)
+{
+	string query = getopt_arg(0);
 
 	pRCO(query, GetLocation(oPC), oPC);
 
 	return OK;
 }
 
-int CommandRunScript(object oPC, int iMode) {
-	string s =getopt_arg(0);
+int CommandRunScript(object oPC, int iMode)
+{
+	string s = getopt_arg(0);
 	object o = GetTarget();
+
 	if (!GetIsObjectValid(o))
 		return NotifyBadTarget();
-	
+
 	ExecuteScript(s, o);
 	return OK;
 }
 
-int CommandManageSetItem(object oPC, int iMode) {
-	string name =getopt_arg(0);
+int CommandManageSetItem(object oPC, int iMode)
+{
+	string name = getopt_arg(0);
 	object oI = CreateItemOnObject("move_target_g", oPC);
 	SetLocalString(oI, "objset_name", name);
 	SetName(oI, "group: " + name);
 	return OK;
 }
 
-int CommandManageSetAdd(object oPC, int iMode) {
+int CommandManageSetAdd(object oPC, int iMode)
+{
 	string set = GetCurrentSet(oPC);
+
 	if ("" == set) {
 		ToPC("No group set.");
 		return FAIL;
 	}
+
 	if (GetIsInSet(set, GetTarget(), oPC)) {
 		ToPC("groupadd: " + ObjectToString(GetTarget()) + " already in " + set);
 		return OK;
@@ -312,11 +333,16 @@ int CommandManageSetAdd(object oPC, int iMode) {
 	return OK;
 }
 
-int CommandManageSetSet(object oPC, int iMode) {
-	string new =getopt_arg(0);
+int CommandManageSetSet(object oPC, int iMode)
+{
+	string new = getopt_arg(0);
+
 	if ("" == new) {
-		object o; int i; int t = GetSetSize(GetCurrentSet(oPC));
+		object o;
+		int i;
+		int t = GetSetSize(GetCurrentSet(oPC));
 		ToPC("group: " + GetCurrentSet(oPC) + " (" + IntToString(t) + ")");
+
 		for (i = 0; i < t; i++) {
 			o = GetFromSet(GetCurrentSet(oPC), i, oPC);
 			ToPC(IntToString(i) + ": " + ObjectToString(o) + " " + GetResRef(o) + " " + GetTag(o));
@@ -326,54 +352,72 @@ int CommandManageSetSet(object oPC, int iMode) {
 		ToPC("groupsel: " + new);
 		SetCurrentSet(new, oPC);
 	}
+
 	return OK;
 }
 
-int CommandManageSetClear(object oPC, int iMode) {
+int CommandManageSetClear(object oPC, int iMode)
+{
 	string set = GetCurrentSet(oPC);
+
 	if (getopt_opt("s"))
-		set =getopt_optv("s");
-	
+		set = getopt_optv("s");
+
 	ClearSet(set, oPC);
 	ToPC("groupclear: " + set);
 	return OK;
 }
 
 
-int CommandEventHandler(object oPC, int iMode) {
+int CommandEventHandler(object oPC, int iMode)
+{
 	object oT = GetTarget();
 
 	if (getopt_argc() == 2) {
-		string sEvent =getopt_arg(0);
-		string sVal =getopt_arg(1);
+		string sEvent = getopt_arg(0);
+		string sVal = getopt_arg(1);
+
 		if ("heartbeat" == sEvent)
 			SetCreatureEventHandler(oT, CREATURE_EVENT_HEARTBEAT, sVal);
+
 		else if ("perception" == sEvent)
 			SetCreatureEventHandler(oT, CREATURE_EVENT_PERCEPTION, sVal);
+
 		else if ("spellcast" == sEvent)
 			SetCreatureEventHandler(oT, CREATURE_EVENT_SPELLCAST, sVal);
+
 		else if ("attacked" == sEvent)
 			SetCreatureEventHandler(oT, CREATURE_EVENT_ATTACKED, sVal);
+
 		else if ("damaged" == sEvent)
 			SetCreatureEventHandler(oT, CREATURE_EVENT_DAMAGED, sVal);
+
 		else if ("endcombat" == sEvent)
 			SetCreatureEventHandler(oT, CREATURE_EVENT_ENDCOMBAT, sVal);
+
 		else if ("conversation" == sEvent)
 			SetCreatureEventHandler(oT, CREATURE_EVENT_CONVERSATION, sVal);
+
 		else if ("spawn" == sEvent)
 			SetCreatureEventHandler(oT, CREATURE_EVENT_SPAWN, sVal);
+
 		else if ("rested" == sEvent)
 			SetCreatureEventHandler(oT, CREATURE_EVENT_RESTED, sVal);
+
 		else if ("death" == sEvent)
 			SetCreatureEventHandler(oT, CREATURE_EVENT_DEATH, sVal);
+
 		else if ("userdef" == sEvent)
 			SetCreatureEventHandler(oT, CREATURE_EVENT_USERDEF, sVal);
+
 		else if ("blocked" == sEvent)
 			SetCreatureEventHandler(oT, CREATURE_EVENT_BLOCKED, sVal);
+
 		else {
 			ToPC("Unknown event: " + sEvent);
 			return FAIL;
 		}
+
 	} else if (getopt_argc() != 0) {
 		ToPC("Syntax error: 0 or 2 arguments.");
 		return SYNTAX;
@@ -397,44 +441,48 @@ int CommandEventHandler(object oPC, int iMode) {
 
 
 
-int CommandNudge(object oPC, int iMode) {
+int CommandNudge(object oPC, int iMode)
+{
 
 	object oTarget = GetTarget();
-	
+
 	if (!GetIsObjectValid(oTarget))
 		return NotifyBadTarget();
-	
+
 	float
-		x = StringToFloat(getopt_optv("x")),
-		y = StringToFloat(getopt_optv("y")),
-		z = StringToFloat(getopt_optv("z"));
+	x = StringToFloat(getopt_optv("x")),
+	y = StringToFloat(getopt_optv("y")),
+	z = StringToFloat(getopt_optv("z"));
 
 	if (0f == x && 0f == y && 0f == z) {
 		ToPC("nothing to be done.");
 		return OK;
 	}
-	
+
 	location loc = GetLocation(oTarget);
 	vector pos = GetPositionFromLocation(loc);
 	object area = GetAreaFromLocation(loc);
 	float facing = GetFacingFromLocation(loc);
-	
+
 	pos.x += x;
 	pos.y += y;
 	pos.z += z;
-	
+
 	loc = Location(area, pos, facing);
 
 	if (is_placeable(oTarget)) {
-		object oNew = CreateObject(OBJECT_TYPE_PLACEABLE, GetResRef(oTarget), loc, FALSE, GetTag(oTarget)); // CopyObject(oTarget, loc);
+		object oNew = CreateObject(OBJECT_TYPE_PLACEABLE, GetResRef(oTarget), loc, FALSE,
+								   GetTag(oTarget)); // CopyObject(oTarget, loc);
+
 		if (GetIsObjectValid(oNew)) {
 			ToPC("done, create/kill placeable.");
 			DestroyObject(oTarget, 0.2f);
-		}
-		else {
+
+		} else {
 			ToPC("Cannot copy object to new location.");
 			return FAIL;
 		}
+
 	} else {
 		AssignCommand(oTarget, ActionJumpToLocation(loc));
 		ToPC("done, action queued.");
@@ -443,16 +491,17 @@ int CommandNudge(object oPC, int iMode) {
 	return OK;
 }
 
-int CommandGo(object oPC, int iMode) {
-	string loc =getopt_arg(0);
+int CommandGo(object oPC, int iMode)
+{
+	string loc = getopt_arg(0);
 	location lo;
 
 	string area, name;
-	float x,y,z,f;
+	float x, y, z, f;
 
 	struct Color
-		col1 = cLightGrey,
-		col2 = cLightBlue;
+			col1 = cLightGrey,
+			col2 = cLightBlue;
 	int color_swap = 1;
 
 #define LOCHDR  "select area, x, y, z, f, name from locations where "
@@ -466,17 +515,27 @@ int CommandGo(object oPC, int iMode) {
 	pQ(LOCHDR + " name = " + pSs(loc) + " and " + amask_cond + " limit 1;");
 
 	if (pF()) {
-		area = pGs(1); x = pGf(2); y = pGf(3); z = pGf(4); f = pGf(5); name = pGs(6);
+		area = pGs(1);
+		x = pGf(2);
+		y = pGf(3);
+		z = pGf(4);
+		f = pGf(5);
+		name = pGs(6);
 
 	} else {
-	
+
 		string matches = "";
 		int count = 0;
 		pQ(LOCHDR + " name like " + pSs("%" + loc + "%") + " and " +
-			amask_cond + " order by name asc;");
-		
+		   amask_cond + " order by name asc;");
+
 		while (pF()) {
-			area = pGs(1); x = pGf(2); y = pGf(3); z = pGf(4); f = pGf(5); name = pGs(6);
+			area = pGs(1);
+			x = pGf(2);
+			y = pGf(3);
+			z = pGf(4);
+			f = pGf(5);
+			name = pGs(6);
 
 			matches += " " + ColorTag(color_swap ? cLightBlue : cLightGrey) + name;
 			color_swap = color_swap ? 0 : 1;
@@ -500,6 +559,7 @@ int CommandGo(object oPC, int iMode) {
 	}
 
 	object oarea = GetObjectByTag(area);
+
 	if (!GetIsObjectValid(oarea)) {
 		ToPC("error: area set for location is invalid.");
 		return FAIL;
@@ -510,107 +570,124 @@ int CommandGo(object oPC, int iMode) {
 	vec.y = y;
 	vec.z = z;
 	lo = Location(oarea, vec, f);
-	
+
 	SetLocalLocation(oPC, "go_last_location", GetLocation(oPC));
 	JumpToLocation(lo);
 	return OK;
-	
+
 }
 
-int CommandGoReturn(object oPC, int iMode) {
+int CommandGoReturn(object oPC, int iMode)
+{
 	location l = GetLocalLocation(oPC, "go_last_location");
 	JumpToLocation(l);
 	return OK;
 }
 
-int CommandInspect(object oPC, int iMode) {
+int CommandInspect(object oPC, int iMode)
+{
 	float fRadius = 60.0;
 	float fDuration = 4.0;
 
-	int bPersistencies =getopt_opt("pl");
-	
+	int bPersistencies = getopt_opt("pl");
+
 	int nShow = 0;
 
 	if (bPersistencies) {
 		int i = 1;
 		object oN = GetNearestObject(OBJECT_TYPE_PLACEABLE, oPC, i);
+
 		while (GetIsObjectValid(oN)) {
 			if (GetPlaceableID(oN) > 0) {
 				effect eglow = EffectVisualEffect(VFX_DUR_GLOW_BROWN);
-				DelayCommand(IntToFloat(i) * 0.1f, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eglow, oN, fDuration));
+				DelayCommand(IntToFloat(i) * 0.1f, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eglow, oN,
+							 fDuration));
 				nShow += 1;
 			}
+
 			i += 1;
 			oN = GetNearestObject(OBJECT_TYPE_PLACEABLE, oPC, i);
 		}
-		ToPC("Showing all persistent placeables within " + FloatToString(fRadius) + " for " + FloatToString(fDuration) + ": " + IntToString(nShow));
+
+		ToPC("Showing all persistent placeables within " + FloatToString(fRadius) + " for " + FloatToString(
+				 fDuration) + ": " + IntToString(nShow));
 
 	}
+
 	return OK;
 
 }
 
 
 
-int CommandpSQL(object oPC, int iMode) {
-	string query =getopt_arg(0);
+int CommandpSQL(object oPC, int iMode)
+{
+	string query = getopt_arg(0);
 
 	int ret = pQ(query);
 	ToPC("pQ result: " + itoa(ret));
 	ToPC("pError: " + pErrStr());
-	
+
 	return OK;
 }
 
 
-int CommandRehash(object oPC, int iMode) {
+int CommandRehash(object oPC, int iMode)
+{
 	pQ("select key, type, value, date_part('epoch', now())::int from gv;");
 	int c;
 	string cacheKey;
+
 	while (pF()) {
 		c += 1;
 		cacheKey = "gv_" + pG(2) + "_" + pG(1);
 		SetLocalInt(GetModule(), cacheKey, StringToInt(pG(4)));
 		SetLocalString(GetModule(), cacheKey, pG(3));
 	}
+
 	ToDMs("Rehashed " + IntToString(c) + " gvs.");
 
 	c = RehashEventScripts();
 	ToDMs("Rehashed " + IntToString(c) + " event scripts.");
 	RunEventScriptsFor(GetEventSerial(), "rehash",
-		oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+					   oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
 	return OK;
 }
 
 
 void VoidCreateItemOnObject(string sItemTemplate, object oTarget = OBJECT_SELF, int nStackSize = 1,
-							string sNewTag = "") {
+							string sNewTag = "")
+{
 	CreateItemOnObject(sItemTemplate, oTarget, nStackSize, sNewTag);
 }
 
 
 // Lists all herbs and sends the results via message.
-void ListHerbs(object oTarget) {
+void ListHerbs(object oTarget)
+{
 	int nTotal = 0, nStack = 0;
 	string sRef;
 
 	object oHerb = GetFirstItemInInventory(oTarget);
 
-	while ( GetIsObjectValid(oHerb) ) {
+	while (GetIsObjectValid(oHerb)) {
 		sRef = GetResRef(oHerb);
-		if ( GetStringLeft(sRef, 4) == "herb" ) {
+
+		if (GetStringLeft(sRef, 4) == "herb") {
 			nStack = GetItemStackSize(oHerb);
 			nTotal += nStack;
 		}
 
 		oHerb = GetNextItemInInventory(oTarget);
 	}
+
 	SendMessageToPC(oTarget, "You have " + IntToString(nTotal) + " herbs in total in your inventory.");
 }
 
 
-int CommandFix(object oPC, int iMode) {
-	string sWhat =getopt_arg(0);
+int CommandFix(object oPC, int iMode)
+{
+	string sWhat = getopt_arg(0);
 	object oTarget = GetTarget();
 	string sRef = "";
 
@@ -619,18 +696,20 @@ int CommandFix(object oPC, int iMode) {
 
 	float fDelay = 5.0;
 
-	if ( "herbs" == sWhat ) {
+	if ("herbs" == sWhat) {
 		ListHerbs(oPC);
 
 		object oHerb = GetFirstItemInInventory(oTarget);
 		int nThisHerbCount = 0;
 
 
-		while ( GetIsObjectValid(oHerb) ) {
+		while (GetIsObjectValid(oHerb)) {
 			sRef = GetResRef(oHerb);
-			if ( GetStringLeft(sRef, 4) == "herb" ) {
+
+			if (GetStringLeft(sRef, 4) == "herb") {
 				nStack = GetItemStackSize(oHerb);
-				if ( 239 > GetBaseItemType(oHerb) ) {
+
+				if (239 > GetBaseItemType(oHerb)) {
 					// its an old herb
 					fDelay += 0.1;
 					DelayCommand(fDelay, DestroyObject(oHerb));
@@ -649,7 +728,7 @@ int CommandFix(object oPC, int iMode) {
 		DelayCommand(fDelay, SendMessageToPC(oPC, "Now is all done. Go do some evil."));
 
 		SendMessageToPC(oPC, "Script will end its run in " +
-			FloatToString(fDelay) + " seconds. Dont touch anything while its working, okay?");
+						FloatToString(fDelay) + " seconds. Dont touch anything while its working, okay?");
 
 
 	} else {
@@ -663,13 +742,14 @@ int CommandFix(object oPC, int iMode) {
 
 
 
-int CommandReadTracks(object oPC, int iMode) {
+int CommandReadTracks(object oPC, int iMode)
+{
 	//Spurenlesen
 
-	if ( GetIsDM(oPC) )
+	if (GetIsDM(oPC))
 		return ACCESS;
 
-	if ( !GetLocalInt(GetModule(), "tracking") ) {
+	if (!GetLocalInt(GetModule(), "tracking")) {
 		SendMessageToPC(oPC, "Tracking is disabled.");
 		return FAIL;
 	}
@@ -677,11 +757,13 @@ int CommandReadTracks(object oPC, int iMode) {
 
 	int nT = GetLocalInt(oPC, "use_active_tracking");
 	SetLocalInt(oPC, "use_active_tracking", nT == 1 ? 0 : 1);
-	if ( nT ) {
+
+	if (nT) {
 		SendMessageToPC(oPC, "Aktives Spurenlesen deaktiviert.");
+
 	} else {
 		SendMessageToPC(oPC, "Aktives Spurenlesen aktiviert.");
-		string sMessage =getopt_arg(0);
+		string sMessage = getopt_arg(0);
 		SetLocalInt(oPC, "active_tracking_message", sMessage != "");
 	}
 
@@ -690,13 +772,14 @@ int CommandReadTracks(object oPC, int iMode) {
 	return OK;
 }
 
-int CommandAFK(object oPC, int iMode) {
+int CommandAFK(object oPC, int iMode)
+{
 	// is AFK?
 
-/*    if (GetIsInCombat(oPC)) {
- * 		SendMessageToPC(oPC, "Du kannst nicht waehrend dem Kampfe AFK gehen.");
- * 		return ERROR;
- * 	}*/
+	/*    if (GetIsInCombat(oPC)) {
+	 * 		SendMessageToPC(oPC, "Du kannst nicht waehrend dem Kampfe AFK gehen.");
+	 * 		return ERROR;
+	 * 	}*/
 
 	int nAFK = GetLocalInt(oPC, "afk");
 
@@ -704,39 +787,47 @@ int CommandAFK(object oPC, int iMode) {
 	evarg.i0 = !nAFK;
 	int serial = GetEventSerial();
 	int ret = RunEventScriptsForWithArgv(serial, "player_afk", oPC, oPC, oPC,
-		GetLocation(oPC), evarg, EVENT_MODE_SYNC);
+										 GetLocation(oPC), evarg, EVENT_MODE_SYNC);
 	DeleteEventArguments(serial);
+
 	if (ret & EVENT_RESULT_SUPPRESS)
 		return false;
 
-	if ( nAFK > 0 ) {
+	if (nAFK > 0) {
 		SetLocalInt(oPC, "afk", 0);
 
 		effect e = GetFirstEffect(oPC);
-		while ( GetIsEffectValid(e) ) {
-			if ( GetEffectCreator(e) == oPC && GetEffectDurationType(e) == DURATION_TYPE_PERMANENT
-				&& GetEffectType(e) == EFFECT_TYPE_VISUALEFFECT
-				&& GetEffectSubType(e) == SUBTYPE_SUPERNATURAL
-				&& GetEffectInteger(e, 0) == VFX_DUR_AFK) {
+
+		while (GetIsEffectValid(e)) {
+			if (GetEffectCreator(e) == oPC && GetEffectDurationType(e) == DURATION_TYPE_PERMANENT
+					&& GetEffectType(e) == EFFECT_TYPE_VISUALEFFECT
+					&& GetEffectSubType(e) == SUBTYPE_SUPERNATURAL
+					&& GetEffectInteger(e, 0) == VFX_DUR_AFK) {
 				RemoveEffect(oPC, e);
 				break;
 			}
 
 			e = GetNextEffect(oPC);
 		}
+
 		if (!GetIsDM(oPC))
 			NWNXChatSpeakToChannel(oPC, MSG_PARTY, GetPlayerName(oPC) + " ist nicht mehr afk.");
+
 		else
 			SendMessageToAllDMs(GetPlayerName(oPC) + " ist nicht mehr afk.");
+
 		FloatingTextStringOnCreature("*Nicht mehr AFK*", oPC, false);
 
 	} else {
-		AssignCommand(oPC, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(
-						VFX_DUR_AFK)), oPC));
+		AssignCommand(oPC, ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+											   SupernaturalEffect(EffectVisualEffect(
+													   VFX_DUR_AFK)), oPC));
 		SetLocalInt(oPC, "afk", 1 /* unix_ts? avoiding sql call for now*/);
 		FloatingTextStringOnCreature("*AFK*", oPC, false);
+
 		if (!GetIsDM(oPC))
 			NWNXChatSpeakToChannel(oPC, MSG_PARTY, GetPlayerName(oPC) + " ist afk.");
+
 		else
 			SendMessageToAllDMs(GetPlayerName(oPC) + " ist afk.");
 	}
@@ -746,13 +837,16 @@ int CommandAFK(object oPC, int iMode) {
 
 
 
-int CommandObject(object oPC, int iMode) {
+int CommandObject(object oPC, int iMode)
+{
 	return OK;
 }
 
-int CommandItem(object oPC, int iMode) {
-	
+int CommandItem(object oPC, int iMode)
+{
+
 	object oTarget = GetTarget();
+
 	if (!is_item(oTarget))
 		return NotifyBadTarget();
 
@@ -763,19 +857,25 @@ int CommandItem(object oPC, int iMode) {
 
 	if (getopt_opt("weight"))
 		weight = StringToInt(getopt_optv("weight"));
+
 	if (getopt_opt("droppable"))
 		drop = StringToBool(getopt_optv("droppable"));
+
 	if (getopt_opt("value"))
 		value = StringToInt(getopt_optv("value"));
+
 	if (getopt_opt("plot"))
 		plot = StringToInt(getopt_optv("plot"));
 
 	if (-1 != weight)
 		SetItemWeight(oTarget, weight);
+
 	if (-1 != drop)
 		SetDroppableFlag(oTarget, drop);
+
 	if (-1 != value)
 		SetGoldPieceValue(oTarget, value);
+
 	if (-1 != plot)
 		SetPlotFlag(oTarget, plot);
 
@@ -786,9 +886,11 @@ int CommandItem(object oPC, int iMode) {
 	return OK;
 }
 
-int CommandCreature(object oPC, int iMode) {
+int CommandCreature(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
-	if ( !is_creature(oTarget) && !GetIsPC(oTarget) )
+
+	if (!is_creature(oTarget) && !GetIsPC(oTarget))
 		return NotifyBadTarget();
 
 	int
@@ -801,51 +903,59 @@ int CommandCreature(object oPC, int iMode) {
 	phenotype = -1,
 	persist = -1;
 
-	if (getopt_opt("persist") )
+	if (getopt_opt("persist"))
 		persist = atoi(getopt_optv("persist"));
 
-	if (getopt_opt("plot") )
+	if (getopt_opt("plot"))
 		bPlot = StringToBool(getopt_optv("plot"));
 
-	if (getopt_opt("i") )
+	if (getopt_opt("i"))
 		bImmortal = StringToBool(getopt_optv("i"));
-	if (getopt_opt("c") )
+
+	if (getopt_opt("c"))
 		bCommandable = StringToBool(getopt_optv("c"));
 
-	if (getopt_opt("race") )
+	if (getopt_opt("race"))
 		race = StringToInt(getopt_optv("race"));
+
 	if (getopt_opt("gender"))
 		gender = StringToInt(getopt_optv("gender"));
-	if (getopt_opt("faction") )
-		race = StringToInt(getopt_optv("faction"));
-	
 
-	if (getopt_opt("phenotype") )
+	if (getopt_opt("faction"))
+		race = StringToInt(getopt_optv("faction"));
+
+
+	if (getopt_opt("phenotype"))
 		phenotype = atoi(getopt_optv("phenotype"));
 
 
 
-	if ( -1 != bImmortal )
+	if (-1 != bImmortal)
 		SetImmortal(oTarget, bImmortal);
-	if ( -1 != bCommandable )
+
+	if (-1 != bCommandable)
 		SetCommandable(bCommandable, oTarget);
-	
-	if ( -1 != race )
+
+	if (-1 != race)
 		SetRacialType(oTarget, race);
-	if ( -1 != gender )
+
+	if (-1 != gender)
 		SetGender(oTarget, gender);
-	if ( -1 != faction )
+
+	if (-1 != faction)
 		SetFactionId(oTarget, faction);
-	if ( -1 != phenotype )
+
+	if (-1 != phenotype)
 		SetPhenoType(phenotype, oTarget);
 
-	if ( -1 != persist ) {
+	if (-1 != persist) {
 		if (!p_canpersist(oTarget)) {
 			ToPC("Diese Kreatur kann nicht persistent gemacht werden!");
 			return FAIL;
 		}
-			
+
 		int vret = p_save("critters", oTarget);
+
 		if (!vret) {
 			ToPC("Warnung: Konnte das ausgewaehlte Ziel nicht speichern.");
 			return FAIL;
@@ -862,16 +972,18 @@ int CommandCreature(object oPC, int iMode) {
 	// ToPC("Conversation: " + GetConversation(oTarget));
 	ToPC("p_id: " + itoa(p_id(oTarget)));
 
-	if (getopt_opt("inv") )
+	if (getopt_opt("inv"))
 		OpenInventory(oTarget, oPC);
 
 	return OK;
 }
 
 
-int CommandPlaceable(object oPC, int iMode) {
+int CommandPlaceable(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
-	if ( !is_placeable(oTarget) )
+
+	if (!is_placeable(oTarget))
 		return NotifyBadTarget();
 
 	int nUseable = -1;
@@ -880,52 +992,58 @@ int CommandPlaceable(object oPC, int iMode) {
 
 
 	// Set/GetUseable
-	if (getopt_opt("useable") )
+	if (getopt_opt("useable"))
 		nUseable = StringToBool(getopt_optv("useable"));
 
-	if (getopt_opt("persist") )
+	if (getopt_opt("persist"))
 		nPersist = StringToBool(getopt_optv("persist"));
 
-	if (getopt_opt("open") )
+	if (getopt_opt("open"))
 		nOpen = StringToBool(getopt_optv("open"));
 
-	if ( nUseable != -1 )
+	if (nUseable != -1)
 		SetUseableFlag(oTarget, nUseable);
 
-	if ( nOpen != -1 ) {
-		if ( !nOpen )
+	if (nOpen != -1) {
+		if (!nOpen)
 			AssignCommand(oTarget, ActionCloseDoor(oTarget));
+
 		else
 			AssignCommand(oTarget, ActionOpenDoor(oTarget));
 	}
 
 	int nIsPersistent = GetPlaceableID(oTarget) > 0;
 
-	if ( nPersist != -1 ) {
+	if (nPersist != -1) {
 
-		if ( nPersist == 0 ) {
+		if (nPersist == 0) {
 			// Delete from DB
-			if ( !nIsPersistent ) {
+			if (!nIsPersistent) {
 				ToPC("Placeable not in database.");
+
 			} else {
 				KillPlacie(oTarget, 0.0, FALSE);
 				ToPC("Database entry removed.");
 				nPersist = 0;
 			}
+
 		} else {
 			// Add to DB
-			if ( nIsPersistent ) {
+			if (nIsPersistent) {
 				ToPC("Placeable is already persistent.");
+
 			} else {
 				int nResult = SavePlacie(oTarget);
-				switch ( nResult ) {
-					case SAVE_ERROR:
-						ToPC("Cannot save placie.");
-						break;
-					case SAVE_NEW:
-						ToPC("Made object persistent.");
-						nIsPersistent = 1;
-						break;
+
+				switch (nResult) {
+				case SAVE_ERROR:
+					ToPC("Cannot save placie.");
+					break;
+
+				case SAVE_NEW:
+					ToPC("Made object persistent.");
+					nIsPersistent = 1;
+					break;
 				}
 			}
 		}
@@ -939,11 +1057,13 @@ int CommandPlaceable(object oPC, int iMode) {
 }
 
 
-int CommandShowWeather(object oPC, int iMode) {
+int CommandShowWeather(object oPC, int iMode)
+{
 	return FAIL;
 }
 
-int CommandDescription(object oPC, int iMode) {
+int CommandDescription(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
 
 	if (!GetIsObjectValid(oTarget) || GetIsDM(oTarget) || GetIsPC(oTarget)) {
@@ -962,7 +1082,8 @@ int CommandDescription(object oPC, int iMode) {
 	}
 
 	string sT = getopt_argall();
-	if ( sT != "" ) {
+
+	if (sT != "") {
 		ToPC("Setting description ..");
 		SetDescription(oTarget, sT);
 	}
@@ -971,11 +1092,13 @@ int CommandDescription(object oPC, int iMode) {
 	return OK;
 }
 
-int CommandTag(object oPC, int iMode) {
+int CommandTag(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
 
-	string sT =getopt_arg(0);
-	if ( sT != "" ) {
+	string sT = getopt_arg(0);
+
+	if (sT != "") {
 		ToPC("Setting tag ..");
 		SetTag(oTarget, sT);
 	}
@@ -985,22 +1108,25 @@ int CommandTag(object oPC, int iMode) {
 }
 
 
-int CommandGetDyePot(object oPC, int iMode) {
+int CommandGetDyePot(object oPC, int iMode)
+{
 	int nColor = StringToInt(getopt_arg(0));
-	string sName =getopt_arg(1);
+	string sName = getopt_arg(1);
 
-	if ( nColor < 1 || nColor > 175 )
+	if (nColor < 1 || nColor > 175)
 		return FAIL;
 
 	string sColor = IntToString(nColor);
-	while ( GetStringLength(sColor) < 3 )
+
+	while (GetStringLength(sColor) < 3)
 		sColor = "0" + sColor;
 
 	string sTag = "x2_it_dye" + sColor;
 
 
 	string sNewName = "Farbe";
-	if ( sName != "" )
+
+	if (sName != "")
 		sNewName = "Farbe: " + sName;
 
 	object oPot = CreateItemOnObject("x2_it_dyec20", oPC, 1, sTag);
@@ -1011,25 +1137,30 @@ int CommandGetDyePot(object oPC, int iMode) {
 
 
 
-int CommandCastSpell(object oPC, int iMode) {
+int CommandCastSpell(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
 	location lTarget = GetTargetLocation();
 
-	if (getopt_opt("loc") && !GetIsObjectValid(GetAreaFromLocation(lTarget)) )
+	if (getopt_opt("loc") && !GetIsObjectValid(GetAreaFromLocation(lTarget)))
 		return NotifyBadTarget("bad location");
 
 	int nMeta = METAMAGIC_ANY;
+
 	if (getopt_opt("mm"))
 		nMeta = atoi(getopt_optv("mm"));
 
 	int asAction = true;
+
 	if (getopt_opt("i"))
 		asAction = false;
 
 	int default_cl = 1;
 	int cl = default_cl;
+
 	if (getopt_opt("cl"))
 		cl = atoi(getopt_optv("cl"));
+
 	if (cl < 1 || cl > 80)
 		cl = default_cl;
 
@@ -1038,49 +1169,57 @@ int CommandCastSpell(object oPC, int iMode) {
 
 	int default_dc = -1;
 	int dc = default_dc;
+
 	if (getopt_opt("dc"))
 		dc = atoi(getopt_optv("dc"));
+
 	if (dc < 1 || dc > 0xff)
 		dc = default_dc;
 
-	int idx; for (idx = 0; idx < getopt_argc(); idx++) {
+	int idx;
+
+	for (idx = 0; idx < getopt_argc(); idx++) {
 		int spell = atoi(getopt_arg(idx));
+
 		if (spell < 0)
 			continue;
 
 		if (asAction) {
 			if (is_valid(oTarget))
 				AssignCommand(oPC,
-					ActionCastFakeSpellAtObject(spell, oTarget));
+							  ActionCastFakeSpellAtObject(spell, oTarget));
+
 			else
 				AssignCommand(oPC,
-					ActionCastFakeSpellAtLocation(spell, lTarget));
+							  ActionCastFakeSpellAtLocation(spell, lTarget));
 
 			AssignCommand(oPC,
-				ActionDoCommand(ExecuteSpellScript(oPC, OBJECT_INVALID,
-					spell, cl, nMeta, dc, oTarget, lTarget))
-			);
+						  ActionDoCommand(ExecuteSpellScript(oPC, OBJECT_INVALID,
+										  spell, cl, nMeta, dc, oTarget, lTarget))
+						 );
 
 		} else {
 			ExecuteSpellScript(oPC, OBJECT_INVALID,
-				spell, cl, nMeta, dc, oTarget, lTarget);
+							   spell, cl, nMeta, dc, oTarget, lTarget);
 		}
 	}
 
 	return OK;
 }
 
-int CommandOhHellBang(object oPC, int iMode) {
+int CommandOhHellBang(object oPC, int iMode)
+{
 	int nNth = 1;
 	int nAff = 0;
 	float fDist = 60.0;
 
 	object o = GetNearestCreature(CREATURE_TYPE_IS_ALIVE, TRUE, oPC, nNth);
-	while ( GetIsObjectValid(o) ) {
-		if ( GetDistanceBetween(oPC, o) > fDist )
+
+	while (GetIsObjectValid(o)) {
+		if (GetDistanceBetween(oPC, o) > fDist)
 			break;
 
-		if ( !GetImmortal(o) && !GetIsPC(o) && GetReputation(o, oPC) <= 10 ) {
+		if (!GetImmortal(o) && !GetIsPC(o) && GetReputation(o, oPC) <= 10) {
 			ApplyEffectToObject(DTI, EffectDamage(2048), o);
 			nAff += 1;
 		}
@@ -1094,14 +1233,18 @@ int CommandOhHellBang(object oPC, int iMode) {
 	return OK;
 }
 
-int CommandRotate(object oPC, int iMode) {
+int CommandRotate(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
-	if ( !GetIsObjectValid(oTarget) )
+
+	if (!GetIsObjectValid(oTarget))
 		return NotifyBadTarget();
 
-	string s =getopt_arg(0);
-	if ( s == "" ) {
+	string s = getopt_arg(0);
+
+	if (s == "") {
 		ToPC("Rotation is: " + FloatToString(GetFacing(oTarget)));
+
 	} else {
 		float fRotation = GetAbsoluteOrRelativeValue(s, GetFacing(oTarget));
 		DelayCommand(getsleep(), AssignCommand(oTarget, SetFacing(fRotation)));
@@ -1114,25 +1257,30 @@ int CommandRotate(object oPC, int iMode) {
 
 
 
-int CommandHP(object oPC, int iMode) {
+int CommandHP(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
-	if ( 0 == GetMaxHitPoints(oTarget) )
+
+	if (0 == GetMaxHitPoints(oTarget))
 		return NotifyBadTarget();
 
-	string sHP =getopt_arg(0);
+	string sHP = getopt_arg(0);
 
 
-	if ( sHP == "" ) {} else {
+	if (sHP == "") {} else {
 		// parse percentage changes
 		float fChange = GetAbsoluteOrRelativeValue(sHP, IntToFloat(GetCurrentHitPoints(oTarget)));
-		if ( fChange == 0.0 ) {
+
+		if (fChange == 0.0) {
 			ToPC("No change.");
 			return OK;
 		}
 
 		effect e;
-		if ( fChange > 0.0 )
+
+		if (fChange > 0.0)
 			e = EffectHeal(FloatToInt(fChange));
+
 		else
 			e = EffectDamage(FloatToInt(fChange));
 
@@ -1145,32 +1293,37 @@ int CommandHP(object oPC, int iMode) {
 
 
 
-int CommandCreateKey(object oPC, int iMode) {
+int CommandCreateKey(object oPC, int iMode)
+{
 	string
-	sName =getopt_arg(0);
+	sName = getopt_arg(0);
 
 	object oTarget = GetTarget();
+
 	if (GetObjectType(oTarget) != OBJECT_TYPE_DOOR)
 		return NotifyBadTarget("Target a door.");
-	
+
 	string sTag = GetLockKeyTag(oTarget);
+
 	if (sTag == "")
 		return NotifyBadTarget("This door does not lock with a key.");
 
 	int nApp = -1;
-	if (getopt_opt("app") )
+
+	if (getopt_opt("app"))
 		nApp = StringToInt(getopt_optv("app"));
 
 	object oKey = CreateItemOnObject("key_basic", oPC, 1, sTag);
 
-	if ( nApp > -1 ) {
+	if (nApp > -1) {
 		object oKeyNew = CopyItemAndModify(oKey, ITEM_APPR_TYPE_SIMPLE_MODEL, 0, nApp, TRUE);
 		DestroyObject(oKey);
 		oKey = oKeyNew;
 	}
 
-	if ( sName != "" )
+	if (sName != "")
 		SetName(oKey, sName);
+
 	else
 		SetName(oKey, "Key for " + sTag);
 
@@ -1183,7 +1336,8 @@ int CommandCreateKey(object oPC, int iMode) {
 
 
 
-int CommandWrite(object oPC, int iMode) {
+int CommandWrite(object oPC, int iMode)
+{
 	string s = getopt_args();
 	object oParchment = GetLocalObject(oPC, "paper_to_write");
 
@@ -1194,7 +1348,8 @@ int CommandWrite(object oPC, int iMode) {
 
 
 
-int CommandSay(object oPC, int iMode) {
+int CommandSay(object oPC, int iMode)
+{
 	string sT = getopt_args();
 
 	ActionSpeakString(sT);
@@ -1203,7 +1358,8 @@ int CommandSay(object oPC, int iMode) {
 }
 
 
-int CommandTime(object oPC, int iMode) {
+int CommandTime(object oPC, int iMode)
+{
 	int
 	nYear  = GetCalendarYear(),
 	nMonth = GetCalendarMonth(),
@@ -1215,32 +1371,37 @@ int CommandTime(object oPC, int iMode) {
 
 	int nChange = 0;
 
-	if (getopt_opt("yr") ) {
+	if (getopt_opt("yr")) {
 		nYear = StringToInt(getopt_optv("yr"));
 		nChange = 1;
 	}
-	if (getopt_opt("mo") ) {
+
+	if (getopt_opt("mo")) {
 		nMonth = StringToInt(getopt_optv("mo"));
 		nChange = 1;
 	}
-	if (getopt_opt("dy") ) {
+
+	if (getopt_opt("dy")) {
 		nDay = StringToInt(getopt_optv("dy"));
 		nChange = 1;
 	}
 
-	if (getopt_opt("hr") ) {
+	if (getopt_opt("hr")) {
 		nHour = StringToInt(getopt_optv("hr"));
 		nChange = 1;
 	}
-	if (getopt_opt("mn") ) {
+
+	if (getopt_opt("mn")) {
 		nMinute = StringToInt(getopt_optv("mn"));
 		nChange = 1;
 	}
-	if (getopt_opt("sc") ) {
+
+	if (getopt_opt("sc")) {
 		nSecond = StringToInt(getopt_optv("sc"));
 		nChange = 1;
 	}
-	if ( nChange ) {
+
+	if (nChange) {
 		SetTime(nHour, nMinute, nSecond, 0);
 		SetCalendar(nYear, nMonth, nDay);
 
@@ -1265,10 +1426,11 @@ int CommandTime(object oPC, int iMode) {
 }
 
 
-int CommandLock(object oPC, int iMode) {
+int CommandLock(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
 
-	if ( !GetIsObjectValid(oTarget) )
+	if (!GetIsObjectValid(oTarget))
 		return NotifyBadTarget();
 
 	string
@@ -1280,38 +1442,41 @@ int CommandLock(object oPC, int iMode) {
 	nLockDC = -1,
 	nUnlockDC = -1;
 
-	if (getopt_opt("locked") )
+	if (getopt_opt("locked"))
 		nLocked = StringToBool(getopt_optv("locked"));
 
-	if (getopt_opt("lockable") )
+	if (getopt_opt("lockable"))
 		nLockable = StringToBool(getopt_optv("lockable"));
 
 
-	if (getopt_opt("keytag") )
-		sKeyTag =getopt_optv("keytag");
+	if (getopt_opt("keytag"))
+		sKeyTag = getopt_optv("keytag");
 
-	if (getopt_opt("keyreq") )
+	if (getopt_opt("keyreq"))
 		nKeyReq = StringToBool(getopt_optv("keyreq"));
 
-	if (getopt_opt("lockdc") )
+	if (getopt_opt("lockdc"))
 		nLockDC = StringToInt(getopt_optv("lockdc"));
 
-	if (getopt_opt("unlockdc") )
+	if (getopt_opt("unlockdc"))
 		nUnlockDC = StringToInt(getopt_optv("unlockdc"));
 
-	if ( nLocked > -1 )
+	if (nLocked > -1)
 		SetLocked(oTarget, nLocked);
 
-	if ( nLockable > -1 )
+	if (nLockable > -1)
 		SetLockLockable(oTarget, nLockable);
 
-	if ( nLockDC > -1 )
+	if (nLockDC > -1)
 		SetLockLockDC(oTarget, nLockDC);
-	if ( nUnlockDC > -1 )
+
+	if (nUnlockDC > -1)
 		SetLockUnlockDC(oTarget, nUnlockDC);
-	if ( nKeyReq > -1 )
+
+	if (nKeyReq > -1)
 		SetLockKeyRequired(oTarget, nKeyReq);
-	if ( sKeyTag != "" )
+
+	if (sKeyTag != "")
 		SetLockKeyTag(oTarget, sKeyTag);
 
 	ToPC("Locked: " + IntToString(GetLocked(oTarget)));
@@ -1325,18 +1490,22 @@ int CommandLock(object oPC, int iMode) {
 }
 
 
-int CommandPlaneWalk(object oPC, int iMode) {
+int CommandPlaneWalk(object oPC, int iMode)
+{
 	object oT = GetTarget();
-	if ( !GetIsPC(oT) ) {
+
+	if (!GetIsPC(oT)) {
 		return NotifyBadTarget();
 	}
 
 	string sPlane = "";
-	if (getopt_opt("plane") )
-		sPlane =getopt_optv("plane");
+
+	if (getopt_opt("plane"))
+		sPlane = getopt_optv("plane");
 
 	float fDuration = 120.0;
-	if (getopt_opt("duration") )
+
+	if (getopt_opt("duration"))
 		fDuration = StringToFloat(getopt_optv("duration"));
 
 	fDuration = fDuration < 5.0 ? 5.0 : fDuration;
@@ -1349,23 +1518,24 @@ int CommandPlaneWalk(object oPC, int iMode) {
 }
 
 
-int CommandLastLog(object oPC, int iMode) {
+int CommandLastLog(object oPC, int iMode)
+{
 	return FAIL;
 
 	int nCount = 15;
 	string sArea = GetTag(GetArea(oPC));
 
-	if (getopt_opt("count") )
+	if (getopt_opt("count"))
 		nCount = StringToInt(getopt_optv("count"));
 
-	if ( nCount < 1 || nCount > 200 )
+	if (nCount < 1 || nCount > 200)
 		nCount = 15;
 
-	pQ("select ts,account_s,character_s,mode,text from get_lastlog_for(" + 
-		pSi(GetCharacterID(oPC)) + "," + pSs(sArea) + "," +  itoa(nCount) + 
-	");");
+	pQ("select ts,account_s,character_s,mode,text from get_lastlog_for(" +
+	   pSi(GetCharacterID(oPC)) + "," + pSs(sArea) + "," +  itoa(nCount) +
+	   ");");
 
-	while ( pF() ) {
+	while (pF()) {
 		string
 		sTS = pG(1),
 		sAcc = pG(2),
@@ -1376,21 +1546,22 @@ int CommandLastLog(object oPC, int iMode) {
 
 		sMode = "";
 
-		if ( nMode & CHATMODE_PARTY )
+		if (nMode & CHATMODE_PARTY)
 			sMode += " [Party]";
 
-		if ( nMode & CHATMODE_SHOUT )
+		if (nMode & CHATMODE_SHOUT)
 			sMode += " [Shout]";
 
-		if ( nMode & CHATMODE_WHISPER )
+		if (nMode & CHATMODE_WHISPER)
 			sMode += " [Whisper]";
 
 
-		if ( nMode & CHATMODE_DM_MODE )
+		if (nMode & CHATMODE_DM_MODE)
 			sMode += " (DM)";
 
 		ToPC("[" + sTS + "]" + sMode + " " + sChar + ": " + sText);
 	}
+
 	ToPC("End of /lastlog");
 
 	return OK;
@@ -1398,17 +1569,20 @@ int CommandLastLog(object oPC, int iMode) {
 
 
 
-int CommandGetRecipe(object oPC, int iMode) {
+int CommandGetRecipe(object oPC, int iMode)
+{
 	int nID = StringToInt(getopt_arg(0));
 
 	struct Recipe r =  FindRecipeByPlanOrComponents("", "", nID);
-	if ( !GetIsRecipeValid(r) ) {
+
+	if (!GetIsRecipeValid(r)) {
 		SendMessageToPC(oPC, "Dieses Rezept gibt es nicht.");
 		return OK;
 	}
 
 	object oItem = CreateItemOnObject("cp_basic", oPC, 1);
-	if ( !GetIsObjectValid(oItem) ) {
+
+	if (!GetIsObjectValid(oItem)) {
 		SendMessageToPC(oPC, "Grrrroaaaar! ResRef cp_basic fehlt!");
 		return OK;
 	}
@@ -1425,22 +1599,30 @@ int CommandGetRecipe(object oPC, int iMode) {
 
 }
 
-int CommandColor(object oPC, int iMode) {
+int CommandColor(object oPC, int iMode)
+{
 	struct Color c;
 
-	string sSet =getopt_arg(0);
-	if ( sSet == "orange" )
+	string sSet = getopt_arg(0);
+
+	if (sSet == "orange")
 		c = cOrange;
-	else if ( sSet == "weiss" )
+
+	else if (sSet == "weiss")
 		c = cWhite;
-	else if ( sSet == "blau" )
+
+	else if (sSet == "blau")
 		c = cLightBlue;
-	else if ( sSet == "gruen" )
+
+	else if (sSet == "gruen")
 		c = cGreen;
-	else if ( sSet == "cyan" )
+
+	else if (sSet == "cyan")
 		c = cTeal;
-	else if ( sSet == "gelb" )
+
+	else if (sSet == "gelb")
 		c = cYellow;
+
 	else {
 		ToPC("Diese Farbe gibt es nicht.");
 		return SYNTAX;
@@ -1452,15 +1634,18 @@ int CommandColor(object oPC, int iMode) {
 	return OK;
 }
 
-int CommandCharges(object oPC, int iMode) {
+int CommandCharges(object oPC, int iMode)
+{
 
 	object oT = GetTarget();
-	if ( !is_item(oT) )
+
+	if (!is_item(oT))
 		return NotifyBadTarget("Not some item");
 
-	if ( getopt_argc() == 0 ) {
+	if (getopt_argc() == 0) {
 		SendMessageToPC(oPC, "Charges: " + IntToString(GetItemCharges(oT)));
-	} else if ( getopt_argc() == 1 ) {
+
+	} else if (getopt_argc() == 1) {
 		SetItemCharges(oT, StringToInt(getopt_arg(0)));
 		SendMessageToPC(oPC, "Charges: " + IntToString(GetItemCharges(oT)));
 	}
@@ -1469,15 +1654,17 @@ int CommandCharges(object oPC, int iMode) {
 }
 
 
-int CommandLimbo(object oPC, int iMode) {
+int CommandLimbo(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
 
-	if ( CREATURE_SIZE_INVALID == GetCreatureSize(oTarget)/* || GetIsPC( oTarget ) */ ) {
+	if (CREATURE_SIZE_INVALID == GetCreatureSize(oTarget)/* || GetIsPC( oTarget ) */) {
 		return NotifyBadTarget();
 	}
 
-	if ( IsLimbo(oTarget) )
+	if (IsLimbo(oTarget))
 		Unlimbo(oTarget);
+
 	else
 		Limbo(oTarget);
 
@@ -1485,26 +1672,28 @@ int CommandLimbo(object oPC, int iMode) {
 }
 
 
-int CommandXP(object oPC, int iMode) {
+int CommandXP(object oPC, int iMode)
+{
 	object oT = GetTarget();
 
-	if ( !is_creature(oT) )
+	if (!is_creature(oT))
 		return NotifyBadTarget("Has to be a creature.");
 
-	if ( ( getopt_argc() == 0 ||getopt_arg(0) == "" ) ) {
+	if ((getopt_argc() == 0 || getopt_arg(0) == "")) {
 		SendMessageToPC(oPC, "XP: " + IntToString(GetXP(oT)));
 		return OK;
 
-	} else if ( getopt_argc() == 1 ) {
+	} else if (getopt_argc() == 1) {
 		int nXP = StringToInt(getopt_arg(0));
-		if ( nXP == 0 ) {
+
+		if (nXP == 0) {
 			ToPC("Cannot set XP to 0.");
 			return FAIL;
 		}
 
 		int bIsTimeXP = getopt_opt("time");
 
-		if ( bIsTimeXP ) {
+		if (bIsTimeXP) {
 			GiveTimeXP(oT, nXP);
 			SendMessageToPC(oPC, "XP is: " + IntToString(GetXP(oT)));
 
@@ -1522,23 +1711,25 @@ int CommandXP(object oPC, int iMode) {
 }
 
 
-void _CommandEffectApply(object pc, effect p, int id) {
+void _CommandEffectApply(object pc, effect p, int id)
+{
 }
 
-int CommandEffect(object oPC, int iMode) {
+int CommandEffect(object oPC, int iMode)
+{
 	object
 	oT = GetTarget();
 	location
 	lT = GetTargetLocation();
 
 	string
-	sE =getopt_arg(0),
-	s1 =getopt_arg(1),
-	s2 =getopt_arg(2),
-	s3 =getopt_arg(3),
-	s4 =getopt_arg(4),
-	s5 =getopt_arg(5),
-	s6 =getopt_arg(6);
+	sE = getopt_arg(0),
+	s1 = getopt_arg(1),
+	s2 = getopt_arg(2),
+	s3 = getopt_arg(3),
+	s4 = getopt_arg(4),
+	s5 = getopt_arg(5),
+	s6 = getopt_arg(6);
 
 	effect e;
 
@@ -1547,22 +1738,25 @@ int CommandEffect(object oPC, int iMode) {
 	float
 	fDur = 0.0;
 
-	if (getopt_opt("durtype") )
+	if (getopt_opt("durtype"))
 		nDurT = StringToInt(getopt_optv("durtype"));
-	if (getopt_opt("duration") )
+
+	if (getopt_opt("duration"))
 		fDur = StringToFloat(getopt_optv("duration"));
 
-	if ( fDur > 0.0 )
+	if (fDur > 0.0)
 		nDurT = DURATION_TYPE_TEMPORARY;
 
-	if (getopt_opt("r") ) {
+	if (getopt_opt("r")) {
 		int i = 0;
 		e = GetFirstEffect(oT);
-		while ( GetIsEffectValid(e) ) {
+
+		while (GetIsEffectValid(e)) {
 			RemoveEffect(oT, e);
 			i++;
 			e = GetNextEffect(oT);
 		}
+
 		SendMessageToPC(oPC, IntToString(i) + " effects removed.");
 		return OK;
 	}
@@ -1571,107 +1765,145 @@ int CommandEffect(object oPC, int iMode) {
 		int i;
 		SendMessageToPC(oPC, "Effects:");
 		effect e = GetFirstEffect(GetTarget());
+
 		while (GetIsEffectValid(e)) {
 			SendMessageToPC(oPC, itoa(i) + ": " + EffectToString(e));
 			i += 1;
 			e = GetNextEffect(GetTarget());
 		}
+
 		SendMessageToPC(oPC, "end of list.");
 		return OK;
 	}
 
-	if ( "vfx" == sE && getopt_argc() == 2 )
+	if ("vfx" == sE && getopt_argc() == 2)
 		e = EffectVisualEffect(StringToInt(s1));
 
-	else if ( "blind" == sE )
+	else if ("blind" == sE)
 		e = EffectBlindness();
-	else if ( "damage" == sE && getopt_argc() == 3 )
+
+	else if ("damage" == sE && getopt_argc() == 3)
 		e = EffectDamage(StringToInt(s1), StringToInt(s2));
-	else if ( "deaf" == sE )
+
+	else if ("deaf" == sE)
 		e = EffectDeaf();
-	else if ( "death" == sE )
+
+	else if ("death" == sE)
 		e = EffectDeath();
-	else if ( "dazed" == sE )
+
+	else if ("dazed" == sE)
 		e = EffectDazed();
-	else if ( "confused" == sE )
+
+	else if ("confused" == sE)
 		e = EffectConfused();
-	else if ( "ethereal" == sE )
+
+	else if ("ethereal" == sE)
 		e = EffectEthereal();
-	else if ( "knockdown" == sE )
+
+	else if ("knockdown" == sE)
 		e = EffectKnockdown();
-	else if ( "slow" == sE )
+
+	else if ("slow" == sE)
 		e = EffectSlow();
-	else if ( "stunned" == sE )
+
+	else if ("stunned" == sE)
 		e = EffectStunned();
-	else if ( "timestop" == sE )
+
+	else if ("timestop" == sE)
 		e = EffectTimeStop();
-	else if ( "frightened" == sE ) {
+
+	else if ("frightened" == sE) {
 		effect eFear = EffectFrightened();
 		effect eMind = EffectVisualEffect(VFX_DUR_MIND_AFFECTING_FEAR);
 		effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_NEGATIVE);
 
 		e = EffectLinkEffects(eFear, eMind);
 		e = EffectLinkEffects(e, eDur);
-	} else if ( "haste" == sE )
+
+	} else if ("haste" == sE)
 		e = EffectHaste();
-	else if ( "curse" == sE && getopt_argc() == 7 )
+
+	else if ("curse" == sE && getopt_argc() == 7)
 		e = EffectCurse(StringToInt(s1), StringToInt(s2), StringToInt(s3), StringToInt(s4), StringToInt(s5),
-				StringToInt(s6));
-	else if ( "polymorph" == sE && getopt_argc() == 3 )
+						StringToInt(s6));
+
+	else if ("polymorph" == sE && getopt_argc() == 3)
 		e = EffectPolymorph(StringToInt(s1), StringToBool(s2));
-	else if ( "wildshape" == sE && getopt_argc() == 3 )
+
+	else if ("wildshape" == sE && getopt_argc() == 3)
 		e = EffectWildshape(oT, StringToInt(s1), StringToBool(s2));
-	else if ( "acincrease" == sE && getopt_argc() == 2 )
+
+	else if ("acincrease" == sE && getopt_argc() == 2)
 		e = EffectACIncrease(StringToInt(s1));
-	else if ( "acdecrease" == sE && getopt_argc() == 2 )
+
+	else if ("acdecrease" == sE && getopt_argc() == 2)
 		e = EffectACDecrease(StringToInt(s1));
-	else if ( "disease" == sE && getopt_argc() == 2 )
+
+	else if ("disease" == sE && getopt_argc() == 2)
 		e = EffectDisease(StringToInt(s1));
-	else if ( "silence" == sE )
+
+	else if ("silence" == sE)
 		e = EffectSilence();
-	else if ( "entangle" == sE )
+
+	else if ("entangle" == sE)
 		e = EffectEntangle();
-	else if ( "abilityincrease" == sE && getopt_argc() == 3 )
+
+	else if ("abilityincrease" == sE && getopt_argc() == 3)
 		e = EffectAbilityIncrease(StringToInt(s1), StringToInt(s2));
-	else if ( "abilitydecrease" == sE && getopt_argc() == 3 )
+
+	else if ("abilitydecrease" == sE && getopt_argc() == 3)
 		e = EffectAbilityDecrease(StringToInt(s1), StringToInt(s2));
-	else if ( "seeinvis" == sE )
+
+	else if ("seeinvis" == sE)
 		e = EffectSeeInvisible();
-	else if ( "trueseeing" == sE )
+
+	else if ("trueseeing" == sE)
 		e = EffectTrueSeeing();
-	else if ( "ultravision" == sE ) {
+
+	else if ("ultravision" == sE) {
 		effect eVis = EffectVisualEffect(VFX_DUR_ULTRAVISION);
 		effect eUltra = EffectUltravision();
 		e = EffectLinkEffects(eVis, eUltra);
-	} else if ( "speedincrease" == sE && getopt_argc() == 2 )
+
+	} else if ("speedincrease" == sE && getopt_argc() == 2)
 		e = EffectMovementSpeedIncrease(StringToInt(s1));
-	else if ( "speeddecrease" == sE && getopt_argc() == 2 )
+
+	else if ("speeddecrease" == sE && getopt_argc() == 2)
 		e = EffectMovementSpeedDecrease(StringToInt(s1));
-	else if ( "skillincrease" == sE && getopt_argc() == 3 )
+
+	else if ("skillincrease" == sE && getopt_argc() == 3)
 		e = EffectSkillIncrease(StringToInt(s1), StringToInt(s2));
-	else if ( "skilldecrease" == sE && getopt_argc() == 3 )
+
+	else if ("skilldecrease" == sE && getopt_argc() == 3)
 		e = EffectSkillDecrease(StringToInt(s1), StringToInt(s2));
-	else if ( "cutsceneghost" == sE )
+
+	else if ("cutsceneghost" == sE)
 		e = EffectCutsceneGhost();
-	else if ( "dr" == sE && getopt_argc() == 4 )
+
+	else if ("dr" == sE && getopt_argc() == 4)
 		e = EffectDamageReduction(StringToInt(s1), StringToInt(s2), StringToInt(s3));
-	else if ( "immunity" == sE && getopt_argc() == 2)
+
+	else if ("immunity" == sE && getopt_argc() == 2)
 		e = EffectImmunity(StringToInt(s1));
-	else if ( "spellimmunity" == sE && getopt_argc() == 2)
+
+	else if ("spellimmunity" == sE && getopt_argc() == 2)
 		e = EffectSpellImmunity(StringToInt(s1));
-	else if ( "paralyze" == sE )
+
+	else if ("paralyze" == sE)
 		e = EffectParalyze();
+
 	else {
 		SendMessageToPC(oPC, "Unknown effect or wrong parameter count.");
 		return FAIL;
 	}
 
-	if (getopt_opt("s") )
+	if (getopt_opt("s"))
 		e = SupernaturalEffect(e);
-	else if (getopt_opt("e") )
+
+	else if (getopt_opt("e"))
 		e = ExtraordinaryEffect(e);
 
-	if (getopt_opt("loc") )
+	if (getopt_opt("loc"))
 		DelayCommand(getsleep(), ApplyEffectAtLocation(nDurT, e, lT, fDur));
 
 	else {
@@ -1682,22 +1914,24 @@ int CommandEffect(object oPC, int iMode) {
 }
 
 
-int CommandSubRace(object oPC, int iMode) {
+int CommandSubRace(object oPC, int iMode)
+{
 	object oT = GetTarget();
 
-	if ( !is_creature(oT) )
+	if (!is_creature(oT))
 		return NotifyBadTarget("Not a creature.");
 
-	string sR =getopt_arg(0);
+	string sR = getopt_arg(0);
 
-	if (getopt_opt("d") ) {
+	if (getopt_opt("d")) {
 		SetSubRace(oT, "");
 		SendMessageToPC(oPC, "Subrace cleared.");
 		return OK;
 	}
 
-	if ( getopt_argc() == 0 ) {
+	if (getopt_argc() == 0) {
 		SendMessageToPC(oPC, "Subrace: " + GetSubRace(oT));
+
 	} else {
 		SendMessageToPC(oPC, "Subrace was: " + GetSubRace(oT));
 		SetSubRace(oT, sR);
@@ -1709,31 +1943,32 @@ int CommandSubRace(object oPC, int iMode) {
 
 
 // area -rsl
-int CommandArea(object oPC, int iMode) {
+int CommandArea(object oPC, int iMode)
+{
 	object
 	oT = GetTarget();
 	string
-	s0 =getopt_arg(0),
-	s1 =getopt_arg(1);
+	s0 = getopt_arg(0),
+	s1 = getopt_arg(1);
 	location
 	lPC = GetLocation(oPC);
 
-	if (getopt_opt("rsl") ) {
+	if (getopt_opt("rsl")) {
 		SendMessageToPC(oPC, "RSL(): ");
 		RecomputeStaticLighting(GetArea(oPC));
 		SendMessageToPC(oPC, "done.");
 		return OK;
 
-	} else if (getopt_opt("tli") ) {
+	} else if (getopt_opt("tli")) {
 		int c0 = GetTileMainLight1Color(lPC);
 		int c1 = GetTileMainLight2Color(lPC);
 
-		if ( getopt_argc() == 0 ) {
+		if (getopt_argc() == 0) {
 			SendMessageToPC(oPC, "L1: " + IntToString(c0));
 			SendMessageToPC(oPC, "L2: " + IntToString(c1));
 			return OK;
 
-		} else if ( getopt_argc() == 2 ) {
+		} else if (getopt_argc() == 2) {
 			SendMessageToPC(oPC, "L1 was: " + IntToString(c0));
 			SendMessageToPC(oPC, "L2 was: " + IntToString(c1));
 			c0 = StringToInt(s0);
@@ -1745,16 +1980,17 @@ int CommandArea(object oPC, int iMode) {
 			SendMessageToPC(oPC, "L2 is: " + IntToString(c1));
 			return OK;
 		}
-	} else if (getopt_opt("tsi") ) {
+
+	} else if (getopt_opt("tsi")) {
 		int c0 = GetTileSourceLight1Color(lPC);
 		int c1 = GetTileSourceLight2Color(lPC);
 
-		if ( getopt_argc() == 0 ) {
+		if (getopt_argc() == 0) {
 			SendMessageToPC(oPC, "S1: " + IntToString(c0));
 			SendMessageToPC(oPC, "S2: " + IntToString(c1));
 			return OK;
 
-		} else if ( getopt_argc() == 2 ) {
+		} else if (getopt_argc() == 2) {
 			SendMessageToPC(oPC, "S1 was: " + IntToString(c0));
 			SendMessageToPC(oPC, "S2 was: " + IntToString(c1));
 			c0 = StringToInt(s0);
@@ -1766,7 +2002,8 @@ int CommandArea(object oPC, int iMode) {
 			SendMessageToPC(oPC, "S2 is: " + IntToString(c1));
 			return OK;
 		}
-	} else if (getopt_opt("explore") ) {
+
+	} else if (getopt_opt("explore")) {
 		ExploreAreaForPlayer(GetArea(oT), oT, TRUE);
 		return OK;
 	}
@@ -1776,49 +2013,53 @@ int CommandArea(object oPC, int iMode) {
 
 
 
-int CommandPassword(object oPC, int iMode) {
+int CommandPassword(object oPC, int iMode)
+{
 	string sPass = getopt_args();
 
 	int iAID = GetAccountID(oPC);
 
-	if ( !iAID ) {
+	if (!iAID) {
 		SendMessageToPC(oPC,
-			"Dein Account wurde nicht gefunden.  Dies ist ein Bug.  Bitte teile uns dies mit.");
+						"Dein Account wurde nicht gefunden.  Dies ist ein Bug.  Bitte teile uns dies mit.");
 		return FAIL;
 	}
 
-	if ( GetStringLowerCase(sPass) == "penis" ) {
+	if (GetStringLowerCase(sPass) == "penis") {
 		SendMessageToPC(oPC, "Ehm.   Ja.   Aww.   Nein?");
 		return FAIL;
 	}
 
-	if ( !GetIsGoodPassword(sPass) ) {
+	if (!GetIsGoodPassword(sPass)) {
 		SendMessageToPC(oPC, "Dieses Passwort ist zu kurz. (mindestens 6 Zeichen).");
 		return FAIL;
 	}
 
 	pQ("update accounts set password = sha1(" +
-		pE(sPass) + ") where id = '" + IntToString(iAID) + "';");
+	   pE(sPass) + ") where id = '" + IntToString(iAID) + "';");
 
 	SendMessageToPC(oPC,
-		"Dein Passwort wurde gesetzt; du kannst dich damit nun in der Charakterverwaltung einloggen.");
+					"Dein Passwort wurde gesetzt; du kannst dich damit nun in der Charakterverwaltung einloggen.");
 
 	ChatHookAudit(oPC, FALSE, "***");
 	return OK;
 }
 
 
-int CommandBodyOperator(object oPC, int iMode) {
+int CommandBodyOperator(object oPC, int iMode)
+{
 	ExecuteScript("body_start_self", oPC);
 	return OK;
 }
 
-int CommandBodyPart(object oPC, int iMode) {
+int CommandBodyPart(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
-	if ( !amask(oPC, AMASK_GM) )
+
+	if (!amask(oPC, AMASK_GM))
 		oTarget = oPC;
 
-	if ( !is_creature(oTarget) )
+	if (!is_creature(oTarget))
 		return NotifyBadTarget("Must be a creature.");
 
 	if (getopt_argc() < 1)
@@ -1828,9 +2069,13 @@ int CommandBodyPart(object oPC, int iMode) {
 
 	if (a0 == "hair" || a0 == "skin" || a0 == "tattoo1" || a0 == "tattoo2") {
 		int nPart;
+
 		if (a0 == "hair") nPart = COLOR_CHANNEL_HAIR;
+
 		if (a0 == "skin") nPart = COLOR_CHANNEL_SKIN;
+
 		if (a0 == "tattoo1") nPart = COLOR_CHANNEL_TATTOO_1;
+
 		if (a0 == "tattoo2") nPart = COLOR_CHANNEL_TATTOO_2;
 
 		int nVal = GetColor(oTarget, nPart);
@@ -1839,7 +2084,8 @@ int CommandBodyPart(object oPC, int iMode) {
 		if (getopt_argc() > 1) {
 			int nVal = StringToInt(getopt_arg(1));
 			SetColor(oTarget, nPart, nVal);
-			SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " = " + a0 + " is now: " + IntToString(nVal));
+			SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " = " + a0 + " is now: " + IntToString(
+								nVal));
 		}
 
 	} else {
@@ -1848,10 +2094,11 @@ int CommandBodyPart(object oPC, int iMode) {
 		int nVal = GetCreatureBodyPart(nPart, oTarget);
 		SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " is: " + IntToString(nVal));
 
-		if ( getopt_argc() > 1 ) {
+		if (getopt_argc() > 1) {
 			int nVal = StringToInt(getopt_arg(1));
 			SetCreatureBodyPart(nPart, nVal, oTarget);
-			SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " = " + a0 + " is now: " + IntToString(nVal));
+			SendMessageToPC(oPC, "Part for " + IntToString(nPart) + " = " + a0 + " is now: " + IntToString(
+								nVal));
 		}
 	}
 
@@ -1860,17 +2107,20 @@ int CommandBodyPart(object oPC, int iMode) {
 
 
 
-int CommandWing(object oPC, int iMode) {
+int CommandWing(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
-	if ( !amask(oPC, AMASK_GM) )
+
+	if (!amask(oPC, AMASK_GM))
 		oTarget = oPC;
 
-	if ( !is_creature(oTarget) )
+	if (!is_creature(oTarget))
 		return NotifyBadTarget("Must be a creature.");
 
-	if ( getopt_argc() == 0 ) {
+	if (getopt_argc() == 0) {
 		int nWing = GetCreatureWingType(oTarget);
 		SendMessageToPC(oPC, "Wings are: " + IntToString(nWing));
+
 	} else {
 		int nWing = GetCreatureWingType(oTarget);
 		SendMessageToPC(oPC, "Wings were: " + IntToString(nWing));
@@ -1884,17 +2134,20 @@ int CommandWing(object oPC, int iMode) {
 	return OK;
 }
 
-int CommandTail(object oPC, int iMode) {
+int CommandTail(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
-	if ( !amask(oPC, AMASK_GM) )
+
+	if (!amask(oPC, AMASK_GM))
 		oTarget = oPC;
 
-	if ( !is_creature(oTarget) )
+	if (!is_creature(oTarget))
 		return NotifyBadTarget("Must be a creature.");
 
-	if ( getopt_argc() == 0 ) {
+	if (getopt_argc() == 0) {
 		int nWing = GetCreatureTailType(oTarget);
 		SendMessageToPC(oPC, "Tail is: " + IntToString(nWing));
+
 	} else {
 		int nWing = GetCreatureTailType(oTarget);
 		SendMessageToPC(oPC, "Tail was: " + IntToString(nWing));
@@ -1910,22 +2163,25 @@ int CommandTail(object oPC, int iMode) {
 
 
 
-int CommandPortrait(object oPC, int iMode) {
+int CommandPortrait(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
-	if ( !amask(oPC, AMASK_GM) )
+
+	if (!amask(oPC, AMASK_GM))
 		oTarget = oPC;
 
-	if ( !GetIsObjectValid(oTarget) )
+	if (!GetIsObjectValid(oTarget))
 		return NotifyBadTarget("Has to be a valid object.");
 
-	string sNewPortrait =getopt_arg(0);
+	string sNewPortrait = getopt_arg(0);
 
 
-	if ( getopt_argc() == 0 ) {
+	if (getopt_argc() == 0) {
 		string sResRef = GetPortraitResRef(oTarget);
 		SendMessageToPC(oPC, "Aktuelles Portrait: " + sResRef);
 		return OK;
-	} else if ( getopt_argc() == 1 ) {
+
+	} else if (getopt_argc() == 1) {
 		string sResRef = GetPortraitResRef(oTarget);
 		SendMessageToPC(oPC, "Altes Portrait: " + sResRef);
 		SetPortraitResRef(oTarget, sNewPortrait);
@@ -1933,14 +2189,16 @@ int CommandPortrait(object oPC, int iMode) {
 		SendMessageToPC(oPC, "Neues Portrait: " + sResRef);
 		return OK;
 	}
+
 	return OK;
 }
 
 
-int CommandRandomWalk(object oPC, int iMode) {
+int CommandRandomWalk(object oPC, int iMode)
+{
 	object oT = GetTarget();
 
-	if ( !is_creature(oT) )
+	if (!is_creature(oT))
 		return NotifyBadTarget("Not a creature.");
 
 //    AssignCommand(oT, ClearAllActions());
@@ -1951,10 +2209,11 @@ int CommandRandomWalk(object oPC, int iMode) {
 }
 
 
-int CommandWWP(object oPC, int iMode) {
+int CommandWWP(object oPC, int iMode)
+{
 	object o = GetTarget();
 
-	if ( !is_creature(o) )
+	if (!is_creature(o))
 		return NotifyBadTarget("Not a creature.");
 
 	AssignCommand(o, WalkWayPoints());
@@ -1964,10 +2223,11 @@ int CommandWWP(object oPC, int iMode) {
 
 
 
-int CommandCAQ(object oPC, int iMode) {
+int CommandCAQ(object oPC, int iMode)
+{
 	object o = GetTarget();
 
-	if ( !is_creature(o) )
+	if (!is_creature(o))
 		return NotifyBadTarget("Not a creature.");
 
 	AssignCommand(o, ClearAllActions(1));
@@ -1976,17 +2236,21 @@ int CommandCAQ(object oPC, int iMode) {
 }
 
 
-int CommandStatus(object oPC, int iMode) {
+int CommandStatus(object oPC, int iMode)
+{
 	int nDM = 0;
 	string sDM = "";
 	string sPlayer = "";
 	int nPlayer = 0;
 	object o = GetFirstPC();
-	while ( GetIsObjectValid(o) ) {
+
+	while (GetIsObjectValid(o)) {
 		string afk = GetLocalInt(o, "afk") ? " (AFK)" : "";
-		if ( GetIsDM(o) ) {
+
+		if (GetIsDM(o)) {
 			sDM += GetName(o) + afk + ", ";
 			nDM++;
+
 		} else {
 			sPlayer += GetName(o) + afk + ", ";
 			nPlayer++;
@@ -1994,6 +2258,7 @@ int CommandStatus(object oPC, int iMode) {
 
 		o = GetNextPC();
 	}
+
 	sPlayer = GetStringLeft(sPlayer, GetStringLength(sPlayer) - 2);
 	sDM = GetStringLeft(sDM, GetStringLength(sDM) - 2);
 	ToPC("Spieler online (" + IntToString(nPlayer) + "): " + sPlayer);
@@ -2003,10 +2268,12 @@ int CommandStatus(object oPC, int iMode) {
 }
 
 
-int CommandFollow(object oPC, int iMode) {
-	if ( !amask(oPC, AMASK_GM) ) {
+int CommandFollow(object oPC, int iMode)
+{
+	if (!amask(oPC, AMASK_GM)) {
 		object oNear = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC);
-		if ( !GetIsPC(oNear) )
+
+		if (!GetIsPC(oNear))
 			return FAIL;
 
 		Floaty("Folge: "  + GetName(oNear), oPC, 0);
@@ -2018,13 +2285,13 @@ int CommandFollow(object oPC, int iMode) {
 
 	// follow - make self follow current target
 	// follow me - make current target follow self
-	
+
 	// follow target - make target follow self!
 	// follow target target - make target follow target
 
 	string
-	p0 =getopt_arg(0),
-	p1 =getopt_arg(1);
+	p0 = getopt_arg(0),
+	p1 = getopt_arg(1);
 
 	object o0 = GetTarget(StringToInt(p0));
 	object o1 = GetTarget(StringToInt(p1));
@@ -2035,19 +2302,21 @@ int CommandFollow(object oPC, int iMode) {
 		AssignCommand(GetTarget(), ActionForceFollowObject(oPC, 1.5));
 		return OK;
 	}
-	
+
 	// make self follow current target
-	if ( getopt_argc() == 0 ) {
+	if (getopt_argc() == 0) {
 //        ClearAllActions(1);
 		ActionForceFollowObject(oT);
 		return OK;
-	
-	// make target follow self
-	} else if ( getopt_argc() == 1 ) {
+
+		// make target follow self
+
+	} else if (getopt_argc() == 1) {
 //        AssignCommand(o0, ClearAllActions(1));
 		AssignCommand(o0, ActionForceFollowObject(oPC, 1.5));
 		return OK;
-	} else if ( getopt_argc() == 2 ) {
+
+	} else if (getopt_argc() == 2) {
 //        AssignCommand(o0, ClearAllActions(1));
 		AssignCommand(o0, ActionForceFollowObject(o1, 1.5));
 		return OK;
@@ -2056,10 +2325,11 @@ int CommandFollow(object oPC, int iMode) {
 	return OK;
 }
 
-int CommandCopyObject(object oPC, int iMode) {
+int CommandCopyObject(object oPC, int iMode)
+{
 	object oT = GetTarget();
 
-	if ( !GetIsObjectValid(oT) )
+	if (!GetIsObjectValid(oT))
 		return NotifyBadTarget();
 
 	if (GetIsPC(oT) || GetIsDMPossessed(oT) || GetIsDM(oT) || GetIsPossessedFamiliar(oT)) {
@@ -2069,14 +2339,17 @@ int CommandCopyObject(object oPC, int iMode) {
 	string t_eval;
 
 	int amount = 1;
+
 	if (getopt_argc() > 0)
 		amount = atoi(getopt_arg(0));
+
 	amount = clamp(amount, 1, 50);
 
 	if (getopt_argc() > 1)
 		t_eval = getopt_arg(1);
 
 	int nOldTarget;
+
 	if (t_eval != "") {
 		nOldTarget = GetDefaultSlot();
 		SetDefaultSlot(TARGET_MACRO_SLOT);
@@ -2084,10 +2357,11 @@ int CommandCopyObject(object oPC, int iMode) {
 
 	int i;
 	object new;
+
 	for (i = 0; i < amount; i++) {
 		new = CopyObject(oT, GetLocation(oPC), oPC);
 
-		if ( GetIsPC(oT) )
+		if (GetIsPC(oT))
 			ChangeToStandardFaction(new, STANDARD_FACTION_COMMONER);
 
 		if (t_eval != "") {
@@ -2102,9 +2376,11 @@ int CommandCopyObject(object oPC, int iMode) {
 	return OK;
 }
 
-int CommandCopyMod(object oPC, int iMode) {
+int CommandCopyMod(object oPC, int iMode)
+{
 	object oT = GetTarget();
-	if ( !is_item(oT) )
+
+	if (!is_item(oT))
 		return NotifyBadTarget();
 
 	int nType = StringToInt(getopt_arg(0));
@@ -2117,12 +2393,13 @@ int CommandCopyMod(object oPC, int iMode) {
 }
 
 
-int CommandJump(object oPC, int iMode) {
+int CommandJump(object oPC, int iMode)
+{
 	location lT = GetTargetLocation();
 	object oT = GetTarget();
 
-	if ( !getopt_opt("loc") ) {
-		if ( !GetIsObjectValid(oT) )
+	if (!getopt_opt("loc")) {
+		if (!GetIsObjectValid(oT))
 			return NotifyBadTarget();
 
 //        ClearAllActions();
@@ -2137,25 +2414,28 @@ int CommandJump(object oPC, int iMode) {
 }
 
 
-int CommandFetch(object oPC, int iMode) {
+int CommandFetch(object oPC, int iMode)
+{
 	int i = 0;
 	int count = getopt_argc();
 
 	object oTarget;
 
-	if ( 0 < count ) {
-		for ( i = 0; i < count; i++ ) {
+	if (0 < count) {
+		for (i = 0; i < count; i++) {
 			oTarget = GetTarget(StringToInt(getopt_arg(i)));
 //            DelayCommand(getsleep(), AssignCommand(oTarget, ClearAllActions()));
 			DelayCommand(getsleep(), AssignCommand(oTarget, JumpToObject(oPC)));
 		}
+
 	} else {
 		oTarget = GetTarget();
 
-		if ( is_item(oTarget) ) {
+		if (is_item(oTarget)) {
 			CopyItem(oTarget, oPC, TRUE);
 			DestroyObject(oTarget);
-		} else if ( is_creature(oTarget) ) {
+
+		} else if (is_creature(oTarget)) {
 //            DelayCommand(getsleep(), AssignCommand(oTarget, ClearAllActions()));
 			DelayCommand(getsleep(), AssignCommand(oTarget, JumpToObject(oPC)));
 
@@ -2168,11 +2448,12 @@ int CommandFetch(object oPC, int iMode) {
 }
 
 
-int CommandKick(object oPC, int iMode) {
+int CommandKick(object oPC, int iMode)
+{
 	object oPC =  FindPCByAccount(getopt_arg(0));
 
-	if ( !GetIsPC(oPC) ) {
-		SendMessageToPC(oPC, "Spieler '" +getopt_arg(0) + "' nicht gefunden.");
+	if (!GetIsPC(oPC)) {
+		SendMessageToPC(oPC, "Spieler '" + getopt_arg(0) + "' nicht gefunden.");
 		return FAIL;
 	}
 
@@ -2183,27 +2464,30 @@ int CommandKick(object oPC, int iMode) {
 }
 
 
-int CommandCreate(object oPC, int iMode) {
+int CommandCreate(object oPC, int iMode)
+{
 	//p0 = objtype
 	//p1 = resref
 	//p2 = location(obj, loc)
 	//p3 = newtag
 	int nObjType = StringToInt(getopt_arg(0));
-	string sRes =getopt_arg(1);
-	int nLoc =getopt_arg(2) == "loc" ? 2 : ( getopt_arg(2) == "obj" ? 1 : -1 );
-	string sTag =getopt_arg(3);
+	string sRes = getopt_arg(1);
+	int nLoc = getopt_arg(2) == "loc" ? 2 : (getopt_arg(2) == "obj" ? 1 : -1);
+	string sTag = getopt_arg(3);
 	int iStackSize = StringToInt(getopt_arg(4));
-	if ( iStackSize < 1 || iStackSize > 500 )
+
+	if (iStackSize < 1 || iStackSize > 500)
 		iStackSize = 1;
 
 	if (getopt_arg(2) == ""
-		|| nLoc == -1
-		|| ( nObjType != OBJECT_TYPE_ITEM
-			&& nObjType != OBJECT_TYPE_CREATURE
-			&& nObjType != OBJECT_TYPE_PLACEABLE
-			&& nObjType != OBJECT_TYPE_STORE && nObjType != OBJECT_TYPE_WAYPOINT )
-		|| ( nLoc == 1 && nObjType != OBJECT_TYPE_ITEM ) ) {
-		SendMessageToPC(oPC, "Syntax: objtype(int), resref, location(obj, loc), [tag(str)] [stacksize(int)]");
+			|| nLoc == -1
+			|| (nObjType != OBJECT_TYPE_ITEM
+				&& nObjType != OBJECT_TYPE_CREATURE
+				&& nObjType != OBJECT_TYPE_PLACEABLE
+				&& nObjType != OBJECT_TYPE_STORE && nObjType != OBJECT_TYPE_WAYPOINT)
+			|| (nLoc == 1 && nObjType != OBJECT_TYPE_ITEM)) {
+		SendMessageToPC(oPC,
+						"Syntax: objtype(int), resref, location(obj, loc), [tag(str)] [stacksize(int)]");
 		return SYNTAX;
 	}
 
@@ -2213,22 +2497,29 @@ int CommandCreate(object oPC, int iMode) {
 	SendMessageToPC(oPC, "Attempting to create '" + sRes + "' ..");
 
 	object o;
-	if ( nLoc == 2 ) {
+
+	if (nLoc == 2) {
 		o = CreateObject(nObjType, sRes, GetTargetLocation(), FALSE, sTag);
-		if ( GetIsObjectValid(o) )
+
+		if (GetIsObjectValid(o))
 			SendMessageToPC(oPC, "Okay, created on location.");
+
 		else {
 			SendMessageToPC(oPC, "Failed creating at location!");
 			return FAIL;
 		}
+
 	} else {
 		o = CreateItemOnObject(sRes, GetTarget(), iStackSize, sTag);
-		if ( GetIsObjectValid(o) )
+
+		if (GetIsObjectValid(o))
 			SendMessageToPC(oPC, "Okay, created on " + GetName(GetTarget()));
+
 		else {
 			SendMessageToPC(oPC, "Failed creating on creature '" + GetName(GetTarget()) + "'.");
 			return FAIL;
-		}}
+		}
+	}
 
 	if (nObjType == OBJECT_TYPE_ITEM)
 		SetPlotFlag(o, true);
@@ -2237,56 +2528,64 @@ int CommandCreate(object oPC, int iMode) {
 }
 
 
-int CommandShunUnshun(object oPC, int iMode, int iState) {
+int CommandShunUnshun(object oPC, int iMode, int iState)
+{
 	iState = iState != 0;
-	if ( "" == getopt_args() ) {
+
+	if ("" == getopt_args()) {
 		SendMessageToPC(oPC, "Required argument: Acccountname to un/shun.");
 		return FAIL;
+
 	} else {
 		object found = FindPCByAccount(getopt_args());
 
-		if ( GetIsObjectValid(found) ) {
+		if (GetIsObjectValid(found)) {
 
-			if ( GetIsDM(found) ) {
+			if (GetIsDM(found)) {
 				SendMessageToPC(oPC, "DMs cannot be shunned.");
 				return FAIL;
 			}
 
 			SetLocalInt(found, "shunned", iState);
 
-			if ( iState )
+			if (iState)
 				SendMessageToPC(oPC, "Player shunned.");
+
 			else
 				SendMessageToPC(oPC, "Player not shunned anymore.");
+
 		} else {
 			SendMessageToPC(oPC, "Player '" + getopt_args() + "' not found.");
 			return FAIL;
 		}
 	}
+
 	return OK;
 }
 
 
-int CommandInfo(object oPC, int iMode) {
+int CommandInfo(object oPC, int iMode)
+{
 	string sArg = getopt_args();
 
-	if ( "" == sArg ) {
+	if ("" == sArg) {
 		object oTarget = GetTarget();
 
-		if ( !GetIsObjectValid(oTarget) ) {
+		if (!GetIsObjectValid(oTarget)) {
 			return NotifyBadTarget();
 		}
 
 		SendMessageToPC(oPC, "Name: " + GetName(oTarget));
 		SendMessageToPC(oPC, "ObjectType: " +
-			IntToString(GetObjectType(oTarget)) + ", OID: " + ObjectToString(oTarget));
+						IntToString(GetObjectType(oTarget)) + ", OID: " + ObjectToString(oTarget));
 		SendMessageToPC(oPC, "Area: " + AreaToString(GetArea(oTarget)));
 		SendMessageToPC(oPC, "Tag: " + GetTag(oTarget));
 		SendMessageToPC(oPC, "ResRef: " + GetResRef(oTarget));
 
 	} else {
 		object o = FindPCByAccount(sArg);
-		if ( GetIsObjectValid(o) ) {
+
+		if (GetIsObjectValid(o)) {
 			SendMessageToPC(oPC, "Info for '" + sArg + "'");
 			SendMessageToPC(oPC, " Charname: " + GetName(o));
 			SendMessageToPC(oPC, " XP: " + IntToString(GetXP(o)));
@@ -2295,85 +2594,103 @@ int CommandInfo(object oPC, int iMode) {
 			SendMessageToPC(oPC, " Key: " + GetPCPublicCDKey(o));
 			SendMessageToPC(oPC, " Area: " + AreaToString(GetArea(o)));
 			SendMessageToPC(oPC, "End of info.");
+
 		} else {
 			SendMessageToPC(oPC, "Player '" + sArg + "' not found.");
 			return FAIL;
 		}
 	}
+
 	SendMessageToPC(oPC, "End of info.");
 	return OK;
 }
 
 
-int CommandIgnoreList(object oPC, int iMode, int iState) {
+int CommandIgnoreList(object oPC, int iMode, int iState)
+{
 	iState = iState != 0;
-	if ( "" == getopt_args() )
+
+	if ("" == getopt_args())
 		SendMessageToPC(oPC, "Benoetigtes Argument: Acccountname");
+
 	else {
 		object found = FindPCByAccount(getopt_args());
 
-		if ( GetIsObjectValid(found) ) {
-			if ( GetLocalInt(oPC, "ignore_" + GetPCPlayerName(found)) && iState )
+		if (GetIsObjectValid(found)) {
+			if (GetLocalInt(oPC, "ignore_" + GetPCPlayerName(found)) && iState)
 				SendMessageToPC(oPC, "Spieler '" +
-					GetPCPlayerName(found) + "' ist bereits auf deiner Ignorelist.");
-			else if ( !GetLocalInt(oPC, "ignore_" + GetPCPlayerName(found)) && !iState )
+								GetPCPlayerName(found) + "' ist bereits auf deiner Ignorelist.");
+
+			else if (!GetLocalInt(oPC, "ignore_" + GetPCPlayerName(found)) && !iState)
 				SendMessageToPC(oPC, "Spieler '" +
-					GetPCPlayerName(found) + "' ist nicht auf deiner Ignorelist.");
+								GetPCPlayerName(found) + "' ist nicht auf deiner Ignorelist.");
 
 			SetLocalInt(oPC, "ignore_" + GetPCPlayerName(found), iState);
 
-			if ( iState )
+			if (iState)
 				SendMessageToPC(oPC, "Spieler '" +
-					GetPCPlayerName(found) + "' kann dir keine Nachrichten mehr senden.");
+								GetPCPlayerName(found) + "' kann dir keine Nachrichten mehr senden.");
+
 			else
 				SendMessageToPC(oPC, "Spieler '" +
-					GetPCPlayerName(found) + "' ist nicht mehr auf deiner Ignorelist.");
+								GetPCPlayerName(found) + "' ist nicht mehr auf deiner Ignorelist.");
 
 		} else {
 			SendMessageToPC(oPC, "Spieler '" + getopt_args() + "' nicht gefunden.");
 			return FAIL;
 		}
 	}
+
 	return OK;
 }
 
 
-int CommandShowObj(object oPC, int iMode) {
+int CommandShowObj(object oPC, int iMode)
+{
 	float fRange = StringToFloat(getopt_arg(0));
-	if ( fRange <= 0.0 || fRange >= 30.0 ) {
+
+	if (fRange <= 0.0 || fRange >= 30.0) {
 		SendMessageToPC(oPC, "Bad Idea( tm ).");
 		return FAIL;
 	}
 
 	string sTagMask = "**";
-	if (getopt_opt("m") )
-		sTagMask =getopt_optv("m");
+
+	if (getopt_opt("m"))
+		sTagMask = getopt_optv("m");
 
 	int nType = OBJECT_TYPE_PLACEABLE;
-	if (getopt_opt("type") )
+
+	if (getopt_opt("type"))
 		nType = StringToInt(getopt_optv("type"));
 
 	int c = 0, worth = 0;
 	string sTag;
 	object o = GetFirstObjectInShape(SHAPE_SPHERE, fRange, GetLocation(oPC), FALSE, nType);
-	while ( GetIsObjectValid(o) ) {
+
+	while (GetIsObjectValid(o)) {
 		sTag = GetTag(o);
-		if ( !GetIsPC(o) && TestStringAgainstPattern(sTagMask, sTag) ) {
+
+		if (!GetIsPC(o) && TestStringAgainstPattern(sTagMask, sTag)) {
 			SendMessageToPC(oPC, GetName(o) + ", Tag: " + GetTag(o) + ", ResRef: " + GetResRef(o));
 			worth += GetGoldPieceValue(o);
 			c += 1;
 		}
+
 		o = GetNextObjectInShape(SHAPE_SPHERE, fRange, GetLocation(oPC), FALSE, nType);
 	}
+
 	SendMessageToPC(oPC, "Found " + IntToString(c) + " objects.");
 	SendMessageToPC(oPC, "Worth in money: " + itoa(worth));
 	return OK;
 }
 
 
-int CommandKillObj(object oPC, int iMode) {
+int CommandKillObj(object oPC, int iMode)
+{
 	float fRange = StringToFloat(getopt_arg(0));
-	if ( fRange <= 0.0 || fRange >= 30.0 ) {
+
+	if (fRange <= 0.0 || fRange >= 30.0) {
 		SendMessageToPC(oPC, "Bad Idea( tm ).");
 		return FAIL;
 	}
@@ -2381,104 +2698,166 @@ int CommandKillObj(object oPC, int iMode) {
 	float delay = 0.2;
 
 	string sTagMask = "**";
-	if (getopt_opt("m") )
-		sTagMask =getopt_optv("m");
+
+	if (getopt_opt("m"))
+		sTagMask = getopt_optv("m");
 
 	int nType = OBJECT_TYPE_PLACEABLE;
-	if (getopt_opt("type") )
+
+	if (getopt_opt("type"))
 		nType = StringToInt(getopt_optv("type"));
 
 	int c = 0;
 	string sTag;
 	object o = GetFirstObjectInShape(SHAPE_SPHERE, fRange, GetLocation(oPC), FALSE, nType);
-	while ( GetIsObjectValid(o) ) {
+
+	while (GetIsObjectValid(o)) {
 		sTag = GetTag(o);
-		if ( !GetIsPC(o) && TestStringAgainstPattern(sTagMask, sTag) ) {
+
+		if (!GetIsPC(o) && TestStringAgainstPattern(sTagMask, sTag)) {
 			switch (GetObjectType(o)) {
-				case OBJECT_TYPE_PLACEABLE:
-					KillInventory(o);
-					KillPlacie(o, delay);
-					break;
-				case OBJECT_TYPE_CREATURE:
-					if (p_id(o) > 0)
-						p_delete("critters", o);
-					break;
-				default:
-					DestroyObject(o, delay);
-					break;
+			case OBJECT_TYPE_PLACEABLE:
+				KillInventory(o);
+				KillPlacie(o, delay);
+				break;
+
+			case OBJECT_TYPE_CREATURE:
+				if (p_id(o) > 0)
+					p_delete("critters", o);
+
+				break;
+
+			default:
+				DestroyObject(o, delay);
+				break;
 			}
+
 			delay += 0.1;
 			c += 1;
 		}
+
 		o = GetNextObjectInShape(SHAPE_SPHERE, fRange, GetLocation(oPC), FALSE, nType);
 	}
-	if ( c > 0 )
+
+	if (c > 0)
 		RecomputeStaticLighting(GetArea(oPC));
+
 	SendMessageToPC(oPC, "Annihilated " + IntToString(c) + " placeables!");
 	return OK;
 }
 
-int CommandVoiceChat(object oPC, string sArg, int iMode) {
+int CommandVoiceChat(object oPC, string sArg, int iMode)
+{
 
 	int id = -1;
 	string sOpt = "";
 	int iWhite = FindSubString(sArg, " ");
 	sArg = GetStringLowerCase(sArg);
-	if ( iWhite != -1 ) {
+
+	if (iWhite != -1) {
 		sOpt = GetSubString(sArg, iWhite + 1, 1024);
 		sArg = GetSubString(sArg, 0, iWhite);
 	}
 
 	// List cleverly autogenerated
-	if ( "attack" == sArg ) id = VOICE_CHAT_ATTACK;
-	else if ( "badidea" == sArg ) id = VOICE_CHAT_BADIDEA;
-	else if ( "battlecry1" == sArg ) id = VOICE_CHAT_BATTLECRY1;
-	else if ( "battlecry2" == sArg ) id = VOICE_CHAT_BATTLECRY2;
-	else if ( "battlecry3" == sArg ) id = VOICE_CHAT_BATTLECRY3;
-	else if ( "bored" == sArg ) id = VOICE_CHAT_BORED;
-	else if ( "cando" == sArg ) id = VOICE_CHAT_CANDO;
-	else if ( "cantdo" == sArg ) id = VOICE_CHAT_CANTDO;
-	else if ( "cheer" == sArg ) id = VOICE_CHAT_CHEER;
-	else if ( "cuss" == sArg ) id = VOICE_CHAT_CUSS;
-	else if ( "death" == sArg ) id = VOICE_CHAT_DEATH;
-	else if ( "encumbered" == sArg ) id = VOICE_CHAT_ENCUMBERED;
-	else if ( "enemies" == sArg ) id = VOICE_CHAT_ENEMIES;
-	else if ( "flee" == sArg ) id = VOICE_CHAT_FLEE;
-	else if ( "followme" == sArg ) id = VOICE_CHAT_FOLLOWME;
-	else if ( "gattack1" == sArg ) id = VOICE_CHAT_GATTACK1;
-	else if ( "gattack2" == sArg ) id = VOICE_CHAT_GATTACK2;
-	else if ( "gattack3" == sArg ) id = VOICE_CHAT_GATTACK3;
-	else if ( "goodbye" == sArg ) id = VOICE_CHAT_GOODBYE;
-	else if ( "goodidea" == sArg ) id = VOICE_CHAT_GOODIDEA;
-	else if ( "group" == sArg ) id = VOICE_CHAT_GROUP;
-	else if ( "guardme" == sArg ) id = VOICE_CHAT_GUARDME;
-	else if ( "healme" == sArg ) id = VOICE_CHAT_HEALME;
-	else if ( "hello" == sArg ) id = VOICE_CHAT_HELLO;
-	else if ( "help" == sArg ) id = VOICE_CHAT_HELP;
-	else if ( "hide" == sArg ) id = VOICE_CHAT_HIDE;
-	else if ( "hold" == sArg ) id = VOICE_CHAT_HOLD;
-	else if ( "laugh" == sArg ) id = VOICE_CHAT_LAUGH;
-	else if ( "lookhere" == sArg ) id = VOICE_CHAT_LOOKHERE;
-	else if ( "moveover" == sArg ) id = VOICE_CHAT_MOVEOVER;
-	else if ( "neardeath" == sArg ) id = VOICE_CHAT_NEARDEATH;
-	else if ( "no" == sArg ) id = VOICE_CHAT_NO;
-	else if ( "pain1" == sArg ) id = VOICE_CHAT_PAIN1;
-	else if ( "pain2" == sArg ) id = VOICE_CHAT_PAIN2;
-	else if ( "pain3" == sArg ) id = VOICE_CHAT_PAIN3;
-	else if ( "picklock" == sArg ) id = VOICE_CHAT_PICKLOCK;
-	else if ( "poisoned" == sArg ) id = VOICE_CHAT_POISONED;
-	else if ( "rest" == sArg ) id = VOICE_CHAT_REST;
-	else if ( "search" == sArg ) id = VOICE_CHAT_SEARCH;
-	else if ( "selected" == sArg ) id = VOICE_CHAT_SELECTED;
-	else if ( "spellfailed" == sArg ) id = VOICE_CHAT_SPELLFAILED;
-	else if ( "stop" == sArg ) id = VOICE_CHAT_STOP;
-	else if ( "talktome" == sArg ) id = VOICE_CHAT_TALKTOME;
-	else if ( "taskcomplete" == sArg ) id = VOICE_CHAT_TASKCOMPLETE;
-	else if ( "taunt" == sArg ) id = VOICE_CHAT_TAUNT;
-	else if ( "thanks" == sArg ) id = VOICE_CHAT_THANKS;
-	else if ( "threaten" == sArg ) id = VOICE_CHAT_THREATEN;
-	else if ( "weaponsucks" == sArg ) id = VOICE_CHAT_WEAPONSUCKS;
-	else if ( "yes" == sArg ) id = VOICE_CHAT_YES;
+	if ("attack" == sArg) id = VOICE_CHAT_ATTACK;
+
+	else if ("badidea" == sArg) id = VOICE_CHAT_BADIDEA;
+
+	else if ("battlecry1" == sArg) id = VOICE_CHAT_BATTLECRY1;
+
+	else if ("battlecry2" == sArg) id = VOICE_CHAT_BATTLECRY2;
+
+	else if ("battlecry3" == sArg) id = VOICE_CHAT_BATTLECRY3;
+
+	else if ("bored" == sArg) id = VOICE_CHAT_BORED;
+
+	else if ("cando" == sArg) id = VOICE_CHAT_CANDO;
+
+	else if ("cantdo" == sArg) id = VOICE_CHAT_CANTDO;
+
+	else if ("cheer" == sArg) id = VOICE_CHAT_CHEER;
+
+	else if ("cuss" == sArg) id = VOICE_CHAT_CUSS;
+
+	else if ("death" == sArg) id = VOICE_CHAT_DEATH;
+
+	else if ("encumbered" == sArg) id = VOICE_CHAT_ENCUMBERED;
+
+	else if ("enemies" == sArg) id = VOICE_CHAT_ENEMIES;
+
+	else if ("flee" == sArg) id = VOICE_CHAT_FLEE;
+
+	else if ("followme" == sArg) id = VOICE_CHAT_FOLLOWME;
+
+	else if ("gattack1" == sArg) id = VOICE_CHAT_GATTACK1;
+
+	else if ("gattack2" == sArg) id = VOICE_CHAT_GATTACK2;
+
+	else if ("gattack3" == sArg) id = VOICE_CHAT_GATTACK3;
+
+	else if ("goodbye" == sArg) id = VOICE_CHAT_GOODBYE;
+
+	else if ("goodidea" == sArg) id = VOICE_CHAT_GOODIDEA;
+
+	else if ("group" == sArg) id = VOICE_CHAT_GROUP;
+
+	else if ("guardme" == sArg) id = VOICE_CHAT_GUARDME;
+
+	else if ("healme" == sArg) id = VOICE_CHAT_HEALME;
+
+	else if ("hello" == sArg) id = VOICE_CHAT_HELLO;
+
+	else if ("help" == sArg) id = VOICE_CHAT_HELP;
+
+	else if ("hide" == sArg) id = VOICE_CHAT_HIDE;
+
+	else if ("hold" == sArg) id = VOICE_CHAT_HOLD;
+
+	else if ("laugh" == sArg) id = VOICE_CHAT_LAUGH;
+
+	else if ("lookhere" == sArg) id = VOICE_CHAT_LOOKHERE;
+
+	else if ("moveover" == sArg) id = VOICE_CHAT_MOVEOVER;
+
+	else if ("neardeath" == sArg) id = VOICE_CHAT_NEARDEATH;
+
+	else if ("no" == sArg) id = VOICE_CHAT_NO;
+
+	else if ("pain1" == sArg) id = VOICE_CHAT_PAIN1;
+
+	else if ("pain2" == sArg) id = VOICE_CHAT_PAIN2;
+
+	else if ("pain3" == sArg) id = VOICE_CHAT_PAIN3;
+
+	else if ("picklock" == sArg) id = VOICE_CHAT_PICKLOCK;
+
+	else if ("poisoned" == sArg) id = VOICE_CHAT_POISONED;
+
+	else if ("rest" == sArg) id = VOICE_CHAT_REST;
+
+	else if ("search" == sArg) id = VOICE_CHAT_SEARCH;
+
+	else if ("selected" == sArg) id = VOICE_CHAT_SELECTED;
+
+	else if ("spellfailed" == sArg) id = VOICE_CHAT_SPELLFAILED;
+
+	else if ("stop" == sArg) id = VOICE_CHAT_STOP;
+
+	else if ("talktome" == sArg) id = VOICE_CHAT_TALKTOME;
+
+	else if ("taskcomplete" == sArg) id = VOICE_CHAT_TASKCOMPLETE;
+
+	else if ("taunt" == sArg) id = VOICE_CHAT_TAUNT;
+
+	else if ("thanks" == sArg) id = VOICE_CHAT_THANKS;
+
+	else if ("threaten" == sArg) id = VOICE_CHAT_THREATEN;
+
+	else if ("weaponsucks" == sArg) id = VOICE_CHAT_WEAPONSUCKS;
+
+	else if ("yes" == sArg) id = VOICE_CHAT_YES;
+
 	else {
 		SendMessageToPC(oPC, "Unbekannter VoiceChat '" + sArg + "'; benutze: ");
 		SendMessageToPC(oPC, " attack, badidea, battlecry1, battlecry2, battlecry3, bored, cando, cantdo");
@@ -2487,28 +2866,33 @@ int CommandVoiceChat(object oPC, string sArg, int iMode) {
 		SendMessageToPC(oPC, " help, hide, hold, laugh, lookhere, moveover, neardeath, no, yes");
 		SendMessageToPC(oPC, " pain1, pain2, pain3, picklock, poisoned, rest, search, selected");
 		SendMessageToPC(oPC,
-			" spellfailed, stop, talktome, taskcomplete, taunt, thanks, threaten, weaponsucks");
+						" spellfailed, stop, talktome, taskcomplete, taunt, thanks, threaten, weaponsucks");
 		return SYNTAX;
 	}
 
-	if ( ( sOpt == "target" || sOpt == "t" ) && amask(oPC, AMASK_GLOBAL_GM) ) {
+	if ((sOpt == "target" || sOpt == "t") && amask(oPC, AMASK_GLOBAL_GM)) {
 		object oTarget = GetTarget();
-		if ( !is_creature(oTarget) )
+
+		if (!is_creature(oTarget))
 			return NotifyBadTarget();
 
 		DelayCommand(0.0, PlayVoiceChat(id, oTarget));
+
 	} else {
 		DelayCommand(0.0, PlayVoiceChat(id, oPC));
 	}
+
 	return OK;
 }
 
-int CommandAnimation(object oPC, string sArg, int iMode) {
+int CommandAnimation(object oPC, string sArg, int iMode)
+{
 	string sOpt = "";
 
 	int iWhite = FindSubString(sArg, " ");
 	sArg = GetStringLowerCase(sArg);
-	if ( iWhite != -1 ) {
+
+	if (iWhite != -1) {
 		sOpt = GetSubString(sArg, iWhite + 1, 1024);
 		sArg = GetSubString(sArg, 0, iWhite);
 	}
@@ -2518,168 +2902,237 @@ int CommandAnimation(object oPC, string sArg, int iMode) {
 	float fSpeed = 1.0;
 
 	// autogenerated, xxx cut stuff we dont want
-	if ( "bow" == sArg )
+	if ("bow" == sArg)
 		iAni = ANIMATION_FIREFORGET_BOW;
-	if ( "dodge_duck" == sArg )
+
+	if ("dodge_duck" == sArg)
 		iAni = ANIMATION_FIREFORGET_DODGE_DUCK;
-	if ( "dodge_side" == sArg )
+
+	if ("dodge_side" == sArg)
 		iAni = ANIMATION_FIREFORGET_DODGE_SIDE;
-	if ( "drink" == sArg )
+
+	if ("drink" == sArg)
 		iAni = ANIMATION_FIREFORGET_DRINK;
-	if ( "greeting" == sArg )
+
+	if ("greeting" == sArg)
 		iAni = ANIMATION_FIREFORGET_GREETING;
-	if ( "head_turn_left" == sArg )
+
+	if ("head_turn_left" == sArg)
 		iAni = ANIMATION_FIREFORGET_HEAD_TURN_LEFT;
-	if ( "head_turn_right" == sArg )
+
+	if ("head_turn_right" == sArg)
 		iAni = ANIMATION_FIREFORGET_HEAD_TURN_RIGHT;
-	if ( "pause_bored" == sArg )
+
+	if ("pause_bored" == sArg)
 		iAni = ANIMATION_FIREFORGET_PAUSE_BORED;
-	if ( "pause_scratch_head" == sArg )
+
+	if ("pause_scratch_head" == sArg)
 		iAni = ANIMATION_FIREFORGET_PAUSE_SCRATCH_HEAD;
-	if ( "read" == sArg )
+
+	if ("read" == sArg)
 		iAni = ANIMATION_FIREFORGET_READ;
-	if ( "salute" == sArg )
+
+	if ("salute" == sArg)
 		iAni = ANIMATION_FIREFORGET_SALUTE;
-	if ( "steal" == sArg )
+
+	if ("steal" == sArg)
 		iAni = ANIMATION_FIREFORGET_STEAL;
-	if ( "taunt" == sArg )
+
+	if ("taunt" == sArg)
 		iAni = ANIMATION_FIREFORGET_TAUNT;
-	if ( "victory1" == sArg )
+
+	if ("victory1" == sArg)
 		iAni = ANIMATION_FIREFORGET_VICTORY1;
-	if ( "victory2" == sArg )
+
+	if ("victory2" == sArg)
 		iAni = ANIMATION_FIREFORGET_VICTORY2;
-	if ( "victory3" == sArg )
+
+	if ("victory3" == sArg)
 		iAni = ANIMATION_FIREFORGET_VICTORY3;
 
-	if ( "sitcross" == sArg )
+	if ("sitcross" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM1;
-	if ( "tapfoot" == sArg )
+
+	if ("tapfoot" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM2;
-	if ( "kneel" == sArg )
+
+	if ("kneel" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM3;
-	if ( "crazy" == sArg )
+
+	if ("crazy" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM5;
-	if ( "freeze" == sArg )
+
+	if ("freeze" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM6;
-	if ( "lieleft" == sArg )
+
+	if ("lieleft" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM7;
-	if ( "lieright" == sArg )
+
+	if ("lieright" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM8;
 
-	if ( "onward" == sArg )
+	if ("onward" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM11;
-	if ( "thought" == sArg )
+
+	if ("thought" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM12;
-	if ( "headache" == sArg )
+
+	if ("headache" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM13;
-	if ( "crossed" == sArg )
+
+	if ("crossed" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM14;
+
 	// if ( "jump" == sArg )
 	// 	iAni = ANIMATION_LOOPING_CUSTOM15;
-	if ( "come" == sArg ) {
+	if ("come" == sArg) {
 		iAni = ANIMATION_LOOPING_CUSTOM16;
 		fSpeed = 2.0;
 	}
-	if ( "crouch" == sArg )
+
+	if ("crouch" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM17;
-	if ( "hang" == sArg )
+
+	if ("hang" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM18;
-	if ( "smash" == sArg ) {
+
+	if ("smash" == sArg) {
 		iAni = ANIMATION_LOOPING_CUSTOM19;
 		fSpeed = 1.5;
 	}
-	if ( "sleep" == sArg )
+
+	if ("sleep" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM20;
 
-	if ( "conjure1" == sArg )
+	if ("conjure1" == sArg)
 		iAni = ANIMATION_LOOPING_CONJURE1;
-	if ( "conjure2" == sArg )
+
+	if ("conjure2" == sArg)
 		iAni = ANIMATION_LOOPING_CONJURE2;
-	if ( "dead_back" == sArg )
+
+	if ("dead_back" == sArg)
 		iAni = ANIMATION_LOOPING_DEAD_BACK;
-	if ( "dead_front" == sArg )
+
+	if ("dead_front" == sArg)
 		iAni = ANIMATION_LOOPING_DEAD_FRONT;
-	if ( "get_low" == sArg )
+
+	if ("get_low" == sArg)
 		iAni = ANIMATION_LOOPING_GET_LOW;
-	if ( "get_mid" == sArg )
+
+	if ("get_mid" == sArg)
 		iAni = ANIMATION_LOOPING_GET_MID;
-	if ( "listen" == sArg )
+
+	if ("listen" == sArg)
 		iAni = ANIMATION_LOOPING_LISTEN;
-	if ( "look_far" == sArg )
+
+	if ("look_far" == sArg)
 		iAni = ANIMATION_LOOPING_LOOK_FAR;
-	if ( "meditate" == sArg )
+
+	if ("meditate" == sArg)
 		iAni = ANIMATION_LOOPING_MEDITATE;
-	if ( "pause" == sArg )
+
+	if ("pause" == sArg)
 		iAni = ANIMATION_LOOPING_PAUSE;
-	if ( "pause_drunk" == sArg )
+
+	if ("pause_drunk" == sArg)
 		iAni = ANIMATION_LOOPING_PAUSE_DRUNK;
-	if ( "pause_tired" == sArg )
+
+	if ("pause_tired" == sArg)
 		iAni = ANIMATION_LOOPING_PAUSE_TIRED;
-	if ( "pause2" == sArg )
+
+	if ("pause2" == sArg)
 		iAni = ANIMATION_LOOPING_PAUSE2;
-	if ( "sit" == sArg )
+
+	if ("sit" == sArg)
 		iAni = ANIMATION_LOOPING_SIT_CROSS;
-	if ( "spasm" == sArg )
+
+	if ("spasm" == sArg)
 		iAni = ANIMATION_LOOPING_SPASM;
-	if ( "talk_forceful" == sArg )
+
+	if ("talk_forceful" == sArg)
 		iAni = ANIMATION_LOOPING_TALK_FORCEFUL;
-	if ( "talk_laughing" == sArg )
+
+	if ("talk_laughing" == sArg)
 		iAni = ANIMATION_LOOPING_TALK_LAUGHING;
-	if ( "talk_normal" == sArg )
+
+	if ("talk_normal" == sArg)
 		iAni = ANIMATION_LOOPING_TALK_NORMAL;
-	if ( "talk_pleading" == sArg )
+
+	if ("talk_pleading" == sArg)
 		iAni = ANIMATION_LOOPING_TALK_PLEADING;
-	if ( "worship" == sArg )
+
+	if ("worship" == sArg)
 		iAni = ANIMATION_LOOPING_WORSHIP;
 
-	if ( "c1" == sArg )
+	if ("c1" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM1;
-	if ( "c2" == sArg )
+
+	if ("c2" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM2;
-	if ( "c3" == sArg )
+
+	if ("c3" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM3;
-	if ( "c4" == sArg )
+
+	if ("c4" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM4;
-	if ( "c5" == sArg )
+
+	if ("c5" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM5;
-	if ( "c6" == sArg )
+
+	if ("c6" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM6;
-	if ( "c7" == sArg )
+
+	if ("c7" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM7;
-	if ( "c8" == sArg )
+
+	if ("c8" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM8;
-	if ( "c9" == sArg )
+
+	if ("c9" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM9;
-	if ( "c10" == sArg )
+
+	if ("c10" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM10;
 
-	if ( "c11" == sArg )
+	if ("c11" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM11;
-	if ( "c12" == sArg )
+
+	if ("c12" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM12;
-	if ( "c13" == sArg )
+
+	if ("c13" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM13;
-	if ( "c14" == sArg )
+
+	if ("c14" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM14;
-	if ( "c15" == sArg )
+
+	if ("c15" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM15;
-	if ( "c16" == sArg )
+
+	if ("c16" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM16;
-	if ( "c17" == sArg )
+
+	if ("c17" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM17;
-	if ( "c18" == sArg )
+
+	if ("c18" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM18;
-	if ( "c19" == sArg )
+
+	if ("c19" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM19;
-	if ( "c20" == sArg )
+
+	if ("c20" == sArg)
 		iAni = ANIMATION_LOOPING_CUSTOM20;
 
-	if ( iAni == -1 ) {
-		SendMessageToPC(oPC, "Unbekannte Animation '" + sArg + "' Siehe die Dokumentation fuer eine Liste an Animationen.");
+	if (iAni == -1) {
+		SendMessageToPC(oPC, "Unbekannte Animation '" + sArg +
+						"' Siehe die Dokumentation fuer eine Liste an Animationen.");
 		SendMessageToPC(oPC, "Unbekannte Animation '" + sArg + "', benutze: ");
 		SendMessageToPC(oPC, " dead_back, dead_front, get_low, get_mid, listen, look_far, meditate, pause");
-		SendMessageToPC(oPC, " pause_drunk, pause_tired, pause2, sit, talk_forceful, talk_laughing, talk_normal, talk_pleading, worship");
-		SendMessageToPC(oPC, " bow, dodge_duck, dodge_side, drink, greeting, head_turn_left, head_turn_right, pause_bored, pause_scratch_head, read");
+		SendMessageToPC(oPC,
+						" pause_drunk, pause_tired, pause2, sit, talk_forceful, talk_laughing, talk_normal, talk_pleading, worship");
+		SendMessageToPC(oPC,
+						" bow, dodge_duck, dodge_side, drink, greeting, head_turn_left, head_turn_right, pause_bored, pause_scratch_head, read");
 		SendMessageToPC(oPC, " salute, spasm, steal, taunt, victory1, victory2, victory3");
 		SendMessageToPC(oPC, " conjure1, conjure2,");
 		SendMessageToPC(oPC, " sitcross, kneel, lieleft, lieright, tapfoot, crazy, freeze");
@@ -2689,26 +3142,31 @@ int CommandAnimation(object oPC, string sArg, int iMode) {
 	}
 
 
-	if ( sOpt == "target" && amask(oPC, AMASK_GLOBAL_GM) ) {
+	if (sOpt == "target" && amask(oPC, AMASK_GLOBAL_GM)) {
 		object oTarget = GetTarget();
-		if ( CREATURE_SIZE_INVALID == GetCreatureSize(oTarget) ) {
+
+		if (CREATURE_SIZE_INVALID == GetCreatureSize(oTarget)) {
 			return NotifyBadTarget();
 		}
+
 //        DelayCommand(getsleep(), AssignCommand(oTarget, ClearAllActions()));
 		DelayCommand(getsleep(), AssignCommand(oTarget, ActionPlayAnimation(iAni, fSpeed, fDuration)));
+
 	} else {
 
 //        DelayCommand(getsleep(), AssignCommand(oPC, ClearAllActions()));
 		DelayCommand(getsleep(), AssignCommand(oPC, ActionPlayAnimation(iAni, fSpeed, fDuration)));
 	}
+
 	return OK;
 }
 
 
-int CommandSetName(object oPC, int iMode) {
+int CommandSetName(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
 
-	if ( !GetIsObjectValid(oTarget) || GetIsDM(oTarget) ) {
+	if (!GetIsObjectValid(oTarget) || GetIsDM(oTarget)) {
 		return NotifyBadTarget();
 	}
 
@@ -2721,32 +3179,39 @@ int CommandSetName(object oPC, int iMode) {
 	}
 
 	string name = getopt_argall();
+
 	if (name != "") {
 		if (GetIsPC(oTarget))
 			SetPlayerName(oTarget, name);
+
 		else
 			SetName(oTarget, name);
+
 		SendMessageToPC(oPC, "Setting name to '" + name + "'.");
+
 	} else {
 		if (GetIsPC(oTarget))
 			SetPlayerName(oTarget);
+
 		else
 			SetName(oTarget);
+
 		SendMessageToPC(oPC, "Resetting name.");
 	}
 
-	if ( Limbo(oTarget) )
+	if (Limbo(oTarget))
 		Unlimbo(oTarget);
 
 	return OK;
 }
 
 
-int CommandFleshToStone(object oPC, int iMode) {
+int CommandFleshToStone(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
 
 	/* can only petrify creatures */
-	if ( CREATURE_SIZE_INVALID == GetCreatureSize(oTarget) ) {
+	if (CREATURE_SIZE_INVALID == GetCreatureSize(oTarget)) {
 		return NotifyBadTarget();
 	}
 
@@ -2760,20 +3225,22 @@ int CommandFleshToStone(object oPC, int iMode) {
 
 
 
-int CommandStoneToFlesh(object oPC, int iMode) {
+int CommandStoneToFlesh(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
 
 	/* can only de-petrify creatures */
-	if ( CREATURE_SIZE_INVALID == GetCreatureSize(oTarget) ) {
+	if (CREATURE_SIZE_INVALID == GetCreatureSize(oTarget)) {
 		return NotifyBadTarget();
 	}
 
 	effect ePetrify = EffectPetrify();
 
 	effect e = GetFirstEffect(oTarget);
-	while ( GetIsEffectValid(e) ) {
 
-		if ( GetEffectType(e) == EFFECT_TYPE_PETRIFY && GetEffectDurationType(e) == DURATION_TYPE_PERMANENT )
+	while (GetIsEffectValid(e)) {
+
+		if (GetEffectType(e) == EFFECT_TYPE_PETRIFY && GetEffectDurationType(e) == DURATION_TYPE_PERMANENT)
 			RemoveEffect(oTarget, e);
 
 		e = GetNextEffect(oTarget);
@@ -2783,36 +3250,38 @@ int CommandStoneToFlesh(object oPC, int iMode) {
 }
 
 
-int CommandFixFactions(object oPC, int iMode) {
-	if (getopt_arg(0) == "all" ) {
+int CommandFixFactions(object oPC, int iMode)
+{
+	if (getopt_arg(0) == "all") {
 		object oO = GetFirstPC();
 
-		while ( GetIsObjectValid(oO) ) {
+		while (GetIsObjectValid(oO)) {
 			FixFactionsForObject(oO, oPC);
 			SendMessageToPC(oPC, "Factions fuer " + GetName(oO) + " repariert.");
 			oO = GetNextPC();
 		}
 
-	} else if (getopt_arg(0) == "target" ) {
+	} else if (getopt_arg(0) == "target") {
 		/* target mode */
 		object oTarget = GetTarget();
-		if ( !GetIsPC(oPC) ) {
+
+		if (!GetIsPC(oPC)) {
 			return NotifyBadTarget();
 		}
 
 		FixFactionsForObject(oTarget, oPC);
 		SendMessageToPC(oPC, "Factions fuer " + GetName(oTarget) + " repariert.");
 
-	} else if (getopt_arg(0) == "personal" ) {
+	} else if (getopt_arg(0) == "personal") {
 		int t1 = StringToInt(getopt_arg(1)),
 			t2 = StringToInt(getopt_arg(2));
 		object o1 = GetTarget(1),
 			   o2 = GetTarget(2);
 
-		if ( t1 < 1 || t1 > TARGET_MAX || t2 < 1 || t2 > TARGET_MAX )
+		if (t1 < 1 || t1 > TARGET_MAX || t2 < 1 || t2 > TARGET_MAX)
 			return NotifyBadTarget(); // Syntax("personal target_1 target_2");
 
-		if ( !is_creature(o1) || !is_creature(o2) )
+		if (!is_creature(o1) || !is_creature(o2))
 			return NotifyBadTarget();
 
 		ClearPersonalReputation(o1, o2);
@@ -2827,46 +3296,53 @@ int CommandFixFactions(object oPC, int iMode) {
 
 
 
-int CommandGetTargetChooser(object oPC, int iMode) {
+int CommandGetTargetChooser(object oPC, int iMode)
+{
 	object oCh = GetItemPossessedBy(oPC, "choose_target_1");
-	if ( GetIsObjectValid(oCh) )
+
+	if (GetIsObjectValid(oCh))
 		DestroyObject(oCh);
+
 	else
 		CreateItemOnObject("choose_target_1", oPC, 1);
 
 	return OK;
 }
 
-int CommandRestore(object oPC, int iMode) {
+int CommandRestore(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
 
-	if (getopt_opt("s") ) {
+	if (getopt_opt("s")) {
 		effect e = GetFirstEffect(oTarget);
-		while ( GetIsEffectValid(e) ) {
+
+		while (GetIsEffectValid(e)) {
 			DelayCommand(getsleep(), RemoveEffect(oTarget, e));
 			e = GetNextEffect(oTarget);
 		}
 	}
 
-	if (getopt_opt("e") ) {
+	if (getopt_opt("e")) {
 		int nEffectID = StringToInt(getopt_optv("e"));
 		effect e = GetFirstEffect(oTarget);
-		while ( GetIsEffectValid(e) ) {
-			if ( ( nEffectID == 0
-					|| ( nEffectID > 0 && GetEffectType(e) == nEffectID )
-					)
-					&& GetEffectSubType(e) != SUBTYPE_SUPERNATURAL
+
+		while (GetIsEffectValid(e)) {
+			if ((nEffectID == 0
+					|| (nEffectID > 0 && GetEffectType(e) == nEffectID)
 				)
+					&& GetEffectSubType(e) != SUBTYPE_SUPERNATURAL
+			   )
 				DelayCommand(getsleep(), RemoveEffect(oTarget, e));
+
 			e = GetNextEffect(oTarget);
 		}
 	}
 
-	if (getopt_opt("l") ) {
+	if (getopt_opt("l")) {
 		DelayCommand(getsleep(), ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectHeal(2000), oTarget));
 	}
 
-	if (getopt_opt("r") ) {
+	if (getopt_opt("r")) {
 		SetLocalInt(oTarget, "Resting_Counter_val", 0);
 		SetLocalDecay(oTarget, "Resting_Food", 241, 60);
 	}
@@ -2876,40 +3352,43 @@ int CommandRestore(object oPC, int iMode) {
 }
 
 
-int CommandVFX(object oPC, int iMode) {
+int CommandVFX(object oPC, int iMode)
+{
 	string p0 = GetStringLowerCase(getopt_arg(0));
 	string p1 = GetStringLowerCase(getopt_arg(1));
 	string p2 = GetStringLowerCase(getopt_arg(2));
 	string p3 = GetStringLowerCase(getopt_arg(3));
 
-	int iTar = ( p0 == "o" || p0 == "obj" ) ? 0 : ( ( p0 == "loc" || p0 == "l" ) ? 1 : -1 );
-	int iDur = ( p1 == "t"
+	int iTar = (p0 == "o" || p0 == "obj") ? 0 : ((p0 == "loc" || p0 == "l") ? 1 : -1);
+	int iDur = (p1 == "t"
 				|| p1 ==
-				"temp" ) ? DURATION_TYPE_TEMPORARY : ( ( p1 == "i"
-														|| p1 ==
-														"inst" ) ? DURATION_TYPE_INSTANT : ( ( p1 == "p"
-																							  || p1 ==
-																							  "perm" ) ?
-																							DURATION_TYPE_PERMANENT
-																							: -1 ) );
+				"temp") ? DURATION_TYPE_TEMPORARY : ((p1 == "i"
+						|| p1 ==
+						"inst") ? DURATION_TYPE_INSTANT : ((p1 == "p"
+								|| p1 ==
+								"perm") ?
+								DURATION_TYPE_PERMANENT
+								: -1));
 	int iVFX = StringToInt(p2);
 	float fDur = StringToFloat(p3);
 
-	if ( p2 == "" || iTar < 0 || iTar > 1
-		|| ( iDur != DURATION_TYPE_INSTANT
-			&& iDur != DURATION_TYPE_PERMANENT && iDur != DURATION_TYPE_TEMPORARY )
-		|| iVFX < 0 || iVFX > MAX_VFX_EFFECT_ID
-		|| ( iDur == DURATION_TYPE_TEMPORARY && ( fDur < 0.0 || fDur > 1000000.0 ) ) ) {
+	if (p2 == "" || iTar < 0 || iTar > 1
+			|| (iDur != DURATION_TYPE_INSTANT
+				&& iDur != DURATION_TYPE_PERMANENT && iDur != DURATION_TYPE_TEMPORARY)
+			|| iVFX < 0 || iVFX > MAX_VFX_EFFECT_ID
+			|| (iDur == DURATION_TYPE_TEMPORARY && (fDur < 0.0 || fDur > 1000000.0))) {
 		return SYNTAX; // Syntax("target_type(obj, loc), duration(temp, inst, perm), vfx_id(int) [duration]", 1);
 	}
 
 	float x, y, z;
 
-	if (getopt_opt("x") )
+	if (getopt_opt("x"))
 		x = StringToFloat(getopt_optv("x"));
-	if (getopt_opt("y") )
+
+	if (getopt_opt("y"))
 		y = StringToFloat(getopt_optv("y"));
-	if (getopt_opt("z") )
+
+	if (getopt_opt("z"))
 		z = StringToFloat(getopt_optv("z"));
 
 	object oTarget = GetTarget();
@@ -2924,15 +3403,17 @@ int CommandVFX(object oPC, int iMode) {
 
 	effect e = EffectVisualEffect(iVFX);
 
-	if ( 1 == iTar )
+	if (1 == iTar)
 		DelayCommand(getsleep(), ApplyEffectAtLocation(iDur, e, lTarget, fDur));
+
 	else
 		DelayCommand(getsleep(), ApplyEffectToObject(iDur, e, oTarget, fDur));
 
 	return OK;
 }
 
-int CommandFX(object oPC, int iMode) {
+int CommandFX(object oPC, int iMode)
+{
 	// void ApplyEffectToObject(int nDurationType, effect eEffect, object oTarget, float fDuration=0.0f)
 	// void ApplyEffectAtLocation(int nDurationType, effect eEffect, location lLocation, float fDuration=0.0f)
 
@@ -2944,13 +3425,14 @@ int CommandFX(object oPC, int iMode) {
 
 
 
-int CommandTarget(object oPC, int iMode) {
+int CommandTarget(object oPC, int iMode)
+{
 	int nSlot, nNth, nSlotFrom;
 	string sTag, sAreaTag, sMask, sWhat;
 
 
 
-	if ( GetLocalInt(oPC, "target_use_cache") ) {
+	if (GetLocalInt(oPC, "target_use_cache")) {
 		nNth = GetLocalInt(OBJECT_SELF, "target_n");
 		nSlot = GetLocalInt(OBJECT_SELF, "target_t");
 		nSlotFrom = GetLocalInt(OBJECT_SELF, "target_f");
@@ -2967,57 +3449,66 @@ int CommandTarget(object oPC, int iMode) {
 		nSlot = GetTargetSlot();
 
 		nNth = 1;
-		if (getopt_opt("n") )
+
+		if (getopt_opt("n"))
 			nNth = StringToInt(getopt_optv("n"));
 
 		sTag = "";
-		if (getopt_opt("tag") )
-			sTag =getopt_optv("tag");
+
+		if (getopt_opt("tag"))
+			sTag = getopt_optv("tag");
 
 		sAreaTag = "";
-		if (getopt_opt("area") )
-			sAreaTag =getopt_optv("area");
+
+		if (getopt_opt("area"))
+			sAreaTag = getopt_optv("area");
 
 
 		nSlotFrom = 0;
-		if (getopt_opt("f") )
+
+		if (getopt_opt("f"))
 			nSlotFrom = StringToInt(getopt_optv("f"));
 
 		sMask = "";
-		if (getopt_opt("m") )
-			sMask =getopt_optv("m");
 
-		sWhat =getopt_arg(0);
+		if (getopt_opt("m"))
+			sMask = getopt_optv("m");
+
+		sWhat = getopt_arg(0);
 
 	}
 
 
-	if (getopt_opt("l") ) {
+	if (getopt_opt("l")) {
 		// show all targets!
 		int i = 1;
 		object ot;
 		location lt;
-		for ( i = 1; i <= TARGET_MAX; i++ ) {
+
+		for (i = 1; i <= TARGET_MAX; i++) {
 			ot = GetTarget(i);
 			lt = GetTargetLocation(i);
-			if ( GetIsObjectValid(ot) ) {
+
+			if (GetIsObjectValid(ot)) {
 				SendMessageToPC(oPC, "O[" +
-					IntToString(i) +
-					"] '" +
-					GetName(ot) +
-					"' (OID: " + ObjectToString(ot) + "), ObjectType: " + IntToString(GetObjectType(ot)));
+								IntToString(i) +
+								"] '" +
+								GetName(ot) +
+								"' (OID: " + ObjectToString(ot) + "), ObjectType: " + IntToString(GetObjectType(ot)));
 				SendMessageToPC(oPC, " @ " + LocationToStringPrintable(GetLocation(ot)));
 			}
 
 			string sl = LocationToStringPrintable(lt);
-			if ( sl != "" )
+
+			if (sl != "")
 				SendMessageToPC(oPC, "L[" + IntToString(i) + "] " + sl);
 
 		}
+
 		return OK;
 	}
 
-	if ( sWhat == "x" ) {
+	if (sWhat == "x") {
 		ToPC("Targeting next.");
 
 		// increment nth, set sWhat to
@@ -3030,19 +3521,22 @@ int CommandTarget(object oPC, int iMode) {
 		return CommandTarget(oPC, iMode);
 	}
 
-	if ( sWhat == "v" ) {
+	if (sWhat == "v") {
 		ToPC("Targeting previous.");
 
 		// increment nth, set sWhat to
 		int nNth = GetLocalInt(OBJECT_SELF, "target_n");
 		nNth -= 1;
-		if ( nNth < 1 )
+
+		if (nNth < 1)
 			nNth = 1;
+
 		SetLocalInt(OBJECT_SELF, "target_n", nNth);
 
 		SetLocalInt(OBJECT_SELF, "target_use_cache", 1);
 		// re-run the command with the new values.
 		return CommandTarget(oPC, iMode);
+
 	} else {
 		// save the current options if we are not running next-style
 		SetLocalInt(OBJECT_SELF, "target_n", nNth);
@@ -3054,15 +3548,17 @@ int CommandTarget(object oPC, int iMode) {
 		SetLocalString(OBJECT_SELF, "target_mask", sMask);
 	}
 
-	if (getopt_opt("d") ) {
+	if (getopt_opt("d")) {
 		SetDefaultSlot(StringToInt(sWhat));
 		return OK;
 	}
 
 	object oArea = OBJECT_SELF;
-	if (getopt_opt("area") ) {
+
+	if (getopt_opt("area")) {
 		oArea = GetObjectByTag(sAreaTag);
-		if ( AREA_INVALID == GetIsAreaNatural(oArea) ) {
+
+		if (AREA_INVALID == GetIsAreaNatural(oArea)) {
 			ToPC("--area is not a valid area.");
 			return OK;
 		}
@@ -3071,10 +3567,10 @@ int CommandTarget(object oPC, int iMode) {
 
 	object oFrom = oPC;
 
-	if (getopt_opt("f") )
+	if (getopt_opt("f"))
 		oFrom = GetTarget(nSlotFrom);
 
-	if ( !GetIsObjectValid(oFrom) ) {
+	if (!GetIsObjectValid(oFrom)) {
 		ToPC("-f is not a valid object.");
 		return OK;
 	}
@@ -3084,76 +3580,78 @@ int CommandTarget(object oPC, int iMode) {
 
 
 	// Get Object by tag.  Assumes "all" for object type.
-	if (getopt_opt("tag") ) {
+	if (getopt_opt("tag")) {
 		o = GetObjectByTag(sTag, nNth - 1);
 		sWhat = "skip";
 	}
 
-	if ( sWhat == "a" ) {
+	if (sWhat == "a") {
 		// get nearest everything
 		o = GetNearestObject(OBJECT_TYPE_ALL, oFrom, nNth);
 
-	} else if ( sWhat == "pc" ) {
+	} else if (sWhat == "pc") {
 		// get nearest player
 		o = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC, oFrom, nNth);
 
-	} else if ( sWhat == "n" ) {
+	} else if (sWhat == "n") {
 		// get nearest npc
 		o = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_NOT_PC, oFrom, nNth);
 
-	} else if ( sWhat == "h" ) {
+	} else if (sWhat == "h") {
 		// get nearest HOSTILE character
 		o = GetNearestCreature(CREATURE_TYPE_REPUTATION, REPUTATION_TYPE_ENEMY, oFrom, nNth);
 
 
-	} else if ( sWhat == "p" ) {
+	} else if (sWhat == "p") {
 		// get nearest placie
 		o = GetNearestObject(OBJECT_TYPE_PLACEABLE, oFrom, nNth);
 
-	} else if ( sWhat == "d" ) {
+	} else if (sWhat == "d") {
 		// get nearest door
 		o = GetNearestObject(OBJECT_TYPE_DOOR, oFrom, nNth);
 
-	} else if ( sWhat == "i" ) {
+	} else if (sWhat == "i") {
 		// get nearest item
 		o = GetNearestObject(OBJECT_TYPE_ITEM, oFrom, nNth);
 
-	} else if ( sWhat == "w" ) {
+	} else if (sWhat == "w") {
 		// get nearest waypoint
 		o = GetNearestObject(OBJECT_TYPE_WAYPOINT, oFrom, nNth);
 
-	} else if ( sWhat == "st" ) {
+	} else if (sWhat == "st") {
 		o = GetNearestObject(OBJECT_TYPE_STORE, oFrom, nNth);
 
-	} else if ( sWhat == "t" ) {
+	} else if (sWhat == "t") {
 		o = GetNearestObject(OBJECT_TYPE_TRIGGER, oFrom, nNth);
 
-	} else if ( sWhat == "aoe" ) {
+	} else if (sWhat == "aoe") {
 		o = GetNearestObject(OBJECT_TYPE_ALL, oFrom, nNth);
 
-	} else if ( sWhat == "ar" ) {
+	} else if (sWhat == "ar") {
 		o = GetArea(oPC);
 
-	} else if ( sWhat == "mod" ) {
+	} else if (sWhat == "mod") {
 		o = GetModule();
 
-	} else if ( sWhat == "s" ) {
+	} else if (sWhat == "s") {
 		// our humble self
 		o = oPC;
 
-	} else if ( sWhat == "pci" ) {
+	} else if (sWhat == "pci") {
 		// player by index
 		int i = 1;
 		object op = GetFirstPC();
-		while ( GetIsObjectValid(op) ) {
-			if ( i > nNth )
+
+		while (GetIsObjectValid(op)) {
+			if (i > nNth)
 				break;
-			if ( op == oPC ) {
+
+			if (op == oPC) {
 				op = GetNextPC();
 				continue;
 			}
 
-			if ( i == nNth ) {
+			if (i == nNth) {
 				o = op;
 				break;
 			}
@@ -3162,19 +3660,20 @@ int CommandTarget(object oPC, int iMode) {
 			i++;
 		}
 
-	} else if ( sWhat == "oi" ) {
+	} else if (sWhat == "oi") {
 		int i = 1;
 		object op = GetFirstObjectInArea(oArea);
-		while ( GetIsObjectValid(op) ) {
-			if ( sMask != "" && !TestStringAgainstPattern("**" + sMask + "**", GetTag(op)) ) {
+
+		while (GetIsObjectValid(op)) {
+			if (sMask != "" && !TestStringAgainstPattern("**" + sMask + "**", GetTag(op))) {
 				op = GetNextObjectInArea(oArea);
 				continue;
 			}
 
-			if ( i > nNth )
+			if (i > nNth)
 				break;
 
-			if ( i == nNth ) {
+			if (i == nNth) {
 				o = op;
 				break;
 			}
@@ -3183,7 +3682,7 @@ int CommandTarget(object oPC, int iMode) {
 			i++;
 		}
 
-	} else if ( sWhat == "l" ) {
+	} else if (sWhat == "l") {
 		// get this location
 		SetTargetLocation(GetLocation(oPC), nSlot);
 		return OK;
@@ -3193,8 +3692,9 @@ int CommandTarget(object oPC, int iMode) {
 	}
 
 
-	if ( GetIsObjectValid(o) ) {
+	if (GetIsObjectValid(o)) {
 		SetTarget(o, nSlot);
+
 	} else {
 		SendMessageToPC(oPC, "No object found that matches your selected criteria.");
 		return FAIL;
@@ -3205,26 +3705,29 @@ int CommandTarget(object oPC, int iMode) {
 
 
 
-int CommandKill(object oPC, int iMode) {
+int CommandKill(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
-	if ( !GetIsObjectValid(oTarget) ) {
+
+	if (!GetIsObjectValid(oTarget)) {
 		return NotifyBadTarget();
 	}
 
-	int bUseDestroy =getopt_opt("d");
-	
+	int bUseDestroy = getopt_opt("d");
+
 	if (bUseDestroy && GetIsPC(oTarget)) {
 		ToPC("BAD! Do NOT /kill -d PLAYER CHARACTERS.");
 		return FAIL;
-	}	
+	}
 
 	AssignCommand(oTarget, SetIsDestroyable(TRUE, FALSE, FALSE));
 
-	if ( bUseDestroy ) {
+	if (bUseDestroy) {
 		if (GetObjectType(oTarget) == OBJECT_TYPE_PLACEABLE) {
 			KillInventory(oTarget);
 			KillPlacie(oTarget, 0.0, false);
 		}
+
 		if (GetObjectType(oTarget) == OBJECT_TYPE_CREATURE && p_id(oTarget) > 0)
 			p_delete("critters", oTarget);
 
@@ -3232,114 +3735,123 @@ int CommandKill(object oPC, int iMode) {
 		return OK;
 	}
 
-	switch ( GetObjectType(oTarget) ) {
-		case OBJECT_TYPE_CREATURE:
-			SetImmortal(oTarget, FALSE);
+	switch (GetObjectType(oTarget)) {
+	case OBJECT_TYPE_CREATURE:
+		SetImmortal(oTarget, FALSE);
 
-			// Set Hitpoints to 0. Do NOT kill into death.
-			DelayCommand(getsleep(), AssignCommand(oTarget, ApplyEffectToObject(DURATION_TYPE_INSTANT,
-						EffectDamage(GetCurrentHitPoints(oTarget)), oTarget)));
-			break;
+		// Set Hitpoints to 0. Do NOT kill into death.
+		DelayCommand(getsleep(), AssignCommand(oTarget, ApplyEffectToObject(DURATION_TYPE_INSTANT,
+											   EffectDamage(GetCurrentHitPoints(oTarget)), oTarget)));
+		break;
 
-		case OBJECT_TYPE_TRIGGER:
-		case OBJECT_TYPE_STORE:
-		case OBJECT_TYPE_WAYPOINT:
-		case OBJECT_TYPE_DOOR:
-		case OBJECT_TYPE_ITEM:
-		case OBJECT_TYPE_PLACEABLE:
-			KillInventory(oTarget);
-			KillPlacie(oTarget, 0.0, false);
-			DestroyObject(oTarget, getsleep());
-			break;
-		default:
-			SendMessageToPC(oPC, "Dieses Objekt kann ich nicht, hmm, verarbeiten.");
-			return FAIL;
+	case OBJECT_TYPE_TRIGGER:
+	case OBJECT_TYPE_STORE:
+	case OBJECT_TYPE_WAYPOINT:
+	case OBJECT_TYPE_DOOR:
+	case OBJECT_TYPE_ITEM:
+	case OBJECT_TYPE_PLACEABLE:
+		KillInventory(oTarget);
+		KillPlacie(oTarget, 0.0, false);
+		DestroyObject(oTarget, getsleep());
+		break;
+
+	default:
+		SendMessageToPC(oPC, "Dieses Objekt kann ich nicht, hmm, verarbeiten.");
+		return FAIL;
 	}
 
 	return OK;
 }
 
 
-int CommandGetVar(object oPC, int iMode) {
+int CommandGetVar(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
-	if ( !GetIsObjectValid(oTarget) )
+
+	if (!GetIsObjectValid(oTarget))
 		return NotifyBadTarget();
 
 	string
-	p0 =getopt_arg(0),
-	p1 =getopt_arg(1);
+	p0 = getopt_arg(0),
+	p1 = getopt_arg(1);
 
-/*	if (p0 == "all") {
-		// Dump all variables
-		struct scriptvar ssv;
-		ssv = GetFirstLocalVariable(oTarget);
+	/*	if (p0 == "all") {
+			// Dump all variables
+			struct scriptvar ssv;
+			ssv = GetFirstLocalVariable(oTarget);
 
-		while (GetIsVariableValid(ssv)) {
-			string tdef = "UKN";
+			while (GetIsVariableValid(ssv)) {
+				string tdef = "UKN";
 
-			switch (ssv.Type) {
-				case 1: tdef = "int"; break;
-				case 2: tdef = "flt"; break;
-				case 3: tdef = "str"; break;
-				case 4: tdef = "obj"; break;
-				case 5: tdef = "loc"; break;
+				switch (ssv.Type) {
+					case 1: tdef = "int"; break;
+					case 2: tdef = "flt"; break;
+					case 3: tdef = "str"; break;
+					case 4: tdef = "obj"; break;
+					case 5: tdef = "loc"; break;
+				}
+				ToPC(ssv.Name + " (" + tdef + "): " + ssv.Value);
+
+				ssv = GetNextLocalVariable(oTarget);
 			}
-			ToPC(ssv.Name + " (" + tdef + "): " + ssv.Value);
+			return OK;
+		}*/
 
-			ssv = GetNextLocalVariable(oTarget);
-		}
-		return OK;
-	}*/
+	int nType = (p0 == "int" ? 1 : (p0 == "str" ? 2 : (p0 == "float" ? 3 : -1)));
 
-	int nType = ( p0 == "int" ? 1 : ( p0 == "str" ? 2 : ( p0 == "float" ? 3 : -1 ) ) );
-
-	if ( p1 == "" || nType == -1 )
+	if (p1 == "" || nType == -1)
 		return SYNTAX; // Syntax("type(int, str, float) key");
 
 
 
-	switch ( nType ) {
-		case 1:
-			SendMessageToPC(oPC, "'" + p1 + "' = '" + IntToString(GetLocalInt(oTarget, p1)) + "'");
-			break;
-		case 2:
-			SendMessageToPC(oPC, "'" + p1 + "' = '" + GetLocalString(oTarget, p1) + "'");
-			break;
-		case 3:
-			SendMessageToPC(oPC, "'" + p1 + "' = '" + FloatToString(GetLocalFloat(oTarget, p1)) + "'");
-			break;
+	switch (nType) {
+	case 1:
+		SendMessageToPC(oPC, "'" + p1 + "' = '" + IntToString(GetLocalInt(oTarget, p1)) + "'");
+		break;
+
+	case 2:
+		SendMessageToPC(oPC, "'" + p1 + "' = '" + GetLocalString(oTarget, p1) + "'");
+		break;
+
+	case 3:
+		SendMessageToPC(oPC, "'" + p1 + "' = '" + FloatToString(GetLocalFloat(oTarget, p1)) + "'");
+		break;
 	}
 
 	return OK;
 }
 
-int CommandSetVar(object oPC, int iMode) {
+int CommandSetVar(object oPC, int iMode)
+{
 	string
-	p0 =getopt_arg(0),
-	p1 =getopt_arg(1),
-	p2 =getopt_arg(2);
+	p0 = getopt_arg(0),
+	p1 = getopt_arg(1),
+	p2 = getopt_arg(2);
 
 
-	int nType = ( p0 == "int" ? 1 : ( p0 == "str" ? 2 : ( p0 == "float" ? 3 : -1 ) ) );
+	int nType = (p0 == "int" ? 1 : (p0 == "str" ? 2 : (p0 == "float" ? 3 : -1)));
 
-	if ( p2 == "" || nType == -1 )
+	if (p2 == "" || nType == -1)
 		return SYNTAX; // Syntax("type(int, str, float) key value");
 
 	object oTarget = GetTarget();
-	if ( !GetIsObjectValid(oTarget) )
+
+	if (!GetIsObjectValid(oTarget))
 		return NotifyBadTarget();
 
 
-	switch ( nType ) {
-		case 1:
-			SetLocalInt(oTarget, p1, StringToInt(p2));
-			break;
-		case 2:
-			SetLocalString(oTarget, p1, p2);
-			break;
-		case 3:
-			SetLocalFloat(oTarget, p1, StringToFloat(p2));
-			break;
+	switch (nType) {
+	case 1:
+		SetLocalInt(oTarget, p1, StringToInt(p2));
+		break;
+
+	case 2:
+		SetLocalString(oTarget, p1, p2);
+		break;
+
+	case 3:
+		SetLocalFloat(oTarget, p1, StringToFloat(p2));
+		break;
 	}
 
 	SendMessageToPC(oPC, "Done.");
@@ -3350,25 +3862,27 @@ int CommandSetVar(object oPC, int iMode) {
 
 
 
-int CommandSetAppearance(object oPC, int iMode) {
+int CommandSetAppearance(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
-	if ( !amask(oPC, AMASK_GM) )
+
+	if (!amask(oPC, AMASK_GM))
 		oTarget = oPC;
 
-	if ( !is_creature(oTarget) ) {
+	if (!is_creature(oTarget)) {
 		return NotifyBadTarget();
 	}
 
 	int iOld = GetAppearanceType(oTarget);
 
-	if (getopt_arg(0) == "" ) {
+	if (getopt_arg(0) == "") {
 		SendMessageToPC(oPC, "Aktuelles Erscheinungsbild: " + IntToString(iOld));
 		return OK;
 	}
 
 	int iApp = StringToInt(getopt_arg(0));
 
-	if ( iApp < 0 || iApp > 2048 ) {
+	if (iApp < 0 || iApp > 2048) {
 		SendMessageToPC(oPC, "Ungueltiger Erscheinungswert.");
 		return FAIL;
 	}
@@ -3384,21 +3898,23 @@ int CommandSetAppearance(object oPC, int iMode) {
 
 
 
-int CommandSetPhenotype(object oPC, int iMode) {
+int CommandSetPhenotype(object oPC, int iMode)
+{
 	object oTarget = GetTarget();
-	if ( !is_creature(oTarget) )
+
+	if (!is_creature(oTarget))
 		return NotifyBadTarget();
 
 	int iOld = GetPhenoType(oTarget);
 
-	if (getopt_arg(0) == "" ) {
+	if (getopt_arg(0) == "") {
 		SendMessageToPC(oPC, "Current Phenotype: " + IntToString(iOld));
 		return OK;
 	}
 
 	int iApp = StringToInt(getopt_arg(0));
 
-	if ( iApp < 0 || iApp > 2048 ) {
+	if (iApp < 0 || iApp > 2048) {
 		SendMessageToPC(oPC, "Invalid Phenotype.");
 		return FAIL;
 	}
@@ -3413,10 +3929,11 @@ int CommandSetPhenotype(object oPC, int iMode) {
 }
 
 
-int CommandShowConst(object oPC, int iMode) {
-	string sArg =getopt_arg(0);
+int CommandShowConst(object oPC, int iMode)
+{
+	string sArg = getopt_arg(0);
 
-	if ( sArg == "mode" ) {
+	if (sArg == "mode") {
 		SendMessageToPC(oPC, " CHATMODE_TALK: " + IntToString(CHATMODE_TALK));
 		SendMessageToPC(oPC, " CHATMODE_SHOUT: " + IntToString(CHATMODE_SHOUT));
 		SendMessageToPC(oPC, " CHATMODE_WHISPER: " + IntToString(CHATMODE_WHISPER));
@@ -3426,7 +3943,7 @@ int CommandShowConst(object oPC, int iMode) {
 		SendMessageToPC(oPC, " CHATMODE_DM_MODE: " + IntToString(CHATMODE_DM_MODE));
 	}
 
-	if ( sArg == "object" ) {
+	if (sArg == "object") {
 		SendMessageToPC(oPC, " OBJECT_TYPE_ALL: " + IntToString(OBJECT_TYPE_ALL));
 		SendMessageToPC(oPC, " OBJECT_TYPE_AREA_OF_EFFECT: " + IntToString(OBJECT_TYPE_AREA_OF_EFFECT));
 		SendMessageToPC(oPC, " OBJECT_TYPE_CREATURE: " + IntToString(OBJECT_TYPE_CREATURE));
@@ -3440,7 +3957,7 @@ int CommandShowConst(object oPC, int iMode) {
 		SendMessageToPC(oPC, " OBJECT_TYPE_WAYPOINT: " + IntToString(OBJECT_TYPE_WAYPOINT));
 	}
 
-	if ( sArg == "phenotype" ) {
+	if (sArg == "phenotype") {
 		SendMessageToPC(oPC, " PHENOTYPE_NORMAL: " + IntToString(PHENOTYPE_NORMAL));
 		SendMessageToPC(oPC, " PHENOTYPE_BIG: " + IntToString(PHENOTYPE_BIG));
 		SendMessageToPC(oPC, " PHENOTYPE_CUSTOM1: " + IntToString(PHENOTYPE_CUSTOM1));
@@ -3450,7 +3967,7 @@ int CommandShowConst(object oPC, int iMode) {
 		SendMessageToPC(oPC, " PHENOTYPE_CUSTOM5: " + IntToString(PHENOTYPE_CUSTOM5));
 	}
 
-	if ( sArg == "creature" ) {
+	if (sArg == "creature") {
 		SendMessageToPC(oPC, " CREATURE_PART_BELT: " + IntToString(CREATURE_PART_BELT));
 		SendMessageToPC(oPC, " CREATURE_PART_HEAD: " + IntToString(CREATURE_PART_HEAD));
 		SendMessageToPC(oPC, " CREATURE_PART_LEFT_BICEP: " + IntToString(CREATURE_PART_LEFT_BICEP));
@@ -3472,14 +3989,14 @@ int CommandShowConst(object oPC, int iMode) {
 		SendMessageToPC(oPC, " CREATURE_PART_TORSO: " + IntToString(CREATURE_PART_TORSO));
 	}
 
-	if ( sArg == "tail" ) {
+	if (sArg == "tail") {
 		SendMessageToPC(oPC, " CREATURE_TAIL_TYPE_NONE: " + IntToString(CREATURE_TAIL_TYPE_NONE));
 		SendMessageToPC(oPC, " CREATURE_TAIL_TYPE_BONE: " + IntToString(CREATURE_TAIL_TYPE_BONE));
 		SendMessageToPC(oPC, " CREATURE_TAIL_TYPE_DEVIL: " + IntToString(CREATURE_TAIL_TYPE_DEVIL));
 		SendMessageToPC(oPC, " CREATURE_TAIL_TYPE_LIZARD: " + IntToString(CREATURE_TAIL_TYPE_LIZARD));
 	}
 
-	if ( sArg == "wing" ) {
+	if (sArg == "wing") {
 		SendMessageToPC(oPC, " CREATURE_WING_TYPE_NONE: " + IntToString(CREATURE_WING_TYPE_NONE));
 		SendMessageToPC(oPC, " CREATURE_WING_TYPE_ANGEL: " + IntToString(CREATURE_WING_TYPE_ANGEL));
 		SendMessageToPC(oPC, " CREATURE_WING_TYPE_BAT: " + IntToString(CREATURE_WING_TYPE_BAT));
@@ -3489,7 +4006,7 @@ int CommandShowConst(object oPC, int iMode) {
 		SendMessageToPC(oPC, " CREATURE_WING_TYPE_DRAGON: " + IntToString(CREATURE_WING_TYPE_DRAGON));
 	}
 
-	if ( sArg == "weather" ) {
+	if (sArg == "weather") {
 		SendMessageToPC(oPC, " WEATHER_CLEAR: " + IntToString(WEATHER_CLEAR));
 		SendMessageToPC(oPC, " WEATHER_RAIN: " + IntToString(WEATHER_RAIN));
 		SendMessageToPC(oPC, " WEATHER_SNOW: " + IntToString(WEATHER_SNOW));
@@ -3497,13 +4014,13 @@ int CommandShowConst(object oPC, int iMode) {
 	}
 
 
-	if ( sArg == "polymorph" ) {
+	if (sArg == "polymorph") {
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_ANCIENT_BLUE_DRAGON: " +
-			IntToString(POLYMORPH_TYPE_ANCIENT_BLUE_DRAGON));
+						IntToString(POLYMORPH_TYPE_ANCIENT_BLUE_DRAGON));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_ANCIENT_GREEN_DRAGON: " +
-			IntToString(POLYMORPH_TYPE_ANCIENT_GREEN_DRAGON));
+						IntToString(POLYMORPH_TYPE_ANCIENT_GREEN_DRAGON));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_ANCIENT_RED_DRAGON: " +
-			IntToString(POLYMORPH_TYPE_ANCIENT_RED_DRAGON));
+						IntToString(POLYMORPH_TYPE_ANCIENT_RED_DRAGON));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_BADGER: " + IntToString(POLYMORPH_TYPE_BADGER));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_BALOR: " + IntToString(POLYMORPH_TYPE_BALOR));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_BASILISK: " + IntToString(POLYMORPH_TYPE_BASILISK));
@@ -3511,50 +4028,53 @@ int CommandShowConst(object oPC, int iMode) {
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_BOAR: " + IntToString(POLYMORPH_TYPE_BOAR));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_BROWN_BEAR: " + IntToString(POLYMORPH_TYPE_BROWN_BEAR));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_CELESTIAL_AVENGER: " +
-			IntToString(POLYMORPH_TYPE_CELESTIAL_AVENGER));
+						IntToString(POLYMORPH_TYPE_CELESTIAL_AVENGER));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_CHICKEN: " + IntToString(POLYMORPH_TYPE_CHICKEN));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_COW: " + IntToString(POLYMORPH_TYPE_COW));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_DEATH_SLAAD: " + IntToString(POLYMORPH_TYPE_DEATH_SLAAD));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_DIRE_BADGER: " + IntToString(POLYMORPH_TYPE_DIRE_BADGER));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_DIRE_BOAR: " + IntToString(POLYMORPH_TYPE_DIRE_BOAR));
-		SendMessageToPC(oPC, " POLYMORPH_TYPE_DIRE_BROWN_BEAR: " + IntToString(POLYMORPH_TYPE_DIRE_BROWN_BEAR));
+		SendMessageToPC(oPC, " POLYMORPH_TYPE_DIRE_BROWN_BEAR: " + IntToString(
+							POLYMORPH_TYPE_DIRE_BROWN_BEAR));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_DIRE_PANTHER: " + IntToString(POLYMORPH_TYPE_DIRE_PANTHER));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_DIRE_WOLF: " + IntToString(POLYMORPH_TYPE_DIRE_WOLF));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_DIRETIGER: " + IntToString(POLYMORPH_TYPE_DIRETIGER));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_DOOM_KNIGHT: " + IntToString(POLYMORPH_TYPE_DOOM_KNIGHT));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_DRIDER: " + IntToString(POLYMORPH_TYPE_DRIDER));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_ELDER_AIR_ELEMENTAL: " +
-			IntToString(POLYMORPH_TYPE_ELDER_AIR_ELEMENTAL));
+						IntToString(POLYMORPH_TYPE_ELDER_AIR_ELEMENTAL));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_ELDER_EARTH_ELEMENTAL: " +
-			IntToString(POLYMORPH_TYPE_ELDER_EARTH_ELEMENTAL));
+						IntToString(POLYMORPH_TYPE_ELDER_EARTH_ELEMENTAL));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_ELDER_FIRE_ELEMENTAL: " +
-			IntToString(POLYMORPH_TYPE_ELDER_FIRE_ELEMENTAL));
+						IntToString(POLYMORPH_TYPE_ELDER_FIRE_ELEMENTAL));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_ELDER_WATER_ELEMENTAL: " +
-			IntToString(POLYMORPH_TYPE_ELDER_WATER_ELEMENTAL));
+						IntToString(POLYMORPH_TYPE_ELDER_WATER_ELEMENTAL));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_FEMALE_DROW: " + IntToString(POLYMORPH_TYPE_FEMALE_DROW));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_FIRE_GIANT: " + IntToString(POLYMORPH_TYPE_FIRE_GIANT));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_FROST_GIANT_FEMALE: " +
-			IntToString(POLYMORPH_TYPE_FROST_GIANT_FEMALE));
+						IntToString(POLYMORPH_TYPE_FROST_GIANT_FEMALE));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_FROST_GIANT_MALE: " +
-			IntToString(POLYMORPH_TYPE_FROST_GIANT_MALE));
+						IntToString(POLYMORPH_TYPE_FROST_GIANT_MALE));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_GARGOYLE: " + IntToString(POLYMORPH_TYPE_GARGOYLE));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_GIANT_SPIDER: " + IntToString(POLYMORPH_TYPE_GIANT_SPIDER));
-		SendMessageToPC(oPC, " POLYMORPH_TYPE_GOLEM_AUTOMATON: " + IntToString(POLYMORPH_TYPE_GOLEM_AUTOMATON));
+		SendMessageToPC(oPC, " POLYMORPH_TYPE_GOLEM_AUTOMATON: " + IntToString(
+							POLYMORPH_TYPE_GOLEM_AUTOMATON));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_HARPY: " + IntToString(POLYMORPH_TYPE_HARPY));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_HEURODIS: " + IntToString(POLYMORPH_TYPE_HEURODIS));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_HUGE_AIR_ELEMENTAL: " +
-			IntToString(POLYMORPH_TYPE_HUGE_AIR_ELEMENTAL));
+						IntToString(POLYMORPH_TYPE_HUGE_AIR_ELEMENTAL));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_HUGE_EARTH_ELEMENTAL: " +
-			IntToString(POLYMORPH_TYPE_HUGE_EARTH_ELEMENTAL));
+						IntToString(POLYMORPH_TYPE_HUGE_EARTH_ELEMENTAL));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_HUGE_FIRE_ELEMENTAL: " +
-			IntToString(POLYMORPH_TYPE_HUGE_FIRE_ELEMENTAL));
+						IntToString(POLYMORPH_TYPE_HUGE_FIRE_ELEMENTAL));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_HUGE_WATER_ELEMENTAL: " +
-			IntToString(POLYMORPH_TYPE_HUGE_WATER_ELEMENTAL));
+						IntToString(POLYMORPH_TYPE_HUGE_WATER_ELEMENTAL));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_IMP: " + IntToString(POLYMORPH_TYPE_IMP));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_IRON_GOLEM: " + IntToString(POLYMORPH_TYPE_IRON_GOLEM));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_JNAH_GIANT_FEMAL: " +
-			IntToString(POLYMORPH_TYPE_JNAH_GIANT_FEMAL));
-		SendMessageToPC(oPC, " POLYMORPH_TYPE_JNAH_GIANT_MALE: " + IntToString(POLYMORPH_TYPE_JNAH_GIANT_MALE));
+						IntToString(POLYMORPH_TYPE_JNAH_GIANT_FEMAL));
+		SendMessageToPC(oPC, " POLYMORPH_TYPE_JNAH_GIANT_MALE: " + IntToString(
+							POLYMORPH_TYPE_JNAH_GIANT_MALE));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_MALE_DROW: " + IntToString(POLYMORPH_TYPE_MALE_DROW));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_MANTICORE: " + IntToString(POLYMORPH_TYPE_MANTICORE));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_MEDUSA: " + IntToString(POLYMORPH_TYPE_MEDUSA));
@@ -3572,110 +4092,118 @@ int CommandShowConst(object oPC, int iMode) {
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_SUPER_CHICKEN: " + IntToString(POLYMORPH_TYPE_SUPER_CHICKEN));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_TROLL: " + IntToString(POLYMORPH_TYPE_TROLL));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_UMBER_HULK: " + IntToString(POLYMORPH_TYPE_UMBER_HULK));
-		SendMessageToPC(oPC, " POLYMORPH_TYPE_VAMPIRE_FEMALE: " + IntToString(POLYMORPH_TYPE_VAMPIRE_FEMALE));
+		SendMessageToPC(oPC, " POLYMORPH_TYPE_VAMPIRE_FEMALE: " + IntToString(
+							POLYMORPH_TYPE_VAMPIRE_FEMALE));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_VAMPIRE_MALE: " + IntToString(POLYMORPH_TYPE_VAMPIRE_MALE));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_VROCK: " + IntToString(POLYMORPH_TYPE_VROCK));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_WERECAT: " + IntToString(POLYMORPH_TYPE_WERECAT));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_WERERAT: " + IntToString(POLYMORPH_TYPE_WERERAT));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_WEREWOLF: " + IntToString(POLYMORPH_TYPE_WEREWOLF));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_WOLF: " + IntToString(POLYMORPH_TYPE_WOLF));
-		SendMessageToPC(oPC, " POLYMORPH_TYPE_WYRMLING_BLACK: " + IntToString(POLYMORPH_TYPE_WYRMLING_BLACK));
+		SendMessageToPC(oPC, " POLYMORPH_TYPE_WYRMLING_BLACK: " + IntToString(
+							POLYMORPH_TYPE_WYRMLING_BLACK));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_WYRMLING_BLUE: " + IntToString(POLYMORPH_TYPE_WYRMLING_BLUE));
-		SendMessageToPC(oPC, " POLYMORPH_TYPE_WYRMLING_GREEN: " + IntToString(POLYMORPH_TYPE_WYRMLING_GREEN));
+		SendMessageToPC(oPC, " POLYMORPH_TYPE_WYRMLING_GREEN: " + IntToString(
+							POLYMORPH_TYPE_WYRMLING_GREEN));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_WYRMLING_RED: " + IntToString(POLYMORPH_TYPE_WYRMLING_RED));
-		SendMessageToPC(oPC, " POLYMORPH_TYPE_WYRMLING_WHITE: " + IntToString(POLYMORPH_TYPE_WYRMLING_WHITE));
+		SendMessageToPC(oPC, " POLYMORPH_TYPE_WYRMLING_WHITE: " + IntToString(
+							POLYMORPH_TYPE_WYRMLING_WHITE));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_YUANTI: " + IntToString(POLYMORPH_TYPE_YUANTI));
 		SendMessageToPC(oPC, " POLYMORPH_TYPE_ZOMBIE: " + IntToString(POLYMORPH_TYPE_ZOMBIE));
 	}
 
-	if ( sArg == "tile" ) {
+	if (sArg == "tile") {
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_AQUA: " + IntToString(TILE_MAIN_LIGHT_COLOR_AQUA));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_BLACK: " + IntToString(TILE_MAIN_LIGHT_COLOR_BLACK));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_BLUE: " + IntToString(TILE_MAIN_LIGHT_COLOR_BLUE));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_BRIGHT_WHITE: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_BRIGHT_WHITE));
+						IntToString(TILE_MAIN_LIGHT_COLOR_BRIGHT_WHITE));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_DARK_AQUA: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_DARK_AQUA));
+						IntToString(TILE_MAIN_LIGHT_COLOR_DARK_AQUA));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_DARK_BLUE: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_DARK_BLUE));
+						IntToString(TILE_MAIN_LIGHT_COLOR_DARK_BLUE));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_DARK_GREEN: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_DARK_GREEN));
+						IntToString(TILE_MAIN_LIGHT_COLOR_DARK_GREEN));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_DARK_ORANGE: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_DARK_ORANGE));
+						IntToString(TILE_MAIN_LIGHT_COLOR_DARK_ORANGE));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_DARK_PURPLE: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_DARK_PURPLE));
-		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_DARK_RED: " + IntToString(TILE_MAIN_LIGHT_COLOR_DARK_RED));
+						IntToString(TILE_MAIN_LIGHT_COLOR_DARK_PURPLE));
+		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_DARK_RED: " + IntToString(
+							TILE_MAIN_LIGHT_COLOR_DARK_RED));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_DARK_YELLOW: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_DARK_YELLOW));
+						IntToString(TILE_MAIN_LIGHT_COLOR_DARK_YELLOW));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_DIM_WHITE: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_DIM_WHITE));
+						IntToString(TILE_MAIN_LIGHT_COLOR_DIM_WHITE));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_GREEN: " + IntToString(TILE_MAIN_LIGHT_COLOR_GREEN));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_ORANGE: " + IntToString(TILE_MAIN_LIGHT_COLOR_ORANGE));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_AQUA: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_PALE_AQUA));
+						IntToString(TILE_MAIN_LIGHT_COLOR_PALE_AQUA));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_BLUE: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_PALE_BLUE));
+						IntToString(TILE_MAIN_LIGHT_COLOR_PALE_BLUE));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_DARK_AQUA: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_AQUA));
+						IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_AQUA));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_DARK_BLUE: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_BLUE));
+						IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_BLUE));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_DARK_GREEN: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_GREEN));
+						IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_GREEN));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_DARK_ORANGE: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_ORANGE));
+						IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_ORANGE));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_DARK_PURPLE: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_PURPLE));
+						IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_PURPLE));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_DARK_RED: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_RED));
+						IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_RED));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_DARK_YELLOW: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_YELLOW));
+						IntToString(TILE_MAIN_LIGHT_COLOR_PALE_DARK_YELLOW));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_GREEN: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_PALE_GREEN));
+						IntToString(TILE_MAIN_LIGHT_COLOR_PALE_GREEN));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_ORANGE: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_PALE_ORANGE));
+						IntToString(TILE_MAIN_LIGHT_COLOR_PALE_ORANGE));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_PURPLE: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_PALE_PURPLE));
-		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_RED: " + IntToString(TILE_MAIN_LIGHT_COLOR_PALE_RED));
+						IntToString(TILE_MAIN_LIGHT_COLOR_PALE_PURPLE));
+		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_RED: " + IntToString(
+							TILE_MAIN_LIGHT_COLOR_PALE_RED));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PALE_YELLOW: " +
-			IntToString(TILE_MAIN_LIGHT_COLOR_PALE_YELLOW));
+						IntToString(TILE_MAIN_LIGHT_COLOR_PALE_YELLOW));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_PURPLE: " + IntToString(TILE_MAIN_LIGHT_COLOR_PURPLE));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_RED: " + IntToString(TILE_MAIN_LIGHT_COLOR_RED));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_WHITE: " + IntToString(TILE_MAIN_LIGHT_COLOR_WHITE));
 		SendMessageToPC(oPC, " TILE_MAIN_LIGHT_COLOR_YELLOW: " + IntToString(TILE_MAIN_LIGHT_COLOR_YELLOW));
 		SendMessageToPC(oPC, "--");
-		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_BLACK: " + IntToString(TILE_SOURCE_LIGHT_COLOR_BLACK));
+		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_BLACK: " + IntToString(
+							TILE_SOURCE_LIGHT_COLOR_BLACK));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_AQUA: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_AQUA));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_AQUA));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_BLUE: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_BLUE));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_BLUE));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_DARK_AQUA: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_AQUA));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_AQUA));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_DARK_BLUE: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_BLUE));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_BLUE));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_DARK_GREEN: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_GREEN));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_GREEN));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_DARK_ORANGE: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_ORANGE));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_ORANGE));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_DARK_PURPLE: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_PURPLE));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_PURPLE));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_DARK_RED: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_RED));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_RED));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_DARK_YELLOW: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_YELLOW));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_DARK_YELLOW));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_GREEN: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_GREEN));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_GREEN));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_ORANGE: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_ORANGE));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_ORANGE));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_PURPLE: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_PURPLE));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_PURPLE));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_RED: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_RED));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_RED));
 		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_PALE_YELLOW: " +
-			IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_YELLOW));
-		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_WHITE: " + IntToString(TILE_SOURCE_LIGHT_COLOR_WHITE));
+						IntToString(TILE_SOURCE_LIGHT_COLOR_PALE_YELLOW));
+		SendMessageToPC(oPC, " TILE_SOURCE_LIGHT_COLOR_WHITE: " + IntToString(
+							TILE_SOURCE_LIGHT_COLOR_WHITE));
 	}
 
-	if ( sArg == "disease" ) {
+	if (sArg == "disease") {
 		SendMessageToPC(oPC, " DISEASE_BLINDING_SICKNESS: " + IntToString(DISEASE_BLINDING_SICKNESS));
 		SendMessageToPC(oPC, " DISEASE_BURROW_MAGGOTS: " + IntToString(DISEASE_BURROW_MAGGOTS));
 		SendMessageToPC(oPC, " DISEASE_CACKLE_FEVER: " + IntToString(DISEASE_CACKLE_FEVER));
@@ -3695,7 +4223,7 @@ int CommandShowConst(object oPC, int iMode) {
 		SendMessageToPC(oPC, " DISEASE_ZOMBIE_CREEP: " + IntToString(DISEASE_ZOMBIE_CREEP));
 	}
 
-	if ( sArg == "ability" ) {
+	if (sArg == "ability") {
 		SendMessageToPC(oPC, " ABILITY_STRENGTH: " + IntToString(ABILITY_STRENGTH));
 		SendMessageToPC(oPC, " ABILITY_DEXTERITY: " + IntToString(ABILITY_DEXTERITY));
 		SendMessageToPC(oPC, " ABILITY_CONSTITUTION: " + IntToString(ABILITY_CONSTITUTION));
@@ -3704,7 +4232,7 @@ int CommandShowConst(object oPC, int iMode) {
 		SendMessageToPC(oPC, " ABILITY_CHARISMA: " + IntToString(ABILITY_CHARISMA));
 	}
 
-	if ( sArg == "class" ) {
+	if (sArg == "class") {
 		SendMessageToPC(oPC, " CLASS_TYPE_ABERRATION: " + IntToString(CLASS_TYPE_ABERRATION));
 		SendMessageToPC(oPC, " CLASS_TYPE_ANIMAL: " + IntToString(CLASS_TYPE_ANIMAL));
 		SendMessageToPC(oPC, " CLASS_TYPE_ARCANE_ARCHER: " + IntToString(CLASS_TYPE_ARCANE_ARCHER));
@@ -3746,13 +4274,13 @@ int CommandShowConst(object oPC, int iMode) {
 		SendMessageToPC(oPC, " CLASS_TYPE_WIZARD: " + IntToString(CLASS_TYPE_WIZARD));
 	}
 
-	if ( sArg == "duration" ) {
+	if (sArg == "duration") {
 		SendMessageToPC(oPC, " DURATION_TYPE_INSTANT: " + IntToString(DURATION_TYPE_INSTANT));
 		SendMessageToPC(oPC, " DURATION_TYPE_PERMANENT: " + IntToString(DURATION_TYPE_PERMANENT));
 		SendMessageToPC(oPC, " DURATION_TYPE_TEMPORARY: " + IntToString(DURATION_TYPE_TEMPORARY));
 	}
 
-	if ( sArg == "damage" ) {
+	if (sArg == "damage") {
 		SendMessageToPC(oPC, " DAMAGE_TYPE_ACID: " + IntToString(DAMAGE_TYPE_ACID));
 		SendMessageToPC(oPC, " DAMAGE_TYPE_BLUDGEONING: " + IntToString(DAMAGE_TYPE_BLUDGEONING));
 		SendMessageToPC(oPC, " DAMAGE_TYPE_COLD: " + IntToString(DAMAGE_TYPE_DIVINE));

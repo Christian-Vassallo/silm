@@ -4,13 +4,15 @@ extern("inc_currency")
 
 extern("inc_horse")
 
-int StartingConditional() {
+int StartingConditional()
+{
 	int nMuneeh = CountInventoryMoney(GetPCSpeaker());
 
 	object oStableBoy = OBJECT_SELF;
 
 	float fRent = GetLocalFloat(OBJECT_SELF, "rent_per_day");
-	if ( 0.0 == fRent )
+
+	if (0.0 == fRent)
 		fRent = DAILY_RENT;
 
 

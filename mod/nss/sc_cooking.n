@@ -132,8 +132,13 @@
 // ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 // Suppe
-void soup(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz, int iFisch, int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl, int iMilch, int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
-		  int iWurst) {
+void soup(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz,
+		  int iFisch, int iFleisch,
+		  int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl, int iMilch,
+		  int iSchmalz,
+		  int iSchnaps, int iWaldkraut, int iWasser, int iWein,
+		  int iWurst)
+{
 	string sFailure = "Das Rezept schlug fehl. Ihr müsst das ungenießbare Resultat fortwerfen.";
 
 	//Soups (25%=1, 50%=2, 25%=3)
@@ -150,43 +155,75 @@ void soup(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, 
 	//Gulaschsuppe        : Wasser + Wasser + Fleisch + Fleisch + Knoblauch
 	//Eintopf             : Wasser + Wasser + Waldkraut + Wurst + Felspilz + Knoblauch
 	string sFoodResRef = "";
-	if ( iAnzahl == 5 && iBier == 2 && iBrot == 1 ) {
-		sFoodResRef = "FOOD_COK_101_360";                                                           //Biersuppe
-	} else if ( iAnzahl == 4 && iBrot == 2 ) {
-		sFoodResRef = "FOOD_COK_102_480";                                                           //Brotsuppe
-	} else if ( iAnzahl == 5 && iEi == 3 ) {
-		sFoodResRef = "FOOD_COK_103_480";                                                           //Eiersuppe
-	} else if ( iAnzahl == 5 && iKnoblauch == 2 && iSchmalz == 1 ) {
-		sFoodResRef = "FOOD_COK_104_360";                                                           //Knoblauchsuppe
-	} else if ( iAnzahl == 4 && iMehl == 2 ) {
-		sFoodResRef = "FOOD_COK_105_480";                                                           //Mehlsuppe
-	} else if ( iAnzahl == 5 && iFelspilz == 2 && iSchmalz == 1 ) {
-		sFoodResRef = "FOOD_COK_106_480";                                                           //Pilzragout
-	} else if ( iAnzahl == 5 && iWaldkraut == 3 ) {
-		sFoodResRef = "FOOD_COK_107_480";                                                           //Krautsuppe
-	} else if ( iAnzahl == 4 && iMilch == 1 && iWaldkraut == 1 ) {
-		sFoodResRef = "FOOD_COK_108_360";                                                           //Kräutercreme
-	} else if ( iAnzahl == 5 && iFisch == 2 && iWaldkraut == 1 ) {
-		sFoodResRef = "FOOD_COK_109_520";                                                           //Fischsuppe
-	} else if ( iAnzahl == 5 && iFleisch == 2 && iKnoblauch == 1 ) {
-		sFoodResRef = "FOOD_COK_110_520";                                                           //Gulaschsuppe
-	} else if ( iAnzahl == 6 && iWurst == 1 && iFelspilz == 1 && iKnoblauch == 1 ) {
-		sFoodResRef = "FOOD_COK_111_720";                                                           //Eintopf
+
+	if (iAnzahl == 5 && iBier == 2 && iBrot == 1) {
+		sFoodResRef =
+			"FOOD_COK_101_360";                                                           //Biersuppe
+
+	} else if (iAnzahl == 4 && iBrot == 2) {
+		sFoodResRef =
+			"FOOD_COK_102_480";                                                           //Brotsuppe
+
+	} else if (iAnzahl == 5 && iEi == 3) {
+		sFoodResRef =
+			"FOOD_COK_103_480";                                                           //Eiersuppe
+
+	} else if (iAnzahl == 5 && iKnoblauch == 2 && iSchmalz == 1) {
+		sFoodResRef =
+			"FOOD_COK_104_360";                                                           //Knoblauchsuppe
+
+	} else if (iAnzahl == 4 && iMehl == 2) {
+		sFoodResRef =
+			"FOOD_COK_105_480";                                                           //Mehlsuppe
+
+	} else if (iAnzahl == 5 && iFelspilz == 2 && iSchmalz == 1) {
+		sFoodResRef =
+			"FOOD_COK_106_480";                                                           //Pilzragout
+
+	} else if (iAnzahl == 5 && iWaldkraut == 3) {
+		sFoodResRef =
+			"FOOD_COK_107_480";                                                           //Krautsuppe
+
+	} else if (iAnzahl == 4 && iMilch == 1 && iWaldkraut == 1) {
+		sFoodResRef =
+			"FOOD_COK_108_360";                                                           //Kräutercreme
+
+	} else if (iAnzahl == 5 && iFisch == 2 && iWaldkraut == 1) {
+		sFoodResRef =
+			"FOOD_COK_109_520";                                                           //Fischsuppe
+
+	} else if (iAnzahl == 5 && iFleisch == 2 && iKnoblauch == 1) {
+		sFoodResRef =
+			"FOOD_COK_110_520";                                                           //Gulaschsuppe
+
+	} else if (iAnzahl == 6 && iWurst == 1 && iFelspilz == 1 && iKnoblauch == 1) {
+		sFoodResRef =
+			"FOOD_COK_111_720";                                                           //Eintopf
 	}
-	if ( sFoodResRef == "" ) {
+
+	if (sFoodResRef == "") {
 		FloatingTextStringOnCreature(sFailure, oPC, FALSE);
+
 	} else {
 		int iW20 = d20();
+
 		// Chance auf Anzahl Soup (25%=1, 50%=2, 25%=3)
-		if ( iW20 > 15 ) CreateItemOnObject(sFoodResRef, oOfen);
-		if ( iW20 >  5 ) CreateItemOnObject(sFoodResRef, oOfen);
+		if (iW20 > 15) CreateItemOnObject(sFoodResRef, oOfen);
+
+		if (iW20 >  5) CreateItemOnObject(sFoodResRef, oOfen);
+
 		CreateItemOnObject(sFoodResRef, oOfen);
 		FloatingTextStringOnCreature("Die Suppe ist fertig.", oPC, FALSE);
 	}
 }
 // Kuchen
-void cake(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz, int iFisch, int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl, int iMilch, int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
-		  int iWurst) {
+void cake(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz,
+		  int iFisch, int iFleisch,
+		  int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl, int iMilch,
+		  int iSchmalz,
+		  int iSchnaps, int iWaldkraut, int iWasser, int iWein,
+		  int iWurst)
+{
 	string sFailure = "Das Rezept schlug fehl. Ihr müsst das ungenießbare Resultat fortwerfen.";
 
 	//Cakes (45%=1, 55%=2)
@@ -199,34 +236,56 @@ void cake(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, 
 	//Grumbel's Kuchen    : Milch + Honigmilch + Ei + Ei + Mehl + Wein
 	//Lotti's Kuchen      : Milch + Honigmilch + Ei + Ei + Mehl + Schnaps
 	string sFoodResRef = "";
-	if ( iAnzahl == 5 ) {
+
+	if (iAnzahl == 5) {
 		sFoodResRef = "food_cok_999";                                                          //Kuchen
-	} else if ( iAnzahl == 6 && iHonig == 1 ) {
-		sFoodResRef = "FOOD_COK_201_520";                                                          //Honigkuchen
-	} else if ( iAnzahl == 6 && iEi == 1 ) {
-		sFoodResRef = "FOOD_COK_202_600";                                                          //Marmorkuchen
-	} else if ( iAnzahl == 6 && iMehl == 2 ) {
-		sFoodResRef = "FOOD_COK_203_600";                                                          //Streusselkuchen
-	} else if ( iAnzahl == 6 && iFruechte == 2 ) {
-		sFoodResRef = "FOOD_COK_204_520";                                                          //Fruechtekuchen
-	} else if ( iAnzahl == 6 && iWein == 1 ) {
-		sFoodResRef = "FOOD_COK_205_520";                                                          //Grumbel's Kuchen
-	} else if ( iAnzahl == 6 && iSchnaps == 1 ) {
-		sFoodResRef = "FOOD_COK_206_520";                                                          //Lotti's Kuchen
+
+	} else if (iAnzahl == 6 && iHonig == 1) {
+		sFoodResRef =
+			"FOOD_COK_201_520";                                                          //Honigkuchen
+
+	} else if (iAnzahl == 6 && iEi == 1) {
+		sFoodResRef =
+			"FOOD_COK_202_600";                                                          //Marmorkuchen
+
+	} else if (iAnzahl == 6 && iMehl == 2) {
+		sFoodResRef =
+			"FOOD_COK_203_600";                                                          //Streusselkuchen
+
+	} else if (iAnzahl == 6 && iFruechte == 2) {
+		sFoodResRef =
+			"FOOD_COK_204_520";                                                          //Fruechtekuchen
+
+	} else if (iAnzahl == 6 && iWein == 1) {
+		sFoodResRef =
+			"FOOD_COK_205_520";                                                          //Grumbel's Kuchen
+
+	} else if (iAnzahl == 6 && iSchnaps == 1) {
+		sFoodResRef =
+			"FOOD_COK_206_520";                                                          //Lotti's Kuchen
 	}
-	if ( sFoodResRef == "" ) {
+
+	if (sFoodResRef == "") {
 		FloatingTextStringOnCreature(sFailure, oPC, FALSE);
+
 	} else {
 		int iW20 = d20();
+
 		// Chance auf Anzahl Cakes (45%=1, 55%=2)
-		if ( iW20 > 9 ) CreateItemOnObject(sFoodResRef, oOfen);
+		if (iW20 > 9) CreateItemOnObject(sFoodResRef, oOfen);
+
 		CreateItemOnObject(sFoodResRef, oOfen);
 		FloatingTextStringOnCreature("Der Kuchen ist fertig.", oPC, FALSE);
 	}
 }
 // Pfannkuchen
-void pancakes(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz, int iFisch, int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl, int iMilch, int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
-			  int iWurst) {
+void pancakes(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz,
+			  int iFisch,
+			  int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl,
+			  int iMilch,
+			  int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
+			  int iWurst)
+{
 	string sFailure = "Das Rezept schlug fehl. Ihr müsst das ungenießbare Resultat fortwerfen.";
 
 	//Pancakes (10%=1, 70%=2, 15%=3, 5%=4)
@@ -238,34 +297,57 @@ void pancakes(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int i
 	//Schmalzkringel      : Milch + Ei + Mehl + Schmalz
 	//Kaiserschmarrn      : Milch + Ei + Mehl + Fruechte
 	string sFoodResRef = "";
-	if ( iAnzahl == 3 ) {
-		sFoodResRef = "FOOD_COK_301_360";                                                          //Pfannkuchen
-	} else if ( iAnzahl == 4 && iHonig == 1 ) {
-		sFoodResRef = "FOOD_COK_302_360";                                                          //Pfannkuchen & Sirup
-	} else if ( iAnzahl == 5 && iHonig == 1 && iSchmalz == 1 ) {
-		sFoodResRef = "FOOD_COK_990";                                                          //HinPfannkuchen
-	} else if ( iAnzahl == 4 && iHonigmilch == 1 ) {
-		sFoodResRef = "FOOD_COK_303_360";                                                          //Arme Ritter
-	} else if ( iAnzahl == 4 && iSchmalz == 1 ) {
-		sFoodResRef = "FOOD_COK_304_360";                                                          //Schmalzkringel
-	} else if ( iAnzahl == 4 && iFruechte == 1 ) {
-		sFoodResRef = "FOOD_COK_305_360";                                                          //Kaiserschmarrn
+
+	if (iAnzahl == 3) {
+		sFoodResRef =
+			"FOOD_COK_301_360";                                                          //Pfannkuchen
+
+	} else if (iAnzahl == 4 && iHonig == 1) {
+		sFoodResRef =
+			"FOOD_COK_302_360";                                                          //Pfannkuchen & Sirup
+
+	} else if (iAnzahl == 5 && iHonig == 1 && iSchmalz == 1) {
+		sFoodResRef =
+			"FOOD_COK_990";                                                          //HinPfannkuchen
+
+	} else if (iAnzahl == 4 && iHonigmilch == 1) {
+		sFoodResRef =
+			"FOOD_COK_303_360";                                                          //Arme Ritter
+
+	} else if (iAnzahl == 4 && iSchmalz == 1) {
+		sFoodResRef =
+			"FOOD_COK_304_360";                                                          //Schmalzkringel
+
+	} else if (iAnzahl == 4 && iFruechte == 1) {
+		sFoodResRef =
+			"FOOD_COK_305_360";                                                          //Kaiserschmarrn
 	}
-	if ( sFoodResRef == "" ) {
+
+	if (sFoodResRef == "") {
 		FloatingTextStringOnCreature(sFailure, oPC, FALSE);
+
 	} else {
 		int iW20 = d20();
+
 		// Chance auf Anzahl Pancakes (10%=1, 70%=2, 15%=3, 5%=4)
-		if ( iW20 > 19 ) CreateItemOnObject(sFoodResRef, oOfen);
-		if ( iW20 > 16 ) CreateItemOnObject(sFoodResRef, oOfen);
-		if ( iW20 >  2 ) CreateItemOnObject(sFoodResRef, oOfen);
+		if (iW20 > 19) CreateItemOnObject(sFoodResRef, oOfen);
+
+		if (iW20 > 16) CreateItemOnObject(sFoodResRef, oOfen);
+
+		if (iW20 >  2) CreateItemOnObject(sFoodResRef, oOfen);
+
 		CreateItemOnObject(sFoodResRef, oOfen);
 		FloatingTextStringOnCreature("Die Pfannkuchen sind fertig.", oPC, FALSE);
 	}
 }
 // Plätzchen
-void cookies(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz, int iFisch, int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl, int iMilch, int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
-			 int iWurst) {
+void cookies(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz,
+			 int iFisch,
+			 int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl,
+			 int iMilch,
+			 int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
+			 int iWurst)
+{
 	string sFailure = "Das Rezept schlug fehl. Ihr müsst das ungenießbare Resultat fortwerfen.";
 
 	//Cookies (5%=3, 15%=4, 30%=5, 30%=6, 15%=7, 5%=8)
@@ -277,29 +359,49 @@ void cookies(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iE
 	//Marmeladenplätzchen : Honigmilch + Ei + Mehl + Fruechte
 	//Rumkugeln           : Honigmilch + Ei + Mehl + Schnaps
 	string sFoodResRef = "";
-	if ( iAnzahl == 3 ) {
-		sFoodResRef = "FOOD_COK_401_040";                                                          //Mürbeteig-Kekse
-	} else if ( iAnzahl == 5 && iMilch == 1 && iSchmalz == 1 ) {
-		sFoodResRef = "FOOD_COK_402_040";                                                          //Butterkeks
-	} else if ( iAnzahl == 4 && iHonig == 1 ) {
-		sFoodResRef = "FOOD_COK_403_030";                                                          //Honigsplitter
-	} else if ( iAnzahl == 4 && iWaldkraut == 1 ) {
-		sFoodResRef = "FOOD_COK_404_040";                                                          //Pfefferkuchen
-	} else if ( iAnzahl == 4 && iFruechte == 1 ) {
-		sFoodResRef = "FOOD_COK_405_030";                                                          //Marmeladenplätzchen
-	} else if ( iAnzahl == 4 && iSchnaps == 1 ) {
-		sFoodResRef = "FOOD_COK_406_020";                                                          //Rumkugeln
+
+	if (iAnzahl == 3) {
+		sFoodResRef =
+			"FOOD_COK_401_040";                                                          //Mürbeteig-Kekse
+
+	} else if (iAnzahl == 5 && iMilch == 1 && iSchmalz == 1) {
+		sFoodResRef =
+			"FOOD_COK_402_040";                                                          //Butterkeks
+
+	} else if (iAnzahl == 4 && iHonig == 1) {
+		sFoodResRef =
+			"FOOD_COK_403_030";                                                          //Honigsplitter
+
+	} else if (iAnzahl == 4 && iWaldkraut == 1) {
+		sFoodResRef =
+			"FOOD_COK_404_040";                                                          //Pfefferkuchen
+
+	} else if (iAnzahl == 4 && iFruechte == 1) {
+		sFoodResRef =
+			"FOOD_COK_405_030";                                                          //Marmeladenplätzchen
+
+	} else if (iAnzahl == 4 && iSchnaps == 1) {
+		sFoodResRef =
+			"FOOD_COK_406_020";                                                          //Rumkugeln
 	}
-	if ( sFoodResRef == "" ) {
+
+	if (sFoodResRef == "") {
 		FloatingTextStringOnCreature(sFailure, oPC, FALSE);
+
 	} else {
 		int iW20 = d20();
+
 		// Chance auf Anzahl Cookies (5%=3, 15%=4, 30%=5, 30%=6, 15%=7, 5%=8)
-		if ( iW20 > 19 ) CreateItemOnObject(sFoodResRef, oOfen);
-		if ( iW20 > 16 ) CreateItemOnObject(sFoodResRef, oOfen);
-		if ( iW20 > 10 ) CreateItemOnObject(sFoodResRef, oOfen);
-		if ( iW20 >  4 ) CreateItemOnObject(sFoodResRef, oOfen);
-		if ( iW20 >  1 ) CreateItemOnObject(sFoodResRef, oOfen);
+		if (iW20 > 19) CreateItemOnObject(sFoodResRef, oOfen);
+
+		if (iW20 > 16) CreateItemOnObject(sFoodResRef, oOfen);
+
+		if (iW20 > 10) CreateItemOnObject(sFoodResRef, oOfen);
+
+		if (iW20 >  4) CreateItemOnObject(sFoodResRef, oOfen);
+
+		if (iW20 >  1) CreateItemOnObject(sFoodResRef, oOfen);
+
 		CreateItemOnObject(sFoodResRef, oOfen);
 		CreateItemOnObject(sFoodResRef, oOfen);
 		CreateItemOnObject(sFoodResRef, oOfen);
@@ -307,8 +409,13 @@ void cookies(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iE
 	}
 }
 // Brot
-void bread(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz, int iFisch, int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl, int iMilch, int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
-		   int iWurst) {
+void bread(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz,
+		   int iFisch,
+		   int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl,
+		   int iMilch,
+		   int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
+		   int iWurst)
+{
 	string sFailure = "Das Rezept schlug fehl. Ihr müsst das ungenießbare Resultat fortwerfen.";
 
 	//Bread (35%=1, 60%=2, 5%=3)
@@ -322,38 +429,63 @@ void bread(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi,
 	//Eiserne Ration      : Wasser + Mehl + Schmalz + Schmalz
 	//Gewürzbrot          : Wasser + Mehl + Waldkraut
 	string sFoodResRef = "";
-	if ( iAnzahl == 3 && iMehl == 2 ) {
+
+	if (iAnzahl == 3 && iMehl == 2) {
 		sFoodResRef = "FOOD_COK_991";                                                                 //Brot
-	} else if ( iAnzahl == 3 && iKnoblauch == 1 ) {
-		sFoodResRef = "FOOD_COK_501_720";                                                                 //Knoblauchbrot
-	} else if ( iAnzahl == 3 && iBier == 1 ) {
-		sFoodResRef = "FOOD_COK_502_840";                                                                 //Zwergenbrot
-	} else if ( iAnzahl == 3 && iHonig == 1 ) {
-		sFoodResRef = "FOOD_COK_503_640";                                                                 //Honigbrot
-	} else if ( iAnzahl == 3 && iSchmalz == 1 ) {
-		sFoodResRef = "FOOD_COK_504_840";                                                                 //Schmalzbrot
-	} else if ( iAnzahl == 4 && iSchmalz == 1 && iWurst == 1 ) {
-		sFoodResRef = "FOOD_COK_992_480";                                                                 //Hafenarbeiterzeche
-	} else if ( iAnzahl == 4 && iSchmalz == 2 ) {
-		sFoodResRef = "FOOD_COK_1001";                                                                    //Eiserne Ration
-	} else if ( iAnzahl == 3 && iWaldkraut == 1 ) {
-		sFoodResRef = "FOOD_COK_505_840";                                                                 //Gewürzbrot
+
+	} else if (iAnzahl == 3 && iKnoblauch == 1) {
+		sFoodResRef =
+			"FOOD_COK_501_720";                                                                 //Knoblauchbrot
+
+	} else if (iAnzahl == 3 && iBier == 1) {
+		sFoodResRef =
+			"FOOD_COK_502_840";                                                                 //Zwergenbrot
+
+	} else if (iAnzahl == 3 && iHonig == 1) {
+		sFoodResRef =
+			"FOOD_COK_503_640";                                                                 //Honigbrot
+
+	} else if (iAnzahl == 3 && iSchmalz == 1) {
+		sFoodResRef =
+			"FOOD_COK_504_840";                                                                 //Schmalzbrot
+
+	} else if (iAnzahl == 4 && iSchmalz == 1 && iWurst == 1) {
+		sFoodResRef =
+			"FOOD_COK_992_480";                                                                 //Hafenarbeiterzeche
+
+	} else if (iAnzahl == 4 && iSchmalz == 2) {
+		sFoodResRef =
+			"FOOD_COK_1001";                                                                    //Eiserne Ration
+
+	} else if (iAnzahl == 3 && iWaldkraut == 1) {
+		sFoodResRef =
+			"FOOD_COK_505_840";                                                                 //Gewürzbrot
 	}
-	if ( sFoodResRef == "" ) {
+
+	if (sFoodResRef == "") {
 		FloatingTextStringOnCreature(sFailure, oPC, FALSE);
+
 	} else {
 		int iW20 = d20();
+
 		// Chance auf Anzahl Bread (35%=1, 60%=2, 5%=3)
-		if ( iW20 > 19 ) CreateItemOnObject(sFoodResRef, oOfen);
-		if ( iW20 >  7 ) CreateItemOnObject(sFoodResRef, oOfen);
+		if (iW20 > 19) CreateItemOnObject(sFoodResRef, oOfen);
+
+		if (iW20 >  7) CreateItemOnObject(sFoodResRef, oOfen);
+
 		CreateItemOnObject(sFoodResRef, oOfen);
 		FloatingTextStringOnCreature("Das Brot ist fertig.", oPC, FALSE);
 	}
 
 }
 // Einfaches Essen
-void eatsimple(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz, int iFisch, int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl, int iMilch, int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
-			   int iWurst) {
+void eatsimple(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz,
+			   int iFisch,
+			   int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl,
+			   int iMilch,
+			   int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
+			   int iWurst)
+{
 	string sFailure = "Das Rezept schlug fehl. Ihr müsst das ungenießbare Resultat fortwerfen.";
 
 	//EatSimple (100%=1)
@@ -365,29 +497,48 @@ void eatsimple(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int 
 	//Käse                  : Milch + Milch
 	//Süsse Fruechte        : Honig + Fruechte
 	string sFoodResRef = "";
-	if ( iAnzahl == 1 && iFisch == 1 ) {
-		sFoodResRef = "FOOD_COK_998";                                                                         //Gebratener Fisch
-	} else if ( iAnzahl == 1 && iFleisch == 1 ) {
-		sFoodResRef = "FOOD_COK_002";                                                                         //Gebratenes Fleisch
-	} else if ( iAnzahl == 1 && iEi == 1 ) {
-		sFoodResRef = "FOOD_COK_996";                                                                         //Gebratenes Ei
-	} else if ( iAnzahl == 2 && iHonig == 1 && iMilch == 1 ) {
-		sFoodResRef = "FOOD_COK_1000";                                                                        //Honigmilch
-	} else if ( iAnzahl == 2 && iMilch == 2 ) {
-		sFoodResRef = "FOOD_COK_996_240";                                                                     //Käse
-	} else if ( iAnzahl == 2 && iHonig == 1 && iFruechte == 1 ) {
-		sFoodResRef = "FOOD_COK_987_480";                                                                     //Süsse Fruechte
+
+	if (iAnzahl == 1 && iFisch == 1) {
+		sFoodResRef =
+			"FOOD_COK_998";                                                                         //Gebratener Fisch
+
+	} else if (iAnzahl == 1 && iFleisch == 1) {
+		sFoodResRef =
+			"FOOD_COK_002";                                                                         //Gebratenes Fleisch
+
+	} else if (iAnzahl == 1 && iEi == 1) {
+		sFoodResRef =
+			"FOOD_COK_996";                                                                         //Gebratenes Ei
+
+	} else if (iAnzahl == 2 && iHonig == 1 && iMilch == 1) {
+		sFoodResRef =
+			"FOOD_COK_1000";                                                                        //Honigmilch
+
+	} else if (iAnzahl == 2 && iMilch == 2) {
+		sFoodResRef =
+			"FOOD_COK_996_240";                                                                     //Käse
+
+	} else if (iAnzahl == 2 && iHonig == 1 && iFruechte == 1) {
+		sFoodResRef =
+			"FOOD_COK_987_480";                                                                     //Süsse Fruechte
 	}
-	if ( sFoodResRef == "" ) {
+
+	if (sFoodResRef == "") {
 		FloatingTextStringOnCreature(sFailure, oPC, FALSE);
+
 	} else {
 		CreateItemOnObject(sFoodResRef, oOfen);
 		FloatingTextStringOnCreature("Essen ist fertig.", oPC, FALSE);
 	}
 }
 // Kleine Gerichte
-void eatsmall(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz, int iFisch, int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl, int iMilch, int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
-			  int iWurst) {
+void eatsmall(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz,
+			  int iFisch,
+			  int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl,
+			  int iMilch,
+			  int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
+			  int iWurst)
+{
 	string sFailure = "Das Rezept schlug fehl. Ihr müsst das ungenießbare Resultat fortwerfen.";
 
 	//EatSmall (30%=1, 60%=2, 10%=3)
@@ -399,33 +550,55 @@ void eatsmall(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int i
 	//Käsespätzle         : Ei + Mehl + Wasser + Käse
 	//Überbackener Käse   : Ei + Käse + Knoblauch + Waldkraut
 	string sFoodResRef = "";
-	if ( iAnzahl == 4 && iEi == 3 && iSchmalz == 1 ) {
-		sFoodResRef = "FOOD_COK_601_360";                                                                     //Rührei
-	} else if ( iAnzahl == 5 && iEi == 3 && iSchmalz == 1 && iFleisch == 1 ) {
-		sFoodResRef = "FOOD_COK_602_480";                                                                     //Rührei mit Speck
-	} else if ( iAnzahl == 3 && iEi == 3 ) {
-		sFoodResRef = "FOOD_COK_603_360";                                                                     //Spiegelei
-	} else if ( iAnzahl == 3 && iEi == 1 && iMehl == 1 && iWasser == 1 ) {
-		sFoodResRef = "FOOD_COK_604_480";                                                                     //Spätzle
-	} else if ( iAnzahl == 4 && iEi == 1 && iMehl == 1 && iWasser == 1 && iKaese == 1 ) {
-		sFoodResRef = "FOOD_COK_604_480";                                                                     //Käsespätzle
-	} else if ( iAnzahl == 4 && iKaese == 1 && iKnoblauch == 1 && iWaldkraut == 1 ) {
-		sFoodResRef = "FOOD_COK_604_360";                                                                     //Überbackener Käse
+
+	if (iAnzahl == 4 && iEi == 3 && iSchmalz == 1) {
+		sFoodResRef =
+			"FOOD_COK_601_360";                                                                     //Rührei
+
+	} else if (iAnzahl == 5 && iEi == 3 && iSchmalz == 1 && iFleisch == 1) {
+		sFoodResRef =
+			"FOOD_COK_602_480";                                                                     //Rührei mit Speck
+
+	} else if (iAnzahl == 3 && iEi == 3) {
+		sFoodResRef =
+			"FOOD_COK_603_360";                                                                     //Spiegelei
+
+	} else if (iAnzahl == 3 && iEi == 1 && iMehl == 1 && iWasser == 1) {
+		sFoodResRef =
+			"FOOD_COK_604_480";                                                                     //Spätzle
+
+	} else if (iAnzahl == 4 && iEi == 1 && iMehl == 1 && iWasser == 1 && iKaese == 1) {
+		sFoodResRef =
+			"FOOD_COK_604_480";                                                                     //Käsespätzle
+
+	} else if (iAnzahl == 4 && iKaese == 1 && iKnoblauch == 1 && iWaldkraut == 1) {
+		sFoodResRef =
+			"FOOD_COK_604_360";                                                                     //Überbackener Käse
 	}
-	if ( sFoodResRef == "" ) {
+
+	if (sFoodResRef == "") {
 		FloatingTextStringOnCreature(sFailure, oPC, FALSE);
+
 	} else {
 		int iW20 = d20();
+
 		// Chance auf Anzahl EatSmall (30%=1, 60%=2, 10%=3)
-		if ( iW20 > 18 ) CreateItemOnObject(sFoodResRef, oOfen);
-		if ( iW20 >  6 ) CreateItemOnObject(sFoodResRef, oOfen);
+		if (iW20 > 18) CreateItemOnObject(sFoodResRef, oOfen);
+
+		if (iW20 >  6) CreateItemOnObject(sFoodResRef, oOfen);
+
 		CreateItemOnObject(sFoodResRef, oOfen);
 		FloatingTextStringOnCreature("Essen ist fertig.", oPC, FALSE);
 	}
 }
 // Mittlere Gerichte
-void eatmedium(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz, int iFisch, int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl, int iMilch, int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
-			   int iWurst) {
+void eatmedium(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int iEi, int iFelspilz,
+			   int iFisch,
+			   int iFleisch, int iFruechte, int iHonigmilch, int iHonig, int iKaese, int iKnoblauch, int iMehl,
+			   int iMilch,
+			   int iSchmalz, int iSchnaps, int iWaldkraut, int iWasser, int iWein,
+			   int iWurst)
+{
 	string sFailure = "Das Rezept schlug fehl. Ihr müsst das ungenießbare Resultat fortwerfen.";
 
 	//EatMedium (55%=1, 40%=2, 5%=3)
@@ -444,40 +617,71 @@ void eatmedium(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int 
 	//Hax'n mit Kraut     : Fleisch + Fleisch + Waldkraut + Waldkraut
 	//Wurst               : Fleisch + Knoblauch + Waldkraut
 	string sFoodResRef = "";
-	if ( iAnzahl == 3 && iMehl == 1 && iEi == 1 && iFisch == 1 ) {
-		sFoodResRef = "FOOD_COK_701_640";                                                                     //Panierter Karpfen
-	} else if ( iAnzahl == 3 && iFisch == 1 && iWasser == 1 && iWaldkraut == 1 ) {
-		sFoodResRef = "FOOD_COK_702_640";                                                                     //Forelle blau
-	} else if ( iAnzahl == 3 && iMehl == 1 && iEi == 1 && iFleisch == 1 ) {
-		sFoodResRef = "FOOD_COK_703_640";                                                                     //Paniertes Schnitzel
-	} else if ( iAnzahl == 3 && iEi == 2 && iFisch == 1 ) {
-		sFoodResRef = "FOOD_COK_704_640";                                                                     //Überbackene Scholle
-	} else if ( iAnzahl == 3 && iEi == 2 && iFleisch == 1 ) {
-		sFoodResRef = "FOOD_COK_705_640";                                                                     //Überbackenes Fleisch
-	} else if ( iAnzahl == 3 && iFleisch == 1 && iWasser == 1 && iFelspilz == 1 ) {
-		sFoodResRef = "FOOD_COK_706_840";                                                                     //Wildschweinragout
-	} else if ( iAnzahl == 4 && iFleisch == 1 && iMilch == 1 && iFelspilz == 1 && iFruechte == 1 ) {
-		sFoodResRef = "FOOD_COK_707_840";                                                                     //Hirschragout in Rahm
-	} else if ( iAnzahl == 3 && iFisch == 1 && iWein == 1 && iWaldkraut == 1 ) {
-		sFoodResRef = "FOOD_COK_708_640";                                                                     //Fisch in Weißwein
-	} else if ( iAnzahl == 3 && iFleisch == 1 && iWein == 1 && iWaldkraut == 1 ) {
-		sFoodResRef = "FOOD_COK_709_720";                                                                     //Rehrücken in Rotwein
-	} else if ( iAnzahl == 3 && iFisch == 1 && iMilch == 1 && iWaldkraut == 1 ) {
-		sFoodResRef = "FOOD_COK_710_640";                                                                     //Lachs & Kräutersosse
-	} else if ( iAnzahl == 3 && iFleisch == 1 && iWaldkraut == 2 ) {
-		sFoodResRef = "FOOD_COK_711_720";                                                                     //Krautwickel
-	} else if ( iAnzahl == 4 && iFleisch == 2 && iWaldkraut == 2 ) {
-		sFoodResRef = "FOOD_COK_712_960";                                                                     //Hax'n mit Kraut
-	} else if ( iAnzahl == 3 && iFleisch == 1 && iKnoblauch == 1 && iWaldkraut == 1 ) {
-		sFoodResRef = "FOOD_COK_993_480";                                                                     //Wurst
+
+	if (iAnzahl == 3 && iMehl == 1 && iEi == 1 && iFisch == 1) {
+		sFoodResRef =
+			"FOOD_COK_701_640";                                                                     //Panierter Karpfen
+
+	} else if (iAnzahl == 3 && iFisch == 1 && iWasser == 1 && iWaldkraut == 1) {
+		sFoodResRef =
+			"FOOD_COK_702_640";                                                                     //Forelle blau
+
+	} else if (iAnzahl == 3 && iMehl == 1 && iEi == 1 && iFleisch == 1) {
+		sFoodResRef =
+			"FOOD_COK_703_640";                                                                     //Paniertes Schnitzel
+
+	} else if (iAnzahl == 3 && iEi == 2 && iFisch == 1) {
+		sFoodResRef =
+			"FOOD_COK_704_640";                                                                     //Überbackene Scholle
+
+	} else if (iAnzahl == 3 && iEi == 2 && iFleisch == 1) {
+		sFoodResRef =
+			"FOOD_COK_705_640";                                                                     //Überbackenes Fleisch
+
+	} else if (iAnzahl == 3 && iFleisch == 1 && iWasser == 1 && iFelspilz == 1) {
+		sFoodResRef =
+			"FOOD_COK_706_840";                                                                     //Wildschweinragout
+
+	} else if (iAnzahl == 4 && iFleisch == 1 && iMilch == 1 && iFelspilz == 1 && iFruechte == 1) {
+		sFoodResRef =
+			"FOOD_COK_707_840";                                                                     //Hirschragout in Rahm
+
+	} else if (iAnzahl == 3 && iFisch == 1 && iWein == 1 && iWaldkraut == 1) {
+		sFoodResRef =
+			"FOOD_COK_708_640";                                                                     //Fisch in Weißwein
+
+	} else if (iAnzahl == 3 && iFleisch == 1 && iWein == 1 && iWaldkraut == 1) {
+		sFoodResRef =
+			"FOOD_COK_709_720";                                                                     //Rehrücken in Rotwein
+
+	} else if (iAnzahl == 3 && iFisch == 1 && iMilch == 1 && iWaldkraut == 1) {
+		sFoodResRef =
+			"FOOD_COK_710_640";                                                                     //Lachs & Kräutersosse
+
+	} else if (iAnzahl == 3 && iFleisch == 1 && iWaldkraut == 2) {
+		sFoodResRef =
+			"FOOD_COK_711_720";                                                                     //Krautwickel
+
+	} else if (iAnzahl == 4 && iFleisch == 2 && iWaldkraut == 2) {
+		sFoodResRef =
+			"FOOD_COK_712_960";                                                                     //Hax'n mit Kraut
+
+	} else if (iAnzahl == 3 && iFleisch == 1 && iKnoblauch == 1 && iWaldkraut == 1) {
+		sFoodResRef =
+			"FOOD_COK_993_480";                                                                     //Wurst
 	}
-	if ( sFoodResRef == "" ) {
+
+	if (sFoodResRef == "") {
 		FloatingTextStringOnCreature(sFailure, oPC, FALSE);
+
 	} else {
 		int iW20 = d20();
+
 		// Chance auf Anzahl EatMedium (55%=1, 40%=2, 5%=3)
-		if ( iW20 > 19 ) CreateItemOnObject(sFoodResRef, oOfen);
-		if ( iW20 > 11 ) CreateItemOnObject(sFoodResRef, oOfen);
+		if (iW20 > 19) CreateItemOnObject(sFoodResRef, oOfen);
+
+		if (iW20 > 11) CreateItemOnObject(sFoodResRef, oOfen);
+
 		CreateItemOnObject(sFoodResRef, oOfen);
 		FloatingTextStringOnCreature("Essen ist fertig.", oPC, FALSE);
 	}
@@ -486,7 +690,8 @@ void eatmedium(object oPC, object oOfen, int iAnzahl, int iBier, int iBrot, int 
 
 
 //Ofen während des Backvorgangs abschliessen und Feueranimation abspielen
-void LockOfen(object oOfen) {
+void LockOfen(object oOfen)
+{
 	vector vCooking = GetPosition(oOfen); //+ (AngleToVector(GetFacing(oOfen)) * 1.4f);
 	location lCooking = Location(GetArea(oOfen), vCooking, GetFacing(oOfen));
 	object oFlame = CreateObject(OBJECT_TYPE_PLACEABLE, "lc_flame", lCooking);
@@ -499,7 +704,8 @@ void LockOfen(object oOfen) {
 
 
 //Ofen nach dem Backvorgang wieder aufschliessen und Feueranimation stoppen
-void UnlockOfen(object oOfen) {
+void UnlockOfen(object oOfen)
+{
 	SetLocked(oOfen, FALSE);
 	DestroyObject(GetLocalObject(oOfen, "lc_flame"));
 	DestroyObject(GetLocalObject(oOfen, "lc_smoke"));
@@ -507,7 +713,8 @@ void UnlockOfen(object oOfen) {
 
 
 //Hauptfunktion
-void main() {
+void main()
+{
 	ClearAllActions();
 	//Variablen deklarieren
 	object oOfen = OBJECT_SELF;
@@ -546,57 +753,76 @@ void main() {
 
 
 	//Gegenstände im Ofen identifizieren und zählen
-	while ( GetIsObjectValid(oZutat) ) {
+	while (GetIsObjectValid(oZutat)) {
 		string sTag = GetTag(oZutat);
 
-		if (       sTag == "NW_IT_MPOTION021"
-			|| sTag == "FOOD_LIQ_994_060" ) {
+		if (sTag == "NW_IT_MPOTION021"
+				|| sTag == "FOOD_LIQ_994_060") {
 			iBier++;
-		} else if ( sTag == "FOOD_COK_991_960" ) {
+
+		} else if (sTag == "FOOD_COK_991_960") {
 			iBrot++;
-		} else if ( sTag == "FOOD_RAW_996_120" ) {
+
+		} else if (sTag == "FOOD_RAW_996_120") {
 			iEi++;
-		} else if ( sTag == "Felspilz" ) {
+
+		} else if (sTag == "Felspilz") {
 			iFelspilz++;
-		} else if ( sTag == "FOOD_RAW_998_480" ) {
+
+		} else if (sTag == "FOOD_RAW_998_480") {
 			iFisch++;
-		} else if ( sTag == "FOOD_RAW_002_480" ) {
+
+		} else if (sTag == "FOOD_RAW_002_480") {
 			iFleisch++;
-		} else if ( sTag == "FOOD_COK_003_480" ) {
+
+		} else if (sTag == "FOOD_COK_003_480") {
 			iFruechte++;
-		} else if ( sTag == "FOOD_LIQ_x00_060" ) {
+
+		} else if (sTag == "FOOD_LIQ_x00_060") {
 			iHonigmilch++;
 			//Gibt eine leere Milchflasche ins PC Inv zurück
 			CreateItemOnObject("Milkbottle_empty", oPC);
-		} else if ( sTag == "FOOD_COK_990_020" ) {
+
+		} else if (sTag == "FOOD_COK_990_020") {
 			iHonig++;
-		} else if ( sTag == "FOOD_COK_996_600" ) {
+
+		} else if (sTag == "FOOD_COK_996_600") {
 			iKaese++;
-		} else if ( sTag == "Knoblauchknolle" ) {
+
+		} else if (sTag == "Knoblauchknolle") {
 			iKnoblauch++;
-		} else if ( sTag == "Mehl" ) {
+
+		} else if (sTag == "Mehl") {
 			iMehl++;
-		} else if ( sTag == "FOOD_LIQ_997_060" ) {
+
+		} else if (sTag == "FOOD_LIQ_997_060") {
 			iMilch++;
 			//Gibt eine leere Milchflasche ins PC Inv zurück
 			CreateItemOnObject("Milkbottle_empty", oPC);
-		} else if ( sTag == "FOOD_RAW_001_120"
-				   || sTag == "Goblinfett" ) {
+
+		} else if (sTag == "FOOD_RAW_001_120"
+				   || sTag == "Goblinfett") {
 			iSchmalz++;
-		} else if ( sTag == "NW_IT_MPOTION022" ) {
+
+		} else if (sTag == "NW_IT_MPOTION022") {
 			iSchnaps++;
-		} else if ( sTag == "Waldkraut" ) {
+
+		} else if (sTag == "Waldkraut") {
 			iWaldkraut++;
-		} else if ( sTag == "FOOD_LIQ_000_060" ) {
+
+		} else if (sTag == "FOOD_LIQ_000_060") {
 			iWasser++;
 			//Gibt eine leere Wasserflasche ins PC Inv zurück
 			CreateItemOnObject("waterbot_empty", oPC);
-		} else if ( sTag == "NW_IT_MPOTION023"
-				   || sTag == "FOOD_LIQ_995_060" ) {
+
+		} else if (sTag == "NW_IT_MPOTION023"
+				   || sTag == "FOOD_LIQ_995_060") {
 			iWein++;
-		} else if ( sTag == "FOOD_COK_993_480" ) {
+
+		} else if (sTag == "FOOD_COK_993_480") {
 			iWurst++;
 		}
+
 		iAnzahl += 1;
 
 		// Jeder Gegestand, der in den Ofen gelegt wird, wird zerstört, unabhängig davon,
@@ -606,7 +832,7 @@ void main() {
 	}
 
 	//Wenn etwas reingelegt wurde, dann fange an zu kochen/backen
-	if ( iAnzahl > 0 ) {
+	if (iAnzahl > 0) {
 		// Kochzeiten und Kochart-Emotes festlegen
 		float fEatSmall  = 30.0;
 		string sEatSmall  = "Ihr gebt die Zutaten in die Pfanne und bratet sie kurz an.";
@@ -634,7 +860,7 @@ void main() {
 
 
 		// Wenn 2x Wasser verwendet wurde ist es eine Suppe (Kochstelle)
-		if ( iWasser == 2 && iCookPlace & 1 ) {
+		if (iWasser == 2 && iCookPlace & 1) {
 			//Soups (25%=1, 50%=2, 25%=3)
 			//===========================
 			//Biersuppe           : Wasser + Wasser + Bier + Bier + Brot
@@ -654,13 +880,13 @@ void main() {
 			LockOfen(oOfen);
 			//Backenfunktion aufrufen
 			DelayCommand(fSoup, soup(oPC, oOfen, iAnzahl, iBier, iBrot, iEi, iFelspilz, iFisch, iFleisch,
-					iFruechte, iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz, iSchnaps,
-					iWaldkraut,
-					iWasser, iWein, iWurst));
+									 iFruechte, iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz, iSchnaps,
+									 iWaldkraut,
+									 iWasser, iWein, iWurst));
 			//Ofen wieder aufschliessen
 			DelayCommand(fSoup - 2, UnlockOfen(oOfen));
 
-		} else if ( iMilch == 1 && iHonigmilch == 1 && iEi >= 2 && iMehl >= 1 && iCookPlace & 2 ) {
+		} else if (iMilch == 1 && iHonigmilch == 1 && iEi >= 2 && iMehl >= 1 && iCookPlace & 2) {
 			// Wenn 1x Milch, 1x Honigmilch, min. 2x Ei und mindestens 1x Mehl, dann ist es ein Kuchen (Backofen)
 
 			//Cakes (45%=1, 55%=2)
@@ -678,12 +904,13 @@ void main() {
 			LockOfen(oOfen);
 			//Backenfunktion aufrufen
 			DelayCommand(fCake, cake(oPC, oOfen, iAnzahl, iBier, iBrot, iEi, iFelspilz, iFisch, iFleisch,
-					iFruechte,
-					iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
-					iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
+									 iFruechte,
+									 iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
+									 iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
 			//Ofen wieder aufschliessen
 			DelayCommand(fCake - 2, UnlockOfen(oOfen));
-		} else if ( iMilch == 1 && iEi == 1 && iMehl == 1 && ( iCookPlace & 2 || iCookPlace & 1 ) ) {
+
+		} else if (iMilch == 1 && iEi == 1 && iMehl == 1 && (iCookPlace & 2 || iCookPlace & 1)) {
 			// Wenn 1x Milch, 1x Ei und 1x Mehl, dann ist es ein Pfannkuchen (Kochstelle & Backofen)
 
 			//Pancakes (10%=1, 70%=2, 15%=3, 5%=4)
@@ -700,12 +927,13 @@ void main() {
 			LockOfen(oOfen);
 			//Backenfunktion aufrufen
 			DelayCommand(fPancakes, pancakes(oPC, oOfen, iAnzahl, iBier, iBrot, iEi, iFelspilz, iFisch,
-					iFleisch, iFruechte,
-					iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
-					iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
+											 iFleisch, iFruechte,
+											 iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
+											 iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
 			//Ofen wieder aufschliessen
 			DelayCommand(fPancakes - 2, UnlockOfen(oOfen));
-		} else if ( iHonigmilch == 1 && iEi == 1 && iMehl == 1 && iCookPlace & 2 ) {
+
+		} else if (iHonigmilch == 1 && iEi == 1 && iMehl == 1 && iCookPlace & 2) {
 			// Wenn 1x Honigmilch, 1x Ei und 1x Mehl, dann ist es ein Plätzchen (Backofen)
 
 			//Cookies (5%=3, 15%=4, 30%=5, 30%=6, 15%=7, 5%=8)
@@ -722,13 +950,13 @@ void main() {
 			LockOfen(oOfen);
 			//Backenfunktion aufrufen
 			DelayCommand(fCookies, cookies(oPC, oOfen, iAnzahl, iBier, iBrot, iEi, iFelspilz, iFisch,
-					iFleisch, iFruechte,
-					iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
-					iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
+										   iFleisch, iFruechte,
+										   iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
+										   iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
 			//Ofen wieder aufschliessen
 			DelayCommand(fCookies - 2, UnlockOfen(oOfen));
 
-		} else if ( iWasser == 1 && iMehl >= 1 && iCookPlace & 2 ) {
+		} else if (iWasser == 1 && iMehl >= 1 && iCookPlace & 2) {
 			// Wenn 1x Wasser und min. 1x Mehl, dann ist es ein Brot (Backofen)
 
 			//Bread (35%=1, 60%=2, 5%=3)
@@ -747,12 +975,13 @@ void main() {
 			LockOfen(oOfen);
 			//Backenfunktion aufrufen
 			DelayCommand(fBread, bread(oPC, oOfen, iAnzahl, iBier, iBrot, iEi, iFelspilz, iFisch, iFleisch,
-					iFruechte,
-					iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
-					iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
+									   iFruechte,
+									   iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
+									   iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
 			//Ofen wieder aufschliessen
 			DelayCommand(fBread - 2, UnlockOfen(oOfen));
-		} else if ( ( iAnzahl == 1 || iAnzahl == 2 ) && ( iCookPlace & 2 || iCookPlace & 1 ) ) {
+
+		} else if ((iAnzahl == 1 || iAnzahl == 2) && (iCookPlace & 2 || iCookPlace & 1)) {
 			// Wenn Zutaten gleich oder weniger als 2 sind, dann ist es einfachstes Essen (Kochstelle & Backofen)
 
 			//EatSimple (100%=1)
@@ -769,12 +998,13 @@ void main() {
 			LockOfen(oOfen);
 			//Backenfunktion aufrufen
 			DelayCommand(fEatSimple, eatsimple(oPC, oOfen, iAnzahl, iBier, iBrot, iEi, iFelspilz, iFisch,
-					iFleisch, iFruechte,
-					iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
-					iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
+											   iFleisch, iFruechte,
+											   iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
+											   iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
 			//Ofen wieder aufschliessen
 			DelayCommand(fEatSimple - 2, UnlockOfen(oOfen));
-		} else if ( iWasser == 1 && iMehl >= 1 && iCookPlace & 1 ) {
+
+		} else if (iWasser == 1 && iMehl >= 1 && iCookPlace & 1) {
 			// Wenn 3x Ei
 			// ODER 1x Ei + 1x Mehl + 1x Wasser
 			// ODER 1x Ei + 1x Knoblauch + 1x Waldkraut,
@@ -794,12 +1024,13 @@ void main() {
 			LockOfen(oOfen);
 			//Backenfunktion aufrufen
 			DelayCommand(fEatSmall, eatsmall(oPC, oOfen, iAnzahl, iBier, iBrot, iEi, iFelspilz, iFisch,
-					iFleisch, iFruechte,
-					iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
-					iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
+											 iFleisch, iFruechte,
+											 iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
+											 iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
 			//Ofen wieder aufschliessen
 			DelayCommand(fEatSmall - 2, UnlockOfen(oOfen));
-		} else if ( iCookPlace & 1 ) {
+
+		} else if (iCookPlace & 1) {
 			// Wenn es sich nicht einordnen lässt, dann ist es vll ein Gericht aus folgender Liste (Kochstelle)
 
 			//EatMedium (55%=1, 40%=2, 5%=3)
@@ -823,11 +1054,12 @@ void main() {
 			LockOfen(oOfen);
 			//Backenfunktion aufrufen
 			DelayCommand(fEatMedium, eatmedium(oPC, oOfen, iAnzahl, iBier, iBrot, iEi, iFelspilz, iFisch,
-					iFleisch, iFruechte,
-					iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
-					iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
+											   iFleisch, iFruechte,
+											   iHonigmilch, iHonig, iKaese, iKnoblauch, iMehl, iMilch, iSchmalz,
+											   iSchnaps, iWaldkraut, iWasser, iWein, iWurst));
 			//Ofen wieder aufschliessen
 			DelayCommand(fEatMedium - 2, UnlockOfen(oOfen));
+
 		} else {
 			FloatingTextStringOnCreature(
 				"Als ihr versucht das Essen zu bereiten geht euch zu spät auf das für euer Rezept dies nicht die richtige Stelle scheint. Die Zutaten sind leider verloren.",

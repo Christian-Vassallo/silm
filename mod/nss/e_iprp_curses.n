@@ -1,6 +1,7 @@
 extern("inc_iprp_curses")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 //	if (e.r_pos != 0)
@@ -13,20 +14,26 @@ void main() {
 			SetLocalInt(e.actedon, "allow_unequip", 0);
 			return;
 		}
-		
+
 		int slot = GetBestEquippableSlot(e.actor, e.actedon);
+
 		if (-1 == slot) {
-			_WARN("player " + GetName(e.actor) + " unequipped a cursed item (" + GetName(e.actedon) + ", but we cant find a slot to re-equip. oops.");
+			_WARN("player " + GetName(e.actor) + " unequipped a cursed item (" + GetName(e.actedon) +
+				  ", but we cant find a slot to re-equip. oops.");
 			return;
 		}
-		FloatingTextStringOnCreature("So sehr du auch versuchst, diesen Gegenstand aus der Hand zu legen/abzustreifen, es gelingt dir nicht.", e.actor, false);
+
+		FloatingTextStringOnCreature("So sehr du auch versuchst, diesen Gegenstand aus der Hand zu legen/abzustreifen, es gelingt dir nicht.",
+									 e.actor, false);
 		DelayCommand(1.0, ReequipCursedItem(e.actor, e.actedon, slot));
 
 		event_stop_end();
 	}
 
 	if (e.ev == "item_acquire" && IPGetIsCursed(e.runnable, IP_CONST_CURSED_UNDROPPABLE)) {
-		FloatingTextStringOnCreature("Du fuehlst ein leichtes Kribbeln, ausgehend von: " + GetName(e.runnable) + ".", e.actor, false);
+		FloatingTextStringOnCreature("Du fuehlst ein leichtes Kribbeln, ausgehend von: " + GetName(
+										 e.runnable) + ".", e.actor,
+									 false);
 		SetItemCursedFlag(e.runnable, true);
 		return;
 	}
@@ -34,13 +41,14 @@ void main() {
 	if (e.ev == "item_spell_cast_at" && is_valid(e.actedon) &&
 			IPGetIsCursed(e.actedon, IP_CONST_CURSED_UNDROPPABLE) &&
 			GetItemCursedFlag(e.actedon)) {
-		
+
 		if (GetSpellId() != SPELL_REMOVE_CURSE)
 			return;
 
 		SetItemCursedFlag(e.actedon, false);
-		FloatingTextStringOnCreature("Du brichst den Fluch auf " + GetName(e.actedon) + ".", e.actor, false);
-		
+		FloatingTextStringOnCreature("Du brichst den Fluch auf " + GetName(e.actedon) + ".", e.actor,
+									 false);
+
 		event_stop_end();
 	}
 
@@ -49,20 +57,25 @@ void main() {
 			return;
 
 		int n = 0;
+
 		for (n = 0; n < 14; n++) {
 			object o = GetItemInSlot(n, e.actedon);
+
 			if (is_valid(o) && IPGetIsCursed(o, IP_CONST_CURSED_UNUNEQUIPPABLE)) {
 				SetLocalInt(o, "allow_unequip", 1);
 				AssignCommand(e.actedon, ActionUnequipItem(o));
 			}
 		}
-		
+
 		object o = GetFirstItemInInventory(e.actedon);
+
 		while (is_valid(o)) {
 			if (IPGetIsCursed(o, IP_CONST_CURSED_UNDROPPABLE)) {
 				SetItemCursedFlag(o, false);
-				FloatingTextStringOnCreature("Du brichst den Fluch auf " + GetName(e.actedon) + ".", e.actor, false);
+				FloatingTextStringOnCreature("Du brichst den Fluch auf " + GetName(e.actedon) + ".", e.actor,
+											 false);
 			}
+
 			o = GetNextItemInInventory(e.actedon);
 		}
 	}

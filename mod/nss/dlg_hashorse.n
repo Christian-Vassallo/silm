@@ -1,24 +1,29 @@
 extern("inc_horse")
 
-int StartingConditional() {
+int StartingConditional()
+{
 	int iResult = FALSE;
 	object oPC = GetPCSpeaker();
 	object oHorse = GetHenchman(oPC);
-	if ( GetIsObjectValid(oHorse) ) {
+
+	if (GetIsObjectValid(oHorse)) {
 		string sType = GetStringLeft(GetTag(oHorse), 9);
-		if ( sType == "reitpferd" || sType == "reitpony0" ) {
+
+		if (sType == "reitpferd" || sType == "reitpony0") {
 			struct Rideable r = GetRideable(oPC);
 
 			float fRent = GetLocalFloat(OBJECT_SELF, "rent_per_day");
-			if ( 0.0 == fRent )
+
+			if (0.0 == fRent)
 				fRent = DAILY_RENT;
 
-			if ( r.pay_rent )
+			if (r.pay_rent)
 				SendMessageToPC(oPC, "Die Mietskosten dieses Stalles belaufen sich auf " +
-					FloatToString(fRent, 2, 2) + " Kupfermuenzen pro Tag.");
+								FloatToString(fRent, 2, 2) + " Kupfermuenzen pro Tag.");
 
 			iResult = TRUE;
 		}
 	}
+
 	return iResult;
 }

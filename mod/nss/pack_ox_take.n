@@ -1,16 +1,21 @@
-void main() {
+void main()
+{
 	ClearAllActions();
 	SetLocalInt(OBJECT_SELF, "PACK_MODE", 4);
 	object oPack = GetLocalObject(OBJECT_SELF, "GROUND_PACK");
-	if ( !GetIsObjectValid(oPack) || GetDistanceToObject(oPack) > 30.0 ) {
-		SpeakString("*Das Paket ist nicht aufzufinden*"); return;
+
+	if (!GetIsObjectValid(oPack) || GetDistanceToObject(oPack) > 30.0) {
+		SpeakString("*Das Paket ist nicht aufzufinden*");
+		return;
 	}
 
 	object oItem = GetFirstItemInInventory(oPack);
-	while ( GetIsObjectValid(oItem) ) {
+
+	while (GetIsObjectValid(oItem)) {
 		ActionTakeItem(oItem, oPack);
 		oItem = GetNextItemInInventory(oPack);
 	}
+
 	DeleteLocalObject(OBJECT_SELF, "GROUND_PACK");
 	ActionDoCommand(DestroyObject(oPack));
 	SetLocalInt(OBJECT_SELF, "PACK_MODE", 1);

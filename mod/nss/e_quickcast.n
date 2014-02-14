@@ -2,35 +2,46 @@ extern("inc_nwnx_events")
 extern("inc_spells")
 extern("inc_resting")
 
-string class2string(int cls) {
+string class2string(int cls)
+{
 	switch (cls) {
-		case CLASS_TYPE_SORCERER:
-		case CLASS_TYPE_WIZARD:
-			return "Wiz_Sorc";
-		case CLASS_TYPE_DRUID:
-			return "Druid";
-		case CLASS_TYPE_RANGER:
-			return "Ranger";
-		case CLASS_TYPE_PALADIN:
-			return "Paladin";
-		case CLASS_TYPE_CLERIC:
-			return "Cleric";
-		case CLASS_TYPE_BARD:
-			return "Bard";
+	case CLASS_TYPE_SORCERER:
+	case CLASS_TYPE_WIZARD:
+		return "Wiz_Sorc";
+
+	case CLASS_TYPE_DRUID:
+		return "Druid";
+
+	case CLASS_TYPE_RANGER:
+		return "Ranger";
+
+	case CLASS_TYPE_PALADIN:
+		return "Paladin";
+
+	case CLASS_TYPE_CLERIC:
+		return "Cleric";
+
+	case CLASS_TYPE_BARD:
+		return "Bard";
 	}
+
 	return "";
 }
 
 
-int GetCasterClassForSpell(object caster, int spell) {
-	int pos; for (pos = 1; pos <= 3; pos++) {
+int GetCasterClassForSpell(object caster, int spell)
+{
+	int pos;
+
+	for (pos = 1; pos <= 3; pos++) {
 		int class = GetClassByPosition(pos, caster);
 		string classString = class2string(class);
+
 		if (classString == "")
 			continue;
-		
+
 		int spellLevel = atoi(Get2DAString("spells", classString,
-			spell));
+										   spell));
 
 		if (spellLevel < 1)
 			continue;
@@ -41,21 +52,24 @@ int GetCasterClassForSpell(object caster, int spell) {
 	return CLASS_TYPE_INVALID;
 }
 
-bool GetQuickcastAllowed(object caster) {
+bool GetQuickcastAllowed(object caster)
+{
 	if (GetIsInCombat(caster))
 		return false;
 
 	int now = GetUnixTimestamp();
 	int lastRestedAt = GetLastRestedAt(caster);
+
 	if (now - lastRestedAt > gvGetInt("quickcast_time_after_resting"))
 		return false;
 
 	return true;
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
-	
+
 	if (e.ev == "creature_castspell") {
 		if (!is_creature(e.actor))
 			return;
@@ -65,9 +79,11 @@ void main() {
 
 		// Only allow self-buffs to be cast quickly.
 		object target = NWNXGetEventTarget();
+
 		if (GetObjectType(target) == OBJECT_TYPE_ITEM &&
 				GetItemPossessor(target) != e.actor)
 			return;
+
 		else if (target != e.actor)
 			return;
 
@@ -79,34 +95,42 @@ void main() {
 			return;
 
 		int class        = GetCasterClassForSpell(e.actor, spell_id);
+
 		if (class == CLASS_TYPE_INVALID)
 			return;
 
 		string classString = class2string(class);
+
 		if (classString == "")
 			return;
 
 		int cl = GetLevelByClass(class, e.actor);
 
 		int sl = atoi(Get2DAString("spells", classString, spell_id));
+
 		if (sl < 1) // bug?
 			return;
 
 		bool spontaneous = class == CLASS_TYPE_BARD ||
-				class == CLASS_TYPE_SORCERER;
+							   class == CLASS_TYPE_SORCERER;
 
 		if (meta == METAMAGIC_EMPOWER) sl += 2;
+
 		if (meta == METAMAGIC_EXTEND || meta == METAMAGIC_SILENT ||
-			meta == METAMAGIC_STILL) sl += 1;
+				meta == METAMAGIC_STILL) sl += 1;
+
 		if (meta == METAMAGIC_MAXIMIZE) sl += 3;
+
 		if (meta == METAMAGIC_QUICKEN) sl += 4;
 
 		int slotsAt = GetMaxSpellSlots(e.actor, class, sl);
+
 		if (slotsAt < 1)
 			return;
 
 		if (spontaneous) {
 			int remaining = GetRemainingSpellSlots(e.actor, class, sl);
+
 			if (remaining < 1)
 				return;
 
@@ -116,8 +140,11 @@ void main() {
 			struct MemorizedSpellSlot ms;
 
 			int found = -1;
-			int i; for (i = 0; i < slotsAt; i++) {
+			int i;
+
+			for (i = 0; i < slotsAt; i++) {
 				ms = GetMemorizedSpell(e.actor, class, sl, i);
+
 				if (ms.id == spell_id && ms.meta == meta &&
 						ms.ready) {
 					found = i;
@@ -133,15 +160,15 @@ void main() {
 		}
 
 		location loc = Location(GetArea(OBJECT_INVALID),
-			Vector(0f, 0f, 0f), 0f);
+								Vector(0f, 0f, 0f), 0f);
 
 		ExecuteSpellScript(e.actor, OBJECT_INVALID,
-			spell_id, cl, meta, -1, target, loc);
+						   spell_id, cl, meta, -1, target, loc);
 
-		SendMessageToPC(e.actor, ColorTag(cTeal) + 
-			"Quickcasting " + GetSpellName(spell_id) +
-			" (" + classString + "/" + itoa(sl) + ")"
-		);
+		SendMessageToPC(e.actor, ColorTag(cTeal) +
+						"Quickcasting " + GetSpellName(spell_id) +
+						" (" + classString + "/" + itoa(sl) + ")"
+					   );
 
 		event_stop_suppress();
 	}

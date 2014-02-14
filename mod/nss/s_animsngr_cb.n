@@ -3,12 +3,15 @@ extern("inc_cdb")
 extern("inc_lists")
 extern("inc_nwnx_func")
 
-void ActionPutTheGoddamnItemDown(object item) {
+void ActionPutTheGoddamnItemDown(object item)
+{
 	ActionPutDownItem(item);
 }
 
-void fallback(object item, object deliverTo) {
+void fallback(object item, object deliverTo)
+{
 	object messenger = OBJECT_SELF;
+
 	if (!is_valid(messenger))
 		return;
 
@@ -26,8 +29,10 @@ void fallback(object item, object deliverTo) {
 	SetCommandable(false);
 }
 
-void GoGoGadget2(object item, object deliverTo) {
+void GoGoGadget2(object item, object deliverTo)
+{
 	object messenger = OBJECT_SELF;
+
 	if (!is_valid(messenger))
 		return;
 
@@ -51,7 +56,8 @@ void GoGoGadget2(object item, object deliverTo) {
 	ActionDoCommand(DestroyObject(messenger, 5f));
 }
 
-void GoGoGadget(object item, object deliverTo) {
+void GoGoGadget(object item, object deliverTo)
+{
 	object messenger = OBJECT_SELF;
 
 	DelayCommand(30f, fallback(item, deliverTo));
@@ -65,16 +71,18 @@ void GoGoGadget(object item, object deliverTo) {
 	DelayCommand(0.1, SetCommandable(false));
 }
 
-void main() {
+void main()
+{
 	object
-		oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC"),
-		oTarget = GetLocalObject(oPC, "animsngr_target");
+	oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC"),
+	oTarget = GetLocalObject(oPC, "animsngr_target");
 
 	int
-		iSelection = GetLocalInt(oPC, "ConvList_Select"),
-		cid = GetListInt(oPC, "animsngr", iSelection);
+	iSelection = GetLocalInt(oPC, "ConvList_Select"),
+	cid = GetListInt(oPC, "animsngr", iSelection);
 
 	object pc = GetPCByCID(cid);
+
 	if (!is_valid(pc))
 		return;
 
@@ -83,15 +91,25 @@ void main() {
 
 	location at = GetRandomLocationAt(GetLocation(oTarget), 2.5f);
 	string resref;
-	switch(Random(3)) {
-		case 0: resref = "falke"; break;
-		case 1: resref = "rabe"; break;
-		case 2: resref = "adler"; break;
+
+	switch (Random(3)) {
+	case 0:
+		resref = "falke";
+		break;
+
+	case 1:
+		resref = "rabe";
+		break;
+
+	case 2:
+		resref = "adler";
+		break;
 	}
+
 	object m = CreateObject(OBJECT_TYPE_CREATURE, resref, at);
 	SetName(m, "Fliegender Bote");
 	ApplyEffectToObject(DURATION_TYPE_PERMANENT,
-		SupernaturalEffect(EffectEthereal()), m);
+						SupernaturalEffect(EffectEthereal()), m);
 
 	SetCreatureEventHandler(m, CREATURE_EVENT_HEARTBEAT, "");
 	SetCreatureEventHandler(m, CREATURE_EVENT_PERCEPTION, "");

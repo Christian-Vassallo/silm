@@ -5,7 +5,8 @@ extern("inc_name")
 // Makes up appear with the given disguisedName, or the original name
 // if "".
 void update_names_for(object up, string disguisedName,
-		object only = OBJECT_INVALID) {
+					  object only = OBJECT_INVALID)
+{
 	if (disguisedName == "")
 		disguisedName = GetName(up);
 
@@ -15,18 +16,19 @@ void update_names_for(object up, string disguisedName,
 
 	} else {
 		SendMessageToPC(up, "Showing you as '" + disguisedName +
-			"' to other players.");
+						"' to other players.");
 
 		iterate_players(pc,
-			SetDynamicName(pc, up, disguisedName);
-			UpdateDynamicName(pc, up);
-			// doesn't update group
-			UpdatePlayerList(pc);
-		);
+						SetDynamicName(pc, up, disguisedName);
+						UpdateDynamicName(pc, up);
+						// doesn't update group
+						UpdatePlayerList(pc);
+					   );
 	}
 }
 
-void login(object on) {
+void login(object on)
+{
 	// update all players for the given disguise name
 	InitPlayerNameList(on, 3);
 
@@ -39,19 +41,21 @@ void login(object on) {
 	}
 
 	iterate_players(pc,
-		UpdatePlayerList(pc);
-		string disguisedName = GetPlayerName(pc);
-		update_names_for(pc, disguisedName, on);
-	);
+					UpdatePlayerList(pc);
+					string disguisedName = GetPlayerName(pc);
+					update_names_for(pc, disguisedName, on);
+				   );
 }
 
-void party_cycle(object pc) {
+void party_cycle(object pc)
+{
 	if (CycleParty(pc))
 		SendMessageToPC(pc,
-			"You have been party-cycled to update your displayed name.");
+						"You have been party-cycled to update your displayed name.");
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "player_login") {

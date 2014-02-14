@@ -4,29 +4,35 @@ extern("_gen")
 // Note: This is not written for readability.
 // It is written for efficiency.
 
-bool supernatural_slow_effect(object oPC, int remove_when = false, int add_when_not = false, int amount = 33) {
+bool supernatural_slow_effect(object oPC, int remove_when = false, int add_when_not = false,
+							  int amount = 33)
+{
 	effect e = GetFirstEffect(oPC);
 	int hasEffectAC = GetLocalInt(oPC, __FILE__);
+
 	while (GetIsEffectValid(e)) {
 		if (GetEffectType(e) == EFFECT_TYPE_MOVEMENT_SPEED_DECREASE &&
-			GetEffectDurationType(e) == DURATION_TYPE_PERMANENT &&
-			GetEffectSubType(e) == SUBTYPE_SUPERNATURAL &&
-			GetEffectInteger(e, 0) == hasEffectAC
-			//TODO: check eff int for exact value to have it match
-		) {
+				GetEffectDurationType(e) == DURATION_TYPE_PERMANENT &&
+				GetEffectSubType(e) == SUBTYPE_SUPERNATURAL &&
+				GetEffectInteger(e, 0) == hasEffectAC
+				//TODO: check eff int for exact value to have it match
+		   ) {
 			if (remove_when) {
 				// SendMessageToAllDMs("a_ac_slowdown.n: Removing ac slowdown from " + GetName(oPC));
 				SetLocalInt(oPC, __FILE__, false);
 				RemoveEffect(oPC, e);
 			}
+
 			return true;
 		}
+
 		e = GetNextEffect(oPC);
 	}
+
 	if (add_when_not) {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT,
-			SupernaturalEffect(EffectMovementSpeedDecrease(amount)),
-		oPC);
+							SupernaturalEffect(EffectMovementSpeedDecrease(amount)),
+							oPC);
 		SetLocalInt(oPC, __FILE__, amount);
 		// SendMessageToAllDMs("e_ac_slowdown.n: Adding ac slowdown to " + GetName(oPC));
 	}
@@ -34,22 +40,26 @@ bool supernatural_slow_effect(object oPC, int remove_when = false, int add_when_
 	return false;
 }
 
-void each(object oPC) {
+void each(object oPC)
+{
 	object armor = GetItemInSlot(INVENTORY_SLOT_CHEST, oPC);
 
 	bool hasEffectAC = GetLocalInt(oPC, __FILE__) != false;
 
 	int ac = 0;
+
 	if (GetIsObjectValid(armor))
 		ac = GetArmorAC(armor); /* nwnx_functions */
 
 	if (ac >= 5 && !hasEffectAC)
 		supernatural_slow_effect(oPC, false, true, 33 - (8 - ac) * 5);
+
 	else if (ac < 5 && hasEffectAC)
 		supernatural_slow_effect(oPC, true, false);
 }
 
-void main() {
+void main()
+{
 	struct EventInfo ei = GetEventInfo();
 
 	if ("player_hb" == ei.ev)

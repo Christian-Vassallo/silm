@@ -1,18 +1,19 @@
 /* File: _ou_strickleiter.n
  * Simulates a rope to climb up/down.
- * 
+ *
  * Usage:
  * Set a local object variable "target", which
  * contains the tag to teleport the user to.
  */
-void main() {
+void main()
+{
 	object oLeiter = OBJECT_SELF;
 	object oPC = GetLastUsedBy();
 	string sTarget = GetLocalString(oLeiter, "target");
 
 	object oWP = GetObjectByTag(sTarget);
 
-	if ( !GetIsObjectValid(oWP) ) {
+	if (!GetIsObjectValid(oWP)) {
 		SendMessageToPC(oPC, "Diese Strickleiter hat kein gueltiges Ziel. (bug)");
 		return;
 	}

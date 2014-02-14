@@ -2,12 +2,13 @@ extern("inc_scorco")
 extern("_gen")
 extern("inc_identify")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if ("pc_examine" != e.ev)
 		return;
-	
+
 	if (!GetItemIdentifiesFor(e.actedon, e.actor))
 		return;
 
@@ -15,6 +16,7 @@ void main() {
 	int count = 0;
 
 	p = GetFirstItemProperty(e.actedon);
+
 	while (GetIsItemPropertyValid(p)) {
 		count += 1;
 		p = GetNextItemProperty(e.actedon);
@@ -28,18 +30,21 @@ void main() {
 	} else {
 		SendMessageToPC(e.actor, ColorTag(cWhite) + "Eigenschaften auf " + GetName(e.actedon) + ":");
 		p = GetFirstItemProperty(e.actedon);
+
 		while (GetIsItemPropertyValid(p)) {
 			string str = "";
 
 			struct Color col;
+
 			switch (GetItemPropertyDurationType(p)) {
-				case DURATION_TYPE_INSTANT:
-				case DURATION_TYPE_PERMANENT:
-					col = CS(MI, HI, MI);
-					break;
-				case DURATION_TYPE_TEMPORARY:
-					col = cLightBlue;
-					break;
+			case DURATION_TYPE_INSTANT:
+			case DURATION_TYPE_PERMANENT:
+				col = CS(MI, HI, MI);
+				break;
+
+			case DURATION_TYPE_TEMPORARY:
+				col = cLightBlue;
+				break;
 			}
 
 			str += ColorTag(col) + " " + ItemPropertyToString(p);

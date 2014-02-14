@@ -1,55 +1,89 @@
 extern("inc_events")
 extern("x2_inc_itemprop")
 
-bool has_iprp(object o) {
+bool has_iprp(object o)
+{
 	itemproperty i = GetFirstItemProperty(o);
+
 	while (GetIsItemPropertyValid(i)) {
 		if (GetItemPropertyType(i) == ITEM_PROPERTY_LIGHT)
 			return true;
 
 		i = GetNextItemProperty(o);
 	}
+
 	return false;
 }
 
-int iprp_to_vfx(int cost, int p1) {
+int iprp_to_vfx(int cost, int p1)
+{
 	// cost: 1 = dim, low = 2, normal = 3, bright = 4
 	// p1: bl = 0, ye = 1, pu = 2, re = 3, gr = 4, or = 5, wh = 7
 	// vfx_dur: bl = 153, ye = 157, pu = 161, re = 165, or = 169, wh = 173, gr = 177
 	int ret = 0;
+
 	switch (p1) {
-		case IP_CONST_LIGHTCOLOR_BLUE: ret = 153; break;
-		case IP_CONST_LIGHTCOLOR_YELLOW: ret = 157; break;
-		case IP_CONST_LIGHTCOLOR_PURPLE: ret = 161; break;
-		case IP_CONST_LIGHTCOLOR_RED: ret = 165; break;
-		case IP_CONST_LIGHTCOLOR_GREEN: ret = 177; break;
-		case IP_CONST_LIGHTCOLOR_ORANGE: ret = 169; break;
-		case IP_CONST_LIGHTCOLOR_WHITE: ret = 173; break;
-		default: return 0; break;
+	case IP_CONST_LIGHTCOLOR_BLUE:
+		ret = 153;
+		break;
+
+	case IP_CONST_LIGHTCOLOR_YELLOW:
+		ret = 157;
+		break;
+
+	case IP_CONST_LIGHTCOLOR_PURPLE:
+		ret = 161;
+		break;
+
+	case IP_CONST_LIGHTCOLOR_RED:
+		ret = 165;
+		break;
+
+	case IP_CONST_LIGHTCOLOR_GREEN:
+		ret = 177;
+		break;
+
+	case IP_CONST_LIGHTCOLOR_ORANGE:
+		ret = 169;
+		break;
+
+	case IP_CONST_LIGHTCOLOR_WHITE:
+		ret = 173;
+		break;
+
+	default:
+		return 0;
+		break;
 	}
+
 	return (ret + cost - 1);
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 	object o;
 
 	if ("item_acquire" == e.ev) {
 		o = e.runnable;
+
 		if (has_iprp(o)) {
 			effect e = GetFirstEffect(o);
+
 			while (GetIsEffectValid(e)) {
 				if (GetEffectType(e) == EFFECT_TYPE_VISUALEFFECT &&
-					GetEffectSubType(e) == SUBTYPE_SUPERNATURAL &&
-					GetEffectDurationType(e) == DURATION_TYPE_PERMANENT) {
-						RemoveEffect(o, e);
-					}
+						GetEffectSubType(e) == SUBTYPE_SUPERNATURAL &&
+						GetEffectDurationType(e) == DURATION_TYPE_PERMANENT) {
+					RemoveEffect(o, e);
+				}
+
 				e = GetNextEffect(o);
 			}
 		}
+
 		return;
 	}
-	
+
 	if ("item_unacquire" == e.ev) {
 		o = e.actedon;
 		int vfx = 0;
@@ -59,18 +93,21 @@ void main() {
 			return;
 
 		itemproperty i = GetFirstItemProperty(o);
+
 		while (GetIsItemPropertyValid(i)) {
 			if (GetItemPropertyType(i) == ITEM_PROPERTY_LIGHT) {
 				found = true;
 				vfx = iprp_to_vfx(GetItemPropertyCostTableValue(i), GetItemPropertyParam1Value(i));
 				break;
 			}
+
 			i = GetNextItemProperty(o);
 		}
 
 		if (found) {
 			if (vfx > 0) {
 				ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(vfx)), o);
+
 			} else {
 				_WARN("cannot add light vfx to item with iprp light");
 			}

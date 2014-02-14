@@ -16,7 +16,8 @@
 
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 
 
 	//Declare major variables
@@ -24,19 +25,22 @@ void main() {
 	object oTarget = GetExitingObject();
 	int bValid = FALSE;
 	effect eAOE;
-	if ( GetHasSpellEffect(SPELL_CREEPING_DOOM, oTarget) ) {
+
+	if (GetHasSpellEffect(SPELL_CREEPING_DOOM, oTarget)) {
 		//Search through the valid effects on the target.
 		eAOE = GetFirstEffect(oTarget);
-		while ( GetIsEffectValid(eAOE) && bValid == FALSE ) {
-			if ( GetEffectCreator(eAOE) == GetAreaOfEffectCreator() ) {
-				if ( GetEffectType(eAOE) == EFFECT_TYPE_MOVEMENT_SPEED_DECREASE ) {
+
+		while (GetIsEffectValid(eAOE) && bValid == FALSE) {
+			if (GetEffectCreator(eAOE) == GetAreaOfEffectCreator()) {
+				if (GetEffectType(eAOE) == EFFECT_TYPE_MOVEMENT_SPEED_DECREASE) {
 					//If the effect was created by the Acid_Fog then remove it
-					if ( GetEffectSpellId(eAOE) == SPELL_CREEPING_DOOM ) {
+					if (GetEffectSpellId(eAOE) == SPELL_CREEPING_DOOM) {
 						RemoveEffect(oTarget, eAOE);
 						bValid = TRUE;
 					}
 				}
 			}
+
 			//Get next effect on the target
 			eAOE = GetNextEffect(oTarget);
 		}

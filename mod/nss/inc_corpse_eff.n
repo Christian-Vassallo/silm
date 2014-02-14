@@ -1,16 +1,19 @@
-void Eff_Afterburn(object oCorpse) {
+void Eff_Afterburn(object oCorpse)
+{
 	object oFlame = CreateObject(OBJECT_TYPE_PLACEABLE, "lc_flame", GetLocation(oCorpse));
-	AssignCommand(oFlame, DelayCommand(5.0f + ( IntToFloat(Random(50)) / 10.0 ),
-			DestroyObject(oFlame)));
+	AssignCommand(oFlame, DelayCommand(5.0f + (IntToFloat(Random(50)) / 10.0),
+									   DestroyObject(oFlame)));
 }
 
-void Eff_RotAway(object oCorpse) {
+void Eff_RotAway(object oCorpse)
+{
 	object oFlame = CreateObject(OBJECT_TYPE_PLACEABLE, "lc_bones", GetLocation(oCorpse));
 	object oSmoke = CreateObject(OBJECT_TYPE_PLACEABLE, "lc_smoke", GetLocation(oCorpse));
 	AssignCommand(oFlame, DelayCommand(5.0f, DestroyObject(oFlame)));
 	AssignCommand(oSmoke, DelayCommand(8.0f, DestroyObject(oSmoke)));
 }
 
-void Eff_Ghost(object oCorpse) {
+void Eff_Ghost(object oCorpse)
+{
 	CreateObject(OBJECT_TYPE_CREATURE, "corpseghost", GetLocation(oCorpse));
 }

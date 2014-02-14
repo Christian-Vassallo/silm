@@ -10,7 +10,8 @@
  * Script vom 11.08.2003
  * Geändert am 31.12.2004
  */
-void main() {
+void main()
+{
 	// Erforderliche Objekte
 	object oStart = OBJECT_SELF;
 	object oArea = GetArea(oStart);
@@ -68,7 +69,8 @@ void main() {
 	// Feuerwerk initialisieren
 	DelayCommand(2.0, ApplyEffectToObject(DURATION_TYPE_INSTANT, eStartEffect, oStart));
 	DelayCommand(5.0, ApplyEffectToObject(DURATION_TYPE_INSTANT, eExplosion, oStart));
-	DelayCommand(5.0, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eStartFlimmern, oStart, fFeuerwerksdauer));
+	DelayCommand(5.0, ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eStartFlimmern, oStart,
+										  fFeuerwerksdauer));
 	// 1. Masseneffekt (Geschoss)
 	DelayCommand(6.0, AssignCommand(oStart, ApplyEffectToObject(DURATION_TYPE_INSTANT, eGeschoss, o1)));
 	DelayCommand(6.0, AssignCommand(oStart, ApplyEffectToObject(DURATION_TYPE_INSTANT, eGeschoss, o2)));
@@ -106,9 +108,10 @@ void main() {
 	DelayCommand(9.4, ApplyEffectToObject(DURATION_TYPE_INSTANT, eExplosion, o6));
 	DelayCommand(9.8, ApplyEffectToObject(DURATION_TYPE_INSTANT, eExplosion, o7));
 	DelayCommand(10.4, ApplyEffectToObject(DURATION_TYPE_INSTANT, eExplosion, o8));
+
 	// Ab hier sollte nichts mehr geaendert werden!!!
 	// Beginn der Raketen
-	while ( iCounter < iWiederholungen ) {
+	while (iCounter < iWiederholungen) {
 		int iAbstandx = 20;
 		int iAbstandy = 20;
 		int iAbstandz = 7;
@@ -117,50 +120,51 @@ void main() {
 		float frAbstandy1 = IntToFloat(Random(iAbstandy));
 		float frAbstandz1 = IntToFloat(Random(iAbstandz));
 		float fDistanz1 = sqrt(IntToFloat(iAbstandx * iAbstandx) +
-							  IntToFloat(iAbstandy * iAbstandy) + IntToFloat(iAbstandz * iAbstandz));
+							   IntToFloat(iAbstandy * iAbstandy) + IntToFloat(iAbstandz * iAbstandz));
 		float fZeit1 = fDistanz1 / 27;
-		float irx1 = vMittelpunkt.x + frAbstandx1 - ( IntToFloat(iAbstandx) / 2.0 );
-		float iry1 = vMittelpunkt.y + frAbstandy1 - ( IntToFloat(iAbstandy) / 2.0 );
+		float irx1 = vMittelpunkt.x + frAbstandx1 - (IntToFloat(iAbstandx) / 2.0);
+		float iry1 = vMittelpunkt.y + frAbstandy1 - (IntToFloat(iAbstandy) / 2.0);
 		float irz1 = vMittelpunkt.z + frAbstandz1;
 		vector vr1 = Vector(irx1, iry1, irz1);
 		location lr1 = Location(oArea, vr1, 0.0);
 		effect eFarbe1;
-		switch ( iFarbe1 ) {
-			case 0:
-				{
-					eFarbe1 = EffectVisualEffect(VFX_IMP_ACID_L);
-					break;
-				}
-			case 1:
-				{
-					eFarbe1 = EffectVisualEffect(VFX_IMP_FLAME_M);
-					break;
-				}
-			case 2:
-				{
-					eFarbe1 = EffectVisualEffect(VFX_IMP_FROST_L);
-					break;
-				}
-			case 3:
-				{
-					eFarbe1 = EffectVisualEffect(VFX_IMP_POISON_L);
-					break;
-				}
-			case 4:
-				{
-					eFarbe1 = EffectVisualEffect(VFX_IMP_LIGHTNING_S);
-					break;
-				}
+
+		switch (iFarbe1) {
+		case 0: {
+			eFarbe1 = EffectVisualEffect(VFX_IMP_ACID_L);
+			break;
+		}
+
+		case 1: {
+			eFarbe1 = EffectVisualEffect(VFX_IMP_FLAME_M);
+			break;
+		}
+
+		case 2: {
+			eFarbe1 = EffectVisualEffect(VFX_IMP_FROST_L);
+			break;
+		}
+
+		case 3: {
+			eFarbe1 = EffectVisualEffect(VFX_IMP_POISON_L);
+			break;
+		}
+
+		case 4: {
+			eFarbe1 = EffectVisualEffect(VFX_IMP_LIGHTNING_S);
+			break;
+		}
 		}
 
 		object or1 = CreateObject(OBJECT_TYPE_PLACEABLE, "feuerwerk", lr1, FALSE);
 		DelayCommand(fStartzeit, AssignCommand(oStart, ApplyEffectToObject(DURATION_TYPE_INSTANT,
-					eGeschossPfeil, or1)));
+											   eGeschossPfeil, or1)));
 		DelayCommand(fStartzeit + fZeit1, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, eFarbe1, lr1));
 		DelayCommand(fStartzeit, DestroyObject(or1, 0.25));
 		fStartzeit = fStartzeit + 0.25;
 		iCounter++;
 	}
+
 	// Objekte der Kreispunkte entfernen
 	DestroyObject(o1, fFeuerwerksdauer);
 	DestroyObject(o2, fFeuerwerksdauer);

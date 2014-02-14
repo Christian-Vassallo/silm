@@ -1,17 +1,18 @@
 // Function: RehashEventScripts
 //
 // Re-loads event scripts from the database
-// 
+//
 // Returns the number of script-events loaded.
 int RehashEventScripts();
 
 
-int RehashEventScripts() {
-	pQ("select script, event, sync, " + 
-		"runnable_tagmask, runnable_refmask, " + 
-		"actor_tagmask, actor_refmask, actedon_tagmask, actedon_refmask from " +
-		"events.events where " +
-		"enabled = true order by event, ordering, script;");
+int RehashEventScripts()
+{
+	pQ("select script, event, sync, " +
+	   "runnable_tagmask, runnable_refmask, " +
+	   "actor_tagmask, actor_refmask, actedon_tagmask, actedon_refmask from " +
+	   "events.events where " +
+	   "enabled = true order by event, ordering, script;");
 
 	string script;
 	int sync;
@@ -20,15 +21,19 @@ int RehashEventScripts() {
 
 	int i = 0;
 	string si;
+
 	while (pF()) {
 		si = itoa(i);
 
 		script = pGs(1);
 		ev = pGs(2);
 		sync = pGb(3);
-		r_t = pGs(4); r_f = pGs(5);
-		a_t = pGs(6); a_f = pGs(7);
-		o_t = pGs(8); o_f = pGs(9);
+		r_t = pGs(4);
+		r_f = pGs(5);
+		a_t = pGs(6);
+		a_f = pGs(7);
+		o_t = pGs(8);
+		o_f = pGs(9);
 
 		SetLocalString(GetModule(), "inc_events_" + si + "_script", script);
 		SetLocalString(GetModule(), "inc_events_" + si + "_event", ev);

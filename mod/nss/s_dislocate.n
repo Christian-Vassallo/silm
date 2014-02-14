@@ -2,14 +2,16 @@ extern("inc_teleport")
 extern("x2_inc_spellhook")
 extern("x0_i0_position")
 
-void main() {
-	if ( !X2PreSpellCastCode() )
+void main()
+{
+	if (!X2PreSpellCastCode())
 		return;
 
 	object oPC = OBJECT_SELF;
 	object oTarget = GetSpellTargetObject();
 
 	object oItem = GetSpellCastItem();
+
 	if (GetLocalInt(oItem, "dislocator_disabled"))
 		return;
 

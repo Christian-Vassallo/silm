@@ -1,6 +1,7 @@
 extern("inc_decay")
 
-void main() {
+void main()
+{
 	object oPC = GetLastUsedBy();
 
 	object oObj = GetFirstItemInInventory(oPC);
@@ -8,12 +9,15 @@ void main() {
 	string sTag;
 	location lLoc = GetLocation(OBJECT_SELF);
 
-	while ( GetIsObjectValid(oObj) ) {
+	while (GetIsObjectValid(oObj)) {
 		sTag = GetTag(oObj);
-		if ( GetStringLowerCase ( GetStringLeft(sTag, 9) ) == "food_raw_" ) break;
+
+		if (GetStringLowerCase(GetStringLeft(sTag, 9)) == "food_raw_") break;
+
 		oObj = GetNextItemInInventory(oPC);
 	}
-	if ( !GetIsObjectValid(oObj) ) {
+
+	if (!GetIsObjectValid(oObj)) {
 		FloatingTextStringOnCreature(
 			"Du hast nichts zu braten.", oPC, FALSE);
 		return;

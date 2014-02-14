@@ -14,7 +14,8 @@ extern("nw_i0_generic")
 extern("inc_summonai")
 extern("inc_events")
 
-void main() {
+void main()
+{
 	// See if what we just 'heard' matches any of our
 	// predefined patterns
 	int nMatch = GetListenPatternNumber();
@@ -25,53 +26,65 @@ void main() {
 	// - i0: GetListenPatternNumber()
 	// - actor: GetLastSpeaker()
 	struct EventArguments ea;
-	ea.i0 = nMatch; ea.o0 = oShouter; 
+	ea.i0 = nMatch;
+	ea.o0 = oShouter;
 	int serial = GetEventSerial();
-	int ret = RunEventScriptsForWithArgv(serial, "creature_conversation", OBJECT_SELF, oShouter, OBJECT_INVALID, GetLocation(OBJECT_INVALID), ea);
+	int ret = RunEventScriptsForWithArgv(serial, "creature_conversation", OBJECT_SELF, oShouter,
+										 OBJECT_INVALID,
+										 GetLocation(OBJECT_INVALID), ea);
 	DeleteEventArguments(serial);
+
 	if (ret & EVENT_RESULT_STOP)
 		return;
 
 	// * if petrified, jump out
-	if ( GetHasEffect(EFFECT_TYPE_PETRIFY, OBJECT_SELF) == TRUE ) {
+	if (GetHasEffect(EFFECT_TYPE_PETRIFY, OBJECT_SELF) == TRUE) {
 		return;
 	}
 
 	// * If dead, exit directly.
-	if ( GetIsDead(OBJECT_SELF) == TRUE ) {
+	if (GetIsDead(OBJECT_SELF) == TRUE) {
 		return;
 	}
 
-	if ( nMatch == -1 ) {
+	if (nMatch == -1) {
 		// Not a match -- start an ordinary conversation
-		if ( GetCommandable(OBJECT_SELF) ) {
+		if (GetCommandable(OBJECT_SELF)) {
 			ClearActions(CLEAR_NW_C2_DEFAULT4_29);
 			BeginConversation();
+
 		} else
-		// * July 31 2004
-		// * If only charmed then allow conversation
-		// * so you can have a better chance of convincing
-		// * people of lowering prices
-		if ( GetHasEffect(EFFECT_TYPE_CHARMED) == TRUE ) {
-			ClearActions(CLEAR_NW_C2_DEFAULT4_29);
-			BeginConversation();
-		}
+
+			// * July 31 2004
+			// * If only charmed then allow conversation
+			// * so you can have a better chance of convincing
+			// * people of lowering prices
+			if (GetHasEffect(EFFECT_TYPE_CHARMED) == TRUE) {
+				ClearActions(CLEAR_NW_C2_DEFAULT4_29);
+				BeginConversation();
+			}
 	}
+
 	// Respond to shouts from friendly non-PCs only
-	else if ( GetIsObjectValid(oShouter)
+	else if (GetIsObjectValid(oShouter)
 			 && !GetIsPC(oShouter)
-			 && GetIsFriend(oShouter) ) {
+			 && GetIsFriend(oShouter)) {
 		object oIntruder = OBJECT_INVALID;
+
 		// Determine the intruder if any
-		if ( nMatch == 4 ) {
+		if (nMatch == 4) {
 			oIntruder = GetLocalObject(oShouter, "NW_BLOCKER_INTRUDER");
-		} else if ( nMatch == 5 ) {
+
+		} else if (nMatch == 5) {
 			oIntruder = GetLastHostileActor(oShouter);
-			if ( !GetIsObjectValid(oIntruder) ) {
+
+			if (!GetIsObjectValid(oIntruder)) {
 				oIntruder = GetAttemptedAttackTarget();
-				if ( !GetIsObjectValid(oIntruder) ) {
+
+				if (!GetIsObjectValid(oIntruder)) {
 					oIntruder = GetAttemptedSpellTarget();
-					if ( !GetIsObjectValid(oIntruder) ) {
+
+					if (!GetIsObjectValid(oIntruder)) {
 						oIntruder = OBJECT_INVALID;
 					}
 				}
@@ -80,10 +93,11 @@ void main() {
 
 		// Actually respond to the shout
 		RespondToShout(oShouter, nMatch, oIntruder);
+
 	} else Sum_RespondShout(oShouter, nMatch);
 
 	// Send the user-defined event if appropriate
-	if ( GetSpawnInCondition(NW_FLAG_ON_DIALOGUE_EVENT) ) {
+	if (GetSpawnInCondition(NW_FLAG_ON_DIALOGUE_EVENT)) {
 		SignalEvent(OBJECT_SELF, EventUserDefined(EVENT_DIALOGUE));
 	}
 }

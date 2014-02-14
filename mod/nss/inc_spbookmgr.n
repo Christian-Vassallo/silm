@@ -7,34 +7,43 @@ int load_spellbook(object creature, string name);
 bool delete_spellbook(object creature, string name);
 
 
-bool delete_spellbook(object creature, string name) {
+bool delete_spellbook(object creature, string name)
+{
 	int cid = GetCharacterID(creature);
+
 	if (!cid) return false;
 
 	pQ("select id from spbookmgr.states where character = " + pSi(cid) +
-		" and name = " + pE(name));
+	   " and name = " + pE(name));
+
 	if (pF()) {
 		int state_id = pGi(1);
 		pQ("delete from spbookmgr.memorized where state = " + pSi(state_id));
 		pQ("delete from spbookmgr.states where id = " + pSi(state_id));
 		return true;
 	}
+
 	return false;
 }
 
-int load_spellbook(object creature, string name) {
+int load_spellbook(object creature, string name)
+{
 	int cid = GetCharacterID(creature);
+
 	if (!cid) return 0;
 
 	pQ("select id from spbookmgr.states where character = " + pSi(cid) +
-		" and name = " + pE(name));
+	   " and name = " + pE(name));
+
 	if (!pF())
 		return 0;
+
 	int state_id = pGi(1);
 
 	int restored = 0;
 	pQ("select level, class, spell, meta, index from spbookmgr.memorized where " +
-		"state = " + pSi(state_id) + " order by class, level asc;");
+	   "state = " + pSi(state_id) + " order by class, level asc;");
+
 	while (pF()) {
 		int level = pGi(1);
 		int class = pGi(2);
@@ -43,19 +52,23 @@ int load_spellbook(object creature, string name) {
 		int index = pGi(5);
 
 		int max_slots = GetMaxSpellSlots(creature, class, level);
+
 		if (index >= max_slots) { // cannot restore unavailable slots
 			SendMessageToPC(creature,
-				"Cannot restore spell for class " + itoa(class) +
-				"level " + itoa(level) + " at position " + itoa(index));
+							"Cannot restore spell for class " + itoa(class) +
+							"level " + itoa(level) + " at position " + itoa(index));
 			continue;
 		}
 
 		struct MemorizedSpellSlot ms =
 			GetMemorizedSpell(creature, class, level, index);
+
 		if (ms.id == spell && ms.meta == meta)
 			continue; // already stored, don't update.
 
-		ms.ready = 0; ms.meta = meta; ms.id = spell;
+		ms.ready = 0;
+		ms.meta = meta;
+		ms.id = spell;
 		SetMemorizedSpell(creature, class, level, index, ms);
 		restored++;
 	}
@@ -65,7 +78,8 @@ int load_spellbook(object creature, string name) {
 
 /* txional */
 int save_spellbook_for_class(object creature, string name,
-		int state_id, int class) {
+							 int state_id, int class)
+{
 
 	if (
 		GetClassByPosition(1, creature) != class &&
@@ -74,12 +88,17 @@ int save_spellbook_for_class(object creature, string name,
 	) return 0;
 
 	int stored = 0;
-	int level; for (level = 0; level <= 9; level++) {
+	int level;
+
+	for (level = 0; level <= 9; level++) {
 		int numSlots = GetMaxSpellSlots(creature, class, level);
+
 		if (numSlots < 1)
 			break;
 
-		int slot; for (slot = 0; slot < numSlots; slot++) {
+		int slot;
+
+		for (slot = 0; slot < numSlots; slot++) {
 			struct MemorizedSpellSlot ms =
 				GetMemorizedSpell(creature, class, level, slot);
 
@@ -87,13 +106,13 @@ int save_spellbook_for_class(object creature, string name,
 				continue;
 
 			pQ("insert into spbookmgr.memorized " +
-				"(state, level, class, spell, meta, index) values(" +
-					pSi(state_id) + ", " +
-					pSi(level, false) + ", " + pSi(class, false) + ", " +
-					pSi(ms.id, false) + ", " + pSi(ms.meta, false) + ", " +
-					pSi(slot, false) +
-				")"
-			);
+			   "(state, level, class, spell, meta, index) values(" +
+			   pSi(state_id) + ", " +
+			   pSi(level, false) + ", " + pSi(class, false) + ", " +
+			   pSi(ms.id, false) + ", " + pSi(ms.meta, false) + ", " +
+			   pSi(slot, false) +
+			   ")"
+			  );
 			stored++;
 		}
 	}
@@ -101,15 +120,17 @@ int save_spellbook_for_class(object creature, string name,
 	return stored;
 }
 
-int save_spellbook(object creature, string name) {
+int save_spellbook(object creature, string name)
+{
 	int cid = GetCharacterID(creature);
+
 	if (!cid) return 0;
 
 	pBegin();
 	delete_spellbook(creature, name);
 
 	pQ("insert into spbookmgr.states (character, name) values(" +
-		pSi(cid) + ", " + pE(name) + ");");
+	   pSi(cid) + ", " + pE(name) + ");");
 	int state_id = pLastId("spbookmgr.states");
 
 	int s = 0;
@@ -121,6 +142,7 @@ int save_spellbook(object creature, string name) {
 
 	if (s > 0)
 		pCommit();
+
 	else
 		pRollback();
 

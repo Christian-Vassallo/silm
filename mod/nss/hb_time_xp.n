@@ -8,11 +8,13 @@ extern("inc_xp_handling")
 
 extern("inc_idle")
 
-void main() {
+void main()
+{
 	int nTS = GetUnixTimestamp();
 	int nPlayerCount = GetPCCount(OBJECT_INVALID, false);
 
 	object oPC = GetFirstPC();
+
 	while (GetIsObjectValid(oPC)) {
 		if (!GetIsDM(oPC)) {
 			int nLastForPlayer = GetLocalInt(oPC, "last_time_xp_given");
@@ -23,14 +25,14 @@ void main() {
 				(
 					nPlayerCount == 1 ||
 					(nPlayerCount > 1 &&
-						GetPlayerIdleTime(oPC) <= gvGetInt("time_xp_interval"))
+					 GetPlayerIdleTime(oPC) <= gvGetInt("time_xp_interval"))
 				) &&
 				// and if the defined interval has passed
 				(nTS - gvGetInt("time_xp_interval") > nLastForPlayer)
 			) {
-				
+
 				SetLocalInt(oPC, "last_time_xp_given", nTS);
-				
+
 				int nGiven = GiveTimeXP(oPC, gvGetInt("time_xp_amount"));
 
 				if (-2 == nGiven && gvGetInt("time_xp_fills_combat_xp")) {

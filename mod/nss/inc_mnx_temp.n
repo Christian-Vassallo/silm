@@ -93,9 +93,11 @@ struct Weather ParseWeatherString(struct Weather w, string s);
 
 
 
-struct Weather GetWeatherFor(object oArea, int nYear, int nMonth, int nDay, int nHour, int nMinute) {
+struct Weather GetWeatherFor(object oArea, int nYear, int nMonth, int nDay, int nHour, int nMinute)
+{
 	struct Weather w;
 	string localWeatherOvr = GetLocalString(oArea, "local_weather_raw");
+
 	if (localWeatherOvr != "")
 		return ParseWeatherString(w, localWeatherOvr);
 
@@ -104,16 +106,20 @@ struct Weather GetWeatherFor(object oArea, int nYear, int nMonth, int nDay, int 
 	sTilesetResRef = GetTilesetResRef(oArea);
 	int nMask = 0;
 
-	if ( AREA_ARTIFICIAL == GetIsAreaNatural(oArea) )
+	if (AREA_ARTIFICIAL == GetIsAreaNatural(oArea))
 		nMask += A_ARTIFICIAL;
-	if ( AREA_UNDERGROUND == GetIsAreaAboveGround(oArea) )
+
+	if (AREA_UNDERGROUND == GetIsAreaAboveGround(oArea))
 		nMask += AREA_UNDERGROUND;
-	if ( GetIsAreaInterior(oArea) )
+
+	if (GetIsAreaInterior(oArea))
 		nMask += A_INTERIOR;
 
-	string ret = ruby_eval("Weather.getweather(" + pSs(sAreaResRef) + ", " + pSs(sTilesetResRef) + ", " +
-			pSi(nMask, false) + ", " + pSi(nYear, false) + ", " + pSi(nMonth, false) + ", " + pSi(nDay, false) + ", " +
-			pSi(nHour, false) + ", " + pSi(nMinute, false) + ");");
+	string ret = ruby_eval("Weather.getweather(" + pSs(sAreaResRef) + ", " + pSs(
+							   sTilesetResRef) + ", " +
+						   pSi(nMask, false) + ", " + pSi(nYear, false) + ", " + pSi(nMonth, false) + ", " + pSi(nDay,
+								   false) + ", " +
+						   pSi(nHour, false) + ", " + pSi(nMinute, false) + ");");
 
 	if (ret != "") {
 		w = ParseWeatherString(w, ret);
@@ -126,6 +132,7 @@ struct Weather GetWeatherFor(object oArea, int nYear, int nMonth, int nDay, int 
 		w.day = nDay;
 		w.hour = nHour;
 		w.minute = nMinute;
+
 	} else {
 		SendMessageToAllDMs("Error retrieving weather information: " + pErrStr());
 	}
@@ -146,7 +153,8 @@ struct Weather GetWeatherFor(object oArea, int nYear, int nMonth, int nDay, int 
  * 	text
  */
 
-struct Weather ParseWeatherString(struct Weather w, string s) {
+struct Weather ParseWeatherString(struct Weather w, string s)
+{
 
 	int nSpacer = -1;
 
@@ -208,41 +216,45 @@ struct Weather ParseWeatherString(struct Weather w, string s) {
 }
 
 
-void DoWeatherEffects(object oArea, int bStartNewLoop = FALSE) {
+void DoWeatherEffects(object oArea, int bStartNewLoop = FALSE)
+{
 	SetLocalInt(oArea, "ambient_loop_started", 1);
 
 	int nEffects = GetLocalInt(oArea, "current_prec");
 
-	switch ( nEffects ) {
-		case P_SANDSTORM:
-			// do sandstorm effects
-			break;
-		case P_CLEAR:
-			break;
-		case P_THUNDERSTORM:
-			// Do lightning effects
-			break;
+	switch (nEffects) {
+	case P_SANDSTORM:
+		// do sandstorm effects
+		break;
 
-		case P_RAIN:
-		case P_DOWNPOUR:
-			break;
+	case P_CLEAR:
+		break;
 
-		case P_SNOW:
-		case P_HSNOW:
-		case P_SLEET:
-			break;
+	case P_THUNDERSTORM:
+		// Do lightning effects
+		break;
 
-		case P_HAIL:
-			break;
+	case P_RAIN:
+	case P_DOWNPOUR:
+		break;
+
+	case P_SNOW:
+	case P_HSNOW:
+	case P_SLEET:
+		break;
+
+	case P_HAIL:
+		break;
 	}
 
 	float fDelay = 20.0 + IntToFloat(Random(20));
 
-	if ( bStartNewLoop )
+	if (bStartNewLoop)
 		DelayCommand(fDelay, DoWeatherEffects(oArea));
 }
 
-int SetEngineWeatherFromWeather(object oArea, struct Weather w) {
+int SetEngineWeatherFromWeather(object oArea, struct Weather w)
+{
 	int bChanged = FALSE;
 
 	int n = WEATHER_CLEAR;
@@ -250,21 +262,24 @@ int SetEngineWeatherFromWeather(object oArea, struct Weather w) {
 	int nAmbientDay = AMBIENT_SOUND_NONE;
 	int nAmbientNight = AMBIENT_SOUND_NONE;
 
-	if ( GetLocalInt(oArea, "ambient_day") )
+	if (GetLocalInt(oArea, "ambient_day"))
 		nAmbientDay = GetLocalInt(oArea, "ambient_day");
-	if ( GetLocalInt(oArea, "ambient_night") )
+
+	if (GetLocalInt(oArea, "ambient_night"))
 		nAmbientNight = GetLocalInt(oArea, "ambient_night");
 
 
 	// Save original values
-	if ( !GetLocalInt(oArea, "fog_sun_amount") )
+	if (!GetLocalInt(oArea, "fog_sun_amount"))
 		SetLocalInt(oArea, "fog_sun_amount", GetFogAmount(FOG_TYPE_SUN, oArea));
-	if ( !GetLocalInt(oArea, "fog_moon_amount") )
+
+	if (!GetLocalInt(oArea, "fog_moon_amount"))
 		SetLocalInt(oArea, "fog_moon_amount", GetFogAmount(FOG_TYPE_MOON, oArea));
 
-	if ( !GetLocalInt(oArea, "fog_sun_color") )
+	if (!GetLocalInt(oArea, "fog_sun_color"))
 		SetLocalInt(oArea, "fog_sun_color", GetFogColor(FOG_TYPE_SUN, oArea));
-	if ( !GetLocalInt(oArea, "fog_moon_color") )
+
+	if (!GetLocalInt(oArea, "fog_moon_color"))
 		SetLocalInt(oArea, "fog_moon_color", GetFogColor(FOG_TYPE_MOON, oArea));
 
 
@@ -273,54 +288,55 @@ int SetEngineWeatherFromWeather(object oArea, struct Weather w) {
 		nBaseSunFogColor = GetLocalInt(oArea, "fog_sun_color"),
 		nBaseMoonFogColor = GetLocalInt(oArea, "fog_moon_color");
 
-	switch ( w.prec ) {
-		case P_FOG:
-			n = WEATHER_CLEAR;
-			break;
+	switch (w.prec) {
+	case P_FOG:
+		n = WEATHER_CLEAR;
+		break;
 
-		case P_SANDSTORM:
-			nAmbientDay = AMBIENT_SOUND_SAND_STORM_EXTREME_XP1;
-			nAmbientNight = AMBIENT_SOUND_SAND_STORM_EXTREME_XP1;
-		case P_CLEAR:
-			n = WEATHER_CLEAR;
-			break;
+	case P_SANDSTORM:
+		nAmbientDay = AMBIENT_SOUND_SAND_STORM_EXTREME_XP1;
+		nAmbientNight = AMBIENT_SOUND_SAND_STORM_EXTREME_XP1;
 
-		case P_THUNDERSTORM:
-			nAmbientDay = AMBIENT_SOUND_RAIN_STORM_BIG;
-			nAmbientNight = AMBIENT_SOUND_RAIN_STORM_BIG;
-			n = WEATHER_RAIN;
-			break;
+	case P_CLEAR:
+		n = WEATHER_CLEAR;
+		break;
 
-		case P_RAIN:
-			nAmbientDay = AMBIENT_SOUND_RAIN_LIGHT;
-			nAmbientNight = AMBIENT_SOUND_RAIN_LIGHT;
-			n = WEATHER_RAIN;
-			break;
+	case P_THUNDERSTORM:
+		nAmbientDay = AMBIENT_SOUND_RAIN_STORM_BIG;
+		nAmbientNight = AMBIENT_SOUND_RAIN_STORM_BIG;
+		n = WEATHER_RAIN;
+		break;
 
-		case P_DOWNPOUR:
-			nAmbientDay = AMBIENT_SOUND_RAIN_HARD;
-			nAmbientNight = AMBIENT_SOUND_RAIN_HARD;
-			n = WEATHER_RAIN;
-			break;
+	case P_RAIN:
+		nAmbientDay = AMBIENT_SOUND_RAIN_LIGHT;
+		nAmbientNight = AMBIENT_SOUND_RAIN_LIGHT;
+		n = WEATHER_RAIN;
+		break;
 
-		case P_SNOW:
-		case P_HSNOW:
-			nAmbientDay = AMBIENT_SOUND_WINTER_DAY_WINDY_XP1;
-			nAmbientNight = AMBIENT_SOUND_WINTER_DAY_WINDY_XP1;
-			n = WEATHER_SNOW;
-			break;
+	case P_DOWNPOUR:
+		nAmbientDay = AMBIENT_SOUND_RAIN_HARD;
+		nAmbientNight = AMBIENT_SOUND_RAIN_HARD;
+		n = WEATHER_RAIN;
+		break;
 
-		case P_SLEET:
-			nAmbientDay = AMBIENT_SOUND_WINTER_DAY_WINDY_XP1;
-			nAmbientNight = AMBIENT_SOUND_WINTER_DAY_WINDY_XP1;
-			n = WEATHER_RAIN;
-			break;
+	case P_SNOW:
+	case P_HSNOW:
+		nAmbientDay = AMBIENT_SOUND_WINTER_DAY_WINDY_XP1;
+		nAmbientNight = AMBIENT_SOUND_WINTER_DAY_WINDY_XP1;
+		n = WEATHER_SNOW;
+		break;
 
-		case P_HAIL:
-			nAmbientDay = AMBIENT_SOUND_GUST_CHASM;
-			nAmbientNight = AMBIENT_SOUND_GUST_CHASM;
-			n = WEATHER_RAIN;
-			break;
+	case P_SLEET:
+		nAmbientDay = AMBIENT_SOUND_WINTER_DAY_WINDY_XP1;
+		nAmbientNight = AMBIENT_SOUND_WINTER_DAY_WINDY_XP1;
+		n = WEATHER_RAIN;
+		break;
+
+	case P_HAIL:
+		nAmbientDay = AMBIENT_SOUND_GUST_CHASM;
+		nAmbientNight = AMBIENT_SOUND_GUST_CHASM;
+		n = WEATHER_RAIN;
+		break;
 
 	}
 
@@ -338,18 +354,20 @@ int SetEngineWeatherFromWeather(object oArea, struct Weather w) {
 	AmbientSoundSetNightVolume(oArea, 70);
 	AmbientSoundPlay(oArea);
 
-	if ( GetWeather(oArea) != n ) {
+	if (GetWeather(oArea) != n) {
 		bChanged = TRUE;
 		SetWeather(oArea, n);
 	}
 
-	if ( w.fog_sun_color > 0 )
+	if (w.fog_sun_color > 0)
 		SetFogColor(FOG_TYPE_SUN, w.fog_sun_color, oArea);
+
 	else
 		SetFogColor(FOG_TYPE_SUN, nBaseSunFogColor, oArea);
 
-	if ( w.fog_moon_color > 0 )
+	if (w.fog_moon_color > 0)
 		SetFogColor(FOG_TYPE_MOON, w.fog_moon_color, oArea);
+
 	else
 		SetFogColor(FOG_TYPE_MOON, nBaseMoonFogColor, oArea);
 
@@ -360,16 +378,18 @@ int SetEngineWeatherFromWeather(object oArea, struct Weather w) {
 }
 
 
-void DisplayWeatherToPlayer(object oPC, struct Weather w) {
+void DisplayWeatherToPlayer(object oPC, struct Weather w)
+{
 	FloatingTextStringOnCreature(w.text, oPC, 0);
 }
 
 
-void ShowAndUpdateWeather(object oArea, object oPC, float fDelay = 3.0) {
+void ShowAndUpdateWeather(object oArea, object oPC, float fDelay = 3.0)
+{
 	struct Weather w = GetWeatherFor(oArea, GetCalendarYear(), GetCalendarMonth(), GetCalendarDay(),
-						   GetTimeHour(), GetTimeMinute());
+									 GetTimeHour(), GetTimeMinute());
 
-	if ( !GetIsAreaInterior(oArea) )
+	if (!GetIsAreaInterior(oArea))
 		SetEngineWeatherFromWeather(oArea, w);
 
 	DelayCommand(fDelay, DisplayWeatherToPlayer(oPC, w));

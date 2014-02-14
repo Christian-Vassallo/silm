@@ -1,7 +1,8 @@
 extern("x0_i0_spells")
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 	if (!X2PreSpellCastCode())
 		return;
 
@@ -16,7 +17,7 @@ void main() {
 	//Check the creatures HP
 	if (GetCurrentHitPoints(oTarget) > 100)
 		return;
-	
+
 	if (MyResistSpell(OBJECT_SELF, oTarget))
 		return;
 

@@ -1,7 +1,8 @@
 extern("inc_horse")
 extern("inc_cdb")
 
-void save_player(object pc) {
+void save_player(object pc)
+{
 	/* DONT save polymorphed characters.
 	 * That re-applies the polymorph effect
 	 * and thus the visuals, and re-sets the TP to Max + 10 */
@@ -11,7 +12,8 @@ void save_player(object pc) {
 	}
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if ("player_logout" == e.ev) {
@@ -23,7 +25,7 @@ void main() {
 		// Only run each 5th HB .. 300ish seconds + sched load
 		__nthcond(5, itoa(GetCharacterID(e.runnable)), save_player(e.runnable));
 	}
-	
+
 	if ("player_login" == e.ev) {
 		DeleteLocalInt(e.actor, "PER_XP_Combat");
 		DeleteLocalInt(e.actor, "PER_Current_LP");

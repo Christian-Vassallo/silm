@@ -1,6 +1,7 @@
 extern("inc_cardgame")
 //DMFI Universal Wand scripts by hahnsoo
-int StartingConditional() {
+int StartingConditional()
+{
 	object oPC = GetPCSpeaker();
 	DeleteLocalInt(oPC, "Tens");
 	int iOffset = GetLocalInt(oPC, "dmfi_univ_offset") + 1;
@@ -8,96 +9,105 @@ int StartingConditional() {
 
 	SetLocalInt(oPC, "dmfi_univ_offset", iOffset);
 
-	if ( sOffset == "afflict" && iOffset == 1 )
+	if (sOffset == "afflict" && iOffset == 1)
 		return TRUE;
 
-	if ( sOffset == "pc_emote" && iOffset == 2 )
+	if (sOffset == "pc_emote" && iOffset == 2)
 		return TRUE;
 
-	if ( sOffset == "emote" && iOffset == 2 )
+	if (sOffset == "emote" && iOffset == 2)
 		return TRUE;
 
-	if ( sOffset == "encounter" && iOffset == 3 )
+	if (sOffset == "encounter" && iOffset == 3)
 		return TRUE;
 
-	if ( sOffset == "fx" && iOffset == 4 )
+	if (sOffset == "fx" && iOffset == 4)
 		return TRUE;
 
-	if ( sOffset == "music" && iOffset == 5 )
+	if (sOffset == "music" && iOffset == 5)
 		return TRUE;
 
-	if ( sOffset == "sound" && iOffset == 6 )
+	if (sOffset == "sound" && iOffset == 6)
 		return TRUE;
 
-	if ( sOffset == "xp" && iOffset == 7 )
+	if (sOffset == "xp" && iOffset == 7)
 		return TRUE;
 
-	if ( sOffset == "onering" && iOffset == 8 )
+	if (sOffset == "onering" && iOffset == 8)
 		return TRUE;
 
-	if ( sOffset == "pc_dicebag" && iOffset == 9 ) {
+	if (sOffset == "pc_dicebag" && iOffset == 9) {
 		SetLocalInt(oPC, "dmfi_univ_offset", 8);
 		return TRUE;
 	}
-	if ( sOffset == "dicebag" && iOffset == 10 ) {
+
+	if (sOffset == "dicebag" && iOffset == 10) {
 		SetLocalInt(oPC, "dmfi_univ_offset", 9);
 		return TRUE;
 	}
-	if ( sOffset == "voice"
-		&& GetIsObjectValid(GetLocalObject(oPC, "dmfi_univ_target"))
-		&& oPC != GetLocalObject(oPC, "dmfi_univ_target")
-		&& iOffset == 11 )
+
+	if (sOffset == "voice"
+			&& GetIsObjectValid(GetLocalObject(oPC, "dmfi_univ_target"))
+			&& oPC != GetLocalObject(oPC, "dmfi_univ_target")
+			&& iOffset == 11)
 		return TRUE;
 
-	if ( sOffset == "voice"
-		&& !GetIsObjectValid(GetLocalObject(oPC, "dmfi_univ_target"))
-		&& iOffset == 12 )
+	if (sOffset == "voice"
+			&& !GetIsObjectValid(GetLocalObject(oPC, "dmfi_univ_target"))
+			&& iOffset == 12)
 		return TRUE;
 
-	if ( sOffset == "voice"
-		&& GetIsObjectValid(GetLocalObject(oPC, "dmfi_univ_target"))
-		&& oPC == GetLocalObject(oPC, "dmfi_univ_target")
-		&& iOffset == 13 )
+	if (sOffset == "voice"
+			&& GetIsObjectValid(GetLocalObject(oPC, "dmfi_univ_target"))
+			&& oPC == GetLocalObject(oPC, "dmfi_univ_target")
+			&& iOffset == 13)
 		return TRUE;
 
-	if ( sOffset == "faction" && iOffset == 14 )
+	if (sOffset == "faction" && iOffset == 14)
 		return TRUE;
 
 	//edit by Poly (Kartenspiel)
-	if ( sOffset == "pc_cards" && iOffset == 15 ) {
+	if (sOffset == "pc_cards" && iOffset == 15) {
 		//Zeigt das gewaehlte Spiel an
 		int iGame = GetLocalInt(oPC, "cg_iGame");
 		int iBet = GetLocalInt(oPC, "cg_iBet");
 		SetCustomToken(9000, "Es wird " + GetGameString(iGame) + " gespielt. Der Einsatz betraegt " +
-			GetBetString(iBet) + " pro Karte");
+					   GetBetString(iBet) + " pro Karte");
 
 		// Listet die Spieler auf
 		int i;
 		string sToken;
 		int iPlayerCount = GetLocalInt(oPC, "cg_iPlayerCount");
-		for ( i = 1; i <= iPlayerCount; i++ ) {
+
+		for (i = 1; i <= iPlayerCount; i++) {
 			object oPlayer = GetLocalObject(oPC, "cg_oPlayer" + IntToString(i));
-			if ( oPlayer != OBJECT_INVALID ) sToken = sToken + GetName(oPlayer) + "\n";
+
+			if (oPlayer != OBJECT_INVALID) sToken = sToken + GetName(oPlayer) + "\n";
 
 		}
+
 		sToken += GetName(OBJECT_SELF);
 		SetCustomToken(9001, sToken);
 		return TRUE;
 	}
-	if ( sOffset == "pc_cards1" && iOffset == 16 ) {
+
+	if (sOffset == "pc_cards1" && iOffset == 16) {
 		object oCardStack = GetLocalObject(oPC, "cg_oCardStack");
 		ShowCards(oCardStack);
 		return TRUE;
 	}
-	if ( sOffset == "pc_cards2" && iOffset == 17 ) {
+
+	if (sOffset == "pc_cards2" && iOffset == 17) {
 		object oCardStack = GetLocalObject(oPC, "cg_oCardStack");
 		ShowCards(oCardStack);
 		return TRUE;
 	}
-	if ( sOffset == "pc_cards_req" && iOffset == 18 ) {
+
+	if (sOffset == "pc_cards_req" && iOffset == 18) {
 		SetCustomToken(9000, GetRequestString());
 		return TRUE;
 	}
+
 	//
 	return FALSE;
 }

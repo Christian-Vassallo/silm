@@ -1,14 +1,18 @@
-void main() {
+void main()
+{
 	string t = GetLocalString(GetModule(), "ruby_token");
 	string type = GetLocalString(GetModule(), "ruby_token_type");
 	float delay = GetLocalFloat(GetModule(), "ruby_token_delay");
 
 	if ("execute" == type)
 		ruby_call_token(t, OBJECT_SELF);
+
 	else if ("delay" == type)
 		DelayCommand(delay, ruby_call_token(t, OBJECT_SELF));
+
 	else if ("assign" == type)
 		AssignCommand(OBJECT_SELF, ruby_call_token(t, OBJECT_SELF));
+
 	else if ("assign_do" == type)
 		AssignCommand(OBJECT_SELF, ActionDoCommand(ruby_call_token(t, OBJECT_SELF)));
 }

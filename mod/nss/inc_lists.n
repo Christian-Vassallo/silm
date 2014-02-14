@@ -75,7 +75,9 @@ int GetListDisplayMode(object oHolder, string sListTag, int iEntry);
 
 // Function: ResetConvList
 //Start a new selection list
-void ResetConvList(object oPC, object oHolder, string sListTag, int iStartToken, string sCallback = "", string sHeading = "", string sProceed = "", string sPrCap = "Weiter", string sRevert = "",
+void ResetConvList(object oPC, object oHolder, string sListTag, int iStartToken,
+				   string sCallback = "",
+				   string sHeading = "", string sProceed = "", string sPrCap = "Weiter", string sRevert = "",
 				   string sRevCap = "Zurueck");
 
 // Function: BuildConvListPage
@@ -101,33 +103,40 @@ Section: Usage example
 
 /* implementation */
 
-void ClearMenuLevel(object oHolder, string sListTag, int nLevel) {
+void ClearMenuLevel(object oHolder, string sListTag, int nLevel)
+{
 	SetLocalInt(oHolder, sListTag + "_m" + IntToString(nLevel), 0);
 }
 
-int GetMenuLevel(object oHolder, string sListTag, int nLevel) {
+int GetMenuLevel(object oHolder, string sListTag, int nLevel)
+{
 	return GetLocalInt(oHolder, sListTag + "_m" + IntToString(nLevel));
 }
 
-void SetMenuLevel(object oHolder, string sListTag, int nLevel, int nValue) {
+void SetMenuLevel(object oHolder, string sListTag, int nLevel, int nValue)
+{
 	SetLocalInt(oHolder, sListTag + "_m" + IntToString(nLevel), nValue);
 }
 
 
 
-int GetListSelection(object oPC) {
+int GetListSelection(object oPC)
+{
 	return GetLocalInt(oPC, "ConvList_Select");
 }
 
-void ClearList(object oHolder, string sListTag) {
+void ClearList(object oHolder, string sListTag)
+{
 	DeleteLocalInt(oHolder, sListTag + "_count");
 }
 
-int GetListCount(object oHolder, string sListTag) {
+int GetListCount(object oHolder, string sListTag)
+{
 	return GetLocalInt(oHolder, sListTag + "_count");
 }
 
-void AddListItem(object oHolder, string sListTag, string sListTitle) {
+void AddListItem(object oHolder, string sListTag, string sListTitle)
+{
 	int iNum = GetListCount(oHolder, sListTag);
 
 	SetLocalInt(oHolder, sListTag + "_count", iNum + 1);
@@ -136,71 +145,86 @@ void AddListItem(object oHolder, string sListTag, string sListTitle) {
 	DeleteLocalInt(oHolder, sListTag + "_dpm_" + IntToString(iNum));
 }
 
-void SetListInt(object oHolder, string sListTag, int iValue) {
+void SetListInt(object oHolder, string sListTag, int iValue)
+{
 	int iNum = GetListCount(oHolder, sListTag);
 
 	SetLocalInt(oHolder, sListTag + "_int_" + IntToString(iNum - 1), iValue);
 }
 
-void SetListString(object oHolder, string sListTag, string sValue) {
+void SetListString(object oHolder, string sListTag, string sValue)
+{
 	int iNum = GetListCount(oHolder, sListTag);
 
 	SetLocalString(oHolder, sListTag + "_str_" + IntToString(iNum - 1), sValue);
 }
 
-void SetListLocation(object oHolder, string sListTag, location lValue) {
+void SetListLocation(object oHolder, string sListTag, location lValue)
+{
 	int iNum = GetListCount(oHolder, sListTag);
 
 	SetLocalLocation(oHolder, sListTag + "_loc_" + IntToString(iNum - 1), lValue);
 }
 
-void SetListObject(object oHolder, string sListTag, object oValue) {
+void SetListObject(object oHolder, string sListTag, object oValue)
+{
 	int iNum = GetListCount(oHolder, sListTag);
 
 	SetLocalObject(oHolder, sListTag + "_obj_" + IntToString(iNum - 1), oValue);
 }
 
-void SetListFloat(object oHolder, string sListTag, float fValue) {
+void SetListFloat(object oHolder, string sListTag, float fValue)
+{
 	int iNum = GetListCount(oHolder, sListTag);
 
 	SetLocalFloat(oHolder, sListTag + "_flt_" + IntToString(iNum - 1), fValue);
 }
 
-void SetListDisplayMode(object oHolder, string sListTag, int iDispMode, int iInd = -1) {
+void SetListDisplayMode(object oHolder, string sListTag, int iDispMode, int iInd = -1)
+{
 	int iNum = GetListCount(oHolder, sListTag);
 
-	if ( iInd > -1 )
+	if (iInd > -1)
 		iNum = iInd + 1;
 
 	SetLocalInt(oHolder, sListTag + "_dpm_" + IntToString(iNum - 1), iDispMode);
 }
 
-int GetListInt(object oHolder, string sListTag, int iEntry) {
+int GetListInt(object oHolder, string sListTag, int iEntry)
+{
 	return GetLocalInt(oHolder, sListTag + "_int_" + IntToString(iEntry));
 }
 
-string GetListString(object oHolder, string sListTag, int iEntry) {
+string GetListString(object oHolder, string sListTag, int iEntry)
+{
 	return GetLocalString(oHolder, sListTag + "_str_" + IntToString(iEntry));
 }
 
-location GetListLocation(object oHolder, string sListTag, int iEntry) {
+location GetListLocation(object oHolder, string sListTag, int iEntry)
+{
 	return GetLocalLocation(oHolder, sListTag + "_loc_" + IntToString(iEntry));
 }
 
-object GetListObject(object oHolder, string sListTag, int iEntry) {
+object GetListObject(object oHolder, string sListTag, int iEntry)
+{
 	return GetLocalObject(oHolder, sListTag + "_obj_" + IntToString(iEntry));
 }
 
-float GetListFloat(object oHolder, string sListTag, int iEntry) {
+float GetListFloat(object oHolder, string sListTag, int iEntry)
+{
 	return GetLocalFloat(oHolder, sListTag + "_flt_" + IntToString(iEntry));
 }
 
-int GetListDisplayMode(object oHolder, string sListTag, int iEntry) {
+int GetListDisplayMode(object oHolder, string sListTag, int iEntry)
+{
 	return GetLocalInt(oHolder, sListTag + "_dpm_" + IntToString(iEntry));
 }
 
-void ResetConvList(object oPC, object oHolder, string sListTag, int iStartToken, string sCallback = "", string sHeading = "", string sProceed = "", string sPrCap = "Weiter", string sRevert = "",
-				   string sRevCap = "Zurueck") {
+void ResetConvList(object oPC, object oHolder, string sListTag, int iStartToken,
+				   string sCallback = "",
+				   string sHeading = "", string sProceed = "", string sPrCap = "Weiter", string sRevert = "",
+				   string sRevCap = "Zurueck")
+{
 	DeleteLocalInt(oPC, "ConvList_CP");
 	SetLocalInt(oPC, "ConvList_StT", iStartToken);
 	SetLocalObject(oPC, "ConvList_Holder", oHolder);
@@ -214,7 +238,8 @@ void ResetConvList(object oPC, object oHolder, string sListTag, int iStartToken,
 	SetLocalString(oPC, "ConvList_RevCap", sRevCap);
 }
 
-void BuildConvListPage(object oPC) {
+void BuildConvListPage(object oPC)
+{
 	int iStartToken = GetLocalInt(oPC, "ConvList_StT");
 	int iCurrent = GetLocalInt(oPC, "ConvList_CP");
 	object oHolder = GetLocalObject(oPC, "ConvList_Holder");
@@ -222,17 +247,18 @@ void BuildConvListPage(object oPC) {
 
 	SetCustomToken(iStartToken + 10, GetLocalString(oPC, "ConvList_Heading"));
 
-/*  int i;
- *
- * for(i=0;i<10;i++)
- * 	SetCustomToken(iStartToken+i,
- * 	 GetLocalString(oHolder,sListTag+"_title_"+IntToString(i+iCurrent)));
- */
+	/*  int i;
+	 *
+	 * for(i=0;i<10;i++)
+	 * 	SetCustomToken(iStartToken+i,
+	 * 	 GetLocalString(oHolder,sListTag+"_title_"+IntToString(i+iCurrent)));
+	 */
 	SetLocalInt(oPC, "ConvList_Current", iCurrent);
 	DeleteLocalInt(oPC, "ConvList_Current2");
 }
 
-int HasNextPage(object oPC) {
+int HasNextPage(object oPC)
+{
 	int iStartToken = GetLocalInt(oPC, "ConvList_StT");
 	int iCurrent = GetLocalInt(oPC, "ConvList_CP");
 	object oHolder = GetLocalObject(oPC, "ConvList_Holder");
@@ -241,16 +267,19 @@ int HasNextPage(object oPC) {
 	return GetListCount(oHolder, sListTag) > iCurrent + 10;
 }
 
-int HasPrevPage(object oPC) {
+int HasPrevPage(object oPC)
+{
 	return GetLocalInt(oPC, "ConvList_CP") > 0;
 }
 
-void SwitchPage(object oPC, int iDirection = 0) {
+void SwitchPage(object oPC, int iDirection = 0)
+{
 	int iCurrent = GetLocalInt(oPC, "ConvList_CP");
 	SetLocalInt(oPC, "ConvList_CP", iCurrent + iDirection * 10);
 }
 
-int GetConvListEntry(object oPC, int iIndex) {
+int GetConvListEntry(object oPC, int iIndex)
+{
 	return iIndex + GetLocalInt(oPC, "ConvList_CP");
 }
 

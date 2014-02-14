@@ -39,108 +39,139 @@
 
 void DetermineCombatRound(object oIntruder = OBJECT_INVALID, int nAI_Difficulty = 10);
 
-object GetSumMaster() {
+object GetSumMaster()
+{
 	return GetLocalObject(OBJECT_SELF, "SUM_MASTER");
 }
 
-int IsMaster(object oPC) {
-	return GetIsObjectValid(oPC) && ( GetSumMaster() == oPC );
+int IsMaster(object oPC)
+{
+	return GetIsObjectValid(oPC) && (GetSumMaster() == oPC);
 }
 
-int GetShouldFollow() {
+int GetShouldFollow()
+{
 	return GetLocalInt(OBJECT_SELF, "SHOULD_FOLLOW");
 }
 
-int GetShouldDefend() {
+int GetShouldDefend()
+{
 	return !GetIsObjectValid(GetSumMaster())
 		   || GetLocalInt(OBJECT_SELF, "SHOULD_FIGHT") > 0;
 }
 
-int GetShouldAttack() {
+int GetShouldAttack()
+{
 	return !GetIsObjectValid(GetSumMaster())
 		   || GetLocalInt(OBJECT_SELF, "SHOULD_FIGHT") > 1;
 }
 
-void SetFollowBehaviour(int iFollow) {
+void SetFollowBehaviour(int iFollow)
+{
 	SetLocalInt(OBJECT_SELF, "SHOULD_FOLLOW", iFollow);
 	SendMessageToPC(GetSumMaster(), "Eure Kreatur wird euch " +
-		( iFollow ? "" : "nicht " ) + "folgen.");
+					(iFollow ? "" : "nicht ") + "folgen.");
 }
 
-void SetFightBehaviour(int iFight) {
+void SetFightBehaviour(int iFight)
+{
 	SetLocalInt(OBJECT_SELF, "SHOULD_FIGHT", iFight);
-	switch ( iFight ) {
-		case 0:
-			SendMessageToPC(GetSumMaster(), "Eure Kreatur wird nicht kaempfen.");
-			break;
-		case 1:
-			SendMessageToPC(GetSumMaster(), "Eure Kreatur wird sich und Euch verteidigen.");
-			break;
-		case 2:
-			SendMessageToPC(GetSumMaster(), "Eure Kreatur wird selbststaendig Feinde bekaempfen.");
-			break;
+
+	switch (iFight) {
+	case 0:
+		SendMessageToPC(GetSumMaster(), "Eure Kreatur wird nicht kaempfen.");
+		break;
+
+	case 1:
+		SendMessageToPC(GetSumMaster(), "Eure Kreatur wird sich und Euch verteidigen.");
+		break;
+
+	case 2:
+		SendMessageToPC(GetSumMaster(), "Eure Kreatur wird selbststaendig Feinde bekaempfen.");
+		break;
 	}
 }
 
-void MoveToMaster() {
+void MoveToMaster()
+{
 	object oMaster = GetSumMaster();
-	if ( GetIsObjectValid(oMaster) ) {
+
+	if (GetIsObjectValid(oMaster)) {
 		float fDist = GetDistanceToObject(oMaster);
-		if ( GetArea(oMaster) != GetArea(OBJECT_SELF) || fDist > 50.0 ) {
+
+		if (GetArea(oMaster) != GetArea(OBJECT_SELF) || fDist > 50.0) {
 			ClearAllActions();
 			ActionJumpToObject(oMaster);
-		} else if ( fDist > 5.0f ) {
+
+		} else if (fDist > 5.0f) {
 			ClearAllActions();
 			ActionMoveToObject(oMaster, TRUE, 3.0f);
 		}
 	}
 }
 
-void Sum_RespondShout(object oShouter, int nMatch) {
-	if ( !IsMaster(oShouter) ) return;
+void Sum_RespondShout(object oShouter, int nMatch)
+{
+	if (!IsMaster(oShouter)) return;
 
-	switch ( nMatch ) {
-		case ASSOCIATE_COMMAND_ATTACKNEAREST:
-			if ( !GetShouldAttack() )
-				SetFightBehaviour(2);
-			else
-				DetermineCombatRound();
-			break;
-		case ASSOCIATE_COMMAND_FOLLOWMASTER:
-			if ( GetIsInCombat(OBJECT_SELF) ) {
-				ClearAllActions(TRUE);
-				MoveToMaster();
-			} else if ( !GetShouldFollow() )
-				SetFollowBehaviour(1);
-			else
-				SetFightBehaviour(0);
-			PlayVoiceChat(VOICE_CHAT_YES);
-			break;
-		case ASSOCIATE_COMMAND_GUARDMASTER:
-			if ( GetIsInCombat(OBJECT_SELF) )
-				MoveToMaster();
-			else {
-				SetFollowBehaviour(1);
-				SetFightBehaviour(1);
-			}
-			PlayVoiceChat(VOICE_CHAT_YES);
-			break;
-		case ASSOCIATE_COMMAND_MASTERATTACKEDOTHER:
-			if ( !GetIsInCombat(OBJECT_SELF) && GetShouldAttack() )
-				DetermineCombatRound();
-			break;
-		case ASSOCIATE_COMMAND_MASTERGOINGTOBEATTACKED:
-			if ( !GetIsInCombat(OBJECT_SELF) && GetShouldDefend() )
-				DetermineCombatRound();
-			break;
-		case ASSOCIATE_COMMAND_MASTERUNDERATTACK:
-			if ( !GetIsInCombat(OBJECT_SELF) && GetShouldDefend() )
-				DetermineCombatRound();
-			break;
-		case ASSOCIATE_COMMAND_STANDGROUND:
-			SetFollowBehaviour(0);
-			PlayVoiceChat(VOICE_CHAT_YES);
-			break;
+	switch (nMatch) {
+	case ASSOCIATE_COMMAND_ATTACKNEAREST:
+		if (!GetShouldAttack())
+			SetFightBehaviour(2);
+
+		else
+			DetermineCombatRound();
+
+		break;
+
+	case ASSOCIATE_COMMAND_FOLLOWMASTER:
+		if (GetIsInCombat(OBJECT_SELF)) {
+			ClearAllActions(TRUE);
+			MoveToMaster();
+
+		} else if (!GetShouldFollow())
+			SetFollowBehaviour(1);
+
+		else
+			SetFightBehaviour(0);
+
+		PlayVoiceChat(VOICE_CHAT_YES);
+		break;
+
+	case ASSOCIATE_COMMAND_GUARDMASTER:
+		if (GetIsInCombat(OBJECT_SELF))
+			MoveToMaster();
+
+		else {
+			SetFollowBehaviour(1);
+			SetFightBehaviour(1);
+		}
+
+		PlayVoiceChat(VOICE_CHAT_YES);
+		break;
+
+	case ASSOCIATE_COMMAND_MASTERATTACKEDOTHER:
+		if (!GetIsInCombat(OBJECT_SELF) && GetShouldAttack())
+			DetermineCombatRound();
+
+		break;
+
+	case ASSOCIATE_COMMAND_MASTERGOINGTOBEATTACKED:
+		if (!GetIsInCombat(OBJECT_SELF) && GetShouldDefend())
+			DetermineCombatRound();
+
+		break;
+
+	case ASSOCIATE_COMMAND_MASTERUNDERATTACK:
+		if (!GetIsInCombat(OBJECT_SELF) && GetShouldDefend())
+			DetermineCombatRound();
+
+		break;
+
+	case ASSOCIATE_COMMAND_STANDGROUND:
+		SetFollowBehaviour(0);
+		PlayVoiceChat(VOICE_CHAT_YES);
+		break;
 	}
 }
 

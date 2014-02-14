@@ -8,7 +8,8 @@ void Variant_FischerRand();
 
 void Variant_Displacement();
 
-void main() {
+void main()
+{
 	SetLocalInt(OBJECT_SELF, "Turn", 1);
 	SetLocalInt(OBJECT_SELF, "GameState", 1);
 	SetLocalInt(OBJECT_SELF, "piecefight", 0);
@@ -21,24 +22,29 @@ void main() {
 
 
 	int nVariant = GetLocalInt(OBJECT_SELF, "nVariant");
-	switch ( nVariant ) {
-		default:
-		case VARIANT_STANDARD:
-			Variant_Standard();
-			break;
-		case VARIANT_PAWNS:
-			Variant_Pawns();
-			break;
-		case VARIANT_FISCHERRANDOM:
-			Variant_FischerRand();
-			break;
-		case VARIANT_DISPLACEMENT:
-			Variant_Displacement();
-			break;
+
+	switch (nVariant) {
+	default:
+	case VARIANT_STANDARD:
+		Variant_Standard();
+		break;
+
+	case VARIANT_PAWNS:
+		Variant_Pawns();
+		break;
+
+	case VARIANT_FISCHERRANDOM:
+		Variant_FischerRand();
+		break;
+
+	case VARIANT_DISPLACEMENT:
+		Variant_Displacement();
+		break;
 	}
 }
 
-void Variant_Standard() {
+void Variant_Standard()
+{
 	int x, y, z;
 	string sTemp;
 	location lLoc;
@@ -53,20 +59,24 @@ void Variant_Standard() {
 	fxCenter = vLoc.x;
 	fyCenter = vLoc.y;
 	fFacing = GetFacing(oCenterPoint);
+
 	// workaround to deal with bug in GetFacing in game version 1.22 and earlier
 	// won't hurt to have it in later (fixed) game versions, so I'll leave it
-	if ( fFacing > 360.0 ) {
+	if (fFacing > 360.0) {
 		fFacing = 720 - fFacing;
 	}
+
 	SetLocalFloat(OBJECT_SELF, "facing", fFacing);
 
 	fSpacing = 2.5;
 	vLoc.z = 0.0;
 	z = 0;
-	for ( x = 0; x < 8; x++ ) {
-		fx = fSpacing * ( x - 4 ) + fSpacing / 2;
-		for ( y = 7; y >= 0; y-- ) {
-			fy = fSpacing * ( y - 4 ) + fSpacing / 2;
+
+	for (x = 0; x < 8; x++) {
+		fx = fSpacing * (x - 4) + fSpacing / 2;
+
+		for (y = 7; y >= 0; y--) {
+			fy = fSpacing * (y - 4) + fSpacing / 2;
 			vLoc.x = fx * cos(fFacing) - fy * sin(fFacing) + fxCenter;
 			vLoc.y = fy * cos(fFacing) + fx * sin(fFacing) + fyCenter;
 			lLoc = Location(oArea, vLoc, 0.0);
@@ -76,22 +86,25 @@ void Variant_Standard() {
 			z++;
 		}
 	}
+
 	// set up white pawns
-	for ( x = 8; x < 16; x++ ) {
+	for (x = 8; x < 16; x++) {
 		lLoc = GetLocationArray(OBJECT_SELF, "lSquare", x);
 		oTemp = CreateObject(OBJECT_TYPE_CREATURE, "c_pawn_w", lLoc);
 		SetLocalInt(oTemp, "nPosition", x);
 		SetIntArray(OBJECT_SELF, "nSquare", x, 1);
 		SetObjectArray(OBJECT_SELF, "oSquare", x, oTemp);
 	}
+
 	// set up black pawns
-	for ( x = 48; x < 56; x++ ) {
+	for (x = 48; x < 56; x++) {
 		lLoc = GetLocationArray(OBJECT_SELF, "lSquare", x);
 		oTemp = CreateObject(OBJECT_TYPE_CREATURE, "c_pawn_b", lLoc);
 		SetLocalInt(oTemp, "nPosition", x);
 		SetIntArray(OBJECT_SELF, "nSquare", x, -1);
 		SetObjectArray(OBJECT_SELF, "oSquare", x, oTemp);
 	}
+
 	// set up white rooks
 	lLoc = GetLocationArray(OBJECT_SELF, "lSquare", 0);
 	oTemp = CreateObject(OBJECT_TYPE_CREATURE, "c_rook_w", lLoc);
@@ -191,17 +204,41 @@ void Variant_Standard() {
 
 	// set up array for notation
 	z = 0;
-	for ( y = 1; y < 9; y++ ) {
-		for ( x = 1; x < 9; x++ ) {
-			switch ( x ) {
-				case 1: sTemp = "a"; break;
-				case 2: sTemp = "b"; break;
-				case 3: sTemp = "c"; break;
-				case 4: sTemp = "d"; break;
-				case 5: sTemp = "e"; break;
-				case 6: sTemp = "f"; break;
-				case 7: sTemp = "g"; break;
-				case 8: sTemp = "h"; break;
+
+	for (y = 1; y < 9; y++) {
+		for (x = 1; x < 9; x++) {
+			switch (x) {
+			case 1:
+				sTemp = "a";
+				break;
+
+			case 2:
+				sTemp = "b";
+				break;
+
+			case 3:
+				sTemp = "c";
+				break;
+
+			case 4:
+				sTemp = "d";
+				break;
+
+			case 5:
+				sTemp = "e";
+				break;
+
+			case 6:
+				sTemp = "f";
+				break;
+
+			case 7:
+				sTemp = "g";
+				break;
+
+			case 8:
+				sTemp = "h";
+				break;
 			}
 
 			sTemp = sTemp + IntToString(y);
@@ -213,7 +250,8 @@ void Variant_Standard() {
 
 
 
-void Variant_Pawns() {
+void Variant_Pawns()
+{
 	int x, y, z;
 	string sTemp;
 	location lLoc;
@@ -228,20 +266,24 @@ void Variant_Pawns() {
 	fxCenter = vLoc.x;
 	fyCenter = vLoc.y;
 	fFacing = GetFacing(oCenterPoint);
+
 	// workaround to deal with bug in GetFacing in game version 1.22 and earlier
 	// won't hurt to have it in later (fixed) game versions, so I'll leave it
-	if ( fFacing > 360.0 ) {
+	if (fFacing > 360.0) {
 		fFacing = 720 - fFacing;
 	}
+
 	SetLocalFloat(OBJECT_SELF, "facing", fFacing);
 
 	fSpacing = 2.5;
 	vLoc.z = 0.0;
 	z = 0;
-	for ( x = 0; x < 8; x++ ) {
-		fx = fSpacing * ( x - 4 ) + fSpacing / 2;
-		for ( y = 7; y >= 0; y-- ) {
-			fy = fSpacing * ( y - 4 ) + fSpacing / 2;
+
+	for (x = 0; x < 8; x++) {
+		fx = fSpacing * (x - 4) + fSpacing / 2;
+
+		for (y = 7; y >= 0; y--) {
+			fy = fSpacing * (y - 4) + fSpacing / 2;
 			vLoc.x = fx * cos(fFacing) - fy * sin(fFacing) + fxCenter;
 			vLoc.y = fy * cos(fFacing) + fx * sin(fFacing) + fyCenter;
 			lLoc = Location(oArea, vLoc, 0.0);
@@ -251,42 +293,49 @@ void Variant_Pawns() {
 			z++;
 		}
 	}
+
 	// set up white pawns
-	for ( x = 8; x < 16; x++ ) {
+	for (x = 8; x < 16; x++) {
 		lLoc = GetLocationArray(OBJECT_SELF, "lSquare", x);
 		oTemp = CreateObject(OBJECT_TYPE_CREATURE, "c_pawn_w", lLoc);
 		SetLocalInt(oTemp, "nPosition", x);
 		SetIntArray(OBJECT_SELF, "nSquare", x, 1);
 		SetObjectArray(OBJECT_SELF, "oSquare", x, oTemp);
 	}
+
 	// set up black pawns
-	for ( x = 48; x < 56; x++ ) {
+	for (x = 48; x < 56; x++) {
 		lLoc = GetLocationArray(OBJECT_SELF, "lSquare", x);
 		oTemp = CreateObject(OBJECT_TYPE_CREATURE, "c_pawn_b", lLoc);
 		SetLocalInt(oTemp, "nPosition", x);
 		SetIntArray(OBJECT_SELF, "nSquare", x, -1);
 		SetObjectArray(OBJECT_SELF, "oSquare", x, oTemp);
 	}
+
 	// set up white pawns 2nd row
-	for ( x = 0; x < 8; x++ ) {
-		if (/*x == 3 || */ x == 4 )
+	for (x = 0; x < 8; x++) {
+		if (/*x == 3 || */ x == 4)
 			continue;
+
 		lLoc = GetLocationArray(OBJECT_SELF, "lSquare", x);
 		oTemp = CreateObject(OBJECT_TYPE_CREATURE, "c_pawn_w", lLoc);
 		SetLocalInt(oTemp, "nPosition", x);
 		SetIntArray(OBJECT_SELF, "nSquare", x, 1);
 		SetObjectArray(OBJECT_SELF, "oSquare", x, oTemp);
 	}
+
 	// set up black pawns 2nd row
-	for ( x = 56; x < 64; x++ ) {
-		if (/*x == 59 || */ x == 60 )
+	for (x = 56; x < 64; x++) {
+		if (/*x == 59 || */ x == 60)
 			continue;
+
 		lLoc = GetLocationArray(OBJECT_SELF, "lSquare", x);
 		oTemp = CreateObject(OBJECT_TYPE_CREATURE, "c_pawn_b", lLoc);
 		SetLocalInt(oTemp, "nPosition", x);
 		SetIntArray(OBJECT_SELF, "nSquare", x, -1);
 		SetObjectArray(OBJECT_SELF, "oSquare", x, oTemp);
 	}
+
 	// set up white queen and king
 	/*lLoc = GetLocationArray(OBJECT_SELF, "lSquare", 3);
 	* oTemp = CreateObject(OBJECT_TYPE_CREATURE, "c_queen_w", lLoc);
@@ -313,17 +362,41 @@ void Variant_Pawns() {
 
 	// set up array for notation
 	z = 0;
-	for ( y = 1; y < 9; y++ ) {
-		for ( x = 1; x < 9; x++ ) {
-			switch ( x ) {
-				case 1: sTemp = "a"; break;
-				case 2: sTemp = "b"; break;
-				case 3: sTemp = "c"; break;
-				case 4: sTemp = "d"; break;
-				case 5: sTemp = "e"; break;
-				case 6: sTemp = "f"; break;
-				case 7: sTemp = "g"; break;
-				case 8: sTemp = "h"; break;
+
+	for (y = 1; y < 9; y++) {
+		for (x = 1; x < 9; x++) {
+			switch (x) {
+			case 1:
+				sTemp = "a";
+				break;
+
+			case 2:
+				sTemp = "b";
+				break;
+
+			case 3:
+				sTemp = "c";
+				break;
+
+			case 4:
+				sTemp = "d";
+				break;
+
+			case 5:
+				sTemp = "e";
+				break;
+
+			case 6:
+				sTemp = "f";
+				break;
+
+			case 7:
+				sTemp = "g";
+				break;
+
+			case 8:
+				sTemp = "h";
+				break;
 			}
 
 			sTemp = sTemp + IntToString(y);
@@ -335,7 +408,8 @@ void Variant_Pawns() {
 
 
 
-void Variant_FischerRand() {
+void Variant_FischerRand()
+{
 	int x, y, z;
 	string sTemp;
 	location lLoc;
@@ -351,20 +425,24 @@ void Variant_FischerRand() {
 	fxCenter = vLoc.x;
 	fyCenter = vLoc.y;
 	fFacing = GetFacing(oCenterPoint);
+
 	// workaround to deal with bug in GetFacing in game version 1.22 and earlier
 	// won't hurt to have it in later (fixed) game versions, so I'll leave it
-	if ( fFacing > 360.0 ) {
+	if (fFacing > 360.0) {
 		fFacing = 720 - fFacing;
 	}
+
 	SetLocalFloat(OBJECT_SELF, "facing", fFacing);
 
 	fSpacing = 2.5;
 	vLoc.z = 0.0;
 	z = 0;
-	for ( x = 0; x < 8; x++ ) {
-		fx = fSpacing * ( x - 4 ) + fSpacing / 2;
-		for ( y = 7; y >= 0; y-- ) {
-			fy = fSpacing * ( y - 4 ) + fSpacing / 2;
+
+	for (x = 0; x < 8; x++) {
+		fx = fSpacing * (x - 4) + fSpacing / 2;
+
+		for (y = 7; y >= 0; y--) {
+			fy = fSpacing * (y - 4) + fSpacing / 2;
 			vLoc.x = fx * cos(fFacing) - fy * sin(fFacing) + fxCenter;
 			vLoc.y = fy * cos(fFacing) + fx * sin(fFacing) + fyCenter;
 			lLoc = Location(oArea, vLoc, 0.0);
@@ -374,22 +452,25 @@ void Variant_FischerRand() {
 			z++;
 		}
 	}
+
 	// set up white pawns
-	for ( x = 8; x < 16; x++ ) {
+	for (x = 8; x < 16; x++) {
 		lLoc = GetLocationArray(OBJECT_SELF, "lSquare", x);
 		oTemp = CreateObject(OBJECT_TYPE_CREATURE, "c_pawn_w", lLoc);
 		SetLocalInt(oTemp, "nPosition", x);
 		SetIntArray(OBJECT_SELF, "nSquare", x, 1);
 		SetObjectArray(OBJECT_SELF, "oSquare", x, oTemp);
 	}
+
 	// set up black pawns
-	for ( x = 48; x < 56; x++ ) {
+	for (x = 48; x < 56; x++) {
 		lLoc = GetLocationArray(OBJECT_SELF, "lSquare", x);
 		oTemp = CreateObject(OBJECT_TYPE_CREATURE, "c_pawn_b", lLoc);
 		SetLocalInt(oTemp, "nPosition", x);
 		SetIntArray(OBJECT_SELF, "nSquare", x, -1);
 		SetObjectArray(OBJECT_SELF, "oSquare", x, oTemp);
 	}
+
 	// The positions. Fill them at random.
 	// White goes from 0 to 7 inclusive,
 	// Black goes from 56 to 63
@@ -505,17 +586,41 @@ void Variant_FischerRand() {
 
 	// set up array for notation
 	z = 0;
-	for ( y = 1; y < 9; y++ ) {
-		for ( x = 1; x < 9; x++ ) {
-			switch ( x ) {
-				case 1: sTemp = "a"; break;
-				case 2: sTemp = "b"; break;
-				case 3: sTemp = "c"; break;
-				case 4: sTemp = "d"; break;
-				case 5: sTemp = "e"; break;
-				case 6: sTemp = "f"; break;
-				case 7: sTemp = "g"; break;
-				case 8: sTemp = "h"; break;
+
+	for (y = 1; y < 9; y++) {
+		for (x = 1; x < 9; x++) {
+			switch (x) {
+			case 1:
+				sTemp = "a";
+				break;
+
+			case 2:
+				sTemp = "b";
+				break;
+
+			case 3:
+				sTemp = "c";
+				break;
+
+			case 4:
+				sTemp = "d";
+				break;
+
+			case 5:
+				sTemp = "e";
+				break;
+
+			case 6:
+				sTemp = "f";
+				break;
+
+			case 7:
+				sTemp = "g";
+				break;
+
+			case 8:
+				sTemp = "h";
+				break;
 			}
 
 			sTemp = sTemp + IntToString(y);
@@ -527,7 +632,8 @@ void Variant_FischerRand() {
 
 
 
-void Variant_Displacement() {
+void Variant_Displacement()
+{
 	int x, y, z;
 	string sTemp;
 	location lLoc;
@@ -542,20 +648,24 @@ void Variant_Displacement() {
 	fxCenter = vLoc.x;
 	fyCenter = vLoc.y;
 	fFacing = GetFacing(oCenterPoint);
+
 	// workaround to deal with bug in GetFacing in game version 1.22 and earlier
 	// won't hurt to have it in later (fixed) game versions, so I'll leave it
-	if ( fFacing > 360.0 ) {
+	if (fFacing > 360.0) {
 		fFacing = 720 - fFacing;
 	}
+
 	SetLocalFloat(OBJECT_SELF, "facing", fFacing);
 
 	fSpacing = 2.5;
 	vLoc.z = 0.0;
 	z = 0;
-	for ( x = 0; x < 8; x++ ) {
-		fx = fSpacing * ( x - 4 ) + fSpacing / 2;
-		for ( y = 7; y >= 0; y-- ) {
-			fy = fSpacing * ( y - 4 ) + fSpacing / 2;
+
+	for (x = 0; x < 8; x++) {
+		fx = fSpacing * (x - 4) + fSpacing / 2;
+
+		for (y = 7; y >= 0; y--) {
+			fy = fSpacing * (y - 4) + fSpacing / 2;
 			vLoc.x = fx * cos(fFacing) - fy * sin(fFacing) + fxCenter;
 			vLoc.y = fy * cos(fFacing) + fx * sin(fFacing) + fyCenter;
 			lLoc = Location(oArea, vLoc, 0.0);
@@ -565,22 +675,25 @@ void Variant_Displacement() {
 			z++;
 		}
 	}
+
 	// set up white pawns
-	for ( x = 8; x < 16; x++ ) {
+	for (x = 8; x < 16; x++) {
 		lLoc = GetLocationArray(OBJECT_SELF, "lSquare", x);
 		oTemp = CreateObject(OBJECT_TYPE_CREATURE, "c_pawn_w", lLoc);
 		SetLocalInt(oTemp, "nPosition", x);
 		SetIntArray(OBJECT_SELF, "nSquare", x, 1);
 		SetObjectArray(OBJECT_SELF, "oSquare", x, oTemp);
 	}
+
 	// set up black pawns
-	for ( x = 48; x < 56; x++ ) {
+	for (x = 48; x < 56; x++) {
 		lLoc = GetLocationArray(OBJECT_SELF, "lSquare", x);
 		oTemp = CreateObject(OBJECT_TYPE_CREATURE, "c_pawn_b", lLoc);
 		SetLocalInt(oTemp, "nPosition", x);
 		SetIntArray(OBJECT_SELF, "nSquare", x, -1);
 		SetObjectArray(OBJECT_SELF, "oSquare", x, oTemp);
 	}
+
 	// set up white rooks
 	lLoc = GetLocationArray(OBJECT_SELF, "lSquare", 0);
 	oTemp = CreateObject(OBJECT_TYPE_CREATURE, "c_rook_w", lLoc);
@@ -681,17 +794,41 @@ void Variant_Displacement() {
 
 	// set up array for notation
 	z = 0;
-	for ( y = 1; y < 9; y++ ) {
-		for ( x = 1; x < 9; x++ ) {
-			switch ( x ) {
-				case 1: sTemp = "a"; break;
-				case 2: sTemp = "b"; break;
-				case 3: sTemp = "c"; break;
-				case 4: sTemp = "d"; break;
-				case 5: sTemp = "e"; break;
-				case 6: sTemp = "f"; break;
-				case 7: sTemp = "g"; break;
-				case 8: sTemp = "h"; break;
+
+	for (y = 1; y < 9; y++) {
+		for (x = 1; x < 9; x++) {
+			switch (x) {
+			case 1:
+				sTemp = "a";
+				break;
+
+			case 2:
+				sTemp = "b";
+				break;
+
+			case 3:
+				sTemp = "c";
+				break;
+
+			case 4:
+				sTemp = "d";
+				break;
+
+			case 5:
+				sTemp = "e";
+				break;
+
+			case 6:
+				sTemp = "f";
+				break;
+
+			case 7:
+				sTemp = "g";
+				break;
+
+			case 8:
+				sTemp = "h";
+				break;
 			}
 
 			sTemp = sTemp + IntToString(y);

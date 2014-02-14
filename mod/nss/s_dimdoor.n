@@ -2,8 +2,9 @@ extern("x0_i0_position")
 extern("inc_teleport")
 extern("x2_inc_spellhook")
 
-void main() {
-	if ( !X2PreSpellCastCode() )
+void main()
+{
+	if (!X2PreSpellCastCode())
 		return;
 
 	object oPC = OBJECT_SELF;
@@ -12,25 +13,30 @@ void main() {
 
 	if (is_valid(oTarget)) {
 		switch (GetObjectType(oTarget)) {
-			case OBJECT_TYPE_TRIGGER:
-			case OBJECT_TYPE_DOOR:
-				object oTransitionTarget = GetTransitionTarget(oTarget);
+		case OBJECT_TYPE_TRIGGER:
+		case OBJECT_TYPE_DOOR:
+			object oTransitionTarget = GetTransitionTarget(oTarget);
 
-				if (!is_valid(oTransitionTarget)) { // in-area-jump through door.
-					oTransitionTarget = oTarget;
-					if (GetIsOnThisSideOfFacing(oTransitionTarget, oPC))
-						lTarget = GetBehindLocation(oTransitionTarget, DISTANCE_SHORT);
-					else
-						lTarget = GetAheadLocation(oTransitionTarget, DISTANCE_SHORT);
-				} else {
+			if (!is_valid(oTransitionTarget)) { // in-area-jump through door.
+				oTransitionTarget = oTarget;
+
+				if (GetIsOnThisSideOfFacing(oTransitionTarget, oPC))
 					lTarget = GetBehindLocation(oTransitionTarget, DISTANCE_SHORT);
-				}
-				break;
 
-			default:
-				lTarget = GetLocation(oTarget);
-				break;
+				else
+					lTarget = GetAheadLocation(oTransitionTarget, DISTANCE_SHORT);
+
+			} else {
+				lTarget = GetBehindLocation(oTransitionTarget, DISTANCE_SHORT);
+			}
+
+			break;
+
+		default:
+			lTarget = GetLocation(oTarget);
+			break;
 		}
+
 	} else
 		lTarget = GetSpellTargetLocation();
 

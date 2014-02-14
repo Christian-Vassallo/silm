@@ -6,14 +6,16 @@ int CharacterNeedsRegistering(object oPC);
 
 
 
-int CharacterNeedsRegistering(object oPC) {
+int CharacterNeedsRegistering(object oPC)
+{
 	int iR = GetRacialType(oPC);
 
 	string sS = GetStringLowerCase(GetSubRace(oPC));
-	if ( RACIAL_TYPE_FEY == iR
-		//RACIAL_TYPE_HALFORC == iR ||
-		//RACIAL_TYPE_HUMANOID_ORC == iR
-	)
+
+	if (RACIAL_TYPE_FEY == iR
+			//RACIAL_TYPE_HALFORC == iR ||
+			//RACIAL_TYPE_HUMANOID_ORC == iR
+	   )
 		return 1;
 
 
@@ -39,10 +41,10 @@ int CharacterNeedsRegistering(object oPC) {
 	)
 		return 1;
 
-	if ( GetAlignmentGoodEvil(oPC) == ALIGNMENT_EVIL )
+	if (GetAlignmentGoodEvil(oPC) == ALIGNMENT_EVIL)
 		return 1;
 
-	if ( GetTotalLevel(oPC) > 4 )
+	if (GetTotalLevel(oPC) > 4)
 		return 1;
 
 	return 0;

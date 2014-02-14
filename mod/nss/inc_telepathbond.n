@@ -12,7 +12,7 @@ extern("inc_chatlog")
 // oSpeakingObject can be a placeable or item,
 // too. (via forcetalk)
 int DelegateHeardToPartners(object oPC, object oSpeakingObject, int nMode,
-	string sMessage);
+							string sMessage);
 
 // oPC just said sMessage in nMode, so
 // delegate it to all partners that are
@@ -23,27 +23,31 @@ int DelegateOwnToPartners(object oPC, int nMode, string sMessage);
 // so send it over.
 // Returns the number of PCs reached
 int DelegateTelepathicMessageToPartners(object oPC, string sMessage,
-		string addWhere = "1=1");
+										string addWhere = "1=1");
 
 // Sets bonds active/inactive
 void SetBondsActive(object oPC, int bState);
 
 int GetHasActiveBonds(object oPC, string addWhere = "1=1");
 
-int GetHasActiveBonds(object oPC, string addWhere = "1=1") {
+int GetHasActiveBonds(object oPC, string addWhere = "1=1")
+{
 	int nCID = GetCharacterID(oPC);
+
 	if (!nCID)
 		return false;
 
 	pQ("select id from telepathic_bonds where character = " + pSi(nCID) +
-			" and active = true and " + addWhere + ";");
+	   " and active = true and " + addWhere + ";");
 	return pF();
 }
 
 int DelegateTelepathicMessageToPartners(object oPC, string sMessage,
-		string addWhere = "1=1") {
+										string addWhere = "1=1")
+{
 
 	int nCID = GetCharacterID(oPC);
+
 	if (!nCID)
 		return 0;
 
@@ -55,12 +59,12 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage,
 	string sStart =  ColorTag(cTeal);
 	string sShortName = GetName(oPC);
 	string sRest = ColorTagClose() + " " +
-		ColorisePlayerText(oPC, CHATMODE_TALK, sMessage);
+				   ColorisePlayerText(oPC, CHATMODE_TALK, sMessage);
 	sMessage = sStart + sShortName + sRest;
 
 
 	pQ("select t_character, shortname from telepathic_bonds where character = " +
-		IntToString(nCID) + " and expire <= unixts() and " + addWhere + ";");
+	   IntToString(nCID) + " and expire <= unixts() and " + addWhere + ";");
 
 	while (pF()) {
 		nTCID = StringToInt(pG(1));
@@ -73,12 +77,13 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage,
 
 			if (USE_TELL)
 				NWNXChatSpeakToChannel(oPC, MSG_PRIVATE, sMessage, oB);
+
 			else
 				SendMessageToPC(oB, sMessage);
-			
+
 			if (gvGetInt("telepathbond_delegate_to_dm"))
 				SendMessageToAllDMs("[TB] " + GetName(oPC) +
-					" > " + GetName(oB) + ": " + sMessage);
+									" > " + GetName(oB) + ": " + sMessage);
 
 			ChatLog(oPC, CHATMODE_TELEPATHIC_BOND, sMessageRaw, oB);
 
@@ -86,24 +91,28 @@ int DelegateTelepathicMessageToPartners(object oPC, string sMessage,
 		}
 
 	}
+
 	if (!USE_TELL && nCount > 0) {
 		if (DARKEN_OWN > 0)
 			sRest = ColorTagClose() + " " +
-				ColorisePlayerTextOverride(oPC, CHATMODE_TALK, sMessageRaw,
-					Darken(colorText, DARKEN_OWN),
-					Darken(colorEmote, DARKEN_OWN),
-					Darken(colorEmphasis, DARKEN_OWN),
-					Darken(colorEmphasisInEmote, DARKEN_OWN));
+					ColorisePlayerTextOverride(oPC, CHATMODE_TALK, sMessageRaw,
+											   Darken(colorText, DARKEN_OWN),
+											   Darken(colorEmote, DARKEN_OWN),
+											   Darken(colorEmphasis, DARKEN_OWN),
+											   Darken(colorEmphasisInEmote, DARKEN_OWN));
 
 		sMessage = ColorTag(CS(MIN, MI, MI)) + "TB" + sRest;
 		SendMessageToPC(oPC, sMessage);
 	}
+
 	return nCount;
 }
 
 
-int DelegateOwnToPartners(object oPC, int nMode, string sMessage) {
+int DelegateOwnToPartners(object oPC, int nMode, string sMessage)
+{
 	int nCID = GetCharacterID(oPC);
+
 	if (!nCID)
 		return 0;
 
@@ -114,12 +123,12 @@ int DelegateOwnToPartners(object oPC, int nMode, string sMessage) {
 	string sStart =  ColorTag(cOrange);
 	string sShortName = GetName(oPC);
 	string sRest = ColorTagClose() +
-		ColorisePlayerText(oPC, nMode, sMessage);
+				   ColorisePlayerText(oPC, nMode, sMessage);
 	string sMessage = sStart + sShortName + ": " + sRest;
 
 	pQ("select t_character, shortname from telepathic_bonds where character = " +
-		IntToString(nCID) + " and active = true and expire <= unixts() and " +
-		"send_spoken = true;");
+	   IntToString(nCID) + " and active = true and expire <= unixts() and " +
+	   "send_spoken = true;");
 
 	while (pF()) {
 		nTCID = StringToInt(pG(1));
@@ -128,16 +137,18 @@ int DelegateOwnToPartners(object oPC, int nMode, string sMessage) {
 
 		if (GetIsPC(oB)
 				&& !hears(oPC, oB, nMode & CHATMODE_TALK ?
-					TALKVOLUME_TALK : TALKVOLUME_WHISPER)) {
+						  TALKVOLUME_TALK : TALKVOLUME_WHISPER)) {
 
 			if (sShortName != "")
 				sMessage = sStart + sShortName + ": " + sRest;
 
 			if (USE_TELL)
 				NWNXChatSpeakToChannel(oPC, MSG_PRIVATE, sMessage, oB);
+
 			else
 				// FloatingTextStringOnCreature(sMessage, oB, false);
 				SendMessageToPC(oB, sMessage);
+
 			nCount++;
 		}
 
@@ -148,8 +159,10 @@ int DelegateOwnToPartners(object oPC, int nMode, string sMessage) {
 
 
 int DelegateHeardToPartners(object oPC, object oSpeakingObject, int nMode,
-		string sMessage) {
+							string sMessage)
+{
 	int nCID = GetCharacterID(oPC);
+
 	if (!nCID)
 		return 0;
 
@@ -160,26 +173,28 @@ int DelegateHeardToPartners(object oPC, object oSpeakingObject, int nMode,
 	string sStart =  ColorTag(cLightGrey);
 	string sShortName = GetName(oSpeakingObject);
 	string sRest = ColorTagClose() +
-		ColorisePlayerText(oSpeakingObject, nMode, sMessage);
+				   ColorisePlayerText(oSpeakingObject, nMode, sMessage);
 
 	string sMessage = sStart + sShortName + ": " + sRest;
 
 	pQ("select t_character, shortname from telepathic_bonds where character = " +
-		IntToString(nCID) + " and active = true and expire <= unixts() and " +
-		"send_heard = true;");
+	   IntToString(nCID) + " and active = true and expire <= unixts() and " +
+	   "send_heard = true;");
 
 	while (pF()) {
 		nTCID = StringToInt(pG(1));
 		oB = GetPCByCID(nTCID);
 
 		if (GetIsPC(oB)
-			&& !hears(oB, oSpeakingObject, nMode & CHATMODE_TALK ?
-				TALKVOLUME_TALK : TALKVOLUME_WHISPER)) {
+				&& !hears(oB, oSpeakingObject, nMode & CHATMODE_TALK ?
+						  TALKVOLUME_TALK : TALKVOLUME_WHISPER)) {
 
 			if (USE_TELL)
 				NWNXChatSpeakToChannel(oPC, MSG_PRIVATE, sMessage, oB);
+
 			else
 				SendMessageToPC(oB, sMessage);
+
 			nCount++;
 		}
 
@@ -188,14 +203,16 @@ int DelegateHeardToPartners(object oPC, object oSpeakingObject, int nMode,
 	return nCount;
 }
 
-void SetBondsActive(object oPC, int bState) {
+void SetBondsActive(object oPC, int bState)
+{
 	int nCID = GetCharacterID(oPC);
+
 	if (!nCID)
 		return;
 
 	bState = 0 != bState;
 
 	pQ("update telepathic_bonds set active=" +
-		IntToString(bState) + " where character = " +
-			IntToString(nCID) + " and expire <= unixts();");
+	   IntToString(bState) + " where character = " +
+	   IntToString(nCID) + " and expire <= unixts();");
 }

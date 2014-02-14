@@ -4,115 +4,129 @@
 extern("inc_time")
 
 const string
-	GV_TABLE = "gv";
+GV_TABLE = "gv";
 
 
-// Function: gvSetInt 
-// 
+// Function: gvSetInt
+//
 int gvSetInt(string sKey, int nValue);
-// Function: gvGetInt 
-// 
+// Function: gvGetInt
+//
 int gvGetInt(string sKey);
 
-// Function: gvSetStr 
-// 
+// Function: gvSetStr
+//
 string gvSetStr(string sKey, string sValue);
-// Function: gvGetStr 
-// 
+// Function: gvGetStr
+//
 string gvGetStr(string sKey);
 
-// Function: gvSetFloat 
-// 
+// Function: gvSetFloat
+//
 float gvSetFloat(string sKey, float fValue);
-// Function: gvGetFloat 
-// 
+// Function: gvGetFloat
+//
 float gvGetFloat(string sKey);
 
-// Function: gvSetVar 
-// 
+// Function: gvSetVar
+//
 string gvSetVar(string sKey, string sType, string sValue);
-// Function: gvGetVar 
-// 
+// Function: gvGetVar
+//
 string gvGetVar(string sKey, string sType);
 
-// Function: gvExistsVar 
-// 
+// Function: gvExistsVar
+//
 int gvExistsVar(string sKey, string sType);
 
 // Imp
 
 
-int gvSetInt(string sKey, int nValue) {
+int gvSetInt(string sKey, int nValue)
+{
 	return StringToInt(
-		gvSetVar(sKey, "int", IntToString(nValue))
-	);
+			   gvSetVar(sKey, "int", IntToString(nValue))
+		   );
 }
-int gvGetInt(string sKey) {
+int gvGetInt(string sKey)
+{
 	return StringToInt(
-		gvGetVar(sKey, "int")
-	);
+			   gvGetVar(sKey, "int")
+		   );
 }
-float gvSetFloat(string sKey, float fValue) {
+float gvSetFloat(string sKey, float fValue)
+{
 	return StringToFloat(
-		gvSetVar(sKey, "float", FloatToString(fValue))
-	);
+			   gvSetVar(sKey, "float", FloatToString(fValue))
+		   );
 }
 
-float gvGetFloat(string sKey) {
+float gvGetFloat(string sKey)
+{
 	return StringToFloat(
-		gvGetVar(sKey, "float")
-	);
+			   gvGetVar(sKey, "float")
+		   );
 }
 
 
-string gvSetStr(string sKey, string sValue) {
+string gvSetStr(string sKey, string sValue)
+{
 	return gvSetVar(sKey, "string", sValue);
 }
-string gvGetStr(string sKey) {
+string gvGetStr(string sKey)
+{
 	return gvGetVar(sKey, "string");
 }
 
 
-string gvSetVar(string sKey, string sType, string sValue) {
+string gvSetVar(string sKey, string sType, string sValue)
+{
 	int ts = GetUnixTimestamp();
 	string cacheKey = "gv_" + sType + "_" + sKey;
 	SetLocalString(GetModule(), cacheKey, sValue);
 	SetLocalInt(GetModule(), cacheKey, ts);
 
 	if (gvExistsVar(sKey, sType))
-		pQ("update " + GV_TABLE + " set value = " + pE(sValue) + 
-			" where key = " + pE(sKey) + " and type = " + pE(sType) + 
-			";");
+		pQ("update " + GV_TABLE + " set value = " + pE(sValue) +
+		   " where key = " + pE(sKey) + " and type = " + pE(sType) +
+		   ";");
+
 	else
 		pQ("insert into " + GV_TABLE + " (key, type, value) values(" +
-			pE(sKey) + ", " + pE(sType) + ", " + pE(sValue) + 
-			");"
-		);
+		   pE(sKey) + ", " + pE(sType) + ", " + pE(sValue) +
+		   ");"
+		  );
+
 	return sValue;
 }
 
-string gvGetVar(string sKey, string sType) {
+string gvGetVar(string sKey, string sType)
+{
 	string cacheKey = "gv_" + sType + "_" + sKey;
+
 	if (GetLocalInt(GetModule(), cacheKey) > 0)
-			return GetLocalString(GetModule(), cacheKey);
+		return GetLocalString(GetModule(), cacheKey);
 
 	pQ("select value, date_part('epoch', now())::int from " + GV_TABLE + " where " +
-		" key = " + pE(sKey) + 
-		" and type = " + pE(sType) + 
-		";");
+	   " key = " + pE(sKey) +
+	   " and type = " + pE(sType) +
+	   ";");
+
 	if (pF()) {
 		string ret = pG(1);
 		SetLocalString(GetModule(), cacheKey, ret);
 		SetLocalInt(GetModule(), cacheKey, StringToInt(pG(2)));
 		return ret;
+
 	} else
 		return "";
 }
 
-int gvExistsVar(string sKey, string sType) {
+int gvExistsVar(string sKey, string sType)
+{
 	pQ("select value from " + GV_TABLE + " where " +
-		" key = " + pE(sKey) + 
-		" and type = " + pE(sType) + 
-		";");
+	   " key = " + pE(sKey) +
+	   " and type = " + pE(sType) +
+	   ";");
 	return 1 == pF();
 }

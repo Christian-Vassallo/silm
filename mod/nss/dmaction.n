@@ -1,15 +1,16 @@
 extern("inc_nwnx_dmact")
 extern("inc_jvm")
 
-void main() {
+void main()
+{
 	object dm = OBJECT_SELF;
 	object target = oGetDMAction_Target();
 	vector t = vGetDMAction_Position();
 	location loc = Location(GetArea(dm), t, 0f);
 
 	int ret = RunEventScriptsFor(GetEventSerial(), "dmaction",
-		dm, dm, target, loc);
-	
-	if (ret & EVENT_RESULT_SUPPRESS) 
+								 dm, dm, target, loc);
+
+	if (ret & EVENT_RESULT_SUPPRESS)
 		PreventDMAction();
 }

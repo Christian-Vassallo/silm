@@ -11,9 +11,11 @@ extern("x0_i0_position")
 
 #define GENGUARD_MAX_DISTANCE_TO_ACTOR 10f
 
-bool is_weapon(object item) {
+bool is_weapon(object item)
+{
 	if (!is_valid(item))
 		return false;
+
 	int b = GetBaseItemType(item);
 	return
 		BASE_ITEM_BASTARDSWORD == b ||
@@ -52,23 +54,25 @@ bool is_weapon(object item) {
 		BASE_ITEM_WHIP == b;
 }
 
-void register_genguards() {
+void register_genguards()
+{
 	SetLocalString(GetModule(), "genguard_citydoors_guard_tag", "sl_bogenschuetze");
 	SetLocalInt(GetModule(), "genguard_citydoors_reject_weapons", 1);
 	SetLocalInt(GetModule(), "genguard_citydoors_reject_helmets", 0);
 	SetLocalInt(GetModule(), "genguard_citydoors_denysr_dunkelelf", 0);
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if ("module_load" == e.ev)
 		register_genguards();
 
 	if (
-			("door_failtoopen" == e.ev) &&
-			(GetLocalString(e.runnable, "genguard_type") != "" ||
-				GetLocalInt(e.runnable, "genguard_active"))
+		("door_failtoopen" == e.ev) &&
+		(GetLocalString(e.runnable, "genguard_type") != "" ||
+		 GetLocalInt(e.runnable, "genguard_active"))
 	) {
 		string genguard_type = GetLocalString(e.runnable, "genguard_type");
 
@@ -76,18 +80,23 @@ void main() {
 			return;
 
 		string guard_tag = "";
+
 		if (genguard_type != "")
 			guard_tag = GetLocalString(GetModule(), "genguard_" + genguard_type + "_guard_tag");
+
 		if (GetLocalString(e.runnable, "genguard_guard_tag") != "")
 			guard_tag = GetLocalString(e.runnable, "genguard_guard_tag");
 
 		object guard;
-		int allow = true; int throw_me_out = false;
+		int allow = true;
+		int throw_me_out = false;
 		location ltarget;
 
 		object otarget = GetTransitionTarget(e.runnable);
+
 		if (is_valid(otarget))
 			ltarget = GetLocation(otarget);
+
 		else
 			// This works, because the player always rotates to
 			// face the door on click.
@@ -107,27 +116,33 @@ void main() {
 		// inside: facing actor opposite facing runnable
 		// We're just assuming here. Testing will have to show if it works out.
 		bool is_inside = (GetFacing(e.actor) - GetFacing(e.runnable)) <= 20f
-			&& GetFacing(e.runnable) - GetFacing(e.actor) >= 20f;
+						 && GetFacing(e.runnable) - GetFacing(e.actor) >= 20f;
 
 		string subrace = GetLocalString(e.actor, "SR_Subrace");
 
-		if (((genguard_type != "" && GetLocalInt(GetModule(), "genguard_" + genguard_type + "_reject_helmets")) ||
+		if (((genguard_type != ""
+				&& GetLocalInt(GetModule(), "genguard_" + genguard_type + "_reject_helmets")) ||
 				GetLocalInt(e.runnable, "genguard_reject_helmets")) &&
 				is_valid(GetItemInSlot(INVENTORY_SLOT_HEAD, e.actor))) {
 			AssignCommand(guard, SpeakString("Zeigt Euer Gesicht, ehe Ihr passieren duerft!"));
 			allow = false;
-		
-		} else if ((genguard_type != "" && GetLocalInt(GetModule(), "genguard_" + genguard_type + "_denysr_" + subrace)) ||
-				GetLocalInt(e.runnable, "genguard_denysr_" + subrace)) {
-			AssignCommand(guard, SpeakString("Die Euren sind hier nicht willkommen! Haut ab, ehe wir Euch fortjagen!"));
+
+		} else if ((genguard_type != ""
+					&& GetLocalInt(GetModule(), "genguard_" + genguard_type + "_denysr_" + subrace)) ||
+				   GetLocalInt(e.runnable, "genguard_denysr_" + subrace)) {
+			AssignCommand(guard,
+						  SpeakString("Die Euren sind hier nicht willkommen! Haut ab, ehe wir Euch fortjagen!"));
+
 			if (is_inside)
 				throw_me_out = true;
+
 			else
 				allow = false;
 
-		} else if (((genguard_type != "" && GetLocalInt(GetModule(), "genguard_" + genguard_type + "_reject_weapons") ) ||
-			GetLocalInt(e.runnable, "genguard_reject_weapons"))
-				&& is_weapon(GetItemInSlot(INVENTORY_SLOT_RIGHTHAND, e.actor))) {
+		} else if (((genguard_type != ""
+					 && GetLocalInt(GetModule(), "genguard_" + genguard_type + "_reject_weapons")) ||
+					GetLocalInt(e.runnable, "genguard_reject_weapons"))
+				   && is_weapon(GetItemInSlot(INVENTORY_SLOT_RIGHTHAND, e.actor))) {
 			AssignCommand(guard, SpeakString("Steckt die Waffe weg!"));
 			allow = false;
 		}

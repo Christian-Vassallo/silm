@@ -3,12 +3,25 @@ extern("inc_cdb")
 extern("inc_scorco")
 #include "factions.nh"
 
-bool is_faction_commoner(object creature) { return GetFactionId(creature) == FACTION_COMMONER; }
-bool is_faction_defender(object creature) { return GetFactionId(creature) == FACTION_DEFENDER; }
-bool is_faction_merchant(object creature) { return GetFactionId(creature) == FACTION_MERCHANT; }
-bool is_faction_hostile(object creature) { return GetFactionId(creature) == FACTION_HOSTILE; }
+bool is_faction_commoner(object creature)
+{
+	return GetFactionId(creature) == FACTION_COMMONER;
+}
+bool is_faction_defender(object creature)
+{
+	return GetFactionId(creature) == FACTION_DEFENDER;
+}
+bool is_faction_merchant(object creature)
+{
+	return GetFactionId(creature) == FACTION_MERCHANT;
+}
+bool is_faction_hostile(object creature)
+{
+	return GetFactionId(creature) == FACTION_HOSTILE;
+}
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 	struct EventArguments a = GetEventArguments(e.serial);
 
@@ -17,19 +30,23 @@ void main() {
 	if (e.ev == "pc_attack") {
 		attacker = e.actor;
 		attackee = e.actedon;
+
 	} else if (e.ev == "creature_attacked") {
 		attacker = e.actor;
 		attackee = e.runnable;
+
 	} else if (e.ev == "creature_damaged") {
 		attacker = e.actor;
 		attackee = e.runnable;
+
 	} else
 		return;
 
 	if (is_dm(attacker))
 		return;
 
-	if (is_pc(attacker) && is_pc(attackee) && !GetIsDMPossessed(attacker) && !GetIsDMPossessed(attackee))
+	if (is_pc(attacker) && is_pc(attackee) && !GetIsDMPossessed(attacker)
+			&& !GetIsDMPossessed(attackee))
 		return;
 
 	if (
@@ -55,11 +72,12 @@ void main() {
 		ClearPersonalReputation(attackee, attacker);
 
 		SendMessageToAllDMs("[stopattack] Stopped " + otoa(attacker) + " from attacking " +
-			otoa(attackee) + " because that would mess up the standard factions.");
+							otoa(attackee) + " because that would mess up the standard factions.");
+
 		if (GetIsPC(attacker))
 			SendMessageToPC(attacker, "Du kannst " + GetName(attackee) +
-				" leider nicht angreifen; dies wuerde die Fraktionen zermuerben." +
-				" Sprich mit einem SL fuer Rollenspiel in diese Richtung."
-			);
+							" leider nicht angreifen; dies wuerde die Fraktionen zermuerben." +
+							" Sprich mit einem SL fuer Rollenspiel in diese Richtung."
+						   );
 	}
 }

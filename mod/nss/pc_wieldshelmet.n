@@ -1,8 +1,9 @@
-int StartingConditional() {
+int StartingConditional()
+{
 	object oPC = GetPCSpeaker();
 	object oHelmet = GetItemInSlot(INVENTORY_SLOT_HEAD, oPC);
 
-	if ( !GetIsObjectValid(oHelmet) )
+	if (!GetIsObjectValid(oHelmet))
 		return FALSE;
 
 	SetLocalObject(oPC, "CHG_CURRENT_ARM", oHelmet);

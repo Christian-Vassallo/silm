@@ -2,7 +2,8 @@ extern("inc_cdb")
 extern("inc_audit")
 extern("_gen")
 
-void main() {
+void main()
+{
 	object oPC = OBJECT_SELF;
 
 
@@ -10,7 +11,7 @@ void main() {
 //    if (!GetIsPC(oPC) || GetIsDM(oPC) || GetIsDMPossessed(oPC))
 //        return;
 
-	if ( GetIsDM(oPC) || GetIsDMPossessed(oPC) )
+	if (GetIsDM(oPC) || GetIsDMPossessed(oPC))
 		return;
 
 	string
@@ -24,7 +25,7 @@ void main() {
 	int nAID = GetAccountID(oPC);
 	int nCID = GetCharacterID(oPC);
 
-	if ( 0 == nCID ) {
+	if (0 == nCID) {
 		audit("cdb", oPC, "Cannot find character", "cdb");
 		SendMessageToAllDMs("Warning: Query in _mod_clenter_cdb failed: Cannot find character.");
 		return;

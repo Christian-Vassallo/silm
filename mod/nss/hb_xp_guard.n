@@ -8,28 +8,31 @@ extern("inc_cdb")
 void AddGMXP(object oPlayer, string sGMs, int nAmount);
 
 
-void AddGMXP(object oPlayer, string sGMs, int nAmount) {
-	
+void AddGMXP(object oPlayer, string sGMs, int nAmount)
+{
+
 	int nCID = GetCharacterID(oPlayer);
+
 	if (!nCID)
 		return;
-	
+
 	if (!nAmount)
 		return;
-	
+
 	if (-6 == nAmount)
 		return;
 
-	pQ("insert into gm_xp (character,account_gms,xp) values( " + IntToString(nCID) + 
-		", '{ " + sGMs + 
-		"}', " + IntToString(nAmount) + " );");
+	pQ("insert into gm_xp (character,account_gms,xp) values( " + IntToString(nCID) +
+	   ", '{ " + sGMs +
+	   "}', " + IntToString(nAmount) + " );");
 
 	string message = "xp_guard: " + GetName(oPlayer) + " by {" + sGMs + "}, " + itoa(nAmount);
 	SendMessageToAllDMs(message);
 	WriteTimestampedLogEntry(message);
 }
 
-void CheckXP(object oPC, string sGMsOnline) {
+void CheckXP(object oPC, string sGMsOnline)
+{
 	int nCurrentXP = GetXP(oPC);
 	int nLastCheckedXP = GetLocalInt(oPC, "xpg_last_xp");
 	SetLocalInt(oPC, "xpg_last_xp", nCurrentXP);
@@ -37,7 +40,7 @@ void CheckXP(object oPC, string sGMsOnline) {
 	// Player is newly joined
 	if (0 == nLastCheckedXP)
 		nLastCheckedXP = nCurrentXP;
-	
+
 	int nXPByScript = GetLocalInt(oPC, "xpg_other_xp");
 	SetLocalInt(oPC, "xpg_other_xp", 0);
 
@@ -51,11 +54,11 @@ void CheckXP(object oPC, string sGMsOnline) {
 	 *  diff = (current - last - scripts) = 20
 	 */
 	int diff = nCurrentXP - nLastCheckedXP - nXPByScript;
-	
-	_DEBUG("checkxp for " + itoa(GetCharacterID(oPC)) + 
-		" -> current = " + itoa(nCurrentXP) + " - last = " + itoa(nLastCheckedXP) + 
-		" - scripts = " + itoa(nXPByScript) + " = " + itoa(diff), 2, "xp"
-	);
+
+	_DEBUG("checkxp for " + itoa(GetCharacterID(oPC)) +
+		   " -> current = " + itoa(nCurrentXP) + " - last = " + itoa(nLastCheckedXP) +
+		   " - scripts = " + itoa(nXPByScript) + " = " + itoa(diff), 2, "xp"
+		  );
 
 	if (0 == diff)
 		return;
@@ -64,10 +67,11 @@ void CheckXP(object oPC, string sGMsOnline) {
 	AddGMXP(oPC, sGMsOnline, diff);
 }
 
-void main() {
+void main()
+{
 	object oPC = GetFirstPC();
 	string gms = "";
-	
+
 	int nAID = 0;
 
 	while (GetIsObjectValid(oPC)) {
@@ -75,6 +79,7 @@ void main() {
 			nAID = GetAccountID(oPC);
 			gms += IntToString(nAID) + ", ";
 		}
+
 		oPC = GetNextPC();
 	}
 
@@ -82,11 +87,13 @@ void main() {
 		gms = GetStringLeft(gms, GetStringLength(gms) - 2);
 
 	oPC = GetFirstPC();
+
 	while (GetIsObjectValid(oPC)) {
 
 		if (!GetIsDM(oPC) && GetIsPC(oPC)) {
 			CheckXP(oPC, gms);
 		}
+
 		oPC = GetNextPC();
 	}
 }

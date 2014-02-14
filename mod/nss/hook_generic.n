@@ -2,18 +2,20 @@ extern("inc_events")
 extern("inc_jvm")
 
 #undef DestroyObject
-void Hook_DestroyObject(object oObject, float fDelay = 0.0) {
-	//RunEventScriptsFor(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_OBJECT_DESTROY, 
+void Hook_DestroyObject(object oObject, float fDelay = 0.0)
+{
+	//RunEventScriptsFor(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_OBJECT_DESTROY,
 	//	oObject, oObject, OBJECT_INVALID, GetLocation(oObject), EVENT_MODE_SYNC);
 	DestroyObject(oObject, fDelay);
 }
 
 #undef CreateObject
 object Hook_CreateObject(int nObjectType, string sTemplate, location lLocation,
-		int bUseAppearAnimation = FALSE, string sNewTag = "") {
-	
+						 int bUseAppearAnimation = FALSE, string sNewTag = "")
+{
+
 	object o = CreateObject(nObjectType, sTemplate, lLocation,
-		bUseAppearAnimation, sNewTag);
+							bUseAppearAnimation, sNewTag);
 
 	SetLocalString(o, "audit_origin_trace", "CreateObject(..)");
 	SetLocalString(o, "audit_origin_callstack", GetRunningScriptCallStack());
@@ -24,8 +26,9 @@ object Hook_CreateObject(int nObjectType, string sTemplate, location lLocation,
 
 #undef CopyObject
 object Hook_CopyObject(object oSource, location locLocation,
-		object oOwner = OBJECT_INVALID, string sNewTag = "") {
-	
+					   object oOwner = OBJECT_INVALID, string sNewTag = "")
+{
+
 	object o = CopyObject(oSource, locLocation, oOwner, sNewTag);
 
 	SetLocalString(o, "audit_origin_trace", "CopyObject(..)");
@@ -38,8 +41,9 @@ object Hook_CopyObject(object oSource, location locLocation,
 
 #undef CreateItemOnObject
 object Hook_CreateItemOnObject(string sItemTemplate, object oTarget = OBJECT_SELF,
-	    int nStackSize = 1, string sNewTag = "") {
-	
+							   int nStackSize = 1, string sNewTag = "")
+{
+
 	object o = CreateItemOnObject(sItemTemplate, oTarget, nStackSize, sNewTag);
 
 	SetLocalString(o, "audit_origin_trace", "CreateItemOnObject(..)");
@@ -50,7 +54,8 @@ object Hook_CreateItemOnObject(string sItemTemplate, object oTarget = OBJECT_SEL
 }
 
 #undef SetXP
-void Hook_SetXP(object oCreature, int nXpAmount) {
+void Hook_SetXP(object oCreature, int nXpAmount)
+{
 //	struct EventArguments ea;
 //	ea.i0 = nXpAmount;
 //	int ret = RunEventScriptsForWithArgv(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_XP_SET,
@@ -59,7 +64,8 @@ void Hook_SetXP(object oCreature, int nXpAmount) {
 }
 
 #undef GiveXPToCreature
-void Hook_GiveXPToCreature(object oCreature, int nXpAmount) {
+void Hook_GiveXPToCreature(object oCreature, int nXpAmount)
+{
 //	struct EventArguments ea;
 //	ea.i0 = nXpAmount;
 //	int ret = RunEventScriptsForWithArgv(EVENT_TYPE_GLOBAL, EVENT_GLOBAL_XP_GIVE,
@@ -68,8 +74,11 @@ void Hook_GiveXPToCreature(object oCreature, int nXpAmount) {
 }
 
 #undef CopyItemAndModify
-object Hook_CopyItemAndModify(object oItem, int nType, int nIndex, int nNewValue, int bCopyVars=FALSE) {
+object Hook_CopyItemAndModify(object oItem, int nType, int nIndex, int nNewValue,
+							  int bCopyVars = FALSE)
+{
 	object oNew = CopyItemAndModify(oItem, nType, nIndex, nNewValue, bCopyVars);
+
 	if (GetDescription(oItem, false) != GetDescription(oItem, true))
 		SetDescription(oNew, GetDescription(oItem));
 
@@ -81,8 +90,10 @@ object Hook_CopyItemAndModify(object oItem, int nType, int nIndex, int nNewValue
 }
 
 #undef CopyItem
-object Hook_CopyItem(object oItem, object oTarget = OBJECT_INVALID, int copy = FALSE) {
+object Hook_CopyItem(object oItem, object oTarget = OBJECT_INVALID, int copy = FALSE)
+{
 	object oNew = CopyItem(oItem, oTarget, copy);
+
 	if (GetDescription(oItem, false) != GetDescription(oItem, true))
 		SetDescription(oNew, GetDescription(oItem));
 
@@ -97,34 +108,43 @@ object Hook_CopyItem(object oItem, object oTarget = OBJECT_INVALID, int copy = F
 void _hook_jump_associates(object obj, location jumpTo, bool as_action);
 
 #undef JumpToLocation
-void Hook_JumpToLocation(location locDestination, bool jump_associates = true) {
+void Hook_JumpToLocation(location locDestination, bool jump_associates = true)
+{
 	JumpToLocation(locDestination);
+
 	if (jump_associates)
 		_hook_jump_associates(OBJECT_SELF, locDestination, false);
 }
 
 #undef JumpToObject
-void Hook_JumpToObject(object target, int a = TRUE, bool jump_associates = true) {
+void Hook_JumpToObject(object target, int a = TRUE, bool jump_associates = true)
+{
 	JumpToObject(target, a);
+
 	if (jump_associates)
 		_hook_jump_associates(OBJECT_SELF, GetLocation(target), false);
 }
 
 #undef ActionJumpToLocation
-void Hook_ActionJumpToLocation(location locDestination, bool jump_associates = true) {
+void Hook_ActionJumpToLocation(location locDestination, bool jump_associates = true)
+{
 	ActionJumpToLocation(locDestination);
+
 	if (jump_associates)
 		_hook_jump_associates(OBJECT_SELF, locDestination, true);
 }
 
 #undef ActionJumpToObject
-void Hook_ActionJumpToObject(object target, int a = TRUE, bool jump_associates = true) {
+void Hook_ActionJumpToObject(object target, int a = TRUE, bool jump_associates = true)
+{
 	ActionJumpToObject(target, a);
+
 	if (jump_associates)
 		_hook_jump_associates(OBJECT_SELF, GetLocation(target), true);
 }
 
-void _hook_jump_associates(object obj, location jumpTo, bool as_action) {
+void _hook_jump_associates(object obj, location jumpTo, bool as_action)
+{
 	if (GetAreaFromLocation(jumpTo) != GetArea(obj))
 		return; // associates will follow automagically
 
@@ -136,6 +156,7 @@ void _hook_jump_associates(object obj, location jumpTo, bool as_action) {
 
 		int i = 1;
 		object assoc = GetAssociate(ASSOCIATE_TYPE_HENCHMAN, obj, i);
+
 		while (is_valid(assoc)) {
 			AssignCommand(assoc, ActionJumpToLocation(jumpTo));
 			i++;
@@ -150,6 +171,7 @@ void _hook_jump_associates(object obj, location jumpTo, bool as_action) {
 
 		int i = 1;
 		object assoc = GetAssociate(ASSOCIATE_TYPE_HENCHMAN, obj, i);
+
 		while (is_valid(assoc)) {
 			AssignCommand(assoc, JumpToLocation(jumpTo));
 			i++;
@@ -159,74 +181,93 @@ void _hook_jump_associates(object obj, location jumpTo, bool as_action) {
 }
 
 #undef SendMessageToPC
-void Hook_SendMessageToPC(object oPC, string sMessage) {
+void Hook_SendMessageToPC(object oPC, string sMessage)
+{
 	SetLocalString(GetModule(), "combatlog_message", sMessage);
 	SendMessageToPC(oPC, sMessage);
 }
 
 #undef GetSpellTargetObject
-object Hook_GetSpellTargetObject() {
+object Hook_GetSpellTargetObject()
+{
 	object o = GetLocalObject(GetModule(), __FILE__ + "GetSpellTargetObject");
+
 	if (is_valid(o))
 		return o;
+
 	else
 		return GetSpellTargetObject();
 }
 
 #undef GetSpellTargetLocation
-location Hook_GetSpellTargetLocation() {
+location Hook_GetSpellTargetLocation()
+{
 	location l = GetLocalLocation(GetModule(),
-		__FILE__ + "GetSpellTargetLocation");
+								  __FILE__ + "GetSpellTargetLocation");
+
 	if (is_valid(GetAreaFromLocation(l)))
 		return l;
+
 	else
 		return GetSpellTargetLocation();
 }
 
 #undef GetSpellCastItem
-object Hook_GetSpellCastItem() {
+object Hook_GetSpellCastItem()
+{
 	object o = GetLocalObject(GetModule(), __FILE__ + "GetSpellCastItem");
+
 	if (is_valid(o))
 		return o;
+
 	else
 		return GetSpellCastItem();
 }
 
 #undef GetMetaMagicFeat
-int Hook_GetMetaMagicFeat() {
+int Hook_GetMetaMagicFeat()
+{
 	if (GetLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeatEnabled"))
 		return GetLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeat");
+
 	else
 		return GetMetaMagicFeat();
 }
 
 #undef GetCasterLevel
-int Hook_GetCasterLevel(object creature) {
+int Hook_GetCasterLevel(object creature)
+{
 	if (GetLocalInt(GetModule(), __FILE__ + "GetCasterLevelEnabled"))
 		return GetLocalInt(GetModule(), __FILE__ + "GetCasterLevel");
+
 	else
 		return GetCasterLevel(creature);
 }
 
 #undef GetSpellId
-int Hook_GetSpellId() {
+int Hook_GetSpellId()
+{
 	if (GetLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled"))
 		return GetLocalInt(GetModule(), __FILE__ + "GetSpellId");
+
 	else
 		return GetSpellId();
 }
 
 #undef GetSpellSaveDC
-int Hook_GetSpellSaveDC() {
+int Hook_GetSpellSaveDC()
+{
 	if (GetLocalInt(GetModule(), __FILE__ + "GetSpellSaveDCEnabled"))
 		return GetLocalInt(GetModule(), __FILE__ + "GetSpellSaveDC");
+
 	else
 		return GetSpellSaveDC();
 }
 
 #undef ApplyEffectAtLocation
 void Hook_ApplyEffectAtLocation(int nDurationType, effect eEffect,
-		location lLocation, float fDuration=0.0f) {
+								location lLocation, float fDuration = 0.0f)
+{
 
 	if (GetLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled"))
 		SetEffectSpellId(eEffect, GetLocalInt(GetModule(), __FILE__ + "GetSpellId"));
@@ -235,7 +276,8 @@ void Hook_ApplyEffectAtLocation(int nDurationType, effect eEffect,
 }
 #undef ApplyEffectToObject
 void Hook_ApplyEffectToObject(int nDurationType, effect eEffect,
-		object oTarget, float fDuration=0.0f) {
+							  object oTarget, float fDuration = 0.0f)
+{
 
 	if (GetLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled"))
 		SetEffectSpellId(eEffect, GetLocalInt(GetModule(), __FILE__ + "GetSpellId"));
@@ -244,34 +286,39 @@ void Hook_ApplyEffectToObject(int nDurationType, effect eEffect,
 }
 
 void ExecuteNamedSpellScript(object caster, object spellCastItem,
-		string spellScript, int spell, int casterLevel, int metaMagic,
-		int spellSaveDC, object spellTargetObject, location spellTargetLocation) {
-	
+							 string spellScript, int spell, int casterLevel, int metaMagic,
+							 int spellSaveDC, object spellTargetObject, location spellTargetLocation)
+{
+
 	if (spell > -1) {
 		SetLocalInt(GetModule(), __FILE__ + "GetSpellId", spell);
 		SetLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled", 1);
 	}
+
 	if (spellSaveDC > -1) {
 		SetLocalInt(GetModule(), __FILE__ + "GetSpellSaveDC", spell);
 		SetLocalInt(GetModule(), __FILE__ + "GetSpellSaveDCEnabled", 1);
 	}
+
 	SetLocalInt(GetModule(), __FILE__ + "GetCasterLevelEnabled", 1);
 	SetLocalInt(GetModule(), __FILE__ + "GetCasterLevel", casterLevel);
 	SetLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeatEnabled", 1);
 	SetLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeat", metaMagic);
 	SetLocalObject(GetModule(), __FILE__ + "GetSpellTargetObject",
-		spellTargetObject);
+				   spellTargetObject);
 	SetLocalLocation(GetModule(), __FILE__ + "GetSpellTargetLocation",
-		spellTargetLocation);
+					 spellTargetLocation);
 	SetLocalObject(GetModule(), __FILE__ + "GetSpellCastItem",
-		spellCastItem);
-	
+				   spellCastItem);
+
 	ExecuteScript(spellScript, caster);
 
 	if (spell > -1)
 		DeleteLocalInt(GetModule(), __FILE__ + "GetSpellIdEnabled");
+
 	if (spellSaveDC > -1)
 		DeleteLocalInt(GetModule(), __FILE__ + "GetSpellSaveDCEnabled");
+
 	DeleteLocalInt(GetModule(), __FILE__ + "GetCasterLevelEnabled");
 	DeleteLocalInt(GetModule(), __FILE__ + "GetMetaMagicFeatEnabled");
 	DeleteLocalObject(GetModule(), __FILE__ + "GetSpellTargetObject");
@@ -280,14 +327,16 @@ void ExecuteNamedSpellScript(object caster, object spellCastItem,
 }
 
 void ExecuteSpellScript(object caster, object spellCastItem,
-		int spell, int casterLevel, int metaMagic, int spellSaveDC,
-		object spellTargetObject, location spellTargetLocation) {
+						int spell, int casterLevel, int metaMagic, int spellSaveDC,
+						object spellTargetObject, location spellTargetLocation)
+{
 
 	string spellScript = Get2DAString("spells", "ImpactScript", spell);
+
 	if (spellScript == "")
 		return;
-	
+
 	ExecuteNamedSpellScript(caster, spellCastItem, spellScript, spell,
-		casterLevel, metaMagic, spellSaveDC,
-		spellTargetObject, spellTargetLocation);
+							casterLevel, metaMagic, spellSaveDC,
+							spellTargetObject, spellTargetLocation);
 }

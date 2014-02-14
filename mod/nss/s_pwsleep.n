@@ -1,7 +1,8 @@
 extern("nw_i0_spells")
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 	if (!X2PreSpellCastCode())
 		return;
 
@@ -16,7 +17,7 @@ void main() {
 	if (GetIsImmune(oTarget, IMMUNITY_TYPE_MIND_SPELLS, OBJECT_SELF))
 		return;
 
-	if(MyResistSpell(OBJECT_SELF, oTarget))
+	if (MyResistSpell(OBJECT_SELF, oTarget))
 		return;
 
 	effect e = EffectSleep();

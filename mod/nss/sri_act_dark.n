@@ -1,16 +1,18 @@
 extern("_gen")
 
-void main() {
+void main()
+{
 	object oTarget = GetLocalObject(OBJECT_SELF, "SR_IAct_Obj");
 	location lTarget = GetLocalLocation(OBJECT_SELF, "SR_IAct_Loc");
 
 	int casterLevel = GetTotalLevel(OBJECT_SELF);
 
-	if ( GetIsObjectValid(oTarget) ) {
+	if (GetIsObjectValid(oTarget)) {
 		ExecuteSpellScript(OBJECT_SELF, OBJECT_INVALID, SPELL_FAERIE_FIRE,
-				casterLevel, METAMAGIC_NONE, 11, oTarget, lTarget);
+						   casterLevel, METAMAGIC_NONE, 11, oTarget, lTarget);
+
 	} else {
 		ExecuteSpellScript(OBJECT_SELF, OBJECT_INVALID, SPELL_DARKNESS,
-				casterLevel, METAMAGIC_NONE, 12, OBJECT_INVALID, lTarget);
+						   casterLevel, METAMAGIC_NONE, 12, OBJECT_INVALID, lTarget);
 	}
 }

@@ -1,6 +1,8 @@
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
+
 	if ("module_load" == e.ev) {
 		ExecuteScript("reg_dispenser", e.runnable);
 		ExecuteScript("reg_spawn", e.runnable);

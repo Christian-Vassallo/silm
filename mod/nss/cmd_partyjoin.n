@@ -2,7 +2,8 @@ extern("_gen")
 extern("inc_cdb")
 extern("inc_target")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 	struct EventArguments ea = GetEventArguments(e.serial);
 
@@ -20,11 +21,11 @@ void main() {
 			}
 
 			SendMessageToPC(e.runnable, "Trying to join faction of " +
-				GetName(target));
+							GetName(target));
 			AddToParty(e.runnable, target);
 			event_stop();
 		}
-		
+
 		// make target join your party
 		if (ea.a1 == "grab") {
 			object target = GetTarget();
@@ -35,7 +36,7 @@ void main() {
 			}
 
 			SendMessageToPC(e.runnable, "Trying to force" +
-				GetName(target) + " into your faction.");
+							GetName(target) + " into your faction.");
 			AddToParty(target, e.runnable);
 			event_stop();
 		}

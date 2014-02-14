@@ -10,23 +10,33 @@
 
 extern("inc_kjeffects")
 
-void kjDruidEnter(object _oDruidDoor) {
+void kjDruidEnter(object _oDruidDoor)
+{
 	string sEffectWP = GetLocalString(OBJECT_SELF, "EffectWP4Druids");
 	int iEffectNo1 = 140; // Charm
 	int iEffectNo2 = 321; // Pixiedust
 
 	string sRankenTxt;
-	switch ( d4() ) {
-		case 1: sRankenTxt =
+
+	switch (d4()) {
+	case 1:
+		sRankenTxt =
 			"*Die Ranken gehen etwas beiseite und geben Euch einen Moment für den Weg durch sie hindurch*";
-			break;
-		case 2: sRankenTxt = "*Der Efeu bewegt sich sacht zur Seite als ihr Euch nähert*"; break;
-		case 3: sRankenTxt =
+		break;
+
+	case 2:
+		sRankenTxt = "*Der Efeu bewegt sich sacht zur Seite als ihr Euch nähert*";
+		break;
+
+	case 3:
+		sRankenTxt =
 			"*Die Pflanzen und Ranken reagieren auf eure Annäherung, bewegen sich aus Euren Weg und gewähren eine offene Passage*";
-			break;
-		case 4: sRankenTxt =
+		break;
+
+	case 4:
+		sRankenTxt =
 			"*Ein Rascheln und Knistern ertönt, als die langen Ranken vor Euch zurückweichen um den Durchgang frei zu geben*";
-			break;
+		break;
 	}
 
 	AssignCommand(_oDruidDoor, ActionSpeakString(sRankenTxt, TALKVOLUME_TALK));
@@ -34,11 +44,13 @@ void kjDruidEnter(object _oDruidDoor) {
 	ActionWait(3.0);
 
 	int iCnt = 0;
-	while ( iCnt < 3 ) {
+
+	while (iCnt < 3) {
 		kjLoopObjects4EffectTrigger(iEffectNo1, IntToString(iCnt) + "_" + sEffectWP);
 		ActionWait(0.2);
 		iCnt++;
 	}
+
 	kjLoopObjects4EffectTrigger(iEffectNo2, "5_" + sEffectWP);
 
 	SetLocked(_oDruidDoor, FALSE);
@@ -46,14 +58,24 @@ void kjDruidEnter(object _oDruidDoor) {
 
 	ActionWait(60.0);
 
-	switch ( d4() ) {
-		case 1: sRankenTxt = "*Die Ranken bewegen sich wieder sachte vor den Durchgang*"; break;
-		case 2: sRankenTxt = "*Langsam schiebt sich der Efeu zurück vor den Eingang*"; break;
-		case 3: sRankenTxt =
+	switch (d4()) {
+	case 1:
+		sRankenTxt = "*Die Ranken bewegen sich wieder sachte vor den Durchgang*";
+		break;
+
+	case 2:
+		sRankenTxt = "*Langsam schiebt sich der Efeu zurück vor den Eingang*";
+		break;
+
+	case 3:
+		sRankenTxt =
 			"*Die Pflanzen entspannen sich langsam und hängen nach kurzer Zeit wieder so, dass sie den Eingang verwehren*";
-			break;
-		case 4: sRankenTxt =
-			"*Nach einiger Zeit lassen sich die Pflanzen und Efeu-Ranken vor den Spalt zurückgleiten*"; break;
+		break;
+
+	case 4:
+		sRankenTxt =
+			"*Nach einiger Zeit lassen sich die Pflanzen und Efeu-Ranken vor den Spalt zurückgleiten*";
+		break;
 	}
 
 	AssignCommand(_oDruidDoor, ActionSpeakString(sRankenTxt, TALKVOLUME_TALK));
@@ -65,22 +87,32 @@ void kjDruidEnter(object _oDruidDoor) {
 
 
 
-void kjNoDruidEnter(object _oDruidDoor) {
+void kjNoDruidEnter(object _oDruidDoor)
+{
 	string sEffectWP = GetLocalString(OBJECT_SELF, "EffectWP4Others");
 	int iEffectNo = 2; // Entangle
 
 	string sRankenTxt;
-	switch ( d4() ) {
-		case 1: sRankenTxt =
+
+	switch (d4()) {
+	case 1:
+		sRankenTxt =
 			"*Als ihr Euch nähert schieben sich Ranken und Blätter vor den Durchgang und verwehren die Passage*";
-			break;
-		case 2: sRankenTxt =
+		break;
+
+	case 2:
+		sRankenTxt =
 			"*Als der Efeu Eure Annäherung verspürt, greifen die Ranken ineinander und verdichten sich zu einem undurchdringlichen Geflecht*";
-			break;
-		case 3: sRankenTxt = "*Das Blattwerk vor dem Spalt scheint, je näher ihr kommt, immer dichter*";
-			break;
-		case 4: sRankenTxt =
-			"*Die Ranken versteifen sich und scheinen gar absichtlich Euch den Weg zu versperren*"; break;
+		break;
+
+	case 3:
+		sRankenTxt = "*Das Blattwerk vor dem Spalt scheint, je näher ihr kommt, immer dichter*";
+		break;
+
+	case 4:
+		sRankenTxt =
+			"*Die Ranken versteifen sich und scheinen gar absichtlich Euch den Weg zu versperren*";
+		break;
 	}
 
 	AssignCommand(_oDruidDoor, ActionSpeakString(sRankenTxt, TALKVOLUME_TALK));
@@ -89,7 +121,8 @@ void kjNoDruidEnter(object _oDruidDoor) {
 
 	object oPC = GetEnteringObject();
 	int iCnt = 0;
-	while ( iCnt < 3 ) {
+
+	while (iCnt < 3) {
 		kjLoopObjects4EffectTrigger(iEffectNo, IntToString(iCnt) + "_" + sEffectWP);
 		ActionWait(1.5);
 		iCnt++;
@@ -98,7 +131,8 @@ void kjNoDruidEnter(object _oDruidDoor) {
 	ActionWait(6.0);
 
 	iCnt = 0;
-	while ( iCnt < 3 ) {
+
+	while (iCnt < 3) {
 		kjLoopObjects4EffectTrigger(iEffectNo, IntToString(iCnt) + "_" + sEffectWP);
 		ActionWait(1.5);
 		iCnt++;
@@ -107,7 +141,8 @@ void kjNoDruidEnter(object _oDruidDoor) {
 	ActionWait(3.0);
 
 	iCnt = 0;
-	while ( iCnt < 3 ) {
+
+	while (iCnt < 3) {
 		kjLoopObjects4EffectTrigger(iEffectNo, IntToString(iCnt) + "_" + sEffectWP);
 		ActionWait(1.5);
 		iCnt++;
@@ -115,19 +150,22 @@ void kjNoDruidEnter(object _oDruidDoor) {
 }
 
 
-void main() {
+void main()
+{
 	string sDruidEntrance  = GetLocalString(OBJECT_SELF, "DruidEntrance");
 	object oDruidDoor = GetNearestObjectByTag(sDruidEntrance);
 
 	object oPC = GetEnteringObject();
+
 	// Überprüfe ob Eingang bereits offen ist
-	if ( GetIsOpen(oDruidDoor) == FALSE ) {
+	if (GetIsOpen(oDruidDoor) == FALSE) {
 		// Tür ist zu
 		// Spieler der den Trigger auslöste checken auf Druide
 
-		if ( GetLevelByClass(CLASS_TYPE_DRUID, oPC) > 0 ) {
+		if (GetLevelByClass(CLASS_TYPE_DRUID, oPC) > 0) {
 			// Spieler ist ein Druide
 			kjDruidEnter(oDruidDoor);
+
 		} else {
 			// Spieler ist alles andere nur kein Druide
 			kjNoDruidEnter(oDruidDoor);

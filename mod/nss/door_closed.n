@@ -1,4 +1,5 @@
-void main() {
+void main()
+{
 	object oDoor = OBJECT_SELF;
 	object oPC = GetLastClosedBy();
 
@@ -6,6 +7,8 @@ void main() {
 	// - runnable: door
 	// - actor: closer/creature
 	// - stop
-	if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "door_closed", OBJECT_SELF, GetLastClosedBy(), OBJECT_SELF, GetLocation(OBJECT_SELF)))
+	if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "door_closed", OBJECT_SELF,
+			GetLastClosedBy(), OBJECT_SELF,
+			GetLocation(OBJECT_SELF)))
 		return;
 }

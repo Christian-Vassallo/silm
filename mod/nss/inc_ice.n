@@ -7,14 +7,16 @@ int ICE_EVENT(string e);
 
 void ICE_TOKEN(string t);
 
-int ICE_EVENT(string e) {
-  SetLocalString(GetModule(), "NWNX!ICE!EVENT", ObjectToString(OBJECT_SELF) + " " + e);
-  string ret = GetLocalString(GetModule(), "NWNX!ICE!EVENT");
-  // WriteTimestampedLogEntry("ICE: " + e + " = " + ret);
-  return StringToInt(ret);
+int ICE_EVENT(string e)
+{
+	SetLocalString(GetModule(), "NWNX!ICE!EVENT", ObjectToString(OBJECT_SELF) + " " + e);
+	string ret = GetLocalString(GetModule(), "NWNX!ICE!EVENT");
+	// WriteTimestampedLogEntry("ICE: " + e + " = " + ret);
+	return StringToInt(ret);
 }
 
-void ICE_TOKEN(string t) {
-  SetLocalString(GetModule(), "NWNX!ICE!TOKEN", ObjectToString(OBJECT_SELF) + " " + t);
-  // DeleteLocalString(GetModule(), "NWNX!ICE!TOKEN");
+void ICE_TOKEN(string t)
+{
+	SetLocalString(GetModule(), "NWNX!ICE!TOKEN", ObjectToString(OBJECT_SELF) + " " + t);
+	// DeleteLocalString(GetModule(), "NWNX!ICE!TOKEN");
 }

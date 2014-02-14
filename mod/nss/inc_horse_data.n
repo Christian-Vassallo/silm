@@ -32,7 +32,8 @@ struct Rideable SetRideable(struct Rideable r);
 // Updates the timestamp with the current time.
 struct Rideable SetRideableDeliveredIn(struct Rideable r);
 
-int GetIsValidRideable(struct Rideable r) {
+int GetIsValidRideable(struct Rideable r)
+{
 	return r.id > 0;
 }
 
@@ -42,31 +43,33 @@ int GetRideableRentCost(struct Rideable r, float fPerDay);
 
 
 
-int GetRideableRentCost(struct Rideable r, float fPerDay) {
-	if ( 0 == r.delivered_in_year )
+int GetRideableRentCost(struct Rideable r, float fPerDay)
+{
+	if (0 == r.delivered_in_year)
 		return 0;
 
-	if ( !r.pay_rent )
+	if (!r.pay_rent)
 		return 0;
 
 	int nRet =
 		FloatToInt(fPerDay * IntToFloat(
-				( GetCalendarDay() - r.delivered_in_day ) +
-				( GetCalendarMonth() - r.delivered_in_month ) * 30 +
-				( GetCalendarYear() - r.delivered_in_year ) * 30 * 12
-			)
-		);
+					   (GetCalendarDay() - r.delivered_in_day) +
+					   (GetCalendarMonth() - r.delivered_in_month) * 30 +
+					   (GetCalendarYear() - r.delivered_in_year) * 30 * 12
+				   )
+				  );
 
 	// Dont bill less than 5 copper (about 2 hours)
 	// dont bill negative delays
-	if ( nRet < 5 )
+	if (nRet < 5)
 		nRet = 0;
 
 	return nRet;
 }
 
 
-struct Rideable SetRideableDeliveredIn(struct Rideable r) {
+struct Rideable SetRideableDeliveredIn(struct Rideable r)
+{
 	r.delivered_in_hour = GetTimeHour();
 	r.delivered_in_day = GetCalendarDay();
 	r.delivered_in_month = GetCalendarMonth();
@@ -75,13 +78,15 @@ struct Rideable SetRideableDeliveredIn(struct Rideable r) {
 }
 
 
-struct Rideable GetRideable(object oPC) {
+struct Rideable GetRideable(object oPC)
+{
 	int nCID = GetCharacterID(oPC);
 	struct Rideable r;
 	pQ(
 		"select id,character,stable,type,phenotype,name,delivered_in_hour, delivered_in_day, delivered_in_month, delivered_in_year ,bought, pay_rent from rideables where character = "
 		+ IntToString(nCID) + ";");
-	if ( pF() ) {
+
+	if (pF()) {
 		r.id = StringToInt(pG(1));
 		r.cid = nCID;
 		r.stable = pG(3);
@@ -99,24 +104,27 @@ struct Rideable GetRideable(object oPC) {
 	return r;
 }
 
-struct Rideable SetRideable(struct Rideable r) {
-	if ( !GetIsValidRideable(r) )
+struct Rideable SetRideable(struct Rideable r)
+{
+	if (!GetIsValidRideable(r))
 		return r;
 
 	pQ("select id from rideables where id = " + IntToString(r.id) + ";");
-	if ( pF() ) {
+
+	if (pF()) {
 		pQ("update rideables set " +
-			"stable=" + pE(r.stable) + ", " +
-			"type=" + pE(r.type) + ", " +
-			"phenotype=" + IntToString(r.phenotype) + ", " +
-			"name=" + pE(r.name) + ", " +
-			"delivered_in_hour=" + IntToString(r.delivered_in_hour) + ", " +
-			"delivered_in_day=" + IntToString(r.delivered_in_day) + ", " +
-			"delivered_in_month=" + IntToString(r.delivered_in_month) + ", " +
-			"delivered_in_year=" + IntToString(r.delivered_in_year) + ", " +
-			"bought=" + pSb(r.bought) + ", " +
-			"pay_rent=" + pSb(r.pay_rent) +
-			" where id=" + IntToString(r.id) + ";");
+		   "stable=" + pE(r.stable) + ", " +
+		   "type=" + pE(r.type) + ", " +
+		   "phenotype=" + IntToString(r.phenotype) + ", " +
+		   "name=" + pE(r.name) + ", " +
+		   "delivered_in_hour=" + IntToString(r.delivered_in_hour) + ", " +
+		   "delivered_in_day=" + IntToString(r.delivered_in_day) + ", " +
+		   "delivered_in_month=" + IntToString(r.delivered_in_month) + ", " +
+		   "delivered_in_year=" + IntToString(r.delivered_in_year) + ", " +
+		   "bought=" + pSb(r.bought) + ", " +
+		   "pay_rent=" + pSb(r.pay_rent) +
+		   " where id=" + IntToString(r.id) + ";");
+
 	} else {
 		pQ(
 			"insert into rideables (character,stable,type,phenotype,name,delivered_in_hour,delivered_in_day,delivered_in_month,delivered_in_year,bought,pay_rent) values("

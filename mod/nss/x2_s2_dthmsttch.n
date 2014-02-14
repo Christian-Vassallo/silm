@@ -24,45 +24,43 @@ extern("x2_inc_switches")
 
 void main()
 {
-    //Declare major variables
-    object oTarget = GetSpellTargetObject();
-    //object oCaster = GetCurrentHitPoints(OBJECT_SELF);
-    int nCasterLvl = GetCasterLevel(OBJECT_SELF);
-    int nMetaMagic = GetMetaMagicFeat();
+	//Declare major variables
+	object oTarget = GetSpellTargetObject();
+	//object oCaster = GetCurrentHitPoints(OBJECT_SELF);
+	int nCasterLvl = GetCasterLevel(OBJECT_SELF);
+	int nMetaMagic = GetMetaMagicFeat();
 
-    //Declare effects
-    effect eSlay = EffectDeath();
-    effect eVis = EffectVisualEffect(VFX_IMP_NEGATIVE_ENERGY);
-    effect eVis2 = EffectVisualEffect(VFX_IMP_DEATH);
-    int nSave = 17;
+	//Declare effects
+	effect eSlay = EffectDeath();
+	effect eVis = EffectVisualEffect(VFX_IMP_NEGATIVE_ENERGY);
+	effect eVis2 = EffectVisualEffect(VFX_IMP_DEATH);
+	int nSave = 17;
 
-    //* GZ: Handle Epic Save Progression
-    int nEpicMod = GetLevelByClass(CLASS_TYPE_PALEMASTER,OBJECT_SELF) - 10 ;
-    if (nEpicMod>0)
-    {
-        nSave += (nEpicMod/2);
-    }
+	//* GZ: Handle Epic Save Progression
+	int nEpicMod = GetLevelByClass(CLASS_TYPE_PALEMASTER, OBJECT_SELF) - 10 ;
 
-    //Link effects
+	if (nEpicMod > 0) {
+		nSave += (nEpicMod / 2);
+	}
 
-    if(TouchAttackMelee(oTarget,TRUE)>0)
-    {
-        //Signal spell cast at event
-        SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, 624));
-        //Saving Throw
+	//Link effects
 
-        if ((GetCreatureSize(oTarget)>CREATURE_SIZE_LARGE )&& (GetModuleSwitchValue(MODULE_SWITCH_SPELL_CORERULES_DMASTERTOUCH) == TRUE))
-        {
-            return; // creature too large to be affected.
-        }
+	if (TouchAttackMelee(oTarget, TRUE) > 0) {
+		//Signal spell cast at event
+		SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, 624));
+		//Saving Throw
 
-        if(!MySavingThrow(SAVING_THROW_FORT, oTarget, nSave, SAVING_THROW_TYPE_NEGATIVE))
-        {
-            //Apply effects to target and caster
-            ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
-            ApplyEffectToObject(DURATION_TYPE_INSTANT, eSlay, oTarget);
-            ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis2, oTarget);
-        }
-   }
+		if ((GetCreatureSize(oTarget) > CREATURE_SIZE_LARGE)
+				&& (GetModuleSwitchValue(MODULE_SWITCH_SPELL_CORERULES_DMASTERTOUCH) == TRUE)) {
+			return; // creature too large to be affected.
+		}
+
+		if (!MySavingThrow(SAVING_THROW_FORT, oTarget, nSave, SAVING_THROW_TYPE_NEGATIVE)) {
+			//Apply effects to target and caster
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, eSlay, oTarget);
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis2, oTarget);
+		}
+	}
 
 }

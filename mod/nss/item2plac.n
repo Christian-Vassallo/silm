@@ -1,6 +1,7 @@
 extern("inc_dbplac")
 
-void main() {
+void main()
+{
 	object oO = GetItemActivated();
 	object oA = GetItemActivator();
 	location lT = GetItemActivatedTargetLocation();
@@ -12,9 +13,10 @@ void main() {
 
 	float fN = GetFacing(oA);
 
-	if ( GetLocalInt(oO, "reverse_facing") ) {
+	if (GetLocalInt(oO, "reverse_facing")) {
 		fN += 180.0;
-		while ( fN > 360.0 )
+
+		while (fN > 360.0)
 			fN -= 360.0;
 	}
 
@@ -29,7 +31,7 @@ void main() {
 
 
 
-	if ( GetLocalInt(oO, "placie_id") ) {
+	if (GetLocalInt(oO, "placie_id")) {
 		SetLocalInt(oN, "placie_id", GetLocalInt(oO, "placie_id"));
 	}
 
@@ -37,13 +39,14 @@ void main() {
 
 	DestroyObject(oO);
 
-	if ( SAVE_ERROR == SavePlacie(oN, oA) ) {
+	if (SAVE_ERROR == SavePlacie(oN, oA)) {
 		SendMessageToPC(oA, "Konnte Placie nicht in der DB speichern - BUG!  Bitte melden.");
 	}
 
 
 	int n = 0, vfx = 0;
-	while ( ( vfx = GetLocalInt(oN, "vfx" + IntToString(n)) ) > 0 ) {
+
+	while ((vfx = GetLocalInt(oN, "vfx" + IntToString(n))) > 0) {
 		ApplyEffectToObject(DTP, SupernaturalEffect(EffectVisualEffect(vfx)), oN);
 		n++;
 	}

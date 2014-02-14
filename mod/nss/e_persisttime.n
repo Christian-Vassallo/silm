@@ -1,7 +1,8 @@
 extern("inc_setting")
 extern("inc_events")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if ("module_load" == e.ev) {
@@ -11,16 +12,20 @@ void main() {
 		int iDay = gvGetInt("t_day");
 		int iHour = gvGetInt("t_hour");
 
-		if ( !iYear )
+		if (!iYear)
 			WriteTimestampedLogEntry("No time entry, starting with preset module time");
+
 		else {
 			SetTime(iHour, 0, 0, 0);
 			SetCalendar(iYear, 1, 1);
-			if ( iMonth > 1 ) SetCalendar(iYear, iMonth, 1);
-			if ( iDay > 1 ) SetCalendar(iYear, iMonth, iDay);
+
+			if (iMonth > 1) SetCalendar(iYear, iMonth, 1);
+
+			if (iDay > 1) SetCalendar(iYear, iMonth, iDay);
+
 			WriteTimestampedLogEntry("Set module time to: " +
-				IntToString(GetCalendarDay()) +
-				". " + IntToString(GetCalendarMonth()) + ". " + IntToString(GetCalendarYear()));
+									 IntToString(GetCalendarDay()) +
+									 ". " + IntToString(GetCalendarMonth()) + ". " + IntToString(GetCalendarYear()));
 		}
 	}
 

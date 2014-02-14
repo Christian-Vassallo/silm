@@ -6,17 +6,20 @@ extern("inc_setting")
 
 
 // Returns the nearest herbal bag that still has capacity
-object GetHerbalBag(object oPC) {
+object GetHerbalBag(object oPC)
+{
 	return GetItemPossessedBy(oPC, "herbal_bag");
 }
 
 
-void _TransformMoney(object oPC, int iValue) {
+void _TransformMoney(object oPC, int iValue)
+{
 	TakeGoldFromCreature(iValue, oPC, TRUE);
 	GiveMoneyToCreature(oPC, iValue);
 }
 
-void main() {
+void main()
+{
 	// PLOT WIZARD MANAGED CODE BEGINS
 	// PLOT WIZARD MANAGED CODE ENDS
 
@@ -27,7 +30,7 @@ void main() {
 	string sResRef = GetResRef(oItem);
 
 	//Got Engine gold coins, transpose into own currency
-	if ( !GetIsObjectValid(oItem) ) {
+	if (!GetIsObjectValid(oItem)) {
 		int iValue = GetGold(oPC);
 		AssignCommand(oPC, _TransformMoney(oPC, iValue));
 		return;
@@ -36,9 +39,10 @@ void main() {
 
 	// Put into herbal thingummy
 
-	if ( GetStringLeft(sResRef, 4) == "herb" ) {
+	if (GetStringLeft(sResRef, 4) == "herb") {
 		object oBag = GetHerbalBag(oPC);
-		if ( GetIsObjectValid(oBag) ) {
+
+		if (GetIsObjectValid(oBag)) {
 			AssignCommand(oPC, ActionGiveItem(oItem, oBag));
 		}
 	}

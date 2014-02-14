@@ -5,7 +5,8 @@ extern("inc_events")
 
 //Workaround for Time-Stop-Bug: Resync clocks with core clock
 //Once every game hour is said to be enough
-void _ClockFix() {
+void _ClockFix()
+{
 	int iHour = GetTimeHour();
 	int iMinute = GetTimeMinute();
 	int iSecond = GetTimeSecond();
@@ -13,7 +14,8 @@ void _ClockFix() {
 	SetTime(iHour, iMinute, iSecond, iMillisecond);
 }
 
-void main() {
+void main()
+{
 	int iHour = GetTimeHour();
 
 	object oMod = GetModule();
@@ -22,12 +24,12 @@ void main() {
 	ExecuteScript("hb_time_xp", oMod);
 
 	ExecuteScript("hb_xp_guard", oMod);
-	
+
 	ExecuteScript("hb_labertasche", oMod);
 
-	while ( GetIsObjectValid(oPC) ) {
+	while (GetIsObjectValid(oPC)) {
 
-		if ( !GetIsDM(oPC) ) {
+		if (!GetIsDM(oPC)) {
 
 			//Placeholder for player-specific scripts/routines which are to be
 			//executed every heartbeat
@@ -42,14 +44,15 @@ void main() {
 
 	pQ("update live.hb set ping = now();");
 
-	RunEventScriptsFor(GetEventSerial(), "module_hb", oMod, oMod, oMod, GetLocation(OBJECT_INVALID), EVENT_MODE_DEFER);
-		
+	RunEventScriptsFor(GetEventSerial(), "module_hb", oMod, oMod, oMod, GetLocation(OBJECT_INVALID),
+					   EVENT_MODE_DEFER);
+
 	PUBLISH("server.hb", "OK");
 
 	//Placeholder for module-wide scripts/routines which are to be
 	//executed every heartbeat
 
-	if ( iHour != GetLocalInt(oMod, "Module_Hour") ) {
+	if (iHour != GetLocalInt(oMod, "Module_Hour")) {
 		_ClockFix();
 
 		SetLocalInt(oMod, "Module_Hour", iHour);

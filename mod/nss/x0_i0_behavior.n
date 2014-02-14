@@ -44,23 +44,29 @@ int GetBehaviorState(int nCondition);
 **********************************************************************/
 
 // Add the specified condition flag to the behavior state of the caller
-void SetBehaviorState(int nCondition, int bValid = TRUE) {
+void SetBehaviorState(int nCondition, int bValid = TRUE)
+{
 	int nPlot = GetLocalInt(OBJECT_SELF, "NW_BEHAVIOR_MASTER");
-	if ( bValid == TRUE ) {
+
+	if (bValid == TRUE) {
 		nPlot = nPlot | nCondition;
 		SetLocalInt(OBJECT_SELF, "NW_BEHAVIOR_MASTER", nPlot);
-	} else if ( bValid == FALSE ) {
+
+	} else if (bValid == FALSE) {
 		nPlot = nPlot & ~nCondition;
 		SetLocalInt(OBJECT_SELF, "NW_BEHAVIOR_MASTER", nPlot);
 	}
 }
 
 // Returns TRUE if the specified behavior flag is set on the caller
-int GetBehaviorState(int nCondition) {
+int GetBehaviorState(int nCondition)
+{
 	int nPlot = GetLocalInt(OBJECT_SELF, "NW_BEHAVIOR_MASTER");
-	if ( nPlot & nCondition ) {
+
+	if (nPlot & nCondition) {
 		return TRUE;
 	}
+
 	return FALSE;
 }
 

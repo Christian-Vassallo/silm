@@ -17,26 +17,33 @@ void statsd_send_timing(string key, int ms);
 void statsd_gauge(string key, int value);
 
 
-void statsd_count(string key, int value) {
+void statsd_count(string key, int value)
+{
 	ruby_eval("$statsd.count '" + STATSD_PREFIX + key + "', " + itoa(value) + ";");
 }
-void statsd_increment(string key) {
+void statsd_increment(string key)
+{
 	statsd_count(key, +1);
 }
-void statsd_decrement(string key) {
+void statsd_decrement(string key)
+{
 	statsd_count(key, -1);
 }
 
-void statsd_start_timing(string key) {
+void statsd_start_timing(string key)
+{
 	ruby_eval("$statsd.start_timing '" + STATSD_PREFIX + key + "';");
 }
-void statsd_stop_timing(string key) {
+void statsd_stop_timing(string key)
+{
 	ruby_eval("$statsd.stop_timing '" + STATSD_PREFIX + key + "';");
 }
-void statsd_send_timing(string key, int ms) {
+void statsd_send_timing(string key, int ms)
+{
 	ruby_eval("$statsd.timing '" + STATSD_PREFIX + key + "', " + itoa(ms) + ";");
 }
 
-void statsd_gauge(string key, int value) {
+void statsd_gauge(string key, int value)
+{
 	ruby_eval("$statsd.gauge '" + STATSD_PREFIX + key + "', " + itoa(value) + ";");
 }

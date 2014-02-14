@@ -14,17 +14,19 @@ vector nStringToVector(string sVector);
 // must be stored in the database as strings, and converted back to the proper
 // form when retrieved.
 
-string nVectorToString(vector vVector) {
+string nVectorToString(vector vVector)
+{
 	return "#X#" + FloatToString(vVector.x) + "#Y#" + FloatToString(vVector.y) +
 		   "#Z#" + FloatToString(vVector.z) + "#E#";
 }
 
-vector nStringToVector(string sVector) {
+vector nStringToVector(string sVector)
+{
 	float fX, fY, fZ;
 	int iPos, iCount;
 	int iLen = GetStringLength(sVector);
 
-	if ( iLen > 0 ) {
+	if (iLen > 0) {
 		iPos = FindSubString(sVector, "#X#") + 3;
 		iCount = FindSubString(GetSubString(sVector, iPos, iLen - iPos), "#");
 		fX = StringToFloat(GetSubString(sVector, iPos, iCount));
@@ -41,13 +43,14 @@ vector nStringToVector(string sVector) {
 	return Vector(fX, fY, fZ);
 }
 
-string nLocationToString(location lLocation) {
+string nLocationToString(location lLocation)
+{
 	object oArea = GetAreaFromLocation(lLocation);
 	vector vPosition = GetPositionFromLocation(lLocation);
 	float fOrientation = GetFacingFromLocation(lLocation);
 	string sReturnValue;
 
-	if ( GetIsObjectValid(oArea) )
+	if (GetIsObjectValid(oArea))
 		sReturnValue =
 			"#A#" + GetTag(oArea) + "#X#" + FloatToString(vPosition.x) +
 			"#Y#" + FloatToString(vPosition.y) + "#Z#" +
@@ -56,7 +59,8 @@ string nLocationToString(location lLocation) {
 	return sReturnValue;
 }
 
-location nStringToLocation(string sLocation) {
+location nStringToLocation(string sLocation)
+{
 	location lReturnValue;
 	object oArea;
 	vector vPosition;
@@ -65,7 +69,7 @@ location nStringToLocation(string sLocation) {
 	int iPos, iCount;
 	int iLen = GetStringLength(sLocation);
 
-	if ( iLen > 0 ) {
+	if (iLen > 0) {
 		iPos = FindSubString(sLocation, "#A#") + 3;
 		iCount = FindSubString(GetSubString(sLocation, iPos, iLen - iPos), "#");
 		oArea = GetObjectByTag(GetSubString(sLocation, iPos, iCount));

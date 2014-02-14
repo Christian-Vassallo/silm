@@ -14,9 +14,10 @@
 
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 
-	if ( !X2PreSpellCastCode() )
+	if (!X2PreSpellCastCode())
 		return;
 
 
@@ -25,9 +26,9 @@ void main() {
 	effect eImpact = EffectVisualEffect(VFX_IMP_HEAD_MIND);
 
 	effect eInvis = EffectLinkEffects(
-		EffectInvisibility(INVISIBILITY_TYPE_IMPROVED),
-		EffectVisualEffect(VFX_DUR_INVISIBILITY)
-	);
+						EffectInvisibility(INVISIBILITY_TYPE_IMPROVED),
+						EffectVisualEffect(VFX_DUR_INVISIBILITY)
+					);
 	effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
 	effect eLink = EffectLinkEffects(eInvis, eDur);
 
@@ -35,10 +36,12 @@ void main() {
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_IMPROVED_INVISIBILITY, FALSE));
 	int nDuration = GetCasterLevel(OBJECT_SELF);
 	int nMetaMagic = GetMetaMagicFeat();
+
 	//Enter Metamagic conditions
-	if ( nMetaMagic == METAMAGIC_EXTEND ) {
+	if (nMetaMagic == METAMAGIC_EXTEND) {
 		nDuration = nDuration * 2; //Duration is +100%
 	}
+
 	//Apply the VFX impact and effects
 	ApplyEffectToObject(DURATION_TYPE_INSTANT, eImpact, oTarget);
 

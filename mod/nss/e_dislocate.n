@@ -1,9 +1,11 @@
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "item_activate" && GetLocalInt(e.runnable, "dislocator")) {
 		SetLocalInt(e.runnable, "dislocator_disabled", !GetLocalInt(e.runnable, "dislocator_disabled"));
-		FloatingTextStringOnCreature("Der Dislokator ist: " + (GetLocalInt(e.runnable, "dislocator_disabled") ? "Deaktiviert" : "Aktiviert") + ".", e.actor, false);
+		FloatingTextStringOnCreature("Der Dislokator ist: " + (GetLocalInt(e.runnable,
+									 "dislocator_disabled") ? "Deaktiviert" : "Aktiviert") + ".", e.actor, false);
 	}
 }

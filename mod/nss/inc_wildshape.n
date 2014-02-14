@@ -2,17 +2,19 @@ extern("inc_nwnx_func")
 
 effect EffectWildshape(object t, int poly, int locked = false);
 
-int __getAC(object old) {
+int __getAC(object old)
+{
 	int ac = GetArmorAC(old);
 
 	bool found_wild_p = false;
 
 	iterate_iprp(old, p,
-		if (GetItemPropertyType(p) == ITEM_PROPERTY_AC_BONUS)
-			ac += GetItemPropertyCostTableValue(p);
-		if (GetItemPropertyType(p) == ITEM_PROPERTY_WILDSHAPE_MERGE_AC)
-			found_wild_p = true;
-	);
+
+				 if (GetItemPropertyType(p) == ITEM_PROPERTY_AC_BONUS)
+				 ac += GetItemPropertyCostTableValue(p);
+				 if (GetItemPropertyType(p) == ITEM_PROPERTY_WILDSHAPE_MERGE_AC)
+					 found_wild_p = true;
+					);
 
 	if (!found_wild_p)
 		return 0;
@@ -21,10 +23,11 @@ int __getAC(object old) {
 }
 
 
-effect EffectWildshape(object t, int poly, int locked = false) {
-	 int bArmor = GetLocalInt(GetModule(), "WildshapeMergeAlways") ||
-		atoi(Get2DAString("polymorph", "MergeA", poly));
-	
+effect EffectWildshape(object t, int poly, int locked = false)
+{
+	int bArmor = GetLocalInt(GetModule(), "WildshapeMergeAlways") ||
+				 atoi(Get2DAString("polymorph", "MergeA", poly));
+
 	effect ret = EffectPolymorph(poly, locked);
 
 	if (!bArmor)
@@ -34,10 +37,9 @@ effect EffectWildshape(object t, int poly, int locked = false) {
 	object oShield    = GetItemInSlot(INVENTORY_SLOT_LEFTHAND, t);
 
 	if (GetIsObjectValid(oShield)) {
-		if (GetBaseItemType(oShield) !=BASE_ITEM_LARGESHIELD &&
-			GetBaseItemType(oShield) !=BASE_ITEM_SMALLSHIELD &&
-			GetBaseItemType(oShield) !=BASE_ITEM_TOWERSHIELD)
-		{
+		if (GetBaseItemType(oShield) != BASE_ITEM_LARGESHIELD &&
+				GetBaseItemType(oShield) != BASE_ITEM_SMALLSHIELD &&
+				GetBaseItemType(oShield) != BASE_ITEM_TOWERSHIELD) {
 			oShield = OBJECT_INVALID;
 		}
 	}
@@ -48,7 +50,7 @@ effect EffectWildshape(object t, int poly, int locked = false) {
 
 	if (ac > 0) {
 		effect acBonus = SupernaturalEffect(EffectACIncrease(ac,
-			AC_ARMOUR_ENCHANTMENT_BONUS));
+											AC_ARMOUR_ENCHANTMENT_BONUS));
 		ret = EffectLinkEffects(acBonus, ret);
 	}
 

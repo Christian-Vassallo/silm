@@ -30,116 +30,106 @@ int nSpellID = 463;
 void RunHandImpact(object oTarget, object oCaster)
 {
 
-    //--------------------------------------------------------------------------
-    // Check if the spell has expired (check also removes effects)
-    //--------------------------------------------------------------------------
-    if (GZGetDelayedSpellEffectsExpired(nSpellID,oTarget,oCaster))
-    {
-        return;
-    }
+	//--------------------------------------------------------------------------
+	// Check if the spell has expired (check also removes effects)
+	//--------------------------------------------------------------------------
+	if (GZGetDelayedSpellEffectsExpired(nSpellID, oTarget, oCaster)) {
+		return;
+	}
 
-    int nDam = MaximizeOrEmpower(6,2,GetMetaMagicFeat(), 12);
-    effect eDam = EffectDamage(nDam, DAMAGE_TYPE_BLUDGEONING);
-    effect eVis = EffectVisualEffect(VFX_IMP_ACID_L);
-    ApplyEffectToObject(DURATION_TYPE_INSTANT, eDam, oTarget);
-    ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
-    DelayCommand(6.0f,RunHandImpact(oTarget,oCaster));
+	int nDam = MaximizeOrEmpower(6, 2, GetMetaMagicFeat(), 12);
+	effect eDam = EffectDamage(nDam, DAMAGE_TYPE_BLUDGEONING);
+	effect eVis = EffectVisualEffect(VFX_IMP_ACID_L);
+	ApplyEffectToObject(DURATION_TYPE_INSTANT, eDam, oTarget);
+	ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
+	DelayCommand(6.0f, RunHandImpact(oTarget, oCaster));
 }
 
 void main()
 {
 
-    /*
-      Spellcast Hook Code
-      Added 2003-06-20 by Georg
-      If you want to make changes to all spells,
-      check x2_inc_spellhook.nss to find out more
-    */
+	/*
+	  Spellcast Hook Code
+	  Added 2003-06-20 by Georg
+	  If you want to make changes to all spells,
+	  check x2_inc_spellhook.nss to find out more
+	*/
 
-    if (!X2PreSpellCastCode())
-    {
-        // If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
-        return;
-    }
-    // End of Spell Cast Hook
+	if (!X2PreSpellCastCode()) {
+		// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
+		return;
+	}
 
-    object oTarget = GetSpellTargetObject();
+	// End of Spell Cast Hook
 
-    //--------------------------------------------------------------------------
-    // This spell no longer stacks. If there is one hand, that's enough
-    //--------------------------------------------------------------------------
-    if (GetHasSpellEffect(nSpellID,oTarget) ||  GetHasSpellEffect(462,oTarget)  )
-    {
-        FloatingTextStrRefOnCreature(100775,OBJECT_SELF,FALSE);
-        return;
-    }
+	object oTarget = GetSpellTargetObject();
 
-    int nDuration = GetCasterLevel(OBJECT_SELF);
-    int nMetaMagic = GetMetaMagicFeat();
+	//--------------------------------------------------------------------------
+	// This spell no longer stacks. If there is one hand, that's enough
+	//--------------------------------------------------------------------------
+	if (GetHasSpellEffect(nSpellID, oTarget) ||  GetHasSpellEffect(462, oTarget)) {
+		FloatingTextStrRefOnCreature(100775, OBJECT_SELF, FALSE);
+		return;
+	}
 
-    //Check for metamagic extend
-    if (nMetaMagic == METAMAGIC_EXTEND) //Duration is +100%
-    {
-         nDuration = nDuration * 2;
-    }
+	int nDuration = GetCasterLevel(OBJECT_SELF);
+	int nMetaMagic = GetMetaMagicFeat();
 
-    if(!GetIsReactionTypeFriendly(oTarget))
-    {
-        //Fire cast spell at event for the specified target
-        SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_BIGBYS_CRUSHING_HAND, TRUE));
+	//Check for metamagic extend
+	if (nMetaMagic == METAMAGIC_EXTEND) { //Duration is +100%
+		nDuration = nDuration * 2;
+	}
 
-        //SR
-        if(!MyResistSpell(OBJECT_SELF, oTarget))
-        {
-            int nCasterModifier = GetCasterAbilityModifier(OBJECT_SELF);
-            int nCasterRoll = d20(1)
-                + nCasterModifier
-                + GetCasterLevel(OBJECT_SELF) + 12 + -1;
-            int nTargetRoll = GetAC(oTarget);
+	if (!GetIsReactionTypeFriendly(oTarget)) {
+		//Fire cast spell at event for the specified target
+		SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_BIGBYS_CRUSHING_HAND, TRUE));
 
-            // * grapple HIT succesful,
-            if (nCasterRoll >= nTargetRoll)
-            {
-                // * now must make a GRAPPLE check
-                // * hold target for duration of spell
+		//SR
+		if (!MyResistSpell(OBJECT_SELF, oTarget)) {
+			int nCasterModifier = GetCasterAbilityModifier(OBJECT_SELF);
+			int nCasterRoll = d20(1)
+							  + nCasterModifier
+							  + GetCasterLevel(OBJECT_SELF) + 12 + -1;
+			int nTargetRoll = GetAC(oTarget);
 
-                nCasterRoll = d20(1) + nCasterModifier
-                    + GetCasterLevel(OBJECT_SELF) + 12 + 4;
+			// * grapple HIT succesful,
+			if (nCasterRoll >= nTargetRoll) {
+				// * now must make a GRAPPLE check
+				// * hold target for duration of spell
 
-                nTargetRoll = d20(1)
-                             + GetBaseAttackBonus(oTarget)
-                             + GetSizeModifier(oTarget)
-                             + GetAbilityModifier(ABILITY_STRENGTH, oTarget);
+				nCasterRoll = d20(1) + nCasterModifier
+							  + GetCasterLevel(OBJECT_SELF) + 12 + 4;
 
-                if (nCasterRoll >= nTargetRoll)
-                {
-                    effect eKnockdown = EffectParalyze();
+				nTargetRoll = d20(1)
+							  + GetBaseAttackBonus(oTarget)
+							  + GetSizeModifier(oTarget)
+							  + GetAbilityModifier(ABILITY_STRENGTH, oTarget);
 
-                    // creatures immune to paralzation are still prevented from moving
-                    if (GetIsImmune(oTarget, IMMUNITY_TYPE_PARALYSIS) ||
-                        GetIsImmune(oTarget, IMMUNITY_TYPE_MIND_SPELLS))
-                    {
-                        eKnockdown = EffectCutsceneImmobilize();
-                    }
+				if (nCasterRoll >= nTargetRoll) {
+					effect eKnockdown = EffectParalyze();
 
-                    effect eHand = EffectVisualEffect(VFX_DUR_BIGBYS_CRUSHING_HAND);
-                    effect eLink = EffectLinkEffects(eKnockdown, eHand);
-                    ApplyEffectToObject(DURATION_TYPE_TEMPORARY,
-                                        eLink, oTarget,
-                                        RoundsToSeconds(nDuration));
+					// creatures immune to paralzation are still prevented from moving
+					if (GetIsImmune(oTarget, IMMUNITY_TYPE_PARALYSIS) ||
+							GetIsImmune(oTarget, IMMUNITY_TYPE_MIND_SPELLS)) {
+						eKnockdown = EffectCutsceneImmobilize();
+					}
 
-                    object oSelf = OBJECT_SELF;
-                    RunHandImpact(oTarget, oSelf);
-                    FloatingTextStrRefOnCreature(2478, OBJECT_SELF);
+					effect eHand = EffectVisualEffect(VFX_DUR_BIGBYS_CRUSHING_HAND);
+					effect eLink = EffectLinkEffects(eKnockdown, eHand);
+					ApplyEffectToObject(DURATION_TYPE_TEMPORARY,
+										eLink, oTarget,
+										RoundsToSeconds(nDuration));
 
-                }
-                else
-                {
-                    FloatingTextStrRefOnCreature(83309, OBJECT_SELF);
-                }
-            }
-        }
-    }
+					object oSelf = OBJECT_SELF;
+					RunHandImpact(oTarget, oSelf);
+					FloatingTextStrRefOnCreature(2478, OBJECT_SELF);
+
+				} else {
+					FloatingTextStrRefOnCreature(83309, OBJECT_SELF);
+				}
+			}
+		}
+	}
 }
 
 

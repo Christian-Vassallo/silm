@@ -2,14 +2,18 @@ string GetPlayerDescription(object player);
 
 void SetPlayerDescription(object player, string descOverride = "");
 
-string GetPlayerDescription(object player) {
+string GetPlayerDescription(object player)
+{
 	string r = GetLocalString(player, "description_override");
+
 	if (r == "")
 		return GetDescription(player, true);
+
 	else
 		return r;
 }
 
-void SetPlayerDescription(object player, string descOverride = "") {
+void SetPlayerDescription(object player, string descOverride = "")
+{
 	SetLocalString(player, "description_override", descOverride);
 }

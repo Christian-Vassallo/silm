@@ -16,37 +16,34 @@ extern("x0_i0_spells")
 void main()
 {
 
-   if (!GetHasFeat(FEAT_TURN_UNDEAD, OBJECT_SELF))
-   {
-        SpeakStringByStrRef(40550);
-   }
-   else
-   if(GetHasFeatEffect(414) == FALSE)
-   {
-        //Declare major variables
-        object oTarget = GetSpellTargetObject();
-        int nLevel = GetCasterLevel(OBJECT_SELF);
+	if (!GetHasFeat(FEAT_TURN_UNDEAD, OBJECT_SELF)) {
+		SpeakStringByStrRef(40550);
 
-        effect eVis = EffectVisualEffect(VFX_IMP_SUPER_HEROISM);
-        effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
+	} else if (GetHasFeatEffect(414) == FALSE) {
+		//Declare major variables
+		object oTarget = GetSpellTargetObject();
+		int nLevel = GetCasterLevel(OBJECT_SELF);
 
-        int nCharismaBonus = GetAbilityModifier(ABILITY_CHARISMA);
-        effect eAC = EffectACIncrease(nCharismaBonus);
-        effect eLink = EffectLinkEffects(eAC, eDur);
-        eLink = SupernaturalEffect(eLink);
+		effect eVis = EffectVisualEffect(VFX_IMP_SUPER_HEROISM);
+		effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
 
-         // * Do not allow this to stack
-        RemoveEffectsFromSpell(oTarget, GetSpellId());
+		int nCharismaBonus = GetAbilityModifier(ABILITY_CHARISMA);
+		effect eAC = EffectACIncrease(nCharismaBonus);
+		effect eLink = EffectLinkEffects(eAC, eDur);
+		eLink = SupernaturalEffect(eLink);
 
-        //Fire cast spell at event for the specified target
-        SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, 474, FALSE));
+		// * Do not allow this to stack
+		RemoveEffectsFromSpell(oTarget, GetSpellId());
 
-        //Apply Link and VFX effects to the target
-        ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, RoundsToSeconds(nCharismaBonus));
-        ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
+		//Fire cast spell at event for the specified target
+		SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, 474, FALSE));
 
-        DecrementRemainingFeatUses(OBJECT_SELF, FEAT_TURN_UNDEAD);
-    }
+		//Apply Link and VFX effects to the target
+		ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, RoundsToSeconds(nCharismaBonus));
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
+
+		DecrementRemainingFeatUses(OBJECT_SELF, FEAT_TURN_UNDEAD);
+	}
 }
 
 

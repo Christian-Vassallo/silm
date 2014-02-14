@@ -1,3 +1,3 @@
 
 
-#define throw(exception,description) 
+#define throw(exception,description)

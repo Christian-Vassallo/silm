@@ -1,8 +1,10 @@
-void main() {
+void main()
+{
 	ClearAllActions();
 	SetLocalInt(OBJECT_SELF, "PACK_MODE", 4); // 4 = Nothing
 	object oPack = GetLocalObject(OBJECT_SELF, "GROUND_PACK");
-	if ( GetIsObjectValid(oPack) ) {
+
+	if (GetIsObjectValid(oPack)) {
 		DestroyObject(oPack);
 	}
 
@@ -10,10 +12,12 @@ void main() {
 	object oItem = GetFirstItemInInventory();
 	object oSelf = OBJECT_SELF;
 	AssignCommand(oPack, TakeGoldFromCreature(GetGold(oSelf), oSelf));
-	while ( GetIsObjectValid(oItem) ) {
+
+	while (GetIsObjectValid(oItem)) {
 		AssignCommand(oPack, ActionTakeItem(oItem, oSelf));
 		oItem = GetNextItemInInventory();
 	}
+
 	SetLocalObject(OBJECT_SELF, "GROUND_PACK", oPack);
 	ActionMoveAwayFromObject(oPack, FALSE, 1.5);
 }

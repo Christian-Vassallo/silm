@@ -12,9 +12,9 @@
 
 void main()
 {
-    object oItem = GetSpellCastItem();
-    object oTarget = GetSpellTargetObject();
-    location lLocal = GetSpellTargetLocation();
-    SetLocalInt(oTarget, "NW_L_PORTALINSTANT", 10);
-    SignalEvent(GetModule(), EventActivateItem(oItem, lLocal, oTarget));
+	object oItem = GetSpellCastItem();
+	object oTarget = GetSpellTargetObject();
+	location lLocal = GetSpellTargetLocation();
+	SetLocalInt(oTarget, "NW_L_PORTALINSTANT", 10);
+	SignalEvent(GetModule(), EventActivateItem(oItem, lLocal, oTarget));
 }

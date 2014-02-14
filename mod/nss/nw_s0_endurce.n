@@ -10,7 +10,8 @@
 //:://////////////////////////////////////////////
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 	/*
 	 * Spellcast Hook Code
 	 * Added 2004-03-08 by Jon (should have been added much sooner, but we somehow missed this one...)
@@ -19,7 +20,7 @@ void main() {
 	 *
 	 */
 
-	if ( !X2PreSpellCastCode() ) {
+	if (!X2PreSpellCastCode()) {
 		// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
 		return;
 	}
@@ -38,16 +39,20 @@ void main() {
 	int nMetaMagic = GetMetaMagicFeat();
 	//Fire cast spell at event for the specified target
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_ENDURANCE, FALSE));
+
 	//Check for metamagic conditions
-	if ( nMetaMagic == METAMAGIC_MAXIMIZE ) {
+	if (nMetaMagic == METAMAGIC_MAXIMIZE) {
 		nModify = 5;
 	}
-	if ( nMetaMagic == METAMAGIC_EMPOWER ) {
+
+	if (nMetaMagic == METAMAGIC_EMPOWER) {
 		nModify = FloatToInt(IntToFloat(nModify) * 1.5);
 	}
-	if ( nMetaMagic == METAMAGIC_EXTEND ) {
+
+	if (nMetaMagic == METAMAGIC_EXTEND) {
 		fDuration = fDuration * 2.0;
 	}
+
 	//Set the ability bonus effect
 	eCon = EffectAbilityIncrease(ABILITY_CONSTITUTION, nModify);
 	effect eLink = EffectLinkEffects(eCon, eDur);

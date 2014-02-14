@@ -28,7 +28,8 @@ extern("x0_i0_anims")
 // extern("x0_i0_walkway") - in x0_i0_anims
 extern("x0_i0_treasure")
 
-void main() {
+void main()
+{
 	ExecuteScript("corpse_spawn", OBJECT_SELF);
 
 	// ***** Spawn-In Conditions ***** //
@@ -250,7 +251,7 @@ void main() {
 
 
 	//* Create a small amount of treasure on the creature
-	if ( !GetLocalInt(OBJECT_SELF, "Copying") )
+	if (!GetLocalInt(OBJECT_SELF, "Copying"))
 		GenerateNPCTreasure(OBJECT_SELF);
 
 	// ***** ADD ANY SPECIAL ON-SPAWN CODE HERE ***** //

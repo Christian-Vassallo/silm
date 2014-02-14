@@ -1,6 +1,7 @@
 extern("inc_nwnx_func")
 
-void summon_set_events(object creature) {
+void summon_set_events(object creature)
+{
 	SetCreatureEventHandler(creature, CREATURE_EVENT_ATTACKED, "nw_ch_ac5");
 	SetCreatureEventHandler(creature, CREATURE_EVENT_DAMAGED, "nw_ch_ac5");
 	SetCreatureEventHandler(creature, CREATURE_EVENT_DEATH, "nw_ch_ac7");
@@ -16,8 +17,10 @@ void summon_set_events(object creature) {
 	SetCreatureEventHandler(creature, CREATURE_EVENT_USERDEF, "nw_ch_acb");
 }
 
-void _fix(object p) {
+void _fix(object p)
+{
 	object golem = GetAssociate(ASSOCIATE_TYPE_SUMMONED, p);
+
 	if (strlwr(GetResRef(golem)) != "x2_golem002") {
 		_ERROR("Summon not our expected golem, bailing.");
 		return;
@@ -31,7 +34,8 @@ void _fix(object p) {
 	SetName(golem, "Marvin");
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 	struct EventArguments ea = GetEventArguments(e.serial);
 

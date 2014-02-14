@@ -1,21 +1,26 @@
 extern("_gen")
 
 void applydamage(object actor, object item, int dmgConst, int dmgBonus,
-		int lightConst, int applyVfx) {
+				 int lightConst, int applyVfx)
+{
 	if (applyVfx > -1)
 		ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(applyVfx), actor);
+
 	if (lightConst > -1)
 		AddItemProperty(DURATION_TYPE_PERMANENT,
-			ItemPropertyLight(IP_CONST_LIGHTBRIGHTNESS_LOW, lightConst), item);
+						ItemPropertyLight(IP_CONST_LIGHTBRIGHTNESS_LOW, lightConst), item);
+
 	AddItemProperty(DURATION_TYPE_PERMANENT,
-		ItemPropertyDamageBonus(dmgConst, dmgBonus), item);
+					ItemPropertyDamageBonus(dmgConst, dmgBonus), item);
 }
 
-bool apply(object item, object actor, string eff, bool applyVfx) {
+bool apply(object item, object actor, string eff, bool applyVfx)
+{
 
 	string dmgtype = "none";
 	string dmgbonus = "";
 	int idx = FindSubString(eff, "_");
+
 	if (idx != -1) {
 		dmgtype = GetSubString(eff, 0, idx);
 		dmgbonus = GetSubString(eff, idx + 1, 1024);
@@ -24,6 +29,7 @@ bool apply(object item, object actor, string eff, bool applyVfx) {
 	if (GetStringRight(dmgbonus, 1) == "d") {
 		if (dmgtype == "magic" || dmgtype == "neg" || dmgtype == "pos" || dmgtype == "holy")
 			dmgbonus += "4";
+
 		else
 			dmgbonus += "6";
 	}
@@ -31,7 +37,9 @@ bool apply(object item, object actor, string eff, bool applyVfx) {
 #define map(a,b) else if (dmgbonus == a) bonus = b
 
 	int bonus;
+
 	if (0 == 1) bonus = -1;
+
 	map("1d4", IP_CONST_DAMAGEBONUS_1d4);
 	map("1d6", IP_CONST_DAMAGEBONUS_1d6);
 	map("1d8", IP_CONST_DAMAGEBONUS_1d8);
@@ -57,58 +65,69 @@ bool apply(object item, object actor, string eff, bool applyVfx) {
 
 	// remove all iprp_rotate effects
 	iterate_iprp(item, iprp,
-		if (GetItemPropertyType(iprp) == ITEM_PROPERTY_VISUALEFFECT ||
-				GetItemPropertyType(iprp) == ITEM_PROPERTY_LIGHT ||
-				GetItemPropertyType(iprp) == ITEM_PROPERTY_DAMAGE_BONUS
-		)
-			RemoveItemProperty(item, iprp);
-	);
+
+				 if (GetItemPropertyType(iprp) == ITEM_PROPERTY_VISUALEFFECT ||
+					 GetItemPropertyType(iprp) == ITEM_PROPERTY_LIGHT ||
+					 GetItemPropertyType(iprp) == ITEM_PROPERTY_DAMAGE_BONUS
+					)
+				 RemoveItemProperty(item, iprp);
+				);
 
 	if (dmgtype == "none")
 		ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_CHARM), actor);
 
 	else if (dmgtype == "fire")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_FIRE, bonus,
-			IP_CONST_LIGHTCOLOR_RED, applyVfx ? VFX_IMP_PULSE_FIRE : -1);
+					IP_CONST_LIGHTCOLOR_RED, applyVfx ? VFX_IMP_PULSE_FIRE : -1);
+
 	else if (dmgtype == "cold")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_COLD, bonus,
-			IP_CONST_LIGHTCOLOR_BLUE, applyVfx ? VFX_IMP_PULSE_COLD : -1);
+					IP_CONST_LIGHTCOLOR_BLUE, applyVfx ? VFX_IMP_PULSE_COLD : -1);
+
 	else if (dmgtype == "acid")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_ACID, bonus,
-			IP_CONST_LIGHTCOLOR_GREEN, applyVfx ? VFX_IMP_PULSE_NATURE : -1);
+					IP_CONST_LIGHTCOLOR_GREEN, applyVfx ? VFX_IMP_PULSE_NATURE : -1);
+
 	else if (dmgtype == "elec")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_ELECTRICAL, bonus,
-			IP_CONST_LIGHTCOLOR_WHITE, applyVfx ? VFX_IMP_PULSE_WATER : -1);
+					IP_CONST_LIGHTCOLOR_WHITE, applyVfx ? VFX_IMP_PULSE_WATER : -1);
+
 	else if (dmgtype == "mag")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_MAGICAL, bonus,
-			IP_CONST_LIGHTCOLOR_PURPLE, applyVfx ? VFX_IMP_PULSE_NEGATIVE : -1);
+					IP_CONST_LIGHTCOLOR_PURPLE, applyVfx ? VFX_IMP_PULSE_NEGATIVE : -1);
+
 	else if (dmgtype == "neg") {
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_NEGATIVE, bonus,
-			IP_CONST_LIGHTCOLOR_RED, applyVfx ? VFX_IMP_PULSE_NEGATIVE : -1);
+					IP_CONST_LIGHTCOLOR_RED, applyVfx ? VFX_IMP_PULSE_NEGATIVE : -1);
 		AddItemProperty(DURATION_TYPE_PERMANENT,
-			ItemPropertyVisualEffect(ITEM_VISUAL_EVIL), item);
+						ItemPropertyVisualEffect(ITEM_VISUAL_EVIL), item);
+
 	} else if (dmgtype == "pos") {
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_POSITIVE, bonus,
-			IP_CONST_LIGHTCOLOR_RED, applyVfx ? VFX_IMP_PULSE_NEGATIVE : -1);
+					IP_CONST_LIGHTCOLOR_RED, applyVfx ? VFX_IMP_PULSE_NEGATIVE : -1);
 		AddItemProperty(DURATION_TYPE_PERMANENT,
-			ItemPropertyVisualEffect(ITEM_VISUAL_EVIL), item);
+						ItemPropertyVisualEffect(ITEM_VISUAL_EVIL), item);
+
 	} else if (dmgtype == "holy") {
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_DIVINE, bonus,
-			IP_CONST_LIGHTCOLOR_YELLOW, applyVfx ? VFX_IMP_PULSE_HOLY : -1);
+					IP_CONST_LIGHTCOLOR_YELLOW, applyVfx ? VFX_IMP_PULSE_HOLY : -1);
 		AddItemProperty(DURATION_TYPE_PERMANENT,
-			ItemPropertyVisualEffect(ITEM_VISUAL_HOLY), item);
+						ItemPropertyVisualEffect(ITEM_VISUAL_HOLY), item);
+
 	} else if (dmgtype == "sub")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_SUBDUAL, bonus,
-			-1, applyVfx ? VFX_IMP_PULSE_WATER : -1);
+					-1, applyVfx ? VFX_IMP_PULSE_WATER : -1);
+
 	else if (dmgtype == "sonic")
 		applydamage(actor, item, IP_CONST_DAMAGETYPE_SONIC, bonus,
-			IP_CONST_LIGHTCOLOR_WHITE, applyVfx ? VFX_IMP_PULSE_WIND : -1);
+					IP_CONST_LIGHTCOLOR_WHITE, applyVfx ? VFX_IMP_PULSE_WIND : -1);
 
 	SetName(item, GetName(item, true) + ": " + eff);
 	return true;
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "item_freeactivate" && GetLocalInt(e.runnable, "iprp_rotate")) {
@@ -125,58 +144,68 @@ void main() {
 		string next;
 		pBegin();
 		streach_rx(sequence, ",", "", itx,
-			if (found) {
-				next = itx;
-				break;
-			}
-			
-			if (current != "" && itx == current)
-				found = true;
 
-			// if we can't find the currently selected, go to first
-			if (i == 0)
-				next = itx;
-			i++;
-		);
+		if (found) {
+		next = itx;
+		break;
+	}
+
+	if (current != "" && itx == current)
+		found = true;
+
+				// if we can't find the currently selected, go to first
+				if (i == 0)
+					next = itx;
+					i++;
+					  );
+
 		pCommit();
-		
+
 		SendMessageToPC(e.actor, " Applying: " + next);
 
 		apply(e.runnable, e.actor, next, applyVfx);
 		SetLocalString(e.runnable, "iprp_rotate_current", next);
 		event_stop_end_suppress();
 	}
-	
+
 	/** /ea <type> */
 	if (e.ev == "chat_command") {
 		struct EventArguments ea = GetEventArguments(e.serial);
+
 		if (ea.a0 != "ea")
 			return;
 
 		object wpn = GetItemInSlot(INVENTORY_SLOT_RIGHTHAND, e.runnable);
+
 		if (GetLocalInt(wpn, "iprp_rotate")) {
 			string sequence = GetLocalString(wpn, "iprp_rotate_seq");
 			bool applyVfx = GetLocalInt(wpn, "iprp_rotate_applyVfx");
 			string type = GetStringTrim(ea.a1);
 			string found = "";
+
 			if (type != "") {
-			
+
 				pBegin();
 				streach_rx(sequence, ",", "", itx,
-					if (TestStringAgainstPattern(type + "*a_**", itx) ||
-							TestStringAgainstPattern(type + "_**", itx)) {
-						found = itx;
-						break;
-					}
-				);
+
+						   if (TestStringAgainstPattern(type + "*a_**", itx) ||
+				TestStringAgainstPattern(type + "_**", itx)) {
+				found = itx;
+				break;
+			}
+					  );
 				pCommit();
 			}
+
 			if (found != "") {
 				SendMessageToPC(e.runnable, "Applying: " + found);
-				if(apply(wpn, e.runnable, found, applyVfx))
+
+				if (apply(wpn, e.runnable, found, applyVfx))
 					SetLocalString(wpn, "iprp_rotate_current", found);
+
 			} else
 				SendMessageToPC(e.runnable, "No such ea property enchanted, available: " + sequence);
+
 		} else
 			SendMessageToPC(e.runnable, "No ea-enchanted weapon equipped.");
 

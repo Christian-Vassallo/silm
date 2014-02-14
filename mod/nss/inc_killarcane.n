@@ -11,7 +11,8 @@ void KillArcane_BuildDialog(object oPC, object oTarget);
 void RemoveArcaneBySpellID(object oPC, object oTarget, int nID);
 
 
-void KillArcane_BuildDialog(object oPC, object oTarget) {
+void KillArcane_BuildDialog(object oPC, object oTarget)
+{
 	ClearList(oPC, TT);
 
 	int nSpellID = -1;
@@ -20,10 +21,11 @@ void KillArcane_BuildDialog(object oPC, object oTarget) {
 	string sAllSpells = " ";
 
 	effect e = GetFirstEffect(oTarget);
+
 	while (GetIsEffectValid(e)) {
 		if (GetEffectCreator(e) == oPC && GetEffectSubType(e) == SUBTYPE_MAGICAL &&
 				GetEffectType(e) != EFFECT_TYPE_VISUALEFFECT) {
-			
+
 			nSpellID = GetEffectSpellId(e);
 
 			if (nSpellID != -1 && - 1 == FindSubString(sAllSpells, " " + IntToString(nSpellID) + " ")) {
@@ -34,6 +36,7 @@ void KillArcane_BuildDialog(object oPC, object oTarget) {
 				SetListObject(oPC, TT, oTarget);
 			}
 		}
+
 		e = GetNextEffect(oTarget);
 	}
 
@@ -43,9 +46,11 @@ void KillArcane_BuildDialog(object oPC, object oTarget) {
 }
 
 
-void RemoveArcaneBySpellID(object oPC, object oTarget, int nID) {
+void RemoveArcaneBySpellID(object oPC, object oTarget, int nID)
+{
 	int nSpellID;
 	effect e = GetFirstEffect(oTarget);
+
 	while (GetIsEffectValid(e)) {
 		if (GetEffectCreator(e) == oPC && GetEffectSubType(e) == SUBTYPE_MAGICAL &&
 				GetEffectType(e) != EFFECT_TYPE_VISUALEFFECT) {
@@ -58,6 +63,7 @@ void RemoveArcaneBySpellID(object oPC, object oTarget, int nID) {
 				break;
 			}
 		}
+
 		e = GetNextEffect(oTarget);
 	}
 

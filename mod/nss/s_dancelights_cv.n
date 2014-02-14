@@ -1,71 +1,74 @@
 extern("_gen")
 extern("inc_dancelights")
 
-void main() {
+void main()
+{
 	object
 	oLight = OBJECT_SELF,
 	oPC = GetMaster();
 
 	int nCommand = GetLastAssociateCommand(oLight);
-	switch ( nCommand ) {
-		// Bugger off.
-		case ASSOCIATE_COMMAND_LEAVEPARTY:
-			ToPC("Ihr loest die Arkane.", oPC);
-			Unsummon();
-			break;
+
+	switch (nCommand) {
+	// Bugger off.
+	case ASSOCIATE_COMMAND_LEAVEPARTY:
+		ToPC("Ihr loest die Arkane.", oPC);
+		Unsummon();
+		break;
 
 
-		case ASSOCIATE_COMMAND_TOGGLESEARCH:
-		case ASSOCIATE_COMMAND_PICKLOCK:
-		case ASSOCIATE_COMMAND_DISARMTRAP:
-		case ASSOCIATE_COMMAND_ATTACKNEAREST:
-			ToPC("Das Tanzende Licht versteht Euren Befehl nicht.", oPC);
-			break;
+	case ASSOCIATE_COMMAND_TOGGLESEARCH:
+	case ASSOCIATE_COMMAND_PICKLOCK:
+	case ASSOCIATE_COMMAND_DISARMTRAP:
+	case ASSOCIATE_COMMAND_ATTACKNEAREST:
+		ToPC("Das Tanzende Licht versteht Euren Befehl nicht.", oPC);
+		break;
 
-		case ASSOCIATE_COMMAND_FOLLOWMASTER:
-			ToPC("Das Tanzende Licht folgt Euch.", oPC);
-			Follow(oPC);
-			break;
+	case ASSOCIATE_COMMAND_FOLLOWMASTER:
+		ToPC("Das Tanzende Licht folgt Euch.", oPC);
+		Follow(oPC);
+		break;
 
-		case ASSOCIATE_COMMAND_STANDGROUND:
-			ToPC("Das Tanzende Licht haelt inne.", oPC);
-			Stay();
-			break;
+	case ASSOCIATE_COMMAND_STANDGROUND:
+		ToPC("Das Tanzende Licht haelt inne.", oPC);
+		Stay();
+		break;
 
-		case ASSOCIATE_COMMAND_TOGGLECASTING:
-			ToPC("Ihr lasst von der Arkane ab.", oPC);
-			LeaveParty(oPC);
-			break;
+	case ASSOCIATE_COMMAND_TOGGLECASTING:
+		ToPC("Ihr lasst von der Arkane ab.", oPC);
+		LeaveParty(oPC);
+		break;
 
-		case ASSOCIATE_COMMAND_GUARDMASTER:
-		case ASSOCIATE_COMMAND_TOGGLESTEALTH:
-			if ( ToggleLights() )
-				ToPC("Das Licht erstrahlt in neuem Glanze.", oPC);
-			else
-				ToPC("Das Licht erlischt voruebergehend.", oPC);
+	case ASSOCIATE_COMMAND_GUARDMASTER:
+	case ASSOCIATE_COMMAND_TOGGLESTEALTH:
+		if (ToggleLights())
+			ToPC("Das Licht erstrahlt in neuem Glanze.", oPC);
 
-			break;
+		else
+			ToPC("Das Licht erlischt voruebergehend.", oPC);
 
-		case ASSOCIATE_COMMAND_HEALMASTER:
-			ToPC("Das Tanzende Licht schenkt Euch waermendes Licht.", oPC);
-			break;
+		break;
 
-		case ASSOCIATE_COMMAND_INVENTORY:
-			ToPC("Das Tanzende Licht verfuegt ueber keinen Koerper - geschweige denn ein Inventar.", oPC);
-			break;
+	case ASSOCIATE_COMMAND_HEALMASTER:
+		ToPC("Das Tanzende Licht schenkt Euch waermendes Licht.", oPC);
+		break;
 
-		case ASSOCIATE_COMMAND_MASTERATTACKEDOTHER:
-		case ASSOCIATE_COMMAND_MASTERFAILEDLOCKPICK:
-		case ASSOCIATE_COMMAND_MASTERGOINGTOBEATTACKED:
-		case ASSOCIATE_COMMAND_MASTERSAWTRAP:
-		case ASSOCIATE_COMMAND_MASTERUNDERATTACK:
-		case ASSOCIATE_COMMAND_RELEASEDOMINATION:
-		case ASSOCIATE_COMMAND_UNPOSSESSFAMILIAR:
-		case ASSOCIATE_COMMAND_UNSUMMONANIMALCOMPANION:
-		case ASSOCIATE_COMMAND_UNSUMMONFAMILIAR:
-		case ASSOCIATE_COMMAND_UNSUMMONSUMMONED:
-		default:
-			// Unknown command
-			break;
+	case ASSOCIATE_COMMAND_INVENTORY:
+		ToPC("Das Tanzende Licht verfuegt ueber keinen Koerper - geschweige denn ein Inventar.", oPC);
+		break;
+
+	case ASSOCIATE_COMMAND_MASTERATTACKEDOTHER:
+	case ASSOCIATE_COMMAND_MASTERFAILEDLOCKPICK:
+	case ASSOCIATE_COMMAND_MASTERGOINGTOBEATTACKED:
+	case ASSOCIATE_COMMAND_MASTERSAWTRAP:
+	case ASSOCIATE_COMMAND_MASTERUNDERATTACK:
+	case ASSOCIATE_COMMAND_RELEASEDOMINATION:
+	case ASSOCIATE_COMMAND_UNPOSSESSFAMILIAR:
+	case ASSOCIATE_COMMAND_UNSUMMONANIMALCOMPANION:
+	case ASSOCIATE_COMMAND_UNSUMMONFAMILIAR:
+	case ASSOCIATE_COMMAND_UNSUMMONSUMMONED:
+	default:
+		// Unknown command
+		break;
 	}
 }

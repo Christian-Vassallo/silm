@@ -13,13 +13,15 @@
 //              Destination Type other than None.
 ////////////////////////////////////////////////////////////
 
-void Teleport_Object(object oObject, object oTarget) {
-	if ( GetIsObjectValid(oObject) )
+void Teleport_Object(object oObject, object oTarget)
+{
+	if (GetIsObjectValid(oObject))
 		AssignCommand(oObject, JumpToObject(oTarget));
 }
 
 
-void main() {
+void main()
+{
 	object oClicker = GetClickingObject();
 	object oTarget = GetTransitionTarget(OBJECT_SELF);
 
@@ -27,7 +29,9 @@ void main() {
 	// - runnable: trigger
 	// - actor: clicker
 	// - stop
-	if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "transition_click", OBJECT_SELF, GetClickingObject(), OBJECT_SELF, GetLocation(OBJECT_SELF)))
+	if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "transition_click", OBJECT_SELF,
+			GetClickingObject(),
+			OBJECT_SELF, GetLocation(OBJECT_SELF)))
 		return;
 
 	SetAreaTransitionBMP(AREA_TRANSITION_RANDOM);

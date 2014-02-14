@@ -5,7 +5,8 @@ extern("inc_currency")
 
 const string TTT = "merc";
 
-void MakeMerchantDialog(object oPC, object oMerc) {
+void MakeMerchantDialog(object oPC, object oMerc)
+{
 	ClearList(oPC, TTT);
 
 	int nMenuLevel0 = GetMenuLevel(oPC, TTT, 0);
@@ -18,13 +19,14 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 
 
 	pQ(
-		"select text_intro,text_buy,text_sell,text_nothingtobuy,text_nothingtosell,text_swap,money,appraise_dc,money_limited from merchants where tag = " + 
+		"select text_intro,text_buy,text_sell,text_nothingtobuy,text_nothingtosell,text_swap,money,appraise_dc,money_limited from merchants where tag = "
+		+
 		pSs(sMerc) + ";"
 	);
 
-	if ( !pF() ) {
+	if (!pF()) {
 		SendMessageToPC(oPC,
-			"Bug. :/ Kein Haendler mit diesem tag gefunden, aber NPC hat Script dran. Hm, hm. Datenbank offski?");
+						"Bug. :/ Kein Haendler mit diesem tag gefunden, aber NPC hat Script dran. Hm, hm. Datenbank offski?");
 		return;
 	}
 
@@ -43,23 +45,25 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 
 
 	float fAppraiseMod = GetLocalFloat(oPC, TTT + "_" + sTag);
-	if ( fAppraiseMod == 0.0 ) {
+
+	if (fAppraiseMod == 0.0) {
 		fAppraiseMod = 1.0;
 
-		if ( nAppraiseDC > 0 ) {
+		if (nAppraiseDC > 0) {
 			int nD = d20() + GetSkillRank(SKILL_APPRAISE, oPC);
 
-			fAppraiseMod += ( nD - nAppraiseDC ) * 0.01;
+			fAppraiseMod += (nD - nAppraiseDC) * 0.01;
 
-			if ( GetIsDM(oPC) ) {
+			if (GetIsDM(oPC)) {
 				SendMessageToPC(oPC, "Your appraise modificator for this merchant is: " +
-					FloatToString(fAppraiseMod) + " (because you rolled  a " + IntToString(nD) + ")");
+								FloatToString(fAppraiseMod) + " (because you rolled  a " + IntToString(nD) + ")");
 			}
 
 			SetLocalFloat(oPC, TTT + "_" + sTag, fAppraiseMod);
 		}
 	}
-	if ( fAppraiseMod == 0.0 )
+
+	if (fAppraiseMod == 0.0)
 		fAppraiseMod = 0.1;
 
 
@@ -67,7 +71,7 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 
 
 	// Main menue.
-	if ( 0 == nMenuLevel0 ) {
+	if (0 == nMenuLevel0) {
 		// buy
 		AddListItem(oPC, TTT, "Dinge vom Haendler kaufen");
 		SetListInt(oPC, TTT, 1);
@@ -75,7 +79,7 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		// sell
 		AddListItem(oPC, TTT, "Dinge an den Haendler verkaufen");
 		SetListInt(oPC, TTT, 2);
-		
+
 
 		//AddListItem(oPC, TTT, "Dinge mit dem Haendler tauschen");
 		//SetListInt(oPC, TTT, 3);
@@ -84,7 +88,8 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		ResetConvList(oPC, oPC, TTT, 50000, "merchant_cb", sTextIntro);
 
 		// Buy from merchant
-	} else if ( 1 == nMenuLevel0 ) {
+
+	} else if (1 == nMenuLevel0) {
 		int nFound = 0, nCount = -1, nWant, nMax;
 		string sResRef = "";
 		object oSell;
@@ -94,12 +99,12 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		float fMark;
 
 		pQ(
-			"select resref,cur,sell_mark,max from stores " + 
+			"select resref,cur,sell_mark,max from stores " +
 			"where sells = 1 and ((cur > 0 and cur > min) or (cur = 0 and max = 0 and min = 0)) and " +
 			"tag = " + pSs(sMerc) + " order by resref asc;"
 		);
 
-		while ( pF() ) {
+		while (pF()) {
 			sResRef = pGs(1);
 			nWant = pGi(2);
 			nMax  = pGi(4);
@@ -107,7 +112,8 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			fMark = pGf(3);
 
 			oSell = GetItemResRefPossessedBy(oMerc, sResRef);
-			if ( !GetIsObjectValid(oSell) )
+
+			if (!GetIsObjectValid(oSell))
 				oSell = CreateItemOnObject(sResRef, oMerc, 1, sResRef);
 
 			int identf = GetIdentified(oSell);
@@ -115,21 +121,23 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			SetIdentified(oSell, TRUE);
 
 			nStackSize = GetItemStackSize(oSell);
+
 			if (!nStackSize)
 				nStackSize = 1;
 
-			nPrice = FloatToInt(( 1.0 / fAppraiseMod ) *
-						 fMark * ( GetGoldPieceValue(oSell) / nStackSize ));
+			nPrice = FloatToInt((1.0 / fAppraiseMod) *
+								fMark * (GetGoldPieceValue(oSell) / nStackSize));
 
 			AddListItem(oPC, TTT, GetName(oSell) +
-				( nMax == 0 ? " (gut bestockt)" : " (" + IntToString(nWant) + " auf Lager)" ) +
-				": " + MoneyToString(nPrice));
+						(nMax == 0 ? " (gut bestockt)" : " (" + IntToString(nWant) + " auf Lager)") +
+						": " + MoneyToString(nPrice));
 			SetListString(oPC, TTT, sResRef);
 			SetListInt(oPC, TTT, nPrice);
 			SetListFloat(oPC, TTT, IntToFloat(nMax));
 
-			if ( nPrice < nPCMoney )
+			if (nPrice < nPCMoney)
 				SetListDisplayMode(oPC, TTT, DISPLAYMODE_GREEN);
+
 			else
 				SetListDisplayMode(oPC, TTT, DISPLAYMODE_RED);
 
@@ -138,18 +146,20 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			nFound += 1;
 		}
 
-		if ( !nFound )
+		if (!nFound)
 			sText = sTextNothingToSell;
+
 		else
 			sText = sTextSell;
 
 
 		ResetConvList(oPC, oPC, TTT, 50000, "merchant_cb", sText, "", "", "merchant_b2m0",
-			"Zurueck zur Liste");
+					  "Zurueck zur Liste");
 
 
 		// Sell to merchant.
-	} else if ( 2 == nMenuLevel0 ) {
+
+	} else if (2 == nMenuLevel0) {
 
 		int nFound = 0, nCount = -1, nWant, nMax;
 		string sResRef = "";
@@ -161,16 +171,16 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 
 		pQ(
 			"select resref,buy_mark,cur,max from stores " +
-			"where buys = 1 and ((cur < max) or (min=0 and cur=0 and max=0)) and tag = " + 
+			"where buys = 1 and ((cur < max) or (min=0 and cur=0 and max=0)) and tag = " +
 			pSs(sMerc) + " order by resref asc;"
 		);
 
-		while ( pF() ) {
+		while (pF()) {
 			sResRef = pG(1);
 			fMark = pGf(2);
 			nWant = pGi(3);
 			nMax  = pGi(4);
-			
+
 			nCount = GetItemCountByResRef(oPC, sResRef);
 
 			nAvailable = 1;
@@ -178,44 +188,47 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			oSell = GetItemResRefPossessedBy(oMerc, sResRef);
 
 			// Do not sell non-existant items
-			if ( nCount == 0 )
+			if (nCount == 0)
 				nAvailable = 0;
 
 			// avoid bug thing
-			if ( nCount == 1 && GetLocalString(oPC, "merc_last_sell") == sResRef ) {
+			if (nCount == 1 && GetLocalString(oPC, "merc_last_sell") == sResRef) {
 				DeleteLocalString(oPC, "merc_last_sell");
 				nCount -= 1;
 				nAvailable = 0;
 			}
 
 			// oops?
-			if ( !GetIsObjectValid(oSell) ) {
+			if (!GetIsObjectValid(oSell)) {
 				nAvailable = 0;
 				oSell = CreateItemOnObject(sResRef, oMerc);
 			}
 
 			if (!GetIsObjectValid(oSell)) {
-				ToPC("Kann kein Item mit dieser ResRef erstellen (" + sResRef + "). Dies ist ein Bug. Bitte melde ihn den SLs.");
+				ToPC("Kann kein Item mit dieser ResRef erstellen (" + sResRef +
+					 "). Dies ist ein Bug. Bitte melde ihn den SLs.");
 				continue;
 			}
-			
+
 			nStackSize = GetItemStackSize(oSell);
+
 			if (!nStackSize)
 				nStackSize = 1;
 
-			nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / nStackSize ));
+			nPrice = FloatToInt(fAppraiseMod * fMark * (GetGoldPieceValue(oSell) / nStackSize));
 
 			AddListItem(oPC, TTT, GetName(oSell) +
-				( nMax ==
-				 0 ? " (immer gesucht)" : " (" +
-				 IntToString(nCount) + " im Inventar, " + IntToString(nMax - nWant) + " gesucht)" ) +
-				": " + MoneyToString(nPrice));
+						(nMax ==
+						 0 ? " (immer gesucht)" : " (" +
+						 IntToString(nCount) + " im Inventar, " + IntToString(nMax - nWant) + " gesucht)") +
+						": " + MoneyToString(nPrice));
 			SetListString(oPC, TTT, sResRef);
 			SetListInt(oPC, TTT, nPrice);
 			SetListFloat(oPC, TTT, IntToFloat(nMax));
 
-			if ( nAvailable && (!bLimitedMoney || nPrice < nMercMoney) )
+			if (nAvailable && (!bLimitedMoney || nPrice < nMercMoney))
 				SetListDisplayMode(oPC, TTT, DISPLAYMODE_GREEN);
+
 			else
 				SetListDisplayMode(oPC, TTT, DISPLAYMODE_RED);
 
@@ -223,17 +236,19 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		}
 
 
-		if ( !nFound ) {
+		if (!nFound) {
 			sText = sTextNothingToBuy; // "Ihr habt nichts fuer das ich mich interessiere.";
+
 		} else {
 			sText = sTextBuy; //"Waehle den Gegenstand, den du verkaufen moechtest. Pro Klick wird einer verkauft.";
 		}
 
 		ResetConvList(oPC, oPC, TTT, 50000, "merchant_cb", sText, "", "", "merchant_b2m0",
-			"Zurueck zur Liste");
-	
-	// Swap with merchant
-	} else if ( 3 == nMenuLevel0 ) {
+					  "Zurueck zur Liste");
+
+		// Swap with merchant
+
+	} else if (3 == nMenuLevel0) {
 		/*
 		int nAvailable;
 		object
@@ -248,7 +263,7 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 		int bAdhereInventory;
 
 		int nPlayerItems;
-		
+
 		int nID;
 
 		SQLQuery(
@@ -279,12 +294,12 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			if (nAvailable && nPlayerItems < takesC) {
 				nAvailable = 0;
 			}
-			
+
 			// Check merchant has at least gives_count items
 			if (nAvailable && givesA < givesC) {
 				nAvailable = 0;
 			}
-			
+
 			// Check merchant has enough room for takes_count items
 			if (nAvailable && takesC > takesA) {
 				nAvailable = 0;
@@ -297,8 +312,8 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 			/ *if ( nCount == takesC && GetLocalString(oPC, "merc_last_swap") == sResRef ) {
 				DeleteLocalString(oPC, "merc_last_swap");
 				nAvailable = 0;
-			}* / 
-			
+			}* /
+
 			oTakes = GetItemResRefPossessedBy(oPC, sTakesR);
 
 			// oops?
@@ -309,13 +324,13 @@ void MakeMerchantDialog(object oPC, object oMerc) {
 
 			// priceTakes = GetGoldPieceValue(oTakes) / GetItemStackSize(oTakes);
 			// nPrice = FloatToInt(fAppraiseMod * fMark * ( GetGoldPieceValue(oSell) / GetItemStackSize(oSell) ));
-		
+
 
 			// Display text: NameTakes (takesC/takesA) -> NameGives (givesC/givesA)
-			
-			AddListItem(oPC, TTT, "Tausche " + 
+
+			AddListItem(oPC, TTT, "Tausche " +
 				IntToString(takesC) + " " + GetName(oTakes) +
-				" gegen " + 
+				" gegen " +
 				IntToString(givesC) + " " + GetName(oGives)
 			);
 			SetListInt(oPC, TTT, nID);

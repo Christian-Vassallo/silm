@@ -5,75 +5,83 @@ extern("inc_session")
 void ChatLog(object oPC, int nMode, string sMessage, object oTo);
 
 
-void ChatLog(object oPC, int nMode, string sMessage, object oTo) {
+void ChatLog(object oPC, int nMode, string sMessage, object oTo)
+{
 
 	string heard_by_aid, heard_by_cid;
 	int nheard_by_aid = 0, nheard_by_cid = 0;
-	
+
 	heard_by_aid += "E'{";
 	heard_by_cid += "E'{";
 
 	if (nMode & CHATMODE_PRIVATE || nMode & CHATMODE_TELEPATHIC_BOND) {
 		if (GetCharacterID(oTo))
 			heard_by_cid += itoa(GetCharacterID(oTo));
+
 		else
 			heard_by_aid += itoa(GetAccountID(oTo));
 
 	} else {
 		iterate_players(oIterate,
-			if (oPC != oIterate) {
-				bool did_hear = false;
 
-				if (nMode & CHATMODE_SHOUT)
-					did_hear = true;
-				else if (nMode & CHATMODE_PARTY)
-					did_hear = (GetIsDM(oIterate) || GetFactionId(oPC) == GetFactionId(oIterate));
-				else if (nMode & CHATMODE_DM || nMode & CHATMODE_SERVER)
-					did_hear = GetIsDM(oIterate);
-				else if ((nMode & CHATMODE_TALK || nMode & CHATMODE_WHISPER) &&
-						hears(oPC, oIterate, nMode & CHATMODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER))
-					did_hear = true;
+		if (oPC != oIterate) {
+		bool did_hear = false;
 
-				if (did_hear) {
-					if (GetCharacterID(oIterate) > 0) {
-						nheard_by_cid += 1;
-						heard_by_cid += itoa(GetCharacterID(oIterate));
-						heard_by_cid += ",";
-					} else {
-						nheard_by_aid += 1;
-						heard_by_aid += itoa(GetAccountID(oIterate));
-						heard_by_aid += ",";
-					}
+		if (nMode & CHATMODE_SHOUT)
+				did_hear = true;
+
+			else if (nMode & CHATMODE_PARTY)
+				did_hear = (GetIsDM(oIterate) || GetFactionId(oPC) == GetFactionId(oIterate));
+
+			else if (nMode & CHATMODE_DM || nMode & CHATMODE_SERVER)
+				did_hear = GetIsDM(oIterate);
+
+			else if ((nMode & CHATMODE_TALK || nMode & CHATMODE_WHISPER) &&
+					 hears(oPC, oIterate, nMode & CHATMODE_TALK ? TALKVOLUME_TALK : TALKVOLUME_WHISPER))
+				did_hear = true;
+
+			if (did_hear) {
+				if (GetCharacterID(oIterate) > 0) {
+					nheard_by_cid += 1;
+					heard_by_cid += itoa(GetCharacterID(oIterate));
+					heard_by_cid += ",";
+
+				} else {
+					nheard_by_aid += 1;
+					heard_by_aid += itoa(GetAccountID(oIterate));
+					heard_by_aid += ",";
 				}
 			}
-		);
+		}
+					   );
 	}
 
 	if (nheard_by_aid > 0)
 		heard_by_aid = substr(heard_by_aid, 0, strlen(heard_by_aid) - 1);
+
 	if (nheard_by_cid > 0)
 		heard_by_cid = substr(heard_by_cid, 0, strlen(heard_by_cid) - 1);
-	
+
 	heard_by_aid += "}'";
 	heard_by_cid += "}'";
 
 	int
-		nAID = GetAccountID(oPC),
-		nCID = GetCharacterID(oPC),
-		nTAID = GetAccountID(oTo),
-		nTCID = GetCharacterID(oTo);
+	nAID = GetAccountID(oPC),
+	nCID = GetCharacterID(oPC),
+	nTAID = GetAccountID(oTo),
+	nTCID = GetCharacterID(oTo);
 
 	string
-		s_key = itoa(session_get(oPC));
-	
+	s_key = itoa(session_get(oPC));
+
 	string
-		sAccount = pSs(GetPCPlayerName(oPC)),
-		sChar = pSs(GetName(oPC)),
-		sText = pSs(sMessage),
-		sLoc = pEscapeLocation(GetLocation(oPC));
-	
+	sAccount = pSs(GetPCPlayerName(oPC)),
+	sChar = pSs(GetName(oPC)),
+	sText = pSs(sMessage),
+	sLoc = pEscapeLocation(GetLocation(oPC));
+
 	string
-		sAccTo = "NULL", sCharTo = "NULL", sLocTo = "NULL";
+	sAccTo = "NULL", sCharTo = "NULL", sLocTo = "NULL";
 
 	if (is_valid(oTo)) {
 		sAccTo = pSs(GetPCPlayerName(oTo));
@@ -83,7 +91,8 @@ void ChatLog(object oPC, int nMode, string sMessage, object oTo) {
 
 	string query;
 	query += "insert into chat.logs (";
-	query +=   "aid, cid, account_s, character_s, at, t_aid, t_cid, t_account_s, t_character_s, t_at, session, text, mode, heard_by_aid, heard_by_cid";
+	query +=
+		"aid, cid, account_s, character_s, at, t_aid, t_cid, t_account_s, t_character_s, t_at, session, text, mode, heard_by_aid, heard_by_cid";
 	query += ") values(";
 	query +=   pSi(nAID) + ", " + pSi(nCID) + ", " + sAccount + ", " + sChar + ", " + sLoc + ", ";
 	query +=   pSi(nTAID) + ", " + pSi(nTCID) + ", " + sAccTo + ", " + sCharTo + ", " + sLocTo + ", ";

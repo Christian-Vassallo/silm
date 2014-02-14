@@ -5,37 +5,39 @@ extern("inc_chat_lib")
 // Returns a random plane.
 string GetRandomPlane();
 
-// Function: PlaneWalk 
-// 
+// Function: PlaneWalk
+//
 // Makes oPC walk the given plane for fDuration seconds.
 // Only in his mind!
 void PlaneWalk(object oPC, string sPlane = "", float fDuration = 120.0);
 
-// Function: PlaneWalkTextHook 
-// 
+// Function: PlaneWalkTextHook
+//
 // Called internally.
 void PlaneWalkTextHook(object oPC, int iMode, string sText);
 
 
 
-string GetRandomPlane() {
+string GetRandomPlane()
+{
 	int nRet = Random(7);
 	return nRet == 0 ? "fire" : nRet == 1 ? "ice" : nRet == 2 ? "water" : "shadow";
 }
 
 
-void PlaneWalkEnd(object oPC) {
+void PlaneWalkEnd(object oPC)
+{
 	object oCopy = GetLocalObject(oPC, "planewalk_copy");
 	location lReal = GetLocalLocation(oPC, "planewalk_location");
 
-	if ( !GetIsObjectValid(oCopy) )
+	if (!GetIsObjectValid(oCopy))
 		return;
 
 	SetImmortal(oCopy, 0);
 
 	int nDamage = GetCurrentHitPoints(oPC) - GetCurrentHitPoints(oCopy);
 
-	if ( GetCurrentHitPoints(oPC) - nDamage < 1 )
+	if (GetCurrentHitPoints(oPC) - nDamage < 1)
 		nDamage = GetCurrentHitPoints(oPC) - 1;
 
 	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDamage(nDamage), oPC);
@@ -50,16 +52,17 @@ void PlaneWalkEnd(object oPC) {
 
 
 
-void PlaneWalk(object oPC, string sPlane = "", float fDuration = 120.0) {
-	if ( sPlane == "" )
+void PlaneWalk(object oPC, string sPlane = "", float fDuration = 120.0)
+{
+	if (sPlane == "")
 		sPlane = GetRandomPlane();
 
 	object oWP = GetObjectByTag("wp_plane_" + GetStringLowerCase(sPlane));
 
-	if ( !GetIsObjectValid(oWP) ) {
+	if (!GetIsObjectValid(oWP)) {
 		SendMessageToAllDMs("Waypoint '" +
-			"wp_plane_" +
-			GetStringLowerCase(sPlane) + "' not found, cannot planewalk " + PCToString(oPC, TRUE) + ".");
+							"wp_plane_" +
+							GetStringLowerCase(sPlane) + "' not found, cannot planewalk " + PCToString(oPC, TRUE) + ".");
 		return;
 	}
 
@@ -92,14 +95,15 @@ void PlaneWalk(object oPC, string sPlane = "", float fDuration = 120.0) {
 }
 
 
-void PlaneWalkTextHook(object oPC, int iMode, string sText) {
+void PlaneWalkTextHook(object oPC, int iMode, string sText)
+{
 
-	if ( !GetIsPC(oPC) )
+	if (!GetIsPC(oPC))
 		return;
 
 	object oCopy = GetLocalObject(oPC, "planewalk_copy");
 
-	if ( !GetIsObjectValid(oCopy) )
+	if (!GetIsObjectValid(oCopy))
 		return;
 
 	SpeakToMode(oCopy, sText, iMode);

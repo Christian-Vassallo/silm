@@ -35,7 +35,8 @@ int GetAreaWeather(int nClimate = 0);
 //::
 //::///////////////////////////////////////////////////////
 
-void weather_setup() {
+void weather_setup()
+{
 	return;
 
 
@@ -66,7 +67,8 @@ void weather_setup() {
 
 // *********************************************************************************************
 
-void weather_update(int nWeather = 0) {
+void weather_update(int nWeather = 0)
+{
 	return;
 
 
@@ -102,22 +104,26 @@ void weather_update(int nWeather = 0) {
 	// Check for time of the year and assigning the appropriate precipitation chance
 	// and snow chance for the current season
 
-	if ( iMonth < iFirst_Spr ) {
+	if (iMonth < iFirst_Spr) {
 		// winter
 		iPerc_Chance = GetLocalInt(oMod, "weather_winter_presi");
 		iSnow_Chance = GetLocalInt(oMod, "weather_winter_snow");
-	} else if ( iMonth < iFirst_Sum ) {
+
+	} else if (iMonth < iFirst_Sum) {
 		// Spring
 		iPerc_Chance = GetLocalInt(oMod, "weather_spring_presi");
 		iSnow_Chance = GetLocalInt(oMod, "weather_spring_snow");
-	} else if ( iMonth < iFirst_Aut ) {
+
+	} else if (iMonth < iFirst_Aut) {
 		// Summer
 		iPerc_Chance = GetLocalInt(oMod, "weather_summer_presi");
 		iSnow_Chance = GetLocalInt(oMod, "weather_summer_snow");
-	} else if ( iMonth < iFirst_Win ) {
+
+	} else if (iMonth < iFirst_Win) {
 		// Autumn
 		iPerc_Chance = GetLocalInt(oMod, "weather_autumn_presi");
 		iSnow_Chance = GetLocalInt(oMod, "weather_autumn_snow");
+
 	} else {
 		// only winter left this year
 		iPerc_Chance = GetLocalInt(oMod, "weather_winter_presi");
@@ -125,18 +131,22 @@ void weather_update(int nWeather = 0) {
 	}
 
 	// Now that we know what season we got we check for precipitation and snow
-	if ( nWeather == 0 ) {
-		if ( ( iRnd_Prec <= iPerc_Chance )
-			&& ( iRnd_Snow <= iSnow_Chance ) )  // something is coming down and it's snow
+	if (nWeather == 0) {
+		if ((iRnd_Prec <= iPerc_Chance)
+				&& (iRnd_Snow <= iSnow_Chance))     // something is coming down and it's snow
 			iWeather = WEATHER_SNOW;
-		else if ( ( iRnd_Prec <= iPerc_Chance )
-				 && !( iRnd_Snow <= iSnow_Chance ) )  // something is coming down but it's not snow. Must be rain
+
+		else if ((iRnd_Prec <= iPerc_Chance)
+				 && !(iRnd_Snow <= iSnow_Chance))     // something is coming down but it's not snow. Must be rain
 			iWeather = WEATHER_RAIN;
+
 		else  // guess nothing is coming down, huh?
 			iWeather = WEATHER_CLEAR;
+
 	} else {
 		iWeather = nWeather;
 	}
+
 	// Weather gets adjusted. Guess what: If you assign a weather to the entire
 	// module it applies to all the outdoor areas. Thanks for that tidbit of info
 	// to Markus (aka Niveau0)
@@ -144,28 +154,30 @@ void weather_update(int nWeather = 0) {
 	SetLocalInt(oMod, "weather", iWeather);
 
 	// Update All activ Areas instantly
-	while ( GetIsObjectValid(oPC) ) {
+	while (GetIsObjectValid(oPC)) {
 		oArea = GetArea(oPC);
 		int nClimate = GetLocalInt(oArea, "weather");
 		int nInitDone = GetLocalInt(oArea, "WeatherDone"); // no multiple use
 
 		//SendMessageToPC(oPC,IntToString(nClimate));
 		//Only runs one time in Area
-		if ( nInitDone == 0 ) {
+		if (nInitDone == 0) {
 			// only updates normal Climate Weatherchanges
-			if ( GetWeather(oArea) != iWeather && nClimate == 0 ) {
+			if (GetWeather(oArea) != iWeather && nClimate == 0) {
 				SetWeather(oArea, iWeather);
 				SetLocalInt(oArea, "WeatherDone", 1);
 				DelayCommand(1.0, DeleteLocalInt(oArea, "WeatherDone"));
 			}
+
 			// update Arctic weather changes (no rain, but Snow)
-			else if ( GetWeather(oArea) != iWeather && iWeather == WEATHER_RAIN && nClimate == 2 ) {
+			else if (GetWeather(oArea) != iWeather && iWeather == WEATHER_RAIN && nClimate == 2) {
 				iWeather = WEATHER_SNOW;
 				SetWeather(oArea, iWeather);
 				SetLocalInt(oArea, "WeatherDone", 1);
 				DelayCommand(1.0, DeleteLocalInt(oArea, "WeatherDone"));
 			}
 		}
+
 		oPC = GetNextPC();
 	}
 
@@ -177,15 +189,18 @@ void weather_update(int nWeather = 0) {
 	DelayCommand(IntToFloat(iRoC), weather_update()); //comment out for debugging
 
 	// DEBUGGING USE ONLY!!!! Comment out for regular use
-	if ( iWeather == WEATHER_SNOW ) {
+	if (iWeather == WEATHER_SNOW) {
 		sWeatherType = "Schnee";
-	} else if ( iWeather == WEATHER_RAIN ) {
+
+	} else if (iWeather == WEATHER_RAIN) {
 		sWeatherType = "Regen";
+
 	} else {
 		sWeatherType = "Sonnenschein";
 	}
+
 	SendMessageToAllDMs("Wetterbericht: " + sWeatherType + " ("
-		+ IntToString(iRoCh) + " Stunden, " + IntToString(iRoCm) + " Minuten)");
+						+ IntToString(iRoCh) + " Stunden, " + IntToString(iRoCm) + " Minuten)");
 
 	/*
 	 * SpeakString("Weather is: "+IntToString(iWeather), TALKVOLUME_SHOUT);
@@ -198,17 +213,20 @@ void weather_update(int nWeather = 0) {
 	// END OF DEBUGGING INSERT
 }
 
-int GetAreaWeather(int nClimate = 0) {
+int GetAreaWeather(int nClimate = 0)
+{
 	object oMod = GetModule();
 	int iWeather = GetLocalInt(oMod, "weather");
 
 	// If Arctic Climate than no Rain only Snow
-	if ( ( nClimate == 2 ) && ( iWeather != WEATHER_CLEAR ) ) {
+	if ((nClimate == 2) && (iWeather != WEATHER_CLEAR)) {
 		iWeather = WEATHER_SNOW;
 	}
+
 	// If Desert Climate no Rain no Snow
-	else if ( nClimate == 1 ) {
+	else if (nClimate == 1) {
 		iWeather = WEATHER_CLEAR;
 	}
+
 	return iWeather;
 }

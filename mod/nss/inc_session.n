@@ -22,19 +22,21 @@ void session_cleanup();
 // Give "" to unset label.
 void session_set_label(string label, object player = OBJECT_SELF);
 
-void session_cleanup() {
+void session_cleanup()
+{
 	pQ("update sessions.sessions set session_end = (select ping from live.hb), session_failed = true where session_end is null;");
-	
+
 	RunEventScriptsFor(GetEventSerial(), "session_cleanup", GetModule(),
-		GetModule(), OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+					   GetModule(), OBJECT_INVALID, GetLocation(OBJECT_INVALID));
 }
 
-void session_start(object player = OBJECT_SELF) {
+void session_start(object player = OBJECT_SELF)
+{
 	int aid = GetAccountID(player);
 	int cid = GetCharacterID(player);
 	string ip = GetPCIPAddress(player);
 	pQ("insert into sessions.sessions (session_start, aid, cid, ipv4) values(now(), " +
-		pSi(aid) + ", " + pSi(cid) + ", " + pSs(ip) + ");");
+	   pSi(aid) + ", " + pSi(cid) + ", " + pSs(ip) + ");");
 	int key = pLastId("sessions.sessions");
 	SetLocalInt(player, "session_key", key);
 
@@ -42,28 +44,35 @@ void session_start(object player = OBJECT_SELF) {
 	evarg.i0 = key;
 	int serial = GetEventSerial();
 	RunEventScriptsForWithArgv(serial, "session_start", player,
-		player, OBJECT_INVALID, GetLocation(player), evarg);
+							   player, OBJECT_INVALID, GetLocation(player), evarg);
 }
 
-void session_set_label(string label, object player = OBJECT_SELF) {
+void session_set_label(string label, object player = OBJECT_SELF)
+{
 	int id = session_get(player);
+
 	if (!id) return;
+
 	pQ("update sessions.sessions set label = " + pSs(label, true) + " where id = " + pSi(id));
 }
 
-void session_end(object player = OBJECT_SELF) {
+void session_end(object player = OBJECT_SELF)
+{
 	int key = GetLocalInt(player, "session_key");
 
 	struct EventArguments evarg;
 	evarg.i0 = key;
 	int serial = GetEventSerial();
 	RunEventScriptsForWithArgv(serial, "session_end", player,
-		player, OBJECT_INVALID, GetLocation(player), evarg, EVENT_MODE_SYNC);
+							   player, OBJECT_INVALID, GetLocation(player), evarg, EVENT_MODE_SYNC);
 
-	pQ("update sessions.sessions set cid = " + pSi(GetCharacterID(player)) + ", session_end = now() where id = " + pSi(key));
+	pQ("update sessions.sessions set cid = " + pSi(GetCharacterID(player)) +
+	   ", session_end = now() where id = " + pSi(
+		   key));
 	DeleteLocalInt(player, "session_key");
 }
 
-int session_get(object player = OBJECT_SELF) {
+int session_get(object player = OBJECT_SELF)
+{
 	return GetLocalInt(player, "session_key");
 }

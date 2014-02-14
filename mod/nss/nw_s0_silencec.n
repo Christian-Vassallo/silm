@@ -15,12 +15,13 @@
 //:://////////////////////////////////////////////
 extern("x0_i0_spells")
 
-void main() {
+void main()
+{
 
-    object oCaster = GetAreaOfEffectCreator();
-    if(GetIsDead(oCaster) || !GetIsObjectValid(oCaster))
-    {
-        DestroyObject(OBJECT_SELF, 0.0);
-    }
+	object oCaster = GetAreaOfEffectCreator();
+
+	if (GetIsDead(oCaster) || !GetIsObjectValid(oCaster)) {
+		DestroyObject(OBJECT_SELF, 0.0);
+	}
 }
 

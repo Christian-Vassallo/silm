@@ -6,19 +6,22 @@ extern("inc_chat_lib")
 extern("inc_dbplac")
 extern("inc_colors")
 
-void main() {
+void main()
+{
 	object oPC = GetLastUsedBy();
 	int nID = GetPlaceableID(OBJECT_SELF);
 
 	string sText = "Kein Text hinterlegt.";
-	if ( nID ) {
+
+	if (nID) {
 		pQ("select text from scene_descriptions where pid = " + pSi(nID) + " limit 1;");
-		if ( pF() ) {
+
+		if (pF()) {
 			sText = pGs(1);
 		}
 	}
 
 	//SendMessageToPC(oPC, sText);
 	FloatingTextStringOnCreature(ColorisePlayerTextOverride(oPC, 0, sText, cLightBlue, colorEmote,
-		colorEmphasis, colorEmphasisInEmote), oPC, FALSE);
+								 colorEmphasis, colorEmphasisInEmote), oPC, FALSE);
 }

@@ -1,11 +1,13 @@
 extern("inc_lists")
 
-void main() {
+void main()
+{
 	object oPC = GetPCSpeaker();
 	string sCallback = GetLocalString(oPC, "ConvList_Callback");
 
 	SetLocalInt(oPC, "ConvList_Select", GetConvListEntry(oPC, 9));
-	if ( sCallback != "" ) {
+
+	if (sCallback != "") {
 		SetLocalObject(OBJECT_SELF, "ConvList_PC", oPC);
 		ExecuteScript(sCallback, OBJECT_SELF);
 	}

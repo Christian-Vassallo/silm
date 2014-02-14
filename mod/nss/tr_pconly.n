@@ -13,12 +13,13 @@
 //              Destination Type other than None.
 ////////////////////////////////////////////////////////////
 
-void main() {
+void main()
+{
 	object oClicker = GetClickingObject();
 	object oTarget = GetTransitionTarget(OBJECT_SELF);
 
 	//Transition is open only for PC and their companions, no NPC
-	if ( !GetIsPC(oClicker) && !GetIsPC(GetMaster(oClicker)) ) return;
+	if (!GetIsPC(oClicker) && !GetIsPC(GetMaster(oClicker))) return;
 
 	SetAreaTransitionBMP(AREA_TRANSITION_RANDOM);
 

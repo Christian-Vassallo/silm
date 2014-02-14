@@ -36,7 +36,8 @@ extern("inc_decay")
 extern("inc_persist")
 extern("inc_subr_data")
 
-void main() {
+void main()
+{
 	string sTarget = GetLocalString(OBJECT_SELF, "ziel");
 	object oPC = GetLastUsedBy();
 	location lLoc = GetLocation(GetWaypointByTag(sTarget));
@@ -45,19 +46,23 @@ void main() {
 	if (GetStringLeft(GetTag(OBJECT_SELF), 5) == "DOOR_") {
 		// ist die Tuer nicht verschlossen?
 		if (!GetLocked(OBJECT_SELF) ||
-			is_valid(GetItemPossessedBy(oPC, GetLockKeyTag(OBJECT_SELF)))) {
+				is_valid(GetItemPossessedBy(oPC, GetLockKeyTag(OBJECT_SELF)))) {
 			//noch nicht geoeffnet?
 			if (GetLocalInt(OBJECT_SELF, "done") == 0) {
 				ActionPlayAnimation(ANIMATION_PLACEABLE_OPEN);
 				SetLocalInt(OBJECT_SELF, "done", 1); //als geoeffnet markieren
+
 			} else {
 				AssignCommand(oPC, JumpToLocation(lLoc));
+
 				if (GetLocalInt(OBJECT_SELF, "autolock"))
 					SetLocked(OBJECT_SELF, true);
+
 				ActionPlayAnimation(ANIMATION_PLACEABLE_CLOSE);
 				SetLocalInt(OBJECT_SELF, "done", 0); //als geschlossen markieren
 			}
 		}
+
 	} else {
 		AssignCommand(oPC, JumpToLocation(lLoc));
 	}

@@ -6,7 +6,8 @@ extern("inc_misc")
 extern("inc_nwnx")
 
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if ("player_login" != e.ev)
@@ -15,17 +16,17 @@ void main() {
 	object oItem;
 	int iValue;
 
-	
+
 	if (GetIsObjectValid(oItem = GetItemPossessedBy(e.runnable, "dmfi_pc_emote")))
 		DestroyObject(oItem);
 
 	// Don't let them start out on the verge of starving to death
-	if ( GetLocalDecay(e.runnable, "Resting_Food") < 60 )
+	if (GetLocalDecay(e.runnable, "Resting_Food") < 60)
 		SetLocalDecay(e.runnable, "Resting_Food", 241, 60);
 
 	//Recover from a crash during trade where money is still
 	//numerical
-	if ( ( iValue = GetGold(e.runnable) ) ) {
+	if ((iValue = GetGold(e.runnable))) {
 		TakeGoldFromCreature(iValue, e.runnable, TRUE);
 		GiveMoneyToCreature(e.runnable, iValue);
 	}
@@ -38,9 +39,10 @@ void main() {
 	SetLocalInt(e.runnable, "dmfi_dicebag", 2);
 
 	// Correct Starting XP vor older Chars
-	if ( GetXP(e.runnable) < 6000 ) {
+	if (GetXP(e.runnable) < 6000) {
 		SetXP(e.runnable, 6000);
 	}
+
 	//For now, no prestige classes, sorry.
 	//SetLocalInt(e.runnable,"X1_AllowShadow",1);
 	//SetLocalInt(e.runnable,"X1_AllowHarper",1);
@@ -60,10 +62,12 @@ void main() {
 	int nSh = 0;
 	// Make sure no ebs shields remain
 	object oShield = GetFirstItemInInventory(e.runnable);
-	while ( GetIsObjectValid(oShield) ) {
-		if ( "s_ebs" == GetTag(oShield) ) {
+
+	while (GetIsObjectValid(oShield)) {
+		if ("s_ebs" == GetTag(oShield)) {
 			nSh = GetLocalInt(oShield, "ebs_create");
-			if ( nSh == 0 || nNow - nSh > 3600 * 3 )
+
+			if (nSh == 0 || nNow - nSh > 3600 * 3)
 				DestroyObject(oShield);
 		}
 

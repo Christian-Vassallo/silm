@@ -3,7 +3,8 @@ extern("inc_killarcane")
 extern("inc_scorco")
 
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev != "item_activate")
@@ -17,7 +18,7 @@ void main() {
 
 
 	if ("pc_follow" == tag) {
-		if ( !is_creature(target) || GetIsInCombat(player) || player == target )
+		if (!is_creature(target) || GetIsInCombat(player) || player == target)
 			return;
 
 		AssignCommand(player, ActionForceFollowObject(target, 2.0f));

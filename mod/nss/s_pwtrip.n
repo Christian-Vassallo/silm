@@ -2,21 +2,22 @@ extern("nw_i0_spells")
 extern("x2_inc_spellhook")
 extern("inc_iprp_curses")
 
-void main() {
+void main()
+{
 	if (!X2PreSpellCastCode())
 		return;
 
 	object oTarget = GetSpellTargetObject();
 
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF,
-		SPELL_POWER_WORD_TRIP));
+										  SPELL_POWER_WORD_TRIP));
 
 	if (GetIsImmune(oTarget, IMMUNITY_TYPE_MIND_SPELLS, OBJECT_SELF))
 		return;
 
-	if(MyResistSpell(OBJECT_SELF, oTarget))
+	if (MyResistSpell(OBJECT_SELF, oTarget))
 		return;
-	
+
 	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectKnockdown(),
-		oTarget, RoundsToSeconds(1));
+						oTarget, RoundsToSeconds(1));
 }

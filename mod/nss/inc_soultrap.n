@@ -14,25 +14,28 @@ bool soultrap_trap(object target, object trap, object caster);
 // Release the creature trapped in +trap+.
 object soultrap_release(location at, object trap, object caster);
 
-bool soultrap_is(object trap) {
+bool soultrap_is(object trap)
+{
 	return GetLocalInt(trap, "creature_gff") > 0;
 }
 
-bool soultrap_can(object target, object caster) {
+bool soultrap_can(object target, object caster)
+{
 	return (
-		is_valid(target) &&
-		is_creature(target) &&
-		caster != target &&
-		!is_pc(target) &&
-		!is_dm(target) &&
-		!GetIsDMPossessed(target) &&
-		!GetIsPossessedFamiliar(target) &&
-		GetAssociateType(target) != ASSOCIATE_TYPE_ANIMALCOMPANION &&
-		GetAssociateType(target) != ASSOCIATE_TYPE_FAMILIAR
-	);
+			   is_valid(target) &&
+			   is_creature(target) &&
+			   caster != target &&
+			   !is_pc(target) &&
+			   !is_dm(target) &&
+			   !GetIsDMPossessed(target) &&
+			   !GetIsPossessedFamiliar(target) &&
+			   GetAssociateType(target) != ASSOCIATE_TYPE_ANIMALCOMPANION &&
+			   GetAssociateType(target) != ASSOCIATE_TYPE_FAMILIAR
+		   );
 }
 
-bool soultrap_trap(object target, object trap, object caster) {
+bool soultrap_trap(object target, object trap, object caster)
+{
 	if (soultrap_is(trap))
 		return false;
 
@@ -42,15 +45,16 @@ bool soultrap_trap(object target, object trap, object caster) {
 	SetLocalInt(trap, "creature_gff", p_save("soultrap", target));
 
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH),
-		GetLocation(target));
+						  GetLocation(target));
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_BREACH),
-		GetLocation(target));
+						  GetLocation(target));
 
 	DestroyObject(target);
 	return true;
 }
 
-object soultrap_release(location at, object trap, object caster) {
+object soultrap_release(location at, object trap, object caster)
+{
 	if (!soultrap_is(trap))
 		return OBJECT_INVALID;
 
@@ -59,15 +63,16 @@ object soultrap_release(location at, object trap, object caster) {
 
 	SetLocalInt(trap, "creature_gff", 0);
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH),
-		at);
+						  at);
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_BREACH),
-		at);
+						  at);
 
 	return critter;
 }
 
 // Destroy the given soultrap.
-void soultrap_destroy(object trap) {
+void soultrap_destroy(object trap)
+{
 	// TODO: delete database entry
 	DestroyObject(trap);
 }

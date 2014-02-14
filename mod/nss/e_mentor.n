@@ -3,7 +3,8 @@ extern("inc_events")
 extern("inc_cdb")
 extern("inc_ms")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev != "item_activate" || GetTag(e.runnable) != "mentor")
@@ -13,13 +14,13 @@ void main() {
 	oPC = e.actor,
 	oTarget = e.actedon;
 
-	if ( GetIsInCombat(oPC) || GetIsInCombat(oTarget) ) {
+	if (GetIsInCombat(oPC) || GetIsInCombat(oTarget)) {
 		FloatingTextStringOnCreature("Das wird nix waehrend Gegner in der Naehe sind.", oPC, 0);
 		return;
 	}
 
 
-	if ( !GetIsPC(oTarget) ) {
+	if (!GetIsPC(oTarget)) {
 		FloatingTextStringOnCreature("Du musst auf einen Spieler - oder dich selbst - zielen.", oPC, 0);
 		return;
 	}

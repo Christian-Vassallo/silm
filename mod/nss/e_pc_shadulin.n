@@ -1,70 +1,78 @@
 extern("inc_cdb")
 
-void chkwpn(object sha, int slot) {
+void chkwpn(object sha, int slot)
+{
 	object wpn = GetItemInSlot(slot, sha);
+
 	if (!is_valid(wpn))
 		return;
 
 	iterate_iprp(wpn, iprp,
-		if (GetItemPropertyType(iprp) == ITEM_PROPERTY_ENHANCEMENT_BONUS) {
-			int bonus = GetItemPropertyCostTableValue(iprp);
-			if (bonus < 3) {
-				SendMessageToPC(sha, "Removing bonus " + itoa(bonus) +
-					" on " + GetName(wpn));
-				RemoveItemProperty(wpn, iprp);
-			} else
-				return;
-		}
-	);
+
+	if (GetItemPropertyType(iprp) == ITEM_PROPERTY_ENHANCEMENT_BONUS) {
+	int bonus = GetItemPropertyCostTableValue(iprp);
+
+		if (bonus < 3) {
+			SendMessageToPC(sha, "Removing bonus " + itoa(bonus) +
+							" on " + GetName(wpn));
+			RemoveItemProperty(wpn, iprp);
+
+		} else
+			return;
+	}
+				);
 
 	SendMessageToPC(sha, "Applying +3 to " + GetName(wpn));
 	AddItemProperty(DURATION_TYPE_PERMANENT,
-		ItemPropertyEnhancementBonus(3), wpn);
+					ItemPropertyEnhancementBonus(3), wpn);
 }
 
 
-void DoMagicFang(object oTarget, int nPower, int nDamagePower) {
+void DoMagicFang(object oTarget, int nPower, int nDamagePower)
+{
 	effect eAll = EffectLinkEffects(
-		EffectAttackIncrease(nPower),
-		EffectDamageIncrease(nPower)
-	);
+					  EffectAttackIncrease(nPower),
+					  EffectDamageIncrease(nPower)
+				  );
 
 	// eAll = EffectLinkEffects(eAll, EffectDamageReduction(nPower, nDamagePower));
 
 	eAll = SupernaturalEffect(eAll);
 
 	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eAll, oTarget, 999999f);
-		
+
 	chkwpn(oTarget, INVENTORY_SLOT_CWEAPON_B);
 	chkwpn(oTarget, INVENTORY_SLOT_CWEAPON_L);
 	chkwpn(oTarget, INVENTORY_SLOT_CWEAPON_R);
 }
 
-void hb(object sha) {
+void hb(object sha)
+{
 	bool has_poly = false;
 	bool has_addon = false;
 
 	effect addon;
 
 	iterate_effects(sha, eff,
-		int etype = GetEffectType(eff);
-		if (etype == EFFECT_TYPE_ATTACK_INCREASE &&
-			GetEffectSubType(eff) == SUBTYPE_SUPERNATURAL &&
-			GetEffectDurationType(eff) == DURATION_TYPE_TEMPORARY) {
-				addon = eff;
-				has_addon = true;
-			}
+					int etype = GetEffectType(eff);
 
-		if (etype == EFFECT_TYPE_POLYMORPH)
-			has_poly = true;
+					if (etype == EFFECT_TYPE_ATTACK_INCREASE &&
+						GetEffectSubType(eff) == SUBTYPE_SUPERNATURAL &&
+	GetEffectDurationType(eff) == DURATION_TYPE_TEMPORARY) {
+	addon = eff;
+	has_addon = true;
+}
 
-		if (has_poly && has_addon)
-			return;
-	);
+if (etype == EFFECT_TYPE_POLYMORPH)
+	has_poly = true;
+
+			   if (has_poly && has_addon)
+				   return;
+					   );
 
 	if (!has_poly && !has_addon)
 		return;
-	
+
 	if (!has_poly && has_addon) {
 		SendMessageToPC(sha, "Removing +3 bonus effects.");
 		RemoveEffect(sha, addon);
@@ -76,7 +84,8 @@ void hb(object sha) {
 	}
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "player_hb") {

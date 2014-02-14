@@ -33,25 +33,28 @@ struct Disguise {
 	int footstepsounds;
 };
 
-void disguise_update_login(object on, struct Disguise d) {
+void disguise_update_login(object on, struct Disguise d)
+{
 	if (!d.valid) return;
 
 	SetPlayerDescription(on, d.description);
 	SetPlayerName(on, d.display_name, true);
 }
 
-void disguise_apply(object on, struct Disguise d) {
+void disguise_apply(object on, struct Disguise d)
+{
 	if (!d.valid) return;
 
 	struct EventArguments evarg;
 	evarg.i0 = d.id;
 	int serial = GetEventSerial();
 	int ret = RunEventScriptsForWithArgv(serial, "disguise_apply", on, on, on,
-		GetLocation(on), evarg, EVENT_MODE_SYNC);
+										 GetLocation(on), evarg, EVENT_MODE_SYNC);
 	DeleteEventArguments(serial);
+
 	if (ret & EVENT_RESULT_SUPPRESS)
 		return;
-	
+
 	SetCreatureTailType(d.tail, on);
 	SetCreatureWingType(d.wings, on);
 	SetCreatureAppearanceType(on, d.appearance);
@@ -79,51 +82,63 @@ void disguise_apply(object on, struct Disguise d) {
 	// Try to find the first armor or cloak with a matching name
 	if (!GetIsInCombat(on)) {
 		iterate_inventory(on, i,
-			if (GetBaseItemType(i) == BASE_ITEM_ARMOR &&
-					GetName(i) == d.name
-			) {
-				SendMessageToPC(on, "Auto-equipping: " + d.name);
-				ActionEquipItem(i, INVENTORY_SLOT_CHEST);
-			}
-			
-			if (GetBaseItemType(i) == BASE_ITEM_CLOAK &&
-					GetName(i) == d.name
-			) {
-				SendMessageToPC(on, "Auto-equipping: " + d.name);
-				ActionEquipItem(i, INVENTORY_SLOT_CLOAK);
-			}
-		);
+
+						  if (GetBaseItemType(i) == BASE_ITEM_ARMOR &&
+							  GetName(i) == d.name
+		) {
+		SendMessageToPC(on, "Auto-equipping: " + d.name);
+			ActionEquipItem(i, INVENTORY_SLOT_CHEST);
+		}
+
+		if (GetBaseItemType(i) == BASE_ITEM_CLOAK &&
+				GetName(i) == d.name
+		   ) {
+		SendMessageToPC(on, "Auto-equipping: " + d.name);
+			ActionEquipItem(i, INVENTORY_SLOT_CLOAK);
+		}
+						 );
 	}
 }
 
-int disguise_current_id(object on) {
+int disguise_current_id(object on)
+{
 	int cid = GetCharacterID(on);
+
 	if (!cid) return 0;
 
 	pQ("select disguise from characters where id = " + pSi(cid));
+
 	if (pF())
 		return pGi(1);
+
 	return 0;
 }
 
-int disguise_find(object player, string name) {
+int disguise_find(object player, string name)
+{
 	int cid = GetCharacterID(player);
+
 	if (!cid) {
 		SendMessageToPC(player, "no cid");
 		return 0;
 	}
 
 	pQ("select id from disguise where cid = " + pSi(cid) + " and name = " + pSs(name) + " limit 1;");
+
 	if (pF())
 		return pGi(1);
+
 	else
 		return 0;
 }
 
-struct Disguise disguise_load(int id) {
+struct Disguise disguise_load(int id)
+{
 	struct Disguise ret;
 	ret.valid = false;
-	pQ("select name, appearance, head, wings, tail, hair, skin, tattoo1, tattoo2, cid, portrait, gender, description, id, soundset, display_name, footstepsounds from " + DISGUISE_TABLE + " where id = " + pSi(id));
+	pQ("select name, appearance, head, wings, tail, hair, skin, tattoo1, tattoo2, cid, portrait, gender, description, id, soundset, display_name, footstepsounds from "
+	   + DISGUISE_TABLE + " where id = " + pSi(id));
+
 	if (pF()) {
 		ret.valid = true;
 		ret.name = pGs(1);
@@ -144,58 +159,68 @@ struct Disguise disguise_load(int id) {
 		ret.display_name = pGs(16);
 		ret.footstepsounds = pGi(17);
 	}
+
 	return ret;
 }
 
-void disguise_save(object pc, string name, int cid = 0, bool saveDescription = false) {
+void disguise_save(object pc, string name, int cid = 0, bool saveDescription = false)
+{
 	if (!cid)
 		cid = GetCharacterID(pc);
+
 	if (!cid)
 		return;
 
 	string desc = "null";
+
 	if (saveDescription)
 		desc = pSs(GetPlayerDescription(pc));
 
-	pQ("select id from " + DISGUISE_TABLE + " where cid = " + pSi(cid, false) + " and name = " + pSs(name));
+	pQ("select id from " + DISGUISE_TABLE + " where cid = " + pSi(cid,
+			false) + " and name = " + pSs(name));
+
 	if (pF()) {
 		string q = "update " + DISGUISE_TABLE + " set updated_on = now(), " +
-			"name = " + pSs(name) + ", " +
-			"appearance = " + pSi(GetAppearanceType(pc), false) + ", " +
-			"head = " + pSi(GetCreatureBodyPart(CREATURE_PART_HEAD, pc), false) + ", " +
-			"wings = " + pSi(GetCreatureWingType(pc), false) + ", " +
-			"tail = " + pSi(GetCreatureTailType(pc), false) + ", " +
-			"hair = " + pSi(GetColor(pc, COLOR_CHANNEL_HAIR), false) + ", " +
-			"skin = " + pSi(GetColor(pc, COLOR_CHANNEL_SKIN), false) + ", " +
-			"tattoo1 = " + pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_1), false) + ", " +
-			"tattoo2 = " + pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_2), false) + ", " +
-			"portrait = " + pSs(GetPortraitResRef(pc)) + ", " +
-			"gender = " + pSi(GetGender(pc), false) + ", ";
+				   "name = " + pSs(name) + ", " +
+				   "appearance = " + pSi(GetAppearanceType(pc), false) + ", " +
+				   "head = " + pSi(GetCreatureBodyPart(CREATURE_PART_HEAD, pc), false) + ", " +
+				   "wings = " + pSi(GetCreatureWingType(pc), false) + ", " +
+				   "tail = " + pSi(GetCreatureTailType(pc), false) + ", " +
+				   "hair = " + pSi(GetColor(pc, COLOR_CHANNEL_HAIR), false) + ", " +
+				   "skin = " + pSi(GetColor(pc, COLOR_CHANNEL_SKIN), false) + ", " +
+				   "tattoo1 = " + pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_1), false) + ", " +
+				   "tattoo2 = " + pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_2), false) + ", " +
+				   "portrait = " + pSs(GetPortraitResRef(pc)) + ", " +
+				   "gender = " + pSi(GetGender(pc), false) + ", ";
+
 		if (saveDescription)
 			q += "description = " + desc + ", ";
+
 		q += "footstepsounds = " + pSi(GetFootstepType(pc), false) + ", ";
 		q += "soundset = " + pSi(GetSoundset(pc), false) +
-			" where id = " + pSi(pGi(1));
+			 " where id = " + pSi(pGi(1));
 		pQ(q);
 	}
 
 	else
 
-	pQ("insert into " + DISGUISE_TABLE + " (cid, name, appearance, head, wings, tail, hair, skin, tattoo1, tattoo2, portrait, description, gender, soundset, footstepsounds) values(" +
-		pSi(cid, false) + "," +
-		pSs(name) + ", " +
-		pSi(GetAppearanceType(pc), false) + ", " +
-		pSi(GetCreatureBodyPart(CREATURE_PART_HEAD, pc), false) + ", " +
-		pSi(GetCreatureWingType(pc), false) + ", " +
-		pSi(GetCreatureTailType(pc), false) + ", " +
-		pSi(GetColor(pc, COLOR_CHANNEL_HAIR), false) + ", " +
-		pSi(GetColor(pc, COLOR_CHANNEL_SKIN), false) + ", " +
-		pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_1), false) + ", " +
-		pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_2), false) + ", " +
-		pSs(GetPortraitResRef(pc)) + ", " +
-		desc + ", " +
-		pSi(GetGender(pc), false) + ", " +
-		pSi(GetSoundset(pc), false) + ", " +
-		pSi(GetFootstepType(pc), false) +
-	");");
+		pQ("insert into " + DISGUISE_TABLE +
+		   " (cid, name, appearance, head, wings, tail, hair, skin, tattoo1, tattoo2, portrait, description, gender, soundset, footstepsounds) values("
+		   +
+		   pSi(cid, false) + "," +
+		   pSs(name) + ", " +
+		   pSi(GetAppearanceType(pc), false) + ", " +
+		   pSi(GetCreatureBodyPart(CREATURE_PART_HEAD, pc), false) + ", " +
+		   pSi(GetCreatureWingType(pc), false) + ", " +
+		   pSi(GetCreatureTailType(pc), false) + ", " +
+		   pSi(GetColor(pc, COLOR_CHANNEL_HAIR), false) + ", " +
+		   pSi(GetColor(pc, COLOR_CHANNEL_SKIN), false) + ", " +
+		   pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_1), false) + ", " +
+		   pSi(GetColor(pc, COLOR_CHANNEL_TATTOO_2), false) + ", " +
+		   pSs(GetPortraitResRef(pc)) + ", " +
+		   desc + ", " +
+		   pSi(GetGender(pc), false) + ", " +
+		   pSi(GetSoundset(pc), false) + ", " +
+		   pSi(GetFootstepType(pc), false) +
+		   ");");
 }

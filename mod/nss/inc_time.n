@@ -41,25 +41,28 @@ string GetTimestampTZ();
 
 
 
-struct RealTime GetRealTime() {
+struct RealTime GetRealTime()
+{
 	struct RealTime r;
-	
+
 	pQ("select " +
-		"extract(seconds from now())::int, " +
-		"extract(minutes from now())::int, " +
-		"extract(hours from now())::int, " +
-		"extract(days from now())::int, " + 
-		"extract(months from now())::int, " +
-		"extract(years from now())::int, " +
-		"extract(weeks from now())::int, " +
-		"extract(dow from now())::int, " +
-		"unixts(), " +
-		"now()::varchar" +
-		";"
-	);
+	   "extract(seconds from now())::int, " +
+	   "extract(minutes from now())::int, " +
+	   "extract(hours from now())::int, " +
+	   "extract(days from now())::int, " +
+	   "extract(months from now())::int, " +
+	   "extract(years from now())::int, " +
+	   "extract(weeks from now())::int, " +
+	   "extract(dow from now())::int, " +
+	   "unixts(), " +
+	   "now()::varchar" +
+	   ";"
+	  );
+
 	if (!pF()) {
 		r.error = 1;
 		_FATAL("GetRealTime() failed.");
+
 	} else {
 		r.second = pGi(1);
 		r.minute = pGi(2);
@@ -72,21 +75,25 @@ struct RealTime GetRealTime() {
 		r.ts = pGi(9);
 		r.timefmt = pGs(10);
 	}
+
 	return r;
 
 }
 
-string GetTimeMS() {
+string GetTimeMS()
+{
 	struct Timeval ret = GetTimeOfDay();
 	return itoa(ret.sec) + itoa(ret.usec / 1000);
 }
 
-int GetUnixTimestamp() {
+int GetUnixTimestamp()
+{
 	struct Timeval ret = GetTimeOfDay();
 	return ret.sec;
 }
 
-string GetTimestampTZ() {
+string GetTimestampTZ()
+{
 	pQ("select now()::timestamptz;");
 	pF();
 	return pG(1);

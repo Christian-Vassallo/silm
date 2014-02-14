@@ -1,7 +1,7 @@
 extern("inc_nwnx_ruby")
 
 // Function: getopt_init
-// 
+//
 // Initialize getopt.
 // Parameters:
 // - str: The string to parse
@@ -15,17 +15,17 @@ int getopt_init(string str, string opts = "");
 string getopt_errstr();
 
 // Function: getopt_reset
-// 
+//
 // Resets all options.
 int getopt_reset();
 
 // Function: getopt_arg
-// 
+//
 // Returns argument n, starting at 0.
 string getopt_arg(int n);
 
 // Function: getopt_argc
-// 
+//
 // Returns the argument count.
 int getopt_argc();
 
@@ -36,17 +36,17 @@ int getopt_argc();
 string getopt_argall();
 
 // Function: getopt_opt
-// 
+//
 // Returns a boolean indicating the presence of option n.
 int getopt_opt(string n);
 
 // Function: getopt_optv
-// 
+//
 // Returns the value of option n, or an empty string.
 string getopt_optv(string n);
 
 // Function: getopt_args
-// 
+//
 // Returns the complete, unparsed string, including all options.
 string getopt_args();
 
@@ -61,7 +61,7 @@ string getopt_args();
 // - "aa && b && c && 'd && e'" returns 4
 int commandsplit(string sText, string sSplitAt);
 
-// Function: commandget 
+// Function: commandget
 // Returns the argument at index (starting at 0) from the last
 // call to commandsplit.
 string commandget(int index);
@@ -71,72 +71,89 @@ string shellwordget(int index);
 
 //
 
-string getopt_errstr() {
+string getopt_errstr()
+{
 	return "";
 }
 
-int commandsplit(string sText, string sSplitAt) {
+int commandsplit(string sText, string sSplitAt)
+{
 	string r = ruby_eval("Getopt.commandsplit(" + pSs(sText) + ", " + pSs(sSplitAt) + ");");
 	return atoi(r);
 }
 
-string commandget(int index) {
-	return ruby_eval("Getopt.commandget(" + pSi(index, false) +");");
+string commandget(int index)
+{
+	return ruby_eval("Getopt.commandget(" + pSi(index, false) + ");");
 }
 
-int shellwords(string sText) {
+int shellwords(string sText)
+{
 	string r = ruby_eval("Getopt.shellwords(" + pSs(sText) + ");");
 	return atoi(r);
 }
 
-string shellwordget(int index) {
-	return ruby_eval("Getopt.shellwordget(" + pSi(index, false) +");");
+string shellwordget(int index)
+{
+	return ruby_eval("Getopt.shellwordget(" + pSi(index, false) + ");");
 }
 
 
 
 
-string getopt_args() {
+string getopt_args()
+{
 	return GetLocalString(MODULE, "getopt_argstr");
 }
 
-int getopt_init(string str, string opts = "") {
+int getopt_init(string str, string opts = "")
+{
 	SetLocalString(MODULE, "getopt_argstr", str);
 	int ret = atoi(ruby_eval("Getopt.init(" + pSs(str) + ", " + pSs(opts) + ");"));
+
 	if (!ret)
 		_WARN("getopt.init failed!");
+
 	return ret;
 }
 
-string getopt_argall() {
+string getopt_argall()
+{
 	string ret = "";
 	int argc = getopt_argc();
-	int i; for (i = 0; i < argc; i++)
+	int i;
+
+	for (i = 0; i < argc; i++)
 		ret += getopt_arg(i) + (i < argc - 1 ? " " : "");
 
 	return ret;
 }
 
-int getopt_argc() {
+int getopt_argc()
+{
 	return atoi(ruby_eval("Getopt.argc();"));
 }
 
-string getopt_arg(int n) {
+string getopt_arg(int n)
+{
 	return ruby_eval("Getopt.arg(" + pSi(n, false) + ");");
 }
 
 
-int getopt_opt(string n) {
+int getopt_opt(string n)
+{
 	return atoi(ruby_eval("Getopt.opt(" + pSs(n) + ");"));
 }
 
-string getopt_optv(string n) {
+string getopt_optv(string n)
+{
 	return ruby_eval("Getopt.optv(" + pSs(n) + ");");
 }
 
 
 
-int getopt_reset() {
+int getopt_reset()
+{
 	SetLocalString(MODULE, "getopt_argstr", "");
 	ruby_eval("Getopt.reset();");
 	return true;

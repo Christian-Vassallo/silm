@@ -1,13 +1,16 @@
-void main() {
+void main()
+{
 	object oDoor = OBJECT_SELF;
 	object oPC = GetLastOpenedBy();
-	
+
 	// Event: door_open
 	// - runnable: door
 	// - actor: opener/creature
 	// - stop
 	// - suppress
-	int ret = RunEventScriptsFor(GetEventSerial(), "door_open", OBJECT_SELF, oPC, oDoor, GetLocation(oDoor));
+	int ret = RunEventScriptsFor(GetEventSerial(), "door_open", OBJECT_SELF, oPC, oDoor,
+								 GetLocation(oDoor));
+
 	if (ret & EVENT_RESULT_SUPPRESS) {
 		AssignCommand(oDoor, ActionCloseDoor(oDoor));
 		return;

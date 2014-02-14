@@ -1,7 +1,8 @@
 extern("inc_cdb")
 extern("_gen")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if ("door_open" == e.ev) {
@@ -29,11 +30,24 @@ void main() {
 			object caster = GetLastSpellCaster();
 			int dc = 11 + GetLocalInt(e.runnable, "arcane_lock_caster_level");
 			int save = GetCasterLevel(caster);
+
 			switch (spell) {
-				case SPELL_LESSER_DISPEL: if (save > 5) save = 5; break;
-				case SPELL_DISPEL_MAGIC: if (save > 10) save = 10; break;
-				case SPELL_GREATER_DISPELLING: if (save > 15) save = 15; break;
+			case SPELL_LESSER_DISPEL:
+				if (save > 5) save = 5;
+
+				break;
+
+			case SPELL_DISPEL_MAGIC:
+				if (save > 10) save = 10;
+
+				break;
+
+			case SPELL_GREATER_DISPELLING:
+				if (save > 15) save = 15;
+
+				break;
 			}
+
 			save = d20() + save;
 
 			if (is_dm(caster) || save >= dc) {
@@ -44,10 +58,11 @@ void main() {
 
 		if (spell == SPELL_KNOCK) {
 			int lock_id = GetLocalInt(e.runnable, "arcane_lock");
+
 			if (lock_id != 0) {
 				ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_KNOCK), e.runnable);
 				SetLocalInt(e.runnable, "arcane_lock", 0);
-				DelayCommand(10*60f, SetLocalInt(e.runnable, "arcane_lock", lock_id));
+				DelayCommand(10 * 60f, SetLocalInt(e.runnable, "arcane_lock", lock_id));
 			}
 		}
 	}

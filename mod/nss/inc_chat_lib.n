@@ -17,11 +17,11 @@ FAIL = 3,
 ACCESS = 4;
 
 struct Color
-	// colorText = CS(255, 228, 181), // moccasin
-	colorText = CS(189, 171, 140),
-	colorEmote = CS(135, 168, 178),
-	colorEmphasis = CS(152, 251, 152), // palegreen
-	colorEmphasisInEmote = CS(135, 206, 250); // lightskyblue
+		// colorText = CS(255, 228, 181), // moccasin
+colorText = CS(189, 171, 140),
+colorEmote = CS(135, 168, 178),
+colorEmphasis = CS(152, 251, 152), // palegreen
+colorEmphasisInEmote = CS(135, 206, 250); // lightskyblue
 
 // Function: setsleep
 void setsleep(float fWait);
@@ -29,11 +29,13 @@ void setsleep(float fWait);
 // Function: getsleep
 float getsleep();
 
-void setsleep(float fWait) {
+void setsleep(float fWait)
+{
 	SetLocalFloat(GetModule(), "cmd_sleep", fWait);
 }
 
-float getsleep() {
+float getsleep()
+{
 	return GetLocalFloat(GetModule(), "cmd_sleep");
 }
 
@@ -57,33 +59,38 @@ void ChatHookAudit(object oPC = OBJECT_SELF, int bSuppress = TRUE, string sData 
 string ColorisePlayerText(object oPC, int nMode, string sText);
 
 string ColorisePlayerTextOverride(object oPC, int nMode, string sText, struct Color cText,
-		struct Color cEmote, struct Color cEmphasis, struct Color cEmphasisInEmote);
+								  struct Color cEmote, struct Color cEmphasis, struct Color cEmphasisInEmote);
 
 
 /* implementation! */
 
-string ColorisePlayerText(object oPC, int nMode, string sText) {
+string ColorisePlayerText(object oPC, int nMode, string sText)
+{
 	struct Color
-		cText = colorText,
-		cEmote = colorEmote,
-		cEmphasis = colorEmphasis,
-		cEmphasisInEmote = colorEmphasisInEmote;
+			cText = colorText,
+			cEmote = colorEmote,
+			cEmphasis = colorEmphasis,
+			cEmphasisInEmote = colorEmphasisInEmote;
 
 	if (GetLocalInt(oPC, "colorOverrideText") > 0)
 		cText = CI(GetLocalInt(oPC, "colorOverrideText"));
+
 	if (GetLocalInt(oPC, "colorOverrideEmote") > 0)
 		cEmote = CI(GetLocalInt(oPC, "colorOverrideEmote"));
+
 	if (GetLocalInt(oPC, "colorOverrideEmphasis") > 0)
 		cEmphasis = CI(GetLocalInt(oPC, "colorOverrideEmphasis"));
+
 	if (GetLocalInt(oPC, "colorOverrideEmphasisEmote") > 0)
 		cEmphasisInEmote = CI(GetLocalInt(oPC, "colorOverrideEmphasisEmote"));
 
 	return ColorisePlayerTextOverride(oPC, nMode, sText,
-		cText, cEmote, cEmphasis, cEmphasisInEmote);
+									  cText, cEmote, cEmphasis, cEmphasisInEmote);
 }
 
 string ColorisePlayerTextOverride(object oPC, int nMode, string sText, struct Color cText,
-		struct Color cEmote, struct Color cEmphasis, struct Color cEmphasisInEmote) {
+								  struct Color cEmote, struct Color cEmphasis, struct Color cEmphasisInEmote)
+{
 	int i = 0;
 	string r = "", c = "";
 
@@ -99,11 +106,12 @@ string ColorisePlayerTextOverride(object oPC, int nMode, string sText, struct Co
 
 	r += ColorTagClose() + ColorTag(cText);
 
-	for ( i = 0; i < GetStringLength(sText); i++ ) {
+	for (i = 0; i < GetStringLength(sText); i++) {
 		c = GetSubString(sText, i, 1);
 
 		if ("*" == c) {
 			bInEmote = !bInEmote;
+
 			if (bInEmote) {
 				r += ColorTag(cEmote) + c;
 
@@ -112,27 +120,32 @@ string ColorisePlayerTextOverride(object oPC, int nMode, string sText, struct Co
 
 				if (bInEmphasis)
 					r += ColorTag(cEmphasis);
+
 				else
 					r += ColorTag(cText);
 			}
 
 		} else if ("_" == c) {
 			bInEmphasis = !bInEmphasis;
+
 			if (bInEmphasis)
 				if (bInEmote)
 					r += ColorTag(cEmphasisInEmote);
+
 				else
 					r += ColorTag(cEmphasis);
+
+			else if (bInEmote)
+				r += ColorTag(cEmote);
+
 			else
-				if (bInEmote)
-					r += ColorTag(cEmote);
-				else
-					r += ColorTag(cText);
+				r += ColorTag(cText);
 
 		} else
 			r += c;
 
 	}
+
 	r += ColorTagClose();
 
 	return r;
@@ -140,8 +153,9 @@ string ColorisePlayerTextOverride(object oPC, int nMode, string sText, struct Co
 
 
 
-void SpeakToMode(object oObject, string sText, int iMode) {
-	if ( "" == sText )
+void SpeakToMode(object oObject, string sText, int iMode)
+{
+	if ("" == sText)
 		return; // SIGSEGV :D
 
 	if (iMode & CHATMODE_DM_MODE)
@@ -153,6 +167,7 @@ void SpeakToMode(object oObject, string sText, int iMode) {
 	string prefix = "";
 
 	_DEBUG("chat", 2, "speaktomode():itempossessor(speaker)? " + otoa(GetItemPossessor(speaker)));
+
 	// If its owned by a inventory, use THAT to speak.
 	if (is_item(speaker) && GetIsObjectValid(GetItemPossessor(speaker))) {
 		speaker = GetItemPossessor(speaker);
@@ -170,35 +185,41 @@ void SpeakToMode(object oObject, string sText, int iMode) {
 
 	sText = prefix + sText;
 
-	switch ( iMode ) {
-		case CHATMODE_TALK:
-			AssignCommand(speaker, SpeakString(sText, TALKVOLUME_TALK));
-			break;
-		case CHATMODE_WHISPER:
-			AssignCommand(speaker, SpeakString(sText, TALKVOLUME_WHISPER));
-			break;
-		case CHATMODE_SHOUT:
-			AssignCommand(speaker, SpeakString(sText, TALKVOLUME_SHOUT));
-			break;
-		case CHATMODE_DM:
-			SendMessageToAllDMs(GetName(oObject) + ": " + sText);
-			break;
-		default:
-			_WARN("Invalid call to SpeakToMode with mode " + itoa(iMode) + ", text was: " + sText);
-			break;
+	switch (iMode) {
+	case CHATMODE_TALK:
+		AssignCommand(speaker, SpeakString(sText, TALKVOLUME_TALK));
+		break;
+
+	case CHATMODE_WHISPER:
+		AssignCommand(speaker, SpeakString(sText, TALKVOLUME_WHISPER));
+		break;
+
+	case CHATMODE_SHOUT:
+		AssignCommand(speaker, SpeakString(sText, TALKVOLUME_SHOUT));
+		break;
+
+	case CHATMODE_DM:
+		SendMessageToAllDMs(GetName(oObject) + ": " + sText);
+		break;
+
+	default:
+		_WARN("Invalid call to SpeakToMode with mode " + itoa(iMode) + ", text was: " + sText);
+		break;
 	}
 }
 
 
 
-void ChatHookAudit(object oPC = OBJECT_SELF, int bSuppress = TRUE, string sData = "") {
+void ChatHookAudit(object oPC = OBJECT_SELF, int bSuppress = TRUE, string sData = "")
+{
 	SetLocalInt(oPC, "chat_suppress_audit", bSuppress == TRUE);
 	SetLocalString(oPC, "chat_data_audit", sData);
 }
 
 
 
-void FixFactionsForObject(object oO, object oPC = OBJECT_SELF) {
+void FixFactionsForObject(object oO, object oPC = OBJECT_SELF)
+{
 	/*
 	 * legion 50   sl_bogenschuetze
 	 * gabelb 50
@@ -218,13 +239,13 @@ void FixFactionsForObject(object oO, object oPC = OBJECT_SELF) {
 
 	SendMessageToPC(oPC, "Vorher");
 	SendMessageToPC(oPC, " Buergerlich: " +
-		IntToString(GetStandardFactionReputation(STANDARD_FACTION_COMMONER, oO)));
+					IntToString(GetStandardFactionReputation(STANDARD_FACTION_COMMONER, oO)));
 	SendMessageToPC(oPC, " Verteidiger: " +
-		IntToString(GetStandardFactionReputation(STANDARD_FACTION_DEFENDER, oO)));
+					IntToString(GetStandardFactionReputation(STANDARD_FACTION_DEFENDER, oO)));
 	SendMessageToPC(oPC, " Haendler: " +
-		IntToString(GetStandardFactionReputation(STANDARD_FACTION_MERCHANT, oO)));
+					IntToString(GetStandardFactionReputation(STANDARD_FACTION_MERCHANT, oO)));
 	SendMessageToPC(oPC, " Feindlich: " +
-		IntToString(GetStandardFactionReputation(STANDARD_FACTION_HOSTILE, oO)));
+					IntToString(GetStandardFactionReputation(STANDARD_FACTION_HOSTILE, oO)));
 
 	/* First, the standard factions */
 	SetStandardFactionReputation(STANDARD_FACTION_HOSTILE, 0, oO);
@@ -234,20 +255,20 @@ void FixFactionsForObject(object oO, object oPC = OBJECT_SELF) {
 
 	SendMessageToPC(oPC, "Nachher");
 	SendMessageToPC(oPC, " Buergerlich: " +
-		IntToString(GetStandardFactionReputation(STANDARD_FACTION_COMMONER, oO)));
+					IntToString(GetStandardFactionReputation(STANDARD_FACTION_COMMONER, oO)));
 	SendMessageToPC(oPC, " Verteidiger: " +
-		IntToString(GetStandardFactionReputation(STANDARD_FACTION_DEFENDER, oO)));
+					IntToString(GetStandardFactionReputation(STANDARD_FACTION_DEFENDER, oO)));
 	SendMessageToPC(oPC, " Haendler: " +
-		IntToString(GetStandardFactionReputation(STANDARD_FACTION_MERCHANT, oO)));
+					IntToString(GetStandardFactionReputation(STANDARD_FACTION_MERCHANT, oO)));
 	SendMessageToPC(oPC, " Feindlich: " +
-		IntToString(GetStandardFactionReputation(STANDARD_FACTION_HOSTILE, oO)));
+					IntToString(GetStandardFactionReputation(STANDARD_FACTION_HOSTILE, oO)));
 
 
 	object wLimbo = GetObjectByTag(LIMBO_WAYPOINT);
 	location lLimbo = GetLocation(wLimbo);
 	object oA;
 
-	if ( !GetIsObjectValid(wLimbo) ) {
+	if (!GetIsObjectValid(wLimbo)) {
 		SendMessageToAllDMs(
 			"Warning, Limbo waypoint is broken. /fixfactions will not work properly for custom factions.");
 		return;

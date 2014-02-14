@@ -1,15 +1,17 @@
 extern("inc_cdb")
 extern("x2_inc_spellhook")
 
-void main() {
-	if ( !X2PreSpellCastCode() )
+void main()
+{
+	if (!X2PreSpellCastCode())
 		return;
 
 	object oPC = OBJECT_SELF;
 	object oTarget = GetSpellTargetObject();
-	
+
 
 	int cid = GetCharacterID(oPC);
+
 	if (!cid)
 		cid = -1;
 
@@ -23,6 +25,7 @@ void main() {
 
 	int current_lock = GetLocalInt(oTarget, "arcane_lock");
 	int current_level = GetLocalInt(oTarget, "arcane_lock_caster_level");
+
 	if (!current_lock || current_level <= GetCasterLevel(oPC)) {
 		AssignCommand(oTarget, ActionCloseDoor(oTarget));
 		SetLocalInt(oTarget, "arcane_lock", cid);

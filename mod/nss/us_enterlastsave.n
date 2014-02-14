@@ -1,7 +1,9 @@
 extern("inc_online")
 
-void main() {
+void main()
+{
 	object oPC = GetLastUsedBy();
+
 	if (GetIsDM(oPC) || !GetIsPC(oPC)) {
 		SendMessageToPC(oPC, "Nur fuer Spielercharaktere.");
 		return;

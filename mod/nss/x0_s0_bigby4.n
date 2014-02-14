@@ -33,36 +33,34 @@ int nSpellID = 462;
 
 void RunHandImpact(object oTarget, object oCaster)
 {
-    //--------------------------------------------------------------------------
-    // Check if the spell has expired (check also removes effects)
-    //--------------------------------------------------------------------------
-    if (GZGetDelayedSpellEffectsExpired(nSpellID,oTarget,oCaster))
-    {
-        return;
-    }
+	//--------------------------------------------------------------------------
+	// Check if the spell has expired (check also removes effects)
+	//--------------------------------------------------------------------------
+	if (GZGetDelayedSpellEffectsExpired(nSpellID, oTarget, oCaster)) {
+		return;
+	}
 
-    int nCasterModifiers = GetCasterAbilityModifier(oCaster) + GetCasterLevel(oCaster);
-    int nCasterRoll = d20(1) + nCasterModifiers + 11 + -1;
-    int nTargetRoll = GetAC(oTarget);
-    if (nCasterRoll >= nTargetRoll)
-    {
-       int nDC = GetLocalInt(oTarget,"XP2_L_SPELL_SAVE_DC_" + IntToString (nSpellID));
+	int nCasterModifiers = GetCasterAbilityModifier(oCaster) + GetCasterLevel(oCaster);
+	int nCasterRoll = d20(1) + nCasterModifiers + 11 + -1;
+	int nTargetRoll = GetAC(oTarget);
 
-       int nDam  = MaximizeOrEmpower(8, 1, GetMetaMagicFeat(), 11);
-       effect eDam = EffectDamage(nDam, DAMAGE_TYPE_BLUDGEONING);
-       effect eVis = EffectVisualEffect(VFX_IMP_ACID_L);
+	if (nCasterRoll >= nTargetRoll) {
+		int nDC = GetLocalInt(oTarget, "XP2_L_SPELL_SAVE_DC_" + IntToString(nSpellID));
 
-       ApplyEffectToObject(DURATION_TYPE_INSTANT, eDam, oTarget);
-       ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
+		int nDam  = MaximizeOrEmpower(8, 1, GetMetaMagicFeat(), 11);
+		effect eDam = EffectDamage(nDam, DAMAGE_TYPE_BLUDGEONING);
+		effect eVis = EffectVisualEffect(VFX_IMP_ACID_L);
 
-       if (!MySavingThrow(SAVING_THROW_FORT, oTarget, nDC))
-       {
-           ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectStunned(), oTarget, RoundsToSeconds(1));
-       }
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, eDam, oTarget);
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
 
-      DelayCommand(6.0f,RunHandImpact(oTarget,oCaster));
+		if (!MySavingThrow(SAVING_THROW_FORT, oTarget, nDC)) {
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectStunned(), oTarget, RoundsToSeconds(1));
+		}
 
-   }
+		DelayCommand(6.0f, RunHandImpact(oTarget, oCaster));
+
+	}
 }
 
 
@@ -70,59 +68,56 @@ void RunHandImpact(object oTarget, object oCaster)
 void main()
 {
 
-    /*
-      Spellcast Hook Code
-      Added 2003-06-20 by Georg
-      If you want to make changes to all spells,
-      check x2_inc_spellhook.nss to find out more
-    */
+	/*
+	  Spellcast Hook Code
+	  Added 2003-06-20 by Georg
+	  If you want to make changes to all spells,
+	  check x2_inc_spellhook.nss to find out more
+	*/
 
-    if (!X2PreSpellCastCode())
-    {
-        // If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
-        return;
-    }
-    // End of Spell Cast Hook
+	if (!X2PreSpellCastCode()) {
+		// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
+		return;
+	}
 
-    object oTarget = GetSpellTargetObject();
+	// End of Spell Cast Hook
 
-    //--------------------------------------------------------------------------
-    // This spell no longer stacks. If there is one hand, that's enough
-    //--------------------------------------------------------------------------
-    if (GetHasSpellEffect(nSpellID,oTarget) ||  GetHasSpellEffect(463,oTarget)  )
-    {
-        FloatingTextStrRefOnCreature(100775,OBJECT_SELF,FALSE);
-        return;
-    }
+	object oTarget = GetSpellTargetObject();
 
-    int nDuration = GetCasterLevel(OBJECT_SELF);
-    int nMetaMagic = GetMetaMagicFeat();
-    if (nMetaMagic == METAMAGIC_EXTEND)
-    {
-         nDuration = nDuration * 2;
-    }
+	//--------------------------------------------------------------------------
+	// This spell no longer stacks. If there is one hand, that's enough
+	//--------------------------------------------------------------------------
+	if (GetHasSpellEffect(nSpellID, oTarget) ||  GetHasSpellEffect(463, oTarget)) {
+		FloatingTextStrRefOnCreature(100775, OBJECT_SELF, FALSE);
+		return;
+	}
 
-    if(!GetIsReactionTypeFriendly(oTarget))
-    {
-        SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, nSpellID, TRUE));
-        int nResult = MyResistSpell(OBJECT_SELF, oTarget);
+	int nDuration = GetCasterLevel(OBJECT_SELF);
+	int nMetaMagic = GetMetaMagicFeat();
 
-        if(nResult  == 0)
-        {
-            int nCasterModifier = GetCasterAbilityModifier(OBJECT_SELF);
-            effect eHand = EffectVisualEffect(VFX_DUR_BIGBYS_CLENCHED_FIST);
-            ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eHand, oTarget, RoundsToSeconds(nDuration));
+	if (nMetaMagic == METAMAGIC_EXTEND) {
+		nDuration = nDuration * 2;
+	}
 
-            //----------------------------------------------------------
-            // GZ: 2003-Oct-15
-            // Save the current save DC on the character because
-            // GetSpellSaveDC won't work when delayed
-            //----------------------------------------------------------
-            SetLocalInt(oTarget,"XP2_L_SPELL_SAVE_DC_" + IntToString (nSpellID), GetSpellSaveDC());
-            object oSelf = OBJECT_SELF;
-            RunHandImpact(oTarget,OBJECT_SELF );
+	if (!GetIsReactionTypeFriendly(oTarget)) {
+		SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, nSpellID, TRUE));
+		int nResult = MyResistSpell(OBJECT_SELF, oTarget);
 
-        }
-    }
+		if (nResult  == 0) {
+			int nCasterModifier = GetCasterAbilityModifier(OBJECT_SELF);
+			effect eHand = EffectVisualEffect(VFX_DUR_BIGBYS_CLENCHED_FIST);
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eHand, oTarget, RoundsToSeconds(nDuration));
+
+			//----------------------------------------------------------
+			// GZ: 2003-Oct-15
+			// Save the current save DC on the character because
+			// GetSpellSaveDC won't work when delayed
+			//----------------------------------------------------------
+			SetLocalInt(oTarget, "XP2_L_SPELL_SAVE_DC_" + IntToString(nSpellID), GetSpellSaveDC());
+			object oSelf = OBJECT_SELF;
+			RunHandImpact(oTarget, OBJECT_SELF);
+
+		}
+	}
 }
 

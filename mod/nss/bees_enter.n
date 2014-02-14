@@ -16,7 +16,8 @@
 extern("x0_i0_spells")
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 
 	//Declare major variables
 	int nDamage;
@@ -27,20 +28,24 @@ void main() {
 	effect eVis2 = EffectVisualEffect(VFX_DUR_CESSATE_NEGATIVE);
 	effect eLink = EffectLinkEffects(eSpeed, eVis2);
 	float fDelay;
-	if ( spellsIsTarget(oTarget, SPELL_TARGET_STANDARDHOSTILE, GetAreaOfEffectCreator()) ) {
+
+	if (spellsIsTarget(oTarget, SPELL_TARGET_STANDARDHOSTILE, GetAreaOfEffectCreator())) {
 		//Fire cast spell at event for the target
 		SignalEvent(oTarget, EventSpellCastAt(GetAreaOfEffectCreator(), SPELL_CREEPING_DOOM));
 		fDelay = GetRandomDelay(1.0, 1.8);
+
 		//Spell resistance check
-		if ( !MyResistSpell(GetAreaOfEffectCreator(), oTarget, fDelay) ) {
+		if (!MyResistSpell(GetAreaOfEffectCreator(), oTarget, fDelay)) {
 			//Roll Damage
 			nDamage = d3();
 			//Set Damage Effect with the modified damage
 			eDam = EffectDamage(nDamage, DAMAGE_TYPE_PIERCING);
+
 			//Apply damage and visuals
-			if ( !GetHasEffect(EFFECT_TYPE_SLOW, oTarget) ) {
+			if (!GetHasEffect(EFFECT_TYPE_SLOW, oTarget)) {
 				ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eSpeed, oTarget, IntToFloat(d4() * 150));
 			}
+
 			DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget));
 			DelayCommand(fDelay, ApplyEffectToObject(DURATION_TYPE_INSTANT, eDam, oTarget));
 		}

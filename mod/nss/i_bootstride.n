@@ -1,4 +1,5 @@
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev != "player_hb")
@@ -7,17 +8,21 @@ void main() {
 	object boots = GetItemInSlot(INVENTORY_SLOT_BOOTS, e.runnable);
 	bool hasBoots = GetIsObjectValid(boots) && GetLocalInt(boots, "striding");
 	int speedBonus = GetLocalInt(boots, "striding_speed");
+
 	if (speedBonus == 0) speedBonus = GetLocalInt(e.runnable, "striding_speed");
+
 	if (speedBonus == 0) speedBonus = 10;
-	
+
 	iterate_effects(e.runnable, eff,
-		if (GetEffectType(eff) == EFFECT_TYPE_MOVEMENT_SPEED_INCREASE &&
-				GetEffectSubType(eff) == SUBTYPE_MAGICAL &&
-				GetEffectInteger(eff, 0) == (100 + speedBonus)) {
-			if (!hasBoots) RemoveEffect(e.runnable, eff);
-			return;
-		};
-	);
+
+					if (GetEffectType(eff) == EFFECT_TYPE_MOVEMENT_SPEED_INCREASE &&
+						GetEffectSubType(eff) == SUBTYPE_MAGICAL &&
+	GetEffectInteger(eff, 0) == (100 + speedBonus)) {
+	if (!hasBoots) RemoveEffect(e.runnable, eff);
+
+		return;
+	};
+				   );
 
 	if (hasBoots && speedBonus > 0) {
 		effect eff = EffectMovementSpeedIncrease(speedBonus);

@@ -16,7 +16,8 @@ int GetHD(int nPoly);
 // Returns if oTarget can morph into nPoly
 int GetCanMorph(object oTarget, int nPoly);
 
-void main() {
+void main()
+{
 	object oPC = OBJECT_SELF;
 
 	object oTarget = oPC;
@@ -28,12 +29,12 @@ void main() {
 
 
 	// dont allow this spell on incorporals or gaseous forms
-	if ( FALSE ) {
+	if (FALSE) {
 		Floaty("Koerperlose Kreaturen oder Gas-Formen koennen nicht polymorphen.");
 		return;
 	}
 
-	if ( !GetIsPC(oPC) ) {
+	if (!GetIsPC(oPC)) {
 		Floaty("Nicht-Spieler-Charaktere koennen nicht polymorphen.");
 		return;
 	}
@@ -46,7 +47,7 @@ void main() {
 
 	ClearList(oPC, CT);
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_GIANT_SPIDER) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_GIANT_SPIDER)) {
 		AddListItem(oPC, CT, "Riesenspinne");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_GIANT_SPIDER);
 	}
@@ -56,74 +57,74 @@ void main() {
 	 * 	SetListInt(oPC, CT, POLYMORPH_TYPE_TROLL);
 	 * } */
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BADGER) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_BADGER)) {
 		AddListItem(oPC, CT, "Dachs");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_BADGER);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BOAR) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_BOAR)) {
 		AddListItem(oPC, CT, "Eber");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_BOAR);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BROWN_BEAR) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_BROWN_BEAR)) {
 		AddListItem(oPC, CT, "Braunbaer");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_BROWN_BEAR);
 	}
 
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BAT) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_BAT)) {
 		AddListItem(oPC, CT, "Fledermaus");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_BAT);
 		SetListString(oPC, CT, "fly");
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_CHICKEN) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_CHICKEN)) {
 		AddListItem(oPC, CT, "Huhn");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_CHICKEN);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_RAVEN) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_RAVEN)) {
 		AddListItem(oPC, CT, "Rabe");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_RAVEN);
 		SetListString(oPC, CT, "fly");
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_FALCON) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_FALCON)) {
 		AddListItem(oPC, CT, "Falke");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_FALCON);
 		SetListString(oPC, CT, "fly");
 	}
 
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_GIANTEAGLE) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_GIANTEAGLE)) {
 		AddListItem(oPC, CT, "Riesenadler");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_GIANTEAGLE);
 		SetListString(oPC, CT, "fly");
 	}
 
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_PANTHER) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_PANTHER)) {
 		AddListItem(oPC, CT, "Panther");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_PANTHER);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_FOX) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_FOX)) {
 		AddListItem(oPC, CT, "Fuchs");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_FOX);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_WOLF) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_WOLF)) {
 		AddListItem(oPC, CT, "Wolf");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_WOLF);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_WINTERWOLF) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_WINTERWOLF)) {
 		AddListItem(oPC, CT, "Winterwolf");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_WINTERWOLF);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_COW) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_COW)) {
 		AddListItem(oPC, CT, "Kuh");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_COW);
 	}
@@ -136,36 +137,42 @@ void main() {
 	 * 	SetListInt(oPC, CT, POLYMORPH_TYPE_NYMPH);
 	 * }*/
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_TINY_FOREST) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_TINY_FOREST)) {
 		AddListItem(oPC, CT, "kleine Waldviper");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_TINY_FOREST);
 	}
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_TINY_SWAMP) ) {
+
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_TINY_SWAMP)) {
 		AddListItem(oPC, CT, "kleine Sumpfviper");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_TINY_SWAMP);
 	}
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_TINY_JUNGLE) ) {
+
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_TINY_JUNGLE)) {
 		AddListItem(oPC, CT, "kleine Jungelviper");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_TINY_JUNGLE);
 	}
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_TINY_DESERT) ) {
+
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_TINY_DESERT)) {
 		AddListItem(oPC, CT, "kleine Wuestenviper");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_TINY_DESERT);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_MED_FOREST) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_MED_FOREST)) {
 		AddListItem(oPC, CT, "mittlere Waldviper");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_MED_FOREST);
 	}
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_MED_SWAMP) ) {
+
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_MED_SWAMP)) {
 		AddListItem(oPC, CT, "mittlere Sumpfviper");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_MED_SWAMP);
 	}
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_MED_JUNGLE) ) {
+
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_MED_JUNGLE)) {
 		AddListItem(oPC, CT, "mittlere Jungelviper");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_MED_JUNGLE);
 	}
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_MED_DESERT) ) {
+
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_VIPER_MED_DESERT)) {
 		AddListItem(oPC, CT, "mittlere Wuestenviper");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_VIPER_MED_DESERT);
 	}
@@ -179,46 +186,48 @@ void main() {
 
 
 
-int GetCanMorph(object oTarget, int nPoly) {
+int GetCanMorph(object oTarget, int nPoly)
+{
 	int nLevel = GetCasterLevel(OBJECT_SELF);
 
-	switch ( nPoly ) {
-		case POLYMORPH_TYPE_VIPER_MED_DESERT:
-		case POLYMORPH_TYPE_VIPER_MED_JUNGLE:
-		case POLYMORPH_TYPE_VIPER_MED_SWAMP:
-		case POLYMORPH_TYPE_VIPER_MED_FOREST:
-			return nLevel >= 6;
+	switch (nPoly) {
+	case POLYMORPH_TYPE_VIPER_MED_DESERT:
+	case POLYMORPH_TYPE_VIPER_MED_JUNGLE:
+	case POLYMORPH_TYPE_VIPER_MED_SWAMP:
+	case POLYMORPH_TYPE_VIPER_MED_FOREST:
+		return nLevel >= 6;
 
-		case POLYMORPH_TYPE_GIANTEAGLE:
-			return nLevel >= 10;
+	case POLYMORPH_TYPE_GIANTEAGLE:
+		return nLevel >= 10;
 
-		case POLYMORPH_TYPE_WINTERWOLF:
-			return nLevel >= 7;
+	case POLYMORPH_TYPE_WINTERWOLF:
+		return nLevel >= 7;
 
-		default:
-			return nLevel >= 5;
+	default:
+		return nLevel >= 5;
 
-			break;
+		break;
 	}
 
 	return nLevel >= 5;
 }
 
-int GetHD(int nPoly) {
+int GetHD(int nPoly)
+{
 
 	//int nBonus = StringToInt(Get2DACached("polymorph", "HPBONUS", nPoly));
 
-	switch ( nPoly ) {
-		case POLYMORPH_TYPE_BADGER:
-		case POLYMORPH_TYPE_BOAR:
-		case POLYMORPH_TYPE_RAVEN:
-			return 4;
+	switch (nPoly) {
+	case POLYMORPH_TYPE_BADGER:
+	case POLYMORPH_TYPE_BOAR:
+	case POLYMORPH_TYPE_RAVEN:
+		return 4;
 
-		case POLYMORPH_TYPE_PIXIE:
-			return 5;
+	case POLYMORPH_TYPE_PIXIE:
+		return 5;
 
-		case POLYMORPH_TYPE_PANTHER:
-			return 6;
+	case POLYMORPH_TYPE_PANTHER:
+		return 6;
 
 	}
 

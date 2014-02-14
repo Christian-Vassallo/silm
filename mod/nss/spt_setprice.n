@@ -1,9 +1,10 @@
-int StartingConditional() {
+int StartingConditional()
+{
 	object oPC = GetPCSpeaker();
 
 	int iPrice = 30 - GetAbilityScore(oPC, ABILITY_CHARISMA);
 
-	if ( iPrice < 7 ) iPrice = 7;
+	if (iPrice < 7) iPrice = 7;
 
 	SetCustomToken(10000, IntToString(iPrice));
 	SetLocalInt(oPC, "SPECIAL_PRICE", iPrice);

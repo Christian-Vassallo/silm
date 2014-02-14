@@ -1,828 +1,1240 @@
-int MapSpellToIPSpell(int nSpell, int nCasterLevel) {
+int MapSpellToIPSpell(int nSpell, int nCasterLevel)
+{
 	int nIP = -1;
-	switch ( nSpell ) {
-		case SPELL_IMPROVED_INVISIBILITY:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_IMPROVED_INVISIBILITY_7;
-			break;
-		case SPELL_SPELL_MANTLE:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_SPELL_MANTLE_13;
-			break;
-		case SPELL_HEALING_CIRCLE:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_HEALING_CIRCLE_9;
-			if ( nCasterLevel >= 16 )
-				nIP = IP_CONST_CASTSPELL_HEALING_CIRCLE_16;
-			break;
-		case SPELL_MORDENKAINENS_DISJUNCTION:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_MORDENKAINENS_DISJUNCTION_17;
-			break;
-		case SPELL_TRUE_SEEING:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_TRUE_SEEING_9;
-			break;
-		case SPELL_ENDURE_ELEMENTS:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_ENDURE_ELEMENTS_2;
-			break;
-		case SPELL_CALL_LIGHTNING:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_CALL_LIGHTNING_5;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_CALL_LIGHTNING_10;
-			break;
-		case SPELL_PRISMATIC_SPRAY:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_PRISMATIC_SPRAY_13;
-			break;
-		case SPELL_MORDENKAINENS_SWORD:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_MORDENKAINENS_SWORD_13;
-			if ( nCasterLevel >= 18 )
-				nIP = IP_CONST_CASTSPELL_MORDENKAINENS_SWORD_18;
-			break;
-		case SPELL_LIGHTNING_BOLT:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_LIGHTNING_BOLT_5;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_LIGHTNING_BOLT_10;
-			break;
-		case SPELL_PHANTASMAL_KILLER:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_PHANTASMAL_KILLER_7;
-			break;
-		case SPELL_ETHEREAL_VISAGE:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_ETHEREAL_VISAGE_9;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_ETHEREAL_VISAGE_15;
-			break;
-		case SPELL_IDENTIFY:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_IDENTIFY_3;
-			break;
-		case SPELL_DIVINE_POWER:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_DIVINE_POWER_7;
-			break;
-		case SPELL_NATURES_BALANCE:
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_NATURES_BALANCE_15;
-			break;
-		case SPELL_DELAYED_BLAST_FIREBALL:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_DELAYED_BLAST_FIREBALL_13;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_DELAYED_BLAST_FIREBALL_15;
-			if ( nCasterLevel >= 20 )
-				nIP = IP_CONST_CASTSPELL_DELAYED_BLAST_FIREBALL_20;
-			break;
-		case SPELL_RESIST_ELEMENTS:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_RESIST_ELEMENTS_3;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_RESIST_ELEMENTS_10;
-			break;
-		case SPELL_MIND_BLANK:
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_MIND_BLANK_15;
-			break;
-		case SPELL_INCENDIARY_CLOUD:
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_INCENDIARY_CLOUD_15;
-			break;
-		case SPELL_NEGATIVE_ENERGY_PROTECTION:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_NEGATIVE_ENERGY_PROTECTION_5;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_NEGATIVE_ENERGY_PROTECTION_10;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_NEGATIVE_ENERGY_PROTECTION_15;
-			break;
-		case SPELL_CREATE_UNDEAD:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_CREATE_UNDEAD_11;
-			if ( nCasterLevel >= 14 )
-				nIP = IP_CONST_CASTSPELL_CREATE_UNDEAD_14;
-			if ( nCasterLevel >= 16 )
-				nIP = IP_CONST_CASTSPELL_CREATE_UNDEAD_16;
-			break;
-		case SPELL_BARKSKIN:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_BARKSKIN_3;
-			if ( nCasterLevel >= 6 )
-				nIP = IP_CONST_CASTSPELL_BARKSKIN_6;
-			if ( nCasterLevel >= 12 )
-				nIP = IP_CONST_CASTSPELL_BARKSKIN_12;
-			break;
-		case SPELL_WAIL_OF_THE_BANSHEE:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_WAIL_OF_THE_BANSHEE_17;
-			break;
-		case SPELL_LESSER_RESTORATION:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_LESSER_RESTORATION_3;
-			break;
-		case SPELL_WORD_OF_FAITH:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_WORD_OF_FAITH_13;
-			break;
-		case SPELL_CONE_OF_COLD:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_CONE_OF_COLD_9;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_CONE_OF_COLD_15;
-			break;
-		case SPELL_GREATER_PLANAR_BINDING:
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_GREATER_PLANAR_BINDING_15;
-			break;
-		case SPELL_POLYMORPH_SELF:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_POLYMORPH_SELF_7;
-			break;
-		case SPELL_INVISIBILITY:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_INVISIBILITY_3;
-			break;
-		case SPELL_CURE_MINOR_WOUNDS:
-			if ( nCasterLevel >= 1 )
-				nIP = IP_CONST_CASTSPELL_CURE_MINOR_WOUNDS_1;
-			break;
-		case SPELL_SUNBEAM:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_SUNBEAM_13;
-			break;
-		case SPELL_CHARM_PERSON_OR_ANIMAL:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_CHARM_PERSON_OR_ANIMAL_3;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_CHARM_PERSON_OR_ANIMAL_10;
-			break;
-		case SPELL_DISMISSAL:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_DISMISSAL_7;
-			if ( nCasterLevel >= 12 )
-				nIP = IP_CONST_CASTSPELL_DISMISSAL_12;
-			if ( nCasterLevel >= 18 )
-				nIP = IP_CONST_CASTSPELL_DISMISSAL_18;
-			break;
-		case SPELL_NEUTRALIZE_POISON:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_NEUTRALIZE_POISON_5;
-			break;
-		case SPELL_CHAIN_LIGHTNING:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_CHAIN_LIGHTNING_11;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_CHAIN_LIGHTNING_15;
-			if ( nCasterLevel >= 20 )
-				nIP = IP_CONST_CASTSPELL_CHAIN_LIGHTNING_20;
-			break;
-		case SPELL_REMOVE_PARALYSIS:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_REMOVE_PARALYSIS_3;
-			break;
-		case SPELL_STORM_OF_VENGEANCE:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_STORM_OF_VENGEANCE_17;
-			break;
-		case SPELL_CONTROL_UNDEAD:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_CONTROL_UNDEAD_13;
-			if ( nCasterLevel >= 20 )
-				nIP = IP_CONST_CASTSPELL_CONTROL_UNDEAD_20;
-			break;
-		case SPELL_SUMMON_CREATURE_V:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_V_9;
-			break;
-		case SPELL_POISON:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_POISON_5;
-			break;
-		case SPELL_GHOSTLY_VISAGE:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_GHOSTLY_VISAGE_3;
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_GHOSTLY_VISAGE_9;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_GHOSTLY_VISAGE_15;
-			break;
-		case SPELL_FIRE_STORM:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_FIRE_STORM_13;
-			if ( nCasterLevel >= 18 )
-				nIP = IP_CONST_CASTSPELL_FIRE_STORM_18;
-			break;
-		case SPELL_FINGER_OF_DEATH:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_FINGER_OF_DEATH_13;
-			break;
-		case SPELL_SPELL_RESISTANCE:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_SPELL_RESISTANCE_9;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_SPELL_RESISTANCE_15;
-			break;
-		case SPELL_SUMMON_CREATURE_IV:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_IV_7;
-			break;
-		case SPELL_MINOR_GLOBE_OF_INVULNERABILITY:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_MINOR_GLOBE_OF_INVULNERABILITY_7;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_MINOR_GLOBE_OF_INVULNERABILITY_15;
-			break;
-		case SPELL_WEIRD:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_WEIRD_17;
-			break;
-		case SPELL_CLOUDKILL:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_CLOUDKILL_9;
-			break;
-		case SPELL_MASS_HEAL:
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_MASS_HEAL_15;
-			break;
-		case SPELL_DARKNESS:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_DARKNESS_3;
-			break;
-		case SPELL_RESISTANCE:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_RESISTANCE_2;
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_RESISTANCE_5;
-			break;
-		case SPELL_RAISE_DEAD:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_RAISE_DEAD_9;
-			break;
-		case SPELL_SILENCE:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_SILENCE_3;
-			break;
-		case SPELL_SUMMON_CREATURE_IX:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_IX_17;
-			break;
-		case SPELL_KNOCK:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_KNOCK_3;
-			break;
-		case SPELL_SOUND_BURST:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_SOUND_BURST_3;
-			break;
-		case SPELL_DISPEL_MAGIC:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_DISPEL_MAGIC_5;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_DISPEL_MAGIC_10;
-			break;
-		case SPELL_GHOUL_TOUCH:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_GHOUL_TOUCH_3;
-			break;
-		case SPELL_AID:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_AID_3;
-			break;
-		case SPELL_CONTAGION:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_CONTAGION_5;
-			break;
-		case SPELL_SLOW:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_SLOW_5;
-			break;
-		case SPELL_CATS_GRACE:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_CATS_GRACE_3;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_CATS_GRACE_10;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_CATS_GRACE_15;
-			break;
-		case SPELL_CHARM_PERSON:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_CHARM_PERSON_2;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_CHARM_PERSON_10;
-			break;
-		case SPELL_RAY_OF_ENFEEBLEMENT:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_RAY_OF_ENFEEBLEMENT_2;
-			break;
-		case SPELL_SEARING_LIGHT:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_SEARING_LIGHT_5;
-			break;
-		case SPELL_HOLD_ANIMAL:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_HOLD_ANIMAL_3;
-			break;
-		case SPELL_REMOVE_FEAR:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_REMOVE_FEAR_2;
-			break;
-		case SPELL_VIRTUE:
-			if ( nCasterLevel >= 1 )
-				nIP = IP_CONST_CASTSPELL_VIRTUE_1;
-			break;
-		case SPELL_HOLD_MONSTER:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_HOLD_MONSTER_7;
-			break;
-		case SPELL_IMPLOSION:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_IMPLOSION_17;
-			break;
-		case SPELL_SUMMON_CREATURE_VIII:
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_VIII_15;
-			break;
-		case SPELL_SUMMON_CREATURE_VI:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_VI_11;
-			break;
-		case SPELL_HEAL:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_HEAL_11;
-			break;
-		case SPELL_CONFUSION:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_CONFUSION_5;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_CONFUSION_10;
-			break;
-		case SPELL_VAMPIRIC_TOUCH:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_VAMPIRIC_TOUCH_5;
-			break;
-		case SPELL_ACID_FOG:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_ACID_FOG_11;
-			break;
-		case SPELL_SHADOW_SHIELD:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_SHADOW_SHIELD_13;
-			break;
-		case SPELL_DOMINATE_ANIMAL:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_DOMINATE_ANIMAL_5;
-			break;
-		case SPELL_HARM:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_HARM_11;
-			break;
-		case SPELL_BURNING_HANDS:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_BURNING_HANDS_2;
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_BURNING_HANDS_5;
-			break;
-		case SPELL_INVISIBILITY_PURGE:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_INVISIBILITY_PURGE_5;
-			break;
-		case SPELL_LESSER_SPELL_MANTLE:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_LESSER_SPELL_MANTLE_9;
-			break;
-		case SPELL_ELEMENTAL_SWARM:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_ELEMENTAL_SWARM_17;
-			break;
-		case SPELL_MAGE_ARMOR:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_MAGE_ARMOR_2;
-			break;
-		case SPELL_FEEBLEMIND:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_FEEBLEMIND_9;
-			break;
-		case SPELL_CURE_CRITICAL_WOUNDS:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_CURE_CRITICAL_WOUNDS_7;
-			if ( nCasterLevel >= 12 )
-				nIP = IP_CONST_CASTSPELL_CURE_CRITICAL_WOUNDS_12;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_CURE_CRITICAL_WOUNDS_15;
-			break;
-		case SPELL_STINKING_CLOUD:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_STINKING_CLOUD_5;
-			break;
-		case SPELL_MASS_CHARM:
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_MASS_CHARM_15;
-			break;
-		case SPELL_GREATER_RESTORATION:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_GREATER_RESTORATION_13;
-			break;
-		case SPELL_REMOVE_CURSE:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_REMOVE_CURSE_5;
-			break;
-		case SPELL_HOLD_PERSON:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_HOLD_PERSON_3;
-			break;
-		case SPELL_LESSER_PLANAR_BINDING:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_LESSER_PLANAR_BINDING_9;
-			break;
-		case SPELL_FIREBALL:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_FIREBALL_5;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_FIREBALL_10;
-			break;
-		case SPELL_SLEEP:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_SLEEP_2;
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_SLEEP_5;
-			break;
-		case SPELL_SEE_INVISIBILITY:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_SEE_INVISIBILITY_3;
-			break;
-		case SPELL_LESSER_MIND_BLANK:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_LESSER_MIND_BLANK_9;
-			break;
-		case SPELL_FLAME_LASH:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_FLAME_LASH_3;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_FLAME_LASH_10;
-			break;
-		case SPELL_BESTOW_CURSE:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_BESTOW_CURSE_5;
-			break;
-		case SPELL_ENERGY_DRAIN:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_ENERGY_DRAIN_17;
-			break;
-		case SPELL_GREASE:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_GREASE_2;
-			break;
-		case SPELL_CLARITY:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_CLARITY_3;
-			break;
-		case SPELL_DOMINATE_PERSON:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_DOMINATE_PERSON_7;
-			break;
-		case SPELL_BLESS:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_BLESS_2;
-			break;
-		case SPELL_ENERVATION:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_ENERVATION_7;
-			break;
-		case SPELL_GREATER_SPELL_MANTLE:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_GREATER_SPELL_MANTLE_17;
-			break;
-		case SPELL_INVISIBILITY_SPHERE:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_INVISIBILITY_SPHERE_5;
-			break;
-		case SPELL_SHAPECHANGE:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_SHAPECHANGE_17;
-			break;
-		case SPELL_CURE_MODERATE_WOUNDS:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_CURE_MODERATE_WOUNDS_3;
-			if ( nCasterLevel >= 6 )
-				nIP = IP_CONST_CASTSPELL_CURE_MODERATE_WOUNDS_6;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_CURE_MODERATE_WOUNDS_10;
-			break;
-		case SPELL_ANIMATE_DEAD:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_ANIMATE_DEAD_5;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_ANIMATE_DEAD_10;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_ANIMATE_DEAD_15;
-			break;
-		case SPELL_DEATH_WARD:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_DEATH_WARD_7;
-			break;
-		case SPELL_CURE_LIGHT_WOUNDS:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_CURE_LIGHT_WOUNDS_2;
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_CURE_LIGHT_WOUNDS_5;
-			break;
-		case SPELL_REMOVE_DISEASE:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_REMOVE_DISEASE_5;
-			break;
-		case SPELL_CIRCLE_OF_DEATH:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_CIRCLE_OF_DEATH_11;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_CIRCLE_OF_DEATH_15;
-			if ( nCasterLevel >= 20 )
-				nIP = IP_CONST_CASTSPELL_CIRCLE_OF_DEATH_20;
-			break;
-		case SPELL_METEOR_SWARM:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_METEOR_SWARM_17;
-			break;
-		case SPELL_SANCTUARY:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_SANCTUARY_2;
-			break;
-		case SPELL_SCARE:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_SCARE_2;
-			break;
-		case SPELL_CREATE_GREATER_UNDEAD:
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_CREATE_GREATER_UNDEAD_15;
-			if ( nCasterLevel >= 16 )
-				nIP = IP_CONST_CASTSPELL_CREATE_GREATER_UNDEAD_16;
-			if ( nCasterLevel >= 18 )
-				nIP = IP_CONST_CASTSPELL_CREATE_GREATER_UNDEAD_18;
-			break;
-		case SPELL_FEAR:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_FEAR_5;
-			break;
-		case SPELL_GREATER_DISPELLING:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_GREATER_DISPELLING_7;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_GREATER_DISPELLING_15;
-			break;
-		case SPELL_ELEMENTAL_SHIELD:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_ELEMENTAL_SHIELD_7;
-			if ( nCasterLevel >= 12 )
-				nIP = IP_CONST_CASTSPELL_ELEMENTAL_SHIELD_12;
-			break;
-		case SPELL_GUST_OF_WIND:
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_GUST_OF_WIND_10;
-			break;
-		case SPELL_ENDURANCE:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_ENDURANCE_3;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_ENDURANCE_10;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_ENDURANCE_15;
-			break;
-		case SPELL_LIGHT:
-			if ( nCasterLevel >= 1 )
-				nIP = IP_CONST_CASTSPELL_LIGHT_1;
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_LIGHT_5;
-			break;
-		case SPELL_ENTANGLE:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_ENTANGLE_2;
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_ENTANGLE_5;
-			break;
-		case SPELL_MELFS_ACID_ARROW:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_MELFS_ACID_ARROW_3;
-			if ( nCasterLevel >= 6 )
-				nIP = IP_CONST_CASTSPELL_MELFS_ACID_ARROW_6;
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_MELFS_ACID_ARROW_9;
-			break;
-		case SPELL_MASS_HASTE:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_MASS_HASTE_11;
-			break;
-		case SPELL_SUMMON_CREATURE_III:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_III_5;
-			break;
-		case SPELL_WALL_OF_FIRE:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_WALL_OF_FIRE_9;
-			break;
-		case SPELL_WEB:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_WEB_3;
-			break;
-		case SPELL_FLAME_ARROW:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_FLAME_ARROW_5;
-			if ( nCasterLevel >= 12 )
-				nIP = IP_CONST_CASTSPELL_FLAME_ARROW_12;
-			if ( nCasterLevel >= 18 )
-				nIP = IP_CONST_CASTSPELL_FLAME_ARROW_18;
-			break;
-		case SPELL_FREEDOM_OF_MOVEMENT:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_FREEDOM_OF_MOVEMENT_7;
-			break;
-		case SPELL_SUMMON_CREATURE_VII:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_VII_13;
-			break;
-		case SPELL_TENSERS_TRANSFORMATION:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_TENSERS_TRANSFORMATION_11;
-			break;
-		case SPELL_HASTE:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_HASTE_5;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_HASTE_10;
-			break;
-		case SPELL_FLAME_STRIKE:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_FLAME_STRIKE_7;
-			if ( nCasterLevel >= 12 )
-				nIP = IP_CONST_CASTSPELL_FLAME_STRIKE_12;
-			if ( nCasterLevel >= 18 )
-				nIP = IP_CONST_CASTSPELL_FLAME_STRIKE_18;
-			break;
-		case SPELL_LESSER_SPELL_BREACH:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_LESSER_SPELL_BREACH_7;
-			break;
-		case SPELL_PREMONITION:
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_PREMONITION_15;
-			break;
-		case SPELL_RESTORATION:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_RESTORATION_7;
-			break;
-		case SPELL_MAGIC_MISSILE:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_MAGIC_MISSILE_3;
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_MAGIC_MISSILE_5;
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_MAGIC_MISSILE_9;
-			break;
-		case SPELL_PLANAR_BINDING:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_PLANAR_BINDING_11;
-			break;
-		case SPELL_GREATER_STONESKIN:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_GREATER_STONESKIN_11;
-			break;
-		case SPELL_LESSER_DISPEL:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_LESSER_DISPEL_3;
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_LESSER_DISPEL_5;
-			break;
-		case SPELL_PRAYER:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_PRAYER_5;
-			break;
-		case SPELL_PROTECTION_FROM_SPELLS:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_PROTECTION_FROM_SPELLS_13;
-			if ( nCasterLevel >= 20 )
-				nIP = IP_CONST_CASTSPELL_PROTECTION_FROM_SPELLS_20;
-			break;
-		case SPELL_RESURRECTION:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_RESURRECTION_13;
-			break;
-		case SPELL_SLAY_LIVING:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_SLAY_LIVING_9;
-			break;
-		case SPELL_SUMMON_CREATURE_I:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_I_2;
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_I_5;
-			break;
-		case SPELL_SUMMON_CREATURE_II:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_II_3;
-			break;
-		case SPELL_TIME_STOP:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_TIME_STOP_17;
-			break;
-		case SPELL_COLOR_SPRAY:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_COLOR_SPRAY_2;
-			break;
-		case SPELL_GATE:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_GATE_17;
-			break;
-		case SPELL_PROTECTION_FROM_ELEMENTS:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_PROTECTION_FROM_ELEMENTS_3;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_PROTECTION_FROM_ELEMENTS_10;
-			break;
-		case SPELL_RAY_OF_FROST:
-			if ( nCasterLevel >= 1 )
-				nIP = IP_CONST_CASTSPELL_RAY_OF_FROST_1;
-			break;
-		case SPELL_HAMMER_OF_THE_GODS:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_HAMMER_OF_THE_GODS_7;
-			if ( nCasterLevel >= 12 )
-				nIP = IP_CONST_CASTSPELL_HAMMER_OF_THE_GODS_12;
-			break;
-		case SPELL_BLADE_BARRIER:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_BLADE_BARRIER_11;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_BLADE_BARRIER_15;
-			break;
-		case SPELL_CHARM_MONSTER:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_CHARM_MONSTER_5;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_CHARM_MONSTER_10;
-			break;
-		case SPELL_MIND_FOG:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_MIND_FOG_9;
-			break;
-		case SPELL_CURE_SERIOUS_WOUNDS:
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_CURE_SERIOUS_WOUNDS_5;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_CURE_SERIOUS_WOUNDS_10;
-			break;
-		case SPELL_CIRCLE_OF_DOOM:
-			if ( nCasterLevel >= 9 )
-				nIP = IP_CONST_CASTSPELL_CIRCLE_OF_DOOM_9;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_CIRCLE_OF_DOOM_15;
-			if ( nCasterLevel >= 20 )
-				nIP = IP_CONST_CASTSPELL_CIRCLE_OF_DOOM_20;
-			break;
-		case SPELL_POWER_WORD_KILL:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_POWER_WORD_KILL_17;
-			break;
-		case SPELL_DOOM:
-			if ( nCasterLevel >= 2 )
-				nIP = IP_CONST_CASTSPELL_DOOM_2;
-			if ( nCasterLevel >= 5 )
-				nIP = IP_CONST_CASTSPELL_DOOM_5;
-			break;
-		case SPELL_POWER_WORD_STUN:
-			if ( nCasterLevel >= 13 )
-				nIP = IP_CONST_CASTSPELL_POWER_WORD_STUN_13;
-			break;
-		case SPELL_STONESKIN:
-			if ( nCasterLevel >= 7 )
-				nIP = IP_CONST_CASTSPELL_STONESKIN_7;
-			break;
-		case SPELL_DOMINATE_MONSTER:
-			if ( nCasterLevel >= 17 )
-				nIP = IP_CONST_CASTSPELL_DOMINATE_MONSTER_17;
-			break;
-		case SPELL_GREATER_SPELL_BREACH:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_GREATER_SPELL_BREACH_11;
-			break;
-		case SPELL_GLOBE_OF_INVULNERABILITY:
-			if ( nCasterLevel >= 11 )
-				nIP = IP_CONST_CASTSPELL_GLOBE_OF_INVULNERABILITY_11;
-			break;
-		case SPELL_DAZE:
-			if ( nCasterLevel >= 1 )
-				nIP = IP_CONST_CASTSPELL_DAZE_1;
-			break;
-		case SPELL_BULLS_STRENGTH:
-			if ( nCasterLevel >= 3 )
-				nIP = IP_CONST_CASTSPELL_BULLS_STRENGTH_3;
-			if ( nCasterLevel >= 10 )
-				nIP = IP_CONST_CASTSPELL_BULLS_STRENGTH_10;
-			if ( nCasterLevel >= 15 )
-				nIP = IP_CONST_CASTSPELL_BULLS_STRENGTH_15;
-			break;
+
+	switch (nSpell) {
+	case SPELL_IMPROVED_INVISIBILITY:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_IMPROVED_INVISIBILITY_7;
+
+		break;
+
+	case SPELL_SPELL_MANTLE:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_SPELL_MANTLE_13;
+
+		break;
+
+	case SPELL_HEALING_CIRCLE:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_HEALING_CIRCLE_9;
+
+		if (nCasterLevel >= 16)
+			nIP = IP_CONST_CASTSPELL_HEALING_CIRCLE_16;
+
+		break;
+
+	case SPELL_MORDENKAINENS_DISJUNCTION:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_MORDENKAINENS_DISJUNCTION_17;
+
+		break;
+
+	case SPELL_TRUE_SEEING:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_TRUE_SEEING_9;
+
+		break;
+
+	case SPELL_ENDURE_ELEMENTS:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_ENDURE_ELEMENTS_2;
+
+		break;
+
+	case SPELL_CALL_LIGHTNING:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_CALL_LIGHTNING_5;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_CALL_LIGHTNING_10;
+
+		break;
+
+	case SPELL_PRISMATIC_SPRAY:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_PRISMATIC_SPRAY_13;
+
+		break;
+
+	case SPELL_MORDENKAINENS_SWORD:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_MORDENKAINENS_SWORD_13;
+
+		if (nCasterLevel >= 18)
+			nIP = IP_CONST_CASTSPELL_MORDENKAINENS_SWORD_18;
+
+		break;
+
+	case SPELL_LIGHTNING_BOLT:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_LIGHTNING_BOLT_5;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_LIGHTNING_BOLT_10;
+
+		break;
+
+	case SPELL_PHANTASMAL_KILLER:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_PHANTASMAL_KILLER_7;
+
+		break;
+
+	case SPELL_ETHEREAL_VISAGE:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_ETHEREAL_VISAGE_9;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_ETHEREAL_VISAGE_15;
+
+		break;
+
+	case SPELL_IDENTIFY:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_IDENTIFY_3;
+
+		break;
+
+	case SPELL_DIVINE_POWER:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_DIVINE_POWER_7;
+
+		break;
+
+	case SPELL_NATURES_BALANCE:
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_NATURES_BALANCE_15;
+
+		break;
+
+	case SPELL_DELAYED_BLAST_FIREBALL:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_DELAYED_BLAST_FIREBALL_13;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_DELAYED_BLAST_FIREBALL_15;
+
+		if (nCasterLevel >= 20)
+			nIP = IP_CONST_CASTSPELL_DELAYED_BLAST_FIREBALL_20;
+
+		break;
+
+	case SPELL_RESIST_ELEMENTS:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_RESIST_ELEMENTS_3;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_RESIST_ELEMENTS_10;
+
+		break;
+
+	case SPELL_MIND_BLANK:
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_MIND_BLANK_15;
+
+		break;
+
+	case SPELL_INCENDIARY_CLOUD:
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_INCENDIARY_CLOUD_15;
+
+		break;
+
+	case SPELL_NEGATIVE_ENERGY_PROTECTION:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_NEGATIVE_ENERGY_PROTECTION_5;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_NEGATIVE_ENERGY_PROTECTION_10;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_NEGATIVE_ENERGY_PROTECTION_15;
+
+		break;
+
+	case SPELL_CREATE_UNDEAD:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_CREATE_UNDEAD_11;
+
+		if (nCasterLevel >= 14)
+			nIP = IP_CONST_CASTSPELL_CREATE_UNDEAD_14;
+
+		if (nCasterLevel >= 16)
+			nIP = IP_CONST_CASTSPELL_CREATE_UNDEAD_16;
+
+		break;
+
+	case SPELL_BARKSKIN:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_BARKSKIN_3;
+
+		if (nCasterLevel >= 6)
+			nIP = IP_CONST_CASTSPELL_BARKSKIN_6;
+
+		if (nCasterLevel >= 12)
+			nIP = IP_CONST_CASTSPELL_BARKSKIN_12;
+
+		break;
+
+	case SPELL_WAIL_OF_THE_BANSHEE:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_WAIL_OF_THE_BANSHEE_17;
+
+		break;
+
+	case SPELL_LESSER_RESTORATION:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_LESSER_RESTORATION_3;
+
+		break;
+
+	case SPELL_WORD_OF_FAITH:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_WORD_OF_FAITH_13;
+
+		break;
+
+	case SPELL_CONE_OF_COLD:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_CONE_OF_COLD_9;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_CONE_OF_COLD_15;
+
+		break;
+
+	case SPELL_GREATER_PLANAR_BINDING:
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_GREATER_PLANAR_BINDING_15;
+
+		break;
+
+	case SPELL_POLYMORPH_SELF:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_POLYMORPH_SELF_7;
+
+		break;
+
+	case SPELL_INVISIBILITY:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_INVISIBILITY_3;
+
+		break;
+
+	case SPELL_CURE_MINOR_WOUNDS:
+		if (nCasterLevel >= 1)
+			nIP = IP_CONST_CASTSPELL_CURE_MINOR_WOUNDS_1;
+
+		break;
+
+	case SPELL_SUNBEAM:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_SUNBEAM_13;
+
+		break;
+
+	case SPELL_CHARM_PERSON_OR_ANIMAL:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_CHARM_PERSON_OR_ANIMAL_3;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_CHARM_PERSON_OR_ANIMAL_10;
+
+		break;
+
+	case SPELL_DISMISSAL:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_DISMISSAL_7;
+
+		if (nCasterLevel >= 12)
+			nIP = IP_CONST_CASTSPELL_DISMISSAL_12;
+
+		if (nCasterLevel >= 18)
+			nIP = IP_CONST_CASTSPELL_DISMISSAL_18;
+
+		break;
+
+	case SPELL_NEUTRALIZE_POISON:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_NEUTRALIZE_POISON_5;
+
+		break;
+
+	case SPELL_CHAIN_LIGHTNING:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_CHAIN_LIGHTNING_11;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_CHAIN_LIGHTNING_15;
+
+		if (nCasterLevel >= 20)
+			nIP = IP_CONST_CASTSPELL_CHAIN_LIGHTNING_20;
+
+		break;
+
+	case SPELL_REMOVE_PARALYSIS:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_REMOVE_PARALYSIS_3;
+
+		break;
+
+	case SPELL_STORM_OF_VENGEANCE:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_STORM_OF_VENGEANCE_17;
+
+		break;
+
+	case SPELL_CONTROL_UNDEAD:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_CONTROL_UNDEAD_13;
+
+		if (nCasterLevel >= 20)
+			nIP = IP_CONST_CASTSPELL_CONTROL_UNDEAD_20;
+
+		break;
+
+	case SPELL_SUMMON_CREATURE_V:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_V_9;
+
+		break;
+
+	case SPELL_POISON:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_POISON_5;
+
+		break;
+
+	case SPELL_GHOSTLY_VISAGE:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_GHOSTLY_VISAGE_3;
+
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_GHOSTLY_VISAGE_9;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_GHOSTLY_VISAGE_15;
+
+		break;
+
+	case SPELL_FIRE_STORM:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_FIRE_STORM_13;
+
+		if (nCasterLevel >= 18)
+			nIP = IP_CONST_CASTSPELL_FIRE_STORM_18;
+
+		break;
+
+	case SPELL_FINGER_OF_DEATH:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_FINGER_OF_DEATH_13;
+
+		break;
+
+	case SPELL_SPELL_RESISTANCE:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_SPELL_RESISTANCE_9;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_SPELL_RESISTANCE_15;
+
+		break;
+
+	case SPELL_SUMMON_CREATURE_IV:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_IV_7;
+
+		break;
+
+	case SPELL_MINOR_GLOBE_OF_INVULNERABILITY:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_MINOR_GLOBE_OF_INVULNERABILITY_7;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_MINOR_GLOBE_OF_INVULNERABILITY_15;
+
+		break;
+
+	case SPELL_WEIRD:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_WEIRD_17;
+
+		break;
+
+	case SPELL_CLOUDKILL:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_CLOUDKILL_9;
+
+		break;
+
+	case SPELL_MASS_HEAL:
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_MASS_HEAL_15;
+
+		break;
+
+	case SPELL_DARKNESS:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_DARKNESS_3;
+
+		break;
+
+	case SPELL_RESISTANCE:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_RESISTANCE_2;
+
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_RESISTANCE_5;
+
+		break;
+
+	case SPELL_RAISE_DEAD:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_RAISE_DEAD_9;
+
+		break;
+
+	case SPELL_SILENCE:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_SILENCE_3;
+
+		break;
+
+	case SPELL_SUMMON_CREATURE_IX:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_IX_17;
+
+		break;
+
+	case SPELL_KNOCK:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_KNOCK_3;
+
+		break;
+
+	case SPELL_SOUND_BURST:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_SOUND_BURST_3;
+
+		break;
+
+	case SPELL_DISPEL_MAGIC:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_DISPEL_MAGIC_5;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_DISPEL_MAGIC_10;
+
+		break;
+
+	case SPELL_GHOUL_TOUCH:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_GHOUL_TOUCH_3;
+
+		break;
+
+	case SPELL_AID:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_AID_3;
+
+		break;
+
+	case SPELL_CONTAGION:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_CONTAGION_5;
+
+		break;
+
+	case SPELL_SLOW:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_SLOW_5;
+
+		break;
+
+	case SPELL_CATS_GRACE:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_CATS_GRACE_3;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_CATS_GRACE_10;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_CATS_GRACE_15;
+
+		break;
+
+	case SPELL_CHARM_PERSON:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_CHARM_PERSON_2;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_CHARM_PERSON_10;
+
+		break;
+
+	case SPELL_RAY_OF_ENFEEBLEMENT:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_RAY_OF_ENFEEBLEMENT_2;
+
+		break;
+
+	case SPELL_SEARING_LIGHT:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_SEARING_LIGHT_5;
+
+		break;
+
+	case SPELL_HOLD_ANIMAL:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_HOLD_ANIMAL_3;
+
+		break;
+
+	case SPELL_REMOVE_FEAR:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_REMOVE_FEAR_2;
+
+		break;
+
+	case SPELL_VIRTUE:
+		if (nCasterLevel >= 1)
+			nIP = IP_CONST_CASTSPELL_VIRTUE_1;
+
+		break;
+
+	case SPELL_HOLD_MONSTER:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_HOLD_MONSTER_7;
+
+		break;
+
+	case SPELL_IMPLOSION:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_IMPLOSION_17;
+
+		break;
+
+	case SPELL_SUMMON_CREATURE_VIII:
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_VIII_15;
+
+		break;
+
+	case SPELL_SUMMON_CREATURE_VI:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_VI_11;
+
+		break;
+
+	case SPELL_HEAL:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_HEAL_11;
+
+		break;
+
+	case SPELL_CONFUSION:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_CONFUSION_5;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_CONFUSION_10;
+
+		break;
+
+	case SPELL_VAMPIRIC_TOUCH:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_VAMPIRIC_TOUCH_5;
+
+		break;
+
+	case SPELL_ACID_FOG:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_ACID_FOG_11;
+
+		break;
+
+	case SPELL_SHADOW_SHIELD:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_SHADOW_SHIELD_13;
+
+		break;
+
+	case SPELL_DOMINATE_ANIMAL:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_DOMINATE_ANIMAL_5;
+
+		break;
+
+	case SPELL_HARM:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_HARM_11;
+
+		break;
+
+	case SPELL_BURNING_HANDS:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_BURNING_HANDS_2;
+
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_BURNING_HANDS_5;
+
+		break;
+
+	case SPELL_INVISIBILITY_PURGE:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_INVISIBILITY_PURGE_5;
+
+		break;
+
+	case SPELL_LESSER_SPELL_MANTLE:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_LESSER_SPELL_MANTLE_9;
+
+		break;
+
+	case SPELL_ELEMENTAL_SWARM:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_ELEMENTAL_SWARM_17;
+
+		break;
+
+	case SPELL_MAGE_ARMOR:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_MAGE_ARMOR_2;
+
+		break;
+
+	case SPELL_FEEBLEMIND:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_FEEBLEMIND_9;
+
+		break;
+
+	case SPELL_CURE_CRITICAL_WOUNDS:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_CURE_CRITICAL_WOUNDS_7;
+
+		if (nCasterLevel >= 12)
+			nIP = IP_CONST_CASTSPELL_CURE_CRITICAL_WOUNDS_12;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_CURE_CRITICAL_WOUNDS_15;
+
+		break;
+
+	case SPELL_STINKING_CLOUD:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_STINKING_CLOUD_5;
+
+		break;
+
+	case SPELL_MASS_CHARM:
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_MASS_CHARM_15;
+
+		break;
+
+	case SPELL_GREATER_RESTORATION:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_GREATER_RESTORATION_13;
+
+		break;
+
+	case SPELL_REMOVE_CURSE:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_REMOVE_CURSE_5;
+
+		break;
+
+	case SPELL_HOLD_PERSON:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_HOLD_PERSON_3;
+
+		break;
+
+	case SPELL_LESSER_PLANAR_BINDING:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_LESSER_PLANAR_BINDING_9;
+
+		break;
+
+	case SPELL_FIREBALL:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_FIREBALL_5;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_FIREBALL_10;
+
+		break;
+
+	case SPELL_SLEEP:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_SLEEP_2;
+
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_SLEEP_5;
+
+		break;
+
+	case SPELL_SEE_INVISIBILITY:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_SEE_INVISIBILITY_3;
+
+		break;
+
+	case SPELL_LESSER_MIND_BLANK:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_LESSER_MIND_BLANK_9;
+
+		break;
+
+	case SPELL_FLAME_LASH:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_FLAME_LASH_3;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_FLAME_LASH_10;
+
+		break;
+
+	case SPELL_BESTOW_CURSE:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_BESTOW_CURSE_5;
+
+		break;
+
+	case SPELL_ENERGY_DRAIN:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_ENERGY_DRAIN_17;
+
+		break;
+
+	case SPELL_GREASE:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_GREASE_2;
+
+		break;
+
+	case SPELL_CLARITY:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_CLARITY_3;
+
+		break;
+
+	case SPELL_DOMINATE_PERSON:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_DOMINATE_PERSON_7;
+
+		break;
+
+	case SPELL_BLESS:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_BLESS_2;
+
+		break;
+
+	case SPELL_ENERVATION:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_ENERVATION_7;
+
+		break;
+
+	case SPELL_GREATER_SPELL_MANTLE:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_GREATER_SPELL_MANTLE_17;
+
+		break;
+
+	case SPELL_INVISIBILITY_SPHERE:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_INVISIBILITY_SPHERE_5;
+
+		break;
+
+	case SPELL_SHAPECHANGE:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_SHAPECHANGE_17;
+
+		break;
+
+	case SPELL_CURE_MODERATE_WOUNDS:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_CURE_MODERATE_WOUNDS_3;
+
+		if (nCasterLevel >= 6)
+			nIP = IP_CONST_CASTSPELL_CURE_MODERATE_WOUNDS_6;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_CURE_MODERATE_WOUNDS_10;
+
+		break;
+
+	case SPELL_ANIMATE_DEAD:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_ANIMATE_DEAD_5;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_ANIMATE_DEAD_10;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_ANIMATE_DEAD_15;
+
+		break;
+
+	case SPELL_DEATH_WARD:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_DEATH_WARD_7;
+
+		break;
+
+	case SPELL_CURE_LIGHT_WOUNDS:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_CURE_LIGHT_WOUNDS_2;
+
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_CURE_LIGHT_WOUNDS_5;
+
+		break;
+
+	case SPELL_REMOVE_DISEASE:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_REMOVE_DISEASE_5;
+
+		break;
+
+	case SPELL_CIRCLE_OF_DEATH:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_CIRCLE_OF_DEATH_11;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_CIRCLE_OF_DEATH_15;
+
+		if (nCasterLevel >= 20)
+			nIP = IP_CONST_CASTSPELL_CIRCLE_OF_DEATH_20;
+
+		break;
+
+	case SPELL_METEOR_SWARM:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_METEOR_SWARM_17;
+
+		break;
+
+	case SPELL_SANCTUARY:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_SANCTUARY_2;
+
+		break;
+
+	case SPELL_SCARE:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_SCARE_2;
+
+		break;
+
+	case SPELL_CREATE_GREATER_UNDEAD:
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_CREATE_GREATER_UNDEAD_15;
+
+		if (nCasterLevel >= 16)
+			nIP = IP_CONST_CASTSPELL_CREATE_GREATER_UNDEAD_16;
+
+		if (nCasterLevel >= 18)
+			nIP = IP_CONST_CASTSPELL_CREATE_GREATER_UNDEAD_18;
+
+		break;
+
+	case SPELL_FEAR:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_FEAR_5;
+
+		break;
+
+	case SPELL_GREATER_DISPELLING:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_GREATER_DISPELLING_7;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_GREATER_DISPELLING_15;
+
+		break;
+
+	case SPELL_ELEMENTAL_SHIELD:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_ELEMENTAL_SHIELD_7;
+
+		if (nCasterLevel >= 12)
+			nIP = IP_CONST_CASTSPELL_ELEMENTAL_SHIELD_12;
+
+		break;
+
+	case SPELL_GUST_OF_WIND:
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_GUST_OF_WIND_10;
+
+		break;
+
+	case SPELL_ENDURANCE:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_ENDURANCE_3;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_ENDURANCE_10;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_ENDURANCE_15;
+
+		break;
+
+	case SPELL_LIGHT:
+		if (nCasterLevel >= 1)
+			nIP = IP_CONST_CASTSPELL_LIGHT_1;
+
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_LIGHT_5;
+
+		break;
+
+	case SPELL_ENTANGLE:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_ENTANGLE_2;
+
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_ENTANGLE_5;
+
+		break;
+
+	case SPELL_MELFS_ACID_ARROW:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_MELFS_ACID_ARROW_3;
+
+		if (nCasterLevel >= 6)
+			nIP = IP_CONST_CASTSPELL_MELFS_ACID_ARROW_6;
+
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_MELFS_ACID_ARROW_9;
+
+		break;
+
+	case SPELL_MASS_HASTE:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_MASS_HASTE_11;
+
+		break;
+
+	case SPELL_SUMMON_CREATURE_III:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_III_5;
+
+		break;
+
+	case SPELL_WALL_OF_FIRE:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_WALL_OF_FIRE_9;
+
+		break;
+
+	case SPELL_WEB:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_WEB_3;
+
+		break;
+
+	case SPELL_FLAME_ARROW:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_FLAME_ARROW_5;
+
+		if (nCasterLevel >= 12)
+			nIP = IP_CONST_CASTSPELL_FLAME_ARROW_12;
+
+		if (nCasterLevel >= 18)
+			nIP = IP_CONST_CASTSPELL_FLAME_ARROW_18;
+
+		break;
+
+	case SPELL_FREEDOM_OF_MOVEMENT:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_FREEDOM_OF_MOVEMENT_7;
+
+		break;
+
+	case SPELL_SUMMON_CREATURE_VII:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_VII_13;
+
+		break;
+
+	case SPELL_TENSERS_TRANSFORMATION:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_TENSERS_TRANSFORMATION_11;
+
+		break;
+
+	case SPELL_HASTE:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_HASTE_5;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_HASTE_10;
+
+		break;
+
+	case SPELL_FLAME_STRIKE:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_FLAME_STRIKE_7;
+
+		if (nCasterLevel >= 12)
+			nIP = IP_CONST_CASTSPELL_FLAME_STRIKE_12;
+
+		if (nCasterLevel >= 18)
+			nIP = IP_CONST_CASTSPELL_FLAME_STRIKE_18;
+
+		break;
+
+	case SPELL_LESSER_SPELL_BREACH:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_LESSER_SPELL_BREACH_7;
+
+		break;
+
+	case SPELL_PREMONITION:
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_PREMONITION_15;
+
+		break;
+
+	case SPELL_RESTORATION:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_RESTORATION_7;
+
+		break;
+
+	case SPELL_MAGIC_MISSILE:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_MAGIC_MISSILE_3;
+
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_MAGIC_MISSILE_5;
+
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_MAGIC_MISSILE_9;
+
+		break;
+
+	case SPELL_PLANAR_BINDING:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_PLANAR_BINDING_11;
+
+		break;
+
+	case SPELL_GREATER_STONESKIN:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_GREATER_STONESKIN_11;
+
+		break;
+
+	case SPELL_LESSER_DISPEL:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_LESSER_DISPEL_3;
+
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_LESSER_DISPEL_5;
+
+		break;
+
+	case SPELL_PRAYER:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_PRAYER_5;
+
+		break;
+
+	case SPELL_PROTECTION_FROM_SPELLS:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_PROTECTION_FROM_SPELLS_13;
+
+		if (nCasterLevel >= 20)
+			nIP = IP_CONST_CASTSPELL_PROTECTION_FROM_SPELLS_20;
+
+		break;
+
+	case SPELL_RESURRECTION:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_RESURRECTION_13;
+
+		break;
+
+	case SPELL_SLAY_LIVING:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_SLAY_LIVING_9;
+
+		break;
+
+	case SPELL_SUMMON_CREATURE_I:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_I_2;
+
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_I_5;
+
+		break;
+
+	case SPELL_SUMMON_CREATURE_II:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_SUMMON_CREATURE_II_3;
+
+		break;
+
+	case SPELL_TIME_STOP:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_TIME_STOP_17;
+
+		break;
+
+	case SPELL_COLOR_SPRAY:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_COLOR_SPRAY_2;
+
+		break;
+
+	case SPELL_GATE:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_GATE_17;
+
+		break;
+
+	case SPELL_PROTECTION_FROM_ELEMENTS:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_PROTECTION_FROM_ELEMENTS_3;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_PROTECTION_FROM_ELEMENTS_10;
+
+		break;
+
+	case SPELL_RAY_OF_FROST:
+		if (nCasterLevel >= 1)
+			nIP = IP_CONST_CASTSPELL_RAY_OF_FROST_1;
+
+		break;
+
+	case SPELL_HAMMER_OF_THE_GODS:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_HAMMER_OF_THE_GODS_7;
+
+		if (nCasterLevel >= 12)
+			nIP = IP_CONST_CASTSPELL_HAMMER_OF_THE_GODS_12;
+
+		break;
+
+	case SPELL_BLADE_BARRIER:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_BLADE_BARRIER_11;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_BLADE_BARRIER_15;
+
+		break;
+
+	case SPELL_CHARM_MONSTER:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_CHARM_MONSTER_5;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_CHARM_MONSTER_10;
+
+		break;
+
+	case SPELL_MIND_FOG:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_MIND_FOG_9;
+
+		break;
+
+	case SPELL_CURE_SERIOUS_WOUNDS:
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_CURE_SERIOUS_WOUNDS_5;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_CURE_SERIOUS_WOUNDS_10;
+
+		break;
+
+	case SPELL_CIRCLE_OF_DOOM:
+		if (nCasterLevel >= 9)
+			nIP = IP_CONST_CASTSPELL_CIRCLE_OF_DOOM_9;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_CIRCLE_OF_DOOM_15;
+
+		if (nCasterLevel >= 20)
+			nIP = IP_CONST_CASTSPELL_CIRCLE_OF_DOOM_20;
+
+		break;
+
+	case SPELL_POWER_WORD_KILL:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_POWER_WORD_KILL_17;
+
+		break;
+
+	case SPELL_DOOM:
+		if (nCasterLevel >= 2)
+			nIP = IP_CONST_CASTSPELL_DOOM_2;
+
+		if (nCasterLevel >= 5)
+			nIP = IP_CONST_CASTSPELL_DOOM_5;
+
+		break;
+
+	case SPELL_POWER_WORD_STUN:
+		if (nCasterLevel >= 13)
+			nIP = IP_CONST_CASTSPELL_POWER_WORD_STUN_13;
+
+		break;
+
+	case SPELL_STONESKIN:
+		if (nCasterLevel >= 7)
+			nIP = IP_CONST_CASTSPELL_STONESKIN_7;
+
+		break;
+
+	case SPELL_DOMINATE_MONSTER:
+		if (nCasterLevel >= 17)
+			nIP = IP_CONST_CASTSPELL_DOMINATE_MONSTER_17;
+
+		break;
+
+	case SPELL_GREATER_SPELL_BREACH:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_GREATER_SPELL_BREACH_11;
+
+		break;
+
+	case SPELL_GLOBE_OF_INVULNERABILITY:
+		if (nCasterLevel >= 11)
+			nIP = IP_CONST_CASTSPELL_GLOBE_OF_INVULNERABILITY_11;
+
+		break;
+
+	case SPELL_DAZE:
+		if (nCasterLevel >= 1)
+			nIP = IP_CONST_CASTSPELL_DAZE_1;
+
+		break;
+
+	case SPELL_BULLS_STRENGTH:
+		if (nCasterLevel >= 3)
+			nIP = IP_CONST_CASTSPELL_BULLS_STRENGTH_3;
+
+		if (nCasterLevel >= 10)
+			nIP = IP_CONST_CASTSPELL_BULLS_STRENGTH_10;
+
+		if (nCasterLevel >= 15)
+			nIP = IP_CONST_CASTSPELL_BULLS_STRENGTH_15;
+
+		break;
 	}
 
 	return nIP;

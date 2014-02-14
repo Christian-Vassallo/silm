@@ -39,122 +39,134 @@ int NWNXGetCurrentNodeType();
 int NWNXGetCurrentNodeID();
 int NWNXGetCurrentAbsoluteNodeID();
 string NWNXGetCurrentNodeText(int nLangID = LANGUAGE_ENGLISH, int nGender = GENDER_MALE);
-void NWNXSetCurrentNodeText(string sText, int nLangID = LANGUAGE_ENGLISH, int nGender = GENDER_MALE);
+void NWNXSetCurrentNodeText(string sText, int nLangID = LANGUAGE_ENGLISH,
+							int nGender = GENDER_MALE);
 int NWNXGetSelectedNodeID();
 int NWNXGetSelectedAbsoluteNodeID();
 string NWNXGetSelectedNodeText(int nLangID = LANGUAGE_ENGLISH, int nGender = GENDER_MALE);
 
 int NWNXGetEventType()
 {
-    SetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_ID", "          ");
-    return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_ID"));
+	SetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_ID", "          ");
+	return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_ID"));
 }
 
 int NWNXGetEventSubType()
 {
-    SetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_SUBID", "          ");
-    return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_SUBID"));
+	SetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_SUBID", "          ");
+	return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_SUBID"));
 }
 
 object NWNXGetEventTarget()
 {
-    return GetLocalObject(GetModule(), "NWNX!EVENTS!TARGET");
+	return GetLocalObject(GetModule(), "NWNX!EVENTS!TARGET");
 }
 
 object NWNXGetEventItem()
 {
-    return GetLocalObject(GetModule(), "NWNX!EVENTS!ITEM");
+	return GetLocalObject(GetModule(), "NWNX!EVENTS!ITEM");
 }
 
 vector NWNXGetEventPosition()
 {
-    SetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_POSITION", "                                              ");
-    string sVector = GetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_POSITION");
-    float x, y, z;
+	SetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_POSITION",
+				   "                                              ");
+	string sVector = GetLocalString(GetModule(), "NWNX!EVENTS!GET_EVENT_POSITION");
+	float x, y, z;
 
-    //Get X
-    int nPos = FindSubString(sVector, "¬");
-    if(nPos == -1) return Vector();
-    x = StringToFloat(GetStringLeft(sVector, nPos));
-    sVector = GetStringRight(sVector, GetStringLength(sVector) - nPos - 1);
+	//Get X
+	int nPos = FindSubString(sVector, "¬");
 
-    //Get Y
-    nPos = FindSubString(sVector, "¬");
-    if(nPos == -1) return Vector();
-    y = StringToFloat(GetStringLeft(sVector, nPos));
-    sVector = GetStringRight(sVector, GetStringLength(sVector) - nPos - 1);
+	if (nPos == -1) return Vector();
 
-    //Get Z
-    nPos = FindSubString(sVector, "¬");
-    if(nPos == -1)
-    {
-        z = StringToFloat(sVector);
-    }
-    else return Vector();
-    return Vector(x, y, z);
+	x = StringToFloat(GetStringLeft(sVector, nPos));
+	sVector = GetStringRight(sVector, GetStringLength(sVector) - nPos - 1);
+
+	//Get Y
+	nPos = FindSubString(sVector, "¬");
+
+	if (nPos == -1) return Vector();
+
+	y = StringToFloat(GetStringLeft(sVector, nPos));
+	sVector = GetStringRight(sVector, GetStringLength(sVector) - nPos - 1);
+
+	//Get Z
+	nPos = FindSubString(sVector, "¬");
+
+	if (nPos == -1) {
+		z = StringToFloat(sVector);
+
+	} else return Vector();
+
+	return Vector(x, y, z);
 }
 
 void NWNXBypassEvent()
 {
-    SetLocalString(GetModule(), "NWNX!EVENTS!BYPASS", "1");
+	SetLocalString(GetModule(), "NWNX!EVENTS!BYPASS", "1");
 }
 
 void NWNXSetGlobalEventHandler(int nEventID, string sHandler)
 {
-    if (sHandler == "")
-        sHandler = "-";
+	if (sHandler == "")
+		sHandler = "-";
 
-    string sKey = "NWNX!EVENTS!SET_EVENT_HANDLER_" + IntToString(nEventID);
-    SetLocalString(GetModule(), sKey, sHandler);
-    DeleteLocalString(GetModule(), sKey);
+	string sKey = "NWNX!EVENTS!SET_EVENT_HANDLER_" + IntToString(nEventID);
+	SetLocalString(GetModule(), sKey, sHandler);
+	DeleteLocalString(GetModule(), sKey);
 }
 
 int NWNXGetCurrentNodeType()
 {
-    SetLocalString(GetModule(), "NWNX!EVENTS!GET_NODE_TYPE", "      ");
-    return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_NODE_TYPE"));
+	SetLocalString(GetModule(), "NWNX!EVENTS!GET_NODE_TYPE", "      ");
+	return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_NODE_TYPE"));
 }
 
 int NWNXGetCurrentNodeID()
 {
-    SetLocalString(GetModule(), "NWNX!EVENTS!GET_NODE_ID", "      ");
-    return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_NODE_ID"));
+	SetLocalString(GetModule(), "NWNX!EVENTS!GET_NODE_ID", "      ");
+	return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_NODE_ID"));
 }
 
 int NWNXGetCurrentAbsoluteNodeID()
 {
-    SetLocalString(GetModule(), "NWNX!EVENTS!GET_ABSOLUTE_NODE_ID", "      ");
-    return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_ABSOLUTE_NODE_ID"));
+	SetLocalString(GetModule(), "NWNX!EVENTS!GET_ABSOLUTE_NODE_ID", "      ");
+	return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_ABSOLUTE_NODE_ID"));
 }
 
 int NWNXGetSelectedNodeID()
 {
-    SetLocalString(GetModule(), "NWNX!EVENTS!GET_SELECTED_NODE_ID", "      ");
-    return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_SELECTED_NODE_ID"));
+	SetLocalString(GetModule(), "NWNX!EVENTS!GET_SELECTED_NODE_ID", "      ");
+	return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_SELECTED_NODE_ID"));
 }
 
 int NWNXGetSelectedAbsoluteNodeID()
 {
-    SetLocalString(GetModule(), "NWNX!EVENTS!GET_SELECTED_ABSOLUTE_NODE_ID", "      ");
-    return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_SELECTED_ABSOLUTE_NODE_ID"));
+	SetLocalString(GetModule(), "NWNX!EVENTS!GET_SELECTED_ABSOLUTE_NODE_ID", "      ");
+	return StringToInt(GetLocalString(GetModule(), "NWNX!EVENTS!GET_SELECTED_ABSOLUTE_NODE_ID"));
 }
 
 string NWNXGetSelectedNodeText(int nLangID, int nGender)
 {
-    if (nGender != GENDER_FEMALE) nGender = GENDER_MALE;
-    SetLocalString(GetModule(), "NWNX!EVENTS!GET_SELECTED_NODE_TEXT", IntToString(nLangID*2 + nGender));
-    return GetLocalString(GetModule(), "NWNX!EVENTS!GET_SELECTED_NODE_TEXT");
+	if (nGender != GENDER_FEMALE) nGender = GENDER_MALE;
+
+	SetLocalString(GetModule(), "NWNX!EVENTS!GET_SELECTED_NODE_TEXT",
+				   IntToString(nLangID * 2 + nGender));
+	return GetLocalString(GetModule(), "NWNX!EVENTS!GET_SELECTED_NODE_TEXT");
 }
 
 string NWNXGetCurrentNodeText(int nLangID, int nGender)
 {
-    if (nGender != GENDER_FEMALE) nGender = GENDER_MALE;
-    SetLocalString(GetModule(), "NWNX!EVENTS!GET_NODE_TEXT", IntToString(nLangID*2 + nGender));
-    return GetLocalString(GetModule(), "NWNX!EVENTS!GET_NODE_TEXT");
+	if (nGender != GENDER_FEMALE) nGender = GENDER_MALE;
+
+	SetLocalString(GetModule(), "NWNX!EVENTS!GET_NODE_TEXT", IntToString(nLangID * 2 + nGender));
+	return GetLocalString(GetModule(), "NWNX!EVENTS!GET_NODE_TEXT");
 }
 
 void NWNXSetCurrentNodeText(string sText, int nLangID, int nGender)
 {
-    if (nGender != GENDER_FEMALE) nGender = GENDER_MALE;
-    SetLocalString(GetModule(), "NWNX!EVENTS!SET_NODE_TEXT", IntToString(nLangID*2 + nGender)+"¬"+sText);
+	if (nGender != GENDER_FEMALE) nGender = GENDER_MALE;
+
+	SetLocalString(GetModule(), "NWNX!EVENTS!SET_NODE_TEXT",
+				   IntToString(nLangID * 2 + nGender) + "¬" + sText);
 }

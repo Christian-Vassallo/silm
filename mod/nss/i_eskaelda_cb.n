@@ -6,20 +6,30 @@ extern("inc_teleport")
 #define GABEL_Z Location(GetObjectByTag("gabel_zentrum"), Vector(59.8, 15.9, 0.0), 79.2)
 #define ADAK Location(GetObjectByTag("adak0"), Vector(24.8, 46.0, 0.0), 257.2)
 
-void main() {
+void main()
+{
 	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
 	object oWho = GetLocalObject(OBJECT_SELF, "eskaelda_target");
 
 	int
-		iSelection = GetLocalInt(oPC, "ConvList_Select");
+	iSelection = GetLocalInt(oPC, "ConvList_Select");
 
 	iSelection = GetListInt(oPC, "eskaelda", iSelection);
 
 	location target;
-	switch ( iSelection ) {
-		case 1: target = ROTKEHL; break;
-		case 2: target = GABEL_Z; break;
-		case 3: target = ADAK; break;
+
+	switch (iSelection) {
+	case 1:
+		target = ROTKEHL;
+		break;
+
+	case 2:
+		target = GABEL_Z;
+		break;
+
+	case 3:
+		target = ADAK;
+		break;
 	}
 
 	// End the conversation to prevent accidental doubleclicks
@@ -27,6 +37,7 @@ void main() {
 
 	if (GetIsObjectValid(GetAreaFromLocation(target)))
 		AssignCommand(oWho, SpellTeleport(target));
+
 	else
 		FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
 }

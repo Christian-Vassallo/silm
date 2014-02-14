@@ -1,7 +1,9 @@
 extern("inc_online")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
+
 	if (e.ev != "player_login")
 		return;
 
@@ -19,6 +21,6 @@ void main() {
 		ClearAllActions();
 		JumpToLocation(lastLoc);
 	}
-	
+
 	SetLocalInt(e.runnable, "lastloc_restored", 1);
 }

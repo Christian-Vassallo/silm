@@ -1,6 +1,7 @@
 extern("x2_inc_itemprop")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "item_equip") {
@@ -12,12 +13,12 @@ void main() {
 
 		if (0 == GetLevelByClass(CLASS_TYPE_BARD, player)) {
 			IPRemoveMatchingItemProperties(item,
-				ITEM_PROPERTY_ARCANE_SPELL_FAILURE,
-				DURATION_TYPE_TEMPORARY);
+										   ITEM_PROPERTY_ARCANE_SPELL_FAILURE,
+										   DURATION_TYPE_TEMPORARY);
 
 		} else {
 			itemproperty ipASF = ItemPropertyArcaneSpellFailure(
-				IP_CONST_ARCANE_SPELL_FAILURE_MINUS_20_PERCENT);
+									 IP_CONST_ARCANE_SPELL_FAILURE_MINUS_20_PERCENT);
 
 			IPSafeAddItemProperty(item, ipASF, 2592000.0);
 		}

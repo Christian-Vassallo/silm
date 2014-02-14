@@ -16,11 +16,15 @@ extern("inc_summonai")
 extern("inc_scorco")
 extern("inc_events")
 
-void main() {
-	
+void main()
+{
+
 	// Event: creature_damaged
 	// - actor: GetLastDamager()
-	int ret = RunEventScriptsFor(GetEventSerial(), "creature_damaged", OBJECT_SELF, GetLastDamager(), OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+	int ret = RunEventScriptsFor(GetEventSerial(), "creature_damaged", OBJECT_SELF, GetLastDamager(),
+								 OBJECT_INVALID,
+								 GetLocation(OBJECT_INVALID));
+
 	if (ret & EVENT_RESULT_STOP)
 		return;
 
@@ -29,37 +33,43 @@ void main() {
 	}
 
 
-	if ( !GetShouldDefend() ) {
+	if (!GetShouldDefend()) {
 		// We're supposed to stand there and take a beating
-	} else if ( GetFleeToExit() ) {
+	} else if (GetFleeToExit()) {
 		// We're supposed to run away, do nothing
-	} else if ( GetSpawnInCondition(NW_FLAG_SET_WARNINGS) ) {
+	} else if (GetSpawnInCondition(NW_FLAG_SET_WARNINGS)) {
 		// don't do anything?
 	} else {
 		object oDamager = GetLastDamager();
-		if ( !GetIsObjectValid(oDamager) ) {
+
+		if (!GetIsObjectValid(oDamager)) {
 			// don't do anything, we don't have a valid damager
-		} else if ( !GetIsFighting(OBJECT_SELF) ) {
+		} else if (!GetIsFighting(OBJECT_SELF)) {
 			// If we're not fighting, determine combat round
-			if ( GetBehaviorState(NW_FLAG_BEHAVIOR_SPECIAL) ) {
+			if (GetBehaviorState(NW_FLAG_BEHAVIOR_SPECIAL)) {
 				DetermineSpecialBehavior(oDamager);
+
 			} else {
-				if ( !GetObjectSeen(oDamager)
-					&& GetArea(OBJECT_SELF) == GetArea(oDamager) ) {
+				if (!GetObjectSeen(oDamager)
+						&& GetArea(OBJECT_SELF) == GetArea(oDamager)) {
 					// We don't see our attacker, go find them
 					ActionMoveToLocation(GetLocation(oDamager), TRUE);
 					ActionDoCommand(DetermineCombatRound());
+
 				} else {
 					DetermineCombatRound();
 				}
 			}
+
 		} else {
 			// We are fighting already -- consider switching if we've been
 			// attacked by a more powerful enemy
 			object oTarget = GetAttackTarget();
-			if ( !GetIsObjectValid(oTarget) )
+
+			if (!GetIsObjectValid(oTarget))
 				oTarget = GetAttemptedAttackTarget();
-			if ( !GetIsObjectValid(oTarget) )
+
+			if (!GetIsObjectValid(oTarget))
 				oTarget = GetAttemptedSpellTarget();
 
 			// If our target isn't valid
@@ -67,15 +77,15 @@ void main() {
 			//    of our hp in damager
 			// or our damager is more than 2HD more powerful than our target
 			// switch to attack the damager.
-			if ( !GetIsObjectValid(oTarget)
-				|| (
-					oTarget != oDamager
-					&&  (
-						GetTotalDamageDealt() > ( GetMaxHitPoints(OBJECT_SELF) / 4 )
-						|| ( GetHitDice(oDamager) - 2 ) > GetHitDice(oTarget)
+			if (!GetIsObjectValid(oTarget)
+					|| (
+						oTarget != oDamager
+						&& (
+							GetTotalDamageDealt() > (GetMaxHitPoints(OBJECT_SELF) / 4)
+							|| (GetHitDice(oDamager) - 2) > GetHitDice(oTarget)
+						)
 					)
-				)
-			) {
+			   ) {
 				// Switch targets
 				DetermineCombatRound(oDamager);
 			}
@@ -83,7 +93,7 @@ void main() {
 	}
 
 	// Send the user-defined event signal
-	if ( GetSpawnInCondition(NW_FLAG_DAMAGED_EVENT) ) {
+	if (GetSpawnInCondition(NW_FLAG_DAMAGED_EVENT)) {
 		SignalEvent(OBJECT_SELF, EventUserDefined(EVENT_DAMAGED));
 	}
 }

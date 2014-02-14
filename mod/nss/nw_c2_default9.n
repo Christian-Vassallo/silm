@@ -30,10 +30,14 @@ extern("x0_i0_treasure")
 extern("inc_horse")
 extern("inc_events")
 
-void main() {
+void main()
+{
 
 	// Event: creature_spawn
-	int ret = RunEventScriptsFor(GetEventSerial(), "creature_spawn", OBJECT_SELF, OBJECT_SELF, OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+	int ret = RunEventScriptsFor(GetEventSerial(), "creature_spawn", OBJECT_SELF, OBJECT_SELF,
+								 OBJECT_INVALID,
+								 GetLocation(OBJECT_INVALID));
+
 	if (ret & EVENT_RESULT_STOP)
 		return;
 
@@ -99,11 +103,11 @@ void main() {
 	// *
 	// SetSpawnInCondition(NW_FLAG_AMBIENT_ANIMATIONS);
 
-	if ( GetLocalInt(OBJECT_SELF, "wander") )
+	if (GetLocalInt(OBJECT_SELF, "wander"))
 		SetSpawnInCondition(NW_FLAG_AMBIENT_ANIMATIONS);
 
 	// XXX FIX TODO Breaks WalkWayPoints?
-	else if ( CheckWayPoints() )
+	else if (CheckWayPoints())
 		SetSpawnInCondition(NW_FLAG_IMMOBILE_AMBIENT_ANIMATIONS);
 
 	// **** Animation Conditions **** //
@@ -124,7 +128,7 @@ void main() {
 	// * performing their ambient animations when they
 	// * first perceive a player, and they will stop when
 	// * the player moves away.
-	if ( GetLocalInt(OBJECT_SELF, "wander") )
+	if (GetLocalInt(OBJECT_SELF, "wander"))
 		SetAnimationCondition(NW_ANIM_FLAG_CONSTANT);
 
 	// * Civilized creatures with this flag set will
@@ -145,7 +149,7 @@ void main() {
 	// * have this condition set.
 	// SetAnimationCondition(NW_ANIM_FLAG_IS_MOBILE_CLOSE_RANGE);
 
-	if ( GetLocalInt(OBJECT_SELF, "wanderclose") )
+	if (GetLocalInt(OBJECT_SELF, "wanderclose"))
 		SetAnimationCondition(NW_ANIM_FLAG_IS_MOBILE_CLOSE_RANGE);
 
 
@@ -220,7 +224,7 @@ void main() {
 	// * Fire User Defined Event 1001 in the OnHeartbeat
 	// *
 
-	if ( "sl_waechter" == sTag )
+	if ("sl_waechter" == sTag)
 		SetSpawnInCondition(NW_FLAG_HEARTBEAT_EVENT);
 
 	// * Fire User Defined Event 1002
@@ -273,7 +277,7 @@ void main() {
 
 
 	//* Create a small amount of treasure on the creature
-	if ( !GetLocalInt(OBJECT_SELF, "Copying") )
+	if (!GetLocalInt(OBJECT_SELF, "Copying"))
 		GenerateNPCTreasure(OBJECT_SELF);
 
 	// ***** ADD ANY SPECIAL ON-SPAWN CODE HERE ***** //
@@ -282,51 +286,60 @@ void main() {
 	string sEffect = GetStringLowerCase(GetLocalString(OBJECT_SELF, "Effect"));
 	effect eVis;
 
-	if ( sTag == "geisterhaft" || sEffect == "geisterhaft" ) {
+	if (sTag == "geisterhaft" || sEffect == "geisterhaft") {
 		eVis = SupernaturalEffect(EffectVisualEffect(VFX_DUR_GHOSTLY_VISAGE));
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, eVis, OBJECT_SELF);
 	}
 
-	if ( sEffect == "geisterhaftw" ) {
+	if (sEffect == "geisterhaftw") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(
-					VFX_DUR_GHOST_TRANSPARENT)), OBJECT_SELF);
+								VFX_DUR_GHOST_TRANSPARENT)), OBJECT_SELF);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(
-					VFX_DUR_GHOST_SMOKE)), OBJECT_SELF);
-		ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_DUR_AURA_WHITE)),
-			OBJECT_SELF);
-		ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_DUR_GLOW_WHITE)),
-			OBJECT_SELF);
+								VFX_DUR_GHOST_SMOKE)), OBJECT_SELF);
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+							SupernaturalEffect(EffectVisualEffect(VFX_DUR_AURA_WHITE)),
+							OBJECT_SELF);
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+							SupernaturalEffect(EffectVisualEffect(VFX_DUR_GLOW_WHITE)),
+							OBJECT_SELF);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(
-					VFX_DUR_LIGHT_GREY_5)), OBJECT_SELF);
+								VFX_DUR_LIGHT_GREY_5)), OBJECT_SELF);
 	}
 
 	// Reitgeschwindigkeit und Hufgerusche auf Reitenden NSC setzen
-	if ( GetIsRidingHorse(OBJECT_SELF) )
+	if (GetIsRidingHorse(OBJECT_SELF))
 		ApplyRidingEffects(OBJECT_SELF);
 
 	// sTask
 	string sTask = GetLocalString(OBJECT_SELF, "Task");
-	if ( sTask == "meditieren" ) {
+
+	if (sTask == "meditieren") {
 		AssignCommand(OBJECT_SELF, ActionPlayAnimation(ANIMATION_LOOPING_MEDITATE, 1.0, 500000.0));
-	} else if ( sTask == "sitzen" ) {
+
+	} else if (sTask == "sitzen") {
 		AssignCommand(OBJECT_SELF, ActionPlayAnimation(ANIMATION_LOOPING_SIT_CROSS, 1.0, 500000.0));
-	} else if ( sTask == "diskutieren" ) {
+
+	} else if (sTask == "diskutieren") {
 		AssignCommand(OBJECT_SELF, ActionPlayAnimation(ANIMATION_LOOPING_TALK_FORCEFUL, 1.0, 500000.0));
-	} else if ( sTask == "buecken" ) {
+
+	} else if (sTask == "buecken") {
 		AssignCommand(OBJECT_SELF, ActionPlayAnimation(ANIMATION_LOOPING_GET_LOW, 1.0, 500000.0));
-	} else if ( sTask == "arbeiten" ) {
+
+	} else if (sTask == "arbeiten") {
 		AssignCommand(OBJECT_SELF, ActionPlayAnimation(ANIMATION_LOOPING_GET_MID, 1.0, 500000.0));
-	} else if ( sTask == "liegen" ) {
+
+	} else if (sTask == "liegen") {
 		AssignCommand(OBJECT_SELF, ActionPlayAnimation(ANIMATION_LOOPING_DEAD_FRONT, 1.0, 500000.0));
-	} else if ( sTask == "beten" ) {
+
+	} else if (sTask == "beten") {
 		AssignCommand(OBJECT_SELF, ActionPlayAnimation(ANIMATION_LOOPING_WORSHIP, 1.0, 500000.0));
 	}
 
-	if ( GetTag(OBJECT_SELF) == "ascore_ghost" ) {
+	if (GetTag(OBJECT_SELF) == "ascore_ghost") {
 		SetName(OBJECT_SELF, "Ascore-Geist");
 	}
 
-	if ( GetTag(OBJECT_SELF) == "irrlicht_gw" ) {
+	if (GetTag(OBJECT_SELF) == "irrlicht_gw") {
 		ActionRandomWalk();
 		SetCommandable(0);
 		SetImmortal(OBJECT_SELF, 1);
@@ -334,7 +347,8 @@ void main() {
 
 
 	int n = 0, vfx = 0;
-	while ( ( vfx = GetLocalInt(OBJECT_SELF, "vfx" + IntToString(n)) ) > 0 ) {
+
+	while ((vfx = GetLocalInt(OBJECT_SELF, "vfx" + IntToString(n))) > 0) {
 		ApplyEffectToObject(DTP, SupernaturalEffect(EffectVisualEffect(vfx)), OBJECT_SELF);
 		n++;
 	}

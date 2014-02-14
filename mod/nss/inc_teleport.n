@@ -11,40 +11,49 @@ void SpellTeleport(location lTarget, bool bVisualsOnly = false);
 
 // Dimension doors OBJECT_SELF to the given location.
 // This will execute immediately. If you want to put it onto the action queue, use AssignCommand(ActionDoCommand()).
-void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false, bool bShowDistanceTraveled = true);
+void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false,
+						bool bShowDistanceTraveled = true);
 
 // Dimension doors (or teleports, if cross-area) OBJECT_SELF to the given location.
 // This will execute immediately. If you want to put it onto the action queue, use AssignCommand(ActionDoCommand()).
 void SpellDimensionDoorOrTeleport(location lTarget, bool bVisualsOnly = false);
 
 
-void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false, bool bShowDistanceTraveled = true) {
+void SpellDimensionDoor(location lTarget, bool bVisualsOnly = false,
+						bool bShowDistanceTraveled = true)
+{
 	bool inter_area = GetArea(OBJECT_SELF) != GetAreaFromLocation(lTarget);
 
 	DelayCommand(0.4, DimensionDoorEffect(OBJECT_SELF, GetLocation(OBJECT_SELF)));
+
 	if (inter_area)
 		SetLocalString(OBJECT_SELF, "e_ae_effect", "dimdoor");
+
 	else
 		DelayCommand(0.4, DimensionDoorEffect(OBJECT_SELF, lTarget));
 
 	if (!bVisualsOnly) {
 		DelayCommand(0.7, ActionJumpToLocation(lTarget));
+
 		if (bShowDistanceTraveled && !inter_area)
 			DelayCommand(0.5, FloatingTextStringOnCreature("Distanz: " +
-				FloatToString(GetDistanceBetweenLocations(GetLocation(OBJECT_SELF), lTarget), 0, 2) +
-				" Meter.", OBJECT_SELF, false)
-			);
+						 FloatToString(GetDistanceBetweenLocations(GetLocation(OBJECT_SELF), lTarget), 0, 2) +
+						 " Meter.", OBJECT_SELF, false)
+						);
 	}
 }
 
 
-void SpellTeleport(location lTarget, bool bVisualsOnly = false) {
+void SpellTeleport(location lTarget, bool bVisualsOnly = false)
+{
 	object teleport = OBJECT_SELF;
 	bool inter_area = GetArea(OBJECT_SELF) != GetAreaFromLocation(lTarget);
 
 	AssignCommand(teleport, TeleportEffect(teleport, GetLocation(teleport)));
+
 	if (inter_area)
 		SetLocalString(teleport, "e_ae_effect", "teleport");
+
 	else
 		AssignCommand(teleport, TeleportEffect(teleport, lTarget));
 
@@ -54,24 +63,30 @@ void SpellTeleport(location lTarget, bool bVisualsOnly = false) {
 			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(445), invis, 6.0);
 			DestroyObject(invis, 7.0);
 		}
+
 		DelayCommand(1.1, JumpToLocation(lTarget));
 	}
 }
 
-void SpellDimensionDoorOrTeleport(location lTarget, bool bVisualsOnly = false) {
+void SpellDimensionDoorOrTeleport(location lTarget, bool bVisualsOnly = false)
+{
 	if (GetAreaFromLocation(lTarget) == GetArea(OBJECT_SELF))
 		SpellDimensionDoor(lTarget, bVisualsOnly);
+
 	else
 		SpellTeleport(lTarget, bVisualsOnly);
 }
 
 
-void DimensionDoorEffect(object oActivator, location lTarget) {
+void DimensionDoorEffect(object oActivator, location lTarget)
+{
 	vector vTarget = GetPositionFromLocation(lTarget);
 	vTarget.z += 0.9;
-	location lElevatedTarget = Location(GetAreaFromLocation(lTarget), vTarget, GetFacingFromLocation(lTarget));
-	
+	location lElevatedTarget = Location(GetAreaFromLocation(lTarget), vTarget,
+										GetFacingFromLocation(lTarget));
+
 	int i;
+
 	for (i = 76; i < 81; i++)
 		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(i), lElevatedTarget);
 
@@ -80,7 +95,8 @@ void DimensionDoorEffect(object oActivator, location lTarget) {
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_FNF_SUMMON_UNDEAD), lTarget);
 }
 
-void TeleportEffect(object oActivator, location oLocation) {
+void TeleportEffect(object oActivator, location oLocation)
+{
 	vector v = GetPositionFromLocation(oLocation);
 
 	vector
@@ -89,55 +105,72 @@ void TeleportEffect(object oActivator, location oLocation) {
 	vHead.z = vBody.z + 0.9;
 
 	location
-		lFeet = Location(GetAreaFromLocation(oLocation), vFeet, 0.0),
-		lBody = Location(GetAreaFromLocation(oLocation), vBody, 0.0),
-		lHead = Location(GetAreaFromLocation(oLocation), vHead, 0.0);
+	lFeet = Location(GetAreaFromLocation(oLocation), vFeet, 0.0),
+	lBody = Location(GetAreaFromLocation(oLocation), vBody, 0.0),
+	lHead = Location(GetAreaFromLocation(oLocation), vHead, 0.0);
 
 	DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(
-				VFX_IMP_SPELL_MANTLE_USE), oLocation));
+			VFX_IMP_SPELL_MANTLE_USE), oLocation));
 
 	// feet
-	DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
-			lFeet));
-	DelayCommand(0.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
-			lFeet));
-	DelayCommand(0.4, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
-			lFeet));
+	DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_HEALING_G),
+											lFeet));
+	DelayCommand(0.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_HEALING_G),
+											lFeet));
+	DelayCommand(0.4, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_HEALING_G),
+											lFeet));
 
 	// body
-	DelayCommand(0.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
-			lBody));
-	DelayCommand(0.4, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
-			lBody));
-	DelayCommand(0.6, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
-			lBody));
+	DelayCommand(0.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_HEALING_G),
+											lBody));
+	DelayCommand(0.4, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_HEALING_G),
+											lBody));
+	DelayCommand(0.6, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_HEALING_G),
+											lBody));
 
 	// head
-	DelayCommand(0.4, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
-			lHead));
-	DelayCommand(0.6, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
-			lHead));
-	DelayCommand(0.8, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_HEALING_G),
-			lHead));
+	DelayCommand(0.4, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_HEALING_G),
+											lHead));
+	DelayCommand(0.6, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_HEALING_G),
+											lHead));
+	DelayCommand(0.8, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_HEALING_G),
+											lHead));
 
 
 	// nifty rings with cool whoop sound.
-	DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
-			oLocation));
-	DelayCommand(0.5, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
-			oLocation));
-	DelayCommand(1.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
-			oLocation));
-	DelayCommand(1.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
-			oLocation));
+	DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_DEATH_WARD),
+											oLocation));
+	DelayCommand(0.5, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_DEATH_WARD),
+											oLocation));
+	DelayCommand(1.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_DEATH_WARD),
+											oLocation));
+	DelayCommand(1.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_DEATH_WARD),
+											oLocation));
 
-	DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
-			lHead));
-	DelayCommand(0.5, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
-			lHead));
-	DelayCommand(1.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
-			lHead));
-	DelayCommand(1.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH_WARD),
-			lHead));
+	DelayCommand(0.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_DEATH_WARD),
+											lHead));
+	DelayCommand(0.5, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_DEATH_WARD),
+											lHead));
+	DelayCommand(1.0, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_DEATH_WARD),
+											lHead));
+	DelayCommand(1.2, ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
+											EffectVisualEffect(VFX_IMP_DEATH_WARD),
+											lHead));
 
 }

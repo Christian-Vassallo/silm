@@ -2,9 +2,11 @@ extern("inc_disguise")
 extern("inc_lists")
 
 
-void main() {
+void main()
+{
 	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
 	int cid = GetCharacterID(oPC);
+
 	if (!cid) return;
 
 	int nSelected   = GetListSelection(oPC);
@@ -12,9 +14,10 @@ void main() {
 
 
 	struct Disguise dd = disguise_load(nSelected);
+
 	if (!dd.valid)
 		return;
-	
+
 	int current_disguise = disguise_current_id(oPC);
 
 	if (current_disguise != nSelected)

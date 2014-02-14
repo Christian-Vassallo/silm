@@ -6,25 +6,27 @@ void CycleShieldOther(object oCleric, object oTarget, int nLastHP, int nLastMaxH
 					  float fInterval);
 
 
-void main() {
+void main()
+{
 	object oCaster = OBJECT_SELF;
 	object oTarget = GetSpellTargetObject();
 	int nMetaFlag = GetMetaMagicFeat();
 	int nLevel = GetCasterLevel(oTarget);
 
-	if ( !GetIsPC(oTarget) ) {
+	if (!GetIsPC(oTarget)) {
 		Floaty("Das Ziel muss ein anderer Spieler sein.", oCaster);
 		return;
 	}
 
 
-	if ( GetLocalInt(oTarget, "shield_other") ) {
+	if (GetLocalInt(oTarget, "shield_other")) {
 		Floaty("Das Ziel wird bereits durch Andere Schuetzen geschuetzt.", oCaster);
 		return;
 	}
+
 	int nDuration = 1 * nLevel;
 
-	if ( METAMAGIC_EXTEND == nMetaFlag )
+	if (METAMAGIC_EXTEND == nMetaFlag)
 		nDuration *= 2;
 
 	// The subject gains a +1 deflection bonus to AC and a +1 resistance bonus on saves.
@@ -36,27 +38,28 @@ void main() {
 	float fInterval = 1.5f;
 
 	DelayCommand(HoursToSeconds(nDuration), CycleShieldOther(oCaster, oTarget,
-			GetCurrentHitPoints(oTarget), GetMaxHitPoints(oTarget), HoursToSeconds(nDuration), fInterval));
+				 GetCurrentHitPoints(oTarget), GetMaxHitPoints(oTarget), HoursToSeconds(nDuration), fInterval));
 }
 
 
 
 void CycleShieldOther(object oCleric, object oTarget, int nLastHP, int nLastMaxHP, float fRemaining,
-					  float fInterval) {
+					  float fInterval)
+{
 	int nCurrentHP = GetCurrentHitPoints(oTarget);
 	int nMaxHP = GetMaxHitPoints(oTarget);
 
 	int nClericCurrentHP = GetCurrentHitPoints(oCleric);
 
 	dbg("CycleShieldOther(): " + GetName(oCleric) + " : " + GetName(oTarget), 3);
-	dbg("CycleShieldOther(): lhp " + IntToString(nLastHP) + " lmhp " + 
+	dbg("CycleShieldOther(): lhp " + IntToString(nLastHP) + " lmhp " +
 		IntToString(nLastMaxHP) + " remain " + FloatToString(fRemaining), 3);
-	dbg("CycleShieldOther(): chp " + IntToString(nCurrentHP) + ", mhp " + 
+	dbg("CycleShieldOther(): chp " + IntToString(nCurrentHP) + ", mhp " +
 		IntToString(nMaxHP) + " cchp " + IntToString(nClericCurrentHP), 3);
 
 	// Oy. Its dead, Jim.
 	// End the spell, show's over.
-	if ( nCurrentHP < -9 ) {
+	if (nCurrentHP < -9) {
 		SendMessageToPC(oCleric, "Andere Schuetzen endet (Ziel tot).");
 		SetLocalInt(oTarget, "shield_other", 0);
 		return;
@@ -64,37 +67,38 @@ void CycleShieldOther(object oCleric, object oTarget, int nLastHP, int nLastMaxH
 
 	// Oyyy! Its us that'll be dead.
 	// End the spell, show's over.
-	if ( nClericCurrentHP < -9 ) {
+	if (nClericCurrentHP < -9) {
 		SendMessageToPC(oCleric, "Andere Schuetzen endet (Schuetzender tot (das bist du!)).");
 		SetLocalInt(oTarget, "shield_other", 0);
 		return;
 	}
 
 	// some non-hitpoint-damage-drain
-	if ( nLastMaxHP > nMaxHP && nLastHP > nMaxHP )
+	if (nLastMaxHP > nMaxHP && nLastHP > nMaxHP)
 		nLastHP -= nLastMaxHP - nMaxHP;
 
-	if ( nCurrentHP < nLastHP ) {
-		int nSplitDamage = ( nLastHP - nCurrentHP ) / 2;
-		if ( nSplitDamage > 0 ) {
+	if (nCurrentHP < nLastHP) {
+		int nSplitDamage = (nLastHP - nCurrentHP) / 2;
+
+		if (nSplitDamage > 0) {
 			ApplyEffectToObject(DTI, EffectHeal(nSplitDamage), oTarget);
 			ApplyEffectToObject(DTI, EffectDamage(nSplitDamage), oCleric);
 			SendMessageToPC(oCleric, "Du hast " +
-				IntToString(nSplitDamage) + " Schaden durch 'Andere Schuetzen' erhalten.");
+							IntToString(nSplitDamage) + " Schaden durch 'Andere Schuetzen' erhalten.");
 			SendMessageToPC(oTarget, "Du hast " +
-				IntToString(nSplitDamage) + " Schaden durch 'Andere Schuetzen' vermieden.");
+							IntToString(nSplitDamage) + " Schaden durch 'Andere Schuetzen' vermieden.");
 
 			nCurrentHP += nSplitDamage;
 		}
 	}
 
 	// End the spell
-	if ( fRemaining < fInterval ) {
+	if (fRemaining < fInterval) {
 		SetLocalInt(oTarget, "shield_other", 0);
 		SendMessageToPC(oCleric, "Andere Schuetzen endet.");
 		return;
 	}
 
 	DelayCommand(fInterval, CycleShieldOther(oCleric, oTarget, nCurrentHP, nMaxHP, fRemaining -
-			fInterval, fInterval));
+				 fInterval, fInterval));
 }

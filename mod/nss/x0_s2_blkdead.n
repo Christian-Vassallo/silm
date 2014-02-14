@@ -17,15 +17,18 @@ void main()
 
 
 
-   int nLevel = GetLevelByClass(CLASS_TYPE_BLACKGUARD, OBJECT_SELF);
-    effect eSummon;
-    float fDelay = 3.0;
-    int nDuration = nLevel;
-    if (nLevel >= 7)
-        eSummon = EffectSummonCreature("NW_S_DOOMKGHT",VFX_FNF_SUMMON_UNDEAD);
-    else
-     eSummon = EffectSummonCreature("NW_S_GHAST",VFX_FNF_SUMMON_UNDEAD);
+	int nLevel = GetLevelByClass(CLASS_TYPE_BLACKGUARD, OBJECT_SELF);
+	effect eSummon;
+	float fDelay = 3.0;
+	int nDuration = nLevel;
 
-    ApplyEffectAtLocation(DURATION_TYPE_TEMPORARY, eSummon, GetSpellTargetLocation(), HoursToSeconds(nDuration));
-    
+	if (nLevel >= 7)
+		eSummon = EffectSummonCreature("NW_S_DOOMKGHT", VFX_FNF_SUMMON_UNDEAD);
+
+	else
+		eSummon = EffectSummonCreature("NW_S_GHAST", VFX_FNF_SUMMON_UNDEAD);
+
+	ApplyEffectAtLocation(DURATION_TYPE_TEMPORARY, eSummon, GetSpellTargetLocation(),
+						  HoursToSeconds(nDuration));
+
 }

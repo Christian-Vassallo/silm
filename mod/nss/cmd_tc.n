@@ -1,4 +1,5 @@
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 	struct EventArguments ea = GetEventArguments(e.serial);
 
@@ -6,7 +7,7 @@ void main() {
 		SetCommandable(!GetCommandable());
 
 		SendMessageToPC(e.runnable, "Now commandable: " +
-			(GetCommandable() ? "Yes" : "No"));
+						(GetCommandable() ? "Yes" : "No"));
 
 		event_stop();
 	}

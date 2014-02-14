@@ -2,7 +2,8 @@ extern("inc_nwnx_def")
 extern("inc_colors")
 extern("inc_cdb")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 	// struct EventArguments ea = GetEventArguments(e.serial);
 
@@ -10,7 +11,7 @@ void main() {
 			amask(e.runnable, AMASK_GLOBAL_GM)) {
 
 		string ret = ColorTag(cLightBlue) + GetName(e.actedon) +
-			" AC: ";
+					 " AC: ";
 
 #define X(n,t) if (GetACByType(e.actedon, t) != 0) \
 	ret += ColorTag(cLightGrey) + n + "=" + ColorTag(cMidGreen) + \

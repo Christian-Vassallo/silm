@@ -14,16 +14,17 @@ void SetArmorAC(object oObject, int iAC);
 /* Implementation                   */
 /************************************/
 
-int GetArmorAC(object oObject) {
-    string sAC;
-    SetLocalString(oObject, "NWNX!FUNCTIONS!GETARMORAC", "      ");
-    sAC = GetLocalString(oObject, "NWNX!FUNCTIONS!GETARMORAC");
-    DeleteLocalString(oObject, "NWNX!FUNCTIONS!GETARMORAC");
-    return StringToInt(sAC);
+int GetArmorAC(object oObject)
+{
+	string sAC;
+	SetLocalString(oObject, "NWNX!FUNCTIONS!GETARMORAC", "      ");
+	sAC = GetLocalString(oObject, "NWNX!FUNCTIONS!GETARMORAC");
+	DeleteLocalString(oObject, "NWNX!FUNCTIONS!GETARMORAC");
+	return StringToInt(sAC);
 }
 
 void SetArmorAC(object oObject, int iAC)
 {
-    SetLocalString(oObject, "NWNX!FUNCTIONS!SETARMORAC", IntToString(iAC));
-    DeleteLocalString(oObject, "NWNX!FUNCTIONS!SETARMORAC");
+	SetLocalString(oObject, "NWNX!FUNCTIONS!SETARMORAC", IntToString(iAC));
+	DeleteLocalString(oObject, "NWNX!FUNCTIONS!SETARMORAC");
 }

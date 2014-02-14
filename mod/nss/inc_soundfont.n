@@ -21,53 +21,72 @@ string ObjectToSF(object oO);
 string HexToSF(string sHexStr);
 
 
-string HexToSF(string sHexStr) {
+string HexToSF(string sHexStr)
+{
 	string sRet = "";
 	string sC;
 	int i = 0;
-	for ( i = 0; i < GetStringLength(sHexStr); i++ ) {
+
+	for (i = 0; i < GetStringLength(sHexStr); i++) {
 		sC = GetStringLowerCase(GetSubString(sHexStr, i, 1));
-		if ( "a" == sC )
+
+		if ("a" == sC)
 			sRet += S_A;
-		if ( "b" == sC )
+
+		if ("b" == sC)
 			sRet += S_B;
-		if ( "c" == sC )
+
+		if ("c" == sC)
 			sRet += S_C;
-		if ( "d" == sC )
+
+		if ("d" == sC)
 			sRet += S_D;
-		if ( "e" == sC )
+
+		if ("e" == sC)
 			sRet += S_E;
-		if ( "f" == sC )
+
+		if ("f" == sC)
 			sRet += S_F;
 
-		if ( "0" == sC )
+		if ("0" == sC)
 			sRet += S_0;
-		if ( "1" == sC )
+
+		if ("1" == sC)
 			sRet += S_1;
-		if ( "2" == sC )
+
+		if ("2" == sC)
 			sRet += S_2;
-		if ( "3" == sC )
+
+		if ("3" == sC)
 			sRet += S_3;
-		if ( "4" == sC )
+
+		if ("4" == sC)
 			sRet += S_4;
-		if ( "5" == sC )
+
+		if ("5" == sC)
 			sRet += S_5;
-		if ( "6" == sC )
+
+		if ("6" == sC)
 			sRet += S_6;
-		if ( "7" == sC )
+
+		if ("7" == sC)
 			sRet += S_7;
-		if ( "8" == sC )
+
+		if ("8" == sC)
 			sRet += S_8;
-		if ( "9" == sC )
+
+		if ("9" == sC)
 			sRet += S_9;
 
-		if ( i < GetStringLength(sHexStr) - 1 )
+		if (i < GetStringLength(sHexStr) - 1)
 			sRet += " ";
 	}
+
 	return sRet;
 }
 
 
-string ObjectToSF(object oO) {
+string ObjectToSF(object oO)
+{
 	return HexToSF(GetStringRight(ObjectToString(oO), 6));
 }

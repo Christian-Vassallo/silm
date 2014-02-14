@@ -8,7 +8,8 @@ TODO: How to trap PCs:
  - only allow summoning while the player is online
 */
 
-void __trap(object oTarget, object oItem, object oPC) {
+void __trap(object oTarget, object oItem, object oPC)
+{
 	if (GetIsDead(oTarget)) {
 		FloatingTextStringOnCreature("Fange die Seele: " + GetName(oTarget) + ": .. tot.", oPC, false);
 		return;
@@ -23,7 +24,7 @@ void __trap(object oTarget, object oItem, object oPC) {
 
 		if (MySavingThrow(SAVING_THROW_WILL, oTarget, GetSpellSaveDC(), SAVING_THROW_TYPE_TRAP, oPC)) {
 			FloatingTextStringOnCreature("Das Ziel hat den Rettungswurf geschafft.", oPC, false);
-			
+
 		} else {
 			object trap = GetIsObjectValid(oItem) ? oItem : CreateItemOnObject("soulstone", oPC);
 			SetName(trap, "Seelenstein (" + GetName(oTarget) + ")");
@@ -36,7 +37,8 @@ void __trap(object oTarget, object oItem, object oPC) {
 	}
 }
 
-void main() {
+void main()
+{
 	object oPC = OBJECT_SELF;
 
 	object oItem = GetSpellCastItem();

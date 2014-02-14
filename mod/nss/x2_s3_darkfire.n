@@ -28,26 +28,25 @@
 
 void main()
 {
-  // Get Caster Level
-  int nLevel = GetCasterLevel(OBJECT_SELF);
+	// Get Caster Level
+	int nLevel = GetCasterLevel(OBJECT_SELF);
 
-  int nDmg = d6() + (nLevel/2);
+	int nDmg = d6() + (nLevel / 2);
 
-  effect eDmg = EffectDamage(nDmg,DAMAGE_TYPE_FIRE);
-  effect eVis;
-  if (nDmg<10) // if we are doing below 12 point of damage, use small flame
-  {
-    eVis =EffectVisualEffect(VFX_IMP_FLAME_S);
-  }
-  else
-  {
-     eVis =EffectVisualEffect(VFX_IMP_FLAME_M);
-  }
-  eDmg = EffectLinkEffects (eVis, eDmg);
-  object oTarget = GetSpellTargetObject();
+	effect eDmg = EffectDamage(nDmg, DAMAGE_TYPE_FIRE);
+	effect eVis;
 
-  if (GetIsObjectValid(oTarget))
-  {
-      ApplyEffectToObject(DURATION_TYPE_INSTANT, eDmg, oTarget);
-  }
+	if (nDmg < 10) { // if we are doing below 12 point of damage, use small flame
+		eVis = EffectVisualEffect(VFX_IMP_FLAME_S);
+
+	} else {
+		eVis = EffectVisualEffect(VFX_IMP_FLAME_M);
+	}
+
+	eDmg = EffectLinkEffects(eVis, eDmg);
+	object oTarget = GetSpellTargetObject();
+
+	if (GetIsObjectValid(oTarget)) {
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, eDmg, oTarget);
+	}
 }

@@ -29,7 +29,8 @@ int GetValue(string sResRef);
 // Destrois the Hidden Object after a little Time Delay if there ist no Visitor in Sight
 void HideSpawn(object oSpawn, object oSpawnPoint);
 
-void main() {
+void main()
+{
 	// static lokal Vars
 	float fSearchDist = GetLocalFloat(OBJECT_SELF, "fSearchDist");  // Searchradius
 	int nDiffaculty = GetLocalInt(OBJECT_SELF, "nDiffaculty");   // DC
@@ -38,41 +39,49 @@ void main() {
 	string sResRef = GetLocalString(OBJECT_SELF, "sResRef"); // Hidden Object defined?
 	int nDone = GetLocalInt(OBJECT_SELF, "done");   // has it been found?
 
-	float fRespawnDelay = IntToFloat(600 + ( d6() * 600 )); // TimeDelay to Respawn 30min + (1d6 * 10min)
+	float fRespawnDelay = IntToFloat(600 + (d6() *
+											600));   // TimeDelay to Respawn 30min + (1d6 * 10min)
 
 	// Check Searcher
 	object oPC = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC);
-	if ( nDone == 0 && oPC != OBJECT_INVALID ) {
+
+	if (nDone == 0 && oPC != OBJECT_INVALID) {
 		float fDist = GetDistanceBetween(OBJECT_SELF, oPC);
-		if ( fDist <= fSearchDist ) {
-			if ( sResRef == "" ) {
+
+		if (fDist <= fSearchDist) {
+			if (sResRef == "") {
 				sResRef = GetHiddenObjectResRef(OBJECT_SELF);
 				SetLocalString(OBJECT_SELF, "sResRef", sResRef);
 				DelayCommand(fRespawnDelay, DeleteLocalString(OBJECT_SELF, "sResRef"));
 			}
+
 			int nBonus = GetBonus(sResRef, oPC);
 			int nSG = nDiffaculty;
 			int nSearchMod = GetSkillRank(SKILL_SEARCH, oPC) + nBonus;
 			int nDetectMode = GetDetectMode(oPC);
-			if ( nDetectMode = DETECT_MODE_PASSIVE ) {
+
+			if (nDetectMode = DETECT_MODE_PASSIVE) {
 				nSG = nSG * 2;
 			}
 
-			if ( GetWeather(GetArea(OBJECT_SELF)) == WEATHER_RAIN )
+			if (GetWeather(GetArea(OBJECT_SELF)) == WEATHER_RAIN)
 				nSG += 2;
-			if ( GetWeather(GetArea(OBJECT_SELF)) == WEATHER_SNOW )
+
+			if (GetWeather(GetArea(OBJECT_SELF)) == WEATHER_SNOW)
 				nSG += 4;
 
 			int nHit = d20();
+
 			/*string sMessage = "Suchen Check: "+ IntToString(nHit) +" + "+ IntToString(nSearchMod) +" = "+ IntToString(nHit + nSearchMod) +" gg SG:"+ IntToString(nSG);
 			 * FloatingTextStringOnCreature(sMessage, oPC);  */
-			if ( nHit + nSearchMod >= nSG ) {
+			if (nHit + nSearchMod >= nSG) {
 				int nLoreMod = GetSkillRank(SKILL_LORE, oPC) + nBonus;
 				nHit = d20();
 				int nSG = GetSG(sResRef);
-/*                sMessage = "Sagenkunde Check: "+ IntToString(nHit) +" + "+ IntToString(nLoreMod) +" = "+ IntToString(nHit + nLoreMod) +" gg SG:"+ IntToString(nSG) +" ("+ sResRef +")";
- * 				FloatingTextStringOnCreature(sMessage, oPC); */
-				if ( nHit + nLoreMod >= nSG ) {
+
+				/*                sMessage = "Sagenkunde Check: "+ IntToString(nHit) +" + "+ IntToString(nLoreMod) +" = "+ IntToString(nHit + nLoreMod) +" gg SG:"+ IntToString(nSG) +" ("+ sResRef +")";
+				 * 				FloatingTextStringOnCreature(sMessage, oPC); */
+				if (nHit + nLoreMod >= nSG) {
 					object oRes;
 					int nLadung = GetValue(sResRef);
 					int nRate = GetMaxHitPoints(oRes) / nLadung;
@@ -86,7 +95,8 @@ void main() {
 	}
 }
 
-string GetHiddenObjectResRef(object oMaster) {
+string GetHiddenObjectResRef(object oMaster)
+{
 	string sTyp = GetLocalString(OBJECT_SELF, "sTyp"); //AreaTyp
 	int nCount;
 	string sResRef;
@@ -94,39 +104,52 @@ string GetHiddenObjectResRef(object oMaster) {
 	int nNumRows = 0;
 	int nPosition;
 	pQ("SELECT resref from hiddenobject_resources WHERE typ = " + pSs(sTyp) + ";");
-	while ( pF() ) {
-		if ( sAllResRef == "" ) {
+
+	while (pF()) {
+		if (sAllResRef == "") {
 			sAllResRef = pGs(1);
+
 		} else {
 			sAllResRef = sAllResRef + "#" + pGs(1);
 		}
+
 		nNumRows++;
 	}
+
 	//WriteTimestampedLogEntry("AllResRef ="+ sAllResRef);
 	nPosition = Random(nNumRows + 1);
-	if ( nPosition == 0 ) nPosition = 1;
+
+	if (nPosition == 0) nPosition = 1;
+
 	//WriteTimestampedLogEntry("Rows / Position ="+ IntToString(nNumRows) +" / "+ IntToString(nPosition));
 	nNumRows = 0;
+
 	// nur eine Ressource
-	if ( nPosition == -1 && nNumRows == 1 ) {
+	if (nPosition == -1 && nNumRows == 1) {
 		sResRef = sAllResRef;
-	} else if ( nPosition == -1 ) {
+
+	} else if (nPosition == -1) {
 		sResRef = "Error";
+
 	} else {
 		int nStop;
 		nStop = FindSubString(sAllResRef, "#");
-		while ( nNumRows != nPosition ) {
+
+		while (nNumRows != nPosition) {
 			nNumRows++;
 
-			if ( nPosition == nNumRows ) {
+			if (nPosition == nNumRows) {
 				sResRef = GetStringLeft(sAllResRef, nStop);
+
 			} else {
 				sAllResRef = GetStringRight(sAllResRef, GetStringLength(sAllResRef) - nStop - 1);
 				nStop = FindSubString(sAllResRef, "#");
 			}
-			if ( nStop == -1 ) {
+
+			if (nStop == -1) {
 				nStop = GetStringLength(sAllResRef);
 			}
+
 			//WriteTimestampedLogEntry("ResRefString:"+ sResRef +"/" +sAllResRef);
 		}
 	}
@@ -134,47 +157,60 @@ string GetHiddenObjectResRef(object oMaster) {
 	return sResRef;
 }
 
-int GetSG(string sResRef) {
+int GetSG(string sResRef)
+{
 	string nSG;
 	string sSQL = "SELECT dc from hiddenobject_resources WHERE resref = " + pSs(sResRef) + ";";
 	pQ(sSQL);
+
 	if (pF())
 		nSG = pGs(1);
+
 	return StringToInt(nSG);
 }
 
 
-int GetBonus(string sResRef, object oPC) {
+int GetBonus(string sResRef, object oPC)
+{
 	string sBonus;
 	int nBonus;
 	string sSQL = "SELECT bonus from hiddenobject_resources WHERE resref = " + pSs(sResRef) + ";";
 	pQ(sSQL);
-	if ( pF() ) {
+
+	if (pF()) {
 		sBonus = pGs(1);
 	}
-	if ( sBonus == "natur" ) {
+
+	if (sBonus == "natur") {
 		int nBonus = GetLevelByClass(CLASS_TYPE_DRUID, oPC) / 2;
-		nBonus = nBonus + ( GetLevelByClass(CLASS_TYPE_RANGER, oPC) / 4 );
+		nBonus = nBonus + (GetLevelByClass(CLASS_TYPE_RANGER, oPC) / 4);
 	}
+
 	return nBonus;
 }
 
-int GetValue(string sResRef) {
+int GetValue(string sResRef)
+{
 	string nValue;
 	string sSQL = "SELECT value from hiddenobject_resources WHERE resref = " + pSs(sResRef) + ";";
 	pQ(sSQL);
-	if ( pF() ) {
+
+	if (pF()) {
 		nValue = pGs(1);
 	}
+
 	return d20() + StringToInt(nValue);
 }
 
-void HideSpawn(object oSpawn, object oSpawnPoint) {
-	if ( GetIsObjectValid(oSpawn) == TRUE ) {
+void HideSpawn(object oSpawn, object oSpawnPoint)
+{
+	if (GetIsObjectValid(oSpawn) == TRUE) {
 		object oPC = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC);
-		if ( GetIsObjectValid(oPC) == FALSE || GetDistanceBetween(oPC, oSpawn) > 30.0 ) {
+
+		if (GetIsObjectValid(oPC) == FALSE || GetDistanceBetween(oPC, oSpawn) > 30.0) {
 			DestroyObject(oSpawn);
 			DeleteLocalInt(oSpawnPoint, "done");
+
 		} else {
 			DelayCommand(180.0, HideSpawn(oSpawn, oSpawnPoint));
 		}

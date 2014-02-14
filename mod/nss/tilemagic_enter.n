@@ -17,24 +17,27 @@
 // -----------------------------------------------------------------------------
 extern("inc_tm")
 
-void main() {
+void main()
+{
 	// get area - this technique works for both areas and
 	object oArea = GetArea(OBJECT_SELF);
 
 	// check "do once" flag
-	if ( GetLocalInt(OBJECT_SELF, "sj_tilemagic_done") ) {
+	if (GetLocalInt(OBJECT_SELF, "sj_tilemagic_done")) {
 		return;
 	}
 
 	// sweep area and convert all markers
 	object oObject = GetFirstObjectInArea(oArea);
-	while ( GetIsObjectValid(oObject) ) {
-		if ( GetTag(oObject) == SJ_TAG_TILEMAGIC_MARKER ) {
+
+	while (GetIsObjectValid(oObject)) {
+		if (GetTag(oObject) == SJ_TAG_TILEMAGIC_MARKER) {
 			// markers found: convert
 			// NOTE: there could potentially be hundreds of markers so we
 			// must use AssignCommand avoid the risk of a TMI
 			AssignCommand(OBJECT_SELF, SJ_TileMagic_ConvertObjectToTile(oObject));
 		}
+
 		oObject = GetNextObjectInArea(oArea);
 	}
 

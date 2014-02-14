@@ -98,14 +98,16 @@ int SJ_GetIsDatapointValid(string sName);
 //  FUNCTIONS
 // -----------------------------------------------------------------------------
 
-int SJ_GetIsSpotValid(object oArea, float fX, float fY) {
+int SJ_GetIsSpotValid(object oArea, float fX, float fY)
+{
 	// for SJ_GetIsTileValid a tile is considered to be 1 unit wide rather than
 	// the normal 10.
 	return SJ_GetIsTileValid(oArea, FloatToInt(fX) / 10, FloatToInt(fY) / 10);
 }
 
 
-int SJ_GetIsTileValid(object oArea, int nColumn, int nRow) {
+int SJ_GetIsTileValid(object oArea, int nColumn, int nRow)
+{
 	// create a "tile" location in contrast to a "real" location.  This location
 	// is only used to pass an X and Y value to GetTileMainLight1Color(). This
 	// means a tile is considered to be 1 unit wide rather than the normal 10.
@@ -113,29 +115,33 @@ int SJ_GetIsTileValid(object oArea, int nColumn, int nRow) {
 	location lTile = Location(oArea, vTile, 0.0);
 
 	// if the tile's mainlight is invalid then the tile too is invalid
-	if ( GetTileMainLight1Color(lTile) == SJ_MAINLIGHT1_COLOR_INVALID ) {
+	if (GetTileMainLight1Color(lTile) == SJ_MAINLIGHT1_COLOR_INVALID) {
 		return FALSE;
 	}
+
 	return TRUE;
 }
 
 
-int SJ_GetAreaHeight(object oArea = OBJECT_SELF) {
+int SJ_GetAreaHeight(object oArea = OBJECT_SELF)
+{
 	return GetAreaSize(AREA_HEIGHT, oArea);
 }
 
 
-int SJ_GetAreaWidth(object oArea = OBJECT_SELF) {
+int SJ_GetAreaWidth(object oArea = OBJECT_SELF)
+{
 	return GetAreaSize(AREA_WIDTH, oArea);
 }
 
 
-string SJ_IntToPrePaddedString(int nInteger, int nLength, string sPadding = "0") {
+string SJ_IntToPrePaddedString(int nInteger, int nLength, string sPadding = "0")
+{
 	// convert to string and prefix as required until minimum length reached
 
 	string sRet = IntToString(nInteger);
 
-	while ( GetStringLength(sRet) < nLength ) {
+	while (GetStringLength(sRet) < nLength) {
 		sRet = sPadding + sRet;
 	}
 
@@ -143,13 +149,14 @@ string SJ_IntToPrePaddedString(int nInteger, int nLength, string sPadding = "0")
 }
 
 
-string SJ_RemoveSubString(string sString, string sSubString) {
+string SJ_RemoveSubString(string sString, string sSubString)
+{
 	// format = left + substring + right
 	// where left and/or right can be null
 
 	int nPosition = FindSubString(sString, sSubString);
 
-	if ( nPosition > -1 ) {
+	if (nPosition > -1) {
 		// get left stringlet
 		string sLeft = GetStringLeft(sString, nPosition);
 
@@ -159,6 +166,7 @@ string SJ_RemoveSubString(string sString, string sSubString) {
 
 		// return left + right
 		return sLeft + sRight;
+
 	} else {
 		// substring not found: return string
 		return sString;
@@ -166,27 +174,31 @@ string SJ_RemoveSubString(string sString, string sSubString) {
 }
 
 
-object SJ_CreateDatapoint(string sName) {
+object SJ_CreateDatapoint(string sName)
+{
 	string sDebug;
 	string sTag = SJ_TAG_DATAPOINT + sName;
 
 	// checks
-	if ( sName == "" ) {
+	if (sName == "") {
 		// check: name is null
 		sDebug = "SJ_CreateDatapoint: failled as name was null.";
-	} else if ( GetStringLength(sTag) > 32 ) {
+
+	} else if (GetStringLength(sTag) > 32) {
 		// check: tag is too long
 		sDebug = "SJ_CreateDatapoint: failled as tag (" + sTag + ") exceeded 32 characters.";
-	} else if ( GetIsObjectValid(GetWaypointByTag(sTag)) ) {
+
+	} else if (GetIsObjectValid(GetWaypointByTag(sTag))) {
 		// datapoint exists
 		sDebug = "SJ_CreateDatapoint: failled as datpoint (" + sName + ") already exists.";
 	}
 
 	// create?
-	if ( sDebug == "" ) {
+	if (sDebug == "") {
 		// passed all checks: create datapoint
 		location lDP = GetStartingLocation();
 		return CreateObject(OBJECT_TYPE_WAYPOINT, SJ_RES_DATAPOINT, lDP, FALSE, sTag);
+
 	} else {
 		// log an error
 		SJ_Debug(SJ_DEBUG_PREFIX_ERROR + sDebug, TRUE);
@@ -195,11 +207,12 @@ object SJ_CreateDatapoint(string sName) {
 }
 
 
-void SJ_DestroyDatapoint(string sName) {
+void SJ_DestroyDatapoint(string sName)
+{
 	string sTag = SJ_TAG_DATAPOINT + sName;
 	object oDP = GetWaypointByTag(sTag);
 
-	if ( GetIsObjectValid(oDP) == FALSE ) {
+	if (GetIsObjectValid(oDP) == FALSE) {
 		// log an error
 		string sDebug = "SJ_DestroyDatapoint: failled as datapoint (" + sName + ") was invalid.";
 		SJ_Debug(SJ_DEBUG_PREFIX_ERROR + sDebug, TRUE);
@@ -211,11 +224,12 @@ void SJ_DestroyDatapoint(string sName) {
 }
 
 
-object SJ_GetDatapoint(string sName) {
+object SJ_GetDatapoint(string sName)
+{
 	string sTag = SJ_TAG_DATAPOINT + sName;
 	object oDP = GetWaypointByTag(sTag);
 
-	if ( GetIsObjectValid(oDP) == FALSE ) {
+	if (GetIsObjectValid(oDP) == FALSE) {
 		// log an error
 		string sDebug = "SJ_GetDatapoint: failled as datapoint (" + sName + ") was invalid.";
 		SJ_Debug(SJ_DEBUG_PREFIX_ERROR + sDebug, TRUE);
@@ -227,7 +241,8 @@ object SJ_GetDatapoint(string sName) {
 }
 
 
-int SJ_GetIsDatapointValid(string sName) {
+int SJ_GetIsDatapointValid(string sName)
+{
 	string sTag = SJ_TAG_DATAPOINT + sName;
 	object oDP = GetWaypointByTag(sTag);
 

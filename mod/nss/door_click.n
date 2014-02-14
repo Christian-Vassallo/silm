@@ -1,10 +1,13 @@
-void main() {
+void main()
+{
 
 	// Event: door_click
 	// - runnable: door
 	// - actor: clicker/creature
 	// - stop
-	if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "door_click", OBJECT_SELF, GetClickingObject(), OBJECT_SELF, GetLocation(OBJECT_SELF)))
+	if (EVENT_RESULT_STOP & RunEventScriptsFor(GetEventSerial(), "door_click", OBJECT_SELF,
+			GetClickingObject(),
+			OBJECT_SELF, GetLocation(OBJECT_SELF)))
 		return;
 
 	ExecuteScript("nw_g0_transition", OBJECT_SELF);

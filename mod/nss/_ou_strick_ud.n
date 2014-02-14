@@ -1,4 +1,5 @@
-void main() {
+void main()
+{
 	object oPC = GetLastUsedBy();
 
 	string sTargetTag = GetLocalString(OBJECT_SELF, "target_rope");
@@ -8,21 +9,25 @@ void main() {
 
 	object oRope = GetObjectByTag(sTargetTag + "_s");
 
-	if ( !GetIsObjectValid(oTargetLoc) ) {
+	if (!GetIsObjectValid(oTargetLoc)) {
 		SendMessageToPC(oPC, "Invalid target (bug)");
 		return;
 	}
 
-	if ( !GetIsObjectValid(oRope) ) {
-		object oNewRope = CreateObject(OBJECT_TYPE_PLACEABLE, "strickleiter", GetLocation(oTargetLoc), FALSE,
-							  sTargetTag + "_s");
-		if ( !GetIsObjectValid(oNewRope) ) {
+	if (!GetIsObjectValid(oRope)) {
+		object oNewRope = CreateObject(OBJECT_TYPE_PLACEABLE, "strickleiter", GetLocation(oTargetLoc),
+									   FALSE,
+									   sTargetTag + "_s");
+
+		if (!GetIsObjectValid(oNewRope)) {
 			SendMessageToPC(oPC, "Cannot spawn rope :/");
 			return;
 		}
+
 		SetLocalString(oNewRope, "target", sSource);
 
 		FloatingTextStringOnCreature("Du laesst die Strickleiter herab.", oPC, TRUE);
+
 	} else {
 		DestroyObject(oRope);
 		FloatingTextStringOnCreature("Du ziehst die Strickleiter hoch.", oPC, TRUE);

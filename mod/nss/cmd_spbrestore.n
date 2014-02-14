@@ -3,7 +3,8 @@ extern("inc_nwnx_func")
 extern("inc_target")
 
 void RestoreSpellbookByClass(object creature, int class,
-		bool spontaneousCaster) {
+							 bool spontaneousCaster)
+{
 	if (
 		GetClassByPosition(1, creature) != class &&
 		GetClassByPosition(2, creature) != class &&
@@ -11,8 +12,11 @@ void RestoreSpellbookByClass(object creature, int class,
 	) return;
 
 
-	int level; for (level = 0; level <= 9; level++) {
+	int level;
+
+	for (level = 0; level <= 9; level++) {
 		int slots = GetMaxSpellSlots(creature, class, level);
+
 		if (slots < 1)
 			return;
 
@@ -20,7 +24,9 @@ void RestoreSpellbookByClass(object creature, int class,
 			SetRemainingSpellSlots(creature, class, level, slots);
 
 		} else {
-			int slot; for (slot = 0; slot < slots; slot++) {
+			int slot;
+
+			for (slot = 0; slot < slots; slot++) {
 				struct MemorizedSpellSlot ms =
 					GetMemorizedSpell(creature, class, level, slot);
 
@@ -34,7 +40,8 @@ void RestoreSpellbookByClass(object creature, int class,
 	}
 }
 
-void RestoreSpellbook(object creature) {
+void RestoreSpellbook(object creature)
+{
 	RestoreSpellbookByClass(creature, CLASS_TYPE_WIZARD, false);
 	RestoreSpellbookByClass(creature, CLASS_TYPE_CLERIC, false);
 	RestoreSpellbookByClass(creature, CLASS_TYPE_DRUID, false);
@@ -45,11 +52,13 @@ void RestoreSpellbook(object creature) {
 	RestoreSpellbookByClass(creature, CLASS_TYPE_SORCERER, true);
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "chat_command") {
 		struct EventArguments ea = GetEventArguments(e.serial);
+
 		if (ea.a0 != "spbrestore")
 			return;
 
@@ -57,6 +66,7 @@ void main() {
 			event_stop();
 
 		object target = GetTarget();
+
 		if (!is_creature(target)) {
 			NotifyBadTarget();
 			event_stop();
@@ -64,7 +74,7 @@ void main() {
 
 		RestoreSpellbook(target);
 		SendMessageToPC(e.runnable, "Restored spellbook for " +
-			GetName(target));
+						GetName(target));
 		event_stop();
 	}
 }

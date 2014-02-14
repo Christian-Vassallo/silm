@@ -7,7 +7,8 @@ extern("inc_description")
 		newDesc += cpat(t, item);
 #define cpat(t, i) C(t + ":", cOrange) + "\n" + GetDescription(i) + "\n\n"
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "pc_examine" && !GetIsDM(e.actedon) &&
@@ -15,8 +16,9 @@ void main() {
 			!GetIsPossessedFamiliar(e.actedon) && GetIsPC(e.actedon)) {
 
 		string newDesc;
+
 		if (!GetIsDM(e.runnable) && (!GetObjectSeen(e.actedon, e.runnable) ||
-				GetArea(e.actedon) != GetArea(e.runnable))) {
+									 GetArea(e.actedon) != GetArea(e.runnable))) {
 			newDesc = C("(zu weit weg/nicht sichtbar)", cLightGrey);
 
 		} else {
@@ -42,9 +44,10 @@ void main() {
 			pF();
 			int height = pGi(2);
 			int weight = pGi(1);
+
 			if (weight > 0 || height > 0) {
 				newDesc += C("Merkmale:" , cLightBlue) + "\n";
-				
+
 				if (height > 0) {
 					float inch = height * 0.393701;
 					float feet = inch / 12;
@@ -53,16 +56,16 @@ void main() {
 					string ft = itoa(ftoi(feet));
 					string in = itoa(ftoi(inch));
 					newDesc += "Grösse: " + itoa(height) + " cm " + C(
-						("(" + ft + " ft. " + in + " in.)"), cLightGrey
-					) + "\n";
+								   ("(" + ft + " ft. " + in + " in.)"), cLightGrey
+							   ) + "\n";
 				}
 
 				if (weight > 0) {
 					string lb = itoa(ftoi(weight * 2.204));
 					string st = itoa(ftoi(weight * 0.157));
 					newDesc += "Gewicht: " + itoa(weight) + " kg " + C(
-						("(" + lb + " lb., " + st + " st.)"), cLightGrey
-					) + "\n";
+								   ("(" + lb + " lb., " + st + " st.)"), cLightGrey
+							   ) + "\n";
 				}
 
 				newDesc += "\n";

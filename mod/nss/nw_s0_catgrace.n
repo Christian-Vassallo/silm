@@ -20,17 +20,18 @@
 
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 
-/*
- * Spellcast Hook Code
- * Added 2003-06-23 by GeorgZ
- * If you want to make changes to all spells,
- * check x2_inc_spellhook.nss to find out more
- *
- */
+	/*
+	 * Spellcast Hook Code
+	 * Added 2003-06-23 by GeorgZ
+	 * If you want to make changes to all spells,
+	 * check x2_inc_spellhook.nss to find out more
+	 *
+	 */
 
-	if ( !X2PreSpellCastCode() ) {
+	if (!X2PreSpellCastCode()) {
 		// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
 		return;
 	}
@@ -49,16 +50,20 @@ void main() {
 	int nMetaMagic = GetMetaMagicFeat();
 	//Signal spell cast at event to fire on the target.
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_CATS_GRACE, FALSE));
+
 	//Enter Metamagic conditions
-	if ( nMetaMagic == METAMAGIC_MAXIMIZE ) {
+	if (nMetaMagic == METAMAGIC_MAXIMIZE) {
 		nModify = 5; //Damage is at max
 	}
-	if ( nMetaMagic == METAMAGIC_EMPOWER ) {
+
+	if (nMetaMagic == METAMAGIC_EMPOWER) {
 		nModify = FloatToInt(IntToFloat(nModify) * 1.5); //Damage/Healing is +50%
 	}
-	if ( nMetaMagic == METAMAGIC_EXTEND ) {
+
+	if (nMetaMagic == METAMAGIC_EXTEND) {
 		fDuration = fDuration * 2.0;    //Duration is +100%
 	}
+
 	//Create the Ability Bonus effect with the correct modifier
 	eDex = EffectAbilityIncrease(ABILITY_DEXTERITY, nModify);
 	effect eLink = EffectLinkEffects(eDex, eDur);

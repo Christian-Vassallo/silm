@@ -1,8 +1,9 @@
-int StartingConditional() {
+int StartingConditional()
+{
 	object oPC = GetPCSpeaker();
 	object oCloak = GetItemInSlot(INVENTORY_SLOT_CLOAK, oPC);
 
-	if ( !GetIsObjectValid(oCloak) )
+	if (!GetIsObjectValid(oCloak))
 		return FALSE;
 
 	SetLocalObject(oPC, "CHG_CURRENT_ARM", oCloak);

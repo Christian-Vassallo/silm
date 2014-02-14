@@ -18,17 +18,18 @@ effect SetSummonEffect(int nSpellID);
 extern("x2_inc_spellhook")
 extern("inc_summon")
 
-void main() {
+void main()
+{
 
-/*
- * Spellcast Hook Code
- * Added 2003-06-23 by GeorgZ
- * If you want to make changes to all spells,
- * check x2_inc_spellhook.nss to find out more
- *
- */
+	/*
+	 * Spellcast Hook Code
+	 * Added 2003-06-23 by GeorgZ
+	 * If you want to make changes to all spells,
+	 * check x2_inc_spellhook.nss to find out more
+	 *
+	 */
 
-	if ( !X2PreSpellCastCode() ) {
+	if (!X2PreSpellCastCode()) {
 		// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
 		return;
 	}
@@ -42,15 +43,19 @@ void main() {
 
 	//Make metamagic check for extend
 	int nMetaMagic = GetMetaMagicFeat();
-	if ( nMetaMagic == METAMAGIC_EXTEND ) {
+
+	if (nMetaMagic == METAMAGIC_EXTEND) {
 		fDuration = fDuration * 2.0;   //Duration is +100%
 	}
+
 	//Apply the VFX impact and summon effect
 	string sSummon = GetSummoningCreature(OBJECT_SELF, nSpellID);
-	if ( sSummon != "" ) {
+
+	if (sSummon != "") {
 		DoSummonCreature(
 			OBJECT_SELF, GetSpellTargetLocation(), fDuration,
 			GetSummonEffect(OBJECT_SELF, nSpellID), sSummon);
+
 	} else {
 		FloatingTextStringOnCreature(
 			"Ihr benoetigt magische Runen oder Artefakte zum beschwoeren von Kreaturen!", OBJECT_SELF);

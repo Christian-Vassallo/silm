@@ -2,30 +2,33 @@
 
 extern("inc_horse")
 
-void main() {
+void main()
+{
 	object oPC = GetPCSpeaker();
 	string sStall = GetTag(OBJECT_SELF);
 
 	struct Rideable r = GetRideable(oPC);
 
-	if ( GetIsValidRideable(r) ) {
-		if ( r.stable == sStall ) {
+	if (GetIsValidRideable(r)) {
+		if (r.stable == sStall) {
 			int nType;
 
-			if ( r.type == "Pony" ) {
+			if (r.type == "Pony") {
 				nType = HORSETYPE_PONY;
+
 			} else {
 				nType = HORSETYPE_HORSE;
 			}
 
 			// pay up!
 			float fRent = GetLocalFloat(OBJECT_SELF, "rent_per_day");
-			if ( 0.0 == fRent )
+
+			if (0.0 == fRent)
 				fRent = DAILY_RENT;
 
 			int nMuneeh = GetRideableRentCost(r, fRent);
 
-			if ( nMuneeh > 0 )
+			if (nMuneeh > 0)
 				TakeMoneyFromCreature(oPC, nMuneeh);
 
 			SpawnHorse(nType, r.phenotype, oPC, r.name);

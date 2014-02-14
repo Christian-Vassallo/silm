@@ -22,44 +22,47 @@ void ClearPlayerNameList(object oPlayer);
 
 void InitPlayerNameList(object oObject, int nUnknownStyle = 0)
 {
-    SetLocalString(oObject, "NWNX!NAMES!INITPLAYERNAMELIST", IntToString(nUnknownStyle));
+	SetLocalString(oObject, "NWNX!NAMES!INITPLAYERNAMELIST", IntToString(nUnknownStyle));
 }
 
 void SetNamesEnabled(object oPlayer, int bEnabled = TRUE)
 {
-    if(!GetIsPC(oPlayer)) return;
-    SetLocalString(oPlayer, "NWNX!NAMES!SETNAMESENABLED", IntToString(bEnabled));
+	if (!GetIsPC(oPlayer)) return;
+
+	SetLocalString(oPlayer, "NWNX!NAMES!SETNAMESENABLED", IntToString(bEnabled));
 }
 
 string GetDynamicName(object oPlayer, object oObject)
 {
-    SetLocalString(oPlayer, "NWNX!NAMES!GETDYNAMICNAME", ObjectToString(oObject));
-    return GetLocalString(oPlayer, "NWNX!NAMES!GETDYNAMICNAME");
+	SetLocalString(oPlayer, "NWNX!NAMES!GETDYNAMICNAME", ObjectToString(oObject));
+	return GetLocalString(oPlayer, "NWNX!NAMES!GETDYNAMICNAME");
 }
 
 void SetDynamicName(object oPlayer, object oObject, string sName)
 {
-    SetLocalString(oPlayer, "NWNX!NAMES!SETDYNAMICNAME", ObjectToString(oObject)+"¬"+sName);
+	SetLocalString(oPlayer, "NWNX!NAMES!SETDYNAMICNAME", ObjectToString(oObject) + "¬" + sName);
 }
 
 void UpdateDynamicName(object oPlayer, object oObject)
 {
-    if(!GetIsObjectValid(oPlayer) || !GetIsObjectValid(oObject)) return;
-    SetLocalString(oPlayer, "NWNX!NAMES!UPDATEDYNAMICNAME", ObjectToString(oObject));
+	if (!GetIsObjectValid(oPlayer) || !GetIsObjectValid(oObject)) return;
+
+	SetLocalString(oPlayer, "NWNX!NAMES!UPDATEDYNAMICNAME", ObjectToString(oObject));
 }
 
 void UpdatePlayerList(object oPlayer)
 {
-    if(!GetIsObjectValid(oPlayer)) return;
-    SetLocalString(oPlayer, "NWNX!NAMES!UPDATEPLAYERLIST", " ");
+	if (!GetIsObjectValid(oPlayer)) return;
+
+	SetLocalString(oPlayer, "NWNX!NAMES!UPDATEPLAYERLIST", " ");
 }
 
 void DeleteDynamicName(object oPlayer, object oObject)
 {
-    SetLocalString(oPlayer, "NWNX!NAMES!DELETEDYNAMICNAME", ObjectToString(oObject));
+	SetLocalString(oPlayer, "NWNX!NAMES!DELETEDYNAMICNAME", ObjectToString(oObject));
 }
 
 void ClearPlayerNameList(object oPlayer)
 {
-    SetLocalString(oPlayer, "NWNX!NAMES!CLEARPLAYERNAMELIST", " ");
+	SetLocalString(oPlayer, "NWNX!NAMES!CLEARPLAYERNAMELIST", " ");
 }

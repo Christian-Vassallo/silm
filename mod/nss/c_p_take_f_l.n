@@ -1,6 +1,7 @@
 extern("c_chessinc")
 
-void main() {
+void main()
+{
 	int nSide, nPosition, nNewPosition;
 
 	nSide = GetLocalInt(GetNearestObjectByTag("c_gamemaster"), "Turn");
@@ -8,7 +9,8 @@ void main() {
 	nPosition = GetLocalInt(OBJECT_SELF, "nPosition");
 	nNewPosition = nPosition + 7 * nSide;
 	TakePiece(nPosition, nNewPosition);
-	if ( GetLocalInt(OBJECT_SELF, "nPosition") == nNewPosition ) {
-		if ( nNewPosition > 55 || nNewPosition < 8 ) SetLocalInt(OBJECT_SELF, "promote", 1);
+
+	if (GetLocalInt(OBJECT_SELF, "nPosition") == nNewPosition) {
+		if (nNewPosition > 55 || nNewPosition < 8) SetLocalInt(OBJECT_SELF, "promote", 1);
 	}
 }

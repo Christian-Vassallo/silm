@@ -3,32 +3,35 @@
 extern("_gen")
 
 
-void OnCollectboxDisturb(object oGivenByPC, object oItem) {
+void OnCollectboxDisturb(object oGivenByPC, object oItem)
+{
 
 	string sName = GetLocalString(OBJECT_SELF, "collectbox_name");
-	if ( sName == "" ) {
+
+	if (sName == "") {
 		SendMessageToAllDMs("Collectbox has no name set.");
 		return;
 	}
 
-    //coin_0100
-	if ( GetStringLeft(GetResRef(oItem), 5) != "coin_" ) {
+	//coin_0100
+	if (GetStringLeft(GetResRef(oItem), 5) != "coin_") {
 		ToPC("Dieses Objekt passt nicht durch den Schlitz ..", oGivenByPC);
 		ActionGiveItem(oItem, oGivenByPC);
 		return;
 	}
 
-	string sText = "Ein leises Klimpern erklingt, als die Muenzen am Boden des Sammelgefaesses auftreffen.";
-	
+	string sText =
+		"Ein leises Klimpern erklingt, als die Muenzen am Boden des Sammelgefaesses auftreffen.";
+
 	int nMulti = StringToInt(GetStringRight(GetResRef(oItem), 4));
 	int nAmount = GetItemStackSize(oItem) * nMulti;
 
-	if ( nAmount > 0 )
+	if (nAmount > 0)
 		pQ("update collectboxes set value = value+" +
-			IntToString(nAmount) + " where name = " + pE(sName) + ";");
+		   IntToString(nAmount) + " where name = " + pE(sName) + ";");
 
 	DestroyObject(oItem);
-	FloatingTextStringOnCreature( sText, oGivenByPC, 1);
+	FloatingTextStringOnCreature(sText, oGivenByPC, 1);
 
 	return;
 }

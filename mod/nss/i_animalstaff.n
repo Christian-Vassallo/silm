@@ -1,24 +1,28 @@
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "player_login") {
 		if (is_wizard(e.actor) || is_sorcerer(e.actor) || is_druid(e.actor) || is_ranger(e.actor)) {
 			object staff = GetItemPossessedBy(e.actor, "animalstaff");
+
 			if (is_valid(staff))
 				return;
 
-			staff = CreateItemOnObject("animalstaff", e.actor);	
+			staff = CreateItemOnObject("animalstaff", e.actor);
 			SetItemCursedFlag(staff, true);
 		}
 	}
 
 	if (e.ev == "item_freeactivate") {
 		object oComp = GetAssociate(ASSOCIATE_TYPE_ANIMALCOMPANION, e.actor);
+
 		if (!is_valid(oComp))
 			oComp = GetAssociate(ASSOCIATE_TYPE_FAMILIAR, e.actor);
 
 		if (!is_valid(oComp)) {
-			SendMessageToPC(e.actor, "Ihr benoetigt einen anwesenden Tiergefaehrten oder Vertauten, um diesen Stab benutzen zu koennen.");
+			SendMessageToPC(e.actor,
+							"Ihr benoetigt einen anwesenden Tiergefaehrten oder Vertauten, um diesen Stab benutzen zu koennen.");
 			event_ret(EVENT_RESULT_STOP | EVENT_RESULT_SUPPRESS);
 			return;
 		}

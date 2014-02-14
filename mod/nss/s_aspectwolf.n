@@ -2,7 +2,8 @@ extern("nw_i0_spells")
 extern("x2_inc_spellhook")
 extern("inc_subr_fly")
 
-void main() {
+void main()
+{
 	if (!X2PreSpellCastCode())
 		return;
 
@@ -14,7 +15,7 @@ void main() {
 	float fdur = TurnsToSeconds(duration);
 
 	ApplyEffectToObject(DURATION_TYPE_INSTANT,
-		EffectVisualEffect(VFX_IMP_POLYMORPH), OBJECT_SELF);
+						EffectVisualEffect(VFX_IMP_POLYMORPH), OBJECT_SELF);
 	ApplyEffectToObject(DURATION_TYPE_TEMPORARY,
-		EffectPolymorph(POLYMORPH_TYPE_WOLF), OBJECT_SELF, fdur);
+						EffectPolymorph(POLYMORPH_TYPE_WOLF), OBJECT_SELF, fdur);
 }

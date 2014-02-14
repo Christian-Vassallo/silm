@@ -8,7 +8,7 @@
 /*
 Section: Events
 
-	Each event constant has zero or more of the following modifiers  Const: 
+	Each event constant has zero or more of the following modifiers  Const:
 	- defer - Event always runs deferred (scripts registered for sync execution will *NOT RUN*), always implies *no abort*
 	- sync - Event always runs synchronously (scripts registered for deferred execution will be forced to run sync)
 	- stop - Event can be stopped by returning EVENT_RESULT_STOP, if the script is running sync
@@ -43,7 +43,7 @@ in an event script to indicate certain conditions.
 	Const: EVENT_RESULT_STOP
 		Per-event special stop. This stops the event from being handled in the core script.
 		See the event documentation for the specific meaning.
-	
+
 	Const: EVENT_RESULT_SUPPRESS
 		Per-event special suppress. This suppresses the event.
 		See the event documentation for the specific meaning.
@@ -153,20 +153,22 @@ struct EventArguments {
 
 
 // Function: RunEventScriptsFor
-// 
+//
 // Runs all scripts that are registered for nEvent
 // Returns:
 // - mask of EVENT_RESULT_*
-int RunEventScriptsFor(event_id_t serial, event_t ev, object oRunnable, object oActor, object oActedOn,
-	location lActedAt, int nRequireMode = EVENT_MODE_ANY);
+int RunEventScriptsFor(event_id_t serial, event_t ev, object oRunnable, object oActor,
+					   object oActedOn,
+					   location lActedAt, int nRequireMode = EVENT_MODE_ANY);
 
 // Function: RunEventScriptsForWithArgv
-// 
+//
 // Runs all scripts that are registered for nEvent
 // Returns:
 // - mask of EVENT_RESULT_*
-int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, object oActor, object oActedOn,
-	location lActedAt, struct EventArguments evArgs, int nRequireMode = EVENT_MODE_ANY);
+int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, object oActor,
+							   object oActedOn,
+							   location lActedAt, struct EventArguments evArgs, int nRequireMode = EVENT_MODE_ANY);
 
 // Function: RunEventScript
 //
@@ -174,13 +176,16 @@ int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, 
 // Returns:
 // - mask of EVENT_RESULT_*
 int RunEventScript(string sScript, int nEventMode, event_id_t serial, event_t ev, object oRunnable,
-	object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime, int retMask);
+				   object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime,
+				   int retMask);
 
 // Function: RunEventScriptAsync
 //
 // Wrapper around RunEventScript, for delayed execution
-void RunEventScriptAsync(string sScript, int nEventMode, event_id_t serial, event_t ev, object oRunnable,
-	object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime, int retMask);
+void RunEventScriptAsync(string sScript, int nEventMode, event_id_t serial, event_t ev,
+						 object oRunnable,
+						 object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime,
+						 int retMask);
 
 
 // Function GetEventInfo
@@ -199,8 +204,8 @@ struct EventArguments GetEventArguments(event_id_t serial);
 void DeleteEventArguments(event_id_t serial);
 
 
-// Function: SetEventScriptReturnValue 
-// 
+// Function: SetEventScriptReturnValue
+//
 // Sets the return value for scripts.
 // - mask of EVENT_RESULT_*
 void SetEventResult(int nValue, string sStatus = "");
@@ -220,27 +225,33 @@ Script file named 'e_test':
 
 /* implementation */
 
-event_id_t GetEventSerial() {
+event_id_t GetEventSerial()
+{
 	event_id_t old = GetLocalInt(GetModule(), "inc_events_serial");
 	old += 1;
+
 	if (old >= EVENTS_MAX_SERIAL)
 		old = 0;
+
 	SetLocalInt(GetModule(), "inc_events_serial", old);
 	return old;
 }
 
 
 int RunEventScriptsFor(event_id_t serial, event_t ev, object oRunnable, object oActor,
-		object oActedOn, location lActedAt, int nRequireMode = EVENT_MODE_ANY) {
+					   object oActedOn, location lActedAt, int nRequireMode = EVENT_MODE_ANY)
+{
 
 	struct EventArguments emptyArgs;
 	emptyArgs.do_not_set = true;
 
-	return RunEventScriptsForWithArgv(serial, ev, oRunnable, oActor, oActedOn, lActedAt, emptyArgs, nRequireMode);
+	return RunEventScriptsForWithArgv(serial, ev, oRunnable, oActor, oActedOn, lActedAt, emptyArgs,
+									  nRequireMode);
 }
 
 int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, object oActor,
-		object oActedOn, location lActedAt, struct EventArguments args, int nRequireMode = EVENT_MODE_ANY) {
+							   object oActedOn, location lActedAt, struct EventArguments args, int nRequireMode = EVENT_MODE_ANY)
+{
 
 	int count = GetLocalInt(GetModule(), "inc_events_last");
 	int i, sync, ret;
@@ -258,41 +269,58 @@ int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, 
 	st("event." + ev + ".all",
 
 	for (i = 0; i < count; i++) {
-		si = IntToString(i);
-		
+	si = IntToString(i);
+
 		ret_ev = GetLocalString(GetModule(), "inc_events_" + si + "_event");
+
 		if (ret_ev != "" && ev != ret_ev)
 			continue;
 
 		tag = GetLocalString(GetModule(), "inc_events_" + si + "_r_tagmask");
-		if (tag != "" && tag != "**" && !TestStringAgainstPattern(GetStringLowerCase(tag), GetStringLowerCase(GetTag(oRunnable))))
+
+		if (tag != "" && tag != "**"
+				&& !TestStringAgainstPattern(GetStringLowerCase(tag), GetStringLowerCase(GetTag(oRunnable))))
 			continue;
+
 		ref = GetLocalString(GetModule(), "inc_events_" + si + "_r_refmask");
-		if (ref != "" && ref != "**" && !TestStringAgainstPattern(GetStringLowerCase(ref), GetStringLowerCase(GetResRef(oRunnable))))
+
+		if (ref != "" && ref != "**"
+				&& !TestStringAgainstPattern(GetStringLowerCase(ref), GetStringLowerCase(GetResRef(oRunnable))))
 			continue;
+
 		tag = GetLocalString(GetModule(), "inc_events_" + si + "_a_tagmask");
-		if (tag != "" && tag != "**" && !TestStringAgainstPattern(GetStringLowerCase(tag), GetStringLowerCase(GetTag(oActor))))
+
+		if (tag != "" && tag != "**"
+				&& !TestStringAgainstPattern(GetStringLowerCase(tag), GetStringLowerCase(GetTag(oActor))))
 			continue;
+
 		ref = GetLocalString(GetModule(), "inc_events_" + si + "_a_refmask");
-		if (ref != "" && ref != "**" && !TestStringAgainstPattern(GetStringLowerCase(ref), GetStringLowerCase(GetResRef(oActor))))
+
+		if (ref != "" && ref != "**"
+				&& !TestStringAgainstPattern(GetStringLowerCase(ref), GetStringLowerCase(GetResRef(oActor))))
 			continue;
-		
+
 		tag = GetLocalString(GetModule(), "inc_events_" + si + "_o_tagmask");
-		if (tag != "" && tag != "**" && !TestStringAgainstPattern(GetStringLowerCase(tag), GetStringLowerCase(GetTag(oActedOn))))
+
+		if (tag != "" && tag != "**"
+				&& !TestStringAgainstPattern(GetStringLowerCase(tag), GetStringLowerCase(GetTag(oActedOn))))
 			continue;
+
 		ref = GetLocalString(GetModule(), "inc_events_" + si + "_o_refmask");
-		if (ref != "" && ref != "**" && !TestStringAgainstPattern(GetStringLowerCase(ref), GetStringLowerCase(GetResRef(oActedOn))))
+
+		if (ref != "" && ref != "**"
+				&& !TestStringAgainstPattern(GetStringLowerCase(ref), GetStringLowerCase(GetResRef(oActedOn))))
 			continue;
-		
-		
+
+
 		script = GetLocalString(GetModule(), "inc_events_" + si + "_script");
 
 		if (script == "")
 			continue;
 
 		sync = GetLocalInt(GetModule(), "inc_events_" + si + "_eventsync");
-	
-		
+
+
 		int runmode = EVENT_MODE_ANY;
 
 		if (runmode != nRequireMode)
@@ -302,13 +330,14 @@ int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, 
 		if (sync && runmode == EVENT_MODE_DEFER) {
 			if (ret_ev != "")
 				_WARN("cannot run " + script + " for " + ret_ev + ", wants sync but we force defer.");
+
 			continue;
 		}
 
 		// Script wants to defer, but we are forced to sync. Continue.
 		// if (!sync && rummode == EVENT_MODE_SYNC)
 		//	;
-		
+
 		// Scripts wants sync mode, and we dont care. Use sync.
 		if (sync && runmode == EVENT_MODE_ANY)
 			runmode = EVENT_MODE_SYNC;
@@ -316,17 +345,22 @@ int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, 
 		ret = 0;
 
 		if (EVENT_MODE_SYNC == runmode)
-			ret = RunEventScript(script, runmode, serial, ev, oRunnable, oActor, oActedOn, lActedAt, i, count, defer_time, total_ret);
+			ret = RunEventScript(script, runmode, serial, ev, oRunnable, oActor, oActedOn, lActedAt, i, count,
+								 defer_time,
+								 total_ret);
+
 		else {
-			DelayCommand(defer_time, RunEventScriptAsync(script, runmode, serial, ev, oRunnable, oActor, oActedOn, lActedAt, i, count, defer_time, total_ret));
+			DelayCommand(defer_time, RunEventScriptAsync(script, runmode, serial, ev, oRunnable, oActor,
+						 oActedOn, lActedAt, i,
+						 count, defer_time, total_ret));
 		}
-		
+
 		if (ret & EVENT_RESULT_STOP)
 			total_ret |= EVENT_RESULT_STOP;
-		
+
 		if (ret & EVENT_RESULT_SUPPRESS)
 			total_ret |= EVENT_RESULT_SUPPRESS;
-		
+
 		if (ret & EVENT_RESULT_FAIL) {
 			_WARN("event script " + script + " indicated failure on " + ev);
 			total_ret |= EVENT_RESULT_FAIL;
@@ -336,28 +370,34 @@ int RunEventScriptsForWithArgv(event_id_t serial, event_t ev, object oRunnable, 
 			total_ret |= EVENT_RESULT_END;
 			break;
 		}
+
 		// Make sure they get queued in the right order.
 		defer_time += 0.01;
 	}
 
-	); // st(event.allscripts)
+	  ); // st(event.allscripts)
 
 	return total_ret;
 }
 
 
-void RunEventScriptAsync(string sScript, int nEventMode, event_id_t serial, event_t ev, object oRunnable,
-		object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime, int retMask) {
+void RunEventScriptAsync(string sScript, int nEventMode, event_id_t serial, event_t ev,
+						 object oRunnable,
+						 object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime,
+						 int retMask)
+{
 
 	RunEventScript(
-		sScript, nEventMode, serial, ev, 
-		oRunnable, oActor, oActedOn, lActedAt, 
+		sScript, nEventMode, serial, ev,
+		oRunnable, oActor, oActedOn, lActedAt,
 		nCurPos, nMaxPos, fDeferTime, retMask
 	);
 }
 
 int RunEventScript(string sScript, int nEventMode, event_id_t serial, event_t ev, object oRunnable,
-		object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime, int retMask) {
+				   object oActor, object oActedOn, location lActedAt, int nCurPos, int nMaxPos, float fDeferTime,
+				   int retMask)
+{
 
 	// Set the state for this particular script execution.
 	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "rpos_cur", nCurPos);
@@ -377,10 +417,10 @@ int RunEventScript(string sScript, int nEventMode, event_id_t serial, event_t ev
 
 	DeleteLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retvar");
 	st("event." + ev + ".script." + sScript +
-			(nEventMode == EVENT_MODE_SYNC ? ".sync" :
-				(nEventMode == EVENT_MODE_DEFER ? ".defer" : ".any")),
-		ExecuteScript(sScript, oRunnable)
-	);
+	   (nEventMode == EVENT_MODE_SYNC ? ".sync" :
+		(nEventMode == EVENT_MODE_DEFER ? ".defer" : ".any")),
+	   ExecuteScript(sScript, oRunnable)
+	  );
 	string sRet = GetLocalString(GetModule(), EVENTS_LVAR_PREFIX + "retvar");
 
 	int nRet = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retvar");
@@ -388,19 +428,21 @@ int RunEventScript(string sScript, int nEventMode, event_id_t serial, event_t ev
 	return nRet;
 }
 
-void SetEventResult(int nValue, string sStatus = "") {
+void SetEventResult(int nValue, string sStatus = "")
+{
 	SetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "retvar", nValue);
 	SetLocalString(GetModule(), EVENTS_LVAR_PREFIX + "retvar", sStatus);
 }
 
 
 
-struct EventInfo GetEventInfo() {
+struct EventInfo GetEventInfo()
+{
 	struct EventInfo r;
-	
+
 	r.ev = GetLocalString(GetModule(), EVENTS_LVAR_PREFIX + "event");
 	r.serial = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "serial");
-	
+
 	r.defer_time = GetLocalFloat(GetModule(), EVENTS_LVAR_PREFIX + "defer");
 	r.r_pos = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "rpos_cur");
 	r.r_total = GetLocalInt(GetModule(), EVENTS_LVAR_PREFIX + "rpos_max");
@@ -416,7 +458,8 @@ struct EventInfo GetEventInfo() {
 
 
 
-struct EventArguments GetEventArguments(event_id_t serial) {
+struct EventArguments GetEventArguments(event_id_t serial)
+{
 	string serial_s = itoa(serial) + "_";
 	struct EventArguments ea;
 	ea.a0 = GetLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a0");
@@ -439,7 +482,8 @@ struct EventArguments GetEventArguments(event_id_t serial) {
 
 
 
-void SetEventArguments(event_id_t serial, struct EventArguments ea) {
+void SetEventArguments(event_id_t serial, struct EventArguments ea)
+{
 	string serial_s = itoa(serial) + "_";
 	SetLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a0", ea.a0);
 	SetLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a1", ea.a1);
@@ -458,7 +502,8 @@ void SetEventArguments(event_id_t serial, struct EventArguments ea) {
 	SetLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l2", ea.l2);
 }
 
-void DeleteEventArgumentsAsync(event_id_t serial) {
+void DeleteEventArgumentsAsync(event_id_t serial)
+{
 	string serial_s = itoa(serial) + "_";
 	DeleteLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a0");
 	DeleteLocalString(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_a1");
@@ -477,6 +522,7 @@ void DeleteEventArgumentsAsync(event_id_t serial) {
 	DeleteLocalLocation(GetModule(), EVENTS_LVAR_PREFIX + serial_s + "arg_l2");
 }
 
-void DeleteEventArguments(event_id_t serial) {
+void DeleteEventArguments(event_id_t serial)
+{
 	DelayCommand(5f, DeleteEventArgumentsAsync(serial));
 }

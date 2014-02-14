@@ -28,25 +28,25 @@
 extern("x0_i0_spells")
 void main()
 {
-    int nBonus = 0;
-    nBonus = ArcaneArcherCalculateBonus() ;
+	int nBonus = 0;
+	nBonus = ArcaneArcherCalculateBonus() ;
 
-    object oTarget = GetSpellTargetObject();
+	object oTarget = GetSpellTargetObject();
 
-    if (GetIsObjectValid(oTarget) == TRUE)
-    {
-        int nDamage = ArcaneArcherDamageDoneByBow() *2;
-        if (nDamage > 0)
-        {
-            effect ePhysical = EffectDamage(nDamage, DAMAGE_TYPE_PIERCING,IPGetDamagePowerConstantFromNumber(nBonus));
-            effect eMagic = EffectDamage(nBonus, DAMAGE_TYPE_MAGICAL);
+	if (GetIsObjectValid(oTarget) == TRUE) {
+		int nDamage = ArcaneArcherDamageDoneByBow() * 2;
 
-          //Fire cast spell at event for the specified target
-            SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, 601));
+		if (nDamage > 0) {
+			effect ePhysical = EffectDamage(nDamage, DAMAGE_TYPE_PIERCING,
+											IPGetDamagePowerConstantFromNumber(nBonus));
+			effect eMagic = EffectDamage(nBonus, DAMAGE_TYPE_MAGICAL);
 
-            ApplyEffectToObject(DURATION_TYPE_INSTANT, ePhysical, oTarget);
-            ApplyEffectToObject(DURATION_TYPE_INSTANT, eMagic, oTarget);
+			//Fire cast spell at event for the specified target
+			SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, 601));
 
-        }
-    }
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, ePhysical, oTarget);
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, eMagic, oTarget);
+
+		}
+	}
 }

@@ -1,17 +1,20 @@
-void main() {
+void main()
+{
 	object oPC = GetLastUsedBy();
 	string sTargetWP = GetLocalString(OBJECT_SELF, "target_rope");
 	object oTarget = GetWaypointByTag("w" + sTargetWP);
 
 	object oRope = GetObjectByTag(sTargetWP + "_s");
 
-	if ( !GetIsObjectValid(oRope) ) {
+	if (!GetIsObjectValid(oRope)) {
 		object oNewRope = CreateObject(OBJECT_TYPE_PLACEABLE, "strickleiter", GetLocation(oTarget), FALSE,
-							  sTargetWP + "_s");
-		if ( !GetIsObjectValid(oNewRope) ) {
+									   sTargetWP + "_s");
+
+		if (!GetIsObjectValid(oNewRope)) {
 			SendMessageToPC(oPC, "Cannot spawn rope :/");
 			return;
 		}
+
 		SetLocalString(oNewRope, "target", GetTag(OBJECT_SELF));
 
 		FloatingTextStringOnCreature("Du laesst die Strickleiter herab.", oPC, TRUE);

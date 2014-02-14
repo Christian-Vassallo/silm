@@ -1,19 +1,21 @@
 extern("inc_mnx_temp")
 
-void UpdateForPlayer(object oPlayer) {
+void UpdateForPlayer(object oPlayer)
+{
 	object oArea = GetArea(oPlayer);
 
-	if ( !GetIsObjectValid(oArea) || GetIsAreaInterior(oArea) )
+	if (!GetIsObjectValid(oArea) || GetIsAreaInterior(oArea))
 		return;
 
 	struct Weather w = GetWeatherFor(oArea, GetCalendarYear(), GetCalendarMonth(), GetCalendarDay(),
-						   GetTimeHour(), GetTimeMinute());
+									 GetTimeHour(), GetTimeMinute());
 
 	SetEngineWeatherFromWeather(oArea, w);
 }
 
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if ("area_enter" == e.ev) {

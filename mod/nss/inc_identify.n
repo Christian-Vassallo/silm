@@ -7,17 +7,20 @@ bool GetItemIdentifiesFor(object oItem, object oCreature);
 void SetItemIdentifiesFor(object oItem, object oCreature);
 
 
-bool GetItemIdentifiesFor(object oItem, object oCreature) {
+bool GetItemIdentifiesFor(object oItem, object oCreature)
+{
 	int cid = GetCharacterID(oCreature);
 
 	return is_dm(oCreature)
-		|| GetLocalInt(oCreature, "always_identify")
-		|| GetItemHasItemProperty(oItem, ITEM_PROPERTY_SELFIDENTIFYING)
-		|| (cid && GetLocalInt(oItem, "identifies_for_" + itoa(cid)));
+		   || GetLocalInt(oCreature, "always_identify")
+		   || GetItemHasItemProperty(oItem, ITEM_PROPERTY_SELFIDENTIFYING)
+		   || (cid && GetLocalInt(oItem, "identifies_for_" + itoa(cid)));
 }
 
-void SetItemIdentifiesFor(object oItem, object oCreature) {
+void SetItemIdentifiesFor(object oItem, object oCreature)
+{
 	int cid = GetCharacterID(oCreature);
+
 	if (!cid)
 		return;
 

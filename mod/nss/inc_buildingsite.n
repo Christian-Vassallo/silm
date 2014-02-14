@@ -1,86 +1,96 @@
 const string DB_PREF = "BS_";
 
-void Load_BuildingSite() {
+void Load_BuildingSite()
+{
 	int i;
 	string sBuildTag = GetLocalString(OBJECT_SELF, "Building_Tag");
 	string sInd;
 	int iNum;
 
-	if ( GetLocalInt(OBJECT_SELF, "loaded") ) return;
+	if (GetLocalInt(OBJECT_SELF, "loaded")) return;
 
-	while ( GetLocalString(OBJECT_SELF, "RES_NAME_" + ( sInd = IntToString(i) )) != "" ) {
+	while (GetLocalString(OBJECT_SELF, "RES_NAME_" + (sInd = IntToString(i))) != "") {
 		SetLocalInt(OBJECT_SELF, "IT_" +
-			GetLocalString(OBJECT_SELF, "RES_TAG_" + sInd), i + 1);
+					GetLocalString(OBJECT_SELF, "RES_TAG_" + sInd), i + 1);
 		i++;
 	}
 
-	if ( !GetCampaignInt(DB_PREF + sBuildTag, "saved") ) return;
+	if (!GetCampaignInt(DB_PREF + sBuildTag, "saved")) return;
 
 	i = 0;
 
-	while ( GetLocalString(OBJECT_SELF, "RES_NAME_" + ( sInd = IntToString(i) )) != "" ) {
+	while (GetLocalString(OBJECT_SELF, "RES_NAME_" + (sInd = IntToString(i))) != "") {
 		iNum = GetCampaignInt(DB_PREF + sBuildTag, "RES_NUM_" + sInd);
 		SetLocalInt(OBJECT_SELF, "RES_NUM_" + sInd, iNum);
 		i++;
 	}
+
 	SetLocalInt(OBJECT_SELF, "loaded", 1);
 }
 
-void Save_BuildingSite() {
+void Save_BuildingSite()
+{
 	int i;
 
 	string sBuildTag = GetLocalString(OBJECT_SELF, "Building_Tag");
 	string sInd;
 	int iNum;
 
-	while ( GetLocalString(OBJECT_SELF, "RES_NAME_" + ( sInd = IntToString(i) )) != "" ) {
+	while (GetLocalString(OBJECT_SELF, "RES_NAME_" + (sInd = IntToString(i))) != "") {
 		SetCampaignInt(DB_PREF + sBuildTag, "RES_NUM_" + sInd,
-			GetLocalInt(OBJECT_SELF, "RES_NUM_" + sInd));
+					   GetLocalInt(OBJECT_SELF, "RES_NUM_" + sInd));
 		i++;
 	}
+
 	SetCampaignInt(DB_PREF + sBuildTag, "saved", 1);
 }
 
-void Output_Needed(object oPC) {
+void Output_Needed(object oPC)
+{
 	int i;
 	string sInd;
 	int iNum;
 	int iMissing = 0;
 	string sName;
 
-	while ( ( sName = GetLocalString(OBJECT_SELF, "RES_NAME_" + ( sInd = IntToString(i) )) ) != "" ) {
-		if ( ( iNum = GetLocalInt(OBJECT_SELF, "RES_NUM_" + sInd) ) > 0 ) {
-			if ( !iMissing ) {
+	while ((sName = GetLocalString(OBJECT_SELF, "RES_NAME_" + (sInd = IntToString(i)))) != "") {
+		if ((iNum = GetLocalInt(OBJECT_SELF, "RES_NUM_" + sInd)) > 0) {
+			if (!iMissing) {
 				SendMessageToPC(oPC, "Noch fehlende Materialien:");
 				iMissing = 1;
 			}
+
 			SendMessageToPC(oPC, sName + ": " + IntToString(iNum));
 		}
+
 		i++;
 	}
 
-	if ( !iMissing )
+	if (!iMissing)
 		SendMessageToPC(oPC, "Alle Materialien vollstaendig.");
 }
 
 
-void Scan_Inventory(object oNotify) {
+void Scan_Inventory(object oNotify)
+{
 	object oItem = GetFirstItemInInventory(OBJECT_SELF);
 	int iInd;
 	int iAdded = 0;
 	int iNum;
 
-	while ( GetIsObjectValid(oItem) ) {
-		if ( ( iInd = GetLocalInt(OBJECT_SELF, "IT_" + GetTag(oItem)) - 1 ) >= 0 ) {
-			if ( ( iNum = GetLocalInt(OBJECT_SELF, "RES_NUM_" + IntToString(iInd)) ) > 0 ) {
+	while (GetIsObjectValid(oItem)) {
+		if ((iInd = GetLocalInt(OBJECT_SELF, "IT_" + GetTag(oItem)) - 1) >= 0) {
+			if ((iNum = GetLocalInt(OBJECT_SELF, "RES_NUM_" + IntToString(iInd))) > 0) {
 				SetLocalInt(OBJECT_SELF, "RES_NUM_" + IntToString(iInd), iNum - 1);
 				DestroyObject(oItem);
 				iAdded = 1;
 			}
 		}
+
 		oItem = GetNextItemInInventory(OBJECT_SELF);
 	}
-	if ( iAdded ) {
+
+	if (iAdded) {
 		Save_BuildingSite();
 		Output_Needed(oNotify);
 	}

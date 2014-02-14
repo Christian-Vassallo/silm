@@ -4,7 +4,8 @@ string GetPlayerName(object player, int afkOverride = -1);
 
 bool SetPlayerName(object player, string nameOverride = "", bool noEvent = false);
 
-string GetPlayerName(object player, int afkOverride = -1) {
+string GetPlayerName(object player, int afkOverride = -1)
+{
 	string r = GetLocalString(player, "name_override");
 
 	if (afkOverride == -1)
@@ -19,12 +20,14 @@ string GetPlayerName(object player, int afkOverride = -1) {
 	return r;
 }
 
-bool SetPlayerName(object player, string nameOverride = "", bool noEvent = false) {
+bool SetPlayerName(object player, string nameOverride = "", bool noEvent = false)
+{
 	string oldNameOverride = GetLocalString(player, "name_override");
 
 	// Don't trigger event if the name doesn't actually change.
 	if (oldNameOverride == "" && GetName(player, true) == nameOverride)
 		return true;
+
 	if (oldNameOverride == nameOverride)
 		return true;
 
@@ -33,8 +36,9 @@ bool SetPlayerName(object player, string nameOverride = "", bool noEvent = false
 		evarg.a0 = nameOverride;
 		int serial = GetEventSerial();
 		int ret = RunEventScriptsForWithArgv(serial, "player_setname", player, player, player,
-			GetLocation(player), evarg, EVENT_MODE_SYNC);
+											 GetLocation(player), evarg, EVENT_MODE_SYNC);
 		DeleteEventArguments(serial);
+
 		if (ret & EVENT_RESULT_SUPPRESS)
 			return false;
 	}

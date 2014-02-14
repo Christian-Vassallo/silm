@@ -13,7 +13,7 @@
         Will entangle target.
         + If a saving throw REFLEX vs. DC 15 is failed the creature
           is immobile (HELD)
-          
+
         DURATION: 1 turn
 */
 //:://////////////////////////////////////////////
@@ -24,22 +24,21 @@
 extern("x0_i0_spells")
 void main()
 {
-    //Declare major variables
-    effect eHold = EffectEntangle();
-    effect eEntangle = EffectVisualEffect(VFX_DUR_ENTANGLE);
-    object oTarget = GetSpellTargetObject();
-    effect eLink = EffectLinkEffects(eHold, eEntangle);
-    
-    if(spellsIsTarget(oTarget,SPELL_TARGET_STANDARDHOSTILE,OBJECT_SELF) )
-	{
-        SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, GetSpellId(), TRUE));
-        //Make reflex save
-        if(!MySavingThrow(SAVING_THROW_REFLEX, oTarget, 15))
-        {
-           //Apply linked effects
-           ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, RoundsToSeconds(2));
-        }
-    }
+	//Declare major variables
+	effect eHold = EffectEntangle();
+	effect eEntangle = EffectVisualEffect(VFX_DUR_ENTANGLE);
+	object oTarget = GetSpellTargetObject();
+	effect eLink = EffectLinkEffects(eHold, eEntangle);
+
+	if (spellsIsTarget(oTarget, SPELL_TARGET_STANDARDHOSTILE, OBJECT_SELF)) {
+		SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, GetSpellId(), TRUE));
+
+		//Make reflex save
+		if (!MySavingThrow(SAVING_THROW_REFLEX, oTarget, 15)) {
+			//Apply linked effects
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, RoundsToSeconds(2));
+		}
+	}
 }
 
 

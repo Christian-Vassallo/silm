@@ -8,7 +8,8 @@ void DBook_MakeDialog(object oPC);
 
 
 
-void DBook_Start(object oPC, object oBook) {
+void DBook_Start(object oPC, object oBook)
+{
 	DeleteLocalInt(oPC, "rcp_sel");
 	SetLocalObject(oPC, "dbook_current", oBook);
 
@@ -18,20 +19,22 @@ void DBook_Start(object oPC, object oBook) {
 
 }
 
-void DBook_MakeDialog(object oPC) {
+void DBook_MakeDialog(object oPC)
+{
 	ClearList(oPC, "rcp");
 
 	object oBook = GetLocalObject(oPC, "dbook_current");
 
 	int nCSkill = GetCraftSkillByTag(GetSubString(GetTag(oBook), 6, 1024)); // dbook_*
-	if ( nCSkill == 0 )
+
+	if (nCSkill == 0)
 		return;
 
 	int iSelRecipe = GetLocalInt(oPC, "rcp_sel");
 
 	int nCID = GetCharacterID(oPC);
 
-	if ( !GetIsDM(oPC) && !nCID ) {
+	if (!GetIsDM(oPC) && !nCID) {
 		SendMessageToPC(oPC, "Bug, nicht in DB gefunden.");
 		return;
 	}
@@ -41,31 +44,38 @@ void DBook_MakeDialog(object oPC) {
 	string sRecipeText;
 
 	// Show the menue
-	if ( !iSelRecipe ) {
+	if (!iSelRecipe) {
 		DeleteLocalInt(oPC, "selected_recipe");
 
-		if (GetIsDM(oPC) )
+		if (GetIsDM(oPC))
 			pQ("select id, name from craft_recipes where cskill = " +
-				IntToString(nCSkill) + " order by name asc;");
+			   IntToString(nCSkill) + " order by name asc;");
+
 		else
 			pQ(
-				"select " + 
-					"id, name, " + 
-					"(cskill_min <= (select skill_practical from craft_skill where cskill = " + pSi(nCSkill) + " and character = " + pSi(nCID) + ")) as cancraft " +
-				
-				"from craft_recipes where cskill = " + pSi(nCSkill) + " and (" + 
+				"select " +
+				"id, name, " +
+				"(cskill_min <= (select skill_practical from craft_skill where cskill = " + pSi(
+					nCSkill) + " and character = " + pSi(
+					nCID) + ")) as cancraft " +
 
-					// Its a automatically received recipe
-					"( automatic = true and cskill_min <= 10 + (select skill_practical from craft_skill where cskill = " + pSi(nCSkill) + " and character = " + pSi(nCID) + ") ) " +
-						" or " +
-					// Its in the players recipe book
-					"( id = (select recipe from craft_rcpbook where craft_recipes.id = craft_rcpbook.recipe and character = " + pSi(nCID) + " and cskill = " + pSi(nCSkill) +")  ) " + 
+				"from craft_recipes where cskill = " + pSi(nCSkill) + " and (" +
+
+				// Its a automatically received recipe
+				"( automatic = true and cskill_min <= 10 + (select skill_practical from craft_skill where cskill = "
+				+ pSi(
+					nCSkill) + " and character = " + pSi(nCID) + ") ) " +
+				" or " +
+				// Its in the players recipe book
+				"( id = (select recipe from craft_rcpbook where craft_recipes.id = craft_rcpbook.recipe and character = "
+				+ pSi(
+					nCID) + " and cskill = " + pSi(nCSkill) + ")  ) " +
 
 				// Also, it HAS to be active for it to show up (killswitch)
 				") and active = true order by name asc;"
 			);
 
-		while ( pF() ) {
+		while (pF()) {
 			nID = pGi(1);
 			sName = pG(2);
 			cancraft = pGb(3);
@@ -83,7 +93,8 @@ void DBook_MakeDialog(object oPC) {
 					  IntToString(nCount) +
 					  " Rezepte sind darin enthalten.  Eure Faehigkeiten in diesem Handwerk belaufen sich auf "
 					  +
-					  IntToString(psk.practical) + " praktische Stufen (davon " + IntToString(psk.epractical) + " effektiv), sowie " +
+					  IntToString(psk.practical) + " praktische Stufen (davon " + IntToString(
+						  psk.epractical) + " effektiv), sowie " +
 					  IntToString(psk.theory) + " theoretische Stufen.  Eure Erfahrungspunkte liegen bei " +
 					  IntToString(psk.practical_xp) +
 					  " XP - fuer einen Aufstieg sind noch " +
@@ -92,10 +103,12 @@ void DBook_MakeDialog(object oPC) {
 		ResetConvList(oPC, oPC, "rcp", 50000, "dbook_cb", sRecipeText);
 
 		// Show the specific recipe
+
 	} else {
 
 		nID = GetLocalInt(oPC, "selected_recipe");
-		if ( !nID ) {
+
+		if (!nID) {
 			nID = GetListInt(oPC, "rcp", GetLocalInt(oPC, "ConvList_Select"));
 			SetLocalInt(oPC, "selected_recipe", nID);
 		}
@@ -116,9 +129,10 @@ void DBook_MakeDialog(object oPC) {
 			"select description,cskill_min,cskill_max from craft_recipes where id = " +
 			IntToString(nID) + " limit 1;");
 
-		if ( !pF() ) {
+		if (!pF()) {
 			sRecipeText =
 				"Rezept nicht gefunden!  Dies ist ein Datenbank-Fehler; bitte die Uhrzeit und was gerade getan wurde merken und das ganze dann einem SL melden.";
+
 		} else {
 			string
 			sD = pG(1),
@@ -131,6 +145,6 @@ void DBook_MakeDialog(object oPC) {
 		}
 
 		ResetConvList(oPC, oPC, "rcp", 50000, "dbook_cb", sRecipeText, "", "", "dbook_backtomenu",
-			"Zurueck zur Liste");
+					  "Zurueck zur Liste");
 	}
 }

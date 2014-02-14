@@ -8,10 +8,12 @@ const string CT = "polymorph";
 
 void DoWildShapeTransForm(object oTarget, int nPolyID);
 
-effect GetEffectBonus(string str) {
+effect GetEffectBonus(string str)
+{
 	effect eLink;
+
 	// For flying creatures
-	if ( "fly" == str ) {
+	if ("fly" == str) {
 		eLink = EffectConcealment(100, MISS_CHANCE_TYPE_VS_MELEE);
 		eLink = EffectLinkEffects(EffectMissChance(100, MISS_CHANCE_TYPE_VS_MELEE), eLink);
 		eLink = EffectLinkEffects(EffectMovementSpeedIncrease(40), eLink);
@@ -21,7 +23,8 @@ effect GetEffectBonus(string str) {
 }
 
 
-void main() {
+void main()
+{
 	object
 	oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC"),
 	oTarget = GetLocalObject(oPC, "polymorph_target");
@@ -35,7 +38,7 @@ void main() {
 	effect eP = SupernaturalEffect(EffectWildshape(oPC, iSelection, FALSE));
 	effect eVis = EffectVisualEffect(VFX_IMP_POLYMORPH);
 
-	if ( sEffect != "" ) {
+	if (sEffect != "") {
 		eP = EffectLinkEffects(GetEffectBonus(sEffect), eP);
 	}
 

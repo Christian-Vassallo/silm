@@ -8,18 +8,23 @@ extern("inc_target")
 
 void MkDlg(object oPC);
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 	struct EventArguments ea = GetEventArguments(e.serial);
 
 	if (e.ev == "player_login") {
 		int cid = GetCharacterID(e.runnable);
+
 		if (!cid) return;
 
 		pQ("select disguise from characters where id = " + pSi(cid) + " and disguise is not null;");
+
 		if (pF()) {
 			int disg = pGi(1);
+
 			if (!disg) return;
+
 			struct Disguise dd = disguise_load(disg);
 			disguise_update_login(e.runnable, dd);
 		}
@@ -34,11 +39,14 @@ void main() {
 
 			if (-1 != idx && name != "") {
 				int disId = disguise_find(e.runnable, name);
+
 				if (!disId) {
 					SendMessageToPC(e.runnable, "Cannot find disguise: " + name);
+
 				} else {
 
 					struct Disguise dd = disguise_load(disId);
+
 					if (!dd.valid)
 						event_stop_end_suppress();
 
@@ -67,11 +75,13 @@ void main() {
 
 			if (-1 == idx || name == "")
 				SendMessageToPC(e.runnable, "Give a name.");
+
 			else {
 
 				SendMessageToPC(e.runnable, "Saving current disguise as " + name);
 				disguise_save(e.runnable, name);
 			}
+
 			event_stop_end_suppress();
 		}
 
@@ -81,28 +91,35 @@ void main() {
 
 			if (-1 == idx || name == "" || !is_creature(playerTarget)) {
 				SendMessageToPC(e.runnable,
-					"Give a name and a valid player as target.");
+								"Give a name and a valid player as target.");
+
 			} else {
 
 				SendMessageToPC(e.runnable, "Saving " + GetName(playerTarget) +
-					" as disguise " + name);
+								" as disguise " + name);
 				int cidof = GetCharacterID(e.runnable);
 				disguise_save(playerTarget, name, cidof, true);
 			}
+
 			event_stop_end_suppress();
 		}
 	}
 }
 
-void MkDlg(object oPC) {
+void MkDlg(object oPC)
+{
 	ClearList(oPC, TTT);
 	int cid = GetCharacterID(oPC);
+
 	if (!cid) return;
 
 	int current_disguise = disguise_current_id(oPC);
-	string sText = "Select a disguise, or create one from your current appearance via /savedisguise Name. Keep 'Name' very simple and easy to re-type.";
+	string sText =
+		"Select a disguise, or create one from your current appearance via /savedisguise Name. Keep 'Name' very simple and easy to re-type.";
 
-	pQ("select id,name,gender,cid,to_char(updated_on, 'DD.MM.YY HH24:MI') from " + DISGUISE_TABLE + " where cid is null or cid = " + pSi(cid) + " order by cid, name asc;");
+	pQ("select id,name,gender,cid,to_char(updated_on, 'DD.MM.YY HH24:MI') from " + DISGUISE_TABLE +
+	   " where cid is null or cid = " + pSi(cid) + " order by cid, name asc;");
+
 	while (pF()) {
 		int id = pGi(1);
 		string name = pGs(2);
@@ -117,6 +134,7 @@ void MkDlg(object oPC) {
 
 		if (cidd == 0)
 			name = ColorTag(cOrange) + name;
+
 		else if (current_disguise == id)
 			name = ColorTag(cGreen) + name;
 

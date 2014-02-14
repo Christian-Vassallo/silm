@@ -15,39 +15,42 @@ void XP_Start(object oPC, object oMentorItem);
 
 // impl
 
-void XPDoXPTransaction(object oGiver, object oReceiver, int nXP) {
-	if ( !GetIsPC(oGiver) || !GetIsDM(oGiver) )
+void XPDoXPTransaction(object oGiver, object oReceiver, int nXP)
+{
+	if (!GetIsPC(oGiver) || !GetIsDM(oGiver))
 		return;
 
-	if ( !GetIsPC(oReceiver) || GetIsDM(oReceiver) )
+	if (!GetIsPC(oReceiver) || GetIsDM(oReceiver))
 		return;
 
-	if ( nXP < 1 )
+	if (nXP < 1)
 		return;
 
 	int nAID = GetAccountID(oGiver),
 		nTCID = GetCharacterID(oReceiver);
 
 
-	if ( nAID == 0 || nTCID == 0 ) {
+	if (nAID == 0 || nTCID == 0) {
 		SendMessageToAllDMs(PCToString(oMentor) +
-			" tried to give XP to " +
-			PCToString(oReceiver) +
-			", but failed because no character IDs were present (Live data: " +
-			IntToString(nAID) + " " + IntToString(nCID) + " " + IntToString(nTCID) + ").");
+							" tried to give XP to " +
+							PCToString(oReceiver) +
+							", but failed because no character IDs were present (Live data: " +
+							IntToString(nAID) + " " + IntToString(nCID) + " " + IntToString(nTCID) + ").");
 		return;
 	}
 
 
 	SQLQuery("select id from xpdata where aid=" +
-		IntToString(nAID) + " and tcid=" + IntToString(nTCID) + " limit 1;");
-	if ( SQLFetch() ) {
+			 IntToString(nAID) + " and tcid=" + IntToString(nTCID) + " limit 1;");
+
+	if (SQLFetch()) {
 		string id = SQLGetData(1);
 
 		SQLQuery("update xpdata set `xp`=`xp`+" + IntToString(nXP) + " where id = " + id + " limit 1;");
+
 	} else {
 		SQLQuery("insert into xpdata (aid, tcid, xp) values(" +
-			IntToString(nAID) + ", " + IntToString(nTCID) + ", " + IntToString(nXP) + ");");
+				 IntToString(nAID) + ", " + IntToString(nTCID) + ", " + IntToString(nXP) + ");");
 	}
 
 	GiveXP(oReceiver, nXP, FALSE);
@@ -58,17 +61,19 @@ void XPDoXPTransaction(object oGiver, object oReceiver, int nXP) {
 
 
 
-void XP_Start(object oPC, object oMentorItem) {
+void XP_Start(object oPC, object oMentorItem)
+{
 	DeleteLocalInt(oPC, "xp_sel");
 
-	if ( !XP_MakeDialog(oPC) )
+	if (!XP_MakeDialog(oPC))
 		return;
 
 	AssignCommand(oPC, ActionStartConversation(oPC, "list_select", TRUE, TRUE));
 
 }
 
-int XP_MakeDialog(object oPC) {
+int XP_MakeDialog(object oPC)
+{
 	ClearList(oPC, TAG);
 
 	int nL0 = GetMenuLevel(oPC, TAG, 0);

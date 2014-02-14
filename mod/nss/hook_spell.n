@@ -12,7 +12,8 @@ int WildMagic(object oPC);
 
 void WildMagicVisuals(object oPC);
 
-void main() {
+void main()
+{
 	object oPC = OBJECT_SELF;
 	location lLoc = GetLocation(oPC);
 	int nSpell = GetSpellId(); // returns the SPELL_* constant of the spell cast
@@ -30,28 +31,33 @@ void main() {
 
 
 	int nRunWildMagic = 0;
-	if ( GetLocalInt(oPC, "wild_magic") )
+
+	if (GetLocalInt(oPC, "wild_magic"))
 		nRunWildMagic = GetLocalInt(oPC, "wild_magic");
-	if ( GetLocalInt(GetArea(oPC), "wild_magic") )
+
+	if (GetLocalInt(GetArea(oPC), "wild_magic"))
 		nRunWildMagic = GetLocalInt(GetArea(oPC), "wild_magic");
-	if ( GetLocalInt(GetModule(), "wild_magic") )
+
+	if (GetLocalInt(GetModule(), "wild_magic"))
 		nRunWildMagic = GetLocalInt(GetModule(), "wild_magic");
-	if ( BASE_ITEM_POTIONS == GetBaseItemType(oItem) )
+
+	if (BASE_ITEM_POTIONS == GetBaseItemType(oItem))
 		nRunWildMagic = 0;
 
-	if ( nRunWildMagic && WildMagic(oPC) )
+	if (nRunWildMagic && WildMagic(oPC))
 		return;
 
 
 
 	// The Event hook goes here
 
-	if ( is_item(oTarget) ) {
+	if (is_item(oTarget)) {
 		// Event: item_spellcast
 		// - actor: GetLastSpellCaster()
-		int nResult = RunEventScriptsFor(GetEventSerial(), "item_spell_cast_at", oPC, oPC, oTarget, lTarget); //oTarget, EVENT_ITEM_SPELLCAST_AT, EVENT_PREFIX_ITEM);
+		int nResult = RunEventScriptsFor(GetEventSerial(), "item_spell_cast_at", oPC, oPC, oTarget,
+										 lTarget); //oTarget, EVENT_ITEM_SPELLCAST_AT, EVENT_PREFIX_ITEM);
 
-		if ( nResult & EVENT_RESULT_STOP ) {
+		if (nResult & EVENT_RESULT_STOP) {
 			// Do not continue.
 			SetModuleOverrideSpellScriptFinished();
 			return;
@@ -61,7 +67,8 @@ void main() {
 	if (is_creature(oTarget)) {
 		// Event: creature_spellcast
 		// - actor: GetLastSpellCaster()
-		int ret = RunEventScriptsFor(GetEventSerial(), "creature_spell_cast_at", oPC, oPC, oTarget, lTarget);
+		int ret = RunEventScriptsFor(GetEventSerial(), "creature_spell_cast_at", oPC, oPC, oTarget,
+									 lTarget);
 
 		if (ret & EVENT_RESULT_STOP) {
 			SetModuleOverrideSpellScriptFinished();
@@ -90,19 +97,20 @@ void main() {
 	}
 
 	// SpellStaff
-	if ( DoSpellStaff(oPC, nSpell) )
+	if (DoSpellStaff(oPC, nSpell))
 		SetModuleOverrideSpellScriptFinished();
 
 	// Craft system
 
-	if ( is_placeable(oTarget) && GetStringLowerCase(GetStringLeft(GetTag(oTarget), 4)) == "hws_"
-		&& OnSpellCastAt(oPC, oTarget, nSpell, nMeta)
-	)
+	if (is_placeable(oTarget) && GetStringLowerCase(GetStringLeft(GetTag(oTarget), 4)) == "hws_"
+			&& OnSpellCastAt(oPC, oTarget, nSpell, nMeta)
+	   )
 		SetModuleOverrideSpellScriptFinished();
 
 }
 
-int WildMagic(object oPC) {
+int WildMagic(object oPC)
+{
 	location lLoc = GetLocation(oPC);
 	int nSpell = GetSpellId(); // returns the SPELL_* constant of the spell cast
 	object oTarget = GetSpellTargetObject(); // returns the targeted object of the spell, if valid
@@ -116,11 +124,11 @@ int WildMagic(object oPC) {
 	int nDC = 12 + d3();
 
 	// Dont run for NPCS or DMS
-	if ( !GetIsPC(oPC) || GetIsDM(oPC) )
+	if (!GetIsPC(oPC) || GetIsDM(oPC))
 		return 0;
 
 	// Dont run for Item-Triggered Spells
-	if ( GetIsObjectValid(oItem) )
+	if (GetIsObjectValid(oItem))
 		return 0;
 
 	int bIsImmune = GetIsImmune(oPC, IMMUNITY_TYPE_MIND_SPELLS);
@@ -130,58 +138,63 @@ int WildMagic(object oPC) {
 	int nDam = GetCurrentHitPoints(oPC) - d20();
 
 	// some mean switch here!
-	switch ( d6() ) {
-		case 1:
-		case 2:
-			// Works as expected
-			if ( WillSave(oPC, nDC - ( bIsImmune * 4 ), SAVING_THROW_TYPE_MIND_SPELLS) )
-				return 0;
+	switch (d6()) {
+	case 1:
+	case 2:
 
-			// failed, fall thru
+		// Works as expected
+		if (WillSave(oPC, nDC - (bIsImmune * 4), SAVING_THROW_TYPE_MIND_SPELLS))
+			return 0;
 
-		case 3:
-		case 4:
-			// fails, burps
-			if ( bIsImmune || WillSave(oPC, nDC, SAVING_THROW_TYPE_MIND_SPELLS) ) {
-				SpeakString("*Die Magieladung verpufft wirkungslos.*");
-				SetModuleOverrideSpellScriptFinished();
-				return 1;
-			}
-			// failed, fall thru
-		case 5:
-		case 6:
-			// Well, that DIDNT work out.
+	// failed, fall thru
+
+	case 3:
+	case 4:
+
+		// fails, burps
+		if (bIsImmune || WillSave(oPC, nDC, SAVING_THROW_TYPE_MIND_SPELLS)) {
+			SpeakString("*Die Magieladung verpufft wirkungslos.*");
 			SetModuleOverrideSpellScriptFinished();
+			return 1;
+		}
 
-			DelayCommand(3.0, ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDamage(nDam), oPC));
-			DrawSpiral(DURATION_TYPE_INSTANT, VFX_IMP_DOMINATE_S, lLoc, 8.0, 0.0, 1.0, 45, 2.5, 3.0);
-			DrawSpiral(DURATION_TYPE_INSTANT, VFX_IMP_FROST_S, lLoc, 8.0, 0.0, 1.0, 45, 2.5, 3.0, 180.0);
-			DelayCommand(3.0, WildMagicVisuals(oPC));
+	// failed, fall thru
+	case 5:
+	case 6:
+		// Well, that DIDNT work out.
+		SetModuleOverrideSpellScriptFinished();
 
-			// near-lethal damage, unconcious
-			switch ( Random(6) ) {
-				case 0:
-				case 1:
-					SpeakString("*Die Magieladung schlaegt auf Euch zurueck, und verwirrt Euren Geist.*");
-					ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectConfused(), oPC, 120.0);
-					ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectBlindness(), oPC, 120.0);
-					break;
-				case 2:
-				case 3:
-					SpeakString(
-						"*Die Magieladung schlaegt auf Euch zurueck, und laesst Euch - im Geiste - die Ebenen wandern.*");
-					ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectConfused(), oPC, 120.0);
-					DelayCommand(3.5, PlaneWalk(oPC, "", 120.0));
-					break;
-			}
+		DelayCommand(3.0, ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDamage(nDam), oPC));
+		DrawSpiral(DURATION_TYPE_INSTANT, VFX_IMP_DOMINATE_S, lLoc, 8.0, 0.0, 1.0, 45, 2.5, 3.0);
+		DrawSpiral(DURATION_TYPE_INSTANT, VFX_IMP_FROST_S, lLoc, 8.0, 0.0, 1.0, 45, 2.5, 3.0, 180.0);
+		DelayCommand(3.0, WildMagicVisuals(oPC));
 
+		// near-lethal damage, unconcious
+		switch (Random(6)) {
+		case 0:
+		case 1:
+			SpeakString("*Die Magieladung schlaegt auf Euch zurueck, und verwirrt Euren Geist.*");
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectConfused(), oPC, 120.0);
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectBlindness(), oPC, 120.0);
 			break;
+
+		case 2:
+		case 3:
+			SpeakString(
+				"*Die Magieladung schlaegt auf Euch zurueck, und laesst Euch - im Geiste - die Ebenen wandern.*");
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectConfused(), oPC, 120.0);
+			DelayCommand(3.5, PlaneWalk(oPC, "", 120.0));
+			break;
+		}
+
+		break;
 	}
 
 	return 1;
 }
 
-void WildMagicVisuals(object oPC) {
+void WildMagicVisuals(object oPC)
+{
 	location lLoc = GetLocation(oPC);
 
 

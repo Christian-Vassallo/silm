@@ -1,39 +1,41 @@
 extern("x0_i0_spells")
-extern("x2_inc_spellhook") 
+extern("x2_inc_spellhook")
 
-void checkAndDismiss(object caster, object creature, int baseDC) {
+void checkAndDismiss(object caster, object creature, int baseDC)
+{
 	if (MyResistSpell(caster, creature))
 		return;
 
 	int dc = baseDC
-		- GetHitDice(creature)
-		+ GetCasterLevel(caster);
-	
+			 - GetHitDice(creature)
+			 + GetCasterLevel(caster);
+
 	if (MySavingThrow(SAVING_THROW_WILL, creature, dc))
 		return;
-	
+
 	ApplyEffectToObject(DURATION_TYPE_INSTANT,
-		EffectVisualEffect(VFX_IMP_UNSUMMON), creature);
+						EffectVisualEffect(VFX_IMP_UNSUMMON), creature);
 	DestroyObject(creature, 0.5);
 }
 
-void main() {
+void main()
+{
 	if (!X2PreSpellCastCode())
 		return;
 
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
-		EffectVisualEffect(VFX_FNF_LOS_EVIL_30),
-		GetSpellTargetLocation());
+						  EffectVisualEffect(VFX_FNF_LOS_EVIL_30),
+						  GetSpellTargetLocation());
 
 	int nSpellDC = GetSpellSaveDC();
 
 	object oTarget = GetFirstObjectInShape(SHAPE_SPHERE,
-		RADIUS_SIZE_COLOSSAL, GetLocation(OBJECT_SELF));
+										   RADIUS_SIZE_COLOSSAL, GetLocation(OBJECT_SELF));
 
-	while(GetIsObjectValid(oTarget)) {
+	while (GetIsObjectValid(oTarget)) {
 		object oMaster = GetMaster(oTarget);
 
-		if(GetIsObjectValid(oMaster) &&
+		if (GetIsObjectValid(oMaster) &&
 				spellsIsTarget(oMaster, SPELL_TARGET_STANDARDHOSTILE, OBJECT_SELF)) {
 
 			if (GetAssociate(ASSOCIATE_TYPE_SUMMONED, oMaster) == oTarget) {
@@ -43,6 +45,6 @@ void main() {
 		}
 
 		oTarget = GetNextObjectInShape(SHAPE_SPHERE,
-			RADIUS_SIZE_COLOSSAL, GetLocation(OBJECT_SELF));
+									   RADIUS_SIZE_COLOSSAL, GetLocation(OBJECT_SELF));
 	}
 }

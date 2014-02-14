@@ -5,7 +5,8 @@ extern("inc_chat_lib")
 
 const string TTT = "bb";
 
-string parseBBCode(string text) {
+string parseBBCode(string text)
+{
 	string textColor = ColorTag(cWhite);
 	string boldColor = ColorTag(cTeal);
 	string italicsColor = ColorTag(cLightBlue);
@@ -24,8 +25,10 @@ string parseBBCode(string text) {
 	string new;
 	int in_tag_def = 0; // 0: in-tag-body 1: in-open-tag 2: in-close-tag
 	string current_tag = "";
+
 	for (i = 0; i < GetStringLength(text); i++) {
 		string c = GetSubString(text, i, 1);
+
 		if (c == "[") {
 			in_tag_def = 1;
 			continue;
@@ -35,38 +38,48 @@ string parseBBCode(string text) {
 			in_tag_def = 2;
 			continue;
 		}
-		
+
 		if (c == "]") {
 			if (current_tag == "b")
 				new += in_tag_def > 1 ? "*" + textColor : boldColor + "*";
+
 			if (current_tag == "i")
 				new += in_tag_def > 1 ? "/" + textColor : italicsColor + "/";
+
 			if (current_tag == "u")
 				new += in_tag_def > 1 ? "_" + textColor : underlineColor + "_";
+
 			if (current_tag == "s")
 				new += in_tag_def > 1 ? "-" + textColor : strikeColor + "-";
 
 			if (current_tag == "color=crimson")
 				new += in_tag_def > 1 ? textColor : crimsonColor;
+
 			if (current_tag == "color=orange")
 				new += in_tag_def > 1 ? textColor : orangeColor;
+
 			if (current_tag == "color=limegreen")
 				new += in_tag_def > 1 ? textColor : limegreenColor;
+
 			if (current_tag == "color=deepskyblue")
 				new += in_tag_def > 1 ? textColor : deepskyblueColor;
+
 			if (current_tag == "color=blue")
 				new += in_tag_def > 1 ? textColor : blueColor;
+
 			if (current_tag == "color=darkviolet")
 				new += in_tag_def > 1 ? textColor : darkvioletColor;
+
 			if (current_tag == "color=gray")
 				new += in_tag_def > 1 ? textColor : grayColor;
 
 			if (in_tag_def > 1)
 				current_tag = "";
+
 			in_tag_def = 0;
 			continue;
 		}
-		
+
 		if (in_tag_def == 1)
 			current_tag += c;
 
@@ -75,17 +88,20 @@ string parseBBCode(string text) {
 
 		if (current_tag == "s" && c == " ")
 			c = "-";
+
 		if (current_tag == "u" && c == " ")
 			c = "_";
 
 		new += c;
 	}
-	
+
 	return new;
 }
 
-void mkdlg(object pc, object forumBoard) {
+void mkdlg(object pc, object forumBoard)
+{
 	int forum = GetLocalInt(forumBoard, "forum_id");
+
 	if (!forum) {
 		_ERROR("No forum_id defined.");
 		SendMessageToPC(pc, "No forum_id defined (bug).");
@@ -101,16 +117,18 @@ void mkdlg(object pc, object forumBoard) {
 		string sText = "Keine Zettel ausgehangen.";
 
 		SQLQuery("select f.Description from bb_Forums f where f.ID = " +
-			itoa(forum));
+				 itoa(forum));
+
 		if (SQLFetch())
 			sText = parseBBCode(SQLGetData(1));
 
 		SQLQuery("select p.ID, convert(p.Subject using utf8) " +
-			" from bb_Threads t, bb_Posts p" +
-			" where p.Thread = t.id and t.Forum = " + itoa(forum) +
-			" and t.Options & 2 = 0" + // Not sticky threads.
-			" and t.Options & 1 = 0" + // Not closed threads.
-			" group by p.Thread order by p.Date desc limit 50;");
+				 " from bb_Threads t, bb_Posts p" +
+				 " where p.Thread = t.id and t.Forum = " + itoa(forum) +
+				 " and t.Options & 2 = 0" + // Not sticky threads.
+				 " and t.Options & 1 = 0" + // Not closed threads.
+				 " group by p.Thread order by p.Date desc limit 50;");
+
 		while (SQLFetch()) {
 			int id = atoi(SQLGetData(1));
 			string subject = SQLGetData(2);
@@ -120,7 +138,7 @@ void mkdlg(object pc, object forumBoard) {
 		}
 
 		ResetConvList(pc, pc, TTT, 50000, "bb_cb", sText, "", "", "",
-			"Zurueck zur Liste");
+					  "Zurueck zur Liste");
 
 	} else if (nMenuLevel0 == 1) {
 		int postId = GetListInt(pc, TTT, nSelected);
@@ -129,11 +147,12 @@ void mkdlg(object pc, object forumBoard) {
 		SQLQuery(
 			"SELECT convert(unhex(replace(hex(p.Msg), '0D', '')) using utf8) " +
 			"FROM bb_Posts p where p.ID = " + itoa(postId));
+
 		if (SQLFetch())
 			txt = parseBBCode(SQLGetData(1));
 
 		ResetConvList(pc, pc, TTT, 50000, "bb_cb", txt, "", "", "bb_b2m0",
-			"Zurueck zur Liste");
+					  "Zurueck zur Liste");
 	}
 
 

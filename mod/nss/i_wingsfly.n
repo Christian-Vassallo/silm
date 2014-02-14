@@ -2,34 +2,37 @@
  * Wings of flying
  */
 
-int GetWingType(object w) {
+int GetWingType(object w)
+{
 	return GetLocalInt(w, "wingmodel") || 6;
 }
 
-void eq(object cloak, object creature) {
+void eq(object cloak, object creature)
+{
 	SetCreatureWingType(0, creature);
 	SetItemCursedFlag(cloak, false);
 	ApplyEffectToObject(DURATION_TYPE_INSTANT,
-		EffectVisualEffect(VFX_IMP_CHARM), creature);
+						EffectVisualEffect(VFX_IMP_CHARM), creature);
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "item_activate"
 			&& GetTag(e.runnable) == "wings_of_flying") {
-		
+
 		int wm = GetWingType(e.runnable);
-		
+
 		AssignCommand(e.actor, ClearAllActions(true));
 		AssignCommand(e.actor, ActionUnequipItem(e.runnable));
 		AssignCommand(e.actor,
-			ActionDoCommand(SetCreatureWingType(wm, e.actor)));
+					  ActionDoCommand(SetCreatureWingType(wm, e.actor)));
 		AssignCommand(e.actor, ActionDoCommand(
-			ApplyEffectToObject(DURATION_TYPE_INSTANT,
-				EffectVisualEffect(VFX_IMP_CHARM), e.actor)));
+						  ApplyEffectToObject(DURATION_TYPE_INSTANT,
+											  EffectVisualEffect(VFX_IMP_CHARM), e.actor)));
 		AssignCommand(e.actor,
-			ActionDoCommand(SetItemCursedFlag(e.runnable, true)));
+					  ActionDoCommand(SetItemCursedFlag(e.runnable, true)));
 	}
 
 
@@ -38,6 +41,7 @@ void main() {
 
 		int current_wm = GetCreatureWingType(e.actor);
 		int wm = GetWingType(e.runnable);
+
 		if (current_wm != wm)
 			return;
 

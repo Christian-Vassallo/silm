@@ -3,23 +3,26 @@ extern("x2_inc_spellhook")
 
 #define VFX 628
 
-void tick(object target, int remainingTicks) {
+void tick(object target, int remainingTicks)
+{
 	if (remainingTicks == -1)
 		return;
+
 	if (!GetHasSpellEffect(SPELL_FAERIE_FIRE, target))
 		return;
 
 	vector v = GetPosition(target);
 	v.z += 1.5f;
 	location loc = Location(GetArea(target), v, 0f);
-	
+
 	ApplyEffectAtLocation(DURATION_TYPE_TEMPORARY,
-		EffectVisualEffect(VFX), loc, 2.0f);
+						  EffectVisualEffect(VFX), loc, 2.0f);
 
 	DelayCommand(1.0, tick(target, remainingTicks - 1));
 }
 
-void main() {
+void main()
+{
 	if (!X2PreSpellCastCode())
 		return;
 
@@ -28,22 +31,23 @@ void main() {
 
 	//Fire cast spell at event for the specified target
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF,
-		SPELL_FAERIE_FIRE));
+										  SPELL_FAERIE_FIRE));
 
 	//Make an SR check
-	if(MyResistSpell(OBJECT_SELF, oTarget))
+	if (MyResistSpell(OBJECT_SELF, oTarget))
 		return;
 
 	int duration = GetCasterLevel(caster);
+
 	if (GetMetaMagicFeat() == METAMAGIC_EXTEND)
 		duration *= 2;
 
 	effect eff = EffectVisualEffect(VFX);
 	eff = EffectLinkEffects(
-		EffectVisualEffect(VFX_DUR_LIGHT_BLUE_5), eff);
-	
+			  EffectVisualEffect(VFX_DUR_LIGHT_BLUE_5), eff);
+
 	ApplyEffectToObject(DURATION_TYPE_TEMPORARY,
-		eff, oTarget, TurnsToSeconds(duration));
-	
+						eff, oTarget, TurnsToSeconds(duration));
+
 	tick(oTarget, ftoi(TurnsToSeconds(duration)));
 }

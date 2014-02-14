@@ -1,14 +1,19 @@
 extern("c_chessinc")
 
-void main() {
+void main()
+{
 	int x;
 	object oPiece, oTarget;
-	for ( x = 0; x < 64; x++ ) {
+
+	for (x = 0; x < 64; x++) {
 		oPiece = GetObjectArray(OBJECT_SELF, "oSquare", x);
 		oTarget = GetLocalObject(oPiece, "target");
-		if ( GetIsObjectValid(oTarget) ) DestroyObject(oTarget);
-		if ( oPiece != OBJECT_SELF && GetIsObjectValid(oPiece) ) DestroyObject(oPiece);
+
+		if (GetIsObjectValid(oTarget)) DestroyObject(oTarget);
+
+		if (oPiece != OBJECT_SELF && GetIsObjectValid(oPiece)) DestroyObject(oPiece);
 	}
+
 	SetLocalInt(OBJECT_SELF, "GameState", 0);
 	SetLocalInt(OBJECT_SELF, "nWhiteAssigned", 0);
 	SetLocalObject(OBJECT_SELF, "oWhitePlayer", OBJECT_INVALID);

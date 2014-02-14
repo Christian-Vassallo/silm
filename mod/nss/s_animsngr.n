@@ -5,7 +5,8 @@ extern("inc_cdb")
 
 #define TT "animsngr"
 
-void main() {
+void main()
+{
 	if (!X2PreSpellCastCode())
 		return;
 
@@ -20,17 +21,18 @@ void main() {
 
 	if (GetWeight(oTarget) > 40) {
 		FloatingTextStringOnCreature("*" + GetName(oTarget) +
-			": Zu schwer zum transportieren!*", oPC, false);
+									 ": Zu schwer zum transportieren!*", oPC, false);
 		return;
 	}
 
 	ClearList(oPC, TT);
 	SetLocalObject(oPC, "animsngr_target", oTarget);
 	string text = "Waehle den Spieler, zu dem " + GetName(oTarget) +
-		" gebracht werden soll.";
+				  " gebracht werden soll.";
 
 	int pcs = 0;
 	object pc = GetFirstPC();
+
 	while (GetIsObjectValid(pc)) {
 		if (!GetIsDM(pc)
 				&& !GetIsDMPossessed(pc)
@@ -41,6 +43,7 @@ void main() {
 			SetListInt(oPC, TT, cid);
 			pcs++;
 		}
+
 		pc = GetNextPC();
 	}
 

@@ -2,7 +2,8 @@ extern("nw_i0_spells")
 extern("x2_inc_spellhook")
 extern("_gen")
 
-void main() {
+void main()
+{
 	if (!X2PreSpellCastCode())
 		return;
 
@@ -10,24 +11,25 @@ void main() {
 	object oTarget = GetSpellTargetObject();
 
 	SignalEvent(oTarget,
-		EventSpellCastAt(oCaster, SPELL_OPEN_CLOSE));
+				EventSpellCastAt(oCaster, SPELL_OPEN_CLOSE));
 
-	if(MyResistSpell(oCaster, oTarget))
+	if (MyResistSpell(oCaster, oTarget))
 		return;
-	
-	switch (GetObjectType(oTarget)) {
-		case OBJECT_TYPE_DOOR:
-			if (GetIsOpen(oTarget))
-				AssignCommand(oTarget,
-					PlayAnimation(ANIMATION_DOOR_CLOSE));
-			else
-				if (GetLocked(oTarget)) {
-					ShowDoorIsLocked(oTarget, oCaster);
-					break;
-				} else
-					AssignCommand(oTarget,
-						PlayAnimation(ANIMATION_DOOR_OPEN1));
 
+	switch (GetObjectType(oTarget)) {
+	case OBJECT_TYPE_DOOR:
+		if (GetIsOpen(oTarget))
+			AssignCommand(oTarget,
+						  PlayAnimation(ANIMATION_DOOR_CLOSE));
+
+		else if (GetLocked(oTarget)) {
+			ShowDoorIsLocked(oTarget, oCaster);
 			break;
+
+		} else
+			AssignCommand(oTarget,
+						  PlayAnimation(ANIMATION_DOOR_OPEN1));
+
+		break;
 	}
 }

@@ -1,7 +1,8 @@
 extern("inc_subr_area")
 extern("inc_areaclean")
 
-void main() {
+void main()
+{
 	/*int iClimate = GetLocalInt(OBJECT_SELF, "weather");
 	 * int iOldWeather = GetWeather(OBJECT_SELF);
 	 * int iWeather = GetAreaWeather(iClimate);
@@ -10,7 +11,7 @@ void main() {
 	 * SetWeather(OBJECT_SELF,iWeather);
 	 * }*/
 
-	if ( !GetIsObjectValid(GetEnteringObject()) ) return;
+	if (!GetIsObjectValid(GetEnteringObject())) return;
 
 	Cl_Areaentered();
 	SR_Enter_Area(GetEnteringObject(), SR_AREA_DAYLIGHT | SR_AREA_NATURAL);

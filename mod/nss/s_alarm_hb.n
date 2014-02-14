@@ -1,29 +1,32 @@
 const float ALARM_DISTANCE = 8.0f; // sphere!
 
-void main() {
+void main()
+{
 	object oTrigger = OBJECT_SELF;
 	location lTrigger = GetLocation(oTrigger);
 
 	int bDisabled = GetLocalInt(oTrigger, "disabled");
 
-	if ( bDisabled )
+	if (bDisabled)
 		return;
 
 	int bDoAlarm = FALSE;
 
 	// Iterate all creatues
 	object oCritter = GetFirstObjectInShape(SHAPE_SPHERE, ALARM_DISTANCE, lTrigger, FALSE,
-						  OBJECT_TYPE_CREATURE);
+											OBJECT_TYPE_CREATURE);
 
-	while ( GetIsObjectValid(oCritter) ) {
-		if ( !GetIsDM(oCritter) ) {
+	while (GetIsObjectValid(oCritter)) {
+		if (!GetIsDM(oCritter)) {
 			bDoAlarm = TRUE;
 			break;
 		}
-		oCritter = GetNextObjectInShape(SHAPE_SPHERE, ALARM_DISTANCE, lTrigger, FALSE, OBJECT_TYPE_CREATURE);
+
+		oCritter = GetNextObjectInShape(SHAPE_SPHERE, ALARM_DISTANCE, lTrigger, FALSE,
+										OBJECT_TYPE_CREATURE);
 	}
 
-	if ( !bDoAlarm )
+	if (!bDoAlarm)
 		return;
 
 

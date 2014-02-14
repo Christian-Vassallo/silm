@@ -28,7 +28,8 @@ struct EffDesc {
 	int iVers;
 };
 
-struct EffDesc SR_GetEffectStruct(string sSubrace, int iIndex, int iLevel) {
+struct EffDesc SR_GetEffectStruct(string sSubrace, int iIndex, int iLevel)
+{
 	struct EffDesc New;
 	string sSuff = "SR_Eff_" + sSubrace + "_" + IntToString(iIndex);
 	object oMod = GetModule();
@@ -42,25 +43,29 @@ struct EffDesc SR_GetEffectStruct(string sSubrace, int iIndex, int iLevel) {
 	New.iLev3 = GetLocalInt(oMod, sSuff + "_Lev3");
 	New.iVers = GetLocalInt(oMod, sSuff + "_Vers");
 
-	if ( New.iLev1 ) New.iPar1 += iLevel / New.iLev1;
-	if ( New.iLev2 ) New.iPar2 += iLevel / New.iLev2;
-	if ( New.iLev3 ) New.iPar3 += iLevel / New.iLev3;
+	if (New.iLev1) New.iPar1 += iLevel / New.iLev1;
+
+	if (New.iLev2) New.iPar2 += iLevel / New.iLev2;
+
+	if (New.iLev3) New.iPar3 += iLevel / New.iLev3;
 
 	return New;
 }
 
 
-effect SR_ParseEffectStruct(struct EffDesc New) {
+effect SR_ParseEffectStruct(struct EffDesc New)
+{
 	effect eNew;
 
 	eNew = ParseEffect(New.sType, New.iPar1, New.iPar2, New.iPar3);
 
-	if ( New.iVers >= 0 ) eNew = VersusRacialTypeEffect(eNew, New.iVers);
+	if (New.iVers >= 0) eNew = VersusRacialTypeEffect(eNew, New.iVers);
 
 	return SupernaturalEffect(eNew);
 }
 
-void ApplySubraceEffects(object oPC) {
+void ApplySubraceEffects(object oPC)
+{
 	struct EffDesc New;
 	string sSubrace = GetLocalString(oPC, "SR_Subrace");
 	int iNumEffs = GetLocalInt(GetModule(), "SR_NEffects_" + sSubrace);
@@ -68,9 +73,10 @@ void ApplySubraceEffects(object oPC) {
 	effect eNew;
 	int i;
 
-	for ( i = 0; i < iNumEffs; i++ ) {
+	for (i = 0; i < iNumEffs; i++) {
 		New = SR_GetEffectStruct(sSubrace, i, iLevel);
-		if ( New.sType == "wing" ) { // && NWNX_Initialized()) {
+
+		if (New.sType == "wing") {   // && NWNX_Initialized()) {
 			// ApplyNWNXWings(oPC, New.iPar1);
 			//SetCreatureWingType(New.iPar1, oPC);
 			// moved to operator code!
@@ -86,34 +92,39 @@ void ApplySubraceEffects(object oPC) {
  * level or polymorph as our own
  */
 
-int IsSubraceEffect(effect eEff) {
+int IsSubraceEffect(effect eEff)
+{
 	int iType;
 
-	if ( GetEffectSubType(eEff) != SUBTYPE_SUPERNATURAL ) return 0;
+	if (GetEffectSubType(eEff) != SUBTYPE_SUPERNATURAL) return 0;
 
-	if ( ( iType = GetEffectType(eEff) ) == EFFECT_TYPE_ABILITY_DECREASE ) return 0;
+	if ((iType = GetEffectType(eEff)) == EFFECT_TYPE_ABILITY_DECREASE) return 0;
 
-	if ( iType == EFFECT_TYPE_NEGATIVELEVEL ) return 0;
+	if (iType == EFFECT_TYPE_NEGATIVELEVEL) return 0;
 
-	if ( ( iType = GetEffectType(eEff) ) == EFFECT_TYPE_POLYMORPH ) return 0;
+	if ((iType = GetEffectType(eEff)) == EFFECT_TYPE_POLYMORPH) return 0;
 
 	return 1;
 }
 
-void RemoveSubraceEffects(object oPC) {
+void RemoveSubraceEffects(object oPC)
+{
 	effect eEff = GetFirstEffect(oPC);
 
-	while ( GetIsEffectValid(eEff) ) {
-		if ( IsSubraceEffect(eEff) ) RemoveEffect(oPC, eEff);
+	while (GetIsEffectValid(eEff)) {
+		if (IsSubraceEffect(eEff)) RemoveEffect(oPC, eEff);
+
 		eEff = GetNextEffect(oPC);
 	}
 }
 
-void SR_RemoveEffect(object oPC, effect eEff) {
-	if ( !IsSubraceEffect(eEff) ) RemoveEffect(oPC, eEff);
+void SR_RemoveEffect(object oPC, effect eEff)
+{
+	if (!IsSubraceEffect(eEff)) RemoveEffect(oPC, eEff);
 }
 
-void RefreshSubraceEffects(object oPC) {
+void RefreshSubraceEffects(object oPC)
+{
 	RemoveSubraceEffects(oPC);
 	ApplySubraceEffects(oPC);
 	DeleteLocalInt(oPC, "SR_In_Area");

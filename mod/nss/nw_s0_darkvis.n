@@ -1,12 +1,14 @@
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 	if (!X2PreSpellCastCode())
 		return;
 
 	object oTarget = GetSpellTargetObject();
 
 	object oSkin = GetItemInSlot(INVENTORY_SLOT_CARMOUR, oTarget);
+
 	if (!GetIsObjectValid(oSkin)) {
 		_WARN("No subrace skin on " + otoa(oTarget));
 		return;
@@ -14,11 +16,11 @@ void main() {
 
 	int nDuration = GetCasterLevel(OBJECT_SELF);
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF,
-		SPELL_DARKVISION, FALSE));
+										  SPELL_DARKVISION, FALSE));
 
 	if (GetMetaMagicFeat() == METAMAGIC_EXTEND)
 		nDuration = nDuration * 2;
-	
+
 	AddItemProperty(DURATION_TYPE_TEMPORARY,
-		ItemPropertyDarkvision(), oSkin, HoursToSeconds(nDuration));
+					ItemPropertyDarkvision(), oSkin, HoursToSeconds(nDuration));
 }

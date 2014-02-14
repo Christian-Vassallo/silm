@@ -1,31 +1,35 @@
 extern("inc_nwnx_dmact")
 extern("inc_xplock")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "player_login") {
 		struct XPLock lock = GetPlayerXPLock(e.runnable);
+
 		if (!lock.active)
 			return;
 
 		if (lock.xp > 0) {
 			SetXP(e.runnable, lock.xp);
 			SendMessageToPC(e.runnable, "Your character is xp-locked to " +
-				itoa(lock.xp) + " xp.");
+							itoa(lock.xp) + " xp.");
 		}
 	}
 
 	if (e.ev == "dmaction") {
 		struct XPLock lock = GetPlayerXPLock(e.actedon);
+
 		if (!lock.active)
 			return;
 
 		bool actionApplies =
 			DM_ACTION_GIVE_XP == nGetDMActionID();
-			// || DM_ACTION_GIVE_LEVEL == nGetDMActionID();
+		// || DM_ACTION_GIVE_LEVEL == nGetDMActionID();
 
 		int gxp = nGetDMAction_Param();
+
 		if (GetXP(e.actedon) + gxp < lock.xp)
 			return;
 

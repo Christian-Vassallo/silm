@@ -1,6 +1,7 @@
 extern("inc_dice")
 
-int parse_alias(object creature, string alias) {
+int parse_alias(object creature, string alias)
+{
 	alias = strlwr(alias);
 	int i;
 
@@ -15,10 +16,10 @@ int parse_alias(object creature, string alias) {
 	GetSkillRank(skill, creature))
 
 	base("ini", "ini",
-		GetAbilityModifier(ABILITY_DEXTERITY, creature) + 
-		(GetHasFeat(FEAT_IMPROVED_INITIATIVE, creature) ? 4 : 0) +
-		(GetHasFeat(FEAT_EPIC_SUPERIOR_INITIATIVE, creature) ? 4 : 0)
-	);
+		 GetAbilityModifier(ABILITY_DEXTERITY, creature) +
+		 (GetHasFeat(FEAT_IMPROVED_INITIATIVE, creature) ? 4 : 0) +
+		 (GetHasFeat(FEAT_EPIC_SUPERIOR_INITIATIVE, creature) ? 4 : 0)
+		);
 
 	if (alias == "ab" || alias == "attack") {
 		// todo: get AB for full round attack, get current wpn damage
@@ -29,8 +30,12 @@ int parse_alias(object creature, string alias) {
 		return 1;
 	}
 
-	a("str", 0); a("dex", 1); a("con", 2);
-	a("int", 3); a("wis", 4); a("cha", 5);
+	a("str", 0);
+	a("dex", 1);
+	a("con", 2);
+	a("int", 3);
+	a("wis", 4);
+	a("cha", 5);
 
 	base("fort", "fort", GetFortitudeSavingThrow(creature));
 	base("ref", "ref", GetReflexSavingThrow(creature));
@@ -38,21 +43,29 @@ int parse_alias(object creature, string alias) {
 
 	for (i = 0; i < 50; i++) {
 		string label = Get2DAString("skills", "Label", i);
+
 		if (label == "")
 			break;
+
 		// Because we're cheap we're just cutting of everything after the
 		// second upcase char and using the first part as an alias.
-		int k; for (k = 1; k < strlen(label); k++) {
+		int k;
+
+		for (k = 1; k < strlen(label); k++) {
 			string chr = substr(label, k, 1);
+
 			if (strlwr(chr) != chr) break;
 		}
+
 		label = strlwr(label);
 		string shortlabel = substr(label, 0, k);
 		string descadd = "";
+
 		if (GetSkillRank(i, creature, true) == 0 &&
 				Get2DAString("skills", "Untrained", i) == "0") {
 			descadd = " (untrained)";
 		}
+
 		s(shortlabel, shortlabel + descadd, i);
 		s(label, shortlabel + descadd, i);
 	}
@@ -60,79 +73,101 @@ int parse_alias(object creature, string alias) {
 	return 0;
 }
 
-int parse_single(object creature, string dstr) {
+int parse_single(object creature, string dstr)
+{
 	int count = 1,
 		faces = 20,
 		mod = 0;
 
 	if (dstr != "") {
-		if (	// xdy
-				TestStringAgainstPattern("*n(w|d)*n", dstr) ||
-				// dy
-				TestStringAgainstPattern("d*n", dstr) ||
-				// +n -n
-				TestStringAgainstPattern("(+|-)*n", dstr) ||
-				// dy+n dy-n
-				TestStringAgainstPattern("d*n(+|-)*n", dstr) ||
-				// xdy+n xdy-n
-				TestStringAgainstPattern("*n(w|d)*n(+|-)*n", dstr)) {
+		if ( // xdy
+			TestStringAgainstPattern("*n(w|d)*n", dstr) ||
+			// dy
+			TestStringAgainstPattern("d*n", dstr) ||
+			// +n -n
+			TestStringAgainstPattern("(+|-)*n", dstr) ||
+			// dy+n dy-n
+			TestStringAgainstPattern("d*n(+|-)*n", dstr) ||
+			// xdy+n xdy-n
+			TestStringAgainstPattern("*n(w|d)*n(+|-)*n", dstr)) {
 
 			int dpos = strpos(dstr, "d");
+
 			if (dpos == -1) dpos = strpos(dstr, "w");
+
 			if (dpos != -1) {
 				if (dpos > 0) // count is optional
 					count = atoi(substr(dstr, 0, dpos));
+
 				if (0 == count) return 0;
+
 				faces = atoi(substr(dstr, dpos + 1, 4));
+
 				if (0 == faces) return 0;
 			}
 
 			if ((dpos = strpos(dstr, "+")) != -1)
 				mod = atoi(substr(dstr, dpos + 1, 4));
+
 			else if ((dpos = strpos(dstr, "-")) != -1)
 				mod = -atoi(substr(dstr, dpos + 1, 4));
 
 		} else if (TestStringAgainstPattern("*n", dstr) ||
-				TestStringAgainstPattern("*n *n", dstr) ||
-				TestStringAgainstPattern("*n *n *n", dstr) ||
-				TestStringAgainstPattern("*n *n (+|-)*n", dstr)) {
+				   TestStringAgainstPattern("*n *n", dstr) ||
+				   TestStringAgainstPattern("*n *n *n", dstr) ||
+				   TestStringAgainstPattern("*n *n (+|-)*n", dstr)) {
 
 			int w0 = FindSubString(dstr, " ", 0); // between count and faces
 			int w1 = FindSubString(dstr, " ", w0 + 1); // between faces and mod
 
 			count = atoi(substr(dstr, 0, w0 != -1 ? w0 : 10));
+
 			if (w0 > -1) faces = atoi(substr(dstr, w0 + 1, w1 == -1 ? 10 : w1));
+
 			if (w1 > -1) mod = atoi(substr(dstr, w1 + 1, 10));
-		
+
 		} else return 0;
 	}
 
 	return dice_throw(creature, count, faces, mod, "");
 }
 
-void parse_dice(object creature, string str) {
+void parse_dice(object creature, string str)
+{
 	if (parse_single(creature, str) || parse_alias(creature, str))
 		return;
 
 	string skills = GetLocalString(GetModule(), "cmd_dice_skills");
+
 	if (skills == "") {
-		int i; for (i = 0; i < 50; i++) {
+		int i;
+
+		for (i = 0; i < 50; i++) {
 			string label = Get2DAString("skills", "Label", i);
+
 			if (label == "")
 				break;
+
 			// Because we're cheap we're just cutting of everything after the
 			// second upcase char and using the first part as an alias.
-			int k; for (k = 1; k < strlen(label); k++) {
+			int k;
+
+			for (k = 1; k < strlen(label); k++) {
 				string chr = substr(label, k, 1);
+
 				if (strlwr(chr) != chr) break;
 			}
+
 			label = strlwr(label);
 			string shortlabel = substr(label, 0, k);
 			string rem = substr(label, k, 100);
 			skills += shortlabel;
+
 			if (rem != "") skills += "(" + rem + ")";
+
 			skills += " ";
 		}
+
 		SetLocalString(GetModule(), "cmd_dice_skills", skills);
 	}
 
@@ -144,8 +179,10 @@ void parse_dice(object creature, string str) {
 	SendMessageToPC(creature, " skills: " + skills);
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
+
 	if (e.ev == "chat_command") {
 		struct EventArguments ea = GetEventArguments(e.serial);
 

@@ -4,9 +4,10 @@ extern("inc_subr_item")
 extern("inc_subr_area")
 extern("inc_subr_fly")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
-	
+
 	if ("module_load" == e.ev) {
 		ExecuteScript("reg_subraces", OBJECT_SELF);
 	}
@@ -18,12 +19,12 @@ void main() {
 		//FIXME: Perminssion management
 		int iSR_State = GetSubraceGranted(sChosen_SR, iRT, 1);
 
-		if ( !iSR_State )
+		if (!iSR_State)
 			return;
 
-		if ( iSR_State == 2 ) {
+		if (iSR_State == 2) {
 			SendMessageToPC(e.runnable, "Subrasse " +
-				sChosen_SR + " ist nur bei gesonderter Anmeldung verfuegbar.");
+							sChosen_SR + " ist nur bei gesonderter Anmeldung verfuegbar.");
 			return;
 		}
 
@@ -39,8 +40,10 @@ void main() {
 	if ("item_equip" == e.ev) {
 		// If he is flying, dont allow equipping medium or heavy.
 		object armor = GetItemInSlot(INVENTORY_SLOT_CHEST, e.actor);
+
 		if (Fly_IsAirborne(e.actor) && is_valid(armor) && GetArmorAC(armor) >= 6) {
-			SendMessageToPC(e.actor, "Du kannst keine mittleren (oder schwerere) Ruestungen tragen waehrend du fliegst.");
+			SendMessageToPC(e.actor,
+							"Du kannst keine mittleren (oder schwerere) Ruestungen tragen waehrend du fliegst.");
 			AssignCommand(e.actor, ActionUnequipItem(armor));
 		}
 	}

@@ -14,39 +14,39 @@
 //:: Updated On: July 15, 2003 Georg Zoeller - Removed saving throws
 //:://////////////////////////////////////////////
 
-extern("nw_i0_spells")    
+extern("nw_i0_spells")
 void main()
 {
-    //Declare major variables
-    object oTarget = GetSpellTargetObject();
-    int nHD = GetHitDice(OBJECT_SELF);
-    effect eVis = EffectVisualEffect(VFX_IMP_FROST_S);
-    effect eBolt;
-    int nDC = 10 + (nHD/2);
-    int nCount = nHD /2;
-    if (nCount == 0)
-    {
-        nCount = 1;
-    }
+	//Declare major variables
+	object oTarget = GetSpellTargetObject();
+	int nHD = GetHitDice(OBJECT_SELF);
+	effect eVis = EffectVisualEffect(VFX_IMP_FROST_S);
+	effect eBolt;
+	int nDC = 10 + (nHD / 2);
+	int nCount = nHD / 2;
 
-    int nDamage = d6(nCount);
-    //Fire cast spell at event for the specified target
-    SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELLABILITY_BOLT_COLD));
-    //Make a ranged touch attack
-    int nTouch = TouchAttackRanged(oTarget);
-    if(nTouch > 0)
-    {
-        if(nTouch == 2)
-        {
-            nDamage *= 2;
-        }
-        //Set damage effect
-        eBolt = EffectDamage(nDamage, DAMAGE_TYPE_COLD);
-        if(nDamage > 0)
-        {
-            //Apply the VFX impact and effects
-            ApplyEffectToObject(DURATION_TYPE_INSTANT, eBolt, oTarget);
-            ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
-        }
-    }
+	if (nCount == 0) {
+		nCount = 1;
+	}
+
+	int nDamage = d6(nCount);
+	//Fire cast spell at event for the specified target
+	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELLABILITY_BOLT_COLD));
+	//Make a ranged touch attack
+	int nTouch = TouchAttackRanged(oTarget);
+
+	if (nTouch > 0) {
+		if (nTouch == 2) {
+			nDamage *= 2;
+		}
+
+		//Set damage effect
+		eBolt = EffectDamage(nDamage, DAMAGE_TYPE_COLD);
+
+		if (nDamage > 0) {
+			//Apply the VFX impact and effects
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, eBolt, oTarget);
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
+		}
+	}
 }

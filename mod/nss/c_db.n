@@ -4,7 +4,8 @@ extern("c_const")
 const string CHESS_TABLE = "chess_games";
 
 
-void SaveChessGame(object oGameMaster) {
+void SaveChessGame(object oGameMaster)
+{
 
 	string sStart = GetLocalString(oGameMaster, "GameStart");
 	int variant = GetLocalInt(oGameMaster, "nVariant");
@@ -14,26 +15,26 @@ void SaveChessGame(object oGameMaster) {
 	object oBlack = GetLocalObject(oGameMaster, "oBlackPlayer");
 	int white = GetAccountID(oWhite);
 	int black = GetAccountID(oBlack);
-	
 
-	pQ("insert into " + CHESS_TABLE + 
-		" (white, black, result, variant, start_ts, end_ts, log)" + 
-		" values(" +
-		IntToString(white) + ", " +
-		IntToString(black) + ", '" + 
-		(result == RESULT_WHITE ? "white" : 
-			result == RESULT_BLACK ? "black" : 
-			"draw"
-		) + "', '" + 
-		(variant == VARIANT_STANDARD ? "standard" : 
-			variant == VARIANT_PAWNS ? "pawns" : 
-			variant == VARIANT_FISCHERRANDOM ? "fischerrandom" : 
-			"displacement"
-		) + "', '" +		
-		sStart + "', now(), " +
-		pE(sLog) + 
-		");"
-	);
-	
+
+	pQ("insert into " + CHESS_TABLE +
+	   " (white, black, result, variant, start_ts, end_ts, log)" +
+	   " values(" +
+	   IntToString(white) + ", " +
+	   IntToString(black) + ", '" +
+	   (result == RESULT_WHITE ? "white" :
+		result == RESULT_BLACK ? "black" :
+		"draw"
+	   ) + "', '" +
+	   (variant == VARIANT_STANDARD ? "standard" :
+		variant == VARIANT_PAWNS ? "pawns" :
+		variant == VARIANT_FISCHERRANDOM ? "fischerrandom" :
+		"displacement"
+	   ) + "', '" +
+	   sStart + "', now(), " +
+	   pE(sLog) +
+	   ");"
+	  );
+
 	SetLocalInt(oGameMaster, "SavedToDB", 1);
 }

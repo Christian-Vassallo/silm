@@ -21,10 +21,13 @@ const int NWNXEVENT_TYPE_POSSESS_FAMILIAR  = 12;
 
 void EventUseItem(object oPC, object oItem, object oTarget, location lTarget);
 
-void main() {
+void main()
+{
 	object oPC = OBJECT_SELF;
 
-	int ret = RunEventScriptsFor(GetEventSerial(), "nwnx_event", oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_SYNC);
+	int ret = RunEventScriptsFor(GetEventSerial(), "nwnx_event", oPC, oPC, oPC, GetLocation(oPC),
+								 EVENT_MODE_SYNC);
+
 	if (ret & EVENT_RESULT_SUPPRESS) {
 		NWNXBypassEvent();
 		return;
@@ -39,182 +42,240 @@ void main() {
 	location lTarget = Location(GetArea(oPC), vTarget, GetFacing(oPC));
 
 	switch (nEventType) {
-		case NWNXEVENT_TYPE_SAVE_CHAR:
-			// Event: pc_save
-			// A player character gets saved
-			// - defer 
-			RunEventScriptsFor(GetEventSerial(), "pc_save", oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_DEFER);
-			break;
+	case NWNXEVENT_TYPE_SAVE_CHAR:
+		// Event: pc_save
+		// A player character gets saved
+		// - defer
+		RunEventScriptsFor(GetEventSerial(), "pc_save", oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_DEFER);
+		break;
 
-		case NWNXEVENT_TYPE_ATTACK:
-			// Event: creature_attack
-			// A creature (pc or npc) attacks something
-			// - sync
-			// - suppress
-			// - runnable: creature
-			// - actor: creature
-			// - actedon: attacked object
-			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "creature_attack", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
-				NWNXBypassEvent();
-			break;
+	case NWNXEVENT_TYPE_ATTACK:
 
-		case NWNXEVENT_TYPE_QUICKCHAT:
-			// Event: pc_quickchat
-			// Player uses a quickchat line
-			// - sync
-			// - suppress
-			// - runnable: pc
-			// - GetEventSubType(): quickchat_phrse # ..
-			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_quickchat", oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_SYNC))
-				NWNXBypassEvent();
-			break;
+		// Event: creature_attack
+		// A creature (pc or npc) attacks something
+		// - sync
+		// - suppress
+		// - runnable: creature
+		// - actor: creature
+		// - actedon: attacked object
+		if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "creature_attack", oPC, oPC,
+				oTarget, lTarget,
+				EVENT_MODE_SYNC))
+			NWNXBypassEvent();
 
-		case NWNXEVENT_TYPE_EXAMINE:
-			// Event: pc_examine
-			// A client examines a object
-			// - sync
-			// - suppress
-			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_examine", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
-				NWNXBypassEvent();
-			break;
+		break;
 
-		case NWNXEVENT_TYPE_USE_SKILL:
-			// Event: pc_useskill
-			// A player activates a skill
-			// - sync
-			// - suppress
-			// - runnable: pc
-			// - actor: pc
-			// - actedon: target
-			// - actedat: target
-			// - GetEventSubType(): SKILL_
-			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_useskill", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
-				NWNXBypassEvent();
-			break;
+	case NWNXEVENT_TYPE_QUICKCHAT:
 
-		case NWNXEVENT_TYPE_USE_FEAT:
-			// Event: pc_usefeat
-			// Player uses a active feat
-			// - sync
-			// - suppress
-			// - runnable: pc
-			// - actor: pc
-			// - actedon: target
-			// - actedat: target
-			// - GetEventSubType(): FEAT_
-			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_usefeat", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
-				NWNXBypassEvent();
-			break;
+		// Event: pc_quickchat
+		// Player uses a quickchat line
+		// - sync
+		// - suppress
+		// - runnable: pc
+		// - GetEventSubType(): quickchat_phrse # ..
+		if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_quickchat", oPC, oPC, oPC,
+				GetLocation(oPC),
+				EVENT_MODE_SYNC))
+			NWNXBypassEvent();
 
-		case NWNXEVENT_TYPE_TOGGLE_MODE:
-			// Event: pc_togglemode
-			// Player toggles a mode.
-			// - sync
-			// - suppress
-			// - GetEventSubType(): ACTION_MODE_
-			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_togglemode", oPC, oPC, oPC, GetLocation(oPC), EVENT_MODE_SYNC))
-				NWNXBypassEvent();
-			break;
+		break;
 
-		case NWNXEVENT_TYPE_PICKPOCKET:
-			// Event: pc_pickpocket
-			// Player tries to pickpocket a creature
-			// - sync
-			// - suppress
-			// - runnable: pc
-			// - actor: pc
-			// - actedon: pickpocketee
-			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_pickpocket", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
-				NWNXBypassEvent();
-			else  {
-				SendMessageToPC(oPC, "Taschendiebstahl bitte ueber SLs oder im Rollenspiel abhandeln.");
-				NWNXBypassEvent();
-				AssignCommand(oPC, ClearAllActions(true));
-			}
-			break;
+	case NWNXEVENT_TYPE_EXAMINE:
 
-		case NWNXEVENT_TYPE_USE_ITEM:
-			// Event: item_freeactivate
-			// Player clicks on "use item". Fires before doing anything else, on click.
-			// - sync
-			// - suppress
-			// - runnable: item
-			// - actor: pc
-			// - actedon: activation target (if applicable)
-			// - actedat: activation location (if applicable)
-			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "item_freeactivate", oItem, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
-				NWNXBypassEvent();
-			else
-				EventUseItem(oPC, oItem, oTarget, lTarget);
-			break;
+		// Event: pc_examine
+		// A client examines a object
+		// - sync
+		// - suppress
+		if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_examine", oPC, oPC, oTarget,
+				lTarget,
+				EVENT_MODE_SYNC))
+			NWNXBypassEvent();
 
-		case NWNXEVENT_TYPE_CAST_SPELL:
-			// Event: creature_castspell
-			// Player or NPC before casting a spell.
-			// - sync
-			// - suppress
-			// - runnable: pc
-			// - actor: pc
-			// - actedon: spell target (if applicable)
-			// - actedat: spell location (if applicable)
-			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "creature_castspell", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
-				NWNXBypassEvent();
-			break;
+		break;
 
-		case NWNXEVENT_TYPE_TOGGLE_PAUSE:
-			// Event: pc_toggle_pause
-			// DM toggles server pause.
-			// - sync
-			// - suppress
-			// - runnable: pc
-			// - actor: pc
-			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_toggle_pause", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
-				NWNXBypassEvent();
-			break;
+	case NWNXEVENT_TYPE_USE_SKILL:
 
-		case NWNXEVENT_TYPE_POSSESS_FAMILIAR:
-			// Event: creature_possess_familiar
-			// Creatures possesses its' familiar.
-			// - sync
-			// - suppress
-			// - runnable: pc
-			// - actor: pc
-			if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "creature_possess_familiar", oPC, oPC, oTarget, lTarget, EVENT_MODE_SYNC))
-				NWNXBypassEvent();
-			break;
+		// Event: pc_useskill
+		// A player activates a skill
+		// - sync
+		// - suppress
+		// - runnable: pc
+		// - actor: pc
+		// - actedon: target
+		// - actedat: target
+		// - GetEventSubType(): SKILL_
+		if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_useskill", oPC, oPC, oTarget,
+				lTarget,
+				EVENT_MODE_SYNC))
+			NWNXBypassEvent();
+
+		break;
+
+	case NWNXEVENT_TYPE_USE_FEAT:
+
+		// Event: pc_usefeat
+		// Player uses a active feat
+		// - sync
+		// - suppress
+		// - runnable: pc
+		// - actor: pc
+		// - actedon: target
+		// - actedat: target
+		// - GetEventSubType(): FEAT_
+		if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_usefeat", oPC, oPC, oTarget,
+				lTarget,
+				EVENT_MODE_SYNC))
+			NWNXBypassEvent();
+
+		break;
+
+	case NWNXEVENT_TYPE_TOGGLE_MODE:
+
+		// Event: pc_togglemode
+		// Player toggles a mode.
+		// - sync
+		// - suppress
+		// - GetEventSubType(): ACTION_MODE_
+		if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_togglemode", oPC, oPC, oPC,
+				GetLocation(oPC),
+				EVENT_MODE_SYNC))
+			NWNXBypassEvent();
+
+		break;
+
+	case NWNXEVENT_TYPE_PICKPOCKET:
+
+		// Event: pc_pickpocket
+		// Player tries to pickpocket a creature
+		// - sync
+		// - suppress
+		// - runnable: pc
+		// - actor: pc
+		// - actedon: pickpocketee
+		if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_pickpocket", oPC, oPC, oTarget,
+				lTarget,
+				EVENT_MODE_SYNC))
+			NWNXBypassEvent();
+
+		else  {
+			SendMessageToPC(oPC, "Taschendiebstahl bitte ueber SLs oder im Rollenspiel abhandeln.");
+			NWNXBypassEvent();
+			AssignCommand(oPC, ClearAllActions(true));
+		}
+
+		break;
+
+	case NWNXEVENT_TYPE_USE_ITEM:
+
+		// Event: item_freeactivate
+		// Player clicks on "use item". Fires before doing anything else, on click.
+		// - sync
+		// - suppress
+		// - runnable: item
+		// - actor: pc
+		// - actedon: activation target (if applicable)
+		// - actedat: activation location (if applicable)
+		if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "item_freeactivate", oItem, oPC,
+				oTarget, lTarget,
+				EVENT_MODE_SYNC))
+			NWNXBypassEvent();
+
+		else
+			EventUseItem(oPC, oItem, oTarget, lTarget);
+
+		break;
+
+	case NWNXEVENT_TYPE_CAST_SPELL:
+
+		// Event: creature_castspell
+		// Player or NPC before casting a spell.
+		// - sync
+		// - suppress
+		// - runnable: pc
+		// - actor: pc
+		// - actedon: spell target (if applicable)
+		// - actedat: spell location (if applicable)
+		if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "creature_castspell", oPC, oPC,
+				oTarget, lTarget,
+				EVENT_MODE_SYNC))
+			NWNXBypassEvent();
+
+		break;
+
+	case NWNXEVENT_TYPE_TOGGLE_PAUSE:
+
+		// Event: pc_toggle_pause
+		// DM toggles server pause.
+		// - sync
+		// - suppress
+		// - runnable: pc
+		// - actor: pc
+		if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "pc_toggle_pause", oPC, oPC,
+				oTarget, lTarget,
+				EVENT_MODE_SYNC))
+			NWNXBypassEvent();
+
+		break;
+
+	case NWNXEVENT_TYPE_POSSESS_FAMILIAR:
+
+		// Event: creature_possess_familiar
+		// Creatures possesses its' familiar.
+		// - sync
+		// - suppress
+		// - runnable: pc
+		// - actor: pc
+		if (EVENT_RESULT_SUPPRESS & RunEventScriptsFor(GetEventSerial(), "creature_possess_familiar", oPC,
+				oPC, oTarget,
+				lTarget, EVENT_MODE_SYNC))
+			NWNXBypassEvent();
+
+		break;
 	}
 }
 
 
-void EventUseItem(object oPC, object oItem, object oTarget, location lTarget) {
-	
+void EventUseItem(object oPC, object oItem, object oTarget, location lTarget)
+{
+
 	string sTag = GetTag(oItem);
 
 	if ("choose_target" == sTag) {
 		int nSlot = TARGET_DEFAULT_SLOT;
-		if ( GetName(oItem) == "Zielwahl: 1" )
+
+		if (GetName(oItem) == "Zielwahl: 1")
 			nSlot = 1;
-		if ( GetName(oItem) == "Zielwahl: 2" )
+
+		if (GetName(oItem) == "Zielwahl: 2")
 			nSlot = 2;
-		if ( GetName(oItem) == "Zielwahl: 3" )
+
+		if (GetName(oItem) == "Zielwahl: 3")
 			nSlot = 3;
-		if ( GetName(oItem) == "Zielwahl: 4" )
+
+		if (GetName(oItem) == "Zielwahl: 4")
 			nSlot = 4;
-		if ( GetName(oItem) == "Zielwahl: 5" )
+
+		if (GetName(oItem) == "Zielwahl: 5")
 			nSlot = 5;
-		if ( GetName(oItem) == "Zielwahl: 6" )
+
+		if (GetName(oItem) == "Zielwahl: 6")
 			nSlot = 6;
-		if ( GetName(oItem) == "Zielwahl: 7" )
+
+		if (GetName(oItem) == "Zielwahl: 7")
 			nSlot = 7;
-		if ( GetName(oItem) == "Zielwahl: 8" )
+
+		if (GetName(oItem) == "Zielwahl: 8")
 			nSlot = 8;
-		if ( GetName(oItem) == "Zielwahl: 9" )
+
+		if (GetName(oItem) == "Zielwahl: 9")
 			nSlot = 9;
-		if ( GetName(oItem) == "Zielwahl: 10" )
+
+		if (GetName(oItem) == "Zielwahl: 10")
 			nSlot = 10;
 
-		if ( GetIsObjectValid(oTarget) ) {
+		if (GetIsObjectValid(oTarget)) {
 			SetTarget(oTarget, nSlot, oPC);
+
 		} else {
 			SetTargetLocation(lTarget, nSlot, oPC);
 		}
@@ -226,6 +287,7 @@ void EventUseItem(object oPC, object oItem, object oTarget, location lTarget) {
 		ExecuteScript("ii_move_target_1", oPC);
 		NWNXBypassEvent();
 	}
+
 	if ("move_target_g" == sTag) {
 		ExecuteScript("ii_move_target_g", oPC);
 		NWNXBypassEvent();

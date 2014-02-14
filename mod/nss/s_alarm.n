@@ -4,8 +4,9 @@ extern("x2_inc_spellhook")
 
 void EndAlarm(object oCaster, object oTrap);
 
-void main() {
-	if ( !X2PreSpellCastCode() )
+void main()
+{
+	if (!X2PreSpellCastCode())
 		return;
 
 	object oPC = OBJECT_SELF;
@@ -33,7 +34,8 @@ void main() {
 	ApplyEffectToObject(DTT, eAlarm, oPC, HoursToSeconds(nHours));
 }
 
-void EndAlarm(object oCaster, object oTrap) {
+void EndAlarm(object oCaster, object oTrap)
+{
 	string sLoc = GetName(GetArea(oTrap));
 	SendMessageToPC(oCaster, "Der arkane Alarm (" + sLoc + ") endet.");
 	DestroyObject(oTrap);

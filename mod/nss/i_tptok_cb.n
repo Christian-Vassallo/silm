@@ -3,15 +3,16 @@ extern("inc_teleport")
 extern("x0_i0_position")
 #include "inc_pgsql.nh"
 
-void main() {
+void main()
+{
 	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
 	object oWho = GetLocalObject(OBJECT_SELF, "tptok_target");
-	
+
 	string area;
-	float x,y,z,f;
+	float x, y, z, f;
 
 	int
-		iSelection = GetLocalInt(oPC, "ConvList_Select");
+	iSelection = GetLocalInt(oPC, "ConvList_Select");
 
 	iSelection = GetListInt(oPC, "tptok", iSelection);
 	location lo;
@@ -19,54 +20,66 @@ void main() {
 	AssignCommand(oPC, ActionStartConversation(oPC, "invalid", 1, 0));
 
 	switch (iSelection) {
-		case -3:
-			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_TYPE_NONE, oPC)) {
-				AssignCommand(oPC, ClearAllActions(1));
-				AssignCommand(oPC, SpellDimensionDoor(GetLocation(oWho)));
-				AssignCommand(oWho, ClearAllActions(1));
-				AssignCommand(oWho, SpellDimensionDoor(GetLocation(oPC)));
+	case -3:
+		if (GetIsFriend(oPC, oWho)
+				|| !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_TYPE_NONE, oPC)) {
+			AssignCommand(oPC, ClearAllActions(1));
+			AssignCommand(oPC, SpellDimensionDoor(GetLocation(oWho)));
+			AssignCommand(oWho, ClearAllActions(1));
+			AssignCommand(oWho, SpellDimensionDoor(GetLocation(oPC)));
+		}
+
+		break;
+
+	case -2:
+		if (GetIsFriend(oPC, oWho)
+				|| !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_TYPE_NONE, oPC)) {
+			AssignCommand(oWho, ClearAllActions(1));
+			AssignCommand(oWho, SpellDimensionDoor(GetAheadLocation(oPC, DISTANCE_TINY)));
+		}
+
+		break;
+
+	case -1:
+		AssignCommand(oPC, ClearAllActions(1));
+		AssignCommand(oPC, SpellDimensionDoor(GetBehindLocation(oWho, DISTANCE_TINY)));
+		break;
+
+
+	default:
+		pQ("select area,x,y,z,f from locations where id = " + pSi(iSelection) + ";");
+
+		if (pF()) {
+			area = pGs(1);
+			x = pGf(2);
+			y = pGf(3);
+			z = pGf(4);
+			f = pGf(5);
+
+			object oarea = GetObjectByTag(area);
+
+			if (!GetIsObjectValid(oarea)) {
+				SendMessageToPC(oPC, "error: area set for location is invalid.");
+				return;
 			}
-			break;
 
-		case -2:
-			if (GetIsFriend(oPC, oWho) || !WillSave(oWho, 14 /* 10 + spell level (dimdoor = 4) */, SAVING_THROW_TYPE_NONE, oPC)) {
+			vector vec;
+			vec.x = x;
+			vec.y = y;
+			vec.z = z;
+			lo = Location(oarea, vec, f);
+
+			if (GetIsObjectValid(GetAreaFromLocation(lo))) {
 				AssignCommand(oWho, ClearAllActions(1));
-				AssignCommand(oWho, SpellDimensionDoor(GetAheadLocation(oPC, DISTANCE_TINY)));
-			}
-			break;
+				AssignCommand(oWho, SpellDimensionDoor(lo));
 
-		case -1:
-				AssignCommand(oPC, ClearAllActions(1));
-			AssignCommand(oPC, SpellDimensionDoor(GetBehindLocation(oWho, DISTANCE_TINY)));
-			break;
-
-
-		default:
-			pQ("select area,x,y,z,f from locations where id = " + pSi(iSelection) + ";");
-			if (pF()) {
-				area = pGs(1); x = pGf(2); y = pGf(3); z = pGf(4); f = pGf(5);
-
-				object oarea = GetObjectByTag(area);
-				if (!GetIsObjectValid(oarea)) {
-					SendMessageToPC(oPC, "error: area set for location is invalid.");
-					return;
-				}
-
-				vector vec;
-				vec.x = x;
-				vec.y = y;
-				vec.z = z;
-				lo = Location(oarea, vec, f);
-
-				if (GetIsObjectValid(GetAreaFromLocation(lo))) {
-					AssignCommand(oWho, ClearAllActions(1));
-					AssignCommand(oWho, SpellDimensionDoor(lo));
-				} else
-					FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
-
-			} else {
+			} else
 				FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
-			}
-			break;
+
+		} else {
+			FloatingTextStringOnCreature("Nichts passiert.", oPC, false);
+		}
+
+		break;
 	}
 }

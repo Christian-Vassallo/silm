@@ -11,10 +11,11 @@ void update_inventory_for_player(object player) {
 		HSET(er_key(player), "equip", spec);
 }*/
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 	// struct EventArguments ea = GetEventArguments(e.serial);
-	
+
 	if (e.ev == "item_equip") {
 		er_touch(e.actor);
 		/*object player = e.actor;
@@ -28,5 +29,5 @@ void main() {
 		er_touch(e.actor);
 		//update_inventory_for_player(e.actor);
 	}
- }
+}
 

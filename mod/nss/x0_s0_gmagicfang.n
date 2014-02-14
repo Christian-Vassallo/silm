@@ -22,41 +22,56 @@ extern("x0_i0_spells")
 
 
 
-extern("x2_inc_spellhook") 
+extern("x2_inc_spellhook")
 
 void main()
 {
 
-/* 
-  Spellcast Hook Code 
-  Added 2003-06-20 by Georg
-  If you want to make changes to all spells,
-  check x2_inc_spellhook.nss to find out more
-  
-*/
+	/*
+	  Spellcast Hook Code
+	  Added 2003-06-20 by Georg
+	  If you want to make changes to all spells,
+	  check x2_inc_spellhook.nss to find out more
 
-    if (!X2PreSpellCastCode())
-    {
-	// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
-        return;
-    }
+	*/
+
+	if (!X2PreSpellCastCode()) {
+		// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
+		return;
+	}
 
 // End of Spell Cast Hook
 
 
-    int nCasterLevel = GetCasterLevel(OBJECT_SELF);
-    int nPower = (nCasterLevel + 1) / 3;
-    if (nPower > 5)
-     nPower = 5;  // * max of +5 bonus
-    int nDamagePower = DAMAGE_POWER_PLUS_ONE;
-    
-    switch (nPower)
-    {
-        case 1: nDamagePower = DAMAGE_POWER_PLUS_ONE; break;
-        case 2: nDamagePower = DAMAGE_POWER_PLUS_TWO; break;
-        case 3: nDamagePower = DAMAGE_POWER_PLUS_THREE; break;
-        case 4: nDamagePower = DAMAGE_POWER_PLUS_FOUR; break;
-        case 5: nDamagePower = DAMAGE_POWER_PLUS_FIVE; break;
-    }
-    DoMagicFang(nPower, nDamagePower);
+	int nCasterLevel = GetCasterLevel(OBJECT_SELF);
+	int nPower = (nCasterLevel + 1) / 3;
+
+	if (nPower > 5)
+		nPower = 5;  // * max of +5 bonus
+
+	int nDamagePower = DAMAGE_POWER_PLUS_ONE;
+
+	switch (nPower) {
+	case 1:
+		nDamagePower = DAMAGE_POWER_PLUS_ONE;
+		break;
+
+	case 2:
+		nDamagePower = DAMAGE_POWER_PLUS_TWO;
+		break;
+
+	case 3:
+		nDamagePower = DAMAGE_POWER_PLUS_THREE;
+		break;
+
+	case 4:
+		nDamagePower = DAMAGE_POWER_PLUS_FOUR;
+		break;
+
+	case 5:
+		nDamagePower = DAMAGE_POWER_PLUS_FIVE;
+		break;
+	}
+
+	DoMagicFang(nPower, nDamagePower);
 }

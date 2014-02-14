@@ -16,7 +16,8 @@
 extern("x0_i0_spells")
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 
 	//Declare major variables
 	int nDamage;
@@ -27,7 +28,8 @@ void main() {
 
 	//Get first target in spell area
 	oTarget = GetFirstInPersistentObject();
-	while ( GetIsObjectValid(oTarget) ) {
+
+	while (GetIsObjectValid(oTarget)) {
 		fDelay = GetRandomDelay(1.0, 2.2);
 		SignalEvent(oTarget, EventSpellCastAt(GetAreaOfEffectCreator(), SPELL_CREEPING_DOOM));
 		//Roll Damage

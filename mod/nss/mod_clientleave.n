@@ -3,7 +3,8 @@
 extern("inc_chat")
 extern("inc_session")
 
-void main() {
+void main()
+{
 	object oExit = GetExitingObject();
 
 	SetLocalObject(oExit, "last_area_entered", OBJECT_INVALID);
@@ -12,7 +13,9 @@ void main() {
 	// When a player character logs out
 	// - runnable: the player character object
 	// - sync
-	RunEventScriptsFor(GetEventSerial(), "player_logout", oExit, oExit, OBJECT_INVALID, GetLocation(OBJECT_INVALID), EVENT_MODE_SYNC);
+	RunEventScriptsFor(GetEventSerial(), "player_logout", oExit, oExit, OBJECT_INVALID,
+					   GetLocation(OBJECT_INVALID),
+					   EVENT_MODE_SYNC);
 
 	NWNXChatPCout(oExit);
 }

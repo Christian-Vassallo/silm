@@ -4,16 +4,18 @@ void LoadEffects(object oPC);
 void ApplyEffectIfNotExists(object oPC, string sEffect);
 
 
-void main() {
+void main()
+{
 	object oPC = OBJECT_SELF;
 
-	if ( !GetIsPC(oPC) || GetIsDM(oPC) )
+	if (!GetIsPC(oPC) || GetIsDM(oPC))
 		return;
 
 	// Only run each other heartbeat = each 12s cycle
-	if ( GetLocalInt(oPC, "hb_persistency_other") ) {
+	if (GetLocalInt(oPC, "hb_persistency_other")) {
 		SetLocalInt(oPC, "hb_persistency_other", 0);
 		return;
+
 	} else
 		SetLocalInt(oPC, "hb_persistency_other", 1);
 
@@ -25,7 +27,8 @@ void main() {
 	int ncount = GetLocalInt(oPC, "peffect");
 
 	string sEffect = "";
-	while ( nfx < ncount ) {
+
+	while (nfx < ncount) {
 
 		sEffect = GetLocalString(oPC, "peffect_" + IntToString(nfx));
 
@@ -37,7 +40,8 @@ void main() {
 }
 
 
-void ApplyEffectIfNotExists(object oPC, string sEffect) {
+void ApplyEffectIfNotExists(object oPC, string sEffect)
+{
 	effect eWhat = SupernaturalEffect(StringToEffect(sEffect));
 	int bFound = FALSE;
 
@@ -47,7 +51,8 @@ void ApplyEffectIfNotExists(object oPC, string sEffect) {
 	//}
 
 	effect e = GetFirstEffect(oPC);
-	while ( GetIsEffectValid(e) ) {
+
+	while (GetIsEffectValid(e)) {
 		if (
 			GetEffectType(e) == GetEffectType(eWhat)
 			&& // GetEffectDurationType(e) == GetEffectDurationType(eWhat) &&
@@ -60,25 +65,29 @@ void ApplyEffectIfNotExists(object oPC, string sEffect) {
 		e = GetNextEffect(oPC);
 	}
 
-	if ( !bFound ) {
+	if (!bFound) {
 		// SendMessageToPC(oPC, "Persistente Arkane: " + sEffect);
 		ApplyEffectToObject(DTP, eWhat, oPC);
 	}
 }
 
-void LoadEffects(object oPC) {
-	if ( GetLocalInt(oPC, "hb_persistency_loaded") )
+void LoadEffects(object oPC)
+{
+	if (GetLocalInt(oPC, "hb_persistency_loaded"))
 		return;
 
 	int nCID = GetCharacterID(oPC);
 
-	if ( !nCID )
+	if (!nCID)
 		return;
 
 	int nfx = 0;
 	pQ(
-		"select apply_when,effect,duration_type,duration,veffect from persistent_effects where character = "	+ IntToString(nCID) + ";");
-	while ( pF() ) {
+		"select apply_when,effect,duration_type,duration,veffect from persistent_effects where character = "
+		+ IntToString(
+			nCID) + ";");
+
+	while (pF()) {
 		//string sWhen = pG(1);
 		string sEffect = pG(2);
 		//string sDurationType = pG(3);

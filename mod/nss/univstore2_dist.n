@@ -12,9 +12,11 @@ const float
 MAX_WEIGHT = 0.0;
 
 
-int GetCapacity(object oContainer) {
+int GetCapacity(object oContainer)
+{
 	int nCapacity = GetLocalInt(oContainer, "store_capacity");
-	if ( !nCapacity ) {
+
+	if (!nCapacity) {
 		// TODO: Add Tag-specific capacity values
 		nCapacity = CAPACITY;
 	}
@@ -22,7 +24,8 @@ int GetCapacity(object oContainer) {
 	return nCapacity;
 }
 
-void main() {
+void main()
+{
 
 	object oPC = GetLastDisturbed();
 	object oDisturbItem = GetInventoryDisturbItem();
@@ -34,7 +37,7 @@ void main() {
 
 
 	//Gegenstand wurde reingelegt
-	if ( nDisturbType == INVENTORY_DISTURB_TYPE_ADDED ) {
+	if (nDisturbType == INVENTORY_DISTURB_TYPE_ADDED) {
 
 		// The inventory was added to.
 		iCount++;
@@ -50,33 +53,34 @@ void main() {
 
 		int nTotalSize = GetTotalContainerItemSizeSum(OBJECT_SELF);
 
-		if ( nMaxSize == 0 )
+		if (nMaxSize == 0)
 			nMaxSize = MAX_SIZE;
-		if ( nCapacity == 0 )
+
+		if (nCapacity == 0)
 			nCapacity = CAPACITY;
 
-		if ( nMaxSize > 0 && GetItemSize(OBJECT_SELF) > nMaxSize ) {
+		if (nMaxSize > 0 && GetItemSize(OBJECT_SELF) > nMaxSize) {
 			SendMessageToPC(oPC, "Dieser Gegenstand passt hier nicht rein - er ist zu gross.");
 			DelayCommand(0.3, AssignCommand(OBJECT_SELF, ActionGiveItem(oDisturbItem, oPC)));
 			return;
 		}
 
 		// Voll
-		if ( nCapacity > 0 && nTotalSize > nCapacity ) {
+		if (nCapacity > 0 && nTotalSize > nCapacity) {
 			SendMessageToPC(oPC, "Dieser Gegenstand passt hier nun beim besten Willen nicht mehr rein.");
 			DelayCommand(0.3, AssignCommand(OBJECT_SELF, ActionGiveItem(oDisturbItem, oPC)));
 			return;
 		}
 
 		// Gegenstand zu schwer.
-		if ( fMaxWeight > 0.0 && ( IntToFloat(GetWeight(oDisturbItem)) / 10.0 ) >= fMaxWeight ) {
+		if (fMaxWeight > 0.0 && (IntToFloat(GetWeight(oDisturbItem)) / 10.0) >= fMaxWeight) {
 			SendMessageToPC(oPC, "Dieser Gegenstand ist zu schwer fuer dieses Behaeltnis.");
 			DelayCommand(0.3, AssignCommand(OBJECT_SELF, ActionGiveItem(oDisturbItem, oPC)));
 			return;
 		}
 
 
-		if ( GetItemStackSize(oDisturbItem) > 50000 ) {
+		if (GetItemStackSize(oDisturbItem) > 50000) {
 			DelayCommand(0.3, AssignCommand(OBJECT_SELF, ActionGiveItem(oDisturbItem, oPC)));
 			SendMessageToPC(oPC, "Stack zu gross.");
 			return;
@@ -88,7 +92,7 @@ void main() {
 
 		//Wenn Gold in die Kiste gelegt wurde
 		// Should not happen anyways
-		if ( GetBaseItemType(oDisturbItem) == BASE_ITEM_GOLD ) {
+		if (GetBaseItemType(oDisturbItem) == BASE_ITEM_GOLD) {
 			SendMessageToPC(oPC, "Engine-Gold kann in dieser Truhe nicht gelagert werden.");
 			//Gold an Spieler zurueckgeben
 			DelayCommand(0.3, AssignCommand(OBJECT_SELF, ActionGiveItem(oDisturbItem, oPC)));
@@ -97,7 +101,7 @@ void main() {
 
 
 		//Wenn Item ein Inventar hat (Kontainer ist)
-		if ( GetHasInventory(oDisturbItem) ) {
+		if (GetHasInventory(oDisturbItem)) {
 			DelayCommand(0.3, AssignCommand(OBJECT_SELF, ActionGiveItem(oDisturbItem, oPC)));
 			//SendMessageToPC(oPC, "Bitte den Behaelter vorm Einlagern leeren.");
 			SendMessageToPC(oPC, "Behaelter koennen nicht eingelagert werden.");
@@ -110,9 +114,10 @@ void main() {
 		return;
 
 	}
+
 	//Gegenstand wurde rausgenommen
-	else if ( nDisturbType == INVENTORY_DISTURB_TYPE_REMOVED
-			 || nDisturbType == INVENTORY_DISTURB_TYPE_STOLEN ) {
+	else if (nDisturbType == INVENTORY_DISTURB_TYPE_REMOVED
+			 || nDisturbType == INVENTORY_DISTURB_TYPE_STOLEN) {
 		iCount--;
 		SetLocalInt(OBJECT_SELF, PPIS_COUNT, iCount);
 	}

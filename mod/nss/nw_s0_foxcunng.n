@@ -13,17 +13,18 @@
 
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 
-/*
- * Spellcast Hook Code
- * Added 2003-06-23 by GeorgZ
- * If you want to make changes to all spells,
- * check x2_inc_spellhook.nss to find out more
- *
- */
+	/*
+	 * Spellcast Hook Code
+	 * Added 2003-06-23 by GeorgZ
+	 * If you want to make changes to all spells,
+	 * check x2_inc_spellhook.nss to find out more
+	 *
+	 */
 
-	if ( !X2PreSpellCastCode() ) {
+	if (!X2PreSpellCastCode()) {
 		// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run this spell
 		return;
 	}
@@ -44,13 +45,16 @@ void main() {
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_FOXS_CUNNING, FALSE));
 
 	//Enter Metamagic conditions
-	if ( nMetaMagic == METAMAGIC_MAXIMIZE ) {
+	if (nMetaMagic == METAMAGIC_MAXIMIZE) {
 		nRaise = 5; //Damage is at max
-	} else if ( nMetaMagic == METAMAGIC_EMPOWER ) {
-		nRaise = nRaise + ( nRaise / 2 ); //Damage/Healing is +50%
-	} else if ( nMetaMagic == METAMAGIC_EXTEND ) {
+
+	} else if (nMetaMagic == METAMAGIC_EMPOWER) {
+		nRaise = nRaise + (nRaise / 2);   //Damage/Healing is +50%
+
+	} else if (nMetaMagic == METAMAGIC_EXTEND) {
 		nDuration = nDuration * 2; //Duration is +100%
 	}
+
 	//Set Adjust Ability Score effect
 	eRaise = EffectAbilityIncrease(ABILITY_INTELLIGENCE, nRaise);
 	effect eLink = EffectLinkEffects(eRaise, eDur);

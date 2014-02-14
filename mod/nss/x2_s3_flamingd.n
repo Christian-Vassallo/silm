@@ -22,31 +22,30 @@
 
 void main()
 {
-  // Get Caster Level
-  int nLevel = GetCasterLevel(OBJECT_SELF);
-  // Assume minimum caster level if variable is not found
-  if (nLevel== 0)
-  {
-     nLevel =1;
-  }
+	// Get Caster Level
+	int nLevel = GetCasterLevel(OBJECT_SELF);
 
-  int nDmg = d4() + nLevel;
+	// Assume minimum caster level if variable is not found
+	if (nLevel == 0) {
+		nLevel = 1;
+	}
 
-  effect eDmg = EffectDamage(nDmg,DAMAGE_TYPE_FIRE);
-  effect eVis;
-  if (nDmg<10) // if we are doing below 10 point of damage, use small flame
-  {
-    eVis =EffectVisualEffect(VFX_IMP_FLAME_S);
-  }
-  else
-  {
-     eVis =EffectVisualEffect(VFX_IMP_FLAME_M);
-  }
-  eDmg = EffectLinkEffects (eVis, eDmg);
-  object oTarget = GetSpellTargetObject();
+	int nDmg = d4() + nLevel;
 
-  if (GetIsObjectValid(oTarget))
-  {
-      ApplyEffectToObject(DURATION_TYPE_INSTANT, eDmg, oTarget);
-  }
+	effect eDmg = EffectDamage(nDmg, DAMAGE_TYPE_FIRE);
+	effect eVis;
+
+	if (nDmg < 10) { // if we are doing below 10 point of damage, use small flame
+		eVis = EffectVisualEffect(VFX_IMP_FLAME_S);
+
+	} else {
+		eVis = EffectVisualEffect(VFX_IMP_FLAME_M);
+	}
+
+	eDmg = EffectLinkEffects(eVis, eDmg);
+	object oTarget = GetSpellTargetObject();
+
+	if (GetIsObjectValid(oTarget)) {
+		ApplyEffectToObject(DURATION_TYPE_INSTANT, eDmg, oTarget);
+	}
 }

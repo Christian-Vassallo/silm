@@ -23,12 +23,12 @@ struct Material {
 	int __pad;
 	string sDesc;   // Description of material
 	int iGroup;     // Material group
-					// 0 - Metal and ore
-					// 1 - Animal leather, wool, cotton(?)
-					// 2 - wood
-					// 3 - herbs
+	// 0 - Metal and ore
+	// 1 - Animal leather, wool, cotton(?)
+	// 2 - wood
+	// 3 - herbs
 	int iLevel;     // 'Level' of material: 2^Level denotes difficulty,
-					// 0xF0+Level is index for crafted item
+	// 0xF0+Level is index for crafted item
 	string sResRef; // ResRef of the object denoting a material piece
 };
 
@@ -41,7 +41,8 @@ struct ItemType {
 	int iCost;      // Number of raw material items needed for crafting
 };
 
-struct Skill GetSkillData(int iIndex) {
+struct Skill GetSkillData(int iIndex)
+{
 	struct Skill New;
 	object oMod = GetModule();
 	string sIndex = IntToString(iIndex);
@@ -53,11 +54,13 @@ struct Skill GetSkillData(int iIndex) {
 	return New;
 }
 
-struct Skill GetSkillData_Label(string sLabel) {
+struct Skill GetSkillData_Label(string sLabel)
+{
 	return GetSkillData(GetLocalInt(GetModule(), "CS_SKS_Index_" + sLabel));
 }
 
-struct Craft GetCraftData(int iIndex) {
+struct Craft GetCraftData(int iIndex)
+{
 	struct Craft New;
 	object oMod = GetModule();
 	string sIndex = IntToString(iIndex);
@@ -69,11 +72,13 @@ struct Craft GetCraftData(int iIndex) {
 	return New;
 }
 
-struct Craft GetCraftData_Label(string sLabel) {
+struct Craft GetCraftData_Label(string sLabel)
+{
 	return GetCraftData(GetLocalInt(GetModule(), "CS_SKC_Index_" + sLabel));
 }
 
-struct SkGroup GetSkGroupData(int iIndex) {
+struct SkGroup GetSkGroupData(int iIndex)
+{
 	struct SkGroup New;
 	object oMod = GetModule();
 	string sIndex = IntToString(iIndex);
@@ -85,7 +90,8 @@ struct SkGroup GetSkGroupData(int iIndex) {
 	return New;
 }
 
-struct Material GetMaterialData(int iIndex) {
+struct Material GetMaterialData(int iIndex)
+{
 	struct Material New;
 	object oMod = GetModule();
 	string sIndex = IntToString(iIndex);
@@ -98,11 +104,13 @@ struct Material GetMaterialData(int iIndex) {
 	return New;
 }
 
-struct Material GetMaterialData_RR(string sResRef) {
+struct Material GetMaterialData_RR(string sResRef)
+{
 	return GetMaterialData(GetLocalInt(GetModule(), "CS_SKM_IRR_" + GetStringLowerCase(sResRef)));
 }
 
-struct ItemType GetItemType(int iIndex) {
+struct ItemType GetItemType(int iIndex)
+{
 	object oMod = GetModule();
 	string sIndex = IntToString(iIndex);
 	struct ItemType New;
@@ -116,7 +124,8 @@ struct ItemType GetItemType(int iIndex) {
 	return New;
 }
 
-struct ItemType GetItemType_BOT(string sBOT) {
+struct ItemType GetItemType_BOT(string sBOT)
+{
 	return GetItemType(GetLocalInt(GetModule(), "CS_SKI_Index_" + sBOT));
 }
 

@@ -1,13 +1,16 @@
-void main() {
+void main()
+{
 	object oClicker = GetClickingObject();
 	object oTarget = GetTransitionTarget(OBJECT_SELF);
 
 	object oPoss;
 
 	oPoss = GetItemPossessedBy(oClicker, "AmulettderDruiden");
-	if ( !GetIsObjectValid(oPoss) ) {
+
+	if (!GetIsObjectValid(oPoss)) {
 		oPoss = GetItemPossessedBy(oClicker, "SteinderDruiden");
-		if ( !GetIsObjectValid(oPoss) ) return;
+
+		if (!GetIsObjectValid(oPoss)) return;
 
 		DestroyObject(oPoss);
 	}

@@ -2,24 +2,27 @@
 
 extern("inc_horse")
 
-void main() {
+void main()
+{
 
 	object oPC = GetPCSpeaker();
 	object oHorse = GetHenchman(oPC);
 	string sStall = GetTag(OBJECT_SELF);
 
-	if ( GetIsObjectValid(oHorse) ) {
+	if (GetIsObjectValid(oHorse)) {
 		string sType = GetStringLeft(GetTag(oHorse), 9);
-		if ( sType == "reitpferd" || sType == "reitpony0" ) {
+
+		if (sType == "reitpferd" || sType == "reitpony0") {
 
 			struct Rideable r = GetRideable(oPC);
 
-			if ( GetIsValidRideable(r) ) {
+			if (GetIsValidRideable(r)) {
 				r.stable = sStall;
 
 				r = SetRideableDeliveredIn(r);
 
 				SetRideable(r);
+
 			} else {
 				SendMessageToPC(oPC, "Datenbankfehler, durnit.");
 			}

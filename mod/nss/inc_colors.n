@@ -15,7 +15,7 @@ LO = 80,
 MIN = 1,
 MAX = 210;
 
-// Struct: Color 
+// Struct: Color
 // Contains the R, G, B components as ints.
 struct Color {
 	int r;
@@ -94,7 +94,8 @@ cWhite = CS(MAX, MAX, MAX);
 /* implementation */
 
 
-struct Color GetLocalColor(object oPC, string sName) {
+struct Color GetLocalColor(object oPC, string sName)
+{
 	struct Color r;
 	r.r = GetLocalInt(oPC, "c_" + sName + "_r");
 	r.g = GetLocalInt(oPC, "c_" + sName + "_g");
@@ -102,52 +103,70 @@ struct Color GetLocalColor(object oPC, string sName) {
 	return r;
 }
 
-void SetLocalColor(object oPC, string sName, struct Color cC) {
+void SetLocalColor(object oPC, string sName, struct Color cC)
+{
 	SetLocalInt(oPC, "c_" + sName + "_r", cC.r);
 	SetLocalInt(oPC, "c_" + sName + "_g", cC.g);
 	SetLocalInt(oPC, "c_" + sName + "_b", cC.b);
 }
 
 
-string IntToChar(int i) {
-	if ( i >= GetStringLength(COL255) )
+string IntToChar(int i)
+{
+	if (i >= GetStringLength(COL255))
 		i = GetStringLength(COL255) - 1;
+
 	return GetSubString(COL255, i, 1);
 }
 
 
-string C(string text, struct Color c) {
+string C(string text, struct Color c)
+{
 	return ColorTag(c) + text + ColorTagClose();
 }
 
-string ColorTag(struct Color c) {
+string ColorTag(struct Color c)
+{
 	return "<c" + IntToChar(c.r) + IntToChar(c.g) + IntToChar(c.b) + ">";
 }
 
-string ColorTagClose() {
+string ColorTagClose()
+{
 	return "</c>";
 }
 
-struct Color CS(int r, int g, int b) {
+struct Color CS(int r, int g, int b)
+{
 	struct Color c;
-	c.r = r; c.g = g; c.b = b;
-	if ( c.r > MAX ) c.r = MAX;
-	if ( c.g > MAX ) c.g = MAX;
-	if ( c.b > MAX ) c.b = MAX;
-	if ( c.r < MIN ) c.r = MIN;
-	if ( c.g < MIN ) c.g = MIN;
-	if ( c.b < MIN ) c.b = MIN;
+	c.r = r;
+	c.g = g;
+	c.b = b;
+
+	if (c.r > MAX) c.r = MAX;
+
+	if (c.g > MAX) c.g = MAX;
+
+	if (c.b > MAX) c.b = MAX;
+
+	if (c.r < MIN) c.r = MIN;
+
+	if (c.g < MIN) c.g = MIN;
+
+	if (c.b < MIN) c.b = MIN;
+
 	return c;
 }
 
-struct Color CI(int rgb) {
+struct Color CI(int rgb)
+{
 	int r = rgb >> 16 & 0xff;
 	int g = rgb >> 8 & 0xff;
 	int b = rgb >> 0 & 0xff;
 	return CS(r, g, b);
 }
 
-struct Color CSRand() {
+struct Color CSRand()
+{
 	struct Color c;
 	c.r = MIN + Random(MAX - MIN);
 	c.g = MIN + Random(MAX - MIN);
@@ -155,37 +174,54 @@ struct Color CSRand() {
 	return c;
 }
 
-struct Color Lighten(struct Color c, int nAmount) {
+struct Color Lighten(struct Color c, int nAmount)
+{
 	struct Color r;
 	r.r = c.r + nAmount;
 	r.g = c.g + nAmount;
 	r.b = c.b + nAmount;
-	if ( r.r > MAX ) r.r = MAX;
-	if ( r.g > MAX ) r.g = MAX;
-	if ( r.b > MAX ) r.b = MAX;
-	if ( r.r < MIN ) r.r = MIN;
-	if ( r.g < MIN ) r.g = MIN;
-	if ( r.b < MIN ) r.b = MIN;
+
+	if (r.r > MAX) r.r = MAX;
+
+	if (r.g > MAX) r.g = MAX;
+
+	if (r.b > MAX) r.b = MAX;
+
+	if (r.r < MIN) r.r = MIN;
+
+	if (r.g < MIN) r.g = MIN;
+
+	if (r.b < MIN) r.b = MIN;
+
 	return r;
 }
 
-struct Color Darken(struct Color c, int nAmount) {
+struct Color Darken(struct Color c, int nAmount)
+{
 	struct Color r;
 	r.r = c.r - nAmount;
 	r.g = c.g - nAmount;
 	r.b = c.b - nAmount;
-	if ( r.r > MAX ) r.r = MAX;
-	if ( r.g > MAX ) r.g = MAX;
-	if ( r.b > MAX ) r.b = MAX;
-	if ( r.r < MIN ) r.r = MIN;
-	if ( r.g < MIN ) r.g = MIN;
-	if ( r.b < MIN ) r.b = MIN;
+
+	if (r.r > MAX) r.r = MAX;
+
+	if (r.g > MAX) r.g = MAX;
+
+	if (r.b > MAX) r.b = MAX;
+
+	if (r.r < MIN) r.r = MIN;
+
+	if (r.g < MIN) r.g = MIN;
+
+	if (r.b < MIN) r.b = MIN;
+
 	return r;
 }
 
 
 
-string RainbowText(string sText, int nStepSize = 2, int bCheatCloseTags = TRUE) {
+string RainbowText(string sText, int nStepSize = 2, int bCheatCloseTags = TRUE)
+{
 	int nEachLetter = GetStringLength(sText) / nStepSize;
 
 	string sOut = "", sMed = "";
@@ -193,14 +229,16 @@ string RainbowText(string sText, int nStepSize = 2, int bCheatCloseTags = TRUE) 
 
 	int i = 0;
 
-	for ( i = 0; i < nEachLetter; i += nEachLetter ) {
+	for (i = 0; i < nEachLetter; i += nEachLetter) {
 		sMed = GetSubString(sText, i, nEachLetter);
 
 		// ColorStep(c, 1024, nEachLetter);
 
 		sOut += ColorTag(c) + sMed;
-		if ( !bCheatCloseTags )
+
+		if (!bCheatCloseTags)
 			sOut += ColorTagClose();
 	}
+
 	return sOut;
 }

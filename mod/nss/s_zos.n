@@ -31,21 +31,25 @@ weiß wie hoch sein Wurf war.
 extern("x0_i0_spells")
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 
-    if (!X2PreSpellCastCode())
-        return;
+	if (!X2PreSpellCastCode())
+		return;
 
 	object oTarget = GetSpellTargetObject();
 
-    effect eZOS = EffectSkillDecrease(SKILL_BLUFF, 1); // EffectAreaOfEffect(AOE_MOB_ZONE_OF_SILENCE, "s_zosa", "s_zosc", "s_zosb");
+	effect eZOS = EffectSkillDecrease(SKILL_BLUFF,
+									  1); // EffectAreaOfEffect(AOE_MOB_ZONE_OF_SILENCE, "s_zosa", "s_zosc", "s_zosb");
 
-    int nDuration = GetCasterLevel(OBJECT_SELF);
-    int nMetaMagic = GetMetaMagicFeat();
-    if (nDuration < 1)
+	int nDuration = GetCasterLevel(OBJECT_SELF);
+	int nMetaMagic = GetMetaMagicFeat();
+
+	if (nDuration < 1)
 		nDuration = 1;
-    if (nMetaMagic == METAMAGIC_EXTEND)
-       nDuration = nDuration * 2;
+
+	if (nMetaMagic == METAMAGIC_EXTEND)
+		nDuration = nDuration * 2;
 
 	//Fire cast spell at event for the specified target
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_ZONE_OF_SILENCE));

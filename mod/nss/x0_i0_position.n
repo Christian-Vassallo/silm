@@ -37,7 +37,7 @@ string VectorToString(vector vec);
 
 // This actually moves the target to the given new location,
 // and makes them face the correct way once they get there.
-void MoveToNewLocation(location lNewLocation, object oTarget=OBJECT_SELF);
+void MoveToNewLocation(location lNewLocation, object oTarget = OBJECT_SELF);
 
 // This returns the change in X coordinate that should be made to
 // cause an object to be fDistance away at fAngle.
@@ -108,53 +108,71 @@ float GetCustomLeftDirection(float fDirection, float fAngle);
  */
 
 location GenerateNewLocation(object oTarget, float fDistance, float fAngle, float fOrientation,
-	float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0);
+							 float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0);
 
-location GenerateNewLocationFromLocation(location lTarget, float fDistance, float fAngle, float fOrientation,
-	float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0);
+location GenerateNewLocationFromLocation(location lTarget, float fDistance, float fAngle,
+		float fOrientation,
+		float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0);
 
 // Turns the target object to face the specified object
-void TurnToFaceObject(object oObjectToFace, object oTarget=OBJECT_SELF);
+void TurnToFaceObject(object oObjectToFace, object oTarget = OBJECT_SELF);
 
 // Returns the location flanking the target to the right
 // (slightly behind) and facing same direction as the target
 // (useful for backup)
-location GetFlankingRightLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0);
+location GetFlankingRightLocation(object oTarget, float dist = DISTANCE_MEDIUM,
+								  float x_adjust = 0.0,
+								  float y_adjust = 0.0, float z_adjust = 0.0);
 
 // Returns the location flanking the target to the left
 // (slightly behind) and facing same direction as the target.
 // (useful for backup)
-location GetFlankingLeftLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0);
+location GetFlankingLeftLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0,
+								 float y_adjust = 0.0, float z_adjust = 0.0);
 
 // Returns a location directly opposite the target and
 // facing the target
-location GetOppositeLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0);
+location GetOppositeLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0,
+							 float y_adjust = 0.0,
+							 float z_adjust = 0.0);
 
 // Returns location directly ahead of the target and facing
 // same direction as the target
-location GetAheadLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0);
+location GetAheadLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0,
+						  float y_adjust = 0.0,
+						  float z_adjust = 0.0);
 
 // Returns location directly behind the target and facing same
 // direction as the target (useful for backstabbing attacks)
-location GetBehindLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0);
+location GetBehindLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0,
+						   float y_adjust = 0.0,
+						   float z_adjust = 0.0);
 
 // Returns location to the forward right flank of the target
 // and facing the same way as the target
 // (useful for guarding)
-location GetForwardFlankingRightLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0);
+location GetForwardFlankingRightLocation(object oTarget, float dist = DISTANCE_MEDIUM,
+		float x_adjust = 0.0,
+		float y_adjust = 0.0, float z_adjust = 0.0);
 
 // Returns location to the forward left flank of the target
 // and facing the same way as the target
 // (useful for guarding)
-location GetForwardFlankingLeftLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0);
+location GetForwardFlankingLeftLocation(object oTarget, float dist = DISTANCE_MEDIUM,
+										float x_adjust = 0.0,
+										float y_adjust = 0.0, float z_adjust = 0.0);
 
 // Returns location to the forward right and facing the target.
 // (useful for one of two people facing off against the target)
-location GetAheadRightLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0);
+location GetAheadRightLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0,
+							   float y_adjust = 0.0,
+							   float z_adjust = 0.0);
 
 // Returns location to the forward left and facing the target.
 // (useful for one of two people facing off against the target)
-location GetAheadLeftLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0);
+location GetAheadLeftLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0,
+							  float y_adjust = 0.0,
+							  float z_adjust = 0.0);
 
 // Returns location just a step to the left
 // (Let's do the time warp...)
@@ -169,16 +187,17 @@ location GetStepRightLocation(object oTarget);
 // If that is not available, will use the roughly-center point
 // of the area.
 // If distance is set to 0.0, a random distance will be used.
-location GetRandomLocation(object oArea, object oSource = OBJECT_INVALID, float fDist=0.0);
+location GetRandomLocation(object oArea, object oSource = OBJECT_INVALID, float fDist = 0.0);
 
-location GetRandomLocationAt(location lWhere, float fDist=0.0);
+location GetRandomLocationAt(location lWhere, float fDist = 0.0);
 
 /**********************************************************************
  * FUNCTION DEFINITIONS
  **********************************************************************/
 
 
-bool GetIsOnThisSideOfFacing(object oTest, object oTo) {
+bool GetIsOnThisSideOfFacing(object oTest, object oTo)
+{
 	location l1 = GetAheadLocation(oTest, DISTANCE_TINY);
 	location l2 = GetBehindLocation(oTest, DISTANCE_TINY);
 	location lo = GetLocation(oTo);
@@ -189,12 +208,12 @@ bool GetIsOnThisSideOfFacing(object oTest, object oTo) {
 
 // This actually moves the target to the given new location,
 // and makes them face the correct way once they get there.
-void MoveToNewLocation(location lNewLocation, object oTarget=OBJECT_SELF)
+void MoveToNewLocation(location lNewLocation, object oTarget = OBJECT_SELF)
 {
 	AssignCommand(oTarget, ActionMoveToLocation(lNewLocation));
 	AssignCommand(oTarget,
 				  ActionDoCommand(
-						SetFacing(GetFacingFromLocation(lNewLocation))));
+					  SetFacing(GetFacingFromLocation(lNewLocation))));
 }
 
 
@@ -221,9 +240,12 @@ vector GetChangedPosition(vector vOriginal, float fDistance, float fAngle)
 	vector vChanged;
 	vChanged.z = vOriginal.z;
 	vChanged.x = vOriginal.x + GetChangeInX(fDistance, fAngle);
+
 	if (vChanged.x < 0.0)
 		vChanged.x = - vChanged.x;
+
 	vChanged.y = vOriginal.y + GetChangeInY(fDistance, fAngle);
+
 	if (vChanged.y < 0.0)
 		vChanged.y = - vChanged.y;
 
@@ -248,9 +270,11 @@ float GetAngleBetweenLocations(location lOne, location lTwo)
 float GetNormalizedDirection(float fDirection)
 {
 	float fNewDir = fDirection;
+
 	while (fNewDir >= 360.0) {
 		fNewDir -= 360.0;
 	}
+
 	return fNewDir;
 }
 
@@ -318,16 +342,16 @@ float GetCustomLeftDirection(float fDirection, float fAngle)
  **********************************************************************/
 
 // Turns the object to face the specified object
-void TurnToFaceObject(object oObjectToFace, object oTarget=OBJECT_SELF)
+void TurnToFaceObject(object oObjectToFace, object oTarget = OBJECT_SELF)
 {
 	AssignCommand(oTarget,
 				  SetFacingPoint(
-						GetPosition(oObjectToFace)));
+					  GetPosition(oObjectToFace)));
 }
 
 // Private function -- we use this to get the new location
 location GenerateNewLocation(object oTarget, float fDistance, float fAngle, float fOrientation,
-	float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0)
+							 float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0)
 {
 	object oArea = GetArea(oTarget);
 	vector vNewPos = GetChangedPosition(GetPosition(oTarget),
@@ -341,8 +365,9 @@ location GenerateNewLocation(object oTarget, float fDistance, float fAngle, floa
 
 // Private function -- we use this to get the new location
 // from a source location.
-location GenerateNewLocationFromLocation(location lTarget, float fDistance, float fAngle, float fOrientation,
-	float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0)
+location GenerateNewLocationFromLocation(location lTarget, float fDistance, float fAngle,
+		float fOrientation,
+		float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0)
 {
 	object oArea = GetAreaFromLocation(lTarget);
 	vector vNewPos = GetChangedPosition(GetPositionFromLocation(lTarget),
@@ -357,7 +382,9 @@ location GenerateNewLocationFromLocation(location lTarget, float fDistance, floa
 
 
 // This returns the location flanking the target to the right
-location GetFlankingRightLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0)
+location GetFlankingRightLocation(object oTarget, float dist = DISTANCE_MEDIUM,
+								  float x_adjust = 0.0,
+								  float y_adjust = 0.0, float z_adjust = 0.0)
 {
 	float fDir = GetFacing(oTarget);
 	float fAngleToRightFlank = GetFarRightDirection(fDir);
@@ -371,7 +398,8 @@ location GetFlankingRightLocation(object oTarget, float dist = DISTANCE_MEDIUM, 
 // Returns the location flanking the target to the left
 // (slightly behind) and facing same direction as the target.
 // (useful for backup)
-location GetFlankingLeftLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0)
+location GetFlankingLeftLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0,
+								 float y_adjust = 0.0, float z_adjust = 0.0)
 {
 	float fDir = GetFacing(oTarget);
 	float fAngleToLeftFlank = GetFarLeftDirection(fDir);
@@ -384,7 +412,9 @@ location GetFlankingLeftLocation(object oTarget, float dist = DISTANCE_MEDIUM, f
 
 // Returns a location directly ahead of the target and
 // facing the target
-location GetOppositeLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0)
+location GetOppositeLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0,
+							 float y_adjust = 0.0,
+							 float z_adjust = 0.0)
 {
 	float fDir = GetFacing(oTarget);
 	float fAngleOpposite = GetOppositeDirection(fDir);
@@ -396,7 +426,9 @@ location GetOppositeLocation(object oTarget, float dist = DISTANCE_MEDIUM, float
 
 // Returns location directly ahead of the target and facing
 // same direction as the target
-location GetAheadLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0)
+location GetAheadLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0,
+						  float y_adjust = 0.0,
+						  float z_adjust = 0.0)
 {
 	float fDir = GetFacing(oTarget);
 	return GenerateNewLocation(oTarget,
@@ -407,7 +439,9 @@ location GetAheadLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_
 
 // Returns location directly behind the target and facing same
 // direction as the target (useful for backstabbing attacks)
-location GetBehindLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0)
+location GetBehindLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0,
+						   float y_adjust = 0.0,
+						   float z_adjust = 0.0)
 {
 	float fDir = GetFacing(oTarget);
 	float fAngleOpposite = GetOppositeDirection(fDir);
@@ -421,7 +455,9 @@ location GetBehindLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x
 // Returns location to the forward right flank of the target
 // and facing the same way as the target
 // (useful for guarding)
-location GetForwardFlankingRightLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0)
+location GetForwardFlankingRightLocation(object oTarget, float dist = DISTANCE_MEDIUM,
+		float x_adjust = 0.0,
+		float y_adjust = 0.0, float z_adjust = 0.0)
 {
 	float fDir = GetFacing(oTarget);
 	float fAngle = GetHalfRightDirection(fDir);
@@ -435,7 +471,9 @@ location GetForwardFlankingRightLocation(object oTarget, float dist = DISTANCE_M
 // Returns location to the forward left flank of the target
 // and facing the same way as the target
 // (useful for guarding)
-location GetForwardFlankingLeftLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0)
+location GetForwardFlankingLeftLocation(object oTarget, float dist = DISTANCE_MEDIUM,
+										float x_adjust = 0.0,
+										float y_adjust = 0.0, float z_adjust = 0.0)
 {
 	float fDir = GetFacing(oTarget);
 	float fAngle = GetHalfLeftDirection(fDir);
@@ -447,7 +485,9 @@ location GetForwardFlankingLeftLocation(object oTarget, float dist = DISTANCE_ME
 
 // Returns location to the forward right and facing the target.
 // (useful for one of two people facing off against the target)
-location GetAheadRightLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0)
+location GetAheadRightLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0,
+							   float y_adjust = 0.0,
+							   float z_adjust = 0.0)
 {
 	float fDir = GetFacing(oTarget);
 	float fAngle = GetHalfRightDirection(fDir);
@@ -460,7 +500,9 @@ location GetAheadRightLocation(object oTarget, float dist = DISTANCE_MEDIUM, flo
 
 // Returns location to the forward left and facing the target.
 // (useful for one of two people facing off against the target)
-location GetAheadLeftLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0, float y_adjust = 0.0, float z_adjust = 0.0)
+location GetAheadLeftLocation(object oTarget, float dist = DISTANCE_MEDIUM, float x_adjust = 0.0,
+							  float y_adjust = 0.0,
+							  float z_adjust = 0.0)
 {
 	float fDir = GetFacing(oTarget);
 	float fAngle = GetHalfLeftDirection(fDir);
@@ -509,21 +551,27 @@ location GetCenterPointOfArea(object oArea)
 	vector vTmp;
 
 	oTmp = GetFirstObjectInArea(oArea);
+
 	while (GetIsObjectValid(oTmp)) {
 		vTmp = GetPositionFromLocation(GetLocation(oTmp));
+
 		if (vTmp.x > fXMax)
 			fXMax = vTmp.x;
+
 		if (vTmp.x < fXMin)
 			fXMin = vTmp.x;
+
 		if (vTmp.y > fYMax)
 			fYMax = vTmp.y;
+
 		if (vTmp.y < fYMin)
 			fYMin = vTmp.y;
+
 		oTmp = GetNextObjectInArea(oArea);
 	}
 
 	// We now have the max and min positions of all objects in an area.
-	vTmp = Vector( (fXMax + fXMin)/2.0, (fYMax + fYMin)/2.0, 0.0);
+	vTmp = Vector((fXMax + fXMin) / 2.0, (fYMax + fYMin) / 2.0, 0.0);
 
 	//PrintString("Center vector: " + VectorToString(vTmp));
 
@@ -537,35 +585,44 @@ location GetCenterPointOfArea(object oArea)
 // If that is not available, will use the roughly-center point
 // of the area.
 // If distance is set to 0.0, a random distance will be used.
-location GetRandomLocation(object oArea, object oSource = OBJECT_INVALID, float fDist=0.0) {
+location GetRandomLocation(object oArea, object oSource = OBJECT_INVALID, float fDist = 0.0)
+{
 	object o = oSource;
+
 	if (!GetIsObjectValid(o)) {
 		o = GetNearestObjectToLocation(OBJECT_TYPE_ALL, GetCenterPointOfArea(oArea));
 	}
 
 	if (fDist == 0.0) {
 		int nRoll = Random(3);
+
 		switch (nRoll) {
-			case 0:
-				fDist = DISTANCE_MEDIUM; break;
-			case 1:
-				fDist = DISTANCE_LARGE; break;
-			case 2:
-				fDist = DISTANCE_HUGE; break;
+		case 0:
+			fDist = DISTANCE_MEDIUM;
+			break;
+
+		case 1:
+			fDist = DISTANCE_LARGE;
+			break;
+
+		case 2:
+			fDist = DISTANCE_HUGE;
+			break;
 		}
 	}
 
 	return GetRandomLocationAt(GetLocation(o), fDist);
 }
 
-location GetRandomLocationAt(location lWhere, float fDist = 0.0) {
+location GetRandomLocationAt(location lWhere, float fDist = 0.0)
+{
 	vector vNewPos = GetPositionFromLocation(lWhere);
 	object oArea = GetAreaFromLocation(lWhere);
 	float fX, fY;
 	float fMaxY;
-	fX = ( Random(200) / 100.0 - 1.0 ) * fDist;
+	fX = (Random(200) / 100.0 - 1.0) * fDist;
 	fMaxY = sqrt(fDist * fDist - fX * fX);
-	fY = ( Random(200) / 100.0 - 1.0 ) * fMaxY;
+	fY = (Random(200) / 100.0 - 1.0) * fMaxY;
 	vNewPos += Vector(fX, fY, 0.0);
 	//Why a third parameter? Is this the "facing" value? --Rikan
 	location lNewLoc = Location(oArea, vNewPos, VectorToAngle(-1.0 * vNewPos));

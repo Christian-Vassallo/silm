@@ -4,15 +4,17 @@
  */
 extern("inc_colors")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "player_login") {
 		string message = ColorTag(cLightGrey) +
-			GetPCPlayerName(e.runnable) + " ist als ";
+						 GetPCPlayerName(e.runnable) + " ist als ";
 
 		if (GetIsDM(e.runnable))
 			message += "Spielleiter";
+
 		else
 			message += "Spieler";
 

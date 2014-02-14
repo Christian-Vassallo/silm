@@ -18,7 +18,8 @@ extern("inc_nwnx_events")
  */
 
 void _trigger(object caster, object actedon, location actedat, object item,
-		int class, int spell, int meta, int flags) {
+			  int class, int spell, int meta, int flags)
+{
 
 	struct EventArguments ea;
 	ea.i0 = spell;
@@ -29,12 +30,13 @@ void _trigger(object caster, object actedon, location actedat, object item,
 
 	int serial = GetEventSerial();
 	RunEventScriptsForWithArgv(serial, "creature_castingspell",
-		caster, caster, actedon, actedat, ea);
+							   caster, caster, actedon, actedat, ea);
 	DeleteEventArguments(serial);
 }
 
 void _tick(object caster, object actedon, location actedat,
-		int class, int spell, int meta, int flags, int remaining = 0) {
+		   int class, int spell, int meta, int flags, int remaining = 0)
+{
 	if (remaining <= 0)
 		return;
 
@@ -42,18 +44,19 @@ void _tick(object caster, object actedon, location actedat,
 			GetSpellId() == spell && GetMetaMagicFeat() == meta) {
 
 		_trigger(caster, actedon, actedat, GetSpellCastItem(),
-			class, spell, meta, flags);
+				 class, spell, meta, flags);
 
 	} else {
 		DelayCommand(TICK_DELAY, _tick(caster, actedon, actedat,
-			class, spell, meta, flags, remaining - 1));
+									   class, spell, meta, flags, remaining - 1));
 
 	}
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
-	
+
 	if (e.ev == "creature_castspell") {
 		if (!is_creature(e.actor))
 			return;
@@ -65,6 +68,6 @@ void main() {
 		int class        = GetClassByPosition(classIndex + 1);
 
 		DelayCommand(TICK_DELAY, _tick(e.actor, e.actedon, e.actedat,
-			class, spell_id, meta, flags, TICK_ITERATIONS));
+									   class, spell_id, meta, flags, TICK_ITERATIONS));
 	}
 }

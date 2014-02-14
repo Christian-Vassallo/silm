@@ -1,4 +1,5 @@
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 	// struct EventArguments ea = GetEventArguments(e.serial);
 
@@ -6,35 +7,37 @@ void main() {
 			&& GetTag(e.runnable) == "sunstone") {
 
 		iterate_iprp(e.runnable, ip,
-			if (GetItemPropertyType(ip) == ITEM_PROPERTY_LIGHT)
-				RemoveItemProperty(e.runnable, ip);
-		);
+
+					 if (GetItemPropertyType(ip) == ITEM_PROPERTY_LIGHT)
+					 RemoveItemProperty(e.runnable, ip);
+					);
 
 		int state = GetLocalInt(e.runnable, "state");
+
 		switch (state) {
-			case 1: // dim red
-				AddItemProperty(DURATION_TYPE_PERMANENT,
-					ItemPropertyLight(IP_CONST_LIGHTBRIGHTNESS_DIM,
-						IP_CONST_LIGHTCOLOR_RED), e.runnable);
-				state = 0;
-				SendMessageToPC(e.actor, "Licht: dunkeles Rot");
-				break;
+		case 1: // dim red
+			AddItemProperty(DURATION_TYPE_PERMANENT,
+							ItemPropertyLight(IP_CONST_LIGHTBRIGHTNESS_DIM,
+											  IP_CONST_LIGHTCOLOR_RED), e.runnable);
+			state = 0;
+			SendMessageToPC(e.actor, "Licht: dunkeles Rot");
+			break;
 
-			/*case 2: // medium orange
-				AddItemProperty(DURATION_TYPE_PERMANENT,
-					ItemPropertyLight(IP_CONST_LIGHTBRIGHTNESS_NORMAL,
-						IP_CONST_LIGHTCOLOR_ORANGE), e.runnable);
-				state = 0;
-				SendMessageToPC(e.actor, "Licht: Orange");
-				break;*/
+		/*case 2: // medium orange
+			AddItemProperty(DURATION_TYPE_PERMANENT,
+				ItemPropertyLight(IP_CONST_LIGHTBRIGHTNESS_NORMAL,
+					IP_CONST_LIGHTCOLOR_ORANGE), e.runnable);
+			state = 0;
+			SendMessageToPC(e.actor, "Licht: Orange");
+			break;*/
 
-			default: // bright white, case 0
-				AddItemProperty(DURATION_TYPE_PERMANENT,
-					ItemPropertyLight(IP_CONST_LIGHTBRIGHTNESS_BRIGHT,
-						IP_CONST_LIGHTCOLOR_WHITE), e.runnable);
-				state = 1;
-				SendMessageToPC(e.actor, "Licht: grelles Weiss");
-				break;
+		default: // bright white, case 0
+			AddItemProperty(DURATION_TYPE_PERMANENT,
+							ItemPropertyLight(IP_CONST_LIGHTBRIGHTNESS_BRIGHT,
+											  IP_CONST_LIGHTCOLOR_WHITE), e.runnable);
+			state = 1;
+			SendMessageToPC(e.actor, "Licht: grelles Weiss");
+			break;
 		}
 
 		SetLocalInt(e.runnable, "state", state);

@@ -2,42 +2,44 @@ extern("nw_i0_spells")
 extern("x2_inc_spellhook")
 extern("inc_iprp_curses")
 
-void dance(int rounds) {
+void dance(int rounds)
+{
 	float delay = RoundsToSeconds(rounds);
 
 	ClearAllActions(true);
 
 	effect eff = EffectLinkEffects(
-		EffectACDecrease(4),
-		EffectSavingThrowDecrease(SAVING_THROW_REFLEX, 10)
-	);
+					 EffectACDecrease(4),
+					 EffectSavingThrowDecrease(SAVING_THROW_REFLEX, 10)
+				 );
 
 	ApplyEffectToObject(DURATION_TYPE_INSTANT,
-		EffectVisualEffect(VFX_IMP_CONFUSION_S), OBJECT_SELF);
+						EffectVisualEffect(VFX_IMP_CONFUSION_S), OBJECT_SELF);
 
 	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eff, OBJECT_SELF, delay);
-	
+
 	ActionPlayAnimation(ANIMATION_LOOPING_CUSTOM5 /* crazy */,
-		1.0, delay);
-	
+						1.0, delay);
+
 	DelayCommand(0.1, SetCommandable(false, OBJECT_SELF));
 	DelayCommand(delay, SetCommandable(true, OBJECT_SELF));
 	DelayCommand(delay + 0.1, ClearAllActions(false));
 }
 
-void main() {
+void main()
+{
 	if (!X2PreSpellCastCode())
 		return;
 
 	object oTarget = GetSpellTargetObject();
 
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF,
-		SPELL_IRRESISTIBLE_DANCE));
+										  SPELL_IRRESISTIBLE_DANCE));
 
 	if (GetIsImmune(oTarget, IMMUNITY_TYPE_MIND_SPELLS, OBJECT_SELF))
 		return;
 
-	if(MyResistSpell(OBJECT_SELF, oTarget))
+	if (MyResistSpell(OBJECT_SELF, oTarget))
 		return;
 
 	int rnd = 1 + d4();

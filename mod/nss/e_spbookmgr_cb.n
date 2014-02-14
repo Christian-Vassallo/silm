@@ -2,21 +2,25 @@ extern("inc_spbookmgr")
 extern("inc_lists")
 
 
-void main() {
+void main()
+{
 	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
 	int cid = GetCharacterID(oPC);
+
 	if (!cid) return;
 
 	int nSelected   = GetListSelection(oPC);
 	nSelected = GetListInt(oPC, "spbookmgr", nSelected);
 
 	pQ("select name from spbookmgr.states where id = " + pSi(nSelected) +
-		" and character = " + pSi(cid));
+	   " and character = " + pSi(cid));
+
 	if (pF()) {
 		string name = pGs(1);
 		SendMessageToPC(oPC, "Loading spellbook template: " + name);
 		int restored = load_spellbook(oPC, name);
 		SendMessageToPC(oPC, "Restored " + itoa(restored) + " spell entries.");
+
 	} else {
 		SendMessageToPC(oPC, "Cannot restore " + itoa(nSelected));
 	}

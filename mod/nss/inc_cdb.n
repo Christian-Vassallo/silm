@@ -7,42 +7,42 @@ TABLE_ACCOUNTS = "accounts",
 TABLE_CHARACTERS = "characters";
 
 
-// Function: GetAccountID 
-// 
+// Function: GetAccountID
+//
 int GetAccountID(object oPC);
 
-// Function: GetOrCreateAccountID 
-// 
+// Function: GetOrCreateAccountID
+//
 int GetOrCreateAccountID(object oPC);
 
-// Function: GetCharacterID 
-// 
+// Function: GetCharacterID
+//
 int GetCharacterID(object oPC);
 
-// Function: GetOrCreateCharacterID 
-// 
+// Function: GetOrCreateCharacterID
+//
 int GetOrCreateCharacterID(object oPC);
 
-// Function: GetAccountIsDM 
-// 
+// Function: GetAccountIsDM
+//
 int GetAccountIsDM(object oPC);
 
-// Function: GetPCByAID 
-// 
+// Function: GetPCByAID
+//
 object GetPCByAID(int nAID);
 
-// Function: GetPCByCID 
-// 
+// Function: GetPCByCID
+//
 object GetPCByCID(int nCID);
 
-// Function: CharacterError 
-// 
+// Function: CharacterError
+//
 // notifies oPC about his character not in the database,
 // and does some log output
 void CharacterError(object oPC, string sLog = "Character not found");
 
-// Function: SaveCharacter 
-// 
+// Function: SaveCharacter
+//
 // Saves oPC into the database, updating all statistics and stuff.
 // Returns the character ID, or 0 on failure.
 int SaveCharacter(object oPC, int bIsLogin = FALSE);
@@ -51,7 +51,7 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE);
 // Returns > 0 if oPC has nAMask, 0 otherwise
 // The special case DM/Non-DM for AMASK_GM
 // is handled here for convenience.
-// 
+//
 // This means that
 //  * amask(oDM, AMASK_GLOBAL_GM) => 1
 //   if oDM has an amask of AMASK_GM only
@@ -62,14 +62,15 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE);
 //  * amask(oPC, AMASK_GLOBAL_GM) => 1
 //   if oPC has an amask of AMASK_GLOBAL_GM
 //
-// Function: amask 
-// 
+// Function: amask
+//
 int amask(object oPC, int nAMask);
 
 /* implementation below */
 
-int amask(object oPC, int nAMask) {
-    // string sAcc = GetPCName(oPC);
+int amask(object oPC, int nAMask)
+{
+	// string sAcc = GetPCName(oPC);
 	int nCID = GetAccountID(oPC);
 
 
@@ -78,47 +79,54 @@ int amask(object oPC, int nAMask) {
 
 	if (AMASK_ANY == nAMask)
 		return 1;
-	
+
 	if (nCID == 0)
 		return 0;
 
 	pQ("select amask from accounts where id = " + pSi(nCID));
 	pF();
-    int nMask = pGi(1);
+	int nMask = pGi(1);
 
 	if (GetIsDM(oPC) && nMask & AMASK_GM && nAMask & AMASK_GLOBAL_GM)
 		return 1;
-	
+
 	if (!GetIsDM(oPC) && nMask & AMASK_GLOBAL_GM && nAMask & AMASK_GM)
 		return 1;
 
-    return
-           ( nMask & nAMask ) > 0;
+	return
+		(nMask & nAMask) > 0;
 }
 
-object GetPCByAID(int nAID) {
+object GetPCByAID(int nAID)
+{
 	object oPC = GetFirstPC();
-	while ( GetIsObjectValid(oPC) ) {
-		if ( GetAccountID(oPC) == nAID )
+
+	while (GetIsObjectValid(oPC)) {
+		if (GetAccountID(oPC) == nAID)
 			return oPC;
 
 		oPC = GetNextPC();
 	}
+
 	return OBJECT_INVALID;
 }
 
-object GetPCByCID(int nCID) {
+object GetPCByCID(int nCID)
+{
 	object oPC = GetFirstPC();
-	while ( GetIsObjectValid(oPC) ) {
-		if ( GetCharacterID(oPC) == nCID )
+
+	while (GetIsObjectValid(oPC)) {
+		if (GetCharacterID(oPC) == nCID)
 			return oPC;
 
 		oPC = GetNextPC();
 	}
+
 	return OBJECT_INVALID;
 }
 
-void CharacterError(object oPC, string sLog = "Character not found") {
+void CharacterError(object oPC, string sLog = "Character not found")
+{
 	ToPC(
 		"Dein Eintrag in der Datenbank wurde nicht gefunden.  Vielleicht ist die Datenbank gerade am Boden; oder es ist ein Bug.  Versuche es in 5 Minuten noch einmal - dann melde es einem SL.",
 		oPC);
@@ -126,19 +134,23 @@ void CharacterError(object oPC, string sLog = "Character not found") {
 }
 
 
-int GetAccountID(object oPC) {
+int GetAccountID(object oPC)
+{
 	string sAcc = GetPCName(oPC);
-	if ( "" == sAcc )
+
+	if ("" == sAcc)
 		return 0;
 
-	if ( GetLocalInt(GetModule(), sAcc + "_aid") )
+	if (GetLocalInt(GetModule(), sAcc + "_aid"))
 		return GetLocalInt(GetModule(), sAcc + "_aid");
 
 
 	pQ("select id from " +
-		TABLE_ACCOUNTS + " where account = " + pE(GetPCName(oPC)) + ";");
-	if ( !pF() )
+	   TABLE_ACCOUNTS + " where account = " + pE(GetPCName(oPC)) + ";");
+
+	if (!pF())
 		return 0;
+
 	else {
 		int nID = StringToInt(pG(1));
 		SetLocalInt(GetModule(), sAcc + "_aid", nID);
@@ -147,45 +159,51 @@ int GetAccountID(object oPC) {
 }
 
 
-int GetAccountIsDM(object oPC) {
-	if ( GetLocalInt(oPC, "dm") )
+int GetAccountIsDM(object oPC)
+{
+	if (GetLocalInt(oPC, "dm"))
 		return 1;
 
 	int iID = GetAccountID(oPC);
-	if ( 0 == iID )
+
+	if (0 == iID)
 		return 0;
 
 	pQ("select dm from " + TABLE_ACCOUNTS + " where id = " + IntToString(iID) + ";");
-	if ( !pF() )
+
+	if (!pF())
 		return 0;
 
 	return pG(1) == "t";
 }
 
 
-int GetCharacterID(object oPC) {
+int GetCharacterID(object oPC)
+{
 	object oMod = GetModule();
 	string sAcc = GetName(oPC);
 
-	if ( sAcc == "" )
+	if (sAcc == "")
 		return 0;
 
 	string sDMFlag = GetIsDM(oPC) ? "_dm" : "";
 
-	if ( GetLocalInt(oMod, sAcc + sDMFlag + "_cid") )
+	if (GetLocalInt(oMod, sAcc + sDMFlag + "_cid"))
 		return GetLocalInt(oMod, sAcc + sDMFlag + "_cid");
 
 	int nAID = GetAccountID(oPC);
-	if ( 0 == nAID )
+
+	if (0 == nAID)
 		return 0;
 
 
 	pQ("select id from " +
-		TABLE_CHARACTERS +
-		" where  account = " + IntToString(nAID) + " and character = " + pE(sAcc) + ";");
+	   TABLE_CHARACTERS +
+	   " where  account = " + IntToString(nAID) + " and character = " + pE(sAcc) + ";");
 
-	if ( !pF() )
+	if (!pF())
 		return 0;
+
 	else {
 		int nID = StringToInt(pG(1));
 		SetLocalInt(oMod, sAcc + sDMFlag + "_cid", nID);
@@ -195,17 +213,19 @@ int GetCharacterID(object oPC) {
 
 
 
-int GetOrCreateAccountID(object oPC) {
+int GetOrCreateAccountID(object oPC)
+{
 	string sAcc = GetPCName(oPC);
-	if ( "" == sAcc )
+
+	if ("" == sAcc)
 		return 0;
 
-	if ( GetLocalInt(GetModule(), sAcc + "_aid") )
+	if (GetLocalInt(GetModule(), sAcc + "_aid"))
 		return GetLocalInt(GetModule(), sAcc + "_aid");
 
 	string sAccount = GetPCName(oPC);
 
-	if ( sAccount == "" )
+	if (sAccount == "")
 		return 0;
 
 	if (GetIsDMPossessed(oPC) || GetIsPossessedFamiliar(oPC)) {
@@ -216,13 +236,16 @@ int GetOrCreateAccountID(object oPC) {
 	sAccount = pE(sAccount);
 
 	pQ("select id from " + TABLE_ACCOUNTS + " where account = " + sAccount + ";");
-	if ( !pF() )
+
+	if (!pF())
 		pQ("insert into " +
-			TABLE_ACCOUNTS + " (account) values(" + sAccount + ");");
+		   TABLE_ACCOUNTS + " (account) values(" + sAccount + ");");
 
 	pQ("select id from " + TABLE_ACCOUNTS + " where account = " + sAccount + ";");
-	if ( !pF() )
+
+	if (!pF())
 		return 0;
+
 	else {
 		int nID = StringToInt(pG(1));
 		SetLocalInt(GetModule(), sAcc + "_aid", nID);
@@ -232,20 +255,23 @@ int GetOrCreateAccountID(object oPC) {
 
 
 
-int GetOrCreateCharacterID(object oPC) {
+int GetOrCreateCharacterID(object oPC)
+{
 	object oMod = GetModule();
 	string sAcc = GetName(oPC);
-	if ( sAcc == "" )
+
+	if (sAcc == "")
 		return 0;
 
 	string sDMFlag = GetIsDM(oPC) ? "dm_" : "";
 
-	if ( GetLocalInt(oMod, sAcc + sDMFlag + "_cid") )
+	if (GetLocalInt(oMod, sAcc + sDMFlag + "_cid"))
 		return GetLocalInt(oMod, sAcc + sDMFlag + "_cid");
 
 
 	int nAID = GetAccountID(oPC);
-	if ( 0 == nAID )
+
+	if (0 == nAID)
 		return 0;
 
 	string
@@ -258,22 +284,23 @@ int GetOrCreateCharacterID(object oPC) {
 	}
 
 	pQ("select id from " +
-		TABLE_CHARACTERS +
-		" where account = " + IntToString(nAID) + " and character =" + sChar + ";");
+	   TABLE_CHARACTERS +
+	   " where account = " + IntToString(nAID) + " and character =" + sChar + ";");
 
-	if ( !pF() )
+	if (!pF())
 		pQ("insert into " +
-			TABLE_CHARACTERS +
-			" (account, character, create_ip, create_key) values(" +
-			sAID +
-			", " + sChar + ", '" + GetPCIPAddress(oPC) + "', '" + GetPCPublicCDKey(oPC) + "');");
+		   TABLE_CHARACTERS +
+		   " (account, character, create_ip, create_key) values(" +
+		   sAID +
+		   ", " + sChar + ", '" + GetPCIPAddress(oPC) + "', '" + GetPCPublicCDKey(oPC) + "');");
 
 	pQ("select id from " +
-		TABLE_CHARACTERS +
-		" where account = " + IntToString(nAID) + " and character = " + sChar + ";");
+	   TABLE_CHARACTERS +
+	   " where account = " + IntToString(nAID) + " and character = " + sChar + ";");
 
-	if ( !pF() )
+	if (!pF())
 		return 0;
+
 	else {
 		int nID = StringToInt(pG(1));
 		SetLocalInt(oMod, sAcc + sDMFlag + "_cid", nID);
@@ -282,22 +309,23 @@ int GetOrCreateCharacterID(object oPC) {
 }
 
 
-int SaveCharacter(object oPC, int bIsLogin = FALSE) {
-	if ( GetIsDM(oPC) )
+int SaveCharacter(object oPC, int bIsLogin = FALSE)
+{
+	if (GetIsDM(oPC))
 		return 0;
 
 	string
-		sChar = pE(GetName(oPC)),
-		sAccount = pE(GetPCName(oPC)),
-		sKey = GetPCPublicCDKey(oPC),
-		sIP = GetPCIPAddress(oPC);
+	sChar = pE(GetName(oPC)),
+	sAccount = pE(GetPCName(oPC)),
+	sKey = GetPCPublicCDKey(oPC),
+	sIP = GetPCIPAddress(oPC);
 
 	/* ACCOUNT */
 
 	int nAID = GetOrCreateAccountID(oPC);
 	string sAID = IntToString(nAID);
 
-	if ( nAID == 0 ) {
+	if (nAID == 0) {
 		audit("error", oPC, audit_fields("info", "Cannot find or create account"), "cdb");
 		SendMessageToAllDMs(
 			"Warning: Query in inc_cdb#SaveCharacter failed: Cannot find or create account for " +
@@ -308,10 +336,10 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 	/* CHARACTER */
 
 	pQ("select id from characters where  account = " +
-		sAID + " and character = " + sChar + ";");
+	   sAID + " and character = " + sChar + ";");
 
 	// Create some initial record.
-	if ( !pF() ) {
+	if (!pF()) {
 		SendMessageToAllDMs("New character: " + GetName(oPC) + "(" + GetPCName(oPC) + ")");
 		pQ(
 			"insert into characters (account, character, create_ip, create_key) values("
@@ -322,16 +350,16 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 
 
 	pQ("select id, create_key, other_keys from characters where account=" +
-		sAID + " and character=" + sChar + " limit 1;");
+	   sAID + " and character=" + sChar + " limit 1;");
 	pF();
 
 
 	string
-		sID = pG(1),
-		sCreateKey = pG(2),
-		sOtherKeys = pG(3);
+	sID = pG(1),
+	sCreateKey = pG(2),
+	sOtherKeys = pG(3);
 
-	if ( sID == "" ) {
+	if (sID == "") {
 		audit("error", oPC, audit_fields("info", "Cannot find or create character"), "cdb");
 		SendMessageToAllDMs(
 			"Warning: Query in inc_cdb#SaveCharacter failed: Cannot create character record for " +
@@ -347,12 +375,13 @@ int SaveCharacter(object oPC, int bIsLogin = FALSE) {
 
 	if (bIsLogin) {
 		// Update keys, if necessary.
-		if ( sCreateKey != sKey && !TestStringAgainstPattern("**" + sKey + "**", sOtherKeys) ) {
-			if ( sOtherKeys != "" )
+		if (sCreateKey != sKey && !TestStringAgainstPattern("**" + sKey + "**", sOtherKeys)) {
+			if (sOtherKeys != "")
 				sOtherKeys += " ";
+
 			sOtherKeys += sKey;
 			pQ("update characters set other_keys='" +
-				sOtherKeys + "' where id='" + sID + "';");
+			   sOtherKeys + "' where id='" + sID + "';");
 		}
 	}
 

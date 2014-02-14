@@ -17,17 +17,21 @@ string GetSpellName(int nSpellID);
 // Returns the spell description as found in the serverside 2da/tlk.
 string GetSpellName(int nSpellID);
 
-string GetSpellName(int nSpellID) {
+string GetSpellName(int nSpellID)
+{
 	int nRes = StringToInt(Get2DACached("spells", "Name", nSpellID));
-	if ( nRes == 0 )
+
+	if (nRes == 0)
 		return "Unknown spell (not found in 2da)";
 
 	return GetStringByStrRef(nRes);
 }
 
-string GetSpellDescription(int nSpellID) {
+string GetSpellDescription(int nSpellID)
+{
 	int nRes = StringToInt(Get2DACached("spells", "SpellDesc", nSpellID));
-	if ( nRes == 0 )
+
+	if (nRes == 0)
 		return "Unknown spell (not found in 2da)";
 
 	return GetStringByStrRef(nRes);

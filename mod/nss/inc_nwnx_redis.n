@@ -887,7 +887,8 @@ string SELECT(string index);
 
  * - Valid values for condition: "NX", "XX"
  */
-string SET(string key, string value, string seconds = "", string milliseconds = "", string condition = "");
+string SET(string key, string value, string seconds = "", string milliseconds = "",
+		   string condition = "");
 
 /**
  * SETBIT
@@ -1006,7 +1007,9 @@ string SMOVE(string source, string destination, string member);
 
  * - Valid values for sorting: "ALPHA"
  */
-string SORT(string key, string pattern = "", string offset = "", string pattern = "", string order = "", string sorting = "", string destination = "");
+string SORT(string key, string pattern = "", string offset = "", string pattern = "",
+			string order = "",
+			string sorting = "", string destination = "");
 
 /**
  * SPOP
@@ -1177,7 +1180,8 @@ string ZINCRBY(string key, string increment, string member);
 
  * - Valid values for aggregate: "SUM", "MIN", "MAX"
  */
-string ZINTERSTORE(string destination, string numkeys, string key, string weight = "", string aggregate = "");
+string ZINTERSTORE(string destination, string numkeys, string key, string weight = "",
+				   string aggregate = "");
 
 /**
  * ZRANGE
@@ -1199,7 +1203,8 @@ string ZRANGE(string key, string start, string stop, string withscores = "");
 
  * - Valid values for withscores: "WITHSCORES"
  */
-string ZRANGEBYSCORE(string key, string min, string max, string withscores = "", string offset = "");
+string ZRANGEBYSCORE(string key, string min, string max, string withscores = "",
+					 string offset = "");
 
 /**
  * ZRANK
@@ -1257,7 +1262,8 @@ string ZREVRANGE(string key, string start, string stop, string withscores = "");
 
  * - Valid values for withscores: "WITHSCORES"
  */
-string ZREVRANGEBYSCORE(string key, string max, string min, string withscores = "", string offset = "");
+string ZREVRANGEBYSCORE(string key, string max, string min, string withscores = "",
+						string offset = "");
 
 /**
  * ZREVRANK
@@ -1286,995 +1292,1193 @@ string ZSCORE(string key, string member);
 
  * - Valid values for aggregate: "SUM", "MIN", "MAX"
  */
-string ZUNIONSTORE(string destination, string numkeys, string key, string weight = "", string aggregate = "");
+string ZUNIONSTORE(string destination, string numkeys, string key, string weight = "",
+				   string aggregate = "");
 
 
 
 // Implementation below
-string APPEND(string key, string value) {
-  redisPushBinarySafe("APPEND");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string APPEND(string key, string value)
+{
+	redisPushBinarySafe("APPEND");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string AUTH(string password) {
-  redisPushBinarySafe("AUTH");
-  redisPushBinarySafe((password));
-  return redisCommand();
+string AUTH(string password)
+{
+	redisPushBinarySafe("AUTH");
+	redisPushBinarySafe((password));
+	return redisCommand();
 }
 
-string BGREWRITEAOF() {
-  redisPushBinarySafe("BGREWRITEAOF");
-  return redisCommand();
+string BGREWRITEAOF()
+{
+	redisPushBinarySafe("BGREWRITEAOF");
+	return redisCommand();
 }
 
-string BGSAVE() {
-  redisPushBinarySafe("BGSAVE");
-  return redisCommand();
+string BGSAVE()
+{
+	redisPushBinarySafe("BGSAVE");
+	return redisCommand();
 }
 
-string BITCOUNT(string key, string start = "", string end = "") {
-  redisPushBinarySafe("BITCOUNT");
-  redisPushBinarySafe((key));
-  if (start != "") redisPushBinarySafe((start));
-  if (end != "") redisPushBinarySafe((end));
-  return redisCommand();
+string BITCOUNT(string key, string start = "", string end = "")
+{
+	redisPushBinarySafe("BITCOUNT");
+	redisPushBinarySafe((key));
+
+	if (start != "") redisPushBinarySafe((start));
+
+	if (end != "") redisPushBinarySafe((end));
+
+	return redisCommand();
 }
 
-string BITOP(string operation, string destkey, string key) {
-  redisPushBinarySafe("BITOP");
-  redisPushBinarySafe((operation));
-  redisPushBinarySafe((destkey));
-  redisPushBinarySafe((key));
-  return redisCommand();
+string BITOP(string operation, string destkey, string key)
+{
+	redisPushBinarySafe("BITOP");
+	redisPushBinarySafe((operation));
+	redisPushBinarySafe((destkey));
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string BLPOP(string key, string timeout) {
-  redisPushBinarySafe("BLPOP");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((timeout));
-  return redisCommand();
+string BLPOP(string key, string timeout)
+{
+	redisPushBinarySafe("BLPOP");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((timeout));
+	return redisCommand();
 }
 
-string BRPOP(string key, string timeout) {
-  redisPushBinarySafe("BRPOP");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((timeout));
-  return redisCommand();
+string BRPOP(string key, string timeout)
+{
+	redisPushBinarySafe("BRPOP");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((timeout));
+	return redisCommand();
 }
 
-string BRPOPLPUSH(string source, string destination, string timeout) {
-  redisPushBinarySafe("BRPOPLPUSH");
-  redisPushBinarySafe((source));
-  redisPushBinarySafe((destination));
-  redisPushBinarySafe((timeout));
-  return redisCommand();
+string BRPOPLPUSH(string source, string destination, string timeout)
+{
+	redisPushBinarySafe("BRPOPLPUSH");
+	redisPushBinarySafe((source));
+	redisPushBinarySafe((destination));
+	redisPushBinarySafe((timeout));
+	return redisCommand();
 }
 
-string CLIENT_KILL(string ip_port) {
-  redisPushBinarySafe("CLIENT KILL");
-  redisPushBinarySafe((ip_port));
-  return redisCommand();
+string CLIENT_KILL(string ip_port)
+{
+	redisPushBinarySafe("CLIENT KILL");
+	redisPushBinarySafe((ip_port));
+	return redisCommand();
 }
 
-string CLIENT_LIST() {
-  redisPushBinarySafe("CLIENT LIST");
-  return redisCommand();
+string CLIENT_LIST()
+{
+	redisPushBinarySafe("CLIENT LIST");
+	return redisCommand();
 }
 
-string CLIENT_GETNAME() {
-  redisPushBinarySafe("CLIENT GETNAME");
-  return redisCommand();
+string CLIENT_GETNAME()
+{
+	redisPushBinarySafe("CLIENT GETNAME");
+	return redisCommand();
 }
 
-string CLIENT_SETNAME(string connection_name) {
-  redisPushBinarySafe("CLIENT SETNAME");
-  redisPushBinarySafe((connection_name));
-  return redisCommand();
+string CLIENT_SETNAME(string connection_name)
+{
+	redisPushBinarySafe("CLIENT SETNAME");
+	redisPushBinarySafe((connection_name));
+	return redisCommand();
 }
 
-string CONFIG_GET(string parameter) {
-  redisPushBinarySafe("CONFIG GET");
-  redisPushBinarySafe((parameter));
-  return redisCommand();
+string CONFIG_GET(string parameter)
+{
+	redisPushBinarySafe("CONFIG GET");
+	redisPushBinarySafe((parameter));
+	return redisCommand();
 }
 
-string CONFIG_SET(string parameter, string value) {
-  redisPushBinarySafe("CONFIG SET");
-  redisPushBinarySafe((parameter));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string CONFIG_SET(string parameter, string value)
+{
+	redisPushBinarySafe("CONFIG SET");
+	redisPushBinarySafe((parameter));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string CONFIG_RESETSTAT() {
-  redisPushBinarySafe("CONFIG RESETSTAT");
-  return redisCommand();
+string CONFIG_RESETSTAT()
+{
+	redisPushBinarySafe("CONFIG RESETSTAT");
+	return redisCommand();
 }
 
-string DBSIZE() {
-  redisPushBinarySafe("DBSIZE");
-  return redisCommand();
+string DBSIZE()
+{
+	redisPushBinarySafe("DBSIZE");
+	return redisCommand();
 }
 
-string DEBUG_OBJECT(string key) {
-  redisPushBinarySafe("DEBUG OBJECT");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string DEBUG_OBJECT(string key)
+{
+	redisPushBinarySafe("DEBUG OBJECT");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string DEBUG_SEGFAULT() {
-  redisPushBinarySafe("DEBUG SEGFAULT");
-  return redisCommand();
+string DEBUG_SEGFAULT()
+{
+	redisPushBinarySafe("DEBUG SEGFAULT");
+	return redisCommand();
 }
 
-string DECR(string key) {
-  redisPushBinarySafe("DECR");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string DECR(string key)
+{
+	redisPushBinarySafe("DECR");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string DECRBY(string key, string decrement) {
-  redisPushBinarySafe("DECRBY");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((decrement));
-  return redisCommand();
+string DECRBY(string key, string decrement)
+{
+	redisPushBinarySafe("DECRBY");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((decrement));
+	return redisCommand();
 }
 
-string DEL(string key) {
-  redisPushBinarySafe("DEL");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string DEL(string key)
+{
+	redisPushBinarySafe("DEL");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string DISCARD() {
-  redisPushBinarySafe("DISCARD");
-  return redisCommand();
+string DISCARD()
+{
+	redisPushBinarySafe("DISCARD");
+	return redisCommand();
 }
 
-string DUMP(string key) {
-  redisPushBinarySafe("DUMP");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string DUMP(string key)
+{
+	redisPushBinarySafe("DUMP");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string ECHO(string message) {
-  redisPushBinarySafe("ECHO");
-  redisPushBinarySafe((message));
-  return redisCommand();
+string ECHO(string message)
+{
+	redisPushBinarySafe("ECHO");
+	redisPushBinarySafe((message));
+	return redisCommand();
 }
 
-string EVAL(string script, string numkeys, string key, string arg) {
-  redisPushBinarySafe("EVAL");
-  redisPushBinarySafe((script));
-  redisPushBinarySafe((numkeys));
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((arg));
-  return redisCommand();
+string EVAL(string script, string numkeys, string key, string arg)
+{
+	redisPushBinarySafe("EVAL");
+	redisPushBinarySafe((script));
+	redisPushBinarySafe((numkeys));
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((arg));
+	return redisCommand();
 }
 
-string EVALSHA(string sha1, string numkeys, string key, string arg) {
-  redisPushBinarySafe("EVALSHA");
-  redisPushBinarySafe((sha1));
-  redisPushBinarySafe((numkeys));
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((arg));
-  return redisCommand();
+string EVALSHA(string sha1, string numkeys, string key, string arg)
+{
+	redisPushBinarySafe("EVALSHA");
+	redisPushBinarySafe((sha1));
+	redisPushBinarySafe((numkeys));
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((arg));
+	return redisCommand();
 }
 
-string EXEC() {
-  redisPushBinarySafe("EXEC");
-  return redisCommand();
+string EXEC()
+{
+	redisPushBinarySafe("EXEC");
+	return redisCommand();
 }
 
-string EXISTS(string key) {
-  redisPushBinarySafe("EXISTS");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string EXISTS(string key)
+{
+	redisPushBinarySafe("EXISTS");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string EXPIRE(string key, string seconds) {
-  redisPushBinarySafe("EXPIRE");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((seconds));
-  return redisCommand();
+string EXPIRE(string key, string seconds)
+{
+	redisPushBinarySafe("EXPIRE");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((seconds));
+	return redisCommand();
 }
 
-string EXPIREAT(string key, string timestamp) {
-  redisPushBinarySafe("EXPIREAT");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((timestamp));
-  return redisCommand();
+string EXPIREAT(string key, string timestamp)
+{
+	redisPushBinarySafe("EXPIREAT");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((timestamp));
+	return redisCommand();
 }
 
-string FLUSHALL() {
-  redisPushBinarySafe("FLUSHALL");
-  return redisCommand();
+string FLUSHALL()
+{
+	redisPushBinarySafe("FLUSHALL");
+	return redisCommand();
 }
 
-string FLUSHDB() {
-  redisPushBinarySafe("FLUSHDB");
-  return redisCommand();
+string FLUSHDB()
+{
+	redisPushBinarySafe("FLUSHDB");
+	return redisCommand();
 }
 
-string GET(string key) {
-  redisPushBinarySafe("GET");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string GET(string key)
+{
+	redisPushBinarySafe("GET");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string GETBIT(string key, string offset) {
-  redisPushBinarySafe("GETBIT");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((offset));
-  return redisCommand();
+string GETBIT(string key, string offset)
+{
+	redisPushBinarySafe("GETBIT");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((offset));
+	return redisCommand();
 }
 
-string GETRANGE(string key, string start, string end) {
-  redisPushBinarySafe("GETRANGE");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((start));
-  redisPushBinarySafe((end));
-  return redisCommand();
+string GETRANGE(string key, string start, string end)
+{
+	redisPushBinarySafe("GETRANGE");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((start));
+	redisPushBinarySafe((end));
+	return redisCommand();
 }
 
-string GETSET(string key, string value) {
-  redisPushBinarySafe("GETSET");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string GETSET(string key, string value)
+{
+	redisPushBinarySafe("GETSET");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string HDEL(string key, string field) {
-  redisPushBinarySafe("HDEL");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((field));
-  return redisCommand();
+string HDEL(string key, string field)
+{
+	redisPushBinarySafe("HDEL");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((field));
+	return redisCommand();
 }
 
-string HEXISTS(string key, string field) {
-  redisPushBinarySafe("HEXISTS");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((field));
-  return redisCommand();
+string HEXISTS(string key, string field)
+{
+	redisPushBinarySafe("HEXISTS");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((field));
+	return redisCommand();
 }
 
-string HGET(string key, string field) {
-  redisPushBinarySafe("HGET");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((field));
-  return redisCommand();
+string HGET(string key, string field)
+{
+	redisPushBinarySafe("HGET");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((field));
+	return redisCommand();
 }
 
-string HGETALL(string key) {
-  redisPushBinarySafe("HGETALL");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string HGETALL(string key)
+{
+	redisPushBinarySafe("HGETALL");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string HINCRBY(string key, string field, string increment) {
-  redisPushBinarySafe("HINCRBY");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((field));
-  redisPushBinarySafe((increment));
-  return redisCommand();
+string HINCRBY(string key, string field, string increment)
+{
+	redisPushBinarySafe("HINCRBY");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((field));
+	redisPushBinarySafe((increment));
+	return redisCommand();
 }
 
-string HINCRBYFLOAT(string key, string field, string increment) {
-  redisPushBinarySafe("HINCRBYFLOAT");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((field));
-  redisPushBinarySafe((increment));
-  return redisCommand();
+string HINCRBYFLOAT(string key, string field, string increment)
+{
+	redisPushBinarySafe("HINCRBYFLOAT");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((field));
+	redisPushBinarySafe((increment));
+	return redisCommand();
 }
 
-string HKEYS(string key) {
-  redisPushBinarySafe("HKEYS");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string HKEYS(string key)
+{
+	redisPushBinarySafe("HKEYS");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string HLEN(string key) {
-  redisPushBinarySafe("HLEN");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string HLEN(string key)
+{
+	redisPushBinarySafe("HLEN");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string HMGET(string key, string field) {
-  redisPushBinarySafe("HMGET");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((field));
-  return redisCommand();
+string HMGET(string key, string field)
+{
+	redisPushBinarySafe("HMGET");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((field));
+	return redisCommand();
 }
 
-string HMSET(string key, string field) {
-  redisPushBinarySafe("HMSET");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((field));
-  return redisCommand();
+string HMSET(string key, string field)
+{
+	redisPushBinarySafe("HMSET");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((field));
+	return redisCommand();
 }
 
-string HSET(string key, string field, string value) {
-  redisPushBinarySafe("HSET");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((field));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string HSET(string key, string field, string value)
+{
+	redisPushBinarySafe("HSET");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((field));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string HSETNX(string key, string field, string value) {
-  redisPushBinarySafe("HSETNX");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((field));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string HSETNX(string key, string field, string value)
+{
+	redisPushBinarySafe("HSETNX");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((field));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string HVALS(string key) {
-  redisPushBinarySafe("HVALS");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string HVALS(string key)
+{
+	redisPushBinarySafe("HVALS");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string INCR(string key) {
-  redisPushBinarySafe("INCR");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string INCR(string key)
+{
+	redisPushBinarySafe("INCR");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string INCRBY(string key, string increment) {
-  redisPushBinarySafe("INCRBY");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((increment));
-  return redisCommand();
+string INCRBY(string key, string increment)
+{
+	redisPushBinarySafe("INCRBY");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((increment));
+	return redisCommand();
 }
 
-string INCRBYFLOAT(string key, string increment) {
-  redisPushBinarySafe("INCRBYFLOAT");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((increment));
-  return redisCommand();
+string INCRBYFLOAT(string key, string increment)
+{
+	redisPushBinarySafe("INCRBYFLOAT");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((increment));
+	return redisCommand();
 }
+
+string INFO(string section = "")
+{
+	redisPushBinarySafe("INFO");
+
+	if (section != "") redisPushBinarySafe((section));
 
-string INFO(string section = "") {
-  redisPushBinarySafe("INFO");
-  if (section != "") redisPushBinarySafe((section));
-  return redisCommand();
+	return redisCommand();
 }
 
-string KEYS(string pattern) {
-  redisPushBinarySafe("KEYS");
-  redisPushBinarySafe((pattern));
-  return redisCommand();
+string KEYS(string pattern)
+{
+	redisPushBinarySafe("KEYS");
+	redisPushBinarySafe((pattern));
+	return redisCommand();
 }
 
-string LASTSAVE() {
-  redisPushBinarySafe("LASTSAVE");
-  return redisCommand();
+string LASTSAVE()
+{
+	redisPushBinarySafe("LASTSAVE");
+	return redisCommand();
 }
 
-string LINDEX(string key, string index) {
-  redisPushBinarySafe("LINDEX");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((index));
-  return redisCommand();
+string LINDEX(string key, string index)
+{
+	redisPushBinarySafe("LINDEX");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((index));
+	return redisCommand();
 }
 
-string LINSERT(string key, string where, string pivot, string value) {
-  redisPushBinarySafe("LINSERT");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((where));
-  redisPushBinarySafe((pivot));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string LINSERT(string key, string where, string pivot, string value)
+{
+	redisPushBinarySafe("LINSERT");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((where));
+	redisPushBinarySafe((pivot));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string LLEN(string key) {
-  redisPushBinarySafe("LLEN");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string LLEN(string key)
+{
+	redisPushBinarySafe("LLEN");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string LPOP(string key) {
-  redisPushBinarySafe("LPOP");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string LPOP(string key)
+{
+	redisPushBinarySafe("LPOP");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string LPUSH(string key, string value) {
-  redisPushBinarySafe("LPUSH");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string LPUSH(string key, string value)
+{
+	redisPushBinarySafe("LPUSH");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string LPUSHX(string key, string value) {
-  redisPushBinarySafe("LPUSHX");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string LPUSHX(string key, string value)
+{
+	redisPushBinarySafe("LPUSHX");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string LRANGE(string key, string start, string stop) {
-  redisPushBinarySafe("LRANGE");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((start));
-  redisPushBinarySafe((stop));
-  return redisCommand();
+string LRANGE(string key, string start, string stop)
+{
+	redisPushBinarySafe("LRANGE");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((start));
+	redisPushBinarySafe((stop));
+	return redisCommand();
 }
 
-string LREM(string key, string count, string value) {
-  redisPushBinarySafe("LREM");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((count));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string LREM(string key, string count, string value)
+{
+	redisPushBinarySafe("LREM");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((count));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string LSET(string key, string index, string value) {
-  redisPushBinarySafe("LSET");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((index));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string LSET(string key, string index, string value)
+{
+	redisPushBinarySafe("LSET");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((index));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string LTRIM(string key, string start, string stop) {
-  redisPushBinarySafe("LTRIM");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((start));
-  redisPushBinarySafe((stop));
-  return redisCommand();
+string LTRIM(string key, string start, string stop)
+{
+	redisPushBinarySafe("LTRIM");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((start));
+	redisPushBinarySafe((stop));
+	return redisCommand();
 }
 
-string MGET(string key) {
-  redisPushBinarySafe("MGET");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string MGET(string key)
+{
+	redisPushBinarySafe("MGET");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string MIGRATE(string host, string port, string key, string destination_db, string timeout) {
-  redisPushBinarySafe("MIGRATE");
-  redisPushBinarySafe((host));
-  redisPushBinarySafe((port));
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((destination_db));
-  redisPushBinarySafe((timeout));
-  return redisCommand();
+string MIGRATE(string host, string port, string key, string destination_db, string timeout)
+{
+	redisPushBinarySafe("MIGRATE");
+	redisPushBinarySafe((host));
+	redisPushBinarySafe((port));
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((destination_db));
+	redisPushBinarySafe((timeout));
+	return redisCommand();
 }
 
-string MONITOR() {
-  redisPushBinarySafe("MONITOR");
-  return redisCommand();
+string MONITOR()
+{
+	redisPushBinarySafe("MONITOR");
+	return redisCommand();
 }
 
-string MOVE(string key, string db) {
-  redisPushBinarySafe("MOVE");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((db));
-  return redisCommand();
+string MOVE(string key, string db)
+{
+	redisPushBinarySafe("MOVE");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((db));
+	return redisCommand();
 }
 
-string MSET(string key) {
-  redisPushBinarySafe("MSET");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string MSET(string key)
+{
+	redisPushBinarySafe("MSET");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string MSETNX(string key) {
-  redisPushBinarySafe("MSETNX");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string MSETNX(string key)
+{
+	redisPushBinarySafe("MSETNX");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string MULTI() {
-  redisPushBinarySafe("MULTI");
-  return redisCommand();
+string MULTI()
+{
+	redisPushBinarySafe("MULTI");
+	return redisCommand();
 }
 
-string OBJECT(string subcommand, string arguments = "") {
-  redisPushBinarySafe("OBJECT");
-  redisPushBinarySafe((subcommand));
-  if (arguments != "") redisPushBinarySafe((arguments));
-  return redisCommand();
+string OBJECT(string subcommand, string arguments = "")
+{
+	redisPushBinarySafe("OBJECT");
+	redisPushBinarySafe((subcommand));
+
+	if (arguments != "") redisPushBinarySafe((arguments));
+
+	return redisCommand();
 }
 
-string PERSIST(string key) {
-  redisPushBinarySafe("PERSIST");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string PERSIST(string key)
+{
+	redisPushBinarySafe("PERSIST");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string PEXPIRE(string key, string milliseconds) {
-  redisPushBinarySafe("PEXPIRE");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((milliseconds));
-  return redisCommand();
+string PEXPIRE(string key, string milliseconds)
+{
+	redisPushBinarySafe("PEXPIRE");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((milliseconds));
+	return redisCommand();
 }
 
-string PEXPIREAT(string key, string milliseconds_timestamp) {
-  redisPushBinarySafe("PEXPIREAT");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((milliseconds_timestamp));
-  return redisCommand();
+string PEXPIREAT(string key, string milliseconds_timestamp)
+{
+	redisPushBinarySafe("PEXPIREAT");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((milliseconds_timestamp));
+	return redisCommand();
 }
 
-string PING() {
-  redisPushBinarySafe("PING");
-  return redisCommand();
+string PING()
+{
+	redisPushBinarySafe("PING");
+	return redisCommand();
 }
 
-string PSETEX(string key, string milliseconds, string value) {
-  redisPushBinarySafe("PSETEX");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((milliseconds));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string PSETEX(string key, string milliseconds, string value)
+{
+	redisPushBinarySafe("PSETEX");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((milliseconds));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string PSUBSCRIBE(string pattern) {
-  redisPushBinarySafe("PSUBSCRIBE");
-  redisPushBinarySafe((pattern));
-  return redisCommand();
+string PSUBSCRIBE(string pattern)
+{
+	redisPushBinarySafe("PSUBSCRIBE");
+	redisPushBinarySafe((pattern));
+	return redisCommand();
 }
 
-string PTTL(string key) {
-  redisPushBinarySafe("PTTL");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string PTTL(string key)
+{
+	redisPushBinarySafe("PTTL");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string PUBLISH(string channel, string message) {
-  redisPushBinarySafe("PUBLISH");
-  redisPushBinarySafe((channel));
-  redisPushBinarySafe((message));
-  return redisCommand();
+string PUBLISH(string channel, string message)
+{
+	redisPushBinarySafe("PUBLISH");
+	redisPushBinarySafe((channel));
+	redisPushBinarySafe((message));
+	return redisCommand();
 }
+
+string PUNSUBSCRIBE(string pattern = "")
+{
+	redisPushBinarySafe("PUNSUBSCRIBE");
 
-string PUNSUBSCRIBE(string pattern = "") {
-  redisPushBinarySafe("PUNSUBSCRIBE");
-  if (pattern != "") redisPushBinarySafe((pattern));
-  return redisCommand();
+	if (pattern != "") redisPushBinarySafe((pattern));
+
+	return redisCommand();
 }
 
-string QUIT() {
-  redisPushBinarySafe("QUIT");
-  return redisCommand();
+string QUIT()
+{
+	redisPushBinarySafe("QUIT");
+	return redisCommand();
 }
 
-string RANDOMKEY() {
-  redisPushBinarySafe("RANDOMKEY");
-  return redisCommand();
+string RANDOMKEY()
+{
+	redisPushBinarySafe("RANDOMKEY");
+	return redisCommand();
 }
 
-string RENAME(string key, string newkey) {
-  redisPushBinarySafe("RENAME");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((newkey));
-  return redisCommand();
+string RENAME(string key, string newkey)
+{
+	redisPushBinarySafe("RENAME");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((newkey));
+	return redisCommand();
 }
 
-string RENAMENX(string key, string newkey) {
-  redisPushBinarySafe("RENAMENX");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((newkey));
-  return redisCommand();
+string RENAMENX(string key, string newkey)
+{
+	redisPushBinarySafe("RENAMENX");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((newkey));
+	return redisCommand();
 }
 
-string RESTORE(string key, string ttl, string serialized_value) {
-  redisPushBinarySafe("RESTORE");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((ttl));
-  redisPushBinarySafe((serialized_value));
-  return redisCommand();
+string RESTORE(string key, string ttl, string serialized_value)
+{
+	redisPushBinarySafe("RESTORE");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((ttl));
+	redisPushBinarySafe((serialized_value));
+	return redisCommand();
 }
 
-string RPOP(string key) {
-  redisPushBinarySafe("RPOP");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string RPOP(string key)
+{
+	redisPushBinarySafe("RPOP");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string RPOPLPUSH(string source, string destination) {
-  redisPushBinarySafe("RPOPLPUSH");
-  redisPushBinarySafe((source));
-  redisPushBinarySafe((destination));
-  return redisCommand();
+string RPOPLPUSH(string source, string destination)
+{
+	redisPushBinarySafe("RPOPLPUSH");
+	redisPushBinarySafe((source));
+	redisPushBinarySafe((destination));
+	return redisCommand();
 }
 
-string RPUSH(string key, string value) {
-  redisPushBinarySafe("RPUSH");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string RPUSH(string key, string value)
+{
+	redisPushBinarySafe("RPUSH");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string RPUSHX(string key, string value) {
-  redisPushBinarySafe("RPUSHX");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string RPUSHX(string key, string value)
+{
+	redisPushBinarySafe("RPUSHX");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string SADD(string key, string member) {
-  redisPushBinarySafe("SADD");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((member));
-  return redisCommand();
+string SADD(string key, string member)
+{
+	redisPushBinarySafe("SADD");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((member));
+	return redisCommand();
 }
 
-string SAVE() {
-  redisPushBinarySafe("SAVE");
-  return redisCommand();
+string SAVE()
+{
+	redisPushBinarySafe("SAVE");
+	return redisCommand();
 }
 
-string SCARD(string key) {
-  redisPushBinarySafe("SCARD");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string SCARD(string key)
+{
+	redisPushBinarySafe("SCARD");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string SCRIPT_EXISTS(string script) {
-  redisPushBinarySafe("SCRIPT EXISTS");
-  redisPushBinarySafe((script));
-  return redisCommand();
+string SCRIPT_EXISTS(string script)
+{
+	redisPushBinarySafe("SCRIPT EXISTS");
+	redisPushBinarySafe((script));
+	return redisCommand();
 }
 
-string SCRIPT_FLUSH() {
-  redisPushBinarySafe("SCRIPT FLUSH");
-  return redisCommand();
+string SCRIPT_FLUSH()
+{
+	redisPushBinarySafe("SCRIPT FLUSH");
+	return redisCommand();
 }
 
-string SCRIPT_KILL() {
-  redisPushBinarySafe("SCRIPT KILL");
-  return redisCommand();
+string SCRIPT_KILL()
+{
+	redisPushBinarySafe("SCRIPT KILL");
+	return redisCommand();
 }
 
-string SCRIPT_LOAD(string script) {
-  redisPushBinarySafe("SCRIPT LOAD");
-  redisPushBinarySafe((script));
-  return redisCommand();
+string SCRIPT_LOAD(string script)
+{
+	redisPushBinarySafe("SCRIPT LOAD");
+	redisPushBinarySafe((script));
+	return redisCommand();
 }
 
-string SDIFF(string key) {
-  redisPushBinarySafe("SDIFF");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string SDIFF(string key)
+{
+	redisPushBinarySafe("SDIFF");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string SDIFFSTORE(string destination, string key) {
-  redisPushBinarySafe("SDIFFSTORE");
-  redisPushBinarySafe((destination));
-  redisPushBinarySafe((key));
-  return redisCommand();
+string SDIFFSTORE(string destination, string key)
+{
+	redisPushBinarySafe("SDIFFSTORE");
+	redisPushBinarySafe((destination));
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string SELECT(string index) {
-  redisPushBinarySafe("SELECT");
-  redisPushBinarySafe((index));
-  return redisCommand();
+string SELECT(string index)
+{
+	redisPushBinarySafe("SELECT");
+	redisPushBinarySafe((index));
+	return redisCommand();
 }
+
+string SET(string key, string value, string seconds = "", string milliseconds = "",
+		   string condition = "")
+{
+	redisPushBinarySafe("SET");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((value));
+
+	if (seconds != "") redisPushBinarySafe((seconds));
 
-string SET(string key, string value, string seconds = "", string milliseconds = "", string condition = "") {
-  redisPushBinarySafe("SET");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((value));
-  if (seconds != "") redisPushBinarySafe((seconds));
-  if (milliseconds != "") redisPushBinarySafe((milliseconds));
-  if (condition != "") redisPushBinarySafe((condition));
-  return redisCommand();
+	if (milliseconds != "") redisPushBinarySafe((milliseconds));
+
+	if (condition != "") redisPushBinarySafe((condition));
+
+	return redisCommand();
 }
 
-string SETBIT(string key, string offset, string value) {
-  redisPushBinarySafe("SETBIT");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((offset));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string SETBIT(string key, string offset, string value)
+{
+	redisPushBinarySafe("SETBIT");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((offset));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string SETEX(string key, string seconds, string value) {
-  redisPushBinarySafe("SETEX");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((seconds));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string SETEX(string key, string seconds, string value)
+{
+	redisPushBinarySafe("SETEX");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((seconds));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string SETNX(string key, string value) {
-  redisPushBinarySafe("SETNX");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string SETNX(string key, string value)
+{
+	redisPushBinarySafe("SETNX");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
 
-string SETRANGE(string key, string offset, string value) {
-  redisPushBinarySafe("SETRANGE");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((offset));
-  redisPushBinarySafe((value));
-  return redisCommand();
+string SETRANGE(string key, string offset, string value)
+{
+	redisPushBinarySafe("SETRANGE");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((offset));
+	redisPushBinarySafe((value));
+	return redisCommand();
 }
+
+string SHUTDOWN(string NOSAVE = "", string SAVE = "")
+{
+	redisPushBinarySafe("SHUTDOWN");
+
+	if (NOSAVE != "") redisPushBinarySafe((NOSAVE));
+
+	if (SAVE != "") redisPushBinarySafe((SAVE));
 
-string SHUTDOWN(string NOSAVE = "", string SAVE = "") {
-  redisPushBinarySafe("SHUTDOWN");
-  if (NOSAVE != "") redisPushBinarySafe((NOSAVE));
-  if (SAVE != "") redisPushBinarySafe((SAVE));
-  return redisCommand();
+	return redisCommand();
 }
 
-string SINTER(string key) {
-  redisPushBinarySafe("SINTER");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string SINTER(string key)
+{
+	redisPushBinarySafe("SINTER");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string SINTERSTORE(string destination, string key) {
-  redisPushBinarySafe("SINTERSTORE");
-  redisPushBinarySafe((destination));
-  redisPushBinarySafe((key));
-  return redisCommand();
+string SINTERSTORE(string destination, string key)
+{
+	redisPushBinarySafe("SINTERSTORE");
+	redisPushBinarySafe((destination));
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string SISMEMBER(string key, string member) {
-  redisPushBinarySafe("SISMEMBER");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((member));
-  return redisCommand();
+string SISMEMBER(string key, string member)
+{
+	redisPushBinarySafe("SISMEMBER");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((member));
+	return redisCommand();
 }
 
-string SLAVEOF(string host, string port) {
-  redisPushBinarySafe("SLAVEOF");
-  redisPushBinarySafe((host));
-  redisPushBinarySafe((port));
-  return redisCommand();
+string SLAVEOF(string host, string port)
+{
+	redisPushBinarySafe("SLAVEOF");
+	redisPushBinarySafe((host));
+	redisPushBinarySafe((port));
+	return redisCommand();
 }
 
-string SLOWLOG(string subcommand, string argument = "") {
-  redisPushBinarySafe("SLOWLOG");
-  redisPushBinarySafe((subcommand));
-  if (argument != "") redisPushBinarySafe((argument));
-  return redisCommand();
+string SLOWLOG(string subcommand, string argument = "")
+{
+	redisPushBinarySafe("SLOWLOG");
+	redisPushBinarySafe((subcommand));
+
+	if (argument != "") redisPushBinarySafe((argument));
+
+	return redisCommand();
 }
 
-string SMEMBERS(string key) {
-  redisPushBinarySafe("SMEMBERS");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string SMEMBERS(string key)
+{
+	redisPushBinarySafe("SMEMBERS");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string SMOVE(string source, string destination, string member) {
-  redisPushBinarySafe("SMOVE");
-  redisPushBinarySafe((source));
-  redisPushBinarySafe((destination));
-  redisPushBinarySafe((member));
-  return redisCommand();
+string SMOVE(string source, string destination, string member)
+{
+	redisPushBinarySafe("SMOVE");
+	redisPushBinarySafe((source));
+	redisPushBinarySafe((destination));
+	redisPushBinarySafe((member));
+	return redisCommand();
 }
+
+string SORT(string key, string pattern = "", string offset = "", string pattern = "",
+			string order = "",
+			string sorting = "", string destination = "")
+{
+	redisPushBinarySafe("SORT");
+	redisPushBinarySafe((key));
+
+	if (pattern != "") redisPushBinarySafe((pattern));
+
+	if (offset != "") redisPushBinarySafe((offset));
+
+	if (pattern != "") redisPushBinarySafe((pattern));
 
-string SORT(string key, string pattern = "", string offset = "", string pattern = "", string order = "", string sorting = "", string destination = "") {
-  redisPushBinarySafe("SORT");
-  redisPushBinarySafe((key));
-  if (pattern != "") redisPushBinarySafe((pattern));
-  if (offset != "") redisPushBinarySafe((offset));
-  if (pattern != "") redisPushBinarySafe((pattern));
-  if (order != "") redisPushBinarySafe((order));
-  if (sorting != "") redisPushBinarySafe((sorting));
-  if (destination != "") redisPushBinarySafe((destination));
-  return redisCommand();
+	if (order != "") redisPushBinarySafe((order));
+
+	if (sorting != "") redisPushBinarySafe((sorting));
+
+	if (destination != "") redisPushBinarySafe((destination));
+
+	return redisCommand();
 }
 
-string SPOP(string key) {
-  redisPushBinarySafe("SPOP");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string SPOP(string key)
+{
+	redisPushBinarySafe("SPOP");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
+
+string SRANDMEMBER(string key, string count = "")
+{
+	redisPushBinarySafe("SRANDMEMBER");
+	redisPushBinarySafe((key));
+
+	if (count != "") redisPushBinarySafe((count));
 
-string SRANDMEMBER(string key, string count = "") {
-  redisPushBinarySafe("SRANDMEMBER");
-  redisPushBinarySafe((key));
-  if (count != "") redisPushBinarySafe((count));
-  return redisCommand();
+	return redisCommand();
 }
 
-string SREM(string key, string member) {
-  redisPushBinarySafe("SREM");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((member));
-  return redisCommand();
+string SREM(string key, string member)
+{
+	redisPushBinarySafe("SREM");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((member));
+	return redisCommand();
 }
 
-string STRLEN(string key) {
-  redisPushBinarySafe("STRLEN");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string STRLEN(string key)
+{
+	redisPushBinarySafe("STRLEN");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string SUBSCRIBE(string channel) {
-  redisPushBinarySafe("SUBSCRIBE");
-  redisPushBinarySafe((channel));
-  return redisCommand();
+string SUBSCRIBE(string channel)
+{
+	redisPushBinarySafe("SUBSCRIBE");
+	redisPushBinarySafe((channel));
+	return redisCommand();
 }
 
-string SUNION(string key) {
-  redisPushBinarySafe("SUNION");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string SUNION(string key)
+{
+	redisPushBinarySafe("SUNION");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string SUNIONSTORE(string destination, string key) {
-  redisPushBinarySafe("SUNIONSTORE");
-  redisPushBinarySafe((destination));
-  redisPushBinarySafe((key));
-  return redisCommand();
+string SUNIONSTORE(string destination, string key)
+{
+	redisPushBinarySafe("SUNIONSTORE");
+	redisPushBinarySafe((destination));
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string SYNC() {
-  redisPushBinarySafe("SYNC");
-  return redisCommand();
+string SYNC()
+{
+	redisPushBinarySafe("SYNC");
+	return redisCommand();
 }
 
-string TIME() {
-  redisPushBinarySafe("TIME");
-  return redisCommand();
+string TIME()
+{
+	redisPushBinarySafe("TIME");
+	return redisCommand();
 }
 
-string TTL(string key) {
-  redisPushBinarySafe("TTL");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string TTL(string key)
+{
+	redisPushBinarySafe("TTL");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string TYPE(string key) {
-  redisPushBinarySafe("TYPE");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string TYPE(string key)
+{
+	redisPushBinarySafe("TYPE");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string UNSUBSCRIBE(string channel = "") {
-  redisPushBinarySafe("UNSUBSCRIBE");
-  if (channel != "") redisPushBinarySafe((channel));
-  return redisCommand();
+string UNSUBSCRIBE(string channel = "")
+{
+	redisPushBinarySafe("UNSUBSCRIBE");
+
+	if (channel != "") redisPushBinarySafe((channel));
+
+	return redisCommand();
 }
 
-string UNWATCH() {
-  redisPushBinarySafe("UNWATCH");
-  return redisCommand();
+string UNWATCH()
+{
+	redisPushBinarySafe("UNWATCH");
+	return redisCommand();
 }
 
-string WATCH(string key) {
-  redisPushBinarySafe("WATCH");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string WATCH(string key)
+{
+	redisPushBinarySafe("WATCH");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string ZADD(string key, string score) {
-  redisPushBinarySafe("ZADD");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((score));
-  return redisCommand();
+string ZADD(string key, string score)
+{
+	redisPushBinarySafe("ZADD");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((score));
+	return redisCommand();
 }
 
-string ZCARD(string key) {
-  redisPushBinarySafe("ZCARD");
-  redisPushBinarySafe((key));
-  return redisCommand();
+string ZCARD(string key)
+{
+	redisPushBinarySafe("ZCARD");
+	redisPushBinarySafe((key));
+	return redisCommand();
 }
 
-string ZCOUNT(string key, string min, string max) {
-  redisPushBinarySafe("ZCOUNT");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((min));
-  redisPushBinarySafe((max));
-  return redisCommand();
+string ZCOUNT(string key, string min, string max)
+{
+	redisPushBinarySafe("ZCOUNT");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((min));
+	redisPushBinarySafe((max));
+	return redisCommand();
 }
 
-string ZINCRBY(string key, string increment, string member) {
-  redisPushBinarySafe("ZINCRBY");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((increment));
-  redisPushBinarySafe((member));
-  return redisCommand();
+string ZINCRBY(string key, string increment, string member)
+{
+	redisPushBinarySafe("ZINCRBY");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((increment));
+	redisPushBinarySafe((member));
+	return redisCommand();
 }
+
+string ZINTERSTORE(string destination, string numkeys, string key, string weight = "",
+				   string aggregate = "")
+{
+	redisPushBinarySafe("ZINTERSTORE");
+	redisPushBinarySafe((destination));
+	redisPushBinarySafe((numkeys));
+	redisPushBinarySafe((key));
 
-string ZINTERSTORE(string destination, string numkeys, string key, string weight = "", string aggregate = "") {
-  redisPushBinarySafe("ZINTERSTORE");
-  redisPushBinarySafe((destination));
-  redisPushBinarySafe((numkeys));
-  redisPushBinarySafe((key));
-  if (weight != "") redisPushBinarySafe((weight));
-  if (aggregate != "") redisPushBinarySafe((aggregate));
-  return redisCommand();
+	if (weight != "") redisPushBinarySafe((weight));
+
+	if (aggregate != "") redisPushBinarySafe((aggregate));
+
+	return redisCommand();
 }
+
+string ZRANGE(string key, string start, string stop, string withscores = "")
+{
+	redisPushBinarySafe("ZRANGE");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((start));
+	redisPushBinarySafe((stop));
 
-string ZRANGE(string key, string start, string stop, string withscores = "") {
-  redisPushBinarySafe("ZRANGE");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((start));
-  redisPushBinarySafe((stop));
-  if (withscores != "") redisPushBinarySafe((withscores));
-  return redisCommand();
+	if (withscores != "") redisPushBinarySafe((withscores));
+
+	return redisCommand();
 }
+
+string ZRANGEBYSCORE(string key, string min, string max, string withscores = "", string offset = "")
+{
+	redisPushBinarySafe("ZRANGEBYSCORE");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((min));
+	redisPushBinarySafe((max));
+
+	if (withscores != "") redisPushBinarySafe((withscores));
 
-string ZRANGEBYSCORE(string key, string min, string max, string withscores = "", string offset = "") {
-  redisPushBinarySafe("ZRANGEBYSCORE");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((min));
-  redisPushBinarySafe((max));
-  if (withscores != "") redisPushBinarySafe((withscores));
-  if (offset != "") redisPushBinarySafe((offset));
-  return redisCommand();
+	if (offset != "") redisPushBinarySafe((offset));
+
+	return redisCommand();
 }
 
-string ZRANK(string key, string member) {
-  redisPushBinarySafe("ZRANK");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((member));
-  return redisCommand();
+string ZRANK(string key, string member)
+{
+	redisPushBinarySafe("ZRANK");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((member));
+	return redisCommand();
 }
 
-string ZREM(string key, string member) {
-  redisPushBinarySafe("ZREM");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((member));
-  return redisCommand();
+string ZREM(string key, string member)
+{
+	redisPushBinarySafe("ZREM");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((member));
+	return redisCommand();
 }
 
-string ZREMRANGEBYRANK(string key, string start, string stop) {
-  redisPushBinarySafe("ZREMRANGEBYRANK");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((start));
-  redisPushBinarySafe((stop));
-  return redisCommand();
+string ZREMRANGEBYRANK(string key, string start, string stop)
+{
+	redisPushBinarySafe("ZREMRANGEBYRANK");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((start));
+	redisPushBinarySafe((stop));
+	return redisCommand();
 }
 
-string ZREMRANGEBYSCORE(string key, string min, string max) {
-  redisPushBinarySafe("ZREMRANGEBYSCORE");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((min));
-  redisPushBinarySafe((max));
-  return redisCommand();
+string ZREMRANGEBYSCORE(string key, string min, string max)
+{
+	redisPushBinarySafe("ZREMRANGEBYSCORE");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((min));
+	redisPushBinarySafe((max));
+	return redisCommand();
 }
+
+string ZREVRANGE(string key, string start, string stop, string withscores = "")
+{
+	redisPushBinarySafe("ZREVRANGE");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((start));
+	redisPushBinarySafe((stop));
+
+	if (withscores != "") redisPushBinarySafe((withscores));
 
-string ZREVRANGE(string key, string start, string stop, string withscores = "") {
-  redisPushBinarySafe("ZREVRANGE");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((start));
-  redisPushBinarySafe((stop));
-  if (withscores != "") redisPushBinarySafe((withscores));
-  return redisCommand();
+	return redisCommand();
 }
 
-string ZREVRANGEBYSCORE(string key, string max, string min, string withscores = "", string offset = "") {
-  redisPushBinarySafe("ZREVRANGEBYSCORE");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((max));
-  redisPushBinarySafe((min));
-  if (withscores != "") redisPushBinarySafe((withscores));
-  if (offset != "") redisPushBinarySafe((offset));
-  return redisCommand();
+string ZREVRANGEBYSCORE(string key, string max, string min, string withscores = "",
+						string offset = "")
+{
+	redisPushBinarySafe("ZREVRANGEBYSCORE");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((max));
+	redisPushBinarySafe((min));
+
+	if (withscores != "") redisPushBinarySafe((withscores));
+
+	if (offset != "") redisPushBinarySafe((offset));
+
+	return redisCommand();
 }
 
-string ZREVRANK(string key, string member) {
-  redisPushBinarySafe("ZREVRANK");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((member));
-  return redisCommand();
+string ZREVRANK(string key, string member)
+{
+	redisPushBinarySafe("ZREVRANK");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((member));
+	return redisCommand();
 }
 
-string ZSCORE(string key, string member) {
-  redisPushBinarySafe("ZSCORE");
-  redisPushBinarySafe((key));
-  redisPushBinarySafe((member));
-  return redisCommand();
+string ZSCORE(string key, string member)
+{
+	redisPushBinarySafe("ZSCORE");
+	redisPushBinarySafe((key));
+	redisPushBinarySafe((member));
+	return redisCommand();
 }
+
+string ZUNIONSTORE(string destination, string numkeys, string key, string weight = "",
+				   string aggregate = "")
+{
+	redisPushBinarySafe("ZUNIONSTORE");
+	redisPushBinarySafe((destination));
+	redisPushBinarySafe((numkeys));
+	redisPushBinarySafe((key));
+
+	if (weight != "") redisPushBinarySafe((weight));
+
+	if (aggregate != "") redisPushBinarySafe((aggregate));
 
-string ZUNIONSTORE(string destination, string numkeys, string key, string weight = "", string aggregate = "") {
-  redisPushBinarySafe("ZUNIONSTORE");
-  redisPushBinarySafe((destination));
-  redisPushBinarySafe((numkeys));
-  redisPushBinarySafe((key));
-  if (weight != "") redisPushBinarySafe((weight));
-  if (aggregate != "") redisPushBinarySafe((aggregate));
-  return redisCommand();
+	return redisCommand();
 }
 

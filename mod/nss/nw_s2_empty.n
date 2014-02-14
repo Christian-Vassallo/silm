@@ -19,23 +19,22 @@ bugfix by Kovi 2002.07.28
 
 void main()
 {
-    if(!GetHasFeatEffect(FEAT_EMPTY_BODY))
-    {
-        //Declare major variables
-        object oTarget = OBJECT_SELF;
-        effect eVis = EffectVisualEffect(VFX_DUR_INVISIBILITY);
-        effect eCover = EffectConcealment(50);
-        effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
-        effect eLink = EffectLinkEffects(eCover, eVis);
-        eLink = EffectLinkEffects(eLink, eDur);
+	if (!GetHasFeatEffect(FEAT_EMPTY_BODY)) {
+		//Declare major variables
+		object oTarget = OBJECT_SELF;
+		effect eVis = EffectVisualEffect(VFX_DUR_INVISIBILITY);
+		effect eCover = EffectConcealment(50);
+		effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
+		effect eLink = EffectLinkEffects(eCover, eVis);
+		eLink = EffectLinkEffects(eLink, eDur);
 
-        eLink = SupernaturalEffect(eLink);
+		eLink = SupernaturalEffect(eLink);
 
-        //Fire cast spell at event for the specified target
-        SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELLABILITY_EMPTY_BODY, FALSE));
-        int nDuration = GetLevelByClass(CLASS_TYPE_MONK);
+		//Fire cast spell at event for the specified target
+		SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELLABILITY_EMPTY_BODY, FALSE));
+		int nDuration = GetLevelByClass(CLASS_TYPE_MONK);
 
-        //Apply the VFX impact and effects
-        ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, RoundsToSeconds(nDuration));
-    }
+		//Apply the VFX impact and effects
+		ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, RoundsToSeconds(nDuration));
+	}
 }

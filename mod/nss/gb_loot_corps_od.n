@@ -9,23 +9,24 @@
 //: MODIFIED ON:
 ///////////////////////////////////////////////////
 
-void main() {
+void main()
+{
 	object oLooter = GetLastDisturbed();
 	object oItem = GetInventoryDisturbItem();
 
-	if ( GetInventoryDisturbType() == INVENTORY_DISTURB_TYPE_REMOVED ) {
+	if (GetInventoryDisturbType() == INVENTORY_DISTURB_TYPE_REMOVED) {
 		object oBody = GetLocalObject(OBJECT_SELF, "Body");
 		object oOrigItm = GetLocalObject(oItem, "OriginalItem");
 
 		AssignCommand(oLooter, ActionPlayAnimation(ANIMATION_LOOPING_GET_LOW, 1.0, 1.0));
 
-		if ( GetIsObjectValid(oOrigItm) ) {
+		if (GetIsObjectValid(oOrigItm)) {
 			DestroyObject(oOrigItm);
 			DeleteLocalObject(oItem, "OriginalItem");
 		}
 	}
 
-	if ( GetInventoryDisturbType() == INVENTORY_DISTURB_TYPE_ADDED ) {
+	if (GetInventoryDisturbType() == INVENTORY_DISTURB_TYPE_ADDED) {
 		AssignCommand(oLooter, ActionPlayAnimation(ANIMATION_LOOPING_GET_LOW, 1.0, 1.0));
 		ActionGiveItem(oItem, oLooter);
 	}

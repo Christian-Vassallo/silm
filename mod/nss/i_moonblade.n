@@ -5,43 +5,55 @@ extern("inc_events")
 #define ZAUBERWORT_AUS "teumegil esta"
 
 
-int GetIndexOfItemProperty(object item, int nType, int nSubType = -1) {
+int GetIndexOfItemProperty(object item, int nType, int nSubType = -1)
+{
 	int i = 0;
 
 	itemproperty ip = GetFirstItemProperty(item);
+
 	while (GetIsItemPropertyValid(ip)) {
 		if (GetItemPropertyType(ip) == nType && (nSubType == -1 || nSubType == GetItemPropertySubType(ip)))
 			break;
+
 		i++;
 
 		ip = GetNextItemProperty(item);
 	}
+
 	return i;
 }
 
-void ToggleBlade(object blade, object owner) {
+void ToggleBlade(object blade, object owner)
+{
 	itemproperty damage = ItemPropertyDamageBonus(IP_CONST_DAMAGETYPE_COLD, IP_CONST_DAMAGEBONUS_1d6);
 	bool active = IPGetItemHasProperty(blade, damage, -1, false);
 
 	if (active) {
 		itemproperty ip = GetFirstItemProperty(blade);
+
 		while (GetIsItemPropertyValid(ip)) {
-			if (GetItemPropertyType(ip) == ITEM_PROPERTY_DAMAGE_BONUS && GetItemPropertySubType(ip) == IP_CONST_DAMAGETYPE_COLD) {
-				ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_DISPEL)), owner);
+			if (GetItemPropertyType(ip) == ITEM_PROPERTY_DAMAGE_BONUS
+					&& GetItemPropertySubType(ip) == IP_CONST_DAMAGETYPE_COLD) {
+				ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_DISPEL)),
+									owner);
 				RemoveItemProperty(blade, ip);
 			}
+
 			ip = GetNextItemProperty(blade);
 		}
+
 	} else {
 		// AssignCommand(e.actor, SpeakString("GO GO GADGET MOONBLADE!"));
 		AddItemProperty(DURATION_TYPE_PERMANENT, damage, blade);
-		ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_CHARM)), owner);
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_CHARM)),
+							owner);
 	}
 
 }
 
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 	struct EventArguments a = GetEventArguments(e.serial);
 	object blade = e.runnable;
@@ -50,19 +62,21 @@ void main() {
 		ToggleBlade(blade, e.actor);
 
 	int an, aus;
-	if (e.ev == "chat_prefilter" && (-1 != (an = strpos(strlwr(a.a0), ZAUBERWORT_AN)) || -1 != (aus = strpos(strlwr(a.a0), ZAUBERWORT_AUS))) ) {
+
+	if (e.ev == "chat_prefilter" && (-1 != (an = strpos(strlwr(a.a0), ZAUBERWORT_AN))
+									 || -1 != (aus = strpos(strlwr(a.a0), ZAUBERWORT_AUS)))) {
 		blade = GetItemInSlot(INVENTORY_SLOT_RIGHTHAND, e.runnable);
-		
+
 		if (GetTag(blade) != "moonblade")
 			return;
-		
+
 		// SendMessageToPC(e.runnable, "You spoke the magic word .. and have a moonblade ..");
-	
+
 		itemproperty damage = ItemPropertyDamageBonus(IP_CONST_DAMAGETYPE_COLD, IP_CONST_DAMAGEBONUS_1d6);
 		bool active = IPGetItemHasProperty(blade, damage, -1, false);
 
 		// SendMessageToPC(e.runnable, "Active? " + itoa(active));
-		
+
 		if ((active && aus != -1) || (!active && an != -1)) {
 			ToggleBlade(blade, e.runnable);
 			//int index = GetIndexOfItemProperty(blade, IP_CONST_CASTSPELL_UNIQUE_POWER_SELF_ONLY, -1);
@@ -70,5 +84,5 @@ void main() {
 			//AssignCommand(e.runnable, ActionUseItemOnObject(blade, OBJECT_INVALID, index-1));
 		}
 	}
-	
+
 }

@@ -17,8 +17,8 @@
  * FUNCTIONS DECLARATIONS
  * ==================================
  */
-// Function: TextMessage 
-// 
+// Function: TextMessage
+//
 // Assigns oData to display sMessage
 // =================================
 // sMessage = message to display
@@ -29,11 +29,13 @@
 // fFontWidth = width of font in meters
 // nVFX = VFX_BEAM_* constant
 // fRotate = angle of rotation
-void TextMessage(string sMessage, object oData, float fSpeed = 2.0f, float fLifetime = 0.0f, float fFontHeight = 0.5f, float fFontWidth = 0.25f, int nVFX = VFX_BEAM_FIRE_W_SILENT,
+void TextMessage(string sMessage, object oData, float fSpeed = 2.0f, float fLifetime = 0.0f,
+				 float fFontHeight = 0.5f,
+				 float fFontWidth = 0.25f, int nVFX = VFX_BEAM_FIRE_W_SILENT,
 				 float fRotate = 0.0f);
 
-// Function: TextPigPenMessage 
-// 
+// Function: TextPigPenMessage
+//
 // Assigns oData to display sMessage in PigPen
 // ===========================================
 // sMessage = message to display
@@ -44,7 +46,8 @@ void TextMessage(string sMessage, object oData, float fSpeed = 2.0f, float fLife
 // fFontWidth = width of font in meters
 // nVFX = VFX_BEAM_* constant
 // fRotate = angle of rotation
-void TextPigPenMessage(string sMessage, object oData, float fSpeed = 2.0f, float fLifetime = 0.0f, float fFontHeight = 0.5f, float fFontWidth = 0.25f, int nVFX = VFX_BEAM_FIRE_W_SILENT,
+void TextPigPenMessage(string sMessage, object oData, float fSpeed = 2.0f, float fLifetime = 0.0f,
+					   float fFontHeight = 0.5f, float fFontWidth = 0.25f, int nVFX = VFX_BEAM_FIRE_W_SILENT,
 					   float fRotate = 0.0f);
 
 /*
@@ -66,8 +69,10 @@ void TextPigPenMessage(string sMessage, object oData, float fSpeed = 2.0f, float
  * FUNCTIONS IMPLEMENTATIONS
  * ==================================
  */
-void gao_CreateTextGrid(object oNode, float fFontHeight, float fFontWidth, object oData, float fLifetime,
-						float fRotate) {
+void gao_CreateTextGrid(object oNode, float fFontHeight, float fFontWidth, object oData,
+						float fLifetime,
+						float fRotate)
+{
 	object oArea = GetArea(oNode);
 	vector vPos = GetPosition(oNode);
 	fRotate += GetFacing(oNode);
@@ -80,27 +85,29 @@ void gao_CreateTextGrid(object oNode, float fFontHeight, float fFontWidth, objec
 	int i, j, nTotal;
 	float f, g;
 
-	for ( i = 0; i < 3; i++ ) {
+	for (i = 0; i < 3; i++) {
 		f = IntToFloat(i);
 
-		for ( j = 0; j < 3; j++ ) {
+		for (j = 0; j < 3; j++) {
 			g = IntToFloat(j - 1);
 			vLedNode = vPos - fFontWidth * g * vFacing + f * Vector(0.0, 0.0, fFontHeight);
 			oLedNode = CreateObject(OBJECT_TYPE_PLACEABLE, "invisobj", Location(oArea, vLedNode, fRotate),
-						   FALSE, "PSC_X_TEXTMESSAGE");
+									FALSE, "PSC_X_TEXTMESSAGE");
 			AssignCommand(oLedNode, ActionDoCommand(SetLocalObject(oNode, "led" +
-						IntToString(j) + IntToString(i), oLedNode)));
-			if ( fLifetime == 0.0 ) {
+													IntToString(j) + IntToString(i), oLedNode)));
+
+			if (fLifetime == 0.0) {
 				nTotal = GetLocalInt(oData, "storetotal");
 				AssignCommand(oLedNode, ActionDoCommand(SetLocalObject(oData, "store" +
-							IntToString(nTotal), oLedNode)));
+														IntToString(nTotal), oLedNode)));
 				SetLocalInt(oData, "storetotal", nTotal + 1);
 			}
 		}
 	}
 }
 
-void gao_DestroyTextGrid(object oNode) {
+void gao_DestroyTextGrid(object oNode)
+{
 	DestroyObject(GetLocalObject(oNode, "led00"));
 	DestroyObject(GetLocalObject(oNode, "led10"));
 	DestroyObject(GetLocalObject(oNode, "led20"));
@@ -112,7 +119,8 @@ void gao_DestroyTextGrid(object oNode) {
 	DestroyObject(GetLocalObject(oNode, "led22"));
 }
 
-void gao_BeamPigPenLetter(object oNode, string sAlphabet, int nVFX) {
+void gao_BeamPigPenLetter(object oNode, string sAlphabet, int nVFX)
+{
 	object oNode1 = GetLocalObject(oNode, "led00");
 	object oNode2 = GetLocalObject(oNode, "led10");
 	object oNode3 = GetLocalObject(oNode, "led20");
@@ -123,58 +131,71 @@ void gao_BeamPigPenLetter(object oNode, string sAlphabet, int nVFX) {
 	object oNode8 = GetLocalObject(oNode, "led12");
 	object oNode9 = GetLocalObject(oNode, "led22");
 
-	if ( sAlphabet == "a" ) {
+	if (sAlphabet == "a") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "b" ) {
+
+	} else if (sAlphabet == "b") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "c" ) {
+
+	} else if (sAlphabet == "c") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
-	} else if ( sAlphabet == "d" ) {
-		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
-		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
-		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "e" ) {
-		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
+
+	} else if (sAlphabet == "d") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "f" ) {
+
+	} else if (sAlphabet == "e") {
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
+
+	} else if (sAlphabet == "f") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "g" ) {
+
+	} else if (sAlphabet == "g") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "h" ) {
+
+	} else if (sAlphabet == "h") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "i" ) {
+
+	} else if (sAlphabet == "i") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "j" ) {
+
+	} else if (sAlphabet == "j") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "k" ) {
+
+	} else if (sAlphabet == "k") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode8);
-	} else if ( sAlphabet == "l" ) {
+
+	} else if (sAlphabet == "l") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "m" ) {
+
+	} else if (sAlphabet == "m") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
-	} else if ( sAlphabet == "n" ) {
+
+	} else if (sAlphabet == "n") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
@@ -183,56 +204,70 @@ void gao_BeamPigPenLetter(object oNode, string sAlphabet, int nVFX) {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode8);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
-	} else if ( sAlphabet == "o" ) {
+
+	} else if (sAlphabet == "o") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "p" ) {
+
+	} else if (sAlphabet == "p") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "q" ) {
+
+	} else if (sAlphabet == "q") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode8);
-	} else if ( sAlphabet == "r" ) {
+
+	} else if (sAlphabet == "r") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "s" ) {
+
+	} else if (sAlphabet == "s") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "t" ) {
+
+	} else if (sAlphabet == "t") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode6, BODY_NODE_CHEST), oNode1);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode6, BODY_NODE_CHEST), oNode7);
-	} else if ( sAlphabet == "u" ) {
+
+	} else if (sAlphabet == "u") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode3);
-	} else if ( sAlphabet == "v" ) {
+
+	} else if (sAlphabet == "v") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode8);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode8);
-	} else if ( sAlphabet == "w" ) {
+
+	} else if (sAlphabet == "w") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode8);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "x" ) {
+
+	} else if (sAlphabet == "x") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode6, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode6, BODY_NODE_CHEST), oNode4);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode6, BODY_NODE_CHEST), oNode1);
-	} else if ( sAlphabet == "y" ) {
+
+	} else if (sAlphabet == "y") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode3);
-	} else if ( sAlphabet == "z" ) {
+
+	} else if (sAlphabet == "z") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode8);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode8);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode8);
+
 	} else gao_DestroyTextGrid(oNode);
 }
 
-void gao_BeamLetter(object oNode, string sAlphabet, int nVFX) {
+void gao_BeamLetter(object oNode, string sAlphabet, int nVFX)
+{
 	object oNode1 = GetLocalObject(oNode, "led00");
 	object oNode2 = GetLocalObject(oNode, "led10");
 	object oNode3 = GetLocalObject(oNode, "led20");
@@ -243,179 +278,220 @@ void gao_BeamLetter(object oNode, string sAlphabet, int nVFX) {
 	object oNode8 = GetLocalObject(oNode, "led12");
 	object oNode9 = GetLocalObject(oNode, "led22");
 
-	if ( sAlphabet == "a" ) {
+	if (sAlphabet == "a") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "b" ) {
+
+	} else if (sAlphabet == "b") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode8);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode5, BODY_NODE_CHEST), oNode8);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode6);
-	} else if ( sAlphabet == "c" ) {
+
+	} else if (sAlphabet == "c") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "d" ) {
+
+	} else if (sAlphabet == "d") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode2);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode8, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode8);
-	} else if ( sAlphabet == "e" ) {
+
+	} else if (sAlphabet == "e") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode5);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "f" ) {
+
+	} else if (sAlphabet == "f") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode5);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "g" ) {
+
+	} else if (sAlphabet == "g") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode5, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "h" ) {
+
+	} else if (sAlphabet == "h") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
-	} else if ( sAlphabet == "i" ) {
+
+	} else if (sAlphabet == "i") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode8);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "j" ) {
+
+	} else if (sAlphabet == "j") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode4);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "k" ) {
+
+	} else if (sAlphabet == "k") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode5);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode5);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode5, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "l" ) {
+
+	} else if (sAlphabet == "l") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
-	} else if ( sAlphabet == "m" ) {
+
+	} else if (sAlphabet == "m") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode5, BODY_NODE_CHEST), oNode8);
-	} else if ( sAlphabet == "n" ) {
+
+	} else if (sAlphabet == "n") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "o" || sAlphabet == "0" ) {
+
+	} else if (sAlphabet == "o" || sAlphabet == "0") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "p" ) {
+
+	} else if (sAlphabet == "p") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode6, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "q" ) {
+
+	} else if (sAlphabet == "q") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode5, BODY_NODE_CHEST), oNode3);
-	} else if ( sAlphabet == "r" ) {
+
+	} else if (sAlphabet == "r") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode6, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode5);
-	} else if ( sAlphabet == "s" || sAlphabet == "5" ) {
+
+	} else if (sAlphabet == "s" || sAlphabet == "5") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode6);
-	} else if ( sAlphabet == "t" ) {
+
+	} else if (sAlphabet == "t") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode8);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "u" ) {
+
+	} else if (sAlphabet == "u") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "v" ) {
+
+	} else if (sAlphabet == "v") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "w" ) {
+
+	} else if (sAlphabet == "w") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode5);
-	} else if ( sAlphabet == "x" ) {
+
+	} else if (sAlphabet == "x") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode7);
-	} else if ( sAlphabet == "y" ) {
+
+	} else if (sAlphabet == "y") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode5, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode5, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode2, BODY_NODE_CHEST), oNode5);
-	} else if ( sAlphabet == "z" ) {
+
+	} else if (sAlphabet == "z") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "1" ) {
+
+	} else if (sAlphabet == "1") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "2" ) {
+
+	} else if (sAlphabet == "2") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode4);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode6, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "3" ) {
+
+	} else if (sAlphabet == "3") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "4" ) {
+
+	} else if (sAlphabet == "4") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "6" ) {
+
+	} else if (sAlphabet == "6") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode6);
-	} else if ( sAlphabet == "7" ) {
+
+	} else if (sAlphabet == "7") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "8" ) {
+
+	} else if (sAlphabet == "8") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
-	} else if ( sAlphabet == "9" ) {
+
+	} else if (sAlphabet == "9") {
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode1, BODY_NODE_CHEST), oNode3);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode6);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode7, BODY_NODE_CHEST), oNode9);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode4, BODY_NODE_CHEST), oNode7);
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBeam(nVFX, oNode3, BODY_NODE_CHEST), oNode9);
+
 	} else gao_DestroyTextGrid(oNode);
 }
 
-void gao_AlphabetPermanent(object oNode, string sAlphabet, int nVFX, float fLifetime) {
+void gao_AlphabetPermanent(object oNode, string sAlphabet, int nVFX, float fLifetime)
+{
 	gao_BeamLetter(oNode, sAlphabet, nVFX);
-	if ( fLifetime > 0.0 ) DelayCommand(fLifetime, gao_DestroyTextGrid(oNode));
+
+	if (fLifetime > 0.0) DelayCommand(fLifetime, gao_DestroyTextGrid(oNode));
 }
 
-void gao_PigPenAlphabetPermanent(object oNode, string sAlphabet, int nVFX, float fLifetime) {
+void gao_PigPenAlphabetPermanent(object oNode, string sAlphabet, int nVFX, float fLifetime)
+{
 	gao_BeamPigPenLetter(oNode, sAlphabet, nVFX);
-	if ( fLifetime > 0.0 ) DelayCommand(fLifetime, gao_DestroyTextGrid(oNode));
+
+	if (fLifetime > 0.0) DelayCommand(fLifetime, gao_DestroyTextGrid(oNode));
 }
 
-void TextMessage(string sMessage, object oData = OBJECT_SELF, float fSpeed = 2.0f, float fLifetime = 0.0f, float fFontHeight = 0.5f, float fFontWidth = 0.25f, int nVFX = VFX_BEAM_FIRE_W_SILENT,
-				 float fRotate = 0.0f) {
+void TextMessage(string sMessage, object oData = OBJECT_SELF, float fSpeed = 2.0f,
+				 float fLifetime = 0.0f,
+				 float fFontHeight = 0.5f, float fFontWidth = 0.25f, int nVFX = VFX_BEAM_FIRE_W_SILENT,
+				 float fRotate = 0.0f)
+{
 	int i;
 	object oNode;
 
@@ -423,21 +499,26 @@ void TextMessage(string sMessage, object oData = OBJECT_SELF, float fSpeed = 2.0
 	int nLength = GetStringLength(sMessage);
 	int nData = GetLocalInt(oData, "storetotal");
 
-	if ( nLength > nData ) nLength = nData;
+	if (nLength > nData) nLength = nData;
 
-	for ( i = 0; i < nLength; i++ ) {
+	for (i = 0; i < nLength; i++) {
 		oNode = GetLocalObject(oData, "store" + IntToString(i));
-		if ( oNode != OBJECT_INVALID ) {
+
+		if (oNode != OBJECT_INVALID) {
 			gao_CreateTextGrid(oNode, fFontHeight, fFontWidth, oData, fLifetime, fRotate);
 			DelayCommand(fSpeed *
-				IntToFloat(i) +
-				1.0, gao_AlphabetPermanent(oNode, GetSubString(sMessage, i, 1), nVFX, fLifetime));
+						 IntToFloat(i) +
+						 1.0, gao_AlphabetPermanent(oNode, GetSubString(sMessage, i, 1), nVFX, fLifetime));
+
 		} else break;
 	}
 }
 
-void TextPigPenMessage(string sMessage, object oData = OBJECT_SELF, float fSpeed = 2.0f, float fLifetime = 0.0f, float fFontHeight = 0.5f, float fFontWidth = 0.25f, int nVFX = VFX_BEAM_FIRE_W_SILENT,
-					   float fRotate = 0.0f) {
+void TextPigPenMessage(string sMessage, object oData = OBJECT_SELF, float fSpeed = 2.0f,
+					   float fLifetime = 0.0f,
+					   float fFontHeight = 0.5f, float fFontWidth = 0.25f, int nVFX = VFX_BEAM_FIRE_W_SILENT,
+					   float fRotate = 0.0f)
+{
 	int i;
 	object oNode;
 
@@ -445,15 +526,17 @@ void TextPigPenMessage(string sMessage, object oData = OBJECT_SELF, float fSpeed
 	int nLength = GetStringLength(sMessage);
 	int nData = GetLocalInt(oData, "storetotal");
 
-	if ( nLength > nData ) nLength = nData;
+	if (nLength > nData) nLength = nData;
 
-	for ( i = 0; i < nLength; i++ ) {
+	for (i = 0; i < nLength; i++) {
 		oNode = GetLocalObject(oData, "store" + IntToString(i));
-		if ( oNode != OBJECT_INVALID ) {
+
+		if (oNode != OBJECT_INVALID) {
 			gao_CreateTextGrid(oNode, fFontHeight, fFontWidth, oData, fLifetime, fRotate);
 			DelayCommand(fSpeed *
-				IntToFloat(i) +
-				1.0, gao_PigPenAlphabetPermanent(oNode, GetSubString(sMessage, i, 1), nVFX, fLifetime));
+						 IntToFloat(i) +
+						 1.0, gao_PigPenAlphabetPermanent(oNode, GetSubString(sMessage, i, 1), nVFX, fLifetime));
+
 		} else break;
 	}
 }

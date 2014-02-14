@@ -3,7 +3,8 @@ extern("inc_cdb")
 extern("inc_currency")
 extern("inc_bank")
 
-void check_all_incomes(object runnable) {
+void check_all_incomes(object runnable)
+{
 	if (!is_valid(runnable)) {
 		_WARN("pc disappeared while waiting for runnable check");
 		return;
@@ -12,12 +13,16 @@ void check_all_incomes(object runnable) {
 	int cid = GetCharacterID(runnable);
 
 	pQ("select id from income.exclusion where cid = " + pSi(cid) + " and source is null;");
+
 	if (pF())
 		return;
 
 	struct RealTime ts = GetRealTime();
 	pBegin();
-	string prof_c = pDeclare("select id, source, bank_account from income.mappings where (cid is null or cid = " + pSi(cid) + ") and enabled = true;");
+	string prof_c =
+		pDeclare("select id, source, bank_account from income.mappings where (cid is null or cid = " + pSi(
+					 cid) + ") and enabled = true;");
+
 	while (pCursorFetch(prof_c)) {
 		int mapping_id = pGi(1);
 		int source_id = pGi(2);
@@ -26,16 +31,20 @@ void check_all_incomes(object runnable) {
 		if (!bank_account) {
 			// See if this cid as an access entry defaulting to income money
 			pQ("select account from bank.access where " +
-				"default_income = true and cid = " + pSi(cid));
+			   "default_income = true and cid = " + pSi(cid));
+
 			if (pF())
 				bank_account = pGi(1);
 		}
 
-		pQ("select id from income.exclusion where cid = " + pSi(cid) + " and source = " + pSi(source_id) + ";");
+		pQ("select id from income.exclusion where cid = " + pSi(cid) + " and source = " + pSi(
+			   source_id) + ";");
+
 		if (pF())
 			continue;
 
-		pQ("select name, skill, skill_base, skill_factor, min_days_pay, max_days_backpay, ability, ability_base, ability_factor from income.sources where id = " + pSi(source_id) + ";");
+		pQ("select name, skill, skill_base, skill_factor, min_days_pay, max_days_backpay, ability, ability_base, ability_factor from income.sources where id = "
+		   + pSi(source_id) + ";");
 		pF();
 		string name = pGs(1);
 		int skill   = pGi(2);
@@ -52,8 +61,10 @@ void check_all_incomes(object runnable) {
 		ability_ranks = (ability_ranks - 10) / 2;
 
 		pQ("select income.days_since_last_payment(" + pSi(cid) + ", " + pSi(mapping_id) + "), " +
-			"income.payment_due(" + pSi(cid) + ", " + pSi(mapping_id) + ", " + pSi(ability_ranks, false) + ", " + pSi(skill_ranks, false) + ", " + ftoa(max_days_backpay) + ");"
-		);
+		   "income.payment_due(" + pSi(cid) + ", " + pSi(mapping_id) + ", " + pSi(ability_ranks,
+				   false) + ", " + pSi(skill_ranks,
+									   false) + ", " + ftoa(max_days_backpay) + ");"
+		  );
 		pF();
 		float days = pGf(1);
 		int copper = pGi(2);
@@ -69,13 +80,16 @@ void check_all_incomes(object runnable) {
 
 			if (bank_account > 0) {
 				bank_deposit(bank_account, copper, cid,
-						name + " (" + GetName(runnable) + ")");
+							 name + " (" + GetName(runnable) + ")");
 				msg += " (auf Bank-Konto gezahlt)";
+
 			} else {
 				GiveMoneyToCreature(runnable, copper);
 			}
 
-			pQ("insert into income.payments (cid, mapping, copper) values(" + pSi(cid) + ", " + pSi(mapping_id) + "," + pSi(copper, false) + ");");
+			pQ("insert into income.payments (cid, mapping, copper) values(" + pSi(cid) + ", " + pSi(
+				   mapping_id) + "," + pSi(copper,
+										   false) + ");");
 
 			_INFO("paid " + itoa(copper) + " copper for " + itoa(mapping_id) + " to " + otoa(runnable));
 
@@ -87,11 +101,13 @@ void check_all_incomes(object runnable) {
 		}
 
 	}
+
 	pCursorClose(prof_c);
 	pCommit();
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 	struct EventArguments ea = GetEventArguments(e.serial);
 

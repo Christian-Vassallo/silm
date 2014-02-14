@@ -5,9 +5,11 @@ void markPlayerActivity(object player);
 
 extern("_gen")
 
-int GetPlayerIdleTime(object player) {
+int GetPlayerIdleTime(object player)
+{
 	if (!GetIsPC(player))
 		return 0;
+
 	if (!gvGetInt("idle_active"))
 		return 0;
 
@@ -18,11 +20,12 @@ int GetPlayerIdleTime(object player) {
 		last = now;
 		markPlayerActivity(player);
 	}
-	
+
 	return (now - last);
 }
 
-void markPlayerActivity(object player) {
+void markPlayerActivity(object player)
+{
 	if (!GetIsPC(player))
 		return;
 

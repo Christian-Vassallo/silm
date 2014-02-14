@@ -3,7 +3,8 @@ extern("inc_cdb")
 extern("inc_events")
 extern("nw_i0_generic")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "item_activate" && GetTag(e.runnable) == "breadcrumbbag") {
@@ -18,6 +19,7 @@ void main() {
 
 		// Try to locate a breadcrumb near
 		object crumb = GetNearestObjectByTag("breadcrumb");
+
 		if (!is_valid(crumb))
 			return;
 

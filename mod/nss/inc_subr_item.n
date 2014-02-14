@@ -1,4 +1,5 @@
-void ApplySubraceItems(object oPC) {
+void ApplySubraceItems(object oPC)
+{
 	object oMod = GetModule();
 	string sSubrace = GetLocalString(oPC, "SR_Subrace");
 	int iSPA = GetLocalInt(oMod, "SR_SPAType_" + sSubrace);
@@ -6,11 +7,11 @@ void ApplySubraceItems(object oPC) {
 	string sSPAItemDesc;
 	object oSPAItem, oSRItem;
 
-	if ( iSPA ) {
+	if (iSPA) {
 		sSPAItemDesc = "SR_SPA_" + IntToString(iSPA);
 		oSPAItem = GetItemPossessedBy(oPC, sSPAItemDesc);
 
-		if ( !GetIsObjectValid(oSPAItem) ) {
+		if (!GetIsObjectValid(oSPAItem)) {
 			oSPAItem = CreateItemOnObject(sSPAItemDesc, oPC);
 		}
 	}
@@ -19,17 +20,17 @@ void ApplySubraceItems(object oPC) {
 	string sSRItemDesc = GetLocalString(oMod, "SR_Item_" + sSubrace);
 	int nRevision = GetLocalInt(GetModule(), "SR_Item_Rev_" + sSubrace);
 
-	if ( sSRItemDesc != "" ) {
+	if (sSRItemDesc != "") {
 		oSRItem = GetItemPossessedBy(oPC, sSRItemDesc);
 		int nItemRevision = GetLocalInt(oSRItem, "SR_Item_Rev");
 
-		if ( GetIsObjectValid(oSRItem) && nRevision > nItemRevision ) {
+		if (GetIsObjectValid(oSRItem) && nRevision > nItemRevision) {
 			DestroyObject(oSRItem);
 			SendMessageToPC(oPC, "Dein(e) Subrassen-Item(s) werde(n) aktualisiert.");
 		}
 
 
-		if ( !GetIsObjectValid(oSRItem) ) {
+		if (!GetIsObjectValid(oSRItem)) {
 			oSRItem = CreateItemOnObject(sSRItemDesc, oPC);
 			SetLocalInt(oSRItem, "SR_Item_Rev", nRevision);
 		}
@@ -42,12 +43,13 @@ void ApplySubraceItems(object oPC) {
 
 
 
-int ActivateSubraceItem(object oPC, object oItem, location lTarget, object oTarget) {
+int ActivateSubraceItem(object oPC, object oItem, location lTarget, object oTarget)
+{
 	object oMod = GetModule();
 	string sSubrace = GetLocalString(oPC, "SR_Subrace");
 	string sSPA = GetLocalString(oMod, "SR_SPA_" + sSubrace);
 
-	if ( GetStringLeft(GetTag(oItem), 7) != "SR_SPA_" )
+	if (GetStringLeft(GetTag(oItem), 7) != "SR_SPA_")
 		return FALSE;
 
 	SetLocalLocation(oPC, "SR_IAct_Loc", lTarget);

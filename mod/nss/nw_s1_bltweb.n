@@ -17,24 +17,24 @@ extern("nw_i0_spells")
 extern("x2_inc_switches")
 void main()
 {
-    object oTarget = GetSpellTargetObject();
-    int nHD = GetHitDice(OBJECT_SELF);
-    effect eVis = EffectVisualEffect(VFX_DUR_WEB);
-    effect eStick = EffectEntangle();
-    effect eLink = EffectLinkEffects(eVis, eStick);
+	object oTarget = GetSpellTargetObject();
+	int nHD = GetHitDice(OBJECT_SELF);
+	effect eVis = EffectVisualEffect(VFX_DUR_WEB);
+	effect eStick = EffectEntangle();
+	effect eLink = EffectLinkEffects(eVis, eStick);
 
-    int nDC = 10 + (nHD/2);
-    int nCount = (nHD + 1) / 2;
+	int nDC = 10 + (nHD / 2);
+	int nCount = (nHD + 1) / 2;
 
-    //Fire cast spell at event for the specified target
-    SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELLABILITY_BOLT_WEB));
-    //Make a saving throw check
-    if (TouchAttackRanged(oTarget))
-    {
-       if( !GetHasFeat(FEAT_WOODLAND_STRIDE, oTarget) && GetCreatureFlag(OBJECT_SELF, CREATURE_VAR_IS_INCORPOREAL) != TRUE )
-       {
-           //Apply the VFX impact and effects
-           ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, RoundsToSeconds(nCount));
-        }
-    }
+	//Fire cast spell at event for the specified target
+	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELLABILITY_BOLT_WEB));
+
+	//Make a saving throw check
+	if (TouchAttackRanged(oTarget)) {
+		if (!GetHasFeat(FEAT_WOODLAND_STRIDE, oTarget)
+				&& GetCreatureFlag(OBJECT_SELF, CREATURE_VAR_IS_INCORPOREAL) != TRUE) {
+			//Apply the VFX impact and effects
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eLink, oTarget, RoundsToSeconds(nCount));
+		}
+	}
 }

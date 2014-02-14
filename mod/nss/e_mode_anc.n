@@ -1,7 +1,8 @@
 extern("inc_nwnx_events")
 extern("inc_colors")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "pc_togglemode") {
@@ -9,17 +10,19 @@ void main() {
 		int state = GetActionMode(e.runnable, mode);
 
 		string msg = ColorTag(cRed) + GetName(e.runnable) +
-			(!state ? " enters " : " leaves ");
+					 (!state ? " enters " : " leaves ");
 
 		if (mode == ACTION_MODE_STEALTH)
 			msg += "stealth mode.";
+
 		else
 			return;
 
 
 		iterate_players(pc,
-			if (GetIsDM(pc) && GetArea(pc) == GetArea(e.runnable))
-				SendMessageToPC(pc, msg);
-		);
+
+						if (GetIsDM(pc) && GetArea(pc) == GetArea(e.runnable))
+						SendMessageToPC(pc, msg);
+					   );
 	}
 }

@@ -3,7 +3,8 @@ extern("inc_lists")
 extern("inc_2dacache")
 
 
-void main() {
+void main()
+{
 	object oPC = OBJECT_SELF;
 
 	object oTarget = GetSpellTargetObject();
@@ -16,13 +17,14 @@ void main() {
 
 	object oTrap;
 
-	if ( GetIsObjectValid(oTarget) ) {
+	if (GetIsObjectValid(oTarget)) {
 		CreateTrapOnObject(TRAP_BASE_TYPE_MINOR_ACID, oTarget, STANDARD_FACTION_HOSTILE, "s_phantrap_dis",
-			"s_phantrap_fire");
+						   "s_phantrap_fire");
 		oTrap = oTarget;
+
 	} else
 		oTrap = CreateTrapAtLocation(TRAP_BASE_TYPE_MINOR_ACID, lTarget, 2.0f, "trap_phantom",
-					STANDARD_FACTION_HOSTILE, "s_phantrap_dis", "s_phantrap_fire");
+									 STANDARD_FACTION_HOSTILE, "s_phantrap_dis", "s_phantrap_fire");
 
 	SetTrapDetectable(oTrap, 1);
 	SetTrapDetectDC(oTrap, 0);

@@ -2,19 +2,21 @@ extern("inc_events")
 
 //Destroy the work-in-progress items if it's unequipped during
 //manufacturing and clear the conversation
-void _StopCustomizing(object oPC, object oItem) {
-	if ( GetIsObjectValid(oItem) ) {
+void _StopCustomizing(object oPC, object oItem)
+{
+	if (GetIsObjectValid(oItem)) {
 		DestroyObject(oItem);
 		AssignCommand(oPC, ClearAllActions());
 		AssignCommand(oPC, ActionStartConversation(oPC, "invalid", TRUE, FALSE));
 	}
 }
 
-void main() {
+void main()
+{
 	object oPC = GetPCItemLastUnequippedBy();
 	object oItem = GetPCItemLastUnequipped();
 
-	if ( GetLocalInt(oItem, "CUST_COPY") ) {
+	if (GetLocalInt(oItem, "CUST_COPY")) {
 		DelayCommand(0.5f, _StopCustomizing(oPC, oItem));
 		return;
 	}

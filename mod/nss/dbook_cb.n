@@ -5,7 +5,8 @@ extern("inc_lists")
 extern("inc_craft")
 
 
-void main() {
+void main()
+{
 	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
 	int iSelPart = GetLocalInt(oPC, "rcp_sel");
 	int iSelection = GetLocalInt(oPC, "ConvList_Select");
@@ -16,17 +17,17 @@ void main() {
 	string sPlan, sName;
 
 	// in recipe?
-	if ( iSelPart > 0 ) {
+	if (iSelPart > 0) {
 		// listen for sub-options
-		switch ( iSelection ) {
+		switch (iSelection) {
 
-			case 1:
-				SetLocalInt(oPC, "craft_plan", iSelPart);
-				break;
+		case 1:
+			SetLocalInt(oPC, "craft_plan", iSelPart);
+			break;
 
-			default:
-				SendMessageToPC(oPC, "Unbekannte Option.");
-				break;
+		default:
+			SendMessageToPC(oPC, "Unbekannte Option.");
+			break;
 		}
 
 	} else {

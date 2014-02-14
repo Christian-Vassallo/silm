@@ -26,44 +26,42 @@ extern("x2_inc_spellhook")
 
 void main()
 {
-    // If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run
-    // this spell.
-    if (!X2PreSpellCastCode())
-    {
-        return;
-    }
-    int nDuration;
-    int nMetaMagic;
+	// If code within the PreSpellCastHook (i.e. UMD) reports FALSE, do not run
+	// this spell.
+	if (!X2PreSpellCastCode()) {
+		return;
+	}
 
-    object oTarget = GetSpellTargetObject();
+	int nDuration;
+	int nMetaMagic;
 
-    // Handle spell cast on item....
-    if (GetObjectType(oTarget) == OBJECT_TYPE_ITEM && ! CIGetIsCraftFeatBaseItem(oTarget))
-    {
-        // Do not allow casting on not equippable items
-        if (!IPGetIsItemEquipable(oTarget))
-        {
-            // Item must be equipable...
-            FloatingTextStrRefOnCreature(83326,OBJECT_SELF);
-            return;
-        }
-        itemproperty ip = ItemPropertyLight (IP_CONST_LIGHTBRIGHTNESS_BRIGHT, IP_CONST_LIGHTCOLOR_WHITE);
-        IPSafeAddItemProperty(oTarget, ip, 0.0f,X2_IP_ADDPROP_POLICY_REPLACE_EXISTING,TRUE,TRUE);
-    }
-    else
-    {
+	object oTarget = GetSpellTargetObject();
 
-        //Declare major variables
-        effect eVis = (EffectVisualEffect(VFX_DUR_LIGHT_WHITE_20));
-        effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
-        effect eLink = SupernaturalEffect(EffectLinkEffects(eVis, eDur));
+	// Handle spell cast on item....
+	if (GetObjectType(oTarget) == OBJECT_TYPE_ITEM && ! CIGetIsCraftFeatBaseItem(oTarget)) {
+		// Do not allow casting on not equippable items
+		if (!IPGetIsItemEquipable(oTarget)) {
+			// Item must be equipable...
+			FloatingTextStrRefOnCreature(83326, OBJECT_SELF);
+			return;
+		}
 
-        //Fire cast spell at event for the specified target
-        SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, 419, FALSE));
+		itemproperty ip = ItemPropertyLight(IP_CONST_LIGHTBRIGHTNESS_BRIGHT, IP_CONST_LIGHTCOLOR_WHITE);
+		IPSafeAddItemProperty(oTarget, ip, 0.0f, X2_IP_ADDPROP_POLICY_REPLACE_EXISTING, TRUE, TRUE);
 
-        //Apply the VFX impact and effects
-        ApplyEffectToObject(DURATION_TYPE_PERMANENT, eLink, oTarget);
-   }
+	} else {
+
+		//Declare major variables
+		effect eVis = (EffectVisualEffect(VFX_DUR_LIGHT_WHITE_20));
+		effect eDur = EffectVisualEffect(VFX_DUR_CESSATE_POSITIVE);
+		effect eLink = SupernaturalEffect(EffectLinkEffects(eVis, eDur));
+
+		//Fire cast spell at event for the specified target
+		SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, 419, FALSE));
+
+		//Apply the VFX impact and effects
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, eLink, oTarget);
+	}
 }
 
 

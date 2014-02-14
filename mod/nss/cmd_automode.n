@@ -10,68 +10,96 @@ void automode_check(int actionMode, object creature, int configuredMode);
 /** Check all combat modes. */
 void automode_check_combat_modes(object creature);
 
-string ActionModeToString(int actionMode) {
+string ActionModeToString(int actionMode)
+{
 	switch (actionMode) {
-		case ACTION_MODE_EXPERTISE: return "Expertise";
-		case ACTION_MODE_IMPROVED_EXPERTISE: return "Improved Expertise";
-		case ACTION_MODE_POWER_ATTACK: return "Power Attack";
-		case ACTION_MODE_IMPROVED_POWER_ATTACK: return "Improved Power Attack";
-		case ACTION_MODE_DEFENSIVE_CAST: return "Defensive Casting";
-		case ACTION_MODE_RAPID_SHOT: return "Rapid Shot";
-		case ACTION_MODE_PARRY: return "Parry";
+	case ACTION_MODE_EXPERTISE:
+		return "Expertise";
+
+	case ACTION_MODE_IMPROVED_EXPERTISE:
+		return "Improved Expertise";
+
+	case ACTION_MODE_POWER_ATTACK:
+		return "Power Attack";
+
+	case ACTION_MODE_IMPROVED_POWER_ATTACK:
+		return "Improved Power Attack";
+
+	case ACTION_MODE_DEFENSIVE_CAST:
+		return "Defensive Casting";
+
+	case ACTION_MODE_RAPID_SHOT:
+		return "Rapid Shot";
+
+	case ACTION_MODE_PARRY:
+		return "Parry";
 	}
+
 	return "Unknown ActionMode(" + itoa(actionMode) + ")";
 }
 
-int get_mode(object player) {
+int get_mode(object player)
+{
 	return GetLocalInt(player, "auto_mode");
 }
 
-bool GetIsActionModeAllowed(object creature, int actionMode) {
+bool GetIsActionModeAllowed(object creature, int actionMode)
+{
 	switch (actionMode) {
-		case ACTION_MODE_NONE:
-			return true;
-		case ACTION_MODE_EXPERTISE:
-			return GetHasFeat(FEAT_EXPERTISE, creature);
-		case ACTION_MODE_IMPROVED_EXPERTISE:
-			return GetHasFeat(FEAT_IMPROVED_EXPERTISE, creature);
-		case ACTION_MODE_POWER_ATTACK:
-			return GetHasFeat(FEAT_POWER_ATTACK, creature);
-		case ACTION_MODE_IMPROVED_POWER_ATTACK:
-			return GetHasFeat(FEAT_IMPROVED_POWER_ATTACK, creature);
-		case ACTION_MODE_RAPID_SHOT:
-			return GetHasFeat(FEAT_RAPID_SHOT, creature);
-		case ACTION_MODE_DEFENSIVE_CAST:
-			return true; // whatever: non-casters may set it,
-				// it's useless to them anyways and we save some opcodes
-		case ACTION_MODE_PARRY:
-			return true; // same goes for parry. Noone uses it anyways!
+	case ACTION_MODE_NONE:
+		return true;
+
+	case ACTION_MODE_EXPERTISE:
+		return GetHasFeat(FEAT_EXPERTISE, creature);
+
+	case ACTION_MODE_IMPROVED_EXPERTISE:
+		return GetHasFeat(FEAT_IMPROVED_EXPERTISE, creature);
+
+	case ACTION_MODE_POWER_ATTACK:
+		return GetHasFeat(FEAT_POWER_ATTACK, creature);
+
+	case ACTION_MODE_IMPROVED_POWER_ATTACK:
+		return GetHasFeat(FEAT_IMPROVED_POWER_ATTACK, creature);
+
+	case ACTION_MODE_RAPID_SHOT:
+		return GetHasFeat(FEAT_RAPID_SHOT, creature);
+
+	case ACTION_MODE_DEFENSIVE_CAST:
+		return true; // whatever: non-casters may set it,
+
+	// it's useless to them anyways and we save some opcodes
+	case ACTION_MODE_PARRY:
+		return true; // same goes for parry. Noone uses it anyways!
 	}
+
 	return false;
 }
 
-void set_mode(object player, int actionMode, bool showText = true) {
+void set_mode(object player, int actionMode, bool showText = true)
+{
 	int oldMode = get_mode(player);
 	SetLocalInt(player, "auto_mode", actionMode);
 
 	if (actionMode != ACTION_MODE_NONE) {
 		if (showText)
 			SendMessageToPC(player, ColorTag(cTeal) +
-				"ENabled " + ActionModeToString(actionMode) +
-				" auto-mode.");
+							"ENabled " + ActionModeToString(actionMode) +
+							" auto-mode.");
 
 		automode_check(actionMode, player, actionMode);
+
 	} else {
 		if (showText)
 			SendMessageToPC(player, ColorTag(Darken(cTeal, 60)) +
-				"DISabled auto-mode.");
+							"DISabled auto-mode.");
 
 		SetActionMode(player, oldMode, false);
 	}
 }
 
 /** Makes sure the given actionmode has the configured state on creature. */
-void automode_check(int actionMode, object creature, int configuredMode) {
+void automode_check(int actionMode, object creature, int configuredMode)
+{
 	if (actionMode == configuredMode &&
 			!GetActionMode(creature, actionMode)) {
 
@@ -85,8 +113,10 @@ void automode_check(int actionMode, object creature, int configuredMode) {
 
 }
 
-void automode_check_combat_modes(object creature) {
+void automode_check_combat_modes(object creature)
+{
 	int configuredMode = get_mode(creature);
+
 	if (configuredMode == ACTION_MODE_NONE)
 		return;
 
@@ -105,7 +135,8 @@ void automode_check_combat_modes(object creature) {
 }
 
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "creature_attack") {
@@ -121,49 +152,57 @@ void main() {
 
 	if (e.ev == "chat_command") {
 		struct EventArguments ea = GetEventArguments(e.serial);
+
 		if (ea.a0 != "automode")
 			return;
 
 		int actionMode = -1;
+
 		if (ea.a1 == "ex")
 			actionMode = ACTION_MODE_EXPERTISE;
+
 		else if (ea.a1 == "iex")
 			actionMode = ACTION_MODE_IMPROVED_EXPERTISE;
+
 		else if (ea.a1 == "dc")
 			actionMode = ACTION_MODE_DEFENSIVE_CAST;
+
 		else if (ea.a1 == "pa")
 			actionMode = ACTION_MODE_POWER_ATTACK;
+
 		else if (ea.a1 == "ipa")
 			actionMode = ACTION_MODE_IMPROVED_POWER_ATTACK;
+
 		else if (ea.a1 == "rs")
 			actionMode = ACTION_MODE_RAPID_SHOT;
+
 		else if (ea.a1 == "p")
 			actionMode = ACTION_MODE_PARRY;
 
 		else {
 			SendMessageToPC(e.runnable, ColorTag(cOrange) +
-				"No such action mode. Use one of:");
+							"No such action mode. Use one of:");
 			SendMessageToPC(e.runnable, ColorTag(cGreen) + "dc" +
-				ColorTag(cLightGrey) + ": defensive casting");
+							ColorTag(cLightGrey) + ": defensive casting");
 			SendMessageToPC(e.runnable, ColorTag(cGreen) + "p" +
-				ColorTag(cLightGrey) + ": parry");
+							ColorTag(cLightGrey) + ": parry");
 			SendMessageToPC(e.runnable, ColorTag(cGreen) + "rs" +
-				ColorTag(cLightGrey) + ": rapid shot");
+							ColorTag(cLightGrey) + ": rapid shot");
 			SendMessageToPC(e.runnable, ColorTag(cGreen) + "ex" +
-				ColorTag(cLightGrey) + ": expertise");
+							ColorTag(cLightGrey) + ": expertise");
 			SendMessageToPC(e.runnable, ColorTag(cGreen) + "iex" +
-				ColorTag(cLightGrey) + ": improved expertise");
+							ColorTag(cLightGrey) + ": improved expertise");
 			SendMessageToPC(e.runnable, ColorTag(cGreen) + "pa" +
-				ColorTag(cLightGrey) + ": power attack");
+							ColorTag(cLightGrey) + ": power attack");
 			SendMessageToPC(e.runnable, ColorTag(cGreen) + "ipa" +
-				ColorTag(cLightGrey) + ": improved power attack");
+							ColorTag(cLightGrey) + ": improved power attack");
 			actionMode = ACTION_MODE_NONE;
 		}
 
 		if (!GetIsActionModeAllowed(e.runnable, actionMode)) {
 			SendMessageToPC(e.runnable,
-				ColorTag(cRed) +
-				"You do not have the prequisites for that action mode.");
+							ColorTag(cRed) +
+							"You do not have the prequisites for that action mode.");
 			event_stop();
 		}
 

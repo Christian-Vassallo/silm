@@ -4,12 +4,14 @@
 
 #define CLOSE_DELAY 15 * 60
 
-void closeDoor() {
+void closeDoor()
+{
 	if (GetIsOpen(OBJECT_SELF))
 		ActionCloseDoor(OBJECT_SELF);
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "door_open") {

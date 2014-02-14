@@ -24,25 +24,37 @@
 //:: Created By: lex42@mac.com
 //:: Created On: July 6, 2002
 //:://////////////////////////////////////////////
-void main() {
-	if ( GetUserDefinedEventNumber() == 1001 ) {
+void main()
+{
+	if (GetUserDefinedEventNumber() == 1001) {
 		effect eEffect = GetFirstEffect(OBJECT_SELF);
-		while ( GetIsEffectValid(eEffect) ) {
-			if ( GetEffectType(eEffect) == EFFECT_TYPE_CHARMED ) {
+
+		while (GetIsEffectValid(eEffect)) {
+			if (GetEffectType(eEffect) == EFFECT_TYPE_CHARMED) {
 				object oCharmer = GetEffectCreator(eEffect);
-				if ( GetIsObjectValid(oCharmer) ) {
+
+				if (GetIsObjectValid(oCharmer)) {
 					SetLocalObject(OBJECT_SELF, "PACK_OWNER", oCharmer);
 					RemoveEffect(OBJECT_SELF, eEffect);
 					ClearPersonalReputation(oCharmer);
 				}
 			}
+
 			eEffect = GetNextEffect(OBJECT_SELF);
 		}
 
-		switch ( GetLocalInt(OBJECT_SELF, "PACK_MODE") ) {
-			case 1: ActionForceFollowObject(GetLocalObject(OBJECT_SELF, "PACK_OWNER"), 3.0); break;
-			case 2: ClearAllActions(); break;
-			case 3: ActionRandomWalk(); break;
+		switch (GetLocalInt(OBJECT_SELF, "PACK_MODE")) {
+		case 1:
+			ActionForceFollowObject(GetLocalObject(OBJECT_SELF, "PACK_OWNER"), 3.0);
+			break;
+
+		case 2:
+			ClearAllActions();
+			break;
+
+		case 3:
+			ActionRandomWalk();
+			break;
 		}
 	}
 

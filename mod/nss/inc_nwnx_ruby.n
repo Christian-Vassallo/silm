@@ -18,18 +18,22 @@ string ruby_send_event(string ev, object caller = OBJECT_SELF);
 void ruby_call_token(string token, object caller = OBJECT_SELF);
 
 
-string ruby_eval(string str) {
-    SetLocalString(GetModule(), "NWNX!RUBY!EVAL", str);
-    return GetLocalString(GetModule(), "NWNX!RUBY!EVAL");
+string ruby_eval(string str)
+{
+	SetLocalString(GetModule(), "NWNX!RUBY!EVAL", str);
+	return GetLocalString(GetModule(), "NWNX!RUBY!EVAL");
 }
 
-string ruby_send_event(string ev, object caller = OBJECT_SELF) {
+string ruby_send_event(string ev, object caller = OBJECT_SELF)
+{
 	string self = ObjectToString(caller);
-    SetLocalString(GetModule(), "NWNX!RUBY!EVAL", "Roe::Route.on_event '" + self + "', :'" + ev + "'");
-    return GetLocalString(GetModule(), "NWNX!RUBY!EVAL");
+	SetLocalString(GetModule(), "NWNX!RUBY!EVAL", "Roe::Route.on_event '" + self + "', :'" + ev + "'");
+	return GetLocalString(GetModule(), "NWNX!RUBY!EVAL");
 }
 
-void ruby_call_token(string token, object caller = OBJECT_SELF) {
+void ruby_call_token(string token, object caller = OBJECT_SELF)
+{
 	string self = ObjectToString(caller);
-    SetLocalString(GetModule(), "NWNX!RUBY!EVAL", "Roe::Route.on_token '" + self + "', '" + token + "'");
+	SetLocalString(GetModule(), "NWNX!RUBY!EVAL",
+				   "Roe::Route.on_token '" + self + "', '" + token + "'");
 }

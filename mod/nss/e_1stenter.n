@@ -3,7 +3,8 @@ extern("inc_currency")
 extern("inc_persist")
 
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev != "player_login")
@@ -11,11 +12,12 @@ void main() {
 
 	int iValue, iGoldSum;
 
-	if ( !GetXP(OBJECT_SELF) && !GetIsDM(OBJECT_SELF) ) {
+	if (!GetXP(OBJECT_SELF) && !GetIsDM(OBJECT_SELF)) {
 		object oItem = GetFirstItemInInventory(OBJECT_SELF);
 
 		SetXP(OBJECT_SELF, 28000);
-		while ( GetIsObjectValid(oItem) ) {
+
+		while (GetIsObjectValid(oItem)) {
 			iGoldSum += GetGoldPieceValue(oItem);
 			DestroyObject(oItem);
 			oItem = GetNextItemInInventory(OBJECT_SELF);

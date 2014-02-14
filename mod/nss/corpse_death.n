@@ -15,16 +15,18 @@
 
 extern("inc_corpse")
 
-void main() {
+void main()
+{
 	object oCorpse;
 
 	/* Drop Corpses he may have in his possession */
 	DropCorpses(OBJECT_SELF);
 
-	if ( !GetLocalInt(OBJECT_SELF, "CUSTOM_CORPSE") ) return;
+	if (!GetLocalInt(OBJECT_SELF, "CUSTOM_CORPSE")) return;
 
-	if ( GetIsObjectValid(oCorpse = SpawnCorpse(OBJECT_SELF)) )
+	if (GetIsObjectValid(oCorpse = SpawnCorpse(OBJECT_SELF)))
 		SetIsDestroyable(FALSE, TRUE);
-	if ( GetDamageDealtByType(DAMAGE_TYPE_FIRE) > 5 )
+
+	if (GetDamageDealtByType(DAMAGE_TYPE_FIRE) > 5)
 		Eff_Afterburn(OBJECT_SELF);
 }

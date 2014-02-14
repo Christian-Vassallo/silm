@@ -1,6 +1,7 @@
 extern("inc_rock")
 
-void main() {
+void main()
+{
 	object oPC = GetLastDamager();
 	object oArea = GetArea(oPC);
 	object oGuard;
@@ -9,18 +10,20 @@ void main() {
 	int nCurHP = GetCurrentHitPoints();
 	int nExist = FALSE;
 	object oCheck = GetFirstObjectInArea(oArea);
-	while ( GetIsObjectValid(oCheck) ) {
-		if ( GetResRef(oCheck) == "ele_e_hherer" ) {
+
+	while (GetIsObjectValid(oCheck)) {
+		if (GetResRef(oCheck) == "ele_e_hherer") {
 			nExist = TRUE;
 		}
+
 		oCheck = GetNextObjectInArea(oArea);
 	}
 
-	if ( nMaxHP - nCurHP > 50 && nExist == FALSE ) {
+	if (nMaxHP - nCurHP > 50 && nExist == FALSE) {
 		// more than 50 DamagePoints and no aktive Guard
 		SetLocalInt(oPC, "Eindringling", TRUE);
 		AssignCommand(OBJECT_SELF, ActionSpeakString("*Die Steine erheben sich zu einer grollenden Masse*",
-				TALKVOLUME_TALK));
+					  TALKVOLUME_TALK));
 		oGuard = CreateObject(OBJECT_TYPE_CREATURE, "ele_e_hherer", lGuard);
 		SetImmortal(oGuard, TRUE);
 		effect eSpeed = EffectMovementSpeedDecrease(50);

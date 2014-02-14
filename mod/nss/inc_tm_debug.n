@@ -90,20 +90,23 @@ void SJ_Debug_SetErrorFlag(int nError);
 //  FUNCTIONS
 // -----------------------------------------------------------------------------
 
-void SendMessageToAllPCs(string sMessage) {
+void SendMessageToAllPCs(string sMessage)
+{
 	// find each PC and display message
 	object oPC = GetFirstPC();
-	while ( GetIsObjectValid(oPC) ) {
+
+	while (GetIsObjectValid(oPC)) {
 		SendMessageToPC(oPC, sMessage);
 		oPC = GetNextPC();
 	}
 }
 
-void SJ_Debug(string sMessage, int nActive = FALSE, int nLevel = 0, int nVolume = 0) {
+void SJ_Debug(string sMessage, int nActive = FALSE, int nLevel = 0, int nVolume = 0)
+{
 	// if either param or setting is active ...
-	if ( nActive || SJ_Debug_GetActive() ) {
+	if (nActive || SJ_Debug_GetActive()) {
 		// and the level is within set level ...
-		if ( nLevel <= SJ_Debug_GetLevel() ) {
+		if (nLevel <= SJ_Debug_GetLevel()) {
 			// then start debugging!
 			int nDebugVolume = SJ_Debug_GetVolume();
 
@@ -111,22 +114,24 @@ void SJ_Debug(string sMessage, int nActive = FALSE, int nLevel = 0, int nVolume 
 			PrintString(sMessage);
 
 			// and send message to DMs when either volume exceeds silent ...
-			if ( nVolume > SJ_DEBUG_VOLUME_SILENT || nDebugVolume > SJ_DEBUG_VOLUME_SILENT ) {
+			if (nVolume > SJ_DEBUG_VOLUME_SILENT || nDebugVolume > SJ_DEBUG_VOLUME_SILENT) {
 				object oPC = GetFirstPC();
-				while ( GetIsObjectValid(oPC) ) {
+
+				while (GetIsObjectValid(oPC)) {
 					// provided at least one DM is on:
-					if ( GetIsDM(oPC) ) {
+					if (GetIsDM(oPC)) {
 						// display debug message and crop the error flag
 						SendMessageToAllDMs(sMessage);
 						SJ_Debug_SetErrorFlag(FALSE);
 						break;
 					}
+
 					oPC = GetNextPC();
 				}
 			}
 
 			// and send message to PCs when either volume exceeds quiet.
-			if ( nVolume > SJ_DEBUG_VOLUME_QUIET || nDebugVolume > SJ_DEBUG_VOLUME_QUIET ) {
+			if (nVolume > SJ_DEBUG_VOLUME_QUIET || nDebugVolume > SJ_DEBUG_VOLUME_QUIET) {
 				SendMessageToAllPCs(sMessage);
 			}
 		}
@@ -134,21 +139,25 @@ void SJ_Debug(string sMessage, int nActive = FALSE, int nLevel = 0, int nVolume 
 }
 
 
-int SJ_Debug_GetActive() {
+int SJ_Debug_GetActive()
+{
 	return GetLocalInt(GetModule(), SJ_VAR_DEBUG_ACTIVE);
 }
 
 
-int SJ_Debug_GetLevel() {
+int SJ_Debug_GetLevel()
+{
 	return GetLocalInt(GetModule(), SJ_VAR_DEBUG_LEVEL);
 }
 
 
-int SJ_Debug_GetVolume() {
+int SJ_Debug_GetVolume()
+{
 	return GetLocalInt(GetModule(), SJ_VAR_DEBUG_VOLUME);
 }
 
 
-void SJ_Debug_SetErrorFlag(int nError) {
+void SJ_Debug_SetErrorFlag(int nError)
+{
 	SetLocalInt(GetModule(), SJ_VAR_DEBUG_ERROR, nError);
 }

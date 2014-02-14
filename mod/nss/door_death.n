@@ -1,9 +1,11 @@
-void main() {
+void main()
+{
 	object oDoor = OBJECT_SELF;
 	object oPC = GetLastDamager(oDoor);
-	
+
 	// Event: door_death
 	// - runnable: door
 	// - actor: damager
-	RunEventScriptsFor(GetEventSerial(), "door_death", OBJECT_SELF, oPC, OBJECT_SELF, GetLocation(OBJECT_SELF));
+	RunEventScriptsFor(GetEventSerial(), "door_death", OBJECT_SELF, oPC, OBJECT_SELF,
+					   GetLocation(OBJECT_SELF));
 }

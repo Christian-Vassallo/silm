@@ -2,36 +2,40 @@ extern("inc_corpse")
 extern("inc_decay")
 extern("inc_horse")
 
-void _next() {
+void _next()
+{
 	int iHP = GetCurrentHitPoints();
 
 	SetLocalDecay(OBJECT_SELF, "Resting_Food", 600, 60);
 
 	/* Bring the creature to exactly 1 hit point */
-	if ( iHP > 1 )
+	if (iHP > 1)
 		ApplyEffectToObject(DURATION_TYPE_INSTANT,
-			EffectDamage(iHP - 1, DAMAGE_TYPE_MAGICAL, DAMAGE_POWER_PLUS_FIVE), OBJECT_SELF);
-	else if ( iHP < 1 )
+							EffectDamage(iHP - 1, DAMAGE_TYPE_MAGICAL, DAMAGE_POWER_PLUS_FIVE), OBJECT_SELF);
+
+	else if (iHP < 1)
 		ApplyEffectToObject(DURATION_TYPE_INSTANT,
-			EffectHeal(1 - iHP), OBJECT_SELF);
+							EffectHeal(1 - iHP), OBJECT_SELF);
 
 	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectResurrection(), OBJECT_SELF);
 	JumpToObject(GetObjectByTag("LOOT_FUGUE"));
 }
 
-void main() {
+void main()
+{
 	object oCorpse;
 
 	/* Drop Corpses he may have in his possession */
 	DropCorpses(OBJECT_SELF);
 
 	/* Wake him up and move him into the fugue plane */
-	if ( GetIsObjectValid(oCorpse = SpawnPCCorpse(OBJECT_SELF)) ) {
+	if (GetIsObjectValid(oCorpse = SpawnPCCorpse(OBJECT_SELF))) {
 		SetIsDestroyable(FALSE, TRUE);
 		RemoveRidingEffects(OBJECT_SELF);
 		DeleteHorse(OBJECT_SELF);
 		DelayCommand(1.0f, _next());
 	}
-	if ( GetDamageDealtByType(DAMAGE_TYPE_FIRE) > 5 )
+
+	if (GetDamageDealtByType(DAMAGE_TYPE_FIRE) > 5)
 		Eff_Afterburn(OBJECT_SELF);
 }

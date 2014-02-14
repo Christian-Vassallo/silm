@@ -3,39 +3,50 @@ extern("inc_lists")
 
 #define TTT "magiclamp"
 
-void killvfx(object o) {
+void killvfx(object o)
+{
 	RemoveAllEffects(o);
 }
 
-int magicLamp_isActive(object oLamp) {
+int magicLamp_isActive(object oLamp)
+{
 	return GetLocalInt(oLamp, "active") == 1;
 }
 
-void magicLamp_off(object oLamp) {
+void magicLamp_off(object oLamp)
+{
 	AssignCommand(oLamp, PlayAnimation(ANIMATION_PLACEABLE_DEACTIVATE));
-	DelayCommand(0.2, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_DISPEL)), oLamp));
+	DelayCommand(0.2, ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+										  SupernaturalEffect(EffectVisualEffect(VFX_IMP_DISPEL)),
+										  oLamp));
 	DelayCommand(0.8, killvfx(oLamp));
 }
 
-void magicLamp_on(object oLamp, int nColor = VFX_DUR_LIGHT_PURPLE_20) {
+void magicLamp_on(object oLamp, int nColor = VFX_DUR_LIGHT_PURPLE_20)
+{
 	int nCo = GetLocalInt(oLamp, "color");
 
 	// Already on with the selected color.
 	if (magicLamp_isActive(oLamp) && nCo == nColor)
 		return;
-	
+
 	magicLamp_off(oLamp);
 
 	AssignCommand(oLamp, PlayAnimation(ANIMATION_PLACEABLE_ACTIVATE));
-	DelayCommand(1.0, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_DUR_LIGHT_BLUE_5)), oLamp));
-	DelayCommand(0.2, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_CHARM)), oLamp));
-	DelayCommand(2.0, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(nColor)), oLamp));
+	DelayCommand(1.0, ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+										  SupernaturalEffect(EffectVisualEffect(VFX_DUR_LIGHT_BLUE_5)), oLamp));
+	DelayCommand(0.2, ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+										  SupernaturalEffect(EffectVisualEffect(VFX_IMP_CHARM)),
+										  oLamp));
+	DelayCommand(2.0, ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+										  SupernaturalEffect(EffectVisualEffect(nColor)), oLamp));
 
 	SetLocalInt(oLamp, "color", nColor);
 	SetLocalInt(oLamp, "active", 1);
 }
 
-void toggleMagicLamp(object oLamp) {
+void toggleMagicLamp(object oLamp)
+{
 	int nActive = GetLocalInt(oLamp, "active");
 	int nColor = GetLocalInt(oLamp, "color");
 
@@ -44,27 +55,34 @@ void toggleMagicLamp(object oLamp) {
 
 	if (nActive) {
 		nActive = false;
-		
+
 		AssignCommand(oLamp, PlayAnimation(ANIMATION_PLACEABLE_DEACTIVATE));
-		DelayCommand(0.2, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_DISPEL)), oLamp));
+		DelayCommand(0.2, ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+											  SupernaturalEffect(EffectVisualEffect(VFX_IMP_DISPEL)),
+											  oLamp));
 		DelayCommand(0.8, killvfx(oLamp));
 
 	} else {
 		nActive = true;
-		
+
 		AssignCommand(oLamp, PlayAnimation(ANIMATION_PLACEABLE_ACTIVATE));
-		DelayCommand(1.0, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_DUR_LIGHT_BLUE_5)), oLamp));
-		DelayCommand(0.2, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(VFX_IMP_CHARM)), oLamp));
-		DelayCommand(2.0, ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(nColor)), oLamp));
+		DelayCommand(1.0, ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+											  SupernaturalEffect(EffectVisualEffect(VFX_DUR_LIGHT_BLUE_5)), oLamp));
+		DelayCommand(0.2, ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+											  SupernaturalEffect(EffectVisualEffect(VFX_IMP_CHARM)),
+											  oLamp));
+		DelayCommand(2.0, ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+											  SupernaturalEffect(EffectVisualEffect(nColor)), oLamp));
 	}
-		
+
 	SetLocalInt(oLamp, "active", nActive);
 }
 
 
 
 
-void MakeMagicLampDialog(object oPC, object oLamp) {
+void MakeMagicLampDialog(object oPC, object oLamp)
+{
 	ClearList(oPC, TTT);
 
 	int nMenuLevel0 = GetMenuLevel(oPC, TTT, 0);

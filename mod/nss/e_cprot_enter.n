@@ -4,7 +4,8 @@ extern("inc_cprot")
 #define RUN_AWAY_DISTANCE 40f
 #define TICK_DURATION 16f
 
-void _tick(object trigger, object o) {
+void _tick(object trigger, object o)
+{
 	if (!GetIsInSubArea(o, trigger))
 		return;
 
@@ -12,74 +13,81 @@ void _tick(object trigger, object o) {
 		return;
 
 	switch (GetAlignmentGoodEvil(o)) {
-		case ALIGNMENT_EVIL:
-			switch (GetAlignmentLawChaos(o)) {
-				case ALIGNMENT_CHAOTIC:
-					ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDamage(d6(2), DAMAGE_TYPE_POSITIVE), o);
+	case ALIGNMENT_EVIL:
+		switch (GetAlignmentLawChaos(o)) {
+		case ALIGNMENT_CHAOTIC:
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDamage(d6(2), DAMAGE_TYPE_POSITIVE), o);
 
-				case ALIGNMENT_LAWFUL:
-				case ALIGNMENT_NEUTRAL:
-					ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDamage(d6(2), DAMAGE_TYPE_POSITIVE), o);
-					ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectBlindness(), o, EFFECT_DURATION);
-					ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectDeaf(), o, EFFECT_DURATION);
-					AssignCommand(o, ClearAllActions(1));
-					AssignCommand(o, ActionMoveAwayFromObject(OBJECT_SELF, true, RUN_AWAY_DISTANCE));
-					DelayCommand(5f,
-						ApplyEffectToObject(DURATION_TYPE_TEMPORARY,
-							EffectLinkEffects(EffectVisualEffect(VFX_DUR_MIND_AFFECTING_FEAR), EffectFrightened()),
-						o, EFFECT_DURATION)
-					);
-					break;
+		case ALIGNMENT_LAWFUL:
+		case ALIGNMENT_NEUTRAL:
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDamage(d6(2), DAMAGE_TYPE_POSITIVE), o);
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectBlindness(), o, EFFECT_DURATION);
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectDeaf(), o, EFFECT_DURATION);
+			AssignCommand(o, ClearAllActions(1));
+			AssignCommand(o, ActionMoveAwayFromObject(OBJECT_SELF, true, RUN_AWAY_DISTANCE));
+			DelayCommand(5f,
+						 ApplyEffectToObject(DURATION_TYPE_TEMPORARY,
+											 EffectLinkEffects(EffectVisualEffect(VFX_DUR_MIND_AFFECTING_FEAR), EffectFrightened()),
+											 o, EFFECT_DURATION)
+						);
+			break;
+		}
+
+		break;
+
+	case ALIGNMENT_GOOD:
+		switch (GetAlignmentLawChaos(o)) {
+		case ALIGNMENT_CHAOTIC:
+		case ALIGNMENT_LAWFUL:
+		case ALIGNMENT_NEUTRAL:
+			if (GetCurrentHitPoints(o) >= GetMaxHitPoints(o)) {
+				// what to do?
+			} else {
+				ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectHeal(d6(1)), o);
 			}
+
+			break;
+		}
+
+		break;
+
+	case ALIGNMENT_NEUTRAL:
+		switch (GetAlignmentLawChaos(o)) {
+		case ALIGNMENT_CHAOTIC:
 			break;
 
-		case ALIGNMENT_GOOD:
-			switch (GetAlignmentLawChaos(o)) {
-				case ALIGNMENT_CHAOTIC:
-				case ALIGNMENT_LAWFUL:
-				case ALIGNMENT_NEUTRAL:
-					if (GetCurrentHitPoints(o) >= GetMaxHitPoints(o)) {
-						 // what to do?
-					} else {
-						ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectHeal(d6(1)), o);
-					}
-					break;
-			}
+		case ALIGNMENT_LAWFUL:
 			break;
 
 		case ALIGNMENT_NEUTRAL:
-			switch (GetAlignmentLawChaos(o)) {
-				case ALIGNMENT_CHAOTIC:
-					break;
-				case ALIGNMENT_LAWFUL:
-					break;
-				case ALIGNMENT_NEUTRAL:
-					effect bene = EffectVisualEffect(VFX_DUR_AURA_WHITE);
-					bene = EffectLinkEffects(EffectDamageReduction(30, DAMAGE_POWER_PLUS_FIVE), bene);
-					bene = EffectLinkEffects(EffectSpellResistanceIncrease(16), bene);
-					bene = ExtraordinaryEffect(bene);
+			effect bene = EffectVisualEffect(VFX_DUR_AURA_WHITE);
+			bene = EffectLinkEffects(EffectDamageReduction(30, DAMAGE_POWER_PLUS_FIVE), bene);
+			bene = EffectLinkEffects(EffectSpellResistanceIncrease(16), bene);
+			bene = ExtraordinaryEffect(bene);
 
-					ApplyEffectToObject(DURATION_TYPE_TEMPORARY, bene, o, EFFECT_DURATION);
-					break;
-			}
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, bene, o, EFFECT_DURATION);
 			break;
+		}
+
+		break;
 	}
 
 
 	DelayCommand(TICK_DURATION, _tick(trigger, o));
 }
 
-void main() {
+void main()
+{
 	object o = GetEnteringObject();
 
 	switch (GetObjectType(o)) {
-		case OBJECT_TYPE_CREATURE:
-			if (GetIsDM(o))
-				return;
+	case OBJECT_TYPE_CREATURE:
+		if (GetIsDM(o))
+			return;
 
-			cprot_enter(OBJECT_SELF, o);
+		cprot_enter(OBJECT_SELF, o);
 
-			// _tick(OBJECT_SELF, o);
+		// _tick(OBJECT_SELF, o);
 	}
 
 }

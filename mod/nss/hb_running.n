@@ -3,12 +3,13 @@ extern("inc_nwnx")
 extern("inc_subr_fly")
 extern("inc_horse")
 
-void main() {
+void main()
+{
 	object oPC = OBJECT_SELF;
 
-	if ( !GetIsObjectValid(oPC) ) return;
+	if (!GetIsObjectValid(oPC)) return;
 
-	if ( !GetIsRidingHorse(oPC) ) {
+	if (!GetIsRidingHorse(oPC)) {
 		int iAct = GetCurrentAction(oPC);
 		location lLoc = GetLocation(oPC);
 		location lOldLoc = GetLocalLocation(oPC, "OLD_LOC");
@@ -26,57 +27,63 @@ void main() {
 
 		int iPassedTime = iTS - iOldTS;
 		int iAC;
-		if ( GetIsObjectValid(oArmor) )
+
+		if (GetIsObjectValid(oArmor))
 			iAC = GetArmorAC(GetItemInSlot(INVENTORY_SLOT_CHEST, oPC));
 
 		//Minute rollover
-		if ( iPassedTime <= 0 )
+		if (iPassedTime <= 0)
 			iPassedTime += 60000;
 
 		SetLocalLocation(oPC, "OLD_LOC", lLoc);
 		SetLocalInt(oPC, "OLD_TS", iTS);
 
 
-		if ( !GetIsObjectValid(oArea) || !GetIsObjectValid(oOldArea)
-			|| oArea != oOldArea ) return;
+		if (!GetIsObjectValid(oArea) || !GetIsObjectValid(oOldArea)
+				|| oArea != oOldArea) return;
 
 		//Normal pace in six seconds is at around 10,
 		//full scale running is at around 21, so this is a good means
-		fMaxDist = ( GetIsPC(oPC) && Fly_IsAirborne(oPC) ) ? 24.0f : 16.0f;
+		fMaxDist = (GetIsPC(oPC) && Fly_IsAirborne(oPC)) ? 24.0f : 16.0f;
 
 		//Distance per round (six seconds) covered
 		fDist = fDist * 6000.0f / IntToFloat(iPassedTime);
 
-		if ( fDist < fMaxDist ) {
+		if (fDist < fMaxDist) {
 			iMalus--;
-			if ( iMalus < 0 )
+
+			if (iMalus < 0)
 				iMalus = 0;
 
 			SetLocalInt(oPC, "RUN_MALUS", iMalus);
 			return;
 		}
+
 		SetLocalInt(oPC, "RUN_MALUS", iMalus + 1);
 
 		//When carrying no substantial armour, allow four rounds of unimpeded
 		//running, then start out with the accumulating.
-		if ( iAC < 2 ) iMalus -= 4;
-		else if ( iAC < 3 ) iMalus -= 2;
-		else if ( iAC < 4 ) iMalus -= 1;
+		if (iAC < 2) iMalus -= 4;
 
-		if ( iMalus < 0 ) return;
+		else if (iAC < 3) iMalus -= 2;
+
+		else if (iAC < 4) iMalus -= 1;
+
+		if (iMalus < 0) return;
 
 		iDiff = 12 + iAC + iMalus;
 
-		if ( GetIsPC(oPC) && Fly_IsAirborne(oPC) ) {
+		if (GetIsPC(oPC) && Fly_IsAirborne(oPC)) {
 			iDiff -= 5;
 			sText = "Du musst Deine Fluegel ein wenig ausruhen und gleitest eine Strecke.";
 			iDec = 30;
+
 		} else {
 			sText = "Du bist vom Rennen erschoepft!";
 			iDec = 70;
 		}
 
-		if ( !FortitudeSave(oPC, iDiff) ) {
+		if (!FortitudeSave(oPC, iDiff)) {
 			effect eEff1;
 			eEff1 = EffectMovementSpeedDecrease(iDec);
 			eEff1 = EffectLinkEffects(EffectAttackDecrease(2), eEff1);
@@ -86,8 +93,9 @@ void main() {
 			//for more leverage while running. Balance it with lengthening the
 			//effects of running as needed.
 			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eEff1, oPC,
-				IntToFloat(3 * ( iMalus + 1 ) * iPassedTime) / 6000.0f);
-			if ( GetIsPC(oPC) ) FloatingTextStringOnCreature(
+								IntToFloat(3 * (iMalus + 1) * iPassedTime) / 6000.0f);
+
+			if (GetIsPC(oPC)) FloatingTextStringOnCreature(
 					sText, oPC, FALSE);
 		}
 	}

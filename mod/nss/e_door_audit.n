@@ -1,7 +1,8 @@
 extern("_gen")
 extern("inc_audit")
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "door_death") {
@@ -11,6 +12,6 @@ void main() {
 		WriteTimestampedLogEntry(msg);
 
 		audit("door_death", e.actor, audit_fields("pc", pcs),
-			"audit", e.runnable);
+			  "audit", e.runnable);
 	}
 }

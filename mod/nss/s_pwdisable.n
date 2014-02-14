@@ -1,7 +1,8 @@
 extern("nw_i0_spells")
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 	if (!X2PreSpellCastCode())
 		return;
 
@@ -12,24 +13,25 @@ void main() {
 		return;
 
 	SignalEvent(oTarget,
-		EventSpellCastAt(OBJECT_SELF, SPELL_POWER_WORD_DISABLE));
+				EventSpellCastAt(OBJECT_SELF, SPELL_POWER_WORD_DISABLE));
 
 	if (GetIsImmune(oTarget, IMMUNITY_TYPE_MIND_SPELLS, OBJECT_SELF))
 		return;
 
-	if(MyResistSpell(OBJECT_SELF, oTarget))
+	if (MyResistSpell(OBJECT_SELF, oTarget))
 		return;
 
 	if (GetIsPC(oTarget))
 		ApplyEffectToObject(DURATION_TYPE_INSTANT,
-			EffectDamage(nHP, DAMAGE_TYPE_MAGICAL, DAMAGE_POWER_PLUS_TWENTY),
-			oTarget);
+							EffectDamage(nHP, DAMAGE_TYPE_MAGICAL, DAMAGE_POWER_PLUS_TWENTY),
+							oTarget);
+
 	else { // NPCs don't have hp 0
 		ApplyEffectToObject(DURATION_TYPE_INSTANT,
-			EffectDamage(nHP - 1, DAMAGE_TYPE_MAGICAL,
-				DAMAGE_POWER_PLUS_TWENTY), oTarget);
+							EffectDamage(nHP - 1, DAMAGE_TYPE_MAGICAL,
+										 DAMAGE_POWER_PLUS_TWENTY), oTarget);
 		ApplyEffectToObject(DURATION_TYPE_TEMPORARY,
-			EffectKnockdown(), oTarget, 9000f);
+							EffectKnockdown(), oTarget, 9000f);
 		SetLocalInt(oTarget, "pw_disable", 1);
 	}
 }

@@ -1,7 +1,8 @@
 extern("nw_i0_spells")
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 	if (!X2PreSpellCastCode())
 		return;
 
@@ -11,13 +12,16 @@ void main() {
 
 	if (nHP >= 201)
 		return;
+
 	else if (nHP >= 101 && nHP <= 200)
 		nDuration = 10 * (d4(1) + 1); // Minutes
+
 	else if (nHP >= 51  && nHP <= 100)
 		nDuration = d4(4) + 1;
+
 	else
 		nDuration = -1;
-	
+
 	//Fire cast spell at event for the specified target
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELL_POWER_WORD_STUN));
 
@@ -25,14 +29,15 @@ void main() {
 		return;
 
 	//Make an SR check
-	if(MyResistSpell(OBJECT_SELF, oTarget))
+	if (MyResistSpell(OBJECT_SELF, oTarget))
 		return;
 
 	if (-1 == nDuration)
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectBlindness(),
-			oTarget);
+							oTarget);
+
 	else
 		ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectBlindness(),
-			oTarget, RoundsToSeconds(nDuration));
+							oTarget, RoundsToSeconds(nDuration));
 }
 

@@ -23,8 +23,9 @@ HEAD = "Bitte Polymorph-Typ waehlen:";
 
 int GetCanMorph(object oTarget, int nPoly);
 
-void main() {
-	if ( !X2PreSpellCastCode() )
+void main()
+{
+	if (!X2PreSpellCastCode())
 		return;
 
 	object oPC = OBJECT_SELF;
@@ -36,7 +37,7 @@ void main() {
 
 
 	// dont allow this spell on incorporals or gaseous forms
-	if ( FALSE ) {
+	if (FALSE) {
 		Floaty("Koerperlose Kreaturen oder Gas-Formen koennen nicht polymorphen.");
 		return;
 	}
@@ -54,28 +55,32 @@ void main() {
 	 * POLYMORPH_TYPE_ANCIENT_GREEN_DRAGON
 	 * POLYMORPH_TYPE_ANCIENT_RED_DRAGON*/
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_UMBER_HULK) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_UMBER_HULK)) {
 		AddListItem(oPC, CT, "Umberhulk");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_UMBER_HULK);
 	}
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_ZOMBIE) ) {
+
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_ZOMBIE)) {
 		AddListItem(oPC, CT, "Zombie");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_ZOMBIE);
 	}
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_GIANT_SPIDER) ) {
+
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_GIANT_SPIDER)) {
 		AddListItem(oPC, CT, "Riesenspinne");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_GIANT_SPIDER);
 	}
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_PIXIE) ) {
+
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_PIXIE)) {
 		AddListItem(oPC, CT, "Pixie");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_PIXIE);
 	}
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_TROLL) ) {
+
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_TROLL)) {
 		AddListItem(oPC, CT, "Troll");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_TROLL);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BADGER) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_BADGER)) {
 		AddListItem(oPC, CT, "Dachs");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_BADGER);
 	}
@@ -85,30 +90,30 @@ void main() {
 	 * 	SetListInt(oPC, CT, POLYMORPH_TYPE_BASILISK);
 	 * }*/
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BOAR) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_BOAR)) {
 		AddListItem(oPC, CT, "Eber");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_BOAR);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BROWN_BEAR) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_BROWN_BEAR)) {
 		AddListItem(oPC, CT, "Braunbaer");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_BROWN_BEAR);
 	}
 
 	// POLYMORPH_TYPE_CELESTIAL_AVENGER
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_BAT) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_BAT)) {
 		AddListItem(oPC, CT, "Fledermaus");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_BAT);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_CHICKEN) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_CHICKEN)) {
 		AddListItem(oPC, CT, "Huhn");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_CHICKEN);
 	}
 
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_GOBLINSHAMAN) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_GOBLINSHAMAN)) {
 		AddListItem(oPC, CT, "Goblin-Schamane");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_GOBLINSHAMAN);
 	}
@@ -162,7 +167,7 @@ void main() {
 	 * POLYMORPH_TYPE_MINDFLAYER
 	 * POLYMORPH_TYPE_MINOTAUR*/
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_GARGOYLE) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_GARGOYLE)) {
 		AddListItem(oPC, CT, "Gargoyle");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_GARGOYLE);
 	}
@@ -172,43 +177,43 @@ void main() {
 	//POLYMORPH_TYPE_PENGUIN
 
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_IMP) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_IMP)) {
 		AddListItem(oPC, CT, "Imp");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_IMP);
 	}
 
 	// POLYMORPH_TYPE_QUASIT
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_QUASIT) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_QUASIT)) {
 		AddListItem(oPC, CT, "Quasit");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_QUASIT);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_RAVEN) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_RAVEN)) {
 		AddListItem(oPC, CT, "Rabe");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_RAVEN);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_FALCON) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_FALCON)) {
 		AddListItem(oPC, CT, "Falke");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_FALCON);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_PANTHER) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_PANTHER)) {
 		AddListItem(oPC, CT, "Panther");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_PANTHER);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_WOLF) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_WOLF)) {
 		AddListItem(oPC, CT, "Wolf");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_WOLF);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_WINTERWOLF) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_WINTERWOLF)) {
 		AddListItem(oPC, CT, "Winterwolf");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_WINTERWOLF);
 	}
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_COW) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_COW)) {
 		AddListItem(oPC, CT, "Kuh");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_COW);
 	}
@@ -233,7 +238,7 @@ void main() {
 	 * }
 	 */
 
-	if ( GetCanMorph(oTarget, POLYMORPH_TYPE_SUCCUBUS) ) {
+	if (GetCanMorph(oTarget, POLYMORPH_TYPE_SUCCUBUS)) {
 		AddListItem(oPC, CT, "Sukkubus");
 		SetListInt(oPC, CT, POLYMORPH_TYPE_SUCCUBUS);
 	}
@@ -243,13 +248,15 @@ void main() {
 
 
 	nFP = nFemale ? POLYMORPH_TYPE_GIRL : POLYMORPH_TYPE_BOY;
-	if ( GetCanMorph(oTarget, nFP) ) {
+
+	if (GetCanMorph(oTarget, nFP)) {
 		AddListItem(oPC, CT, "Junge/Maedchen (m/w)");
 		SetListInt(oPC, CT, nFP);
 	}
 
 	nFP = nFemale ? POLYMORPH_TYPE_RAKSHASA_FEMALE : POLYMORPH_TYPE_RAKSHASA_MALE;
-	if ( GetCanMorph(oTarget, nFP) ) {
+
+	if (GetCanMorph(oTarget, nFP)) {
 		AddListItem(oPC, CT, "Rakshasa (m/w)");
 		SetListInt(oPC, CT, nFP);
 	}
@@ -265,7 +272,8 @@ void main() {
 
 
 
-int GetCanMorph(object oTarget, int nPoly) {
+int GetCanMorph(object oTarget, int nPoly)
+{
 	int nLevel = GetCasterLevel(OBJECT_SELF);
 	return 1;
 

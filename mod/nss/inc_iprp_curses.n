@@ -6,43 +6,53 @@ void UnequipCursedItem(object item);
 void ReequipCursedItem(object creature, object item, int slot);
 
 
-void ReequipCursedItem(object creature, object item, int slot) {
+void ReequipCursedItem(object creature, object item, int slot)
+{
 	if (INVENTORY_SLOT_INVALID != GetItemInventorySlot(item))
 		return;  // Its already equipped, lets not do that again.
 
 	AssignCommand(creature, ActionEquipItem(item, slot));
 }
 
-bool IPGetIsCursed(object item, int subtype = -1) {
+bool IPGetIsCursed(object item, int subtype = -1)
+{
 	itemproperty p = GetFirstItemProperty(item);
+
 	while (GetIsItemPropertyValid(p)) {
 		if (GetItemPropertyType(p) == ITEM_PROPERTY_CURSED) {
 			if (subtype == -1)
 				return true;
+
 			if (GetItemPropertySubType(p) == subtype)
 				return true;
 		}
+
 		p = GetNextItemProperty(item);
 	}
 
 	return false;
 }
 
-void IPRemoveCurse(object item, int subtype = -1) {
+void IPRemoveCurse(object item, int subtype = -1)
+{
 	itemproperty p = GetFirstItemProperty(item);
+
 	while (GetIsItemPropertyValid(p)) {
 		if (GetItemPropertyType(p) == ITEM_PROPERTY_CURSED) {
 			if (subtype == -1) {
 				RemoveItemProperty(item, p);
+
 			} else if (GetItemPropertySubType(p) == subtype) {
 				RemoveItemProperty(item, p);
 			}
 		}
+
 		p = GetNextItemProperty(item);
 	}
 }
 
-void UnequipCursedItem(object item) {
+void UnequipCursedItem(object item)
+{
 	CopyItem(item, OBJECT_INVALID, true);
 	DestroyObject(item, 0.1);
 }

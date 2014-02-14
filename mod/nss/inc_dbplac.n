@@ -11,35 +11,36 @@ SAVE_ERROR = 0,
 SAVE_NEW = 1,
 SAVE_UPDATE = 2;
 
-// Function: LoadPlaciesForArea 
-// 
+// Function: LoadPlaciesForArea
+//
 void LoadPlaciesForArea(object oA);
 
-// Function: SavePlacie 
-// 
+// Function: SavePlacie
+//
 int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID);
 
-// Function: SavePlaciesForArea 
-// 
+// Function: SavePlaciesForArea
+//
 void SavePlaciesForArea(object oA);
 
-// Function: KillPlacies 
-// 
+// Function: KillPlacies
+//
 void KillPlacies(object oA);
 
-// Function: KillPlacie 
-// 
+// Function: KillPlacie
+//
 void KillPlacie(object oP, float fDelay = 0.0, int bDestroy = TRUE);
 
-// Function: GetPlaceableID 
-// 
+// Function: GetPlaceableID
+//
 // Returns the placeable ID of this placie, or 0 if its not in database.
 int GetPlaceableID(object oP);
 
 // impl
 
-void LoadPlaciesForArea(object oA) {
-	if ( GetLocalInt(oA, "placies_loaded") )
+void LoadPlaciesForArea(object oA)
+{
+	if (GetLocalInt(oA, "placies_loaded"))
 		return;
 
 
@@ -56,7 +57,7 @@ void LoadPlaciesForArea(object oA) {
 	int count = 0;
 
 	pQ("select resref,x,y,z,f,name,id,locked,dcont_id from " +
-		PLAC_TABLE + " where area = " + sAreaTag + ";");
+	   PLAC_TABLE + " where area = " + sAreaTag + ";");
 
 	while (pF()) {
 
@@ -72,13 +73,15 @@ void LoadPlaciesForArea(object oA) {
 
 		lT = Location(oA, v, f);
 		object oP = CreateObject(OBJECT_TYPE_PLACEABLE, sResRef, lT, FALSE);
-		if ( !GetIsObjectValid(oP) ) {
+
+		if (!GetIsObjectValid(oP)) {
 			SendMessageToAllDMs("Warning: Placeable creation failed for ResRef: " + sResRef);
 			continue;
 		}
+
 		count += 1;
 
-		if ( sName != "" )
+		if (sName != "")
 			SetName(oP, sName);
 
 		SetLocked(oP, nLocked == 1);
@@ -94,7 +97,8 @@ void LoadPlaciesForArea(object oA) {
 
 
 
-void SavePlaciesForArea(object oA) {
+void SavePlaciesForArea(object oA)
+{
 	string sAreaTag = pE(GetResRef(oA));
 
 	string sResRef;
@@ -104,20 +108,23 @@ void SavePlaciesForArea(object oA) {
 
 	object oP = GetFirstObjectInArea(oA);
 
-	while ( GetIsObjectValid(oP) ) {
-		if ( is_placeable(oP) ) {
-			if ( GetLocalInt(oP, "placie_id") > 0 ) {
+	while (GetIsObjectValid(oP)) {
+		if (is_placeable(oP)) {
+			if (GetLocalInt(oP, "placie_id") > 0) {
 				SavePlacie(oP);
 			}
 
 		}
+
 		oP = GetNextObjectInArea(oP);
 	}
 }
 
-void KillPlacies(object oA) {
+void KillPlacies(object oA)
+{
 	string sAreaTag = GetResRef(oA);
-	if ( sAreaTag == "" )
+
+	if (sAreaTag == "")
 		return;
 
 	sAreaTag = pE(sAreaTag);
@@ -126,19 +133,21 @@ void KillPlacies(object oA) {
 }
 
 
-int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
-	if ( !is_placeable(oP) )
+int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID)
+{
+	if (!is_placeable(oP))
 		return SAVE_ERROR;
 
 	string sAreaTag = GetResRef(GetArea(oP));
 
-	if ( sAreaTag == "" )
+	if (sAreaTag == "")
 		return SAVE_ERROR;
 
 	sAreaTag = pE(sAreaTag);
 
 	int nID = 0;
-	if ( GetIsPC(oPlacedBy) && !GetIsDM(oPlacedBy) )
+
+	if (GetIsPC(oPlacedBy) && !GetIsDM(oPlacedBy))
 		nID = GetCharacterID(oPlacedBy);
 
 	int dcont_id = GetLocalInt(oP, "dcont_id");
@@ -150,21 +159,21 @@ int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
 	string sStoreTag = pE(GetLocalString(oP, "store_tag"));
 	string sLockKey = pE(GetLockKeyTag(oP));
 
-	if ( id == 0 ) {
+	if (id == 0) {
 		pQ("insert into " +
-			PLAC_TABLE +
-			" (area,name,store_tag,lock_key,resref,x,y,z,f,locked,first_placed_by,dcont_id) values("
-			+
-			"" + sAreaTag + ", " +
-			"" + sName + ", " +
-			"" + sStoreTag + ", " +
-			"" + sLockKey + ", " +
-			"" + pE(GetResRef(oP)) + ", " +
-			"" + FloatToString(v.x) + ", " + FloatToString(v.y) + ", " + FloatToString(v.z) + ", " +
-			"'" + FloatToString(f) + "', " +
-			"" + pSb(GetLocked(oP)) + ", " + pSi(nID, true) + ", " +
-			"" + pSi(dcont_id) +
-			")");
+		   PLAC_TABLE +
+		   " (area,name,store_tag,lock_key,resref,x,y,z,f,locked,first_placed_by,dcont_id) values("
+		   +
+		   "" + sAreaTag + ", " +
+		   "" + sName + ", " +
+		   "" + sStoreTag + ", " +
+		   "" + sLockKey + ", " +
+		   "" + pE(GetResRef(oP)) + ", " +
+		   "" + FloatToString(v.x) + ", " + FloatToString(v.y) + ", " + FloatToString(v.z) + ", " +
+		   "'" + FloatToString(f) + "', " +
+		   "" + pSb(GetLocked(oP)) + ", " + pSi(nID, true) + ", " +
+		   "" + pSi(dcont_id) +
+		   ")");
 
 		pQ("select id from " + PLAC_TABLE + " order by id desc limit 1;");
 		pF();
@@ -194,17 +203,22 @@ int SavePlacie(object oP, object oPlacedBy = OBJECT_INVALID) {
 	}
 }
 
-void KillPlacie(object oP, float fDelay = 0.0, int bDestroy = TRUE) {
+void KillPlacie(object oP, float fDelay = 0.0, int bDestroy = TRUE)
+{
 	int id = GetLocalInt(oP, "placie_id");
-	if ( id > 0 ) {
+
+	if (id > 0) {
 		pQ("delete from " + PLAC_TABLE + " where id = " + IntToString(id) + ";");
 	}
-	if ( bDestroy )
+
+	if (bDestroy)
 		DestroyObject(oP, fDelay);
+
 	else
 		SetLocalInt(oP, "placie_id", 0);
 }
 
-int GetPlaceableID(object oP) {
+int GetPlaceableID(object oP)
+{
 	return GetLocalInt(oP, "placie_id");
 }

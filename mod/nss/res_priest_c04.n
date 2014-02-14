@@ -1,9 +1,10 @@
 extern("corpse_raise")
 
-int StartingConditional() {
+int StartingConditional()
+{
 	int iPrice;
 
-	if ( GetLocalInt(OBJECT_SELF, "NO_HEAL") ) return FALSE;
+	if (GetLocalInt(OBJECT_SELF, "NO_HEAL")) return FALSE;
 
 	iPrice = GetHitDice(GetPCSpeaker()) * 10;
 	SetCustomToken(35000, IntToString(iPrice / 10));

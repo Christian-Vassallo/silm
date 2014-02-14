@@ -14,42 +14,55 @@ extern("inc_cdb")
 const string sTrackSQLTable = "tracks";
 const float fLeaveTracksHB = 2.0f;
 
-void trackDebug(string message) {
-	if ( GetLocalInt(GetModule(), "tracking_debug") == 1 ) {
+void trackDebug(string message)
+{
+	if (GetLocalInt(GetModule(), "tracking_debug") == 1) {
 		WriteTimestampedLogEntry("trackDebug: " + message);
 	}
 }
 
-float getDistance(float x1, float y1, float x2, float y2) {
+float getDistance(float x1, float y1, float x2, float y2)
+{
 	float deltaX = x1 - x2;
 	float deltaY = y1 - y2;
 	return sqrt(deltaX * deltaX + deltaY * deltaY);
 }
 
 //Rechnet das Gewicht in die Spurentiefe um
-int getTrackDeep(int weight) {
-	if ( weight > 2000 ) return 5;
-	else if ( weight > 1500 ) return 4;
-	else if ( weight > 800 ) return 3;
-	else if ( weight > 400 ) return 2;
+int getTrackDeep(int weight)
+{
+	if (weight > 2000) return 5;
+
+	else if (weight > 1500) return 4;
+
+	else if (weight > 800) return 3;
+
+	else if (weight > 400) return 2;
+
 	else return 1;
 }
 
 
-void deleteTrackHB(object oTrack, object oSpotter, float fDeleteDistance) {
-	if ( GetArea(oTrack) != GetArea(oSpotter) || GetDistanceBetween(oTrack, oSpotter) > fDeleteDistance )
+void deleteTrackHB(object oTrack, object oSpotter, float fDeleteDistance)
+{
+	if (GetArea(oTrack) != GetArea(oSpotter) || GetDistanceBetween(oTrack, oSpotter) > fDeleteDistance)
 		DestroyObject(oTrack);
+
 	else
 		DelayCommand(4.0f, deleteTrackHB(oTrack, oSpotter, fDeleteDistance));
 }
 
 //Zeigen einer Spur
-int showTrack(object oPC, int cid, float fDist, int id, location loc, int age, int deep, int size, int gender, int speed,
-			  int bareFoot) {
+int showTrack(object oPC, int cid, float fDist, int id, location loc, int age, int deep, int size,
+			  int gender,
+			  int speed,
+			  int bareFoot)
+{
 	//Entdeckte Spur auf Boden anzeigen
 	object oTrack = GetNearestObjectToLocation(OBJECT_TYPE_PLACEABLE, loc, 1);
-	if ( GetIsObjectValid(oTrack)
-		&& GetResRef(oTrack) == "tracking_track" && GetLocalInt(oTrack, "id") == id ) {
+
+	if (GetIsObjectValid(oTrack)
+			&& GetResRef(oTrack) == "tracking_track" && GetLocalInt(oTrack, "id") == id) {
 		trackDebug(IntToString(id) + ": not showing, already present.");
 		return 0;
 	}
@@ -81,13 +94,15 @@ int showTrack(object oPC, int cid, float fDist, int id, location loc, int age, i
 
 
 //Loescht alle Spuren die aelter als x RL-Tage sind
-void deleteOldTracks() {
+void deleteOldTracks()
+{
 	pQ("DELETE FROM " + sTrackSQLTable + " WHERE age < (unixts() - (3 * 60*60*24));");
 }
 
 // Suchen nach einer Spur im Umkreis der aktuellen Position
-void track(object oPC, int bShowMessage = TRUE) {
-	if ( GetLocalInt(GetModule(), "tracking") != 1 ) return;
+void track(object oPC, int bShowMessage = TRUE)
+{
+	if (GetLocalInt(GetModule(), "tracking") != 1) return;
 
 	deleteOldTracks();
 
@@ -95,9 +110,13 @@ void track(object oPC, int bShowMessage = TRUE) {
 
 	//Suchradius bestimmen
 	float radius = 3.0f;
-	if ( GetWeather(area) != WEATHER_CLEAR ) radius -= 2.0f; //Regen?
+
+	if (GetWeather(area) != WEATHER_CLEAR) radius -= 2.0f;   //Regen?
+
 	radius += GetSkillRank(SKILL_SPOT, oPC) / 5.0f; //Entdecken-Skill
-	if ( GetIsDay() == FALSE ) radius -= 2.0f; //Nacht?
+
+	if (GetIsDay() == FALSE) radius -= 2.0f;   //Nacht?
+
 	radius += GetLevelByClass(CLASS_TYPE_RANGER, oPC) / 2.0f; //Waldlaeufer-Bonus
 	radius += GetLevelByClass(CLASS_TYPE_DRUID, oPC) / 3.0f; //Druiden-Bonus
 
@@ -117,8 +136,8 @@ void track(object oPC, int bShowMessage = TRUE) {
 		xmin + " AND x<" + xmax + " AND y>" + ymin + " AND y<" + ymax + " LIMIT 4";
 	pQ(sSQL);
 
-	while ( pF() ) {
-		if ( pG(2) == "" )
+	while (pF()) {
+		if (pG(2) == "")
 			return;
 
 		trackDebug("Found track: " + pG(2) + ", radius = " + FloatToString(radius));
@@ -142,7 +161,7 @@ void track(object oPC, int bShowMessage = TRUE) {
 		trackDebug("dist vs rad: " + FloatToString(distance) + " <? " + FloatToString(radius));
 
 
-		if ( distance < radius ) {
+		if (distance < radius) {
 			//Spur gefunden => anzeigen
 			trackDebug("-> can see it");
 
@@ -155,26 +174,30 @@ void track(object oPC, int bShowMessage = TRUE) {
 			int gender = StringToInt(pG(9));
 			int speed = StringToInt(pG(10));
 			int bareFoot = StringToInt(pG(11));
-			if ( showTrack(oPC, nCID, radius, nID, loc, age, deep, size, gender, speed, bareFoot) )
+
+			if (showTrack(oPC, nCID, radius, nID, loc, age, deep, size, gender, speed, bareFoot))
 				trackNumber++;
 		}
+
 		//Naechste Spur
 	}
-	if ( bShowMessage && trackNumber > 0 )
+
+	if (bShowMessage && trackNumber > 0)
 		FloatingTextStringOnCreature("Du hast " +
-			IntToString(trackNumber) + " Spur" + ( trackNumber > 1 ? "en" : "" ) + " gefunden!", oPC, FALSE);
+									 IntToString(trackNumber) + " Spur" + (trackNumber > 1 ? "en" : "") + " gefunden!", oPC, FALSE);
 }
 
 
 
 //Heartbeat bei dem der Charakter spuren hinterlaesst
-void leaveTracksHB(object oPC) {
-	if ( !GetLocalInt(GetModule(), "tracking") ) {
+void leaveTracksHB(object oPC)
+{
+	if (!GetLocalInt(GetModule(), "tracking")) {
 		trackDebug("tracking not active");
 		return;
 	}
 
-	if ( GetIsDM(oPC) )
+	if (GetIsDM(oPC))
 		return;
 
 
@@ -186,21 +209,22 @@ void leaveTracksHB(object oPC) {
 	object area = GetArea(oPC);
 
 	//Kein Tracking waehrend Gebietsuebergang
-	if ( area == OBJECT_INVALID ) {
+	if (area == OBJECT_INVALID) {
 		trackDebug(GetName(oPC) + " in AT");
 		return;
 	}
 
 	//Kein Tracking in nicht natuerlichen Gebieten
-	if ( GetIsAreaNatural(area) != AREA_NATURAL ) {
+	if (GetIsAreaNatural(area) != AREA_NATURAL) {
 		trackDebug(GetName(oPC) + " in nonnatural area");
 		return;
 	}
 
-	if ( GetLocalInt(oPC, "use_active_tracking") ) {
-		if ( GetDetectMode(oPC) == DETECT_MODE_ACTIVE ) {
+	if (GetLocalInt(oPC, "use_active_tracking")) {
+		if (GetDetectMode(oPC) == DETECT_MODE_ACTIVE) {
 			//trackDebug(GetName(oPC) + " is searching for tracks");
 			track(oPC, GetLocalInt(oPC, "active_tracking_message"));
+
 		} else {
 			//trackDebug(GetName(oPC) + " is NOT searching for tracks");
 		}
@@ -212,7 +236,7 @@ void leaveTracksHB(object oPC) {
 
 
 	// oPC does not do tracks.
-	if ( GetHasFeat(FEAT_TRACKLESS_STEP, oPC) )
+	if (GetHasFeat(FEAT_TRACKLESS_STEP, oPC))
 		return;
 
 
@@ -220,17 +244,24 @@ void leaveTracksHB(object oPC) {
 	float trackDistance = 5.0f;
 
 	int speed = 4; //Normal
-	if ( GetWeather(area) != WEATHER_CLEAR ) trackDistance += 1.5f; //Bei Schnee und Regen weniger Spuren
+
+	if (GetWeather(area) != WEATHER_CLEAR) trackDistance +=
+			1.5f;   //Bei Schnee und Regen weniger Spuren
+
 	trackDistance += GetSkillRank(SKILL_MOVE_SILENTLY, oPC) / 10.0f; //LeiseBewegenSkill-Bonus
-	if ( GetDetectMode(oPC) == DETECT_MODE_ACTIVE ) {
+
+	if (GetDetectMode(oPC) == DETECT_MODE_ACTIVE) {
 		//Wenn Suchend
 		trackDistance += 2.0f;
 		speed = 3; //Suchend
 	}
-	if ( GetStealthMode(oPC) == STEALTH_MODE_ACTIVATED ) {
+
+	if (GetStealthMode(oPC) == STEALTH_MODE_ACTIVATED) {
 		//Wenn Schleichend
 		trackDistance += 3.0f;
-		if ( speed == 3 ) speed = 1; //Schleichend und suchend
+
+		if (speed == 3) speed = 1;   //Schleichend und suchend
+
 		else speed = 2; //Schleichend
 	}
 
@@ -240,7 +271,8 @@ void leaveTracksHB(object oPC) {
 	//Barfuss?
 
 	int bareFoot = GetItemInSlot(INVENTORY_SLOT_BOOTS, oPC) == OBJECT_INVALID;
-	if ( bareFoot )
+
+	if (bareFoot)
 		trackDistance += 3.0f;
 
 	location lastTrackLoc = GetLocalLocation(oPC, "lastTrackLocation");
@@ -248,23 +280,28 @@ void leaveTracksHB(object oPC) {
 
 	//Bestimme ob eine neue Spur gesetzt wird
 	int newTrack = FALSE;
-	if ( GetAreaFromLocation(currentLoc) != GetAreaFromLocation(lastTrackLoc) ) {
+
+	if (GetAreaFromLocation(currentLoc) != GetAreaFromLocation(lastTrackLoc)) {
 		trackDebug("( " + GetName(oPC) + " ) Gebietswechsel!");
 		newTrack = TRUE;
+
 	} else {
 		vector currentPos = GetPositionFromLocation(currentLoc);
 		vector lastTrackPos = GetPositionFromLocation(lastTrackLoc);
 		float distance = getDistance(lastTrackPos.x, lastTrackPos.y, currentPos.x, currentPos.y);
 		trackDebug("( " + GetName(oPC) + " ) Distanz zur letzten Spur: " + FloatToString(distance));
-		if ( distance > trackDistance )
+
+		if (distance > trackDistance)
 			newTrack = TRUE;
 	}
 
 	//Neue Spur speichern
-	if ( newTrack ) {
+	if (newTrack) {
 		int nCID = GetCharacterID(oPC);
+
 		if (nCID < 1)
 			return;
+
 		SetLocalLocation(oPC, "lastTrackLocation", currentLoc);
 
 		//Spurentiefe bestimmen

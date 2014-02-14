@@ -2,14 +2,15 @@ extern("inc_chat_lib")
 extern("inc_chat_run")
 extern("inc_setting")
 
-void main() {
+void main()
+{
 	struct EventInfo ei = GetEventInfo();
 
 	if (ei.ev == "module_load") {
 		RegisterAllCommands();
 		return;
 	}
-	
+
 	struct EventArguments ea = GetEventArguments(ei.serial);
 
 	if (ei.ev != "chat_prefilter")
@@ -18,14 +19,16 @@ void main() {
 	string first = substr(ea.a0, 0, 1);
 	string second = substr(ea.a0, 1, 1);
 	string rest = substr(ea.a0, 1, 1024);
-	
+
 	// Now do alias shit ..
 	if (amask(ei.runnable, AMASK_GM) && "," == first) {
 		first = "/";
 		rest = "go " + rest;
 	}
 
-	if (!(ea.i0 & CHATMODE_PRIVATE) &&  ( GetIsDM(ei.actor) || amask(ei.actor, AMASK_FORCETALK | AMASK_GLOBAL_FORCETALK) )  && "." == first && "." != second) {
+	if (!(ea.i0 & CHATMODE_PRIVATE) && (GetIsDM(ei.actor)
+										|| amask(ei.actor, AMASK_FORCETALK | AMASK_GLOBAL_FORCETALK))
+			&& "." == first && "." != second) {
 		rest = substr(ea.a0, 2, 1024);
 		int t = atoi(second);
 		object oTarget = GetTarget(t);
@@ -44,10 +47,10 @@ void main() {
 			SendMessageToPC(ei.actor, "Du kannst nur Ziele sprechen lassen, die du siehst.");
 			return;
 		}
-		
+
 		//ea.i0 |= CHATMODE_FORCED;
 		//SetEventArguments(ei.serial, ea);
-		
+
 		if (ea.i0 & CHATMODE_DM)
 			ea.i0 = CHATMODE_TALK;
 

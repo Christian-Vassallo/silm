@@ -8,10 +8,11 @@
 //: MODIFIED BY:
 //: MODIFIED ON:
 ///////////////////////////////////////////////////
-void main() {
-	if ( GetPlotFlag(OBJECT_SELF) ) return;
+void main()
+{
+	if (GetPlotFlag(OBJECT_SELF)) return;
 
-	if ( !GetIsObjectValid(GetFirstItemInInventory()) ) {
+	if (!GetIsObjectValid(GetFirstItemInInventory())) {
 		DestroyObject(OBJECT_SELF);
 		AssignCommand(GetLocalObject(OBJECT_SELF, "Body"), SetIsDestroyable(TRUE));
 	}

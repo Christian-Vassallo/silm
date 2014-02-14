@@ -1,59 +1,75 @@
 extern("inc_corpse_eff")
 extern("inc_corpse_def")
 
-void FilterND(object oWho) {
+void FilterND(object oWho)
+{
 	object oItem = GetFirstItemInInventory(oWho);
-	while ( GetIsObjectValid(oItem) ) {
-		if ( !GetDroppableFlag(oItem) || GetItemCursedFlag(oItem) ) DestroyObject(oItem);
+
+	while (GetIsObjectValid(oItem)) {
+		if (!GetDroppableFlag(oItem) || GetItemCursedFlag(oItem)) DestroyObject(oItem);
+
 		oItem = GetNextItemInInventory(oWho);
 	}
 }
 
-void DestroyInventory(object oWho, int iSpareND = FALSE, int iThreaded = FALSE) {
+void DestroyInventory(object oWho, int iSpareND = FALSE, int iThreaded = FALSE)
+{
 	int i = 1;
 	object oItem, oItem2;
-	for ( i = 0; i < NUM_INVENTORY_SLOTS; i++ )
-		if ( GetIsObjectValid(oItem = GetItemInSlot(i, oWho)) )
+
+	for (i = 0; i < NUM_INVENTORY_SLOTS; i++)
+		if (GetIsObjectValid(oItem = GetItemInSlot(i, oWho)))
 			DestroyObject(oItem);
-	if ( iThreaded ) {
+
+	if (iThreaded) {
 		oItem = GetFirstItemInInventory(oWho);
-		while ( GetIsObjectValid(oItem) ) {
+
+		while (GetIsObjectValid(oItem)) {
 			DeleteLocalInt(oItem, "Stashed");
 			oItem = GetNextItemInInventory(oWho);
 		}
 
 		oItem = GetFirstItemInInventory(oWho);
-		while ( GetIsObjectValid(oItem) ) {
+
+		while (GetIsObjectValid(oItem)) {
 			oItem2 = GetFirstItemInInventory(oItem);
-			while ( GetIsObjectValid(oItem2) ) {
+
+			while (GetIsObjectValid(oItem2)) {
 				SetLocalInt(oItem2, "Stashed", 1);
 				oItem2 = GetNextItemInInventory(oItem);
 			}
+
 			oItem = GetNextItemInInventory(oWho);
 		}
 	}
 
 	oItem = GetFirstItemInInventory(oWho);
-	while ( GetIsObjectValid(oItem) ) {
-		if ( !iSpareND || !( !GetDroppableFlag(oItem) || GetItemCursedFlag(oItem) ) ) {
-			if ( !iThreaded )
+
+	while (GetIsObjectValid(oItem)) {
+		if (!iSpareND || !(!GetDroppableFlag(oItem) || GetItemCursedFlag(oItem))) {
+			if (!iThreaded)
 				DestroyObject(oItem);
-			else if ( !GetLocalInt(oItem, "Stashed") )
+
+			else if (!GetLocalInt(oItem, "Stashed"))
 				DelayCommand(0.2f * IntToFloat(i++), DestroyObject(oItem));
 		}
+
 		oItem = GetNextItemInInventory(oWho);
 	}
+
 	TakeGoldFromCreature(GetGold(oWho), oWho, TRUE);
 }
 
-object MakeCorpseObject(object oContainer, object oCarrier = OBJECT_INVALID) {
+object MakeCorpseObject(object oContainer, object oCarrier = OBJECT_INVALID)
+{
 	object oCorpseOb;
 	object oOriginalBody = GetLocalObject(oContainer, "Body");
 
-	if ( !GetIsObjectValid(oCarrier) ) oCarrier = oContainer;
+	if (!GetIsObjectValid(oCarrier)) oCarrier = oContainer;
 
-	if ( GetGender(oOriginalBody) == GENDER_FEMALE )
+	if (GetGender(oOriginalBody) == GENDER_FEMALE)
 		oCorpseOb = CreateItemOnObject("loot_corps_w", oCarrier);
+
 	else
 		oCorpseOb = CreateItemOnObject("loot_corps_m", oCarrier);
 
@@ -66,7 +82,8 @@ object MakeCorpseObject(object oContainer, object oCarrier = OBJECT_INVALID) {
 	return oCorpseOb;
 }
 
-object SpawnCorpse(object oOriginalBody, int iWasPC = FALSE) {
+object SpawnCorpse(object oOriginalBody, int iWasPC = FALSE)
+{
 	vector vPos = GetPosition(oOriginalBody);
 	vector vSinkIt = Vector(vPos.x, vPos.y, vPos.z - 0.11f);
 	location lSpot = Location(GetArea(oOriginalBody), vSinkIt, GetFacing(oOriginalBody));
@@ -75,7 +92,7 @@ object SpawnCorpse(object oOriginalBody, int iWasPC = FALSE) {
 	object oPickCorpse;
 	object oItem;
 
-	if ( !GetIsObjectValid(oCorpse) ) return OBJECT_INVALID;
+	if (!GetIsObjectValid(oCorpse)) return OBJECT_INVALID;
 
 	DESTRUCT_TIME = GetLocalFloat(oOriginalBody, "DESTRUCT_TIME");
 
@@ -83,14 +100,15 @@ object SpawnCorpse(object oOriginalBody, int iWasPC = FALSE) {
 	SetLocalFloat(oCorpse, "DESTRUCT_TIME", DESTRUCT_TIME);
 	SetLocalObject(oCorpse, "Body", oOriginalBody);
 	SetLocalInt(oCorpse, "WAS_PC_CORPSE",
-		GetLocalInt(oOriginalBody, "WAS_PC_CORPSE"));
+				GetLocalInt(oOriginalBody, "WAS_PC_CORPSE"));
 	SetLocalObject(oCorpse, "PC_CORPSE",
-		GetLocalObject(oOriginalBody, "PC_CORPSE"));
+				   GetLocalObject(oOriginalBody, "PC_CORPSE"));
 
-	if ( GetLocalInt(oOriginalBody, "PLOT_FLAG") )
+	if (GetLocalInt(oOriginalBody, "PLOT_FLAG"))
 		SetPlotFlag(oCorpse, TRUE);
+
 	else {
-		if ( DESTRUCT_TIME > 0.0 )
+		if (DESTRUCT_TIME > 0.0)
 			DelayCommand(DESTRUCT_TIME, SignalEvent(oCorpse, EventUserDefined(110)));
 	}
 
@@ -101,19 +119,21 @@ object SpawnCorpse(object oOriginalBody, int iWasPC = FALSE) {
 	return oCorpse;
 }
 
-object SpawnPCCorpse(object oPC, int iOldPCLocation = FALSE) {
+object SpawnPCCorpse(object oPC, int iOldPCLocation = FALSE)
+{
 	int i;
 	location lCorpseLoc = GetLocation(oPC);
 	object oFakeCorpse;
 	object oItem;
 
-	if ( iOldPCLocation ) lCorpseLoc = GetLocalLocation(oPC, "CORPSE_LOCATION");
+	if (iOldPCLocation) lCorpseLoc = GetLocalLocation(oPC, "CORPSE_LOCATION");
 
 	oFakeCorpse = CopyObject(oPC, lCorpseLoc);
-	if ( !GetIsDead(oFakeCorpse) )
+
+	if (!GetIsDead(oFakeCorpse))
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectDeath(), oFakeCorpse);
 
-	if ( !GetIsObjectValid(oFakeCorpse) ) return OBJECT_INVALID;
+	if (!GetIsObjectValid(oFakeCorpse)) return OBJECT_INVALID;
 
 	ClearPersonalReputation(oPC, oFakeCorpse);
 	ClearPersonalReputation(oFakeCorpse, oPC);
@@ -123,7 +143,7 @@ object SpawnPCCorpse(object oPC, int iOldPCLocation = FALSE) {
 	SetLocalObject(oPC, "PC_CORPSE", oFakeCorpse);
 	SetLocalInt(oFakeCorpse, "PLOT_FLAG", 1);
 
-	if ( !GetIsObjectValid(SpawnCorpse(oFakeCorpse, TRUE)) ) return OBJECT_INVALID;
+	if (!GetIsObjectValid(SpawnCorpse(oFakeCorpse, TRUE))) return OBJECT_INVALID;
 
 	AssignCommand(oFakeCorpse, SetIsDestroyable(FALSE, TRUE));
 	SetLocalLocation(oPC, "CORPSE_LOCATION", GetLocation(oFakeCorpse));
@@ -132,33 +152,37 @@ object SpawnPCCorpse(object oPC, int iOldPCLocation = FALSE) {
 	return oFakeCorpse;
 }
 
-object MoveCorpseObj_2(object oCorpseOb, object oCorpsePlac, object oLocation, int ReCreatePlac = TRUE) {
+object MoveCorpseObj_2(object oCorpseOb, object oCorpsePlac, object oLocation,
+					   int ReCreatePlac = TRUE)
+{
 	object oPC;
 	object oItem, oCopy;
 	object oNewCorpse;
 	int nGold = 0;
 	int i;
 
-	if ( GetIsObjectValid(oCorpseOb) ) {
+	if (GetIsObjectValid(oCorpseOb)) {
 		oNewCorpse = CopyObject(oCorpseOb, GetLocation(oLocation));
 		oItem = GetFirstItemInInventory(oCorpseOb);
 
-		while ( GetIsObjectValid(oItem) ) {
+		while (GetIsObjectValid(oItem)) {
 			DestroyObject(oItem);
 			oItem = GetNextItemInInventory(oCorpseOb);
 		}
 
-		for ( i = 0; i < NUM_INVENTORY_SLOTS; i++ )
-			if ( GetIsObjectValid(oItem = GetItemInSlot(i, oCorpseOb)) )
+		for (i = 0; i < NUM_INVENTORY_SLOTS; i++)
+			if (GetIsObjectValid(oItem = GetItemInSlot(i, oCorpseOb)))
 				DestroyObject(oItem);
+
 		AssignCommand(oCorpseOb, SetIsDestroyable(TRUE));
 		TakeGoldFromCreature(GetGold(oCorpseOb), oCorpseOb, TRUE);
 		DestroyObject(oCorpseOb);
 
 		AssignCommand(oNewCorpse, SetIsDestroyable(FALSE, TRUE));
 
-		SetLocalObject(oNewCorpse, "PC_CORPSE", ( oPC = GetLocalObject(oCorpseOb, "PC_CORPSE") ));
-		if ( GetIsObjectValid(oPC) )
+		SetLocalObject(oNewCorpse, "PC_CORPSE", (oPC = GetLocalObject(oCorpseOb, "PC_CORPSE")));
+
+		if (GetIsObjectValid(oPC))
 			SetLocalObject(oPC, "PC_CORPSE", oNewCorpse);
 
 		SetLocalObject(oNewCorpse, "PICKUP", GetLocalObject(oCorpseOb, "PICKUP"));
@@ -170,19 +194,22 @@ object MoveCorpseObj_2(object oCorpseOb, object oCorpsePlac, object oLocation, i
 
 	}
 
-	if ( GetIsObjectValid(oCorpsePlac) ) {
+	if (GetIsObjectValid(oCorpsePlac)) {
 		DestroyObject(oCorpsePlac);
 	}
 
-	if ( GetIsObjectValid(oNewCorpse) && ReCreatePlac ) {
+	if (GetIsObjectValid(oNewCorpse) && ReCreatePlac) {
 		SpawnCorpse(oNewCorpse, GetIsObjectValid(oPC));
-		if ( GetIsObjectValid(oPC) )
+
+		if (GetIsObjectValid(oPC))
 			SetLocalLocation(oPC, "CORPSE_LOCATION", GetLocation(oNewCorpse));
 	}
+
 	return oNewCorpse;
 }
 
-void MoveCorpseObject(object oCorpsePick, object oLocation, int ReCreatePlac = TRUE) {
+void MoveCorpseObject(object oCorpsePick, object oLocation, int ReCreatePlac = TRUE)
+{
 	object oCorpseOb = GetLocalObject(oCorpsePick, "ORIG_BODY");
 	object oCorpsePlac = GetLocalObject(oCorpsePick, "CONTAINER");
 
@@ -192,24 +219,29 @@ void MoveCorpseObject(object oCorpsePick, object oLocation, int ReCreatePlac = T
 
 }
 
-object TakeCorpseObject(object oCorpsePlac, object oCarrier) {
+object TakeCorpseObject(object oCorpsePlac, object oCarrier)
+{
 	object oCarry = MakeCorpseObject(oCorpsePlac, oCarrier);
 	MoveCorpseObject(oCarry, GetObjectByTag("LOOT_WP"), FALSE);
 	return oCarry;
 }
 
-void DropCorpseObject(object oCorpseOb, object oCarrier) {
+void DropCorpseObject(object oCorpseOb, object oCarrier)
+{
 	MoveCorpseObject(oCorpseOb, oCarrier, TRUE);
 	DelayCommand(0.2f, DestroyObject(oCorpseOb));
 }
 
-void DropCorpses(object oCarrier) {
-	if ( !GetIsObjectValid(GetItemPossessedBy(oCarrier, "loot_corpse")) ) return;
+void DropCorpses(object oCarrier)
+{
+	if (!GetIsObjectValid(GetItemPossessedBy(oCarrier, "loot_corpse"))) return;
 
 	object oItem = GetFirstItemInInventory(oCarrier);
-	while ( GetIsObjectValid(oItem) ) {
-		if ( GetTag(oItem) == "loot_corpse" )
+
+	while (GetIsObjectValid(oItem)) {
+		if (GetTag(oItem) == "loot_corpse")
 			DropCorpseObject(oItem, oCarrier);
+
 		oItem = GetNextItemInInventory(oCarrier);
 	}
 }
@@ -217,22 +249,24 @@ void DropCorpses(object oCarrier) {
 /*
  * PC is about to log out while dead, remove traces
  */
-void LogoutPC(object oPC) {
+void LogoutPC(object oPC)
+{
 	object oFakeCorpse = GetLocalObject(oPC, "PC_CORPSE");
 
 	// Drop Corpses when a carrier logs out
 //  DropCorpses(oPC);
 
-	if ( !GetIsObjectValid(oFakeCorpse) ) return;
+	if (!GetIsObjectValid(oFakeCorpse)) return;
 
 	object oCorpsePlac = GetLocalObject(oFakeCorpse, "PLACEABLE");
 	object oCorpsePick = GetLocalObject(oFakeCorpse, "PICKUP");
 
 	//When the corpse is carried around it will reappear at that location where
 	//the bearer was as the PC in question logged out
-	if ( GetIsObjectValid(oCorpsePick) ) {
+	if (GetIsObjectValid(oCorpsePick)) {
 		object oPoss = GetItemPossessor(oCorpsePick);
-		if ( GetIsObjectValid(GetArea(oPoss)) )
+
+		if (GetIsObjectValid(GetArea(oPoss)))
 			SetLocalLocation(oPC, "CORPSE_LOCATION", GetLocation(oPoss));
 	}
 
@@ -246,24 +280,26 @@ void LogoutPC(object oPC) {
 	DestroyObject(oCorpsePick);
 }
 
-void LoginPC(object oPC) {
-	if ( GetLocalInt(oPC, "IS_DEAD") )
+void LoginPC(object oPC)
+{
+	if (GetLocalInt(oPC, "IS_DEAD"))
 		SpawnPCCorpse(oPC, TRUE);
 }
 
 /*
  * Merge PC back with his corpse
  */
-void ReIntegratePC(object oPC) {
+void ReIntegratePC(object oPC)
+{
 	object oFakeCorpse = GetLocalObject(oPC, "PC_CORPSE");
 	object oCorpsePlac = GetLocalObject(oFakeCorpse, "PLACEABLE");
 	object oItem;
 
-	if ( !GetIsObjectValid(oPC) ) return;
+	if (!GetIsObjectValid(oPC)) return;
 
 	DeleteLocalInt(oPC, "IS_DEAD");
 
-	if ( !GetIsObjectValid(oCorpsePlac) )
+	if (!GetIsObjectValid(oCorpsePlac))
 		oCorpsePlac = SpawnCorpse(oFakeCorpse, TRUE);
 
 	location lCorpsePlac = GetLocation(oCorpsePlac);
@@ -278,14 +314,16 @@ void ReIntegratePC(object oPC) {
 	DestroyObject(oFakeCorpse);
 }
 
-void DestroyOldCorpse(object oFakeCorpse, object oCorpsePlac) {
+void DestroyOldCorpse(object oFakeCorpse, object oCorpsePlac)
+{
 	DestroyInventory(oFakeCorpse);
 	DestroyObject(oFakeCorpse);
 	AssignCommand(oFakeCorpse, SetIsDestroyable(TRUE));
 	DestroyObject(oCorpsePlac);
 }
 
-void DisconnectPlayerCorpse(object oPC) {
+void DisconnectPlayerCorpse(object oPC)
+{
 	object oFakeCorpse = SpawnPCCorpse(oPC, TRUE);
 	object oCloth;
 
@@ -308,18 +346,21 @@ void DisconnectPlayerCorpse(object oPC) {
  * PC starts a new reincarnation, let him start nekkid out with the ties
  * to the old corpse removed
  */
-void ReincarnatePC(object oPC) {
+void ReincarnatePC(object oPC)
+{
 	object oFakeCorpse = GetLocalObject(oPC, "PC_CORPSE");
 	object oCorpsePlac = GetLocalObject(oFakeCorpse, "PLACEABLE");
 	object oCorpsePick = GetLocalObject(oFakeCorpse, "PICKUP");
 
-	if ( !GetIsObjectValid(oFakeCorpse) ) return;
+	if (!GetIsObjectValid(oFakeCorpse)) return;
 
 	//When the corpse is carried around, have it dropped at the location of the carrier
-	if ( GetIsObjectValid(oCorpsePick) ) {
+	if (GetIsObjectValid(oCorpsePick)) {
 		object oPoss = GetItemPossessor(oCorpsePick);
-		if ( GetIsObjectValid(GetArea(oPoss)) )
+
+		if (GetIsObjectValid(GetArea(oPoss)))
 			SetLocalLocation(oPC, "CORPSE_LOCATION", GetLocation(oPoss));
+
 		DestroyObject(oCorpsePick);
 	}
 
@@ -333,10 +374,10 @@ void ReincarnatePC(object oPC) {
 	//with a raise dead and a summoning effect to denote that the player
 	//has been transported elsewhere and been resurrected.
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
-		EffectVisualEffect(VFX_FNF_SUMMON_MONSTER_3), GetLocation(oFakeCorpse), 0.0f);
+						  EffectVisualEffect(VFX_FNF_SUMMON_MONSTER_3), GetLocation(oFakeCorpse), 0.0f);
 
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT,
-		EffectVisualEffect(VFX_IMP_RAISE_DEAD), GetLocation(oFakeCorpse), 0.0f);
+						  EffectVisualEffect(VFX_IMP_RAISE_DEAD), GetLocation(oFakeCorpse), 0.0f);
 
 	//Create new Fake corpse with player's worldly possessions
 	//DisconnectPlayerCorpse(oPC);

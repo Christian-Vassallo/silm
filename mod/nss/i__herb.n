@@ -15,7 +15,8 @@ void NothingHappens();
 // Returns true if the user is allowed to use this herb.
 int OneAtATime(object oTarget, float fDuration);
 
-void main() {
+void main()
+{
 	object
 	oPC = GetItemActivator(),
 	oHerb = OBJECT_SELF,
@@ -28,209 +29,218 @@ void main() {
 
 
 	float fDuration = 5.0 * 30.0;
-	fDuration += ( -60.0 + IntToFloat(Random(120)) );
+	fDuration += (-60.0 + IntToFloat(Random(120)));
 
 	int nHerb = StringToInt(GetStringRight(sTag, 3));
 
-	switch ( nHerb ) {
-		// Aschekraut
-		case 2:
-			if ( !SelfOnly() )
-				break;
-
-			NotifyEat();
-
-			if ( OneAtATime(oTarget, fDuration) ) {
-				ApplyEffectToObject(DTT, EffectSavingThrowIncrease(SAVING_THROW_FORT, 1), oTarget, fDuration);
-			}
-
-			SingleUse();
+	switch (nHerb) {
+	// Aschekraut
+	case 2:
+		if (!SelfOnly())
 			break;
 
-			// Campina
-		case 4:
-			if ( !SelfOnly() )
-				break;
+		NotifyEat();
 
-			NotifyEat();
+		if (OneAtATime(oTarget, fDuration)) {
+			ApplyEffectToObject(DTT, EffectSavingThrowIncrease(SAVING_THROW_FORT, 1), oTarget, fDuration);
+		}
 
-			ApplyEffectToObject(DTT, EffectDazed(), oTarget, 23.0);
+		SingleUse();
+		break;
 
-			SingleUse();
+	// Campina
+	case 4:
+		if (!SelfOnly())
 			break;
 
-			// Felspilz
-		case 6:
-			if ( !SelfOnly() )
-				break;
+		NotifyEat();
 
-			NotifyEat();
+		ApplyEffectToObject(DTT, EffectDazed(), oTarget, 23.0);
 
-			if ( OneAtATime(oTarget, fDuration) ) {
-				ApplyEffectToObject(DTT, EffectAbilityDecrease(ABILITY_DEXTERITY, d3()), oTarget, fDuration);
-				ApplyEffectToObject(DTT, EffectAbilityDecrease(ABILITY_STRENGTH, d3()), oTarget, fDuration);
-			}
+		SingleUse();
+		break;
 
-			SingleUse();
+	// Felspilz
+	case 6:
+		if (!SelfOnly())
 			break;
 
+		NotifyEat();
 
-			// Maraichpilz
-		case 10:
-			if ( !SelfOnly() )
-				break;
+		if (OneAtATime(oTarget, fDuration)) {
+			ApplyEffectToObject(DTT, EffectAbilityDecrease(ABILITY_DEXTERITY, d3()), oTarget, fDuration);
+			ApplyEffectToObject(DTT, EffectAbilityDecrease(ABILITY_STRENGTH, d3()), oTarget, fDuration);
+		}
 
-			NotifyEat();
-			if ( !FortitudeSave(oTarget, 18, SAVING_THROW_TYPE_POISON) )
-				ApplyEffectToObject(DTT, EffectUnconscious(), oTarget, fDuration / 1.8);
+		SingleUse();
+		break;
 
-			SingleUse();
+
+	// Maraichpilz
+	case 10:
+		if (!SelfOnly())
 			break;
 
-			// Nachtmoos
-		case 11:
-			SingleUse();
+		NotifyEat();
 
-			if ( GetObjectType(oTarget) == OBJECT_TYPE_CREATURE ) {
-				int nHitPoints = GetCurrentHitPoints(oTarget);
+		if (!FortitudeSave(oTarget, 18, SAVING_THROW_TYPE_POISON))
+			ApplyEffectToObject(DTT, EffectUnconscious(), oTarget, fDuration / 1.8);
 
-				//negative hitPoints will be stabilized
-				if ( nHitPoints < 0 ) {
-					int nHealSkill = GetSkillRank(SKILL_HEAL, oPC);
-					AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_GET_LOW, 1.0, 3.0));
-					if ( d20() + nHealSkill >= 16 ) {
-						int nHealPoints = 1 - nHitPoints;
-						if ( nHealSkill < nHealPoints ) {
-							nHealPoints = nHealSkill;
-						}
-						ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectHeal(nHealPoints), oTarget);
-						AssignCommand(oPC, ActionSpeakString("*Stillt die Blutungen von " +
-								GetName(oTarget) + "*", TALKVOLUME_TALK));
-						break;
-					} else {
-						AssignCommand(oPC, ActionSpeakString("*Versucht vergeblich die Blutung von " +
-								GetName(oTarget) + " zu stoppen*", TALKVOLUME_TALK));
-						break;
+		SingleUse();
+		break;
+
+	// Nachtmoos
+	case 11:
+		SingleUse();
+
+		if (GetObjectType(oTarget) == OBJECT_TYPE_CREATURE) {
+			int nHitPoints = GetCurrentHitPoints(oTarget);
+
+			//negative hitPoints will be stabilized
+			if (nHitPoints < 0) {
+				int nHealSkill = GetSkillRank(SKILL_HEAL, oPC);
+				AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_GET_LOW, 1.0, 3.0));
+
+				if (d20() + nHealSkill >= 16) {
+					int nHealPoints = 1 - nHitPoints;
+
+					if (nHealSkill < nHealPoints) {
+						nHealPoints = nHealSkill;
 					}
+
+					ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectHeal(nHealPoints), oTarget);
+					AssignCommand(oPC, ActionSpeakString("*Stillt die Blutungen von " +
+														 GetName(oTarget) + "*", TALKVOLUME_TALK));
+					break;
+
+				} else {
+					AssignCommand(oPC, ActionSpeakString("*Versucht vergeblich die Blutung von " +
+														 GetName(oTarget) + " zu stoppen*", TALKVOLUME_TALK));
+					break;
 				}
-
 			}
 
-			NothingHappens();
+		}
 
+		NothingHappens();
+
+		break;
+
+
+	case 12: // Nrarom
+		if (!SelfOnly())
 			break;
 
+		NotifyEat();
 
-		case 12: // Nrarom
-			if ( !SelfOnly() )
-				break;
+		ActionCastSpellAtObject(SPELL_CURE_MINOR_WOUNDS, oTarget);
 
-			NotifyEat();
+		SingleUse();
+		break;
 
-			ActionCastSpellAtObject(SPELL_CURE_MINOR_WOUNDS, oTarget);
 
-			SingleUse();
+	// Venumon
+	case 15:
+		if (!SelfOnly())
 			break;
 
+		NotifyEat();
 
-			// Venumon
-		case 15:
-			if ( !SelfOnly() )
-				break;
+		if (!FortitudeSave(oTarget, 18, SAVING_THROW_TYPE_POISON)) {
+			ApplyEffectToObject(DTT, EffectDisease(DISEASE_MINDFIRE), oTarget, fDuration);
+			Floaty("Das Venumon-Gift greift auf Euch.", oTarget, 1);
+		}
 
-			NotifyEat();
+		SingleUse();
+		break;
 
-			if ( !FortitudeSave(oTarget, 18, SAVING_THROW_TYPE_POISON) ) {
-				ApplyEffectToObject(DTT, EffectDisease(DISEASE_MINDFIRE), oTarget, fDuration);
-				Floaty("Das Venumon-Gift greift auf Euch.", oTarget, 1);
-			}
-
-			SingleUse();
+	// Waldkraut
+	case 16:
+		if (!SelfOnly())
 			break;
 
-			// Waldkraut
-		case 16:
-			if ( !SelfOnly() )
-				break;
+		NotifyEat();
 
-			NotifyEat();
+		Floaty("Ein wuerziger, leicht bitterer Geschmack bleibt zurueck.", oPC, 0);
 
-			Floaty("Ein wuerziger, leicht bitterer Geschmack bleibt zurueck.", oPC, 0);
+		SingleUse();
+		break;
 
-			SingleUse();
-			break;
-
-		case 1: // Anarkraut
-		case 3: // Baumschattenkraut
-		case 5: // Cauavarablatt
-		case 7: // Ginboawurzel
-		case 8: // Goianbeere
-		case 9: // Kaktanumpilz
-		case 13: // Sanglipflanze
-		case 14: // Schattenbeere
-		case 17: // Spinnenbein
-		case 18: // Knoblauchknolle
-		case 19: // Baumrinde
-		case 20: // Eselsmilch
-		case 21: // Goblinfett
-		case 22: // Vogelbeere
-		case 23: // Feder eines Raben
-		case 24: // Schreckhuhnei
-		case 25: // Gesegnetes Weihwasser
-		case 26: // Feenstaub
-		case 27: // Koboldherz
-		case 28: // Schlangenauge
-		case 29: // Ameisenblut
-		case 30: // Feuerkaeferbauch
-		case 31: // Mumienbinde
-		case 32: // Skelettkn%f6chelchen
-		case 33: // Mantikorstachel
-		case 34: // Kralle eines Schreckenstigers
-		case 35: // Zahn eines Schreckensb%e4ren
-		case 36: // Holz: Eisenholz
-		case 37: // Spinnenkokon
-		case 38: // Ogerhoden
-		case 39: // Skorpionpanzer
-		case 40: // Giftdr%fcsen einer Spinne
-		case 41: // Giftdr%fcsen einer Viper
-		case 42: // Giftdr%fcsen eines Skorpions
-		case 43: // Rettich-Helmling
-		case 44: // Hefepilzkultur
-		case 47: // Hopfen
-		case 50: // Kartoffeln
-		case 51: // Feder eines Falken
-		case 52: // Feder einer Eule
-		case 53: // Flaum eines jungen Adlers
-		case 54: // Katzenhaare
-		default:
-			NothingHappens();
-			break;
+	case 1: // Anarkraut
+	case 3: // Baumschattenkraut
+	case 5: // Cauavarablatt
+	case 7: // Ginboawurzel
+	case 8: // Goianbeere
+	case 9: // Kaktanumpilz
+	case 13: // Sanglipflanze
+	case 14: // Schattenbeere
+	case 17: // Spinnenbein
+	case 18: // Knoblauchknolle
+	case 19: // Baumrinde
+	case 20: // Eselsmilch
+	case 21: // Goblinfett
+	case 22: // Vogelbeere
+	case 23: // Feder eines Raben
+	case 24: // Schreckhuhnei
+	case 25: // Gesegnetes Weihwasser
+	case 26: // Feenstaub
+	case 27: // Koboldherz
+	case 28: // Schlangenauge
+	case 29: // Ameisenblut
+	case 30: // Feuerkaeferbauch
+	case 31: // Mumienbinde
+	case 32: // Skelettkn%f6chelchen
+	case 33: // Mantikorstachel
+	case 34: // Kralle eines Schreckenstigers
+	case 35: // Zahn eines Schreckensb%e4ren
+	case 36: // Holz: Eisenholz
+	case 37: // Spinnenkokon
+	case 38: // Ogerhoden
+	case 39: // Skorpionpanzer
+	case 40: // Giftdr%fcsen einer Spinne
+	case 41: // Giftdr%fcsen einer Viper
+	case 42: // Giftdr%fcsen eines Skorpions
+	case 43: // Rettich-Helmling
+	case 44: // Hefepilzkultur
+	case 47: // Hopfen
+	case 50: // Kartoffeln
+	case 51: // Feder eines Falken
+	case 52: // Feder einer Eule
+	case 53: // Flaum eines jungen Adlers
+	case 54: // Katzenhaare
+	default:
+		NothingHappens();
+		break;
 	}
 }
 
 
 
-void NotifyEat() {
+void NotifyEat()
+{
 	object oHerb = OBJECT_SELF;
 	object oPC = GetItemActivator();
 	Floaty("Ihr knabbert an " + GetName(oHerb) + " ..", oPC, 1);
 }
 
 
-void NothingHappens() {
+void NothingHappens()
+{
 	object oPC = GetItemActivator();
 	Floaty("Nichts passiert.", oPC, 0);
 }
 
 
-int OneAtATime(object oTarget, float fDuration) {
+int OneAtATime(object oTarget, float fDuration)
+{
 	object
 	oHerb = OBJECT_SELF;
 	string
 	sTag = GetTag(oHerb);
 
-	if ( GetLocalInt(oTarget, "f_" + sTag) )
+	if (GetLocalInt(oTarget, "f_" + sTag))
 		return 0;
+
 	else {
 		SetLocalInt(oTarget, "f_" + sTag, 1);
 		DelayCommand(fDuration, DeleteLocalInt(oTarget, "f_" + sTag));
@@ -239,20 +249,23 @@ int OneAtATime(object oTarget, float fDuration) {
 }
 
 
-void SingleUse() {
-	if ( GetItemStackSize(OBJECT_SELF) > 1 )
+void SingleUse()
+{
+	if (GetItemStackSize(OBJECT_SELF) > 1)
 		SetItemStackSize(OBJECT_SELF, GetItemStackSize(OBJECT_SELF) - 1);
+
 	else
 		DestroyObject(OBJECT_SELF);
 }
 
 
-int SelfOnly() {
+int SelfOnly()
+{
 	object
 	oPC = GetItemActivator(),
 	oTarget = GetItemActivatedTarget();
 
-	if ( oTarget != oPC ) {
+	if (oTarget != oPC) {
 		Floaty("Ihr koennt dieses Kraut nur selbst essen.", oPC);
 		return 0;
 	}

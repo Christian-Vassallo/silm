@@ -13,9 +13,11 @@
 //:: Created On: Nov 23, 2001
 //:://////////////////////////////////////////////
 
-void main() {
+void main()
+{
 	object oDoor = GetBlockingDoor();
-	if ( GetObjectType(oDoor) == OBJECT_TYPE_CREATURE ) {
+
+	if (GetObjectType(oDoor) == OBJECT_TYPE_CREATURE) {
 		// * Increment number of times blocked
 		/*SetLocalInt(OBJECT_SELF, "X2_NUMTIMES_BLOCKED", GetLocalInt(OBJECT_SELF, "X2_NUMTIMES_BLOCKED") + 1);
 		 * if (GetLocalInt(OBJECT_SELF, "X2_NUMTIMES_BLOCKED") > 3)
@@ -33,14 +35,17 @@ void main() {
 		 * }   */
 		return;
 	}
-	if ( GetAbilityScore(OBJECT_SELF, ABILITY_INTELLIGENCE) >= 5 ) {
-		if ( ( GetIsDoorActionPossible(oDoor, DOOR_ACTION_OPEN)
-			  || GetIsDoorActionPossible(oDoor, DOOR_ACTION_UNLOCK) )
-			&& GetAbilityScore(OBJECT_SELF, ABILITY_INTELLIGENCE) >= 7 ) {
-			if ( GetLocked(oDoor) )
+
+	if (GetAbilityScore(OBJECT_SELF, ABILITY_INTELLIGENCE) >= 5) {
+		if ((GetIsDoorActionPossible(oDoor, DOOR_ACTION_OPEN)
+				|| GetIsDoorActionPossible(oDoor, DOOR_ACTION_UNLOCK))
+				&& GetAbilityScore(OBJECT_SELF, ABILITY_INTELLIGENCE) >= 7) {
+			if (GetLocked(oDoor))
 				SetLocked(oDoor, 0);
+
 			DoDoorAction(oDoor, DOOR_ACTION_OPEN);
-		} else if ( GetIsDoorActionPossible(oDoor, DOOR_ACTION_BASH) ) {
+
+		} else if (GetIsDoorActionPossible(oDoor, DOOR_ACTION_BASH)) {
 			// DoDoorAction(oDoor, DOOR_ACTION_BASH);
 		}
 	}

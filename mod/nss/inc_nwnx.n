@@ -20,7 +20,8 @@ int NWNX_Initialized();
 
 
 
-void InitNWNX() {
+void InitNWNX()
+{
 	int i;
 	string sMemory = ".";
 	object oMod = GetModule();
@@ -28,22 +29,25 @@ void InitNWNX() {
 	GetLocalObject(oMod, "NWNX!INIT");
 
 	//NWNX changes the value on its own.
-	if ( GetLocalString(oMod, "NWNX!INIT") == "0" ) {
+	if (GetLocalString(oMod, "NWNX!INIT") == "0") {
 		WriteTimestampedLogEntry("NWNX subsystem initialized.");
 		SetLocalInt(oMod, "NWNX_Init", 1);
+
 	} else {
 		WriteTimestampedLogEntry("No NWNX subsystem found.");
 		return;
 	}
 
 	// allocate a 1k buffer to pass to the NWNX plugin
-	for ( i = 0; i < 5; i++ )
+	for (i = 0; i < 5; i++)
 		sMemory = sMemory + sMemory + sMemory + sMemory;
+
 	// only use the NWNX! prefix if it's meant to be
 	// processed by the plugin
 	SetLocalString(oMod, "NWNX_buffer", sMemory);
 }
 
-int NWNX_Initialized() {
+int NWNX_Initialized()
+{
 	return GetLocalInt(GetModule(), "NWNX_Init");
 }

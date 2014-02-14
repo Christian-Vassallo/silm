@@ -59,26 +59,29 @@ object redisRCO(string query, location loc, object owner);
 // Implementation below.
 
 const int
-	REDIS_REPLY_STRING        = 1,
-	REDIS_REPLY_ARRAY         = 2,
-	REDIS_REPLY_INTEGER       = 3,
-	REDIS_REPLY_NIL           = 4,
-	REDIS_REPLY_STATUS        = 5,
-	REDIS_REPLY_ERROR         = 6;
+REDIS_REPLY_STRING        = 1,
+REDIS_REPLY_ARRAY         = 2,
+REDIS_REPLY_INTEGER       = 3,
+REDIS_REPLY_NIL           = 4,
+REDIS_REPLY_STATUS        = 5,
+REDIS_REPLY_ERROR         = 6;
 
 int    redisLastReplyType   = 0;
 string redisLastErrorStr    = "";
 string redisLastReply       = "";
 int    redisGetOffset       = 0;
 
-int redisErr() {
+int redisErr()
+{
 	return (redisLastReplyType == REDIS_REPLY_ERROR);
 }
-string redisErrStr() {
+string redisErrStr()
+{
 	return redisLastErrorStr;
 }
 
-string redisCommand() {
+string redisCommand()
+{
 	string result = "";
 
 	string redisStr = "NWNX!REDIS!CMD";
@@ -100,6 +103,7 @@ string redisCommand() {
 	if (replytype == REDIS_REPLY_ERROR) {
 		redisLastErrorStr = result;
 		result            = "";
+
 	} else {
 		redisLastErrorStr = "";
 	}
@@ -111,70 +115,82 @@ string redisCommand() {
 	return result;
 }
 
-string redisGet() {
+string redisGet()
+{
 	switch (redisLastReplyType) {
-		case REDIS_REPLY_ERROR:
-			return "";
+	case REDIS_REPLY_ERROR:
+		return "";
 
-		case REDIS_REPLY_ARRAY:
-			while (redisGetOffset < GetStringLength(redisLastReply)) {
-				int pos_end_of_sz = FindSubString(redisLastReply, " ", redisGetOffset);
-				int start_of_content = pos_end_of_sz + 1;
-				string szstr = GetSubString(redisLastReply, redisGetOffset, pos_end_of_sz - redisGetOffset);
-				int sz = StringToInt(szstr);
-				int end_of_content = start_of_content + sz;
-				string content = GetSubString(redisLastReply, start_of_content, sz);
+	case REDIS_REPLY_ARRAY:
+		while (redisGetOffset < GetStringLength(redisLastReply)) {
+			int pos_end_of_sz = FindSubString(redisLastReply, " ", redisGetOffset);
+			int start_of_content = pos_end_of_sz + 1;
+			string szstr = GetSubString(redisLastReply, redisGetOffset, pos_end_of_sz - redisGetOffset);
+			int sz = StringToInt(szstr);
+			int end_of_content = start_of_content + sz;
+			string content = GetSubString(redisLastReply, start_of_content, sz);
 
-				redisGetOffset = end_of_content + 1; // redisGetOffset + " "
+			redisGetOffset = end_of_content + 1; // redisGetOffset + " "
 
-				return content;
-			}
-			return "";
+			return content;
+		}
 
-		default:
-			string ret = redisGetOffset == 0 ? redisLastReply : "";
-			redisGetOffset = GetStringLength(redisLastReply);
-			return ret;
+		return "";
+
+	default:
+		string ret = redisGetOffset == 0 ? redisLastReply : "";
+		redisGetOffset = GetStringLength(redisLastReply);
+		return ret;
 	}
 
 	return "";
 }
 
-void redisSubscribe(string channel, int wildcard = 0) {
+void redisSubscribe(string channel, int wildcard = 0)
+{
 	if (wildcard)
 		SetLocalString(GetModule(), "NWNX!REDIS!PSUBSCRIBE", channel);
+
 	else
 		SetLocalString(GetModule(), "NWNX!REDIS!SUBSCRIBE", channel);
 }
-void redisUnsubscribe(string channel, int wildcard = 0) {
+void redisUnsubscribe(string channel, int wildcard = 0)
+{
 	if (wildcard)
 		SetLocalString(GetModule(), "NWNX!REDIS!PUNSUBSCRIBE", channel);
+
 	else
 		SetLocalString(GetModule(), "NWNX!REDIS!UNSUBSCRIBE", channel);
 }
 
-void redisPushBinarySafe(string value) {
+void redisPushBinarySafe(string value)
+{
 	if (value == "")
 		SetLocalString(GetModule(), "NWNX!REDIS!PUSHEMPTY", "1");
+
 	else
 		SetLocalString(GetModule(), "NWNX!REDIS!PUSH", value);
 }
 
-string redisGetEventChannel() {
+string redisGetEventChannel()
+{
 	SetLocalString(GetModule(), "NWNX!REDIS!GETEVCHAN", "1");
 	return GetLocalString(GetModule(), "NWNX!REDIS!GETEVCHAN");
 }
-string redisGetEventMessage() {
+string redisGetEventMessage()
+{
 	SetLocalString(GetModule(), "NWNX!REDIS!GETEVMSG", "1");
 	return GetLocalString(GetModule(), "NWNX!REDIS!GETEVMSG");
 }
 
-void redisSCO(string query, object obj) {
+void redisSCO(string query, object obj)
+{
 	SetLocalString(GetModule(), "NWNX!REDIS!SETSCORCOQUERY", query);
 	StoreCampaignObject("NWNX", "REDIS", obj);
 }
 
-object redisRCO(string query, location loc, object owner) {
+object redisRCO(string query, location loc, object owner)
+{
 	SetLocalString(GetModule(), "NWNX!REDIS!SETSCORCOQUERY", query);
 	return RetrieveCampaignObject("NWNX", "REDIS", loc, owner, OBJECT_INVALID);
 }

@@ -12,10 +12,11 @@ live.command ->
 */
 
 
-void main() {
+void main()
+{
 	string channel = redisGetEventChannel();
 	string message = redisGetEventMessage();
-	
+
 	/*
 	struct EventArguments evarg;
 	evarg.a0 = channel;
@@ -29,6 +30,7 @@ void main() {
 
 	if (channel == "live.command") {
 		int argc = shellwords(message);
+
 		if (argc < 2) return;
 
 		string command = shellwordget(0);
@@ -42,7 +44,9 @@ void main() {
 		if (argc == 3 && command == "disguise.apply") {
 			if (!is_pc(obj))
 				return;
-			int disguise_id = atoi(shellwordget(2)); 
+
+			int disguise_id = atoi(shellwordget(2));
+
 			if (disguise_id < 1) return;
 
 			struct Disguise dd = disguise_load(disguise_id);
@@ -65,22 +69,28 @@ void main() {
 				return;
 
 			int colorType = atoi(shellwordget(2));
+
 			if (colorType < 0 || colorType > 3) return;
+
 			int idx = atoi(shellwordget(3));
+
 			if (idx < 0 || idx > 175) return;
 
 			SetColor(obj, colorType, idx);
 			er_touch(obj);
 			return;
 		}
-		
+
 		if (argc == 4 && command == "creature.bodyPart") {
 			if (!is_valid(obj) || !is_creature(obj))
 				return;
 
 			int bodyPart = atoi(shellwordget(2));
+
 			if (bodyPart != 20 && (bodyPart < 0 || bodyPart > 17)) return;
+
 			int idx = atoi(shellwordget(3));
+
 			if (idx < 0) return;
 
 			SetCreatureBodyPart(bodyPart, idx, obj);
@@ -93,9 +103,11 @@ void main() {
 				return;
 
 			int channel = atoi(shellwordget(2));
+
 			if (channel > 14 || channel < 1) return;
 
 			string text = shellwordget(3);
+
 			if (text == "") return;
 
 			NWNXChatSpeakToChannel(obj, channel, text);
@@ -105,16 +117,18 @@ void main() {
 
 		return;
 	}
+
 	if (channel == "live.download") {
 		object o = StringToObject(message);
+
 		if (!is_valid(o)) return;
 
 		switch (GetObjectType(o)) {
-			case OBJECT_TYPE_CREATURE:
-			case OBJECT_TYPE_ITEM:
-				redisSCO("set er:gff:" + message + " %b", o);
-				EXPIRE("er:gff:"+message, "12");
-				break;
+		case OBJECT_TYPE_CREATURE:
+		case OBJECT_TYPE_ITEM:
+			redisSCO("set er:gff:" + message + " %b", o);
+			EXPIRE("er:gff:" + message, "12");
+			break;
 		}
 
 		return;
@@ -123,6 +137,7 @@ void main() {
 	if (channel == "live.upload") {
 		int cid = atoi(message);
 		object pc = GetPCByCID(cid);
+
 		if (!is_valid(pc))
 			return;
 
@@ -135,6 +150,7 @@ void main() {
 			redisRCO("SPOP " + key, GetLocation(pc), pc);
 			length--;
 		}
-		SendMessageToPC(pc, "Upload complete?");		
+
+		SendMessageToPC(pc, "Upload complete?");
 	}
 }

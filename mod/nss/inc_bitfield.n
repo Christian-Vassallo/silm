@@ -1,37 +1,45 @@
-int _GetFieldNumber(int iBit) {
+int _GetFieldNumber(int iBit)
+{
 	return iBit / 31;
 }
 
-int _GetBitNumber(int iBit) {
+int _GetBitNumber(int iBit)
+{
 	return iBit % 31;
 }
 
-void DeleteBitfield(object oHolder, string sBitTag) {
+void DeleteBitfield(object oHolder, string sBitTag)
+{
 	int i;
-	for ( i = 0; i < 10; i++ )
+
+	for (i = 0; i < 10; i++)
 		DeleteLocalInt(oHolder, sBitTag + "_" + IntToString(i));
 }
 
-int GetBit(object oHolder, string sBitTag, int iBit) {
+int GetBit(object oHolder, string sBitTag, int iBit)
+{
 	return GetLocalInt(oHolder,
-			   sBitTag + "_" + IntToString(_GetFieldNumber(iBit))) &
-		   ( 1 << _GetBitNumber(iBit) );
+					   sBitTag + "_" + IntToString(_GetFieldNumber(iBit))) &
+		   (1 << _GetBitNumber(iBit));
 }
 
-void ChangeBit(object oHolder, string sBitTag, int iBit, int iValue) {
+void ChangeBit(object oHolder, string sBitTag, int iBit, int iValue)
+{
 	string sField = sBitTag + "_" + IntToString(_GetFieldNumber(iBit));
 	int iFBit  = _GetBitNumber(iBit);
 	int iOldValue = GetLocalInt(oHolder, sField);
 
 	SetLocalInt(oHolder, sField,
-		( iOldValue & ~( 1 << iFBit ) ) | ( iValue << iFBit ));
+				(iOldValue & ~(1 << iFBit)) | (iValue << iFBit));
 }
 
-void SetBit(object oHolder, string sBitTag, int iBit) {
+void SetBit(object oHolder, string sBitTag, int iBit)
+{
 	ChangeBit(oHolder, sBitTag, iBit, 1);
 }
 
-void ClearBit(object oHolder, string sBitTag, int iBit) {
+void ClearBit(object oHolder, string sBitTag, int iBit)
+{
 	ChangeBit(oHolder, sBitTag, iBit, 0);
 }
 

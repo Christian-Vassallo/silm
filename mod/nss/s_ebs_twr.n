@@ -9,22 +9,25 @@ sPrefix = "ebst";
 const int
 iMaxShield = 6;
 
-void main() {
+void main()
+{
 
-	if ( !X2PreSpellCastCode() )
+	if (!X2PreSpellCastCode())
 		return;
 
 	object oPC = OBJECT_SELF;
 
 
 	object oShield = GetItemPossessedBy(oPC, "s_ebs");
-	if ( GetIsObjectValid(oShield) ) {
+
+	if (GetIsObjectValid(oShield)) {
 		FloatingTextStringOnCreature("Du hast bereits ein Energieschild.", oPC, FALSE);
 		return;
 	}
 
 	string r = IntToString(Random(iMaxShield) + 1);
-	while ( GetStringLength(r) < 3 )
+
+	while (GetStringLength(r) < 3)
 		r = "0" + r;
 
 	oShield = CreateItemOnObject(sPrefix + r, oPC, 1, "s_ebs");
@@ -36,7 +39,7 @@ void main() {
 	// Duration: 12h (IG time) = 3h RL time
 	// Value in seconds
 	// int nExpireIn = ( ( 12 * 60 ) / GetMinutesPerHour() ) * 60;
-	
+
 	int nExpireIn = 24 * 3600;
 	DelayCommand(IntToFloat(nExpireIn), DestroyObject(oShield));
 

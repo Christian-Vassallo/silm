@@ -2,18 +2,22 @@ extern("_gen")
 extern("inc_subr_ardefs")
 extern("inc_subr_teff")
 
-int GetMovementSpeedForFlyingCreature(object oPC) {
+int GetMovementSpeedForFlyingCreature(object oPC)
+{
 	if (GetSubRace(oPC) == "Avariel")
 		return 99;
+
 	if (GetSubRace(oPC) == "Fey'ri")
 		return 99;
+
 	if (GetSubRace(oPC) == "Tauben-Aasimar")
 		return 40;
 
 	return 0;
 }
 
-void Fly_Effect(object oPC) {
+void Fly_Effect(object oPC)
+{
 	object oEff1, oEff2;
 	location lLoc = GetLocation(oPC);
 	oEff2 = CreateObject(OBJECT_TYPE_PLACEABLE, "plc_dustplume", lLoc);
@@ -21,31 +25,37 @@ void Fly_Effect(object oPC) {
 	ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DUST_EXPLOSION), lLoc);
 }
 
-int Fly_IsAirborne(object oPC) {
+int Fly_IsAirborne(object oPC)
+{
 	return GetLocalInt(oPC, "SR_Airborne");
 }
 
-int Fly_IsAreaOK(object oPC) {
+int Fly_IsAreaOK(object oPC)
+{
 	return true;
 }
 
-int Fly_IsPCOK(object oPC) {
+int Fly_IsPCOK(object oPC)
+{
 	if (GetLocalInt(oPC, "cannot_fly"))
 		return false;
 
 	int maxtlbs = atoi(Get2DAString("encumbrance", "Normal", GetAbilityScore(oPC, ABILITY_STRENGTH)));
 	int currtlbs = GetWeight(oPC);
+
 	if (currtlbs > maxtlbs)
 		return false;
 
 	object armor = GetItemInSlot(INVENTORY_SLOT_CHEST, oPC);
+
 	if (is_valid(armor) && GetArmorAC(armor) >= 6)
 		return false;
 
 	return GetCurrentHitPoints(oPC) >= GetMaxHitPoints(oPC) / 2;
 }
 
-void Fly_TakeOff_Etherealness(object oPC) {
+void Fly_TakeOff_Etherealness(object oPC)
+{
 	if (Fly_IsAirborne(oPC)) {
 		effect ether = EffectEthereal();
 		ether = EffectLinkEffects(EffectVisualEffect(VFX_DUR_INVISIBILITY), ether);
@@ -54,13 +64,15 @@ void Fly_TakeOff_Etherealness(object oPC) {
 	}
 }
 
-void Fly_TakeOff(object oPC) {
+void Fly_TakeOff(object oPC)
+{
 	effect eEff1, eEff2;
 
-	if ( Fly_IsAirborne(oPC) )
+	if (Fly_IsAirborne(oPC))
 		return;
 
 	int speed = GetMovementSpeedForFlyingCreature(oPC);
+
 	if (!speed)
 		speed = 25;
 
@@ -86,8 +98,9 @@ void Fly_TakeOff(object oPC) {
 	SetLocalInt(oPC, "SR_Airborne", 1);
 }
 
-void Fly_Land(object oPC, int iHard = FALSE) {
-	if ( !Fly_IsAirborne(oPC) ) return;
+void Fly_Land(object oPC, int iHard = FALSE)
+{
+	if (!Fly_IsAirborne(oPC)) return;
 
 	Fly_Effect(oPC);
 	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectAppear(), oPC);
@@ -97,9 +110,9 @@ void Fly_Land(object oPC, int iHard = FALSE) {
 
 	if (iHard) {
 		ApplyEffectToObject(DURATION_TYPE_INSTANT,
-			EffectDamage(d10(2), DAMAGE_TYPE_BLUDGEONING), oPC);
+							EffectDamage(d10(2), DAMAGE_TYPE_BLUDGEONING), oPC);
 		ApplyEffectToObject(DURATION_TYPE_TEMPORARY,
-			EffectKnockdown(), oPC, 6f);
+							EffectKnockdown(), oPC, 6f);
 	}
 }
 

@@ -6,17 +6,19 @@ extern("inc_cdb")
 extern("_gen")
 
 
-void main() {
+void main()
+{
 	object oItem = GetModuleItemLost();
 	object oPC = GetModuleItemLostBy();
 
 	string sRes = GetResRef(oItem);
 
-	if ( CorpseDropped(oItem, oPC) )
+	if (CorpseDropped(oItem, oPC))
 		return;
 
 
-	if ( TestStringAgainstPattern("move_**", sRes) && !TestStringAgainstPattern("move_target_**", sRes) && is_valid(GetArea(oItem)) ) {
+	if (TestStringAgainstPattern("move_**", sRes) && !TestStringAgainstPattern("move_target_**", sRes)
+			&& is_valid(GetArea(oItem))) {
 		location lT = GetLocation(oPC);
 
 		string sResRef = GetResRef(oItem);
@@ -24,7 +26,7 @@ void main() {
 
 		object oN = CreateObject(OBJECT_TYPE_PLACEABLE, sTag, lT, FALSE);
 
-		if ( GetLocalInt(oItem, "placie_id") ) {
+		if (GetLocalInt(oItem, "placie_id")) {
 			SetLocalInt(oN, "placie_id", GetLocalInt(oItem, "placie_id"));
 		}
 

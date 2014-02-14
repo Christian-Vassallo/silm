@@ -1,27 +1,30 @@
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
-	
+
 	if (e.ev != "item_activate" && e.ev != "item_freeactivate")
 		return;
-	
+
 	object item = e.runnable;
 	object pc = e.actor;
 
 	bool found = false;
 	effect invis;
 	iterate_effects(pc, eff,
-		if (GetEffectType(eff) == EFFECT_TYPE_INVISIBILITY &&
-				GetEffectSubType(eff) == SUBTYPE_MAGICAL &&
-				GetEffectDurationType(eff) == DURATION_TYPE_PERMANENT) {
-			invis = eff;
-			found = true;
-			break;
-		}
-	);
+
+					if (GetEffectType(eff) == EFFECT_TYPE_INVISIBILITY &&
+						GetEffectSubType(eff) == SUBTYPE_MAGICAL &&
+	GetEffectDurationType(eff) == DURATION_TYPE_PERMANENT) {
+	invis = eff;
+	found = true;
+	break;
+}
+			   );
 
 
 	bool is_free_action = GetLocalInt(item, "free_action");
 	int invis_type = GetLocalInt(item, "invis_type");
+
 	if (!invis_type)
 		invis_type = INVISIBILITY_TYPE_NORMAL;
 
@@ -31,14 +34,14 @@ void main() {
 	}
 
 	if ((
-			(is_free_action && e.ev == "item_freeactivate") ||
-			(!is_free_action && e.ev == "item_activate")
-		)&& !found) {
+				(is_free_action && e.ev == "item_freeactivate") ||
+				(!is_free_action && e.ev == "item_activate")
+			) && !found) {
 
 		effect eInvis = EffectLinkEffects(
-			EffectInvisibility(invis_type),
-			EffectVisualEffect(VFX_DUR_INVISIBILITY)
-		);
+							EffectInvisibility(invis_type),
+							EffectVisualEffect(VFX_DUR_INVISIBILITY)
+						);
 
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, eInvis, pc);
 

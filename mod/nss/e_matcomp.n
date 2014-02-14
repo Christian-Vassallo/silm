@@ -18,7 +18,8 @@ extern("inc_currency")
 #define MSG_FAIL_XP           ColorTag(cRed) + \
 	"*Ihr habt nicht genug Erfahrung fuer diesen Zauber!*"
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "creature_castspell") {
@@ -40,6 +41,7 @@ void main() {
 		}
 
 		int class = GetClassByPosition(1 + class_index);
+
 		if (class == CLASS_TYPE_INVALID) {
 			_FATAL("invalid class type of index: " + itoa(class_index));
 			return;
@@ -54,7 +56,8 @@ void main() {
 			return;
 
 		pQ("select component, afocus, copper, xp, target_hd_copper_multi " +
-				"from spellcomp where spell = " + pSi(GetSpellId()));
+		   "from spellcomp where spell = " + pSi(GetSpellId()));
+
 		if (!pF())
 			return;
 
@@ -68,7 +71,7 @@ void main() {
 				&& CI_GetClassMagicType(class) == X2_CI_MAGICTYPE_ARCANE) {
 			if (!is_valid(GetItemPossessedBy(e.actor, afocus))) {
 				FloatingTextStringOnCreature(MSG_FAIL_ARCANE_FOCUS,
-					e.actor, false);
+											 e.actor, false);
 				event_stop_end_suppress();
 			}
 		}
@@ -76,16 +79,17 @@ void main() {
 		if ("" != comp) {
 			if (!is_valid(GetItemPossessedBy(e.actor, comp))) {
 				FloatingTextStringOnCreature(MSG_FAIL_COMPONENT,
-					e.actor, false);
+											 e.actor, false);
 				event_stop_end_suppress();
 			}
 		}
 
 		if (copper > 0) {
 			int money = CountInventoryMoney(e.actor);
+
 			if (copper > money) {
 				FloatingTextStringOnCreature(MSG_FAIL_MONEY,
-					e.actor, false);
+											 e.actor, false);
 				event_stop_end_suppress();
 			}
 		}
@@ -93,9 +97,10 @@ void main() {
 		if (xp > 0) {
 			int lvl = GetHitDice(e.actor);
 			int xp_start = atoi(Get2DAString("exptable", "XP", lvl - 1));
+
 			if (GetXP(e.actor) - xp < xp_start) {
 				FloatingTextStringOnCreature(MSG_FAIL_XP,
-					e.actor, false);
+											 e.actor, false);
 				event_stop_end_suppress();
 			}
 		}
@@ -106,6 +111,7 @@ void main() {
 
 			if (GetItemStackSize(cobj) > 1)
 				SetItemStackSize(cobj, GetItemStackSize(cobj) - 1);
+
 			else
 				DestroyObject(cobj);
 		}
@@ -113,6 +119,7 @@ void main() {
 		if (copper != 0) {
 			if (copper > 0)
 				TakeMoneyFromCreature(e.actor, copper);
+
 			else
 				GiveMoneyToCreature(e.actor, - copper);
 		}
@@ -120,6 +127,7 @@ void main() {
 		if (xp != 0) {
 			if (xp > 0)
 				SetXP(e.actor, GetXP(e.actor) - xp);
+
 			else
 				SetXP(e.actor, GetXP(e.actor) + xp);
 		}

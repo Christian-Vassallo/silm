@@ -20,15 +20,20 @@ extern("inc_scorco")
 extern("inc_events")
 
 
-void _Respawn(int iObType, string sResRef, location lLocation) {
+void _Respawn(int iObType, string sResRef, location lLocation)
+{
 	CreateObject(iObType, sResRef, lLocation);
 }
 
-void main() {
+void main()
+{
 
 	// Event: creature_death
 	// - actor: GetLastKiller()
-	int ret = RunEventScriptsFor(GetEventSerial(), "creature_death", OBJECT_SELF, GetLastKiller(), OBJECT_INVALID, GetLocation(OBJECT_INVALID));
+	int ret = RunEventScriptsFor(GetEventSerial(), "creature_death", OBJECT_SELF, GetLastKiller(),
+								 OBJECT_INVALID,
+								 GetLocation(OBJECT_INVALID));
+
 	if (ret & EVENT_RESULT_STOP)
 		return;
 
@@ -36,19 +41,25 @@ void main() {
 	int nAlign = GetAlignmentGoodEvil(OBJECT_SELF);
 	object oKiller = GetLastKiller();
 	object oKilled =  OBJECT_SELF;
-	
+
 	if (gvGetInt("persist_critters") && !GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF) > 0) {
 		p_delete("critters", OBJECT_SELF);
 	}
 
 	int nID = GetCharacterID(oKiller);
+
 	if (nID > 0) {
-		pQ("select id from monster_kills where killer_id = " + IntToString(nID) + " and resref = " + pE(GetResRef(oKilled)) + ";");
+		pQ("select id from monster_kills where killer_id = " + IntToString(nID) + " and resref = " + pE(
+			   GetResRef(
+				   oKilled)) + ";");
+
 		if (pF()) {
 			string sID = pG(1);
 			pQ("update monster_kills set count = count + 1 where id = " + sID);
+
 		} else {
-			pQ("insert into monster_kills (killer_id, resref) values(" + IntToString(nID) + ", " + pE(GetResRef(oKilled)) + ");");
+			pQ("insert into monster_kills (killer_id, resref) values(" + IntToString(nID) + ", " + pE(GetResRef(
+						oKilled)) + ");");
 		}
 	}
 
@@ -57,7 +68,7 @@ void main() {
 
 	// If we're a good/neutral commoner,
 	// adjust the killer's alignment evil
-	if ( nClass > 0 && ( nAlign == ALIGNMENT_GOOD || nAlign == ALIGNMENT_NEUTRAL ) )
+	if (nClass > 0 && (nAlign == ALIGNMENT_GOOD || nAlign == ALIGNMENT_NEUTRAL))
 		AdjustAlignment(oKiller, ALIGNMENT_EVIL, 5);
 
 	// Call to allies to let them know we're dead
@@ -68,31 +79,31 @@ void main() {
 
 	// NOTE: the OnDeath user-defined event does not
 	// trigger reliably and should probably be removed
-	if ( GetSpawnInCondition(NW_FLAG_DEATH_EVENT) ) {
+	if (GetSpawnInCondition(NW_FLAG_DEATH_EVENT)) {
 		SignalEvent(OBJECT_SELF, EventUserDefined(1007));
 	}
 
-	if ( !GetLocalInt(OBJECT_SELF, "no_xp") )
+	if (!GetLocalInt(OBJECT_SELF, "no_xp"))
 		GiveKillXP();
 
-	if ( ( fRespawnTime = GetLocalFloat(OBJECT_SELF, "RespawnTime") ) > 1.0f ) {
+	if ((fRespawnTime = GetLocalFloat(OBJECT_SELF, "RespawnTime")) > 1.0f) {
 		int iObjType = GetObjectType(OBJECT_SELF);
 		string sResRef = GetResRef(OBJECT_SELF);
 		location lLocation = GetLocation(OBJECT_SELF);
 
 		AssignCommand(GetModule(),
-			DelayCommand(fRespawnTime,
-				_Respawn(iObjType, sResRef, lLocation)));
+					  DelayCommand(fRespawnTime,
+								   _Respawn(iObjType, sResRef, lLocation)));
 	}
 
-	if ( !GetLocalInt(OBJECT_SELF, "no_corpse") )
+	if (!GetLocalInt(OBJECT_SELF, "no_corpse"))
 		ExecuteScript("corpse_death", OBJECT_SELF);
 
-	if ( GetTag(OBJECT_SELF) == "ascore_ghost" ) {
+	if (GetTag(OBJECT_SELF) == "ascore_ghost") {
 		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(SPELL_LESSER_DISPEL), GetLocation(
-				OBJECT_SELF));
+								  OBJECT_SELF));
 		ApplyEffectAtLocation(DURATION_TYPE_INSTANT, EffectVisualEffect(VFX_IMP_DEATH), GetLocation(
-				OBJECT_SELF));
+								  OBJECT_SELF));
 		ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDisappear(1), OBJECT_SELF);
 		DelayCommand(3.0, DestroyObject(OBJECT_SELF));
 		return;

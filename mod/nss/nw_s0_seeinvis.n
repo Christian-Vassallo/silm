@@ -1,6 +1,7 @@
 extern("x2_inc_spellhook")
 
-void main() {
+void main()
+{
 	if (!X2PreSpellCastCode())
 		return;
 
@@ -8,12 +9,13 @@ void main() {
 	effect eSight = EffectSeeInvisible();
 
 	SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF,
-		SPELL_SEE_INVISIBILITY, FALSE));
+										  SPELL_SEE_INVISIBILITY, FALSE));
 
 	int nDuration = 10 * GetCasterLevel(OBJECT_SELF);
+
 	if (GetMetaMagicFeat() == METAMAGIC_EXTEND)
 		nDuration *= 2;
 
 	ApplyEffectToObject(DURATION_TYPE_TEMPORARY, eSight, oTarget,
-		TurnsToSeconds(nDuration)); // 10 minutes per level
+						TurnsToSeconds(nDuration)); // 10 minutes per level
 }

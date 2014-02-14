@@ -20,45 +20,44 @@ extern("nw_i0_spells")
 void Drown(object oTarget)
 {
 
-    effect eVis = EffectVisualEffect(VFX_IMP_FROST_S);
-    // * certain racial types are immune
-    if ((GetRacialType(oTarget) != RACIAL_TYPE_CONSTRUCT)
-     &&(GetRacialType(oTarget) != RACIAL_TYPE_UNDEAD)
-     &&(GetRacialType(oTarget) != RACIAL_TYPE_ELEMENTAL))
-    {
-        //Make a fortitude save
-        if(MySavingThrow(SAVING_THROW_FORT, oTarget, 20) == FALSE)
-        {
-            //Apply the VFX impact and damage effect
-            ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
-            //Set damage effect to kill the target
-            ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDeath(), oTarget);
+	effect eVis = EffectVisualEffect(VFX_IMP_FROST_S);
 
-         }
-    }
+	// * certain racial types are immune
+	if ((GetRacialType(oTarget) != RACIAL_TYPE_CONSTRUCT)
+			&& (GetRacialType(oTarget) != RACIAL_TYPE_UNDEAD)
+			&& (GetRacialType(oTarget) != RACIAL_TYPE_ELEMENTAL)) {
+		//Make a fortitude save
+		if (MySavingThrow(SAVING_THROW_FORT, oTarget, 20) == FALSE) {
+			//Apply the VFX impact and damage effect
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, eVis, oTarget);
+			//Set damage effect to kill the target
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDeath(), oTarget);
+
+		}
+	}
 }
-void main ()
+void main()
 {
-    int nDamage = GetCurrentHitPoints() / 2;
-    ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectDamage(nDamage), OBJECT_SELF);
-    //Declare major variables
-    object oTarget;
-    int bSave = FALSE;
-    int nIdx;
+	int nDamage = GetCurrentHitPoints() / 2;
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectDamage(nDamage), OBJECT_SELF);
+	//Declare major variables
+	object oTarget;
+	int bSave = FALSE;
+	int nIdx;
 
-    effect eImpact = EffectVisualEffect(VFX_IMP_PULSE_WATER);
-    ApplyEffectToObject(DURATION_TYPE_INSTANT, eImpact, OBJECT_SELF);
-    oTarget = GetFirstObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_LARGE, GetLocation(OBJECT_SELF));
-    while(GetIsObjectValid(oTarget) == TRUE)
-    {
-      	if(!GetIsReactionTypeFriendly(oTarget) && oTarget != OBJECT_SELF)
-    	{
-            //Fire cast spell at event for the specified target
-            SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELLABILITY_PULSE_DROWN));
-            Drown(oTarget);
-        }
-        oTarget = GetNextObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_LARGE, GetLocation(OBJECT_SELF));
-    }
+	effect eImpact = EffectVisualEffect(VFX_IMP_PULSE_WATER);
+	ApplyEffectToObject(DURATION_TYPE_INSTANT, eImpact, OBJECT_SELF);
+	oTarget = GetFirstObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_LARGE, GetLocation(OBJECT_SELF));
+
+	while (GetIsObjectValid(oTarget) == TRUE) {
+		if (!GetIsReactionTypeFriendly(oTarget) && oTarget != OBJECT_SELF) {
+			//Fire cast spell at event for the specified target
+			SignalEvent(oTarget, EventSpellCastAt(OBJECT_SELF, SPELLABILITY_PULSE_DROWN));
+			Drown(oTarget);
+		}
+
+		oTarget = GetNextObjectInShape(SHAPE_SPHERE, RADIUS_SIZE_LARGE, GetLocation(OBJECT_SELF));
+	}
 }
 
 

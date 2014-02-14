@@ -2,25 +2,49 @@ extern("inc_colors")
 extern("inc_spelltools")
 extern("draconic")
 
-void _show(object caster, int class, int spell, int meta, int flags) {
+void _show(object caster, int class, int spell, int meta, int flags)
+{
 	struct Color c;
+
 	switch (Random(7)) {
-		case 0: c = cRed; break;
-		case 1: c = cLightBlue; break;
-		case 2: c = cYellow; break;
-		case 3: c = cMidGreen; break;
-		case 4: c = cMagenta; break;
-		case 5: c = cTeal; break;
-		case 6: c = cOrange; break;
+	case 0:
+		c = cRed;
+		break;
+
+	case 1:
+		c = cLightBlue;
+		break;
+
+	case 2:
+		c = cYellow;
+		break;
+
+	case 3:
+		c = cMidGreen;
+		break;
+
+	case 4:
+		c = cMagenta;
+		break;
+
+	case 5:
+		c = cTeal;
+		break;
+
+	case 6:
+		c = cOrange;
+		break;
 	}
-	
+
 	string meta_s = MetaMagicToDraconic(meta);
 
 	string name = SpellToDraconic(spell);
+
 	if (name == "") {
 		_WARN("cannot resolve verbal component for " + itoa(spell));
 		return;
 	}
+
 	if (meta_s != "")
 		name += " " + strupper(meta_s);
 
@@ -29,58 +53,63 @@ void _show(object caster, int class, int spell, int meta, int flags) {
 	AssignCommand(caster, SpeakString(str));
 }
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
-	
+
 	if (e.ev == "creature_castingspell") {
 		if (GetLocalInt(e.actor, "spellcomp_skip")) {
 			if (GetLocalInt(e.actor, "spellcomp_skip") < 2)
 				SetLocalInt(e.actor, "spellcomp_skip", 0);
+
 			return;
 		}
 
 		struct EventArguments ea = GetEventArguments(e.serial);
 
 		int spell_id     = ea.i0;
+
 		int meta         = ea.i1;
+
 		int flags        = ea.i2;
+
 		int class        = atoi(ea.a0);
-		
+
 		if (flags) // We assume instant spells are scripted and not player-cast
 			return;
 
 		int is_verbal = -1 != strpos(strlwr(Get2DAString("spells", "VS",
-				spell_id)), "v");
+											spell_id)), "v");
 
 		if (!is_verbal)
 			return;
-	
+
 		if (METAMAGIC_SILENT == meta)
 			return;
 
 		switch (class) {
-			// divine
-			case CLASS_TYPE_CLERIC:
-			case CLASS_TYPE_PALADIN:
-			case CLASS_TYPE_PALEMASTER:
-				// todo: divine incantations
-				_show(e.actor, class, spell_id, meta, flags);
-				break;
+		// divine
+		case CLASS_TYPE_CLERIC:
+		case CLASS_TYPE_PALADIN:
+		case CLASS_TYPE_PALEMASTER:
+			// todo: divine incantations
+			_show(e.actor, class, spell_id, meta, flags);
+			break;
 
-			// bard
-			case CLASS_TYPE_BARD:
-				ApplyEffectToObject(DURATION_TYPE_TEMPORARY,
-					SupernaturalEffect(EffectVisualEffect(277)),
-					e.runnable,
-					2.0);
-				break;
+		// bard
+		case CLASS_TYPE_BARD:
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY,
+								SupernaturalEffect(EffectVisualEffect(277)),
+								e.runnable,
+								2.0);
+			break;
 
-			// arcane/draconic
-			default:
+		// arcane/draconic
+		default:
 			// case CLASS_TYPE_SORCERER:
 			// case CLASS_TYPE_WIZARD:
-				_show(e.actor, class, spell_id, meta, flags);
-				break;
+			_show(e.actor, class, spell_id, meta, flags);
+			break;
 		}
 	}
 }

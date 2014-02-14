@@ -8,12 +8,18 @@ extern("x2_inc_itemprop")
 
 int dice_throw(object creature, int count, int faces, int mod, string descriptor);
 
-int dice_throw(object creature, int count, int faces, int mod, string descriptor) {
+int dice_throw(object creature, int count, int faces, int mod, string descriptor)
+{
 	if (count < 1) count = 1;
+
 	if (count > 20) count = 20;
+
 	if (faces < 2) faces = 2;
+
 	if (faces > 1000) faces = 1000;
+
 	if (mod < -1000) mod = -1000;
+
 	if (mod > 1000) mod = 1000;
 
 	if (descriptor == "")
@@ -22,24 +28,33 @@ int dice_throw(object creature, int count, int faces, int mod, string descriptor
 	int total = mod;
 
 	string fstrdetail = "";
-	int i; for (i = 0; i < count; i++) {
+	int i;
+
+	for (i = 0; i < count; i++) {
 		int res = 1 + Random(faces);
 		total += res;
 		fstrdetail += itoa(res) + " ";
 	}
+
 	fstrdetail = substr(fstrdetail, 0, strlen(fstrdetail) - 1); // om nom " "
 
 	string msg = ColorTag(cLightGrey) + "[" + descriptor + "]";
+
 	if (mod != 0) {
 		msg += " ";
+
 		if (mod > 0) msg += "+";
+
 		msg += itoa(mod);
 	}
+
 	msg += " = " + ColorTag(cPink) + itoa(total);
+
 	if (mod != 0 || count > 1)
 		msg += ColorTag(cDarkGrey) + " // " + fstrdetail;
 
 	AssignCommand(creature, SpeakString(msg));
+
 	if (!is_dm(creature))
 		AssignCommand(creature, PlaySound("dice" + itoa(Random(2))));
 

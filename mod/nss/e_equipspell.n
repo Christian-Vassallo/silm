@@ -4,21 +4,28 @@ extern("_gen")
 #define LIFEDRAIN_DAMAGE 1
 #define LIFEDRAIN_OFFSET 120
 
-void RemoveLifeDrain(object creature) {
+void RemoveLifeDrain(object creature)
+{
 	int found = false;
-	int n; for (n = 0; n < 14; n++) {
+	int n;
+
+	for (n = 0; n < 14; n++) {
 		object oIterate = GetItemInSlot(n, creature);
+
 		if (GetLocalString(oIterate, "equipspell") == "lifedrain") {
 			found = true;
 			break;
 		}
 	}
+
 	if (!found)
 		SetLocalInt(creature, "equipspell_lifedrain", 0);
 }
 
-bool GetHasEquipEffect(object creature, string eff) {
+bool GetHasEquipEffect(object creature, string eff)
+{
 	int nSlot;
+
 	for (nSlot = 0; nSlot < NUM_INVENTORY_SLOTS; nSlot++)
 		if (GetLocalString(GetItemInSlot(nSlot, creature), "equipspell") == eff)
 			return true;
@@ -26,115 +33,141 @@ bool GetHasEquipEffect(object creature, string eff) {
 	return false;
 }
 
-void main() {
+void main()
+{
 
 	struct EventInfo e = GetEventInfo();
 
 	if (e.ev == "item_equip") {
 		effect app;
 		string es = GetLocalString(e.runnable, "equipspell");
+
 		if ("" == es)
 			return;
 
 		/* regular items */
 		else if ("invisibility" == es)
 			app = EffectInvisibility(INVISIBILITY_TYPE_NORMAL);
+
 		else if ("darkness_invisibility" == es)
 			app = EffectInvisibility(INVISIBILITY_TYPE_DARKNESS);
+
 		else if ("extended_invisibility" == es)
 			app = EffectInvisibility(INVISIBILITY_TYPE_IMPROVED);
+
 		else if ("see_invisible" == es)
 			app = EffectSeeInvisible();
 
 		/* cursed items */
 		else if ("ethereal" == es) {
 			app = SupernaturalEffect(EffectLinkEffects(
-				EffectLinkEffects(EffectVisualEffect(VFX_DUR_CUTSCENE_INVISIBILITY), EffectEthereal()),
-				EffectLinkEffects(
-					EffectLinkEffects(
-						EffectDeaf(),
-						EffectSilence()
-					),
-					EffectLinkEffects(
-						EffectMissChance(100),
-						EffectSpellFailure(100)
-					)
-				)
-			));
+										 EffectLinkEffects(EffectVisualEffect(VFX_DUR_CUTSCENE_INVISIBILITY), EffectEthereal()),
+										 EffectLinkEffects(
+											 EffectLinkEffects(
+												 EffectDeaf(),
+												 EffectSilence()
+											 ),
+											 EffectLinkEffects(
+												 EffectMissChance(100),
+												 EffectSpellFailure(100)
+											 )
+										 )
+									 ));
+
 		} else if ("manyarrows" == es) {
 			app = SupernaturalEffect(EffectLinkEffects(
-				EffectLinkEffects(
-					EffectLinkEffects(
-						EffectVisualEffect(632),
-						EffectVisualEffect(633)
-					),
-					EffectLinkEffects(
-						EffectVisualEffect(634),
-						EffectVisualEffect(635)
-					)
-				),
-				EffectLinkEffects(
-					EffectLinkEffects(
-						EffectVisualEffect(636),
-						EffectVisualEffect(637)
-					),
-					EffectVisualEffect(638)
-				)
-			));
+										 EffectLinkEffects(
+											 EffectLinkEffects(
+												 EffectVisualEffect(632),
+												 EffectVisualEffect(633)
+											 ),
+											 EffectLinkEffects(
+												 EffectVisualEffect(634),
+												 EffectVisualEffect(635)
+											 )
+										 ),
+										 EffectLinkEffects(
+											 EffectLinkEffects(
+												 EffectVisualEffect(636),
+												 EffectVisualEffect(637)
+											 ),
+											 EffectVisualEffect(638)
+										 )
+									 ));
+
 		} else if ("petrify" == es)
 			app = SupernaturalEffect(EffectPetrify());
+
 		else if ("blindness" == es)
 			app = SupernaturalEffect(EffectBlindness());
+
 		else if ("confused" == es)
 			app = SupernaturalEffect(EffectConfused());
+
 		else if ("dazed" == es)
 			app = SupernaturalEffect(EffectDazed());
+
 		else if ("darkness" == es)
 			app = SupernaturalEffect(EffectAreaOfEffect(AOE_PER_DARKNESS));
+
 		else if ("silence" == es)
 			app = SupernaturalEffect(EffectSilence());
+
 		else if ("sleep" == es)
 			app = SupernaturalEffect(EffectSleep());
+
 		else if ("lifedrain" == es) {
 			SetLocalInt(e.actor, "equipspell_lifedrain", 1);
-			SetLocalInt(e.actor, "equipspell_lifedrain_offset", GetLocalInt(e.runnable, "equipspell_lifedrain_offset"));
-			SetLocalInt(e.actor, "equipspell_lifedrain_damage", GetLocalInt(e.runnable, "equipspell_lifedrain_damage"));
+			SetLocalInt(e.actor, "equipspell_lifedrain_offset", GetLocalInt(e.runnable,
+						"equipspell_lifedrain_offset"));
+			SetLocalInt(e.actor, "equipspell_lifedrain_damage", GetLocalInt(e.runnable,
+						"equipspell_lifedrain_damage"));
+
 		} else if ("poison" == es) {
 			int poison = GetLocalInt(e.runnable, "poison");
+
 			if (!poison) {
 				_WARN("poison equipspell by " + GetName(e.actor) +
-					" did not have a poison set, defaulting to HUGE_SPIDER_VENOM");
+					  " did not have a poison set, defaulting to HUGE_SPIDER_VENOM");
 				poison = POISON_HUGE_SPIDER_VENOM;
+
 			} else
 				poison--;
+
 			app = SupernaturalEffect(EffectPoison(poison));
+
 		} else if ("swarm" == es) {
 			string ref = GetLocalString(e.runnable, "swarm_ref"); // substr(es, 6, 1024);
 			app = EffectSwarm(true, ref);
+
 		} else if ("spellfailure" == es)
 			app = SupernaturalEffect(EffectSpellFailure(100));
+
 		else if ("" != es) {
 			_WARN("Unknown equipspell '" + es + "'");
 			return;
 		}
-		
+
 		ApplyEffectToObject(DURATION_TYPE_PERMANENT, app, e.actor);
 	}
 
 	if (e.ev == "item_unequip") {
 		if (GetLocalInt(e.actor, "equipspell_lifedrain"))
 			DelayCommand(0.1, RemoveLifeDrain(e.actor));
-		
+
 		string es = GetLocalString(e.runnable, "equipspell");
+
 		if (es == "")
 			return;
 
 		effect ef = GetFirstEffect(e.actor);
+
 		while (GetIsEffectValid(ef)) {
 			if (GetEffectCreator(ef) == e.runnable &&
-				GetEffectSubType(ef) == SUBTYPE_MAGICAL) {
+					GetEffectSubType(ef) == SUBTYPE_MAGICAL) {
 				RemoveEffect(e.actor, ef);
 			}
+
 			ef = GetNextEffect(e.actor);
 		}
 	}
@@ -142,11 +175,15 @@ void main() {
 	if (e.ev == "player_hb") {
 		object pc = e.runnable;
 		int ld;
+
 		if (ld = GetLocalInt(pc, "equipspell_lifedrain")) {
 			int now = GetUnixTimestamp();
 			int offset = GetLocalInt(pc, "equipspell_lifedrain_offset");
+
 			if (!offset) offset = LIFEDRAIN_OFFSET;
+
 			int damage = GetLocalInt(pc, "equipspell_lifedrain_damage");
+
 			if (!damage) damage = LIFEDRAIN_DAMAGE;
 
 			if (ld + offset <= now) {

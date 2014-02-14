@@ -2,7 +2,8 @@ extern("_gen")
 extern("inc_horse")
 extern("inc_events")
 
-void main() {
+void main()
+{
 	object oPC = GetPCItemLastEquippedBy();
 	object oItem = GetPCItemLastEquipped();
 
@@ -10,10 +11,13 @@ void main() {
 
 	int nNow = GetUnixTimestamp();
 	int nSh = 0;
-	if ( "s_ebs" == GetTag(oItem) ) {
+
+	if ("s_ebs" == GetTag(oItem)) {
 		nSh = GetLocalInt(oItem, "ebs_create");
-		if ( nSh == 0 || nNow - nSh > 3600 * 3 )
+
+		if (nSh == 0 || nNow - nSh > 3600 * 3)
 			DestroyObject(oItem);
+
 		return;
 	}
 

@@ -1,17 +1,22 @@
 extern("inc_cdb")
 
-void tweakByMaster(object master, int associate) {
+void tweakByMaster(object master, int associate)
+{
 	object assoc = GetAssociate(associate, master);
+
 	if (!is_valid(assoc))
 		return;
 
 	int cid = GetCharacterID(master);
+
 	if (!cid) return;
 
 	pQ("select appearance, tail, name, portrait, description from " +
-		"tweaksummon.appearance where " +
-		"cid = " + pSi(cid) + " and associate = " + pSi(associate));
+	   "tweaksummon.appearance where " +
+	   "cid = " + pSi(cid) + " and associate = " + pSi(associate));
+
 	if (!pF()) return;
+
 	int app = pGi(1);
 	int tail = pGi(2);
 	string name = pGs(3);
@@ -20,24 +25,30 @@ void tweakByMaster(object master, int associate) {
 
 	if (app > 0)
 		DelayCommand(0.2, SetCreatureAppearanceType(assoc, app));
+
 	if (tail > 0)
 		DelayCommand(0.3, SetCreatureTailType(tail, assoc));
+
 	if (name != "")
 		SetName(assoc, name);
+
 	if (desc != "")
 		SetDescription(assoc, desc);
+
 	if (portrait != "")
 		SetPortraitResRef(assoc, portrait);
 }
 
 
-void main() {
+void main()
+{
 	struct EventInfo e = GetEventInfo();
 	// struct EventArguments ea = GetEventArguments(e.serial);
 
 	if (e.ev == "familiar_summon") {
 		DelayCommand(0.3, tweakByMaster(e.runnable, ASSOCIATE_TYPE_FAMILIAR));
 	}
+
 	if (e.ev == "companion_summon") {
 		DelayCommand(0.3, tweakByMaster(e.runnable, ASSOCIATE_TYPE_ANIMALCOMPANION));
 	}

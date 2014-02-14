@@ -1,28 +1,28 @@
 /*
   File: inc_chat_run.n
-  
+
   TODO: translateme
 
 Allgemeine Benutzung:
-Alle Chatbefehle beginnen mit einem / vorangestellt. Sie nehmen optionale Parameter an, sowie Optionen. Benutzern von unixoiden Kommandozeilen-Shells duerfte dies sehr sehr bekannt vorkommen. 
+Alle Chatbefehle beginnen mit einem / vorangestellt. Sie nehmen optionale Parameter an, sowie Optionen. Benutzern von unixoiden Kommandozeilen-Shells duerfte dies sehr sehr bekannt vorkommen.
 
 Parameter:
-Parameter werden hinter dem Befehl angefuegt, in der Reihenfolge, in der man sie dem Befehl uebergeben moechte; sie werden durch ein oder mehrere Leerzeichen getrennt. Wenn ein Parameter ein Leerzeichen enthaelt, so muss man den Parameter in einfache oder doppelte Anfuehrungszeichen setzen. 
+Parameter werden hinter dem Befehl angefuegt, in der Reihenfolge, in der man sie dem Befehl uebergeben moechte; sie werden durch ein oder mehrere Leerzeichen getrennt. Wenn ein Parameter ein Leerzeichen enthaelt, so muss man den Parameter in einfache oder doppelte Anfuehrungszeichen setzen.
 
 Optionen:
-Optionen sind, wie angedeutet, optionale Parameter. Sie beginnen immer mit einem vorangestellten -, und koennen optional einen Wert haben. Dies wird in der Uebersicht durch ein =Typ angedeutet. 
-- Beispiel: h t=int 
+Optionen sind, wie angedeutet, optionale Parameter. Sie beginnen immer mit einem vorangestellten -, und koennen optional einen Wert haben. Dies wird in der Uebersicht durch ein =Typ angedeutet.
+- Beispiel: h t=int
 Dies sagt aus, dass der Befehl eine Option "-h" versteht, sowie eine Option "-t int"; wo int eine beliebige Zahl ist, positiv oder negativ.
 
 Typen:
-- int: kommt von Integer, bedeutet eine Ganzzahl mit optionalem Vorzeichen 
-- float: Fliesskommazahl - Dezimaltrenner ist ein ".", kein "," (55.42) 
-- string: Eine Zeichenkette: --blubb "Dies ist das Argument zu blubb" 
-- bool: Ein Ja/Nein-Wert. 1 oder 0, true oder false, yes oder no. 
+- int: kommt von Integer, bedeutet eine Ganzzahl mit optionalem Vorzeichen
+- float: Fliesskommazahl - Dezimaltrenner ist ein ".", kein "," (55.42)
+- string: Eine Zeichenkette: --blubb "Dies ist das Argument zu blubb"
+- bool: Ein Ja/Nein-Wert. 1 oder 0, true oder false, yes oder no.
 
 Ziel eines Befehls:
-Die meisten Befehle arbeiten mit einem Ziel. Dieses kann durch die Zielwahl (ein Gegenstand unter Selbst erstellt, Einfuehrung) getan werden, oder durch den Konsolenbefehl /ta. 
-  
+Die meisten Befehle arbeiten mit einem Ziel. Dieses kann durch die Zielwahl (ein Gegenstand unter Selbst erstellt, Einfuehrung) getan werden, oder durch den Konsolenbefehl /ta.
+
 */
 extern("inc_chat")
 extern("_gen")
@@ -60,13 +60,15 @@ int CommandSQL(object oPC, int iMode);
 // This evaluates a string of commands, not prefixed with the
 // command character.
 // Example:  "ta self && app 298 && restore"
-int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel);
+int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias,
+				int nRunModLevel);
 
 // Runs a single command.  Usually called by CommandEval.
 int RunCommand(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel);
 
 
-int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro , int bRunAlias, int nRunModLevel);
+int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro , int bRunAlias,
+			  int nRunModLevel);
 
 void RunMacro(object oPC, int iMode, string sMacro);
 int CommandMacro(object oPC, int iMode);
@@ -86,7 +88,8 @@ void RegisterAccessFlags(int nFlags);
 
 
 
-int RunCommand(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel) {
+int RunCommand(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel)
+{
 	nRunModLevel = unsigned(nRunModLevel);
 	string sCommand, sRest;
 
@@ -95,12 +98,13 @@ int RunCommand(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias
 	// Now split up between command and the rest of arguments
 	int iWhite = FindSubString(sText, " ");
 
-	if ( iWhite > -1 ) {
+	if (iWhite > -1) {
 
 		sCommand = GetStringLowerCase(GetSubString(sText, 0, iWhite));
 
 		int i = 1;
-		while ( GetSubString(sText, iWhite + i, 1) == " " )
+
+		while (GetSubString(sText, iWhite + i, 1) == " ")
 			i++;
 
 		sRest = GetSubString(sText, iWhite + i, GetStringLength(sText));
@@ -118,48 +122,54 @@ int RunCommand(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias
 	sRest = GetStringTrim(sRest);
 
 	if (gvGetInt("chat_debug")) {
-		SendMessageToAllDMs("chat> run(RunCommand): '" + sCommand + "':'" + sRest + "'::" + IntToString(iMode) + "::" + 
-			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
+		SendMessageToAllDMs("chat> run(RunCommand): '" + sCommand + "':'" + sRest + "'::" + IntToString(
+								iMode) + "::" +
+							IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
 	}
 
-	switch ( OnCommand(oPC, sCommand, sRest, iMode, bRunMacro, bRunAlias, nRunModLevel) ) {
-		case ACCESS:
-			ToPC("Ihr habt nicht die noetigen Rechte, um diesen Befehl auszufuehren.", oPC);
-			return FALSE;
+	switch (OnCommand(oPC, sCommand, sRest, iMode, bRunMacro, bRunAlias, nRunModLevel)) {
+	case ACCESS:
+		ToPC("Ihr habt nicht die noetigen Rechte, um diesen Befehl auszufuehren.", oPC);
+		return FALSE;
 
-		case SYNTAX:
-			// ToPC(sCommand + ": Syntaxfehler, bitte ueberpruefen.", oPC);
-			return FALSE;
+	case SYNTAX:
+		// ToPC(sCommand + ": Syntaxfehler, bitte ueberpruefen.", oPC);
+		return FALSE;
 
-		case NOTFOUND:
-			if (gvGetInt("chat_debug")) {
-				SendMessageToAllDMs("chat> NOTFOUND(RunCommand): '" + sCommand + "':'" + sRest + "'::" + IntToString(iMode) + "::" + 
-					IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
-			}
-			ToPC("Befehl nicht gefunden.", oPC);
-			break;
+	case NOTFOUND:
+		if (gvGetInt("chat_debug")) {
+			SendMessageToAllDMs("chat> NOTFOUND(RunCommand): '" + sCommand + "':'" + sRest + "'::" +
+								IntToString(iMode) + "::" +
+								IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
+		}
 
-		case FAIL:
-			return FALSE;
+		ToPC("Befehl nicht gefunden.", oPC);
+		break;
 
-		case OK:
-			// Continue
-			// break;
+	case FAIL:
+		return FALSE;
+
+	case OK:
+		// Continue
+		// break;
 	}
 
-	if ( GetLocalInt(oPC, "chat_suppress_audit") == 0 ) {
+	if (GetLocalInt(oPC, "chat_suppress_audit") == 0) {
 		string sData = GetLocalString(oPC, "chat_data_audit");
 		SetLocalString(oPC, "chat_data_audit", "");
-		audit(sCommand, oPC, audit_fields("args", ( sData ==
-												   "" ? sRest : sData ), "mode", IntToString(iMode)),
-			"command", GetTarget());
+		audit(sCommand, oPC, audit_fields("args", (sData ==
+										  "" ? sRest : sData), "mode", IntToString(iMode)),
+			  "command", GetTarget());
+
 	} else
 		SetLocalInt(oPC, "chat_suppress_audit", 0);
+
 	return 1;
 }
 
 
-int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel) {
+int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlias, int nRunModLevel)
+{
 	nRunModLevel = unsigned(nRunModLevel);
 	int i = 0;
 	string sCmd = "";
@@ -167,37 +177,44 @@ int CommandEval(object oPC, int iMode, string sText, int bRunMacro, int bRunAlia
 	int nCommandCount = commandsplit(sText, COMMAND_SPLIT);
 
 	if (gvGetInt("chat_debug")) {
-		SendMessageToAllDMs("chat> CommandEval(): '" + sText + "'::" + IntToString(iMode) + "::" + 
-			IntToString(nCommandCount) + "::" +
-			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
+		SendMessageToAllDMs("chat> CommandEval(): '" + sText + "'::" + IntToString(iMode) + "::" +
+							IntToString(nCommandCount) + "::" +
+							IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
 	}
 
-	for ( i = 0; i < nCommandCount; i++ ) {
+	for (i = 0; i < nCommandCount; i++) {
 		sCmd = commandget(i);
-		if ( !RunCommand(oPC, iMode, sCmd, bRunMacro, bRunAlias, nRunModLevel) )
+
+		if (!RunCommand(oPC, iMode, sCmd, bRunMacro, bRunAlias, nRunModLevel))
 			return FALSE;
 	}
+
 	return TRUE;
 }
 
 
 
 
-void RegisterAlias(string sAlias, string sAliasValue) {
+void RegisterAlias(string sAlias, string sAliasValue)
+{
 	SetLocalString(GetModule(), "alias_" + sAlias, sAliasValue);
 }
 
-void RA(string sAlias, string sAliasValue) {
+void RA(string sAlias, string sAliasValue)
+{
 	RegisterAlias(sAlias, sAliasValue);
 }
 
-void RegisterCommand(string sCommandName, string sOptions, int nMinArg = -1, int nMaxArg = -1) {
+void RegisterCommand(string sCommandName, string sOptions, int nMinArg = -1, int nMaxArg = -1)
+{
 	object oM = GetModule();
 	LastCommand = GetStringLowerCase(sCommandName);
 
 	string sAllCommands = GetLocalString(oM, "cmds_all");
-	if ( sAllCommands != "" )
+
+	if (sAllCommands != "")
 		sAllCommands += ", ";
+
 	sAllCommands += LastCommand;
 	SetLocalString(oM, "cmds_all", sAllCommands);
 
@@ -209,22 +226,26 @@ void RegisterCommand(string sCommandName, string sOptions, int nMinArg = -1, int
 	SetLocalInt(oM, "cmd_" + LastCommand + "_amask", AMASK_GLOBAL_GM);
 }
 
-void RH(string sText, int nAMask = AMASK_ANY) {
+void RH(string sText, int nAMask = AMASK_ANY)
+{
 	RegisterHelp(sText);
 }
 
 // Cough up a syntax helper
-void RHs(string s = "", int bAddTarget = FALSE, int nAMask = AMASK_ANY) {
+void RHs(string s = "", int bAddTarget = FALSE, int nAMask = AMASK_ANY)
+{
 	RH("Syntax: " +
-		LastCommand + " " + ( bAddTarget == TRUE ? "[-t=1.." + IntToString(TARGET_MAX) + "] " : "" ) + s);
+	   LastCommand + " " + (bAddTarget == TRUE ? "[-t=1.." + IntToString(TARGET_MAX) + "] " : "") + s);
 }
 
 // Display an example
-void RHe(string s = "", int nAMask = AMASK_ANY) {
+void RHe(string s = "", int nAMask = AMASK_ANY)
+{
 	RH("Example: " + LastCommand + " " + s);
 }
 
-void RegisterHelp(string sText, int nAMask = AMASK_ANY) {
+void RegisterHelp(string sText, int nAMask = AMASK_ANY)
+{
 	int nCount = GetLocalInt(GetModule(), "cmd_" + LastCommand + "_h");
 
 	SetLocalString(GetModule(), "cmd_" + LastCommand + "h_" + IntToString(nCount), sText);
@@ -234,57 +255,60 @@ void RegisterHelp(string sText, int nAMask = AMASK_ANY) {
 	SetLocalInt(GetModule(), "cmd_" + LastCommand + "_h", nCount);
 }
 
-void RAF(int n) {
+void RAF(int n)
+{
 	RegisterAccessFlags(n);
 }
 
-void RegisterAccessFlags(int nFlags) {
+void RegisterAccessFlags(int nFlags)
+{
 	object oM = GetModule();
 	SetLocalInt(oM, "cmd_" + LastCommand + "_amask", nFlags);
 }
 
 
-void RegisterAllCommands() {
+void RegisterAllCommands()
+{
 	/* modifiers */
-	
+
 	// Chatcommand: g
 	RegisterCommand("g", "");
 
-	
+
 	// Chatcommand: here
 	RegisterCommand("here", "");
-	
-	
+
+
 	// Chatcommand: self
 	RegisterCommand("self", "");
 
-	
+
 	// Chatcommand: online
 	RegisterCommand("online", "dms");
 	RAF(AMASK_CAN_DO_BACKEND);
 
-	
+
 	// Chatcommand: area
 	RegisterCommand("area", "type=");
-	
-	
+
+
 	// Chatcommand: rect
 	RegisterCommand("rect", "x= y= type=");
 
-	
+
 	// Chatcommand: radius
 	RegisterCommand("radius", "r= type=");
-	
-	
+
+
 	// Chatcommand: line
 	RegisterCommand("line", "c=");
-	
-	
+
+
 	// Chatcommand: server
 	RegisterCommand("server", "type=");
 	RAF(AMASK_CAN_DO_BACKEND);
-	
-	
+
+
 	// Chatcommand: run
 	// Runs a named script.
 	RegisterCommand("run", "", 1, 1);
@@ -309,7 +333,7 @@ void RegisterAllCommands() {
 	RegisterCommand("afk", "");
 	RHs(">> Sets/unsets AFK mode (with flashy visuals!).");
 	RAF(AMASK_ANY);
-	
+
 	RegisterCommand("repeat", "");
 	RHs(">> Repeat the last spoken message in the current chat channel");
 	RAF(AMASK_ANY);
@@ -349,7 +373,7 @@ void RegisterAllCommands() {
 	// - Account
 	RegisterCommand("unignore", "", 1, 1);
 	RAF(AMASK_ANY);
-	
+
 	// Chatcommand: uptime
 	// Shows server uptime.
 	RegisterCommand("uptime", "");
@@ -367,7 +391,7 @@ void RegisterAllCommands() {
 	RegisterCommand("v", "");
 	RAF(AMASK_ANY);
 
-	
+
 	// Chatcommand: a
 	// Play animations.
 	// /a for a list.
@@ -381,7 +405,7 @@ void RegisterAllCommands() {
 	RA("crouch", "a crouch");
 	RAF(AMASK_ANY);
 
-	
+
 	// Chatcommand: rt
 	// Toggle track-reading.
 	RegisterCommand("rt", "");
@@ -390,7 +414,7 @@ void RegisterAllCommands() {
 
 	/* public-GM hybrids */
 
-	
+
 	// Chatcommand: follow
 	// Follow the next character standing nearest to you.
 	RegisterCommand("follow", "");
@@ -401,7 +425,7 @@ void RegisterAllCommands() {
 	RHe("[target_0] [target_1] >> Make t_0 follow t_1", AMASK_GM);
 	RAF(AMASK_ANY);
 
-	
+
 	// Chatcommand: lastlog
 	// Show the last-said chat concerning you.
 	RegisterCommand("lastlog", "count=");
@@ -411,7 +435,7 @@ void RegisterAllCommands() {
 
 	/* GM commands */
 
-	
+
 	// Chatcommand: gi
 	// Creates a command item for a named group.
 	// Parameters:
@@ -419,7 +443,7 @@ void RegisterAllCommands() {
 	RegisterCommand("gi", "", 1, 1);
 	RHs("setname >> create item for setname");
 
-	
+
 	// Chatcommand: gs
 	// Shows/selects a new named group.
 	// Parameters:
@@ -427,19 +451,19 @@ void RegisterAllCommands() {
 	RegisterCommand("gs", "", 0, 1);
 	RHs("[setname] >> get/set current set");
 
-	
+
 	// Chatcommand: ga
 	// Adds the current target to the current named group.
 	RegisterCommand("ga", "s=", 0, 0);
 	RHs("[-s=setname] >> add target to current/setname set");
 
-	
+
 	// Chatcommand: gc
 	// Clears the current named group.
 	RegisterCommand("gc", "s=", 0, 0);
 	RHs("[-s=setname] >> clear current/setname set");
 
-	
+
 	// Chatcommand: n
 	// Nudge target in direction.
 	// Options:
@@ -448,35 +472,35 @@ void RegisterAllCommands() {
 	RHs("[-x=float] [-y=float] [-z=float] >> nudge current target in direction");
 
 
-	
+
 	// Chatcommand: go
 	// Jump to named location.
 	RegisterCommand("go", "", 1, 1);
 	RHs("loc >> Go to location.");
 	RAF(AMASK_ANY);
-	
+
 	// Chatcommand: re
 	// Return to last location before /go
 	RegisterCommand("re", "", 0, 0);
 	RHs("Return to from whence you came.");
 	RAF(AMASK_ANY);
 
-	
+
 	// Chatcommand: shun
 	// Shuts an account up. Global.
 	RegisterCommand("shun", "");
-	
+
 	// Chatcommand: unshun
 	// Reverse of shun.
 	RegisterCommand("unshun", "");
 
-	
+
 	// Chatcommand: fix
 	// Fixes things. Developer only.
 	RegisterCommand("fix", "", 1, 1);
 	RHs("Fixes things.");
 
-	
+
 	// Chatcommand: obj
 	// Manages objects.
 	// Options:
@@ -484,24 +508,24 @@ void RegisterAllCommands() {
 	// - destroyable=: Set destroyable
 	RegisterCommand("obj", "plot= destroyable=");
 
-	
+
 	// Chatcommand: tag
 	// Gets/sets object tag.
 	RegisterCommand("tag", "", 0, 1);
-	
+
 	// Chatcommand: description
 	// Gets/sets object description.
 	RegisterCommand("description", "", 0, 1);
 
-	
-	
+
+
 	// Chatcommand: charges
 	// Gets/sets the charges of the current target.
 	RegisterCommand("charges", "", 0, 1);
 	RHs("Gets/Sets the charges of the current item", 1);
 
 
-	
+
 	// Chatcommand: cr
 	// Manages creatures.
 	// Options:
@@ -518,32 +542,33 @@ void RegisterAllCommands() {
 	// - faction=int: set faction ID
 	// - persist=bool: persist this creature
 	// - inv: open inventory
-	RegisterCommand("cr", "i= c= phenotype= subrace= wings= tail= bp= portrait= race= gender= faction= persist= inv", 0, 0);
+	RegisterCommand("cr",
+					"i= c= phenotype= subrace= wings= tail= bp= portrait= race= gender= faction= persist= inv", 0, 0);
 	RAF(AMASK_GM);
 	RH("ToDo.");
 
-	
+
 	// Chatcommand: app
 	// Change appearance of current target.
 	// Parameters:
 	// - int: [id]
 	RegisterCommand("app", "", 0, 1);
 	RAF(AMASK_ANY);
-	
+
 	// Chatcommand: pht
 	// Get/set phenotype. DEPRECATED, use /cr.
 	// Parameters:
 	// - int: [id]
 	RegisterCommand("pht", "", 0, 1);
 	RAF(AMASK_GM);
-	
+
 	// Chatcommand: subrace
 	// Gets/changes subrace. DEPRECATED, use /cr.
 	// Parameters:
 	// - str: [new subrace]
 	RegisterCommand("subrace", "d", 0, 1);
 	RHs("[-d] [subr] >> Gets/Sets the subrace", 1);
-	
+
 	// Chatcommand: bp
 	// Get/set bodypart.
 	// Parameters:
@@ -554,24 +579,24 @@ void RegisterAllCommands() {
 	RH("Check /showconst creature for a list of CREATURE_PARTs");
 	RAF(AMASK_ANY);
 
-	
+
 	// Chatcommand: wings
 	RegisterCommand("wings", "", 0, 1);
 	RHs("[wing_type] >> Gets/Sets the wings on the selected target", 1);
 	RAF(AMASK_ANY);
 
-	
+
 	// Chatcommand: tail
 	RegisterCommand("tail", "", 0, 1);
 	RHs("[tail_type] >> Gets/Sets the tail on the selected target", 1);
 	RAF(AMASK_ANY);
-	
+
 	// Chatcommand: portrait
 	RegisterCommand("portrait", "", 0, 1);
 	RHs("[new_portrait_resref] >> Gets/Sets the portrait", 1);
 	RAF(AMASK_ANY);
 
-	
+
 	// Chatcommand: it
 	// Manages items.
 	// Options:
@@ -583,7 +608,7 @@ void RegisterAllCommands() {
 	RH("Shows/sets various item related things.");
 	RHs("[--droppable=bool] [--weight=int] [--value=int] [--plot=bool]");
 
-	
+
 	// Chatcommand: pl
 	// Manages placeables.
 	// Options:
@@ -596,13 +621,13 @@ void RegisterAllCommands() {
 	RH("Shows/sets various placeable related things.");
 	RHs("[--persist=bool] [--useable=bool] [--plot=bool] [placeable scene text]");
 
-	
+
 	// Chatcommand: rotate
 	// Rotates object by degrees.
 	RegisterCommand("rotate", "", 0, 1);
 	RHs("[deg] >> Sets gets the rotation either as relative or absolute value.", 1);
 
-	
+
 	// Chatcommand: castspell
 	// Cast a spell.
 	RegisterCommand("castspell", "i mm= cl= dc= loc", 1, 1);
@@ -614,33 +639,33 @@ void RegisterAllCommands() {
 	RHs("-mm=N >> Specify metamagic. empower=1 extend=2 maximize=4");
 	RAF(AMASK_GLOBAL_GM);
 
-	
+
 	// Chatcommand: getdyepot
 	// Returns a dye pot with the given color.
 	RegisterCommand("getdyepot", "", 1, 2);
 
-	
+
 	// Chatcommand: bloodyhell
 	RegisterCommand("bloodyhell", "", 0, 0);
 	RH("For escapism");
 	RAF(AMASK_CAN_DO_BACKEND);
-	
+
 	// Chatcommand: hp
 	// Gets/sets HP.
 	RegisterCommand("hp", "", 0, 1);
 	RHs("[hp] >> Gets/Sets HP.", 1);
 
-//	
+//
 	RegisterCommand("stat", "", 1, 1);
 //	RHs("type >> type of (mentor, xp_dist)", 0);
 //	RAF(AMASK_AUDIT);
 
-	
+
 	// Chatcommand: say
 	// Say text.
 	RegisterCommand("say", "");
 
-	
+
 	// Chatcommand: ta
 	// Target something.
 	RegisterCommand("ta", "n= tag= area= f= d l m=", 0, 1);
@@ -656,35 +681,35 @@ void RegisterAllCommands() {
 	RHs("-l >> List all currently selected targets");
 	RAF(AMASK_GM);
 
-	
+
 	// Chatcommand: time
 	// Gets/sets server time.
 	RegisterCommand("time", "yr= mo= dy= hr= mn= sc=");
 	RAF(AMASK_CAN_DO_BACKEND);
 
-	
+
 	// Chatcommand: rehash
 	// Rehashes settings.
 	RegisterCommand("rehash", "", 0, 0);
 	RAF(AMASK_CAN_EDIT_GV);
 
-	
+
 	// Chatcommand: psql
 	// Execute raw postgres query.
 	RegisterCommand("psql", "", 1, 1);
 	RAF(AMASK_CAN_DO_BACKEND);
-	
+
 	// Chatcommand: _sco
 	// Store object with raw query.
 	RegisterCommand("_sco", "", 1, 1);
 	RAF(AMASK_CAN_DO_BACKEND);
-	
+
 	// Chatcommand: _rco
 	// Receive object with raw query.
 	RegisterCommand("_rco", "", 1, 1);
 	RAF(AMASK_CAN_DO_BACKEND);
 
-	
+
 	// Chatcommand: createkey
 	// Creates a key.
 	// Parameters:
@@ -693,7 +718,7 @@ void RegisterAllCommands() {
 	RHs("[--app=x] [name]", 0);
 
 
-	
+
 	// Chatcommand: lock
 	// Manages locks.
 	// Options:
@@ -708,7 +733,7 @@ void RegisterAllCommands() {
 		"[--locked bool] [--lockable bool] [--keytag tag] [--keyreq bool] [--lockdc n] [--unlockdc n] >> Shows/sets options on a lock.",
 		1);
 
-	
+
 	// Chatcommand: planewalk
 	// Planewalk the current target.
 	// Options:
@@ -720,13 +745,13 @@ void RegisterAllCommands() {
 		1);
 
 
-	
+
 	// Chatcommand: help
 	// Help .. useless ..
 	RegisterCommand("help", "");
 	RAF(AMASK_ANY);
 
-	
+
 	// Chatcommand: getrecipe
 	// Get crafing recipe.
 	// Parameters:
@@ -735,7 +760,7 @@ void RegisterAllCommands() {
 	RHs("id >> Returns recipe with id", 0);
 	RAF(AMASK_GLOBAL_GM);
 
-	
+
 	// Chatcommand: event
 	// shows/sets event handlers.
 	RegisterCommand("event", "", 0, 2);
@@ -757,7 +782,7 @@ void RegisterAllCommands() {
 	// - effect-name
 	// - [parameter] ..
 	// - [n] ..
-	// 
+	//
 	// Available effects:
 	// vfx(val) blind() damage(amount, type) deaf() dazed() death() confused() ethereal() knockdown() slow() stunned() timestop()
 	// frightened() haste() curse(str, dex, con, int, wis, chr) polymorph(type locked=bool) acincrease(val) acdecrease(val) disease(type)
@@ -787,18 +812,18 @@ void RegisterAllCommands() {
 		"paralyze()"
 	);
 
-	
+
 	// Chatcommand: _xp
 	// Sets/gets XP.
 	RegisterCommand("_xp", "time");
 
-	
+
 	// Chatcommand: info
 	// ??
 	RegisterCommand("info", "");
 
 
-	
+
 	// Chatcommand: ar
 	// Manages areas.
 	// Options:
@@ -812,7 +837,7 @@ void RegisterAllCommands() {
 	RHs("-tli [new_color_1] [new_color_2] >> Gets/Sets MainLight color for the current tile.");
 	RHs("-tsi [new_color_1] [new_color_2] >> Gets/Sets SourceLight color for the current tile.");
 
-	
+
 	// Chatcommand: inspect
 	// Show placeables that are persisted.
 	RegisterCommand("inspect", "pl", 0, 0);
@@ -820,7 +845,7 @@ void RegisterAllCommands() {
 	RAF(AMASK_CAN_SET_PERSISTENCY);
 
 
-	
+
 	// Chatcommand: so
 	// Show objects within radius.
 	// Options:
@@ -828,7 +853,7 @@ void RegisterAllCommands() {
 	// Parameters:
 	// - float: radius
 	RegisterCommand("so", "type= m=");
-	
+
 	// Chatcommand: ko
 	// KILLS objects within radius.
 	// Options:
@@ -837,35 +862,35 @@ void RegisterAllCommands() {
 	// - float: radius
 	RegisterCommand("ko", "type= m=");
 
-	
+
 	// Chatcommand: setname
 	// Set the name of the current target.
 	RegisterCommand("setname", "");
 	RAF(AMASK_ANY);
-	
+
 	// Chatcommand: f2s
 	// Flesh2Stone the current target.
 	RegisterCommand("f2s", "");
 
-	
+
 	// Chatcommand: s2f
 	// Stone2Flesh the current target.
 	RegisterCommand("s2f", "");
 
-	
+
 	// Chatcommand: fixfactions
 	// Fix all factions for the current target.
 	RegisterCommand("fixfactions", "");
 
-	
+
 	// Chatcommand: limbo
 	RegisterCommand("limbo", "");
 
-	
+
 	// Chatcommand: gettargetchooser
 	RegisterCommand("gettargetchooser", "");
 
-	
+
 	// Chatcommand: restore
 	// Restore things to normal.
 	// Options:
@@ -880,64 +905,64 @@ void RegisterAllCommands() {
 	RHs("-e [ID] >> Remove all effects, or effects of type ID", 1);
 	RHs("-s >> Removes all effects, including supernatural effects.", 1);
 
-	
+
 	// Chatcommand: set
 	// Set variable.
 	RegisterCommand("set", "");
-	
+
 	// Chatcommand: get
 	// Get variable.
 	RegisterCommand("get", "");
 
-	
+
 	// Chatcommand: showconst
 	// Show various constants.
 	RegisterCommand("showconst", "");
 	RHs(
 		"type >> type of (mode, object, phenotype, creature, tail, wing, weather, polymorph, disease, class, duration, damage)");
 
-	
+
 	// Chatcommand: kill
 	// Kill the current target (by self-applying damage)
 	// Options:
 	// -d: DestroyObject() instead of applying damage.
 	RegisterCommand("kill", "d");
-	
+
 	// Chatcommand: create
 	// Create something.
 	RegisterCommand("create", "");
 
-	
+
 	// Chatcommand: kick
 	// Kick an account or playername.
 	RegisterCommand("kick", "");
 	RAF(AMASK_GLOBAL_GM);
 
-	
+
 	// Chatcommand: vfx
 	// Create an VFX
 	RegisterCommand("vfx", "x= y= z=");
 
 
-	
+
 	// Chatcommand: fetch
 	// Fetch the current target to yourself.
 	RegisterCommand("fetch", "");
 	RHs("[t1] [t2] [tn] >> Fetch those target slots, or fetch the current target to your location.");
-	
+
 	// Chatcommand: jump
 	// Jump to the current target.
 	// Options:
 	// - loc: Jump to the current target-location instead of object.
 	RegisterCommand("jump", "loc");
 	RHs("[--loc] >> Jumps to target object or location", 1);
-	
+
 	// Chatcommand: cp
 	// Copy the current object.
 	RegisterCommand("cp", "", 0, 2);
 	RHs("[amount=1] [string to eval]", 1);
 
-	
+
 	// Chatcommand: cpm
 	// Copy a item and modify it.
 	// CopyItemAndModify(Target, a, b, c, TRUE);
@@ -945,17 +970,17 @@ void RegisterAllCommands() {
 	RHs("a b c >> CopyItemAndModify(Target, a, b, c, TRUE);");
 	RAF(AMASK_GLOBAL_GM);
 
-	
+
 	// Chatcommand: caq
 	// clear the targets' action queue.
 	RegisterCommand("caq", "");
 	RHs(">> Clears the action queue.", 1);
-	
+
 	// Chatcommand: wwp
 	// Make the targeted creature walk its waypoints.
 	RegisterCommand("wwp", "");
 	RHs(">> Makes a creature walk its designated day/night waypoints, or none if none were placed.", 1);
-	
+
 	// Chatcommand: rwalk
 	// Make the targeted creature walk randomly.
 	RegisterCommand("rwalk", "");
@@ -968,12 +993,14 @@ void RegisterAllCommands() {
 
 
 
-int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro, int bRunAlias, int nRunModLevel) {
+int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro, int bRunAlias,
+			  int nRunModLevel)
+{
 	nRunModLevel = unsigned(nRunModLevel);
 
 	if (gvGetInt("chat_debug")) {
-		SendMessageToAllDMs("chat> run: '" + sCommand + "':'" + sArg + "'::" + IntToString(iMode) + "::" + 
-			IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
+		SendMessageToAllDMs("chat> run: '" + sCommand + "':'" + sArg + "'::" + IntToString(iMode) + "::" +
+							IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
 		SendMessageToAllDMs("chat> runs on: " + GetName(oPC) + " / " + GetName(OBJECT_SELF));
 	}
 
@@ -981,87 +1008,104 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 	int nArgMin = 0;
 	int nArgMax = 0;
 
-	if ( bRunAlias ) {
+	if (bRunAlias) {
 		string sAlias = GetLocalString(GetModule(), "alias_" + sCommand);
-		if ( "" != sAlias ) {
+
+		if ("" != sAlias) {
 			return RunCommand(oPC, iMode, sAlias + " " + sArg, bRunMacro, FALSE, nRunModLevel);
 		}
 	}
 
 	struct EventArguments cmdea;
+
 	cmdea.a0 = GetStringTrim(sCommand);
+
 	cmdea.a1 = GetStringTrim(sArg);
+
 	int serial = GetEventSerial();
-	int dispatch_ret = RunEventScriptsForWithArgv(serial, "chat_command", oPC, oPC, OBJECT_INVALID, GetLocation(OBJECT_INVALID), cmdea, EVENT_MODE_SYNC);
+
+	int dispatch_ret = RunEventScriptsForWithArgv(serial, "chat_command", oPC, oPC, OBJECT_INVALID,
+					   GetLocation(OBJECT_INVALID), cmdea, EVENT_MODE_SYNC);
+
 	DeleteEventArguments(serial);
 
 	if (dispatch_ret & EVENT_RESULT_STOP) {
 		// A plugin said its parsing it, stop it.
 		if (dispatch_ret & EVENT_RESULT_FAIL)
 			return FAIL;
+
 		else
 			return OK;
 	}
 
-	if ( GetLocalInt(GetModule(), "cmd_" + sCommand) ) {
+	if (GetLocalInt(GetModule(), "cmd_" + sCommand)) {
 		sOpt = GetLocalString(GetModule(), "cmd_" + sCommand + "_opt");
 		nArgMin = GetLocalInt(GetModule(), "cmd_" + sCommand + "_argc_min");
 		nArgMax = GetLocalInt(GetModule(), "cmd_" + sCommand + "_argc_max");
+
 	} else {
 		if (gvGetInt("chat_debug")) {
-			SendMessageToAllDMs("chat> NOTFOUND(register): '" + sCommand + "':'" + sArg + "'::'" + IntToString(iMode) + "::" + 
-				IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
+			SendMessageToAllDMs("chat> NOTFOUND(register): '" + sCommand + "':'" + sArg + "'::'" + IntToString(
+									iMode) + "::" +
+								IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
 		}
+
 		return NOTFOUND;
 	}
 
 	int nAMask = GetLocalInt(GetModule(), "cmd_" + sCommand + "_amask");
 
-	if ( !GetLocalInt(GetModule(), "no_new_acl") && nAMask > 0 && !amask(oPC, nAMask) ) {
+	if (!GetLocalInt(GetModule(), "no_new_acl") && nAMask > 0 && !amask(oPC, nAMask)) {
 		if (gvGetInt("chat_debug")) {
-			SendMessageToAllDMs("chat> NOACCESS(): " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
-				IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
+			SendMessageToAllDMs("chat> NOACCESS(): " + sCommand + " " + sArg + IntToString(iMode) + "::" +
+								IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
 		}
+
 		return ACCESS;
 	}
 
 	getopt_reset();
+
 	if (!getopt_init(sArg, "h t= sleep= " + sOpt)) {
 		ToPC("Error parsing arguments.");
 		return SYNTAX;
 	}
 
-	if ( getopt_opt("h") && GetLocalInt(GetModule(), "cmd_" + sCommand) && (
-			( nArgMin > -1 && getopt_argc() < nArgMin )
-			|| ( nArgMax > -1 && getopt_argc() > nArgMax )
-		) ) {
+	if (getopt_opt("h") && GetLocalInt(GetModule(), "cmd_" + sCommand) && (
+				(nArgMin > -1 && getopt_argc() < nArgMin)
+				|| (nArgMax > -1 && getopt_argc() > nArgMax)
+			)) {
 		ToPC("Falsche Anzahl an Parametern: Mindestens " +
-			IntToString(nArgMin) + " und maximal " + IntToString(nArgMax));
+			 IntToString(nArgMin) + " und maximal " + IntToString(nArgMax));
 		ToPC("Gib '/" + sCommand + " -h' ein fuer eine Hilfestellung zu diesem Befehl.");
 		return SYNTAX;
 	}
 
-	if ( getopt_opt("h") ) {
+	if (getopt_opt("h")) {
 
 		int nCount = GetLocalInt(GetModule(), "cmd_" + sCommand + "_h");
 		int nDisp = 0;
 		int i = 0;
-		for ( i = 0; i < nCount; i++ ) {
+
+		for (i = 0; i < nCount; i++) {
 			int nMask = GetLocalInt(GetModule(), "cmd_" + sCommand + "ham_" + IntToString(i));
-			if ( amask(oPC, nMask) || nMask == 0 ) {
+
+			if (amask(oPC, nMask) || nMask == 0) {
 				ToPC(GetLocalString(GetModule(), "cmd_" + sCommand + "h_" + IntToString(i)));
 				nDisp++;
 			}
 		}
-		if ( !nDisp )
+
+		if (!nDisp)
 			ToPC("No help available for this command.");
+
 		return SYNTAX;
 	}
 
 
 	float fWait = 0.0;
 
-	if ( getopt_opt("sleep") ) {
+	if (getopt_opt("sleep")) {
 		// Wait for w
 		fWait = StringToFloat(getopt_optv("sleep"));
 		fWait = fWait < 0.0 ? 0.0 : fWait;
@@ -1074,13 +1118,13 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 	SetLocalString(GetModule(), "chat_current_command_name", sCommand);
 
-	if ( "m" == sCommand && bRunMacro )
+	if ("m" == sCommand && bRunMacro)
 		ret = CommandMacro(oPC, iMode);
 
-	if ( nRunModLevel > 0 ) {
+	if (nRunModLevel > 0) {
 		if ("g" == sCommand)
 			ret = CommandModSet(oPC, iMode, nRunModLevel);
-		
+
 		if ("here" == sCommand)
 			ret = CommandModHere(oPC, iMode, nRunModLevel);
 
@@ -1105,293 +1149,298 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 		ret = CommandRunScript(oPC, iMode);
 
 	// Set management
-	if ( "gi" == sCommand )
+	if ("gi" == sCommand)
 		ret = CommandManageSetItem(oPC, iMode);
-	if ( "gs" == sCommand )
+
+	if ("gs" == sCommand)
 		ret = CommandManageSetSet(oPC, iMode);
-	if ( "gc" == sCommand )
+
+	if ("gc" == sCommand)
 		ret = CommandManageSetClear(oPC, iMode);
-	if ( "ga" == sCommand )
+
+	if ("ga" == sCommand)
 		ret = CommandManageSetAdd(oPC, iMode);
 
-	if ( "event" == sCommand )
+	if ("event" == sCommand)
 		ret = CommandEventHandler(oPC, iMode);
 
-	if ( "it" == sCommand )
+	if ("it" == sCommand)
 		ret = CommandItem(oPC, iMode);
 
-	if ( "n" == sCommand )
+	if ("n" == sCommand)
 		ret = CommandNudge(oPC, iMode);
 
-	if ( "go" == sCommand )
+	if ("go" == sCommand)
 		ret = CommandGo(oPC, iMode);
-	
-	if ( "re" == sCommand )
+
+	if ("re" == sCommand)
 		ret = CommandGoReturn(oPC, iMode);
-	
-	if ( "psql" == sCommand )
+
+	if ("psql" == sCommand)
 		ret = CommandpSQL(oPC, iMode);
-	if ( "_sco" == sCommand )
+
+	if ("_sco" == sCommand)
 		ret = CommandSCO(oPC, iMode);
-	if ( "_rco" == sCommand )
+
+	if ("_rco" == sCommand)
 		ret = CommandRCO(oPC, iMode);
-	
-	if ( "inspect" == sCommand )
+
+	if ("inspect" == sCommand)
 		ret = CommandInspect(oPC, iMode);
 
-	if ( "rehash" == sCommand )
+	if ("rehash" == sCommand)
 		ret = CommandRehash(oPC, iMode);
 
-	if ( "fix" == sCommand )
+	if ("fix" == sCommand)
 		ret = CommandFix(oPC, iMode);
 
-	if ( "rt" == sCommand )
+	if ("rt" == sCommand)
 		ret = CommandReadTracks(oPC, iMode);
 
-	if ( "afk" == sCommand )
+	if ("afk" == sCommand)
 		ret = CommandAFK(oPC, iMode);
-	
-	if ( "bpop" == sCommand )
+
+	if ("bpop" == sCommand)
 		ret = CommandBodyOperator(oPC, iMode);
-	
+
 	if ("repeat" == sCommand)
 		ret = CommandRepeat(oPC, iMode);
 
-	if ( "cr" == sCommand )
+	if ("cr" == sCommand)
 		ret = CommandCreature(oPC, iMode);
 
-	if ( "obj" == sCommand )
+	if ("obj" == sCommand)
 		ret = CommandObject(oPC, iMode);
 
-	if ( "pl" == sCommand )
+	if ("pl" == sCommand)
 		ret = CommandPlaceable(oPC, iMode);
 
-	if ( "weather" == sCommand )
+	if ("weather" == sCommand)
 		ret = CommandShowWeather(oPC, iMode);
 
-	if ( "tag" == sCommand )
+	if ("tag" == sCommand)
 		ret = CommandTag(oPC, iMode);
 
-	if ( "description" == sCommand )
+	if ("description" == sCommand)
 		ret = CommandDescription(oPC, iMode);
 
-	if ( "castspell" == sCommand )
+	if ("castspell" == sCommand)
 		ret = CommandCastSpell(oPC, iMode);
 
-	if ( "getdyepot" == sCommand )
+	if ("getdyepot" == sCommand)
 		ret = CommandGetDyePot(oPC, iMode);
 
-	if ( "bloodyhell" == sCommand )
+	if ("bloodyhell" == sCommand)
 		ret = CommandOhHellBang(oPC, iMode);
 
-	if ( "rotate" == sCommand )
+	if ("rotate" == sCommand)
 		ret = CommandRotate(oPC, iMode);
 
-	if ( "hp" == sCommand )
+	if ("hp" == sCommand)
 		ret = CommandHP(oPC, iMode);
 
 //	if ( "stat" == sCommand )
 //		ret = CommandStat(oPC, iMode);
 
-	if ( "createkey" == sCommand )
+	if ("createkey" == sCommand)
 		ret = CommandCreateKey(oPC, iMode);
 
-	if ( "say" == sCommand )
+	if ("say" == sCommand)
 		ret = CommandSay(oPC, iMode);
 
-	if ( "write" == sCommand )
+	if ("write" == sCommand)
 		ret = CommandWrite(oPC, iMode);
 
 
-	if ( "time" == sCommand )
+	if ("time" == sCommand)
 		ret = CommandTime(oPC, iMode);
 
-	if ( "lock" == sCommand )
+	if ("lock" == sCommand)
 		ret = CommandLock(oPC, iMode);
 
-	if ( "planewalk" == sCommand )
+	if ("planewalk" == sCommand)
 		ret = CommandPlaneWalk(oPC, iMode);
 
 
-	if ( "getrecipe" == sCommand )
+	if ("getrecipe" == sCommand)
 		ret = CommandGetRecipe(oPC, iMode);
 
-	if ( "lastlog" == sCommand )
+	if ("lastlog" == sCommand)
 		ret = CommandLastLog(oPC, iMode);
 
-	if ( "charges" == sCommand )
+	if ("charges" == sCommand)
 		ret = CommandCharges(oPC, iMode);
 
-	if ( "effect" == sCommand )
+	if ("effect" == sCommand)
 		ret = CommandEffect(oPC, iMode);
 
-	if ( "_xp" == sCommand )
+	if ("_xp" == sCommand)
 		ret = CommandXP(oPC, iMode);
 
-	if ( "info" == sCommand )
+	if ("info" == sCommand)
 		ret = CommandInfo(oPC, iMode);
 
-	if ( "password" == sCommand )
+	if ("password" == sCommand)
 		ret = CommandPassword(oPC, iMode);
 
-	if ( "status" == sCommand )
+	if ("status" == sCommand)
 		ret = CommandStatus(oPC, iMode);
 
-	if ( "ta" == sCommand )
+	if ("ta" == sCommand)
 		ret = CommandTarget(oPC, iMode);
 
-	if ( "portrait" == sCommand )
+	if ("portrait" == sCommand)
 		ret = CommandPortrait(oPC, iMode);
 
-	if ( "bp" == sCommand )
+	if ("bp" == sCommand)
 		ret = CommandBodyPart(oPC, iMode);
 
-	if ( "wings" == sCommand )
+	if ("wings" == sCommand)
 		ret = CommandWing(oPC, iMode);
 
-	if ( "tail" == sCommand )
+	if ("tail" == sCommand)
 		ret = CommandTail(oPC, iMode);
 
-	if ( "subrace" == sCommand )
+	if ("subrace" == sCommand)
 		ret = CommandSubRace(oPC, iMode);
 
-	if ( "ar" == sCommand )
+	if ("ar" == sCommand)
 		ret = CommandArea(oPC, iMode);
 
 
-	if ( "shun" == sCommand )
+	if ("shun" == sCommand)
 		ret = CommandShunUnshun(oPC, iMode, 1);
 
-	if ( "unshun" == sCommand )
+	if ("unshun" == sCommand)
 		ret = CommandShunUnshun(oPC, iMode, 0);
 
-	if ( "ignore" == sCommand )
+	if ("ignore" == sCommand)
 		ret = CommandIgnoreList(oPC, iMode, 1);
 
-	if ( "unignore" == sCommand )
+	if ("unignore" == sCommand)
 		ret = CommandIgnoreList(oPC, iMode, 0);
 
-	if ( "so" == sCommand )
+	if ("so" == sCommand)
 		ret = CommandShowObj(oPC, iMode);
 
-	if ( "ko" == sCommand )
+	if ("ko" == sCommand)
 		ret = CommandKillObj(oPC, iMode);
 
-	if ( "setname" == sCommand )
+	if ("setname" == sCommand)
 		ret = CommandSetName(oPC, iMode);
 
-	if ( "app" == sCommand )
+	if ("app" == sCommand)
 		ret = CommandSetAppearance(oPC, iMode);
 
-	if ( "pht" == sCommand )
+	if ("pht" == sCommand)
 		ret = CommandSetPhenotype(oPC, iMode);
 
-	if ( "f2s" == sCommand )
+	if ("f2s" == sCommand)
 		ret = CommandFleshToStone(oPC, iMode);
 
-	if ( "s2f" == sCommand )
+	if ("s2f" == sCommand)
 		ret = CommandStoneToFlesh(oPC, iMode);
 
-	if ( "fixfactions" == sCommand )
+	if ("fixfactions" == sCommand)
 		ret = CommandFixFactions(oPC, iMode);
 
-	if ( "limbo" == sCommand )
+	if ("limbo" == sCommand)
 		ret = CommandLimbo(oPC, iMode);
 
-	if ( "gettargetchooser" == sCommand )
+	if ("gettargetchooser" == sCommand)
 		ret = CommandGetTargetChooser(oPC, iMode);
 
-	if ( "restore" == sCommand )
+	if ("restore" == sCommand)
 		ret = CommandRestore(oPC, iMode);
 
-	if ( "set" == sCommand )
+	if ("set" == sCommand)
 		ret = CommandSetVar(oPC, iMode);
 
-	if ( "get" == sCommand )
+	if ("get" == sCommand)
 		ret = CommandGetVar(oPC, iMode);
 
 
-	if ( "showconst" == sCommand )
+	if ("showconst" == sCommand)
 		ret = CommandShowConst(oPC, iMode);
 
-	if ( "kill" == sCommand )
+	if ("kill" == sCommand)
 		ret = CommandKill(oPC, iMode);
 
-	if ( "create" == sCommand )
+	if ("create" == sCommand)
 		ret = CommandCreate(oPC, iMode);
 
-	if ( "v" == sCommand )
+	if ("v" == sCommand)
 		ret = CommandVoiceChat(oPC, getopt_args(), iMode);
 
-	if ( "a" == sCommand )
+	if ("a" == sCommand)
 		ret = CommandAnimation(oPC, getopt_args(), iMode);
 
 	/* aliases for anim */
-	if ( "sit" == sCommand )
+	if ("sit" == sCommand)
 		ret = CommandAnimation(oPC, "sit", iMode);
 
-	if ( "meditate" == sCommand )
+	if ("meditate" == sCommand)
 		ret = CommandAnimation(oPC, "meditate", iMode);
 
-	if ( "sitcross" == sCommand )
+	if ("sitcross" == sCommand)
 		ret = CommandAnimation(oPC, "sitcross", iMode);
 
-	if ( "dance" == sCommand )
+	if ("dance" == sCommand)
 		ret = CommandAnimation(oPC, "dance", iMode);
 
-	if ( "kneel" == sCommand )
+	if ("kneel" == sCommand)
 		ret = CommandAnimation(oPC, "kneel", iMode);
 
-	if ( "lieleft" == sCommand )
+	if ("lieleft" == sCommand)
 		ret = CommandAnimation(oPC, "lieleft", iMode);
 
-	if ( "lieright" == sCommand )
+	if ("lieright" == sCommand)
 		ret = CommandAnimation(oPC, "lieright", iMode);
 
 	/* end of alias list */
 
-	if ( "kick" == sCommand )
+	if ("kick" == sCommand)
 		ret = CommandKick(oPC, iMode);
 
-	if ( "vfx" == sCommand )
+	if ("vfx" == sCommand)
 		ret = CommandVFX(oPC, iMode);
 
-	if ( "fx" == sCommand )
+	if ("fx" == sCommand)
 		ret = CommandFX(oPC, iMode);
 
 
-	if ( "fetch" == sCommand )
+	if ("fetch" == sCommand)
 		ret = CommandFetch(oPC, iMode);
 
-	if ( "jump" == sCommand )
+	if ("jump" == sCommand)
 		ret = CommandJump(oPC, iMode);
 
-	if ( "cp" == sCommand )
+	if ("cp" == sCommand)
 		ret = CommandCopyObject(oPC, iMode);
 
-	if ( "cpm" == sCommand )
+	if ("cpm" == sCommand)
 		ret = CommandCopyMod(oPC, iMode);
 
-	if ( "follow" == sCommand )
+	if ("follow" == sCommand)
 		ret = CommandFollow(oPC, iMode);
 
-	if ( "caq" == sCommand )
+	if ("caq" == sCommand)
 		ret = CommandCAQ(oPC, iMode);
 
 
-	if ( "wwp" == sCommand )
+	if ("wwp" == sCommand)
 		ret = CommandWWP(oPC, iMode);
 
 
-	if ( "rwalk" == sCommand )
+	if ("rwalk" == sCommand)
 		ret = CommandRandomWalk(oPC, iMode);
 
 	if ("playsound" == sCommand)
 		ret = CommandPlaySound(oPC, iMode);
-	
+
 	SetLocalString(GetModule(), "chat_current_command_name", "");
 
-	// SendMessageToAllDMs("chat> NOTFOUND(call): " + sCommand + " " + sArg + IntToString(iMode) + "::" + 
+	// SendMessageToAllDMs("chat> NOTFOUND(call): " + sCommand + " " + sArg + IntToString(iMode) + "::" +
 	//	IntToString(bRunMacro) + ":" + IntToString(bRunAlias) + ":" + IntToString(nRunModLevel));
 
 	return ret;
@@ -1401,20 +1450,22 @@ int OnCommand(object oPC, string sCommand, string sArg, int iMode, int bRunMacro
 
 
 
-int GetIsMacro(object oPC, string sMacroName) {
+int GetIsMacro(object oPC, string sMacroName)
+{
 	string sAID = IntToString(GetAccountID(oPC));
 	pQ("select id from macro where account = " +
-		sAID + " and macro = " + pE(sMacroName) + " limit 1;");
+	   sAID + " and macro = " + pE(sMacroName) + " limit 1;");
 	return pF();
 }
 
 
-void RunMacro(object oPC, int iMode, string sMacro) {
+void RunMacro(object oPC, int iMode, string sMacro)
+{
 	ToPC("Executing macro '" + sMacro + "'.");
 
 	int nSlot = TARGET_MACRO_SLOT;
 
-	if ( getopt_opt("t") )
+	if (getopt_opt("t"))
 		nSlot = GetTargetSlot();
 
 	int nOldTarget = GetDefaultSlot();
@@ -1430,8 +1481,9 @@ void RunMacro(object oPC, int iMode, string sMacro) {
 
 }
 
-int CommandMacro(object oPC, int iMode) {
-	if ( !amask(oPC, AMASK_CAN_USE_MACROS) )
+int CommandMacro(object oPC, int iMode)
+{
+	if (!amask(oPC, AMASK_CAN_USE_MACROS))
 		return ACCESS;
 
 	// create/update: macro "macroname" "macrovalue"
@@ -1441,7 +1493,8 @@ int CommandMacro(object oPC, int iMode) {
 
 
 	string sAID = IntToString(GetAccountID(oPC));
-	if ( "0" == sAID ) {
+
+	if ("0" == sAID) {
 		ToPC("You have no Account ID.");
 		return OK;
 	}
@@ -1450,14 +1503,16 @@ int CommandMacro(object oPC, int iMode) {
 	string sMacro = getopt_arg(1);
 
 
-	if ( getopt_opt("d") ) {
+	if (getopt_opt("d")) {
 		pQ("select id from macro where account = " +
-			sAID + " and macro = " + pE(sMacroName) + " order by account desc limit 1;");
-		if ( pF() ) {
+		   sAID + " and macro = " + pE(sMacroName) + " order by account desc limit 1;");
+
+		if (pF()) {
 			// Delete the macro
 			pQ("delete from macro where account = " +
-				sAID + " and macro = " + pE(sMacroName) + " limit 1;");
+			   sAID + " and macro = " + pE(sMacroName) + " limit 1;");
 			ToPC("Macro '" + sMacroName + "' deleted.");
+
 		} else {
 			ToPC("Macro '" + sMacroName + "' not found (or not yours).");
 			return FAIL;
@@ -1466,28 +1521,32 @@ int CommandMacro(object oPC, int iMode) {
 		return OK;
 	}
 
-	if ( getopt_opt("l") ) {
+	if (getopt_opt("l")) {
 		pQ("select id,macro,command from macro where (account = " +
-			sAID + " or account = 0) order by account desc;");
+		   sAID + " or account = 0) order by account desc;");
 		int n = 0;
-		while ( pF() ) {
+
+		while (pF()) {
 			sMacroName = pG(2);
 			sMacro = pG(3);
 			ToPC(sMacroName + ": " + sMacro);
 			n++;
 		}
+
 		ToPC(IntToString(n) + " macros displayed.");
 		return OK;
 
 	}
 
-	if ( getopt_opt("i") ) {
+	if (getopt_opt("i")) {
 		pQ("select command from macro where (account = " +
-			sAID +
-			" or account = 0) and macro = " + pE(sMacroName) + " order by account desc limit 1;");
-		if ( !pF() ) {
+		   sAID +
+		   " or account = 0) and macro = " + pE(sMacroName) + " order by account desc limit 1;");
+
+		if (!pF()) {
 			ToPC("Macro not found.");
 			return FAIL;
+
 		} else {
 			sMacro = pG(1);
 			object oI = CreateItemOnObject("macro", oPC, 1);
@@ -1500,13 +1559,15 @@ int CommandMacro(object oPC, int iMode) {
 	}
 
 
-	if ( getopt_argc() == 1 ) {
+	if (getopt_argc() == 1) {
 		pQ("select command from macro where (account = " +
-			sAID +
-			" or account = 0) and macro = " + pE(sMacroName) + " order by account desc limit 1;");
-		if ( !pF() ) {
+		   sAID +
+		   " or account = 0) and macro = " + pE(sMacroName) + " order by account desc limit 1;");
+
+		if (!pF()) {
 			ToPC("Macro not found.");
 			return FAIL;
+
 		} else {
 			sMacro = pG(1);
 			DelayCommand(getsleep(), RunMacro(oPC, iMode, sMacro));
@@ -1516,14 +1577,16 @@ int CommandMacro(object oPC, int iMode) {
 		// save new personal macro
 		SetLocalString(oPC, "macro_" + sMacroName, sMacro);
 		pQ("select id from macro where account = " +
-			sAID + " and macro = " + pE(sMacroName) + " limit 1;");
-		if ( pF() ) {
+		   sAID + " and macro = " + pE(sMacroName) + " limit 1;");
+
+		if (pF()) {
 			string sID = pG(1);
 			pQ("update macro set command = " + pE(sMacro) + " where id = " + sID + ";");
 			ToPC(sMacroName + " updated.");
+
 		} else {
 			pQ("insert into macro (account, macro, command) values(" +
-				sAID + ", " + pE(sMacroName) + ", " + pE(sMacro) + ");");
+			   sAID + ", " + pE(sMacroName) + ", " + pE(sMacro) + ");");
 			ToPC(sMacroName + " saved.");
 		}
 
@@ -1536,47 +1599,51 @@ int CommandMacro(object oPC, int iMode) {
 
 
 
-int CommandModSet(object oPC, int iMode, int nRunModLevel) {
+int CommandModSet(object oPC, int iMode, int nRunModLevel)
+{
 	string sRest = getopt_arg(0);
-	
+
 	if (gvGetInt("chat_debug")) {
 		SendMessageToAllDMs("chat:mod:self> " + sRest);
 	}
-	
+
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
-	
+
 	string sSetName = GetCurrentSet(oPC);
 
 	int nSz = GetSetSize(sSetName, oPC);
 	int i;
 	int ret;
 	object t;
+
 	for (i = 0; i < nSz; i++) {
 		t = GetFromSet(sSetName, i, oPC);
 		SetTarget(t);
 		ret = CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1);
+
 		if (!ret)
 			return FAIL;
 	}
-	
+
 	SetDefaultSlot(nOldTarget);
 
 	return OK;
 }
 
-int CommandModHere(object oPC, int iMode, int nRunModLevel) {
+int CommandModHere(object oPC, int iMode, int nRunModLevel)
+{
 	string sRest = getopt_arg(0);
-	
+
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
-	
+
 	SetTargetLocation(GetLocation(oPC));
-	
+
 	if (gvGetInt("chat_debug")) {
 		SendMessageToAllDMs("chat:mod:here> " + sRest);
 	}
-	
+
 	int ret = CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1);
 
 	SetDefaultSlot(nOldTarget);
@@ -1585,18 +1652,19 @@ int CommandModHere(object oPC, int iMode, int nRunModLevel) {
 }
 
 
-int CommandModSelf(object oPC, int iMode, int nRunModLevel) {
+int CommandModSelf(object oPC, int iMode, int nRunModLevel)
+{
 	string sRest = getopt_arg(0);
-	
+
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
-	
+
 	SetTarget(oPC);
-	
+
 	if (gvGetInt("chat_debug")) {
 		SendMessageToAllDMs("chat:mod:self> " + sRest);
 	}
-	
+
 	int ret = CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1);
 
 	SetDefaultSlot(nOldTarget);
@@ -1605,9 +1673,10 @@ int CommandModSelf(object oPC, int iMode, int nRunModLevel) {
 	return ret ? OK : FAIL;
 }
 
-int CommandModRadius(object oPC, int iMode, int nRunModLevel) {
+int CommandModRadius(object oPC, int iMode, int nRunModLevel)
+{
 	string sRest = getopt_arg(0);
-	
+
 	float radius = 6.0;
 	int otype = OBJECT_TYPE_ALL;
 
@@ -1619,92 +1688,105 @@ int CommandModRadius(object oPC, int iMode, int nRunModLevel) {
 
 	if (gvGetInt("chat_debug"))
 		SendMessageToAllDMs("chat:mod:radius> r = " + FloatToString(radius));
-	
+
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
 
 	object oLoop = GetFirstObjectInShape(SHAPE_SPHERE, radius, GetLocation(oPC), FALSE, otype);
+
 	while (GetIsObjectValid(oLoop)) {
 		SetTarget(oLoop);
+
 		if (!CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1)) {
 			if (gvGetInt("chat_debug"))
 				SendMessageToAllDMs("chat:mod:radius> Eval() returned FALSE");
+
 			return FAIL;
 		}
-		
+
 		oLoop = GetNextObjectInShape(SHAPE_SPHERE, radius, GetLocation(oPC), FALSE, otype);
 	}
+
 	SetDefaultSlot(nOldTarget);
 
 	return OK;
 }
 
-int CommandModRectangle(object oPC, int iMode, int nRunModLevel) {
+int CommandModRectangle(object oPC, int iMode, int nRunModLevel)
+{
 	ToPC("mod:rect> Not in yet.");
 	return FAIL;
 }
 
-int CommandModLine(object oPC, int iMode, int nRunModLevel) {
+int CommandModLine(object oPC, int iMode, int nRunModLevel)
+{
 	ToPC("mod:line> Not in yet.");
 	return FAIL;
 }
 
-int CommandModArea(object oPC, int iMode, int nRunModLevel) {
+int CommandModArea(object oPC, int iMode, int nRunModLevel)
+{
 	string sRest = getopt_arg(0);
 	int otype = OBJECT_TYPE_ALL;
-	
+
 	if (getopt_opt("type"))
 		otype = StringToInt(getopt_optv("type"));
-	
+
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
 
 	iterate_area(GetArea(oPC), oIterate,
-		if (GetObjectType(oIterate) == otype) {
-			SetTarget(oIterate);
-			if (!CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1)) {
-				if (gvGetInt("chat_debug"))
-					SendMessageToAllDMs("chat:mod:area> Eval() returned FALSE");
-				return FAIL;
-			}
+
+	if (GetObjectType(oIterate) == otype) {
+	SetTarget(oIterate);
+
+		if (!CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1)) {
+			if (gvGetInt("chat_debug"))
+				SendMessageToAllDMs("chat:mod:area> Eval() returned FALSE");
+
+			return FAIL;
 		}
-	);
+	}
+				);
 
 	SetDefaultSlot(nOldTarget);
 
 	return OK;
-return FAIL;
+	return FAIL;
 }
 
-int CommandModServer(object oPC, int iMode, int nRunModLevel) {
+int CommandModServer(object oPC, int iMode, int nRunModLevel)
+{
 	ToPC("mod:server> Not in yet.");
 	return FAIL;
 }
 
-int CommandModOnline(object oPC, int iMode, int nRunModLevel) { 
+int CommandModOnline(object oPC, int iMode, int nRunModLevel)
+{
 	string sRest = getopt_arg(0);
-	
+
 	int bDoDM = getopt_opt("dms");
 
 	int nOldTarget = GetDefaultSlot();
 	SetDefaultSlot(TARGET_MACRO_SLOT);
 
 	iterate_players(oIterate,
-		SetTarget(oIterate);
-		
-		if (gvGetInt("chat_debug")) {
-			SendMessageToAllDMs("chat:mod:online> " + sRest + ": " + GetName(oIterate));
-		}
+					SetTarget(oIterate);
 
-		if (!CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1)) {
-			if (gvGetInt("chat_debug"))
-				SendMessageToAllDMs("chat:mod:online> Eval() returned FALSE");
-			return FAIL;
-		}
-		
-		if (gvGetInt("chat_debug"))
-			SendMessageToAllDMs("chat:mod:online> continuing.");
-	);
+	if (gvGetInt("chat_debug")) {
+	SendMessageToAllDMs("chat:mod:online> " + sRest + ": " + GetName(oIterate));
+	}
+
+	if (!CommandEval(oPC, iMode, sRest, 1, 1, nRunModLevel - 1)) {
+	if (gvGetInt("chat_debug"))
+			SendMessageToAllDMs("chat:mod:online> Eval() returned FALSE");
+
+		return FAIL;
+	}
+
+	if (gvGetInt("chat_debug"))
+	SendMessageToAllDMs("chat:mod:online> continuing.");
+				   );
 
 	SetDefaultSlot(nOldTarget);
 

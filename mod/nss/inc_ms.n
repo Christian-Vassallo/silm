@@ -53,17 +53,20 @@ void SaveMentor(struct Mentor sM);
 //
 
 
-struct Mentor GetMentor(object oPC) {
+struct Mentor GetMentor(object oPC)
+{
 	struct Mentor r;
 	int nAID = GetAccountID(oPC);
-	if ( 0 == nAID )
+
+	if (0 == nAID)
 		return r;
 
 	pQ(
 		"select last_charge_cycle,charge,charge_per_hour,capacity,amount_per_pc,flags from mentors where account="
 		+
 		IntToString(nAID) + ";");
-	if ( pF() ) {
+
+	if (pF()) {
 		r.account = nAID;
 		r.last_charge_cycle = StringToInt(pG(1));
 		r.charge = StringToInt(pG(2));
@@ -79,40 +82,45 @@ struct Mentor GetMentor(object oPC) {
 	return r;
 }
 
-void SaveMentor(struct Mentor sM) {
-	if ( 0 == sM.account )
+void SaveMentor(struct Mentor sM)
+{
+	if (0 == sM.account)
 		return;
 
 	pQ("update mentors set " +
-		"last_charge_cycle = unixts(), charge = " + IntToString(sM.charge) + ", " +
-		"charge_per_hour = " + IntToString(sM.charge_per_hour) + ", " +
-		"capacity = " + IntToString(sM.capacity) + ", " +
-		"amount_per_pc = " + IntToString(sM.amount_per_pc) +
+	   "last_charge_cycle = unixts(), charge = " + IntToString(sM.charge) + ", " +
+	   "charge_per_hour = " + IntToString(sM.charge_per_hour) + ", " +
+	   "capacity = " + IntToString(sM.capacity) + ", " +
+	   "amount_per_pc = " + IntToString(sM.amount_per_pc) +
 
-		" where account = " + IntToString(sM.account) + ";"
-	);
+	   " where account = " + IntToString(sM.account) + ";"
+	  );
 }
 
-int GetMentorSelfValue(struct Mentor sM) {
-	if ( GetMentorMayDoAction(sM, MENTOR_FLAG_SELF) )
+int GetMentorSelfValue(struct Mentor sM)
+{
+	if (GetMentorMayDoAction(sM, MENTOR_FLAG_SELF))
 		return sM.amount_per_pc / 3;
+
 	else
 		return 0;
 }
 
-int GetMentorMayDoAction(struct Mentor sM, int nFlag) {
+int GetMentorMayDoAction(struct Mentor sM, int nFlag)
+{
 	return sM.flags & nFlag;
 }
 
 
-struct Mentor GetMentorCharge(struct Mentor sM) {
+struct Mentor GetMentorCharge(struct Mentor sM)
+{
 	int nC = sM.charge;
 
 	int nNow = GetUnixTimestamp();
 
 	int nLastChargeAccess = sM.last_charge_cycle;
 
-	if ( nLastChargeAccess == 0 )
+	if (nLastChargeAccess == 0)
 		nLastChargeAccess = nNow;
 
 	int nSecondsPassed = nNow - nLastChargeAccess;
@@ -120,7 +128,8 @@ struct Mentor GetMentorCharge(struct Mentor sM) {
 
 
 	int nChargedSince = FloatToInt(IntToFloat(sM.charge_per_hour) * nHoursPassed);
-	if ( nChargedSince < 0 )
+
+	if (nChargedSince < 0)
 		nChargedSince = 0;
 
 	sM.last_charge_cycle = nNow;
@@ -129,7 +138,7 @@ struct Mentor GetMentorCharge(struct Mentor sM) {
 
 	int nCapacity = sM.capacity;
 
-	if ( nC > nCapacity )
+	if (nC > nCapacity)
 		nC = nCapacity;
 
 	sM.charge = nC;
@@ -140,7 +149,8 @@ struct Mentor GetMentorCharge(struct Mentor sM) {
 	return sM;
 }
 
-void SetMentorCharge(struct Mentor sM, int nCharge) {
+void SetMentorCharge(struct Mentor sM, int nCharge)
+{
 	sM.charge = nCharge;
 	// And save it
 	SaveMentor(sM);
@@ -148,14 +158,15 @@ void SetMentorCharge(struct Mentor sM, int nCharge) {
 
 
 
-void MentorDoXPTransaction(object oMentor, object oReceiver, int nXP) {
-	if ( !GetIsPC(oMentor) )
+void MentorDoXPTransaction(object oMentor, object oReceiver, int nXP)
+{
+	if (!GetIsPC(oMentor))
 		return;
 
-	if ( !GetIsPC(oReceiver) )
+	if (!GetIsPC(oReceiver))
 		return;
 
-	if ( nXP < 1 )
+	if (nXP < 1)
 		return;
 
 	int nAID = GetAccountID(oMentor),
@@ -163,53 +174,58 @@ void MentorDoXPTransaction(object oMentor, object oReceiver, int nXP) {
 		nTCID = GetCharacterID(oReceiver);
 
 
-	if ( nAID == 0 || nCID == 0 || nTCID == 0 ) {
+	if (nAID == 0 || nCID == 0 || nTCID == 0) {
 		SendMessageToAllDMs(PCToString(oMentor) +
-			" tried to give XP to " +
-			PCToString(oReceiver) +
-			", but failed because no character IDs were present (Live data: " +
-			IntToString(nAID) + " " + IntToString(nCID) + " " + IntToString(nTCID) + ").");
+							" tried to give XP to " +
+							PCToString(oReceiver) +
+							", but failed because no character IDs were present (Live data: " +
+							IntToString(nAID) + " " + IntToString(nCID) + " " + IntToString(nTCID) + ").");
 		return;
 	}
 
 
 	pQ("select id from mentordata where account=" +
-		IntToString(nAID) + " and character=" + IntToString(nCID) + " and t_character=" + IntToString(nTCID) + ";");
-	if ( pF() ) {
+	   IntToString(nAID) + " and character=" + IntToString(nCID) + " and t_character=" + IntToString(
+		   nTCID) + ";");
+
+	if (pF()) {
 		string id = pG(1);
 
 		pQ("update mentordata set xp=xp+" + IntToString(nXP) + " where id = " + id + ";");
+
 	} else {
 		pQ("insert into mentordata (account, character, t_character, xp) values(" +
-			IntToString(nAID) +
-			", " + IntToString(nCID) + ", " + IntToString(nTCID) + ", " + IntToString(nXP) + ");");
+		   IntToString(nAID) +
+		   ", " + IntToString(nCID) + ", " + IntToString(nTCID) + ", " + IntToString(nXP) + ");");
 	}
 
 	GiveXP(oReceiver, nXP, FALSE);
 
 	SendMessageToPC(oMentor, PCToString(oReceiver, 1) +
-		" hat " + IntToString(nXP) + " XP durch Dich erhalten.");
+					" hat " + IntToString(nXP) + " XP durch Dich erhalten.");
 	SendMessageToPC(oReceiver, "Du hast " +
-		IntToString(nXP) + " XP durch " + PCToString(oMentor, 1) + " erhalten.");
+					IntToString(nXP) + " XP durch " + PCToString(oMentor, 1) + " erhalten.");
 
 	SendMessageToAllDMs("Mentor " +
-		PCToString(oMentor) + " hat " + IntToString(nXP) + " an " + PCToString(oReceiver) + " vergeben.");
+						PCToString(oMentor) + " hat " + IntToString(nXP) + " an " + PCToString(oReceiver) + " vergeben.");
 }
 
 int MS_MakeDialog(object oPC);
 
-void MS_Start(object oPC, object oMentorItem) {
+void MS_Start(object oPC, object oMentorItem)
+{
 	DeleteLocalInt(oPC, "ms_sel");
 	// SetLocalObject(oPC, "ms_current", oMentorItem);
 
-	if ( !MS_MakeDialog(oPC) )
+	if (!MS_MakeDialog(oPC))
 		return;
 
 	AssignCommand(oPC, ActionStartConversation(oPC, "list_select", TRUE, TRUE));
 
 }
 
-int MS_MakeDialog(object oPC) {
+int MS_MakeDialog(object oPC)
+{
 	ClearList(oPC, "ms");
 
 	object oTargetPC = GetLocalObject(oPC, "mentor_target");
@@ -218,7 +234,7 @@ int MS_MakeDialog(object oPC) {
 
 	struct Mentor sM = GetMentor(oPC);
 
-	if ( 0 == sM.account ) {
+	if (0 == sM.account) {
 		ToPC(
 			"Du bist nicht als Mentor in der Datenbank eingetragen, und kannst daher diesen Stein nicht benutzen.",
 			oPC);
@@ -231,7 +247,7 @@ int MS_MakeDialog(object oPC) {
 	nCPH = sM.charge_per_hour,
 	nXPA = sM.amount_per_pc;
 
-	if ( nCapacity == 0 ) {
+	if (nCapacity == 0) {
 		ToPC("Dieser Stab hat keine Kapazitaet gesetzt und kann daher nicht verwendet werden.", oPC);
 		SendMessageToAllDMs("Warning: MentorItem has no capacity set, player " + PCToString(oPC));
 		return 0;
@@ -248,12 +264,12 @@ int MS_MakeDialog(object oPC) {
 		bIsDMOnline = GetPCCount(OBJECT_INVALID, TRUE) > 0;
 
 	// Cough up a warning
-	if ( bIsDMOnline )
+	if (bIsDMOnline)
 		FloatingTextStringOnCreature(
 			"Der Mentorenstein nur eingeschraenkte Funktionalitaet, waehrend SLs online sind.", oPC, 0);
 
 
-	if ( nPC < 2 )
+	if (nPC < 2)
 		FloatingTextStringOnCreature(
 			"Der Mentorenstein nur eingeschraenkte Funktionalitaet, wenn weniger als zwei Spieler online sind.",
 			oPC, 0);
@@ -267,36 +283,36 @@ int MS_MakeDialog(object oPC) {
 			  IntToString(nCPH) +
 			  ").  Fuehle Dich darauf hingewiesen, dass die Mentoren-Daten regelmaessig ueberprueft werden und Missbrauch in Blut und Traenen endet.";
 
-	if ( !bIsDMOnline && nPC >= 2 ) {
-		if ( ( oTargetPC != oPC && GetMentorMayDoAction(sM, MENTOR_FLAG_SINGLE) )
-			|| ( oTargetPC == oPC && GetMentorMayDoAction(sM, MENTOR_FLAG_SELF) ) ) {
+	if (!bIsDMOnline && nPC >= 2) {
+		if ((oTargetPC != oPC && GetMentorMayDoAction(sM, MENTOR_FLAG_SINGLE))
+				|| (oTargetPC == oPC && GetMentorMayDoAction(sM, MENTOR_FLAG_SELF))) {
 			AddListItem(oPC, "ms", IntToString(nXPA) + " XP an den ausgewaehlten Spieler.");
 			SetListInt(oPC, "ms", 2);
 			SetListDisplayMode(oPC, "ms", nCharge > nXPA - GetMentorSelfValue(sM) ? 1 : -1);
 		}
 
-		if ( GetMentorMayDoAction(sM, MENTOR_FLAG_AREA) ) {
+		if (GetMentorMayDoAction(sM, MENTOR_FLAG_AREA)) {
 			AddListItem(oPC, "ms", IntToString(nXPA) +
-				" XP an alle Spieler im Gebiet (" +
-				IntToString(nPCArea) +
-				" Spieler, " + IntToString(nXPA * nPCArea - GetMentorSelfValue(sM)) + " XP).");
+						" XP an alle Spieler im Gebiet (" +
+						IntToString(nPCArea) +
+						" Spieler, " + IntToString(nXPA * nPCArea - GetMentorSelfValue(sM)) + " XP).");
 			SetListInt(oPC, "ms", 4);
 			SetListDisplayMode(oPC, "ms", nCharge > nXPA * nPCArea - GetMentorSelfValue(sM) ? 1 : -1);
 		}
 
-		if ( GetMentorMayDoAction(sM, MENTOR_FLAG_PARTY) ) {
+		if (GetMentorMayDoAction(sM, MENTOR_FLAG_PARTY)) {
 			AddListItem(oPC, "ms", IntToString(nXPA) +
-				" XP an alle Spieler in meiner Gruppe (" +
-				IntToString(nPCParty) +
-				" Spieler, " + IntToString(nXPA * nPCParty - GetMentorSelfValue(sM)) + " XP).");
+						" XP an alle Spieler in meiner Gruppe (" +
+						IntToString(nPCParty) +
+						" Spieler, " + IntToString(nXPA * nPCParty - GetMentorSelfValue(sM)) + " XP).");
 			SetListInt(oPC, "ms", 3);
 			SetListDisplayMode(oPC, "ms", nCharge > nXPA * nPCParty - GetMentorSelfValue(sM) ? 1 : -1);
 		}
 
-		if ( GetMentorMayDoAction(sM, MENTOR_FLAG_SERVER) ) {
+		if (GetMentorMayDoAction(sM, MENTOR_FLAG_SERVER)) {
 			AddListItem(oPC, "ms", IntToString(nXPA) +
-				" XP an alle Spieler auf dem Server (" +
-				IntToString(nPC) + " Spieler, " + IntToString(nXPA * nPC - GetMentorSelfValue(sM)) + " XP).");
+						" XP an alle Spieler auf dem Server (" +
+						IntToString(nPC) + " Spieler, " + IntToString(nXPA * nPC - GetMentorSelfValue(sM)) + " XP).");
 			SetListInt(oPC, "ms", 5);
 			SetListDisplayMode(oPC, "ms", nCharge > nXPA * nPC - GetMentorSelfValue(sM) ? 1 : -1);
 		}

@@ -14,11 +14,12 @@ CUST_TYPE_ARMOR = 1;
  * original one
  */
 
-object Assert_Copy_Equipped(object oPC, int iSlot) {
+object Assert_Copy_Equipped(object oPC, int iSlot)
+{
 	object oItem = GetItemInSlot(iSlot, oPC);
 	object oOrig = oItem;
 
-	if ( GetLocalInt(oItem, "CUST_COPY") ) return oItem;
+	if (GetLocalInt(oItem, "CUST_COPY")) return oItem;
 
 	oItem = CopyItem(oItem, oPC, TRUE);
 	SetLocalInt(oItem, "CUST_COPY", 1);
@@ -31,131 +32,146 @@ object Assert_Copy_Equipped(object oPC, int iSlot) {
 /*
  * Make sure to destroy the copied item
  */
-void Assert_Copy_Destroyed(object oPC, int iSlot) {
+void Assert_Copy_Destroyed(object oPC, int iSlot)
+{
 	object oItem = GetItemInSlot(iSlot, oPC);
 	object oOrig;
 
-	if ( !GetLocalInt(oItem, "CUST_COPY") ) return;
+	if (!GetLocalInt(oItem, "CUST_COPY")) return;
 
-	if ( GetIsObjectValid(oOrig = GetLocalObject(oItem, "CUST_ORIG")) )
+	if (GetIsObjectValid(oOrig = GetLocalObject(oItem, "CUST_ORIG")))
 		AssignCommand(oPC, ActionEquipItem(oOrig, iSlot));
+
 	DestroyObject(oItem);
 }
 
 /*
  * Commit the changes, remove the copy marking and destroy the original
  */
-void Assert_Changes_Committed(object oPC, int iSlot) {
+void Assert_Changes_Committed(object oPC, int iSlot)
+{
 	object oItem = GetItemInSlot(iSlot, oPC);
 	object oOrig;
 
-	if ( !GetLocalInt(oItem, "CUST_COPY") ) return;
+	if (!GetLocalInt(oItem, "CUST_COPY")) return;
 
-	if ( GetIsObjectValid(oOrig = GetLocalObject(oItem, "CUST_ORIG")) )
+	if (GetIsObjectValid(oOrig = GetLocalObject(oItem, "CUST_ORIG")))
 		DestroyObject(oOrig);
+
 	DeleteLocalInt(oItem, "CUST_COPY");
 }
 
-int Get_Current_PartNumber(object oPC, int iPass = 0) {
+int Get_Current_PartNumber(object oPC, int iPass = 0)
+{
 	int iPart = GetLocalInt(oPC, "CUST_PART");
 	int iSide = GetLocalInt(oPC, "CUST_SIDE");
 
 
 	//Selected only one side to modify, disallow second pass
-	if ( iSide < 2 && iPass > 0 ) return -1;
+	if (iSide < 2 && iPass > 0) return -1;
 
 	//Selected right side or in second pass of two-sided designing
-	if ( iPass == 1 || iSide == 1 ) {
-		switch ( iPart ) {
-			case ITEM_APPR_ARMOR_MODEL_LBICEP:
-				iPart = ITEM_APPR_ARMOR_MODEL_RBICEP;
-				break;
-			case ITEM_APPR_ARMOR_MODEL_LFOOT:
-				iPart = ITEM_APPR_ARMOR_MODEL_RFOOT;
-				break;
-			case ITEM_APPR_ARMOR_MODEL_LFOREARM:
-				iPart = ITEM_APPR_ARMOR_MODEL_RFOREARM;
-				break;
-			case ITEM_APPR_ARMOR_MODEL_LHAND:
-				iPart = ITEM_APPR_ARMOR_MODEL_RHAND;
-				break;
-			case ITEM_APPR_ARMOR_MODEL_LSHIN:
-				iPart = ITEM_APPR_ARMOR_MODEL_RSHIN;
-				break;
-			case ITEM_APPR_ARMOR_MODEL_LSHOULDER:
-				iPart = ITEM_APPR_ARMOR_MODEL_RSHOULDER;
-				break;
-			case ITEM_APPR_ARMOR_MODEL_LTHIGH:
-				iPart = ITEM_APPR_ARMOR_MODEL_RTHIGH;
-				break;
+	if (iPass == 1 || iSide == 1) {
+		switch (iPart) {
+		case ITEM_APPR_ARMOR_MODEL_LBICEP:
+			iPart = ITEM_APPR_ARMOR_MODEL_RBICEP;
+			break;
+
+		case ITEM_APPR_ARMOR_MODEL_LFOOT:
+			iPart = ITEM_APPR_ARMOR_MODEL_RFOOT;
+			break;
+
+		case ITEM_APPR_ARMOR_MODEL_LFOREARM:
+			iPart = ITEM_APPR_ARMOR_MODEL_RFOREARM;
+			break;
+
+		case ITEM_APPR_ARMOR_MODEL_LHAND:
+			iPart = ITEM_APPR_ARMOR_MODEL_RHAND;
+			break;
+
+		case ITEM_APPR_ARMOR_MODEL_LSHIN:
+			iPart = ITEM_APPR_ARMOR_MODEL_RSHIN;
+			break;
+
+		case ITEM_APPR_ARMOR_MODEL_LSHOULDER:
+			iPart = ITEM_APPR_ARMOR_MODEL_RSHOULDER;
+			break;
+
+		case ITEM_APPR_ARMOR_MODEL_LTHIGH:
+			iPart = ITEM_APPR_ARMOR_MODEL_RTHIGH;
+			break;
 		}
 	}
+
 	return iPart;
 }
 
-string Get_2daTable(int iPart) {
-	switch ( iPart ) {
-		case ITEM_APPR_ARMOR_MODEL_BELT:
-			return "chg_belt";
+string Get_2daTable(int iPart)
+{
+	switch (iPart) {
+	case ITEM_APPR_ARMOR_MODEL_BELT:
+		return "chg_belt";
 
-		case ITEM_APPR_ARMOR_MODEL_LBICEP:
-		case ITEM_APPR_ARMOR_MODEL_RBICEP:
-			return "chg_bicep";
+	case ITEM_APPR_ARMOR_MODEL_LBICEP:
+	case ITEM_APPR_ARMOR_MODEL_RBICEP:
+		return "chg_bicep";
 
-		case ITEM_APPR_ARMOR_MODEL_LFOOT:
-		case ITEM_APPR_ARMOR_MODEL_RFOOT:
-			return "chg_foot";
+	case ITEM_APPR_ARMOR_MODEL_LFOOT:
+	case ITEM_APPR_ARMOR_MODEL_RFOOT:
+		return "chg_foot";
 
-		case ITEM_APPR_ARMOR_MODEL_LFOREARM:
-		case ITEM_APPR_ARMOR_MODEL_RFOREARM:
-			return "chg_forearm";
+	case ITEM_APPR_ARMOR_MODEL_LFOREARM:
+	case ITEM_APPR_ARMOR_MODEL_RFOREARM:
+		return "chg_forearm";
 
-		case ITEM_APPR_ARMOR_MODEL_LHAND:
-		case ITEM_APPR_ARMOR_MODEL_RHAND:
-			return "chg_hand";
+	case ITEM_APPR_ARMOR_MODEL_LHAND:
+	case ITEM_APPR_ARMOR_MODEL_RHAND:
+		return "chg_hand";
 
-		case ITEM_APPR_ARMOR_MODEL_LSHIN:
-		case ITEM_APPR_ARMOR_MODEL_RSHIN:
-			return "chg_shin";
+	case ITEM_APPR_ARMOR_MODEL_LSHIN:
+	case ITEM_APPR_ARMOR_MODEL_RSHIN:
+		return "chg_shin";
 
-		case ITEM_APPR_ARMOR_MODEL_LSHOULDER:
-		case ITEM_APPR_ARMOR_MODEL_RSHOULDER:
-			return "chg_shoulder";
+	case ITEM_APPR_ARMOR_MODEL_LSHOULDER:
+	case ITEM_APPR_ARMOR_MODEL_RSHOULDER:
+		return "chg_shoulder";
 
-		case ITEM_APPR_ARMOR_MODEL_LTHIGH:
-		case ITEM_APPR_ARMOR_MODEL_RTHIGH:
-			return "chg_legs";
+	case ITEM_APPR_ARMOR_MODEL_LTHIGH:
+	case ITEM_APPR_ARMOR_MODEL_RTHIGH:
+		return "chg_legs";
 
-		case ITEM_APPR_ARMOR_MODEL_NECK:
-			return "chg_neck";
+	case ITEM_APPR_ARMOR_MODEL_NECK:
+		return "chg_neck";
 
-		case ITEM_APPR_ARMOR_MODEL_ROBE:
-			return "chg_robe";
+	case ITEM_APPR_ARMOR_MODEL_ROBE:
+		return "chg_robe";
 
-		case ITEM_APPR_ARMOR_MODEL_TORSO:
-			return "chg_chest";
+	case ITEM_APPR_ARMOR_MODEL_TORSO:
+		return "chg_chest";
 
-		case ITEM_APPR_ARMOR_MODEL_PELVIS:
-			return "chg_pelvis";
+	case ITEM_APPR_ARMOR_MODEL_PELVIS:
+		return "chg_pelvis";
 	}
 
 	return "";
 }
 
-object ModifyArmorPart(object oArmor, int iPart, int iDelta) {
+object ModifyArmorPart(object oArmor, int iPart, int iDelta)
+{
 	string s2DATable = Get_2daTable(iPart);
 	int iModel = GetItemAppearance(oArmor, ITEM_APPR_TYPE_ARMOR_MODEL, iPart);
 	SendMessageToPC(GetItemPossessor(oArmor), "Altes Modell: " + IntToString(iModel));
 	string sRes;
 	object oNew;
 
-	if ( iDelta > 0 )
+	if (iDelta > 0)
 		sRes = Get2DACached(s2DATable, "Next", iModel);
+
 	else
 		sRes = Get2DACached(s2DATable, "Prev", iModel);
 
 	//Model number can't be switched, bail out
-	if ( sRes == "****" ) return OBJECT_INVALID;
+	if (sRes == "****") return OBJECT_INVALID;
 
 	iModel = StringToInt(sRes);
 	SendMessageToPC(GetItemPossessor(oArmor), "Neues Modell: " + IntToString(iModel));
@@ -165,24 +181,28 @@ object ModifyArmorPart(object oArmor, int iPart, int iDelta) {
 	return oNew;
 }
 
-void PerformModifyArmor(object oPC, int iDelta) {
+void PerformModifyArmor(object oPC, int iDelta)
+{
 	object oArmor = Assert_Copy_Equipped(oPC, INVENTORY_SLOT_CHEST);
 	object oOld = oArmor;
 	int iPart;
 
 	iPart = Get_Current_PartNumber(oPC, 0);
 	oArmor = ModifyArmorPart(oArmor, iPart, iDelta);
-	if ( !GetIsObjectValid(oArmor) ) return;
+
+	if (!GetIsObjectValid(oArmor)) return;
 
 	iPart = Get_Current_PartNumber(oPC, 1);
-	if ( iPart > -1 ) oArmor = ModifyArmorPart(oArmor, iPart, iDelta);
 
-	if ( !GetIsObjectValid(oArmor) ) return;
+	if (iPart > -1) oArmor = ModifyArmorPart(oArmor, iPart, iDelta);
+
+	if (!GetIsObjectValid(oArmor)) return;
 
 	AssignCommand(oPC, ActionEquipItem(oArmor, INVENTORY_SLOT_CHEST));
 }
 
-void PerformModifyArmorCol(object oPC, int iDelta) {
+void PerformModifyArmorCol(object oPC, int iDelta)
+{
 	object oArmor = Assert_Copy_Equipped(oPC, INVENTORY_SLOT_CHEST);
 	object oNew;
 
@@ -192,18 +212,23 @@ void PerformModifyArmorCol(object oPC, int iDelta) {
 	SendMessageToPC(oPC, "Altes Modell: " + IntToString(iCurrentCol));
 
 	iCurrentCol += iDelta;
-	if ( iCurrentCol < 0 ) iCurrentCol = MAX_COLOR;
-	if ( iCurrentCol > MAX_COLOR ) iCurrentCol = 0;
+
+	if (iCurrentCol < 0) iCurrentCol = MAX_COLOR;
+
+	if (iCurrentCol > MAX_COLOR) iCurrentCol = 0;
+
 	SendMessageToPC(oPC, "Neues Modell: " + IntToString(iCurrentCol));
 
 	oNew = CopyItemAndModify(oArmor, ITEM_APPR_TYPE_ARMOR_COLOR, iColSlot, iCurrentCol, TRUE);
-	if ( GetIsObjectValid(oNew) ) {
+
+	if (GetIsObjectValid(oNew)) {
 		DestroyObject(oArmor);
 		AssignCommand(oPC, ActionEquipItem(oNew, INVENTORY_SLOT_CHEST));
 	}
 }
 
-void PerformModifyWeapon(object oPC, int iDelta) {
+void PerformModifyWeapon(object oPC, int iDelta)
+{
 	object oWeap = Assert_Copy_Equipped(oPC, INVENTORY_SLOT_RIGHTHAND);
 	object oNew;
 	int iSlot = GetLocalInt(oPC, "CUST_PART");
@@ -211,66 +236,80 @@ void PerformModifyWeapon(object oPC, int iDelta) {
 	SendMessageToPC(oPC, "Altes Modell: " + IntToString(iCurrentMod));
 
 	iCurrentMod += iDelta;
-	if ( iCurrentMod < 1 ) iSlot = 89;
-	if ( iCurrentMod > 89 ) iSlot = 1;
+
+	if (iCurrentMod < 1) iSlot = 89;
+
+	if (iCurrentMod > 89) iSlot = 1;
+
 	SendMessageToPC(oPC, "Neues Modell: " + IntToString(iCurrentMod));
 
 	oNew = CopyItemAndModify(oWeap, ITEM_APPR_TYPE_WEAPON_MODEL, iSlot, iCurrentMod, TRUE);
-	if ( GetIsObjectValid(oNew) ) {
+
+	if (GetIsObjectValid(oNew)) {
 		DestroyObject(oWeap);
 		AssignCommand(oPC, ActionEquipItem(oNew, INVENTORY_SLOT_RIGHTHAND));
 	}
 }
 
 
-void PerformModifyWeaponCol(object oPC, int iDelta) {
+void PerformModifyWeaponCol(object oPC, int iDelta)
+{
 	object oWeap = Assert_Copy_Equipped(oPC, INVENTORY_SLOT_RIGHTHAND);
 	object oNew;
 	int iSlot = GetLocalInt(oPC, "CUST_PART");
 
-	switch ( iSlot ) {
-		case ITEM_APPR_WEAPON_MODEL_TOP:
-			iSlot = ITEM_APPR_WEAPON_COLOR_TOP;
-			break;
-		case ITEM_APPR_WEAPON_MODEL_MIDDLE:
-			iSlot = ITEM_APPR_WEAPON_COLOR_MIDDLE;
-			break;
-		case ITEM_APPR_WEAPON_MODEL_BOTTOM:
-			iSlot = ITEM_APPR_WEAPON_COLOR_BOTTOM;
-			break;
+	switch (iSlot) {
+	case ITEM_APPR_WEAPON_MODEL_TOP:
+		iSlot = ITEM_APPR_WEAPON_COLOR_TOP;
+		break;
+
+	case ITEM_APPR_WEAPON_MODEL_MIDDLE:
+		iSlot = ITEM_APPR_WEAPON_COLOR_MIDDLE;
+		break;
+
+	case ITEM_APPR_WEAPON_MODEL_BOTTOM:
+		iSlot = ITEM_APPR_WEAPON_COLOR_BOTTOM;
+		break;
 	}
 
 	int iCurrentCol = GetItemAppearance(oWeap, ITEM_APPR_TYPE_WEAPON_COLOR, iSlot);
 	SendMessageToPC(oPC, "Altes Modell: " + IntToString(iCurrentCol));
 
 	iCurrentCol += iDelta;
-	if ( iCurrentCol < 1 ) iSlot = 9;
-	if ( iCurrentCol > 9 ) iSlot = 1;
+
+	if (iCurrentCol < 1) iSlot = 9;
+
+	if (iCurrentCol > 9) iSlot = 1;
+
 	SendMessageToPC(oPC, "Neues Modell: " + IntToString(iCurrentCol));
 
 	oNew = CopyItemAndModify(oWeap, ITEM_APPR_TYPE_WEAPON_COLOR, iSlot, iCurrentCol, TRUE);
-	if ( GetIsObjectValid(oNew) ) {
+
+	if (GetIsObjectValid(oNew)) {
 		DestroyObject(oWeap);
 		AssignCommand(oPC, ActionEquipItem(oNew, INVENTORY_SLOT_RIGHTHAND));
 	}
 }
 
-void PerformResetWeaponPart(object oPC) {
+void PerformResetWeaponPart(object oPC)
+{
 	object oWeap = Assert_Copy_Equipped(oPC, INVENTORY_SLOT_RIGHTHAND);
 	object oNew;
 	int iSlot = GetLocalInt(oPC, "CUST_PART");
 	int iColSlot;
 
-	switch ( iSlot ) {
-		case ITEM_APPR_WEAPON_MODEL_TOP:
-			iColSlot = ITEM_APPR_WEAPON_COLOR_TOP;
-			break;
-		case ITEM_APPR_WEAPON_MODEL_MIDDLE:
-			iColSlot = ITEM_APPR_WEAPON_COLOR_MIDDLE;
-			break;
-		case ITEM_APPR_WEAPON_MODEL_BOTTOM:
-			iColSlot = ITEM_APPR_WEAPON_COLOR_BOTTOM;
-			break;
+	switch (iSlot) {
+	case ITEM_APPR_WEAPON_MODEL_TOP:
+		iColSlot = ITEM_APPR_WEAPON_COLOR_TOP;
+		break;
+
+	case ITEM_APPR_WEAPON_MODEL_MIDDLE:
+		iColSlot = ITEM_APPR_WEAPON_COLOR_MIDDLE;
+		break;
+
+	case ITEM_APPR_WEAPON_MODEL_BOTTOM:
+		iColSlot = ITEM_APPR_WEAPON_COLOR_BOTTOM;
+		break;
 	}
 
 	oNew = CopyItemAndModify(oWeap, ITEM_APPR_TYPE_WEAPON_MODEL, iSlot, 1, TRUE);
@@ -281,7 +320,8 @@ void PerformResetWeaponPart(object oPC) {
 	AssignCommand(oPC, ActionEquipItem(oNew, INVENTORY_SLOT_RIGHTHAND));
 }
 
-void PerformModifyCloakCol(object oPC, int iDelta) {
+void PerformModifyCloakCol(object oPC, int iDelta)
+{
 	object oArmor = Assert_Copy_Equipped(oPC, INVENTORY_SLOT_CLOAK);
 	object oNew;
 
@@ -291,18 +331,23 @@ void PerformModifyCloakCol(object oPC, int iDelta) {
 	SendMessageToPC(oPC, "Altes Modell: " + IntToString(iCurrentCol));
 
 	iCurrentCol += iDelta;
-	if ( iCurrentCol < 0 ) iCurrentCol = MAX_COLOR;
-	if ( iCurrentCol > MAX_COLOR ) iCurrentCol = 0;
+
+	if (iCurrentCol < 0) iCurrentCol = MAX_COLOR;
+
+	if (iCurrentCol > MAX_COLOR) iCurrentCol = 0;
+
 	SendMessageToPC(oPC, "Neues Modell: " + IntToString(iCurrentCol));
 
 	oNew = CopyItemAndModify(oArmor, ITEM_APPR_TYPE_ARMOR_COLOR, iColSlot, iCurrentCol, TRUE);
-	if ( GetIsObjectValid(oNew) ) {
+
+	if (GetIsObjectValid(oNew)) {
 		DestroyObject(oArmor);
 		AssignCommand(oPC, ActionEquipItem(oNew, INVENTORY_SLOT_CLOAK));
 	}
 }
 
-void PerformModifyHelmetCol(object oPC, int iDelta) {
+void PerformModifyHelmetCol(object oPC, int iDelta)
+{
 	object oHelmet = Assert_Copy_Equipped(oPC, INVENTORY_SLOT_HEAD);
 	object oNew;
 
@@ -312,50 +357,60 @@ void PerformModifyHelmetCol(object oPC, int iDelta) {
 	SendMessageToPC(oPC, "Altes Modell: " + IntToString(iCurrentCol));
 
 	iCurrentCol += iDelta;
-	if ( iCurrentCol < 0 ) iCurrentCol = MAX_COLOR;
-	if ( iCurrentCol > MAX_COLOR ) iCurrentCol = 0;
+
+	if (iCurrentCol < 0) iCurrentCol = MAX_COLOR;
+
+	if (iCurrentCol > MAX_COLOR) iCurrentCol = 0;
+
 	SendMessageToPC(oPC, "Neues Modell: " + IntToString(iCurrentCol));
 
 	oNew = CopyItemAndModify(oHelmet, ITEM_APPR_TYPE_ARMOR_COLOR, iColSlot, iCurrentCol, TRUE);
-	if ( GetIsObjectValid(oNew) ) {
+
+	if (GetIsObjectValid(oNew)) {
 		DestroyObject(oHelmet);
 		AssignCommand(oPC, ActionEquipItem(oNew, INVENTORY_SLOT_HEAD));
 	}
 }
 
-void PerformModify(object oPC, int iDelta) {
-	switch ( GetLocalInt(oPC, "CUST_TYPE") ) {
-		case CUST_TYPE_WEAPON:
-			PerformModifyWeapon(oPC, iDelta);
-			break;
-		case CUST_TYPE_ARMOR:
-			PerformModifyArmor(oPC, iDelta);
-			break;
+void PerformModify(object oPC, int iDelta)
+{
+	switch (GetLocalInt(oPC, "CUST_TYPE")) {
+	case CUST_TYPE_WEAPON:
+		PerformModifyWeapon(oPC, iDelta);
+		break;
 
-		default:
-			SendMessageToPC(oPC, "Invalid CUST_TYPE: " + IntToString(GetLocalInt(oPC, "CUST_TYPE")));
-			break;
+	case CUST_TYPE_ARMOR:
+		PerformModifyArmor(oPC, iDelta);
+		break;
+
+	default:
+		SendMessageToPC(oPC, "Invalid CUST_TYPE: " + IntToString(GetLocalInt(oPC, "CUST_TYPE")));
+		break;
 	}
 }
 
-void PerformModifyCol(object oPC, int iDelta) {
-	switch ( GetLocalInt(oPC, "CUST_TYPE") ) {
-		case CUST_TYPE_WEAPON:
-			PerformModifyWeaponCol(oPC, iDelta);
-			break;
-		case CUST_TYPE_CLOAK:
-			PerformModifyCloakCol(oPC, iDelta);
-			break;
-		case CUST_TYPE_HELMET:
-			PerformModifyHelmetCol(oPC, iDelta);
-			break;
-		case CUST_TYPE_ARMOR:
-			PerformModifyArmorCol(oPC, iDelta);
-			break;
+void PerformModifyCol(object oPC, int iDelta)
+{
+	switch (GetLocalInt(oPC, "CUST_TYPE")) {
+	case CUST_TYPE_WEAPON:
+		PerformModifyWeaponCol(oPC, iDelta);
+		break;
 
-		default:
-			SendMessageToPC(oPC, "Invalid CUST_TYPE: " + IntToString(GetLocalInt(oPC, "CUST_TYPE")));
-			break;
+	case CUST_TYPE_CLOAK:
+		PerformModifyCloakCol(oPC, iDelta);
+		break;
+
+	case CUST_TYPE_HELMET:
+		PerformModifyHelmetCol(oPC, iDelta);
+		break;
+
+	case CUST_TYPE_ARMOR:
+		PerformModifyArmorCol(oPC, iDelta);
+		break;
+
+	default:
+		SendMessageToPC(oPC, "Invalid CUST_TYPE: " + IntToString(GetLocalInt(oPC, "CUST_TYPE")));
+		break;
 	}
 }
 

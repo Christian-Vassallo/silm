@@ -2,7 +2,8 @@ extern("inc_target")
 extern("inc_cdb")
 extern("inc_nwnx_events")
 
-void main() {
+void main()
+{
 
 	object oPC = OBJECT_SELF;
 	object oItem = NWNXGetEventItem();
@@ -11,10 +12,10 @@ void main() {
 	location lTarget = Location(GetArea(oPC), vTarget, GetFacing(oPC));
 
 
-	if ( !amask(oPC, AMASK_GM) &&
-		!amask(oPC, AMASK_FORCETALK) &&
-		!amask(oPC, AMASK_GLOBAL_FORCETALK)
-	) {
+	if (!amask(oPC, AMASK_GM) &&
+			!amask(oPC, AMASK_FORCETALK) &&
+			!amask(oPC, AMASK_GLOBAL_FORCETALK)
+	   ) {
 		SendMessageToPC(oPC, "Nicht genuegend Rechte um " + GetName(oItem) + " zu benutzen.");
 		return;
 	}
@@ -26,19 +27,22 @@ void main() {
 
 	if (GetIsObjectValid(oTarget)) {
 		if (!is_creature(oTarget)) {
-			
+
 			if (oTarget == oItem) {
 				// toggle queueing
 				nQueues = !nQueues;
 				SetLocalInt(oItem, "current_target_queues", nQueues);
+
 				if (nRun)
 					SendMessageToPC(oPC, "Target queues actions.");
+
 				else
 					SendMessageToPC(oPC, "Target does not queue actions.");
 
 			} else {
 				SendMessageToPC(oPC, "Not a valid target.");
 			}
+
 		} else {
 			if (GetIsPC(oTarget)) {
 				// make him follow
@@ -46,18 +50,24 @@ void main() {
 				if (GetIsObjectValid(oCurrentTarget) && is_creature(oCurrentTarget)) {
 					if (!nQueues)
 						AssignCommand(oCurrentTarget, ClearAllActions(TRUE));
+
 					AssignCommand(oCurrentTarget, ActionForceFollowObject(oTarget, 2.0f));
+
 				} else {
 					SendMessageToPC(oPC, "Current target cannot follow selected PC, because its not a creature.");
 				}
+
 			} else {
 				if (oTarget == oCurrentTarget) {
 					nRun = !nRun;
 					SetLocalInt(oItem, "current_target_run", nRun);
+
 					if (nRun)
 						SendMessageToPC(oPC, "Target runs.");
+
 					else
 						SendMessageToPC(oPC, "Target walks.");
+
 				} else {
 					ShowTargetFor(-1, oTarget, oPC);
 					SetLocalObject(oItem, "current_target", oTarget);
@@ -66,11 +76,14 @@ void main() {
 				}
 			}
 		}
+
 	} else {
 		if (GetIsObjectValid(oCurrentTarget)) {
 			if (!nQueues)
 				AssignCommand(oCurrentTarget, ClearAllActions(TRUE));
+
 			AssignCommand(oCurrentTarget, ActionMoveToLocation(lTarget, nRun));
+
 		} else {
 			SendMessageToPC(oPC, "No valid target for this item is set.");
 		}

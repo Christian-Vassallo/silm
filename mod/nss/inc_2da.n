@@ -1,4 +1,4 @@
-// Function: Get2DACached 
+// Function: Get2DACached
 //
 // Gets a value from a 2DA file on the server and returns it as a string
 // avoid using this function in loops
@@ -10,13 +10,14 @@ string Get2DACached(string s2DA, string sCol, int nRow);
 
 
 
-string Get2DACached(string s2DA, string sCol, int nRow) {
+string Get2DACached(string s2DA, string sCol, int nRow)
+{
 	object oMod = GetModule();
 
 	string s = "2da" + s2DA + sCol +  IntToString(nRow);
 	string s2;
 
-	if ( ( s2 = GetLocalString(oMod, s) ) != "" )
+	if ((s2 = GetLocalString(oMod, s)) != "")
 		return s2;
 
 	s2 = Get2DAString(s2DA, sCol, nRow);

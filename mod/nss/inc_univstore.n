@@ -54,29 +54,33 @@ int GetIsCustomItem(object oItem);
 /* implementation */
 
 
-int UnivStore_IsContainer(object oContainer) {
+int UnivStore_IsContainer(object oContainer)
+{
 	string sTag = GetLocalString(oContainer, "store_tag");
 	return sTag != "";
 }
 
 
-int UnivStore_GetCapacity(object oContainer) {
-	if ( GetLocalInt(oContainer, "store_capacity") > 0 )
+int UnivStore_GetCapacity(object oContainer)
+{
+	if (GetLocalInt(oContainer, "store_capacity") > 0)
 		return GetLocalInt(oContainer, "store_capacity");
 
 	return STORE_MAX_ITEMS;
 }
 
-float UnivStore_GetMaxWeight(object oContainer) {
-	if ( GetLocalFloat(oContainer, "store_maxweight") > 0.0 )
+float UnivStore_GetMaxWeight(object oContainer)
+{
+	if (GetLocalFloat(oContainer, "store_maxweight") > 0.0)
 		return GetLocalFloat(oContainer, "store_maxweight");
 
 	return STORE_MAX_WEIGHT;
 }
 
-int UnivStore_StoreItem(object oContainer, object oPC, object oItem) {
+int UnivStore_StoreItem(object oContainer, object oPC, object oItem)
+{
 
-	if ( !UnivStore_IsContainer(oContainer) )
+	if (!UnivStore_IsContainer(oContainer))
 		return STORE_FAIL;
 
 	string sCID = IntToString(GetLocalInt(oPC, "cid"));
@@ -109,12 +113,13 @@ int UnivStore_StoreItem(object oContainer, object oPC, object oItem) {
 }
 
 
-int UnivStore_ClearStore(object oContainer) {
+int UnivStore_ClearStore(object oContainer)
+{
 	string sTag = GetLocalString(oContainer, "store_tag");
 	//if (sTag == "")
 	//    sTag = GetTag(oContainer);
 
-	if ( sTag == "" )
+	if (sTag == "")
 		return 0;
 
 	SQLExecDirect("delete from `" + STORE_TABLE + "` where `container` = '" + SQLEscape(sTag) + "';");
@@ -147,14 +152,15 @@ int UnivStore_ClearStore(object oContainer) {
 
 
 
-int GetIsCustomItem(object oItem) {
+int GetIsCustomItem(object oItem)
+{
 	string sResRef = GetResRef(oItem);
 
 	//Wenn Gegenstand keine ResRef hat
-	if ( sResRef == "" )
+	if (sResRef == "")
 		return STORE_RESULT_NORESREF;
 
-	if ( GetLocalInt(oItem, "no_persistent_storage") )
+	if (GetLocalInt(oItem, "no_persistent_storage"))
 		return STORE_RESULT_NOSTORE;
 
 	//Mit ResRef
@@ -163,12 +169,12 @@ int GetIsCustomItem(object oItem) {
 		int nCustomItem = STORE_RESULT_OK;
 
 		//Wenn Gegenstand nicht von ResRef erstellt werden kann
-		if ( oTestItem == OBJECT_INVALID )
+		if (oTestItem == OBJECT_INVALID)
 			nCustomItem = STORE_RESULT_NOCOPY;
 
-		if ( STORE_RESULT_OK == nCustomItem ) {
+		if (STORE_RESULT_OK == nCustomItem) {
 			//Wenn Grundgegenstandstyp unterschiedlich ist
-			if ( GetBaseItemType(oItem) != GetBaseItemType(oTestItem) )
+			if (GetBaseItemType(oItem) != GetBaseItemType(oTestItem))
 				nCustomItem = STORE_RESULT_WRONGBASETYPE;
 		}
 
@@ -179,18 +185,19 @@ int GetIsCustomItem(object oItem) {
 		 * 		nCustomItem = STORE_RESULT_WRONGNAME;
 		 * }*/
 
-		if ( STORE_RESULT_OK == nCustomItem ) {
+		if (STORE_RESULT_OK == nCustomItem) {
 			//Wenn Grundaussehen anders ist
-			if ( GetItemAppearance(oItem, ITEM_APPR_TYPE_SIMPLE_MODEL, 0)
-				!= GetItemAppearance(oTestItem, ITEM_APPR_TYPE_SIMPLE_MODEL, 0) )
+			if (GetItemAppearance(oItem, ITEM_APPR_TYPE_SIMPLE_MODEL, 0)
+					!= GetItemAppearance(oTestItem, ITEM_APPR_TYPE_SIMPLE_MODEL, 0))
 				nCustomItem = STORE_RESULT_WRONGAPP;
 		}
 
 		//Feststellen ob veraenderte Eigenschaften
-		if ( STORE_RESULT_OK == nCustomItem ) {
+		if (STORE_RESULT_OK == nCustomItem) {
 			int nIPCount1 = IPGetNumberOfItemProperties(oItem);
 			int nIPCount2 = IPGetNumberOfItemProperties(oTestItem);
-			if ( nIPCount1 != nIPCount2 )  //Gegenstand hat unterschiedliche Zahl an Eigenschaften
+
+			if (nIPCount1 != nIPCount2)    //Gegenstand hat unterschiedliche Zahl an Eigenschaften
 				nCustomItem = STORE_RESULT_WRONGPROP;
 		}
 

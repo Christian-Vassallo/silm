@@ -30,7 +30,7 @@ string v; int iv = 0; while (iv < strlen(s)) {\
 })
 
 // Macro: streach_rx(str,delim,flags,v,code)
-// Splits the given string *str* split at regular expression *delim*, assigning it to 
+// Splits the given string *str* split at regular expression *delim*, assigning it to
 // the named variable *v*, and runs *code* for each iteration.
 // Uses the database.
 // Warning: requires a running transaction
