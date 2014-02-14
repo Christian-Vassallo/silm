@@ -3,9 +3,7 @@
 # useable.
 
 require 'rubygems'
-require 'nwn/gff'
-require 'nwn/yaml'
-require 'yaml'
+require 'nwn/all'
 
 $quit = false
 trap "INT", proc { $quit = true }
@@ -19,10 +17,10 @@ for file in ARGV do
 
   gff = YAML.load(IO.read(file))
   
-  gff['Placeable List'].value.each {|p|
-    if p['Useable'].value == 1 && p['Static'].value == 0
-      puts "  %-32s %2x:%2x" % [ p['Tag'].value, p['X'].value, p['Y'].value ]
-      puts "    %s" % [ p.keys.select {|k| k =~ /^On/ }.map {|k| p[k].value}.join(' ') ]
+  (gff / 'Placeable List$').each {|p|
+    if p / 'Useable$' == 1 && p / 'Static$' == 0
+      puts "  %-32s %2x:%2x" % [ p/'Tag$', p/'X$', p/'Y$' ]
+      puts "    %s" % [ p.keys.select {|k| k =~ /^On/ }.map {|k| p/(k+"$")}.join(' ') ]
     end
   }
 
