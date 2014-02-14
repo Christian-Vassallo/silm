@@ -1,0 +1,57 @@
+extern("inc_name")
+
+/* Players that are invisible or stealthed sometimes don't show
+ * up on clients (since the object isn't being sent). We create
+ * a proxy object to send the text from so that it always shows
+ * up properly.
+ *
+ * We could use TALK_MODE_DM but that does not adhere to
+ * nwnx_names settings and cannot be positioned different from
+ * the player object.
+ */
+object self_or_proxy(object oSpeaker)
+{
+	object oProxy = oSpeaker;
+
+	if (GetIsPC(oSpeaker) && !GetIsDM(oSpeaker) && (
+				GetActionMode(oSpeaker, ACTION_MODE_STEALTH) ||
+				GetHasEffectOfTrueType(EFFECT_TRUETYPE_INVISIBILITY, oSpeaker))) {
+
+		/* For simplicities sake, we're creating one proxy per chat-line.
+		 * This is easier & more robust than keeping a ref, the Destroy() of
+		 * which may race with a newly-spoken line and as a result swallow it.
+		 */
+		vector pSpeaker = GetPosition(oSpeaker);
+
+		/* Offset "the voice" 1m off the ground so that it doesn't look too weird. */
+		pSpeaker.z += 0.5 + 0.3 * StringToInt(Get2DAString("appearance", "SIZECATEGORY",
+											  GetAppearanceType(oSpeaker)));
+
+		oProxy = CreateObject(OBJECT_TYPE_PLACEABLE, "invisobj",
+							  Location(GetArea(oSpeaker), pSpeaker, 0f));
+
+		SetName(oProxy, GetPlayerName(oSpeaker));
+		SetPortraitResRef(oProxy, GetPortraitResRef(oSpeaker));
+
+		DestroyObject(oProxy, 6.0);
+	}
+
+	return oProxy;
+}
+
+void __chatlog(object runnable, object actor, object actedon, struct EventArguments ea)
+{
+	int logmode = ea.i0;
+
+	if (logmode & CHATMODE_DM_MODE)
+		logmode -= CHATMODE_DM_MODE;
+
+	string mode = itoa(logmode);
+	string aid = itoa(GetAccountID(actor));
+	string cid = itoa(GetCharacterID(actor));
+	SetLocalString(GetModule(), "last_chat_message_text_" + mode + "_" + aid + "_" + cid, ea.a0);
+	SetLocalObject(GetModule(), "last_chat_message_on_" + mode + "_" + aid + "_" + cid, actedon);
+
+	ChatLog(actor, logmode, ea.a0, actedon);
+}
+

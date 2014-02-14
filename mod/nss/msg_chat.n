@@ -1,28 +1,25 @@
-/*
-  File: msg_cht.n
-  The core chat handler.
-*/
-
 extern("inc_cdb")
 extern("inc_chatlog")
 extern("inc_chat")
 extern("inc_chat_lib")
 extern("inc_events")
+extern("msg_chat_lib")
 
-void __chatlog(object runnable, object actor, object actedon, struct EventArguments ea)
+void handle_directional(object oSpeaker, struct EventArguments evarg)
 {
-	int logmode = ea.i0;
+	object oProxy = self_or_proxy(oSpeaker);
 
-	if (logmode & CHATMODE_DM_MODE)
-		logmode -= CHATMODE_DM_MODE;
+	evarg.a0 = ColorisePlayerText(oSpeaker, evarg.i0, evarg.a0);
 
-	string mode = itoa(logmode);
-	string aid = itoa(GetAccountID(actor));
-	string cid = itoa(GetCharacterID(actor));
-	SetLocalString(GetModule(),  "last_chat_message_text_" + mode + "_" + aid + "_" + cid, ea.a0);
-	SetLocalObject(GetModule(), "last_chat_message_on_" + mode + "_" + aid + "_" + cid, actedon);
+	/* Wait for the object to be created & synced to all clients,
+	 * otherwise some players won't see the text.
+	 * 300ms seems about right-ish. */
+	if (oProxy != oSpeaker)
+		DelayCommand(0.3, NWNXChatSpeakToChannel(oProxy, ChatModeToMsg(evarg.i0), evarg.a0));
+	else
+		NWNXChatSpeakToChannel(oSpeaker, ChatModeToMsg(evarg.i0), evarg.a0);
 
-	ChatLog(actor, logmode, ea.a0, actedon);
+	NWNXChatSuppress();
 }
 
 void main()
@@ -40,7 +37,6 @@ void main()
 	if (ret & EVENT_RESULT_STOP)
 		return;
 
-	// get text and stuff
 	SetLocalString(oSpeaker, "NWNX!CHAT!TEXT", NWNXChatGetSpacer());
 	string sText = GetLocalString(oSpeaker, "NWNX!CHAT!TEXT");
 
@@ -52,14 +48,12 @@ void main()
 	int iMsg = StringToInt(GetStringLeft(sText, 2));
 	int iMode = MsgToChatMode(iMsg);
 
-	// Dont handle silent shouts by NPCs!
 	if (iMode & CHATMODE_SILENT_SHOUT && !GetIsPC(oSpeaker))
 		return;
 
 	int nTo = StringToInt(GetSubString(sText, 2, 10));
 	object oTo = (iMode & CHATMODE_PRIVATE ? NWNXChatGetPC(nTo) : OBJECT_INVALID);
 
-	// chompchomp
 	sText = GetSubString(sText, 12, GetStringLength(sText));
 
 	if (sText == "") {
@@ -67,10 +61,14 @@ void main()
 		return;
 	}
 
-	// Send out chat_prefilter for all hooked scripts.
 	struct EventArguments evarg;
-	evarg.a0 = sText; evarg.i0 = iMode;
+
+	evarg.a0 = sText;
+
+	evarg.i0 = iMode;
+
 	int serial = GetEventSerial();
+
 	int _evret = RunEventScriptsForWithArgv(serial, "chat_prefilter", oSpeaker,
 											oSpeaker, oTo, GetLocation(oSpeaker), evarg);
 
@@ -84,29 +82,19 @@ void main()
 
 	evarg = GetEventArguments(serial);
 
-	// Log chat.
 	__chatlog(oSpeaker, oSpeaker, oTo, evarg);
 
-	// Notify player about empty DM channel.
 	if (evarg.i0 & CHATMODE_DM && !GetIsDM(oSpeaker) && !GetIsDMOnline())
 		SendMessageToPC(oSpeaker, "Derzeit ist kein SL im Spiel online " +
 						"und deine Nachricht wurde von niemandem gelesen.");
 
-	// Notify about sending message to onesself.
 	if (oSpeaker == oTo)
 		FloatingTextStringOnCreature("Warnung: Diese Nachricht ging an dich " +
 									 "selbst (falsch geklickt?): " + substr(evarg.a0, 0, 10) + " ..",
 									 oSpeaker, false);
 
-	// Replace the spoken text with the modified one.
-	if (evarg.i0 & CHATMODE_TALK || evarg.i0 & CHATMODE_WHISPER) {
-		// Colourise text (usually done just before sending it out to clients.
-		evarg.a0 = ColorisePlayerText(oSpeaker, evarg.i0, evarg.a0);
-
-		NWNXChatSpeakToChannel(oSpeaker, ChatModeToMsg(evarg.i0), evarg.a0);
-
-		NWNXChatSuppress();
-	}
+	if (evarg.i0 & CHATMODE_TALK || evarg.i0 & CHATMODE_WHISPER)
+		handle_directional(oSpeaker, evarg);
 
 	DeleteEventArguments(serial);
 }
