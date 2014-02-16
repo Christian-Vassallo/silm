@@ -10,7 +10,7 @@ VALIDEXT= \
 	itp/\*.itp ssf/\*.ssf \
 	mod/\*.fac mod/\*.ifo mod/\*.jrl \
 	`find uti -iname \*.uti` \
- 	nss/\*.ncs
+	nss/out/\*.ncs
 
 # The player package is a leightweight module variant for
 # players to build their own areas, items, etc.

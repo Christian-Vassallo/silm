@@ -4,6 +4,10 @@ ENCODING = 'ISO-8859-15'
 
 require 'optparse'
 
+ARGV.each do |aa|
+  fail "file #{aa} is > 16 chars!" if File.basename(aa).size > 16 + 4
+end
+
 $global_includes = []
 OptionParser.new do |o|
   o.on "-g file", "global include, which will be added to each file before parsing/compiling" do |g|
@@ -50,7 +54,7 @@ $global_includes.each {|file|
 }
 $global_depends_on.uniq!
 
-$objects  = ARGV.select {|file| get_is_compileable(file) }.map {|file| File.basename(file).split('.')[0..-2].join('.') }
+$objects  = ARGV.select {|file| get_is_compileable(file) }.map {|file| "out/" + File.basename(file).split('.')[0..-2].join('.') }
 $includes, $externs = {}, {}
 ARGV.each {|file| $includes[file], $externs[file] = *get_includes_and_externs_for(file) }
 
@@ -62,7 +66,7 @@ depends = {}
 
 ARGV.each {|file|
   extension = File.extname(file)
-  file_without_extension = File.basename(file).split('.')[0..-2].join('.')
+  file_without_extension = "out/" + File.basename(file).split('.')[0..-2].join('.')
 
   # Filter our non-existing source files (we assume they're NWN core).
   includes = $includes[file].reject {|f| !File.exists?(f) }
@@ -85,7 +89,7 @@ ARGV.each {|file|
       (depends[file_without_extension + ".nss"] ||= []) << includes.map {|v| $externs[v] }
 
       # to make the .ncs, we need all extern()ed files to be properly preprocessed
-      (depends[file_without_extension + ".ncs"] ||= [] ) << externs.map {|v| v + "ss" }
+      (depends[file_without_extension + ".ncs"] ||= [] ) << externs.map {|v| "out/" + v + "ss" }
 
     when ".h", ".nh"
       depends[file] ||= []
