@@ -5,7 +5,7 @@
 */
 const string
 COL255 =
-	" !#$%&'()*+,-./MIN123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ¡¢£¤¥§¨©ª«¬­®¯°±²³´µ¶·¸¸º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïñòóôõö÷øùúûüış";
+	" !#$%&'()*+,-./MIN123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ¡¢£¤¥§¨©ª««­®¯°±²³´µ¶·¸¸º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïñòóôõö÷øùúûüış";
 
 const int
 HI = 210,
@@ -30,6 +30,9 @@ struct Color CI(int rgb);
 
 // Returns a randomized color.
 struct Color CSRand();
+
+/* Scale the given color by percentage, where 100% is c, and 0% is as dark as possible. */
+struct Color ColorPercentage(struct Color c, int percentage);
 
 // Lightens the given color by the given amount.
 struct Color Lighten(struct Color c, int nAmount);
@@ -81,6 +84,20 @@ cWhite = CS(MAX, MAX, MAX);
 
 /* implementation */
 
+
+struct Color ColorPercentage(struct Color c, int percentage)
+{
+	// int vdiff = MAX-MIN;
+	// p = (cur * 100) / max
+	// p * max = (cur * 100)
+	// (p*max)/100 =cur
+
+	struct Color r;
+	r.r = ftoi((percentage * c.r) / 100.0);
+	r.g = ftoi((percentage * c.g) / 100.0);
+	r.b = ftoi((percentage * c.b) / 100.0);
+	return r;
+}
 
 struct Color GetLocalColor(object oPC, string sName)
 {
