@@ -41,6 +41,12 @@ void NWNXChatSpeakToChannel(object oSender, int nChannel, string sMessage,
 // Returns the PC with the given player ID, or OBJECT_INVALID if invalid ..
 object NWNXChatGetPC(int nID);
 
+// Returns the actual game object for a client, for example possessed familiars for players,
+// or DM-possessed creatures for DMs.
+// Depends on you calling NWNXChat_PCEnter/Exit() appropriately.
+object NWNXChatGetActualGameObjectForPC(object player);
+object NWNXChatGetActualGameObjectForPlayerID(int playerId);
+
 // Suppress the last chat message. ONLY usable
 // in the chat script.
 void NWNXChatSuppress(object oPC = OBJECT_SELF);
@@ -217,3 +223,14 @@ int NWNXChatGetCCMessagSubtype()
 	SetLocalString(GetModule(), "NWNX!CHAT!SUBTYPE", "  ");
 	return StringToInt(GetLocalString(GetModule(), "NWNX!CHAT!SUBTYPE"));
 }
+
+object NWNXChatGetActualGameObjectForPC(object player)
+{
+	return NWNXChatGetActualGameObjectForPlayerID(GetLocalInt(player, PC_ID_NAME));
+}
+object NWNXChatGetActualGameObjectForPlayerID(int playerId)
+{
+	SetLocalString(GetModule(), "NWNX!CHAT!GETGAMEOBJRQ", IntToString(playerId) + " ");
+	return GetLocalObject(GetModule(), "NWNX!CHAT!GETGAMEOBJ");
+}
+
