@@ -1,0 +1,128 @@
+/*
+File: inc_objset.n
+
+Object-Sets are collections of objects that can be easily iterated and modified.
+*/
+
+void AddToSet(string sSetName, object oObj, object oPC = OBJECT_INVALID);
+
+object GetFromSet(string sSetName, int nIndex, object oPC = OBJECT_INVALID);
+
+int GetSetSize(string sSetName, object oPC = OBJECT_INVALID);
+
+void ClearSet(string sSetName, object oPC = OBJECT_INVALID);
+
+// Removes nIndex from set sSetName, shuffling all following
+//// Function: RemoveFromSet
+int RemoveFromSet(string sSetName, int nIndex);
+
+string GetCurrentSet(object oPC = OBJECT_INVALID);
+void SetCurrentSet(string sSetName, object oPC = OBJECT_INVALID);
+
+int GetIsInSet(string sSetName, object oTest, object oPC = OBJECT_INVALID);
+
+// Iterates the named set *setname* on *owner* and executes *code* for each
+// named after the variable *object_name*.
+//
+// Example:
+// :IterateSet("test-set", oPC, myobj,
+// :    DestroyObject(myobj);
+// :);
+#define IterateSet(setname, owner, object_name, code) __EBLOCK(\
+	int i; \
+	for (i = 0; i < GetSetSize(setname, owner); i++) {\
+		__EBLOCK ( \
+			object object_name = GetFromSet(setname, i, owner); \
+			code; \
+		) \
+	}\
+)
+
+int GetIsInSet(string sSetName, object oTest, object oPC = OBJECT_INVALID)
+{
+	if (!is_valid(oPC))
+		oPC = GetModule();
+
+	int i;
+
+	for (i = 0; i < GetSetSize(sSetName, oPC); i++)
+		if (GetFromSet(sSetName, i, oPC) == oTest)
+			return 1;
+
+	return 0;
+}
+
+void AddToSet(string sSetName, object oObj, object oPC = OBJECT_INVALID)
+{
+	if (!is_valid(oPC))
+		oPC = GetModule();
+
+	int nSz = GetLocalInt(oPC, "objset_" + sSetName + "_sz");
+	SetLocalObject(oPC, "objset_" + sSetName + "_" + IntToString(nSz), oObj);
+	nSz++;
+	SetLocalInt(oPC, "objset_" + sSetName + "_sz", nSz);
+}
+
+object GetFromSet(string sSetName, int nIndex, object oPC = OBJECT_INVALID)
+{
+	if (!is_valid(oPC))
+		oPC = GetModule();
+
+	int nSz = GetLocalInt(oPC, "objset_" + sSetName + "_sz");
+
+	if (nIndex > nSz - 1 || nIndex < 0)
+		return OBJECT_INVALID;
+
+	return GetLocalObject(oPC, "objset_" + sSetName + "_" + IntToString(nIndex));
+}
+
+int GetSetSize(string sSetName, object oPC = OBJECT_INVALID)
+{
+	if (!is_valid(oPC))
+		object oPC = GetModule();
+
+	object oPC = GetModule();
+	int nSz = GetLocalInt(oPC, "objset_" + sSetName + "_sz");
+	return nSz;
+}
+
+void ClearSet(string sSetName, object oPC = OBJECT_INVALID)
+{
+	if (!is_valid(oPC))
+		oPC = GetModule();
+
+	SetLocalInt(oPC, "objset_" + sSetName + "_sz", 0);
+
+}
+
+string GetCurrentSet(object oPC = OBJECT_INVALID)
+{
+	if (!is_valid(oPC))
+		oPC = GetModule();
+
+	return GetLocalString(oPC, "objset_current");
+}
+
+void SetCurrentSet(string sSetName, object oPC = OBJECT_INVALID)
+{
+	if (!is_valid(oPC))
+		oPC = GetModule();
+
+	SetLocalString(oPC, "objset_current", sSetName);
+}
+
+/*int RemoveFromSet(string sSetName, int nIndex) {
+	object oPC = GetModule();
+	int nSz = GetLocalInt(oPC, "objset_" + sSetName + "_sz");
+	if (nIndex > nSz - 1 || nIndex < 0)
+		return 0;
+	SetLocalObject(oPC, "objset_" + sSetName + "_" + IntToString(nIndex), OBJECT_INVALID);
+	object otmp;
+	int i;
+	for (i = nIndex; i < nSz; i++) {
+		otmp = GetLocalObject(oPC, i);
+
+	}
+	nSz++;
+	SetLocalInt(oPC, "objset_" + sSetName + "_sz", nSz);
+}*/

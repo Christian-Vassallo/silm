@@ -1,0 +1,77 @@
+extern("_gen")
+extern("inc_decay")
+extern("inc_currency")
+extern("inc_customize")
+extern("inc_misc")
+extern("inc_nwnx")
+
+
+void main()
+{
+	struct EventInfo e = GetEventInfo();
+
+	if ("player_login" != e.ev)
+		return;
+
+	object oItem;
+	int iValue;
+
+
+	if (GetIsObjectValid(oItem = GetItemPossessedBy(e.runnable, "dmfi_pc_emote")))
+		DestroyObject(oItem);
+
+	// Don't let them start out on the verge of starving to death
+	if (GetLocalDecay(e.runnable, "Resting_Food") < 60)
+		SetLocalDecay(e.runnable, "Resting_Food", 241, 60);
+
+	//Recover from a crash during trade where money is still
+	//numerical
+	if ((iValue = GetGold(e.runnable))) {
+		TakeGoldFromCreature(iValue, e.runnable, TRUE);
+		GiveMoneyToCreature(e.runnable, iValue);
+	}
+
+	/* Destroy leftovers from crashes or intentional exits while crafting */
+	Assert_Copy_Destroyed(e.runnable, INVENTORY_SLOT_CHEST);
+	Assert_Copy_Destroyed(e.runnable, INVENTORY_SLOT_RIGHTHAND);
+
+	/* Dice bag broadcasting should default to "local" (visible in area) */
+	SetLocalInt(e.runnable, "dmfi_dicebag", 2);
+
+	// Correct Starting XP vor older Chars
+	if (GetXP(e.runnable) < 6000) {
+		SetXP(e.runnable, 6000);
+	}
+
+	//For now, no prestige classes, sorry.
+	//SetLocalInt(e.runnable,"X1_AllowShadow",1);
+	//SetLocalInt(e.runnable,"X1_AllowHarper",1);
+	//SetLocalInt(e.runnable,"X1_AllowAsasin",1);
+	//SetLocalInt(e.runnable,"X1_AllowBlkGrd",1);
+
+	/*SetLocalInt(e.runnable,"X2_AllowDivcha",1);
+	 * SetLocalInt(e.runnable,"X1_AllowDrDis",1); //What? Is an XP2 PrC!
+	 * SetLocalInt(e.runnable,"X1_AllowDwDef",1);
+	 * SetLocalInt(e.runnable,"X2_AllowKensei",1);
+	 * SetLocalInt(e.runnable,"X2_AllowPalema",1);
+	 * SetLocalInt(e.runnable,"X2_AllowShiftr",1);
+	 * SetLocalInt(e.runnable,"X2_AllowWM",1); */
+
+
+	int nNow = GetUnixTimestamp();
+	int nSh = 0;
+	// Make sure no ebs shields remain
+	object oShield = GetFirstItemInInventory(e.runnable);
+
+	while (GetIsObjectValid(oShield)) {
+		if ("s_ebs" == GetTag(oShield)) {
+			nSh = GetLocalInt(oShield, "ebs_create");
+
+			if (nSh == 0 || nNow - nSh > 3600 * 3)
+				DestroyObject(oShield);
+		}
+
+		oShield = GetNextItemInInventory(e.runnable);
+	}
+
+}

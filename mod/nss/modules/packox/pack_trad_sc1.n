@@ -1,0 +1,26 @@
+int StartingConditional()
+{
+	object oPackOx;
+	object oPC = GetPCSpeaker();
+
+	int iIndex = 1;
+	int iPrice;
+
+	while (GetIsObjectValid(oPackOx = GetNearestObjectByTag("pack_animal", oPC, iIndex))) {
+		if (GetLocalObject(oPackOx, "PACK_OWNER") == oPC) break;
+
+		iIndex++;
+	}
+
+	if (!GetIsObjectValid(oPackOx)) return FALSE;
+
+	iPrice = GetLocalInt(oPackOx, "OLD_PRICE") / 2;
+
+	SetCustomToken(30000, IntToString(iPrice / 10));
+
+	SetLocalInt(OBJECT_SELF, "PRICE", iPrice);
+
+	SetLocalObject(OBJECT_SELF, "ANIMAL", oPackOx);
+
+	return TRUE;
+}

@@ -1,11 +1,21 @@
 #!/usr/bin/env ruby
 
-ENCODING = 'ISO-8859-15'
+ENCODING = 'windows-1252'
 
 require 'optparse'
+require 'find'
 
 ARGV.each do |aa|
   fail "file #{aa} is > 16 chars!" if File.basename(aa).size > 16 + 4
+end
+
+$subdirs = Find.find(".").select {|x| File.directory?(x) } # + ["../../gamedata/override"]
+
+def lookup file, default = nil
+  $subdirs.each do |d|
+    return d + "/" + file if FileTest.exists?(d + "/" + file)
+  end
+  if default then default else raise "Not found: #{file}" end
 end
 
 $global_includes = []
@@ -17,6 +27,7 @@ end.parse!
 
 # Returns all included file names for this file. Extensions are sanitized.
 def get_includes_and_externs_for(file)
+  file = lookup(file)
   includes = []
   externs = []
 
@@ -24,10 +35,11 @@ def get_includes_and_externs_for(file)
     case line.strip
       when /^#include "(.*)"\s*$/
         dep = $1.downcase
-        includes << dep
+        includes << lookup(dep)
       when /^\s*extern\("(.*)"\)\s*$/
         dep = $1.downcase + ".n"
-        externs << dep
+        externs << lookup(dep) rescue FileTest.exists?("../../gamedata/override/#{dep}ss") or
+          $stderr.puts "Error: #{file} externs #{dep}, which does not exist"
     end
   }
 
@@ -59,7 +71,7 @@ $includes, $externs = {}, {}
 ARGV.each {|file| $includes[file], $externs[file] = *get_includes_and_externs_for(file) }
 
 puts "global_dependencies := %s" % $global_depends_on.join(' ')
-puts "objects := %s" % $objects.map{|v|v + ".ncs"}.join(' ')
+puts "objects := %s" % $objects.map{|v| v + ".ncs" }.join(' ')
 puts ""
 
 depends = {}
@@ -86,10 +98,10 @@ ARGV.each {|file|
 
       # and we need all files, that the included files extern:
       (depends[file_without_extension + ".nss"] ||= []) << includes.map {|v| $includes[v] }
-      (depends[file_without_extension + ".nss"] ||= []) << includes.map {|v| $externs[v] }
+      (depends[file_without_extension + ".nss"] ||= []) << includes.map {|v| $externs[v]  }
 
       # to make the .ncs, we need all extern()ed files to be properly preprocessed
-      (depends[file_without_extension + ".ncs"] ||= [] ) << externs.map {|v| "out/" + v + "ss" }
+      (depends[file_without_extension + ".ncs"] ||= [] ) << externs.map {|v| "out/" + File.basename(v) + "ss" }
 
     when ".h", ".nh"
       depends[file] ||= []

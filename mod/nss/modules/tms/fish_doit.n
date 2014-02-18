@@ -1,0 +1,96 @@
+void UseupBait()
+{
+	object oBait = GetItemPossessedBy(OBJECT_SELF, "FishingBait");
+
+	DestroyObject(oBait);
+}
+
+void _Fishing_end()
+{
+
+	object oRod = GetItemInSlot(INVENTORY_SLOT_RIGHTHAND, OBJECT_SELF);
+
+	if (GetTag(oRod) != "FishingRod") {
+		SendMessageToPC(OBJECT_SELF, "Die Angelrute darf man auch nicht aus der Hand legen...");
+		return;
+	}
+
+	switch (Random(40)) {
+	case 0:
+		PlaySound("as_na_branchsnp3");
+		SendMessageToPC(OBJECT_SELF,
+						"Verdammt! Das Mistvieh hat so gezerrt, dass die Angel zerbrochen ist!");
+		DestroyObject(oRod);
+		UseupBait();
+		break;
+
+	case 1:
+	case 2:
+	case 3:
+		SendMessageToPC(OBJECT_SELF, "Der Fisch ist mit dem Köder abgehauen!");
+		UseupBait();
+		break;
+
+	case 4:
+	case 5:
+	case 6:
+	case 7:
+	case 8:
+		SendMessageToPC(OBJECT_SELF,
+						"Es zuckt an der Leine, aber Du holst einen alten Schuh aus dem Wasser.");
+
+		if (d4() == 1)
+			SendMessageToPC(OBJECT_SELF, "Glücklicherweise ist der Köder noch drangeblieben.");
+
+		else
+			UseupBait();
+
+		break;
+
+	case 9:
+	case 10:
+	case 11:
+	case 12:
+	case 13:
+	case 14:
+		SendMessageToPC(OBJECT_SELF, "Kein Anglerglück. Es passiert nichts.");
+		break;
+
+	default:
+		SendMessageToPC(OBJECT_SELF, "Ihr holt einen Fisch aus dem Wasser.");
+		UseupBait();
+		CreateItemOnObject("food_raw_998", OBJECT_SELF);
+		break;
+	}
+}
+
+void main()
+{
+	object oArea = GetArea(OBJECT_SELF);
+
+	object oTrig = GetFirstObjectInArea(oArea);
+
+	while (GetIsObjectValid(oTrig)) {
+		if (GetTag(oTrig) == "FishingPlace"
+				&& GetIsInSubArea(OBJECT_SELF, oTrig)) break;
+
+		oTrig = GetNextObjectInArea(oArea);
+	}
+
+	if (!GetIsObjectValid(oTrig)) {
+		FloatingTextStringOnCreature("Das ist keine gute Angelstelle.", OBJECT_SELF, FALSE);
+		return;
+	}
+
+	if (!GetIsObjectValid(GetItemPossessedBy(OBJECT_SELF, "FishingBait"))) {
+		FloatingTextStringOnCreature("Ohne Köder ist Angeln eine wenig einträgliche Tätigkeit.",
+									 OBJECT_SELF,
+									 FALSE);
+		return;
+	}
+
+	PlaySound("as_na_splash2");
+	ActionPlayAnimation(ANIMATION_LOOPING_SIT_CROSS, 0.5f, 90.0f);
+	FloatingTextStringOnCreature("Angeln ist ja so entspannend...", OBJECT_SELF, FALSE);
+	ActionDoCommand(_Fishing_end());
+}

@@ -1,3 +1,0 @@
-
-
-#define throw(exception,description)

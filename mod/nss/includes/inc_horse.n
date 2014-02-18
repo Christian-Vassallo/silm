@@ -1,0 +1,526 @@
+//::///////////////////////////////////////////////
+//:: Name Gilean Sistema Cavalli
+//:: FileName  inc_horse
+//:: Copyright (c) 2001 Bioware Corp.
+//:://////////////////////////////////////////////
+/*     Sistema persistente di cavalli
+ * 	   Creato per il pw Ardemor
+ */
+//:://////////////////////////////////////////////
+//:: Created By:   Gilean
+//:: Created On:   04.03.05
+//:: Changed By:   GM Poly
+//:: Changed On:   10.01.05
+//:://////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////
+//  SKILL TABLE
+/////////////////////////////////////////////////////////////
+//  1 - Reiter
+//-----------------------------------------------------------
+//  5 - Kampfreiter:    AB +1
+//                      beide Haende verwendbar (Zweihaender und 2 Items)
+//-----------------------------------------------------------
+//  10 - Reitschuetze   AB +1
+//                      Schuss-, Wurfwaffen verwendbar
+//-----------------------------------------------------------
+//  15 - Kavallerist    AB +1
+//                      Weicher Fall bei Sturz vom Pferd
+//
+/////////////////////////////////////////////////////////////
+
+extern("x0_i0_match")
+
+extern("inc_horse_data")
+
+
+const float DAILY_RENT = 2.14; // km
+
+const int SKILL_RIDE_HORSE = 27;       //SKILL ID
+
+const int SC_STAY_IN_SADDLE = 24;       //SC (vom Pferd fallen im Kampf)
+
+//Definition ab welchem Skill-Rank "Reiten"
+//Sind keine echten (fuer den Spieler sichtbaren) FEATS,
+//sondern werden nur simuliert
+const int FEAT_ADVANCED_COMBAT_RIDE = 10;
+const int FEAT_COMBAT_RIDE = 5;    //Beidhaendige Waffen tragen
+const int FEAT_SOFT_FALL = 15;          //Weicher Fall
+const int FEAT_SPUR_MOUNT = 15;         //Schneller reiten
+
+
+const int HORSETYPE_INVALID = 0;
+const int HORSETYPE_HORSE = 1;
+const int HORSETYPE_PONY = 2;
+
+const int PHENOTYPE_HORSE1 = 5;
+const int PHENOTYPE_HORSE2 = 6;
+const int PHENOTYPE_HORSE3 = 7;
+
+
+
+
+//Gibt den Pferdetyp zurueck, den diese Kreatur reiten kann
+//
+//returns HORSETYPE_HORSE, HORSETYPE_PONY, HORSETYPE_INVALID
+int GetRideableHorseTypeobject(object oPC);
+
+
+//Laesst einen PC auf ein Pferd steigen
+void mountHorse(object oPC, object oHorse);
+
+//Aendert die Geschwindigkeit und den Footstepsound einer Kreatur
+void ApplyRidingEffects(object oPC);
+
+//Setzt die Geschwindigkeit und den Footstepsound einer Kreatur zurck auf normal
+void RemoveRidingEffects(object oPC);
+
+//Laesst den PC vom Pferd steigen
+//Setzt den Phenotyp wieder auf PHENOTYPE_NORMAL
+//Spawnet das Pferd als Henchman
+//
+//returns TRUE, FALSE
+int unmountHorse(object oPC);
+
+//Spawnet ein Pferd/Pony
+//
+// int iHorseType   Pferdetyp (HORSETYPE_HORSE, HORSETYPE_PONY)
+// int iPhenotype   Phenotyp  (PHENOTYPE_HORSE1, PHENOTYPE_HORSE2, PHENOTYPE_HORSE3)
+// object oPC       Kreatur bei der das Pferd gespawnet werden soll
+void SpawnHorse(int iHorseType, int iPhenoType, object oPC, string sName);
+
+
+//Setzt oPC wieder auf PHENOTYPE_NORMAL falls noetig
+void OnClientEnter(object oPC);
+
+
+//Return TRUE if oHorse belongs to oPC
+int GetMasterOfHorse(object oPC, object oHorse);
+
+
+//Put this in OnCombatRoundEnd and you'll have a check on dismount during combat;
+void CheckFallFromHorse(object oMob);
+
+
+//OnDeath event function: makes oPC dismount and destroys the horse
+void OnPGDeath(object oPC);
+
+
+//Return TRUE if oPC is riding a rideable creature
+int GetIsRidingHorse(object oPC);
+
+
+//Put this in OnEquipItem:
+void CheckRideWithWeapons(object oPC);
+
+
+//Ermittelt die Fertigkeitspunkte fuer "Reiten" (inklusive Boni)
+//
+//returns int
+int GetRideSkill(object oPC);
+
+
+int GetIsTwoHandWeapon(object oWeapon);
+
+void DeleteHorse(object oPC);
+
+///////////////////////////////////////////////
+int GetIsRidingHorse(object oPC)
+{
+///////////////////////////////////////////////
+	int iPheno = GetPhenoType(oPC);
+
+	if (iPheno == PHENOTYPE_HORSE1 || iPheno == PHENOTYPE_HORSE2
+			|| iPheno == PHENOTYPE_HORSE3)
+		return TRUE;
+
+	else
+		return FALSE;
+}
+
+///////////////////////////////////////////////
+int GetRideableHorseType(object oPC)
+{
+///////////////////////////////////////////////
+	int nRace = GetRacialType(oPC);
+
+	switch (nRace) {
+	case (RACIAL_TYPE_HUMAN):
+		return HORSETYPE_HORSE;
+
+		break;
+
+	case (RACIAL_TYPE_HALFELF):
+		return HORSETYPE_HORSE;
+
+		break;
+
+	case (RACIAL_TYPE_ELF):
+		return HORSETYPE_HORSE;
+
+		break;
+
+	case (RACIAL_TYPE_HALFORC):
+		return HORSETYPE_HORSE;
+
+		break;
+
+	case (RACIAL_TYPE_DWARF):
+		return HORSETYPE_PONY;
+
+		break;
+
+	case (RACIAL_TYPE_GNOME):
+		return HORSETYPE_PONY;
+
+		break;
+
+	case (RACIAL_TYPE_HALFLING):
+		return HORSETYPE_PONY;
+
+		break;
+
+	default:
+		return HORSETYPE_INVALID;
+	}
+
+	return HORSETYPE_INVALID;
+}
+
+///////////////////////////////////////////////
+int GetHorseType(object oHorse)
+{
+///////////////////////////////////////////////
+	string sHorseTag = GetTag(oHorse);
+	string sHorseType = GetStringLeft(sHorseTag, 9);
+
+	if (sHorseType == "reitpferd") return HORSETYPE_HORSE;
+
+	else if (sHorseType == "reitpony0") return HORSETYPE_PONY;
+
+	else return HORSETYPE_INVALID;
+}
+
+///////////////////////////////////////////////
+int GetHorsePheno(object oHorse)
+{
+///////////////////////////////////////////////
+	string sHorseTag = GetTag(oHorse);
+	return StringToInt(GetStringRight(sHorseTag, 2));
+}
+
+///////////////////////////////////////////////
+int unmountHorse(object oPC)
+{
+///////////////////////////////////////////////
+	if (!GetIsRidingHorse(oPC)) return FALSE;
+
+	PlayAnimation(ANIMATION_LOOPING_CUSTOM9);
+	SetFootstepType(FOOTSTEP_TYPE_NORMAL, oPC);
+	int iPhenoType = GetPhenoType(oPC);
+	DelayCommand(1.0, SetPhenoType(PHENOTYPE_NORMAL, oPC));
+
+	RemoveRidingEffects(oPC);
+
+	int iHorseType = GetRideableHorseType(oPC);
+
+	string sName = GetLocalString(oPC, "horse_name");
+
+	if (sName == "")
+		sName = "Reittier";
+
+	DelayCommand(1.0, SpawnHorse(iHorseType, iPhenoType, oPC, sName));
+	return TRUE;
+}
+
+
+void SpawnHorse(int iHorseType, int iPhenoType, object oPC, string sName)
+{
+	object oHorse;
+
+	if (iHorseType == HORSETYPE_HORSE) {
+		oHorse = CreateObject(OBJECT_TYPE_CREATURE, "reitpferd0" +
+							  IntToString(iPhenoType), GetLocation(oPC), TRUE);
+
+	} else if (iHorseType == HORSETYPE_PONY) {
+		oHorse = CreateObject(OBJECT_TYPE_CREATURE, "reitpony0" +
+							  IntToString(iPhenoType), GetLocation(oPC), TRUE);
+	}
+
+	SetName(oHorse, sName);
+	SetLocalString(oPC, "horse_name", sName);
+	SetLocalObject(oHorse, "gsc_padrone", oPC);
+	AddHenchman(oPC, oHorse);
+
+}
+///////////////////////////////////////////////
+void mountHorse(object oPC, object oHorse)
+{
+///////////////////////////////////////////////
+	if (GetIsRidingHorse(oPC))
+		return;
+
+	if (GetIsDMPossessed(oHorse))
+		return;
+
+	if (!GetCommandable(oHorse))
+		return;
+
+	effect e = GetFirstEffect(oHorse);
+
+	while (GetIsEffectValid(e)) {
+		if (EFFECT_TYPE_PETRIFY == GetEffectType(e)) {
+			FloatingTextStringOnCreature("Stein reitet sich nicht.", oPC, FALSE);
+			return;
+		}
+
+		if (EFFECT_TYPE_CONFUSED == GetEffectType(e)
+				|| EFFECT_TYPE_STUNNED == GetEffectType(e)
+				|| EFFECT_TYPE_DAZED == GetEffectType(e) || EFFECT_TYPE_SLEEP == GetEffectType(e)) {
+			FloatingTextStringOnCreature("Dieses Reittier ist verwirrt und laesst Euch nicht an sich ran.",
+										 oPC, FALSE);
+			return;
+		}
+
+		e = GetNextEffect(oHorse);
+	}
+
+	//Min Skill Level 1 auf Reiten
+	if (GetSkillRank(SKILL_RIDE_HORSE, oPC) == 0) {
+		FloatingTextStringOnCreature("Ihr seid im reiten nicht geschult.", oPC, FALSE);
+		return;
+
+	}
+
+	//Restriktion fuer dicken Phenotyp
+	if (GetPhenoType(oPC) != PHENOTYPE_NORMAL) {
+		FloatingTextStringOnCreature("Ihr seid zu dick zum reiten.", oPC, FALSE);
+		return;
+	}
+
+	//Restriktion fuer Moenche
+	if (GetLevelByClass(CLASS_TYPE_MONK, oPC) > 2) {
+		FloatingTextStringOnCreature("Als Moench der Stufe drei oder hoeher duerft Ihr nicht reiten.", oPC,
+									 FALSE);
+		return;
+	}
+
+	int iHorseType = GetHorseType(oHorse);
+
+	if (iHorseType == HORSETYPE_INVALID) {
+		FloatingTextStringOnCreature("Dies ist kein geeignetes Reittier.", oPC, FALSE);
+
+		return;
+	}
+
+	if (GetRideableHorseType(oPC) == iHorseType) {
+
+		//Zu weit entfernt
+		if (GetDistanceBetween(oPC, oHorse) > 3.0) {
+			FloatingTextStringOnCreature("Ihr seid zu weit entfernt.", oPC, FALSE);
+			return;
+		}
+
+		int nPhenotype = GetHorsePheno(oHorse);
+
+		AssignCommand(oHorse, SetIsDestroyable(TRUE, FALSE, FALSE));
+		location lHorse = GetLocation(oHorse);
+		float fHorse = GetFacing(oHorse);
+		DestroyObject(oHorse);
+		DelayCommand(1.0, SetPhenoType(nPhenotype, oPC));
+		AssignCommand(oPC, JumpToLocation(lHorse));
+		AssignCommand(oPC, SetFacing(fHorse));
+		ApplyRidingEffects(oPC);
+
+	} else FloatingTextStringOnCreature("Ihr koennt auf diesem Tier nicht reiten.", oPC, FALSE);
+}
+
+///////////////////////////////////////////////
+void ApplyRidingEffects(object oPC)
+{
+///////////////////////////////////////////////
+	SetFootstepType(FOOTSTEP_TYPE_HOOF_LARGE, oPC);
+	int iRideSkill = GetRideSkill(oPC);
+	effect eLink;
+	effect eEndurance = SupernaturalEffect(EffectMovementSpeedIncrease(50));
+
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT, eEndurance, oPC);
+
+	if (iRideSkill >= 5) {
+		effect eAttack = SupernaturalEffect(EffectAttackIncrease(iRideSkill / 5, ATTACK_BONUS_OFFHAND));
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, eAttack, oPC);
+
+		if (iRideSkill < 10
+				&& (GetLevelByClass(CLASS_TYPE_BARD, oPC) >= 1
+					|| GetLevelByClass(CLASS_TYPE_SORCERER, oPC) >= 1
+					|| GetLevelByClass(CLASS_TYPE_WIZARD, oPC) >= 1)) {
+			effect eSpell = SupernaturalEffect(EffectSpellFailure(50));
+			ApplyEffectToObject(DURATION_TYPE_PERMANENT, eSpell, oPC);
+		}
+
+	} else {
+		effect eSpell = SupernaturalEffect(EffectSpellFailure());
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT, eSpell, oPC);
+	}
+
+	CheckRideWithWeapons(oPC);
+}
+
+///////////////////////////////////////////////
+void RemoveRidingEffects(object oPC)
+{
+///////////////////////////////////////////////
+	SetFootstepType(FOOTSTEP_TYPE_DEFAULT, oPC);
+
+	effect First = GetFirstEffect(oPC);
+
+	while (GetIsEffectValid(First)) {
+		if (GetEffectSubType(First) == SUBTYPE_SUPERNATURAL && (
+					GetEffectType(First) == EFFECT_TYPE_MOVEMENT_SPEED_INCREASE
+					|| GetEffectType(First) == EFFECT_TYPE_ATTACK_INCREASE
+					|| GetEffectType(First) == EFFECT_TYPE_SPELL_FAILURE)
+		   ) {
+			RemoveEffect(oPC, First);
+		}
+
+		First = GetNextEffect(oPC);
+	}
+
+}
+
+///////////////////////////////////////////////
+void OnClientEnter(object oPC)
+{
+///////////////////////////////////////////////
+	if (GetIsRidingHorse(oPC))
+		SetPhenoType(PHENOTYPE_NORMAL, oPC);
+
+}
+
+int GetMasterOfHorse(object oPC, object oHorse)
+{
+	int nMaxCavalli = GetMaxHenchmen();
+	int i;
+
+	for (i == 1; i <= nMaxCavalli; i++) {
+		if (GetHenchman(oPC, i) == oHorse)
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+
+///////////////////////////////////////////////
+void CheckFallFromHorse(object oMob)
+{
+///////////////////////////////////////////////
+	object oPC = GetAttackTarget(oMob);
+
+	if (!GetIsRidingHorse(oPC)) return;
+
+	if (GetLastDamager(oPC) == oMob) {
+		int PXScorsi = GetLocalInt(oPC, "gsc_px");
+		int nPXAttualiPC = GetCurrentHitPoints(oPC);
+
+		//If check goes wrong oPC dismounts
+		if (nPXAttualiPC != PXScorsi
+				&& PXScorsi != 0 && !GetIsSkillSuccessful(oPC, SKILL_RIDE_HORSE, SC_STAY_IN_SADDLE)) {
+			SendMessageToPC(oPC, "Ihr stuerzt vom Pferd!");
+			unmountHorse(oPC);
+			AssignCommand(oPC, ActionPlayAnimation(ANIMATION_LOOPING_DEAD_FRONT, 1.0, 5.0));
+
+			if (GetRideSkill(oPC) < FEAT_SOFT_FALL) {
+				int iDamage = d6(2);
+				int iHP = GetCurrentHitPoints(oPC);
+
+				if (iDamage > iHP && iHP > 0) iDamage = iHP - 1;
+
+				else if (iHP == 0) iDamage = 0;
+
+				effect eDamage = EffectDamage(iDamage, DAMAGE_TYPE_SLASHING);
+				ApplyEffectToObject(DURATION_TYPE_INSTANT, eDamage, oPC);
+			}
+
+			ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectDamage(10), oPC);
+			SetLocalInt(oPC, "gsc_px", nPXAttualiPC);
+
+		} else if (PXScorsi == 0)
+			SetLocalInt(oPC, "gsc_px", nPXAttualiPC);
+
+		//oPC wasn't hit so no check starts
+		else
+			SetLocalInt(oPC, "gsc_px", nPXAttualiPC);
+	}
+}
+
+
+///////////////////////////////////////////////
+void OnPGDeath(object oPC)
+{
+///////////////////////////////////////////////
+
+	if (GetIsRidingHorse(oPC)) {
+		int nPhenotype = GetPhenoType(oPC);
+		DestroyObject(GetItemPossessedBy(oPC, "gsc_sella" + IntToString(nPhenotype)));
+		SetPhenoType(1, oPC);
+
+	} else return;
+}
+
+void UnequipWeapon(object oPC, object oWeapon)
+{
+	AssignCommand(oPC, ClearAllActions());
+	AssignCommand(oPC, ActionUnequipItem(oWeapon));
+}
+
+
+///////////////////////////////////////////////
+void CheckRideWithWeapons(object oPC)
+{
+///////////////////////////////////////////////
+	if (!GetIsRidingHorse(oPC))
+		return;
+
+	int iRideSkill = GetRideSkill(oPC);
+
+	object weaponr = GetItemInSlot(INVENTORY_SLOT_RIGHTHAND, oPC);
+	object weaponl = GetItemInSlot(INVENTORY_SLOT_LEFTHAND, oPC);
+
+
+	if (iRideSkill < FEAT_ADVANCED_COMBAT_RIDE && GetIsObjectValid(weaponr)
+			&& GetWeaponRanged(weaponr)) {
+		SendMessageToPC(oPC, "Ihr koennt auf dem Pferd keine Fernkampfwaffen verwenden.");
+		DelayCommand(1.0, UnequipWeapon(oPC, weaponr));
+		return;
+	}
+
+	if (iRideSkill < FEAT_COMBAT_RIDE) {
+		if (GetIsObjectValid(weaponr) && GetIsObjectValid(weaponl)) {
+			SendMessageToPC(oPC, "Ihr koennt nicht freihaendig reiten.");
+			DelayCommand(1.0, UnequipWeapon(oPC, weaponr));
+
+		} else if (GetIsObjectValid(weaponr) && !MatchSingleHandedWeapon(weaponr)) {
+			SendMessageToPC(oPC, "Ihr koennt nicht freihaendig reiten.");
+			DelayCommand(1.0, UnequipWeapon(oPC, weaponr));
+		}
+	}
+}
+
+///////////////////////////////////////////////
+int GetRideSkill(object oPC)
+{
+///////////////////////////////////////////////
+	int iRideSkill = GetSkillRank(SKILL_RIDE_HORSE, oPC);
+	int iAnimalEmpSkill = GetSkillRank(SKILL_ANIMAL_EMPATHY, oPC);
+
+	//Bonus "Gefuehl fuer Tiere" auf "Reiten"
+	//"Reiten" + ("Gefuehl fuer Tiere" / 5)
+	//SendMessageToPC(oPC,"RideSkill: "+IntToString(iRideSkill + iAnimalEmpSkill / 5));
+	return iRideSkill + GetAbilityModifier(ABILITY_DEXTERITY, oPC) + iAnimalEmpSkill / 5;
+}
+
+void DeleteHorse(object oPC)
+{}
+
+//void main(){}

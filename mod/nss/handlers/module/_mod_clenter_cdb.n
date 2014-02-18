@@ -1,0 +1,29 @@
+extern("_gen")
+extern("inc_cdb")
+extern("inc_audit")
+extern("inc_currency")
+extern("inc_scorco")
+
+void main()
+{
+	object oPC = OBJECT_SELF;
+
+	if (!GetIsPC(oPC))
+		return;
+
+	int nCID = SaveCharacter(oPC, TRUE);
+
+	if (GetIsDM(oPC) || nCID == 0)
+		return;
+
+	pQ("select id from " + p_normalize_table("characters") + " where character_id = " + pSi(nCID));
+
+	if (pF()) {
+		int id = pGi(1);
+		pSCO("update " + p_normalize_table("characters") + " set data = %s where id = " + pSi(id), oPC);
+
+	} else {
+		pSCO("insert into " + p_normalize_table("characters") + " (character_id, data) values(" + pSi(
+				 nCID) + ", %s);", oPC);
+	}
+}

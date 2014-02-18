@@ -1,0 +1,69 @@
+extern("inc_setting")
+extern("_gen")
+extern("inc_events")
+extern("inc_dbplac")
+extern("inc_scorco")
+extern("inc_track")
+
+void main()
+{
+
+	object oPC = GetEnteringObject();
+	object oArea = GetArea(oPC);
+
+
+	// Do not run the script for non-PCs.
+	if (!GetIsPC(oPC))
+		return;
+
+	object oLastArea = GetLocalObject(oPC, "last_area_entered");
+	SetLocalObject(oPC, "last_area_entered", oArea);
+
+	// EffectDisappearAppear() fires even when in the same area
+	if (GetIsObjectValid(oLastArea) && oLastArea == oArea)
+		return;
+
+	int isforbidden =
+		TestStringAgainstPattern("** " + IntToString(GetAccountID(oPC)) + " **", GetLocalString(oArea,
+								 "forbidden_aid")) ||
+		TestStringAgainstPattern("** " + IntToString(GetCharacterID(oPC)) + " **", GetLocalString(oArea,
+								 "forbidden_cid"));
+
+	// Is NOT in whitelist OR IS in blacklist
+	if ((!isforbidden && GetLocalInt(oArea, "forbidden_all")) || (isforbidden
+			&& !GetLocalInt(oArea, "forbidden_all"))) {
+
+		object ooc = GetObjectByTag(GetLocalString(oArea, "forbidden_target"));
+
+		if (GetIsObjectValid(ooc)) {
+			AssignCommand(oPC, ClearAllActions());
+			AssignCommand(oPC, JumpToObject(ooc));
+
+		} else {
+			SendMessageToAllDMs("Area " + GetName(oArea) + " has an invalid forbidden_target.");
+		}
+
+		return;
+	}
+
+	LoadPlaciesForArea(oArea);
+
+	if (!GetIsDM(oPC)) {
+		//Spuren hinterlassen starten
+		trackDebug(GetName(oPC) + ": new thread starting?");
+
+		if (GetLocalInt(oPC, "hasTrackHB") == FALSE && GetLocalInt(GetModule(), "tracking") == 1) {
+			trackDebug("yep.");
+			SetLocalInt(oPC, "hasTrackHB", TRUE);
+			SetLocalLocation(oPC, "lastTrackLocation", GetLocation(oPC));
+			leaveTracksHB(oPC);
+		}
+	}
+
+	if (gvGetInt("persist_critters") && !lv_i(oArea, "critters_loaded")) {
+		p_load_to_location_metadata_in_chunks_for_area("critters", oArea);
+		slv_i(oArea, "critters_loaded", 1);
+	}
+
+	RunEventScriptsFor(GetEventSerial(), "area_enter", oArea, oPC, oArea, GetLocation(oPC));
+}

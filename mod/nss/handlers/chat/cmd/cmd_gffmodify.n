@@ -1,0 +1,103 @@
+extern("inc_target")
+extern("inc_scorco")
+extern("inc_cdb")
+extern("inc_inventory")
+/*
+ /gffmodify /Path/To/Struct value [/Path/To/Struct value]
+*/
+
+void main()
+{
+	struct EventInfo e = GetEventInfo();
+	struct EventArguments a = GetEventArguments(e.serial);
+
+	if (e.ev != "chat_command")
+		return;
+
+	if (a.a0 != "gffmodify")
+		return;
+
+	if (!amask(e.runnable, AMASK_GLOBAL_GM))
+		return;
+
+//	current_cmd("gffmodify");
+
+	object target = GetTarget();
+
+	if (!is_item(target) && (!is_creature(target) || GetIsPC(target))) {
+		ToPC("Target needs to be a item or a non-player-creature.");
+
+		event_fail_stop();
+	}
+
+	getopt_reset();
+
+	if (!getopt_init(a.a1, "d"))
+		event_fail_stop();
+
+
+	int argc = getopt_argc();
+	bool destroy_after_success = !getopt_opt("d");
+	int equipped_in_slot = is_item(target) ? GetItemInventorySlot(target) : INVENTORY_SLOT_INVALID;
+	object target_owner =  GetItemPossessor(target);
+
+	ToPC("target_owner: " + otoa(target_owner));
+
+	if (argc % 2 != 0 || argc == 0) {
+		ToPC("Syntax: /gffmodify /Path/To/Struct value [/Path/To/Struct value]");
+		event_fail_stop();
+	}
+
+	string path, value;
+	int i = 0;
+
+
+	pQ("truncate gff.cache;");
+	pSCO("insert into gff.cache (data) values (%s);", target);
+	pQ("select length(data) from gff.cache;");
+	pF();
+	ToPC("Data size is: " + pGs(1));
+
+	while (i < argc) {
+		path = getopt_arg(i);
+		value = getopt_arg(i + 1);
+		ToPC("Setting " + path + " to value " + value);
+
+		if (!pQ("update gff.cache set data = gff.value(data, " + pSs(path) + ", " + pSs(value) + ");")) {
+			ToPC("Error: " + pErrStr());
+			ToPC("  Continuing anyhow.");
+		}
+
+		i += 2;
+	}
+
+	object target_new;
+
+	if (is_item(target)) {
+		target_new = pRCO("select data from gff.cache;", GetLocation(target_owner), target_owner);
+		ToPC("Restoring to inventory.");
+
+	} else
+		target_new = pRCO("select data from gff.cache;", GetLocation(target), target);
+
+	if (!is_valid(target_new)) {
+		ToPC("RCO failed. Hum.");
+		event_fail_stop();
+
+	} else {
+		ToPC("Follow the magenta rabbit.");
+		ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(VFX_DUR_AURA_MAGENTA), target_new,
+							1f);
+		SetEventResult(EVENT_RESULT_STOP);
+
+		if (destroy_after_success) {
+			ToPC("Destroying old object and updating target");
+			DestroyObject(target);
+			SetTarget(target_new);
+		}
+
+		if (is_item(target_new) && equipped_in_slot != INVENTORY_SLOT_INVALID) {
+			AssignCommand(target_owner, ActionEquipItem(target_new, equipped_in_slot));
+		}
+	}
+}

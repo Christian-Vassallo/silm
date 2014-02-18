@@ -1,0 +1,1263 @@
+/*
+ *  K A R T E N S P I E L - I N C   by Poly
+ */
+extern("inc_currency")
+const string sCard10a = "ein <c þ >Barden-Duo</c>";
+const string sCard10b = "ein <c þ >Barden-Trio</c>";
+const string sCard10c = "ein <c þ >Barden-Quartett</c>";
+const string sCard11a = "ein <c þ >Nymphen-Paar</c>";
+const string sCard11b = "ein <c þ >Nymphen-Fest</c>";
+const string sCard11c = "einen <c þ >Nymphen-Hain</c>";
+const string sCard12a = "einen <c þ >Kleriker-Rat</c>";
+const string sCard12b = "eine <c þ >Kleriker-Triade</c>";
+const string sCard12c = "einen <c þ >Kleriker-Orden</c>";
+const string sCard13a = "ein <c þ >Drachen-Ei</c>";
+const string sCard13b = "ein <c þ >Drachen-Nest</c>";
+const string sCard13c = "einen <c þ >Drachen-Hort</c>";
+
+const string sStraight = "eine <c þ >Dorfstrasse</c>";
+const string sFlush = "eine <c þ >Gilde</c>";
+const string sFullHouse = "eine <c þ >Taverne</c>";
+const string sStraightFlush = "eine <c þ >Meistergilde</c>";
+
+/*
+ * Spiel beginnen
+ */
+void StartGame();
+/*
+ * Naechste(r) Spieler / Runde
+ */
+void NextPlayer(object oCardStack);
+/*
+ * Spielauswertung
+ */
+void ShowResults(object oCardStack);
+/*
+ * Spielerabbruch
+ */
+void AbortGame(object oCardStack);
+/*
+ * Karten tauschen
+ */
+void ChangeCards(object oCardStack);
+/*
+ * Karten-Token setzen
+ */
+void ShowCards(object oCardStack);
+/*
+ * Ausgabe im Eventchannel
+ */
+void ShowCardsOnEventChannel(object oCardStack, int iActivePlayer);
+/*
+ * Kartenspiel-Einstellungen und Spielerliste zuruecksetzen
+ */
+void resetCards(object oPC);
+
+/*******************************************************************************
+*                                  Helpers
+*******************************************************************************/
+/*
+ * Gibt den Nten Spieler zurueck
+ */
+object getPlayer(object oCardStack, int iNumber);
+
+/*
+ * gibt die ersten N Karten aus dem Stapel zurueck und entfernt sie aus dem Stapel
+ */
+string getCardsFromDeck(object oCardStack, int i);
+
+/*
+ * gibt den Namen einer Karte zurueck
+ * iPictureOnly=TRUE gibt nur den String des Bildes zurueck
+ */
+string getCardString(string sCard, int iPictureOnly = FALSE);
+
+/*
+ * legt eine Karte ans Ende des Stapel
+ */
+void drawCard(object oCardStack, string sCard);
+
+/*
+ * gibt die Nte Karte von einem Spieler zurueck
+ */
+string getCardFromPlayer(object oCardStack, int card, int player);
+
+/*
+ * Gibt Farbe einer Karte zurueck (0...3);
+ */
+int GetColorOfCard(string sCard);
+
+/*
+ * gibt den Punktewert eine Karte zurueck
+ */
+int getPointsOfCard(string sCard);
+
+/*
+ * (De-)maskiert eine Karte zum Tauschen wenn der Spieler genug Gold hat
+ */
+void SwapCard(object oCardStack, int iCard);
+
+/*
+ * Setzt das Spiel zurueck
+ */
+void resetGame(object oCardStack);
+
+/*
+ * Sendet einen String an alle Kartenspieler
+ */
+void sendMessageToAllPlayer(object oCardStack, string sMessage);
+
+/*
+ * Sortiert Karten nach Farbe oder nach Bild
+ */
+void sortCards(object oCardStack, int iP, int iByColor = TRUE);
+
+/*
+ * Beginnt die Spielkoversation mit dem Spieler der gerade am Zug ist
+ */
+void StartGameConversation(object oPlayer, int iGame);
+
+/*
+ * Gibt die Anzahl gleicher Bilder ab einer bestimmten Karte zurueck
+ */
+int GetEqualCardPictures(object oCardStack, int iPlayer, int iStart);
+
+/*
+ * Gibt zurueck ob die Karten eines Spielers eine Strasse ergeben
+ * Rueckgabewert ist Wert der hoechsten Karte oder FALSE
+ */
+int GetStraight(object oCardStack, int iPlayer);
+
+/*
+ * Gibt zurueck ob die Karten eines Spielers die gleiche Farbe habe
+ */
+int GetAllColorsEqual(object oCardStack, int iPlayer);
+
+string GetBetString(int iBet);
+
+string GetGameString(int iGame);
+
+string GetRequestString();
+
+
+void StartGame()
+{
+	int iPlayerCount = GetLocalInt(OBJECT_SELF, "cg_iPlayerCount");
+
+	if (!iPlayerCount) {
+		SendMessageToPC(OBJECT_SELF, "Allein macht das nicht gerade Spass!");
+		return;
+	}
+
+	object oCardStack = CreateObject(OBJECT_TYPE_PLACEABLE, "dmfi_cardstack", GetLocation(OBJECT_SELF),
+									 FALSE);
+	int iGame = GetLocalInt(OBJECT_SELF, "cg_iGame");
+	int iBet = GetLocalInt(OBJECT_SELF, "cg_iBet");
+	int i;
+	object oPlayer;
+
+	for (i = 1; i <= iPlayerCount; i++) {
+		oPlayer = GetLocalObject(OBJECT_SELF, "cg_oPlayer" + IntToString(i));
+		SetLocalObject(oCardStack, "cg_oPlayer" + IntToString(i), oPlayer);
+
+		/* Convert the money into the gold piece value */
+		GiveGoldToCreature(oPlayer, CountInventoryMoney(oPlayer, TRUE));
+
+	}
+
+	iPlayerCount++;
+	oPlayer = OBJECT_SELF;
+	SetLocalInt(oPlayer, "cg_iCG", TRUE);
+	SetLocalObject(oCardStack, "cg_oPlayer" + IntToString(iPlayerCount), oPlayer);
+	GiveGoldToCreature(oPlayer, CountInventoryMoney(oPlayer, TRUE));
+
+	SetLocalInt(oCardStack, "cg_iPlayerCount", iPlayerCount);
+	SetLocalInt(oCardStack, "cg_iGame", iGame);
+	SetLocalInt(oCardStack, "cg_iBet", iBet);
+
+	string sGame = GetGameString(iGame);  //Output-String
+	int player;            //Spieler
+	int startCards;        //Anzahl der Karten, die zu Beginn ausgeteilt werden
+	string sCardDeck;      //der Kartenstapel
+
+	/*******************************************************************************
+	*  	hier die Startbedingungen fuer die verschiedenen Spiele eintragen
+	*******************************************************************************/
+	switch (iGame) {
+	case 0: //Poker
+		startCards = 5;
+		sCardDeck =
+			"00010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051";        //52er Blatt
+//    sCardDeck="0506070809101112181920212223242531323334353637384445464748495051";  //32er Blatt
+		break;
+
+	case 1: //Blackjack
+		startCards = 2;
+		sCardDeck =
+			"00010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051";        //52er Blatt
+	}
+
+	//switch
+
+//-----------------------------------------------------------------------------/
+//Karten mischen und speichern
+	{
+		int i;
+		int iLength = GetStringLength(sCardDeck);
+		int iRndCard;
+		string sCardSubString;
+
+		for (i = 0; i <= iLength; i++) {
+			iRndCard = Random((iLength - 1));
+
+			if (iRndCard % 2 != 0) iRndCard--;
+
+			sCardSubString = GetSubString(sCardDeck, iRndCard, 2);
+
+			if (d2() == 1) {
+				//hinten anhaengen
+				sCardDeck = GetStringLeft(sCardDeck, iRndCard)
+							+ GetStringRight(sCardDeck, iLength - iRndCard - 2) + sCardSubString;
+
+			} else {
+				//vorne anhaengen
+				sCardDeck = sCardSubString + GetStringLeft(sCardDeck, iRndCard)
+							+ GetStringRight(sCardDeck, iLength - iRndCard - 2);
+			}
+		}
+
+		// gemischten Kartenstapel Speichern
+		SetLocalString(oCardStack, "cg_sCardDeck", sCardDeck);
+	}
+
+
+	sGame = "Das Spiel beginnt! (" + sGame + ") Es spielen: ";
+
+	for (player = 1; player <= iPlayerCount; player++) {
+		object oPlayer = getPlayer(oCardStack, player);
+
+		if (oPlayer != OBJECT_INVALID) {
+			sGame += GetName(oPlayer) + " - ";
+			//Gib Spieler eine Referenz auf den Kartenstack
+			SetLocalObject(oPlayer, "cg_oCardStack", oCardStack);
+			//teilt Karten aus
+			SetLocalString(oCardStack, "cg_cards_" +
+						   IntToString(player), getCardsFromDeck(oCardStack, startCards));
+		}
+	}
+
+//erster Spielzug
+	sendMessageToAllPlayer(oCardStack, sGame);
+
+	NextPlayer(oCardStack);
+} //StartGame
+
+
+void NextPlayer(object oCardStack)
+{
+	int iPlayerCount = GetLocalInt(oCardStack, "cg_iPlayerCount");
+	int iGame = GetLocalInt(oCardStack, "cg_iGame");
+	int iActivePlayer = GetLocalInt(oCardStack, "cg_iActivePlayer");
+	int iRound = GetLocalInt(oCardStack, "cg_iRound");
+
+//Bei null Spielern muss auch der Cardstack byebye sagen
+	if (iPlayerCount == 0) {
+		DestroyObject(oCardStack);
+		return;
+	}
+
+	/******************************************************************************
+	*  	hier die RundenAnzahl der Spiele eintragen
+	******************************************************************************/
+	int iLastRound;
+
+	switch (iGame) {
+	case 0:
+		iLastRound = 3;
+		break;
+
+	case 1:
+		iLastRound = 8;
+		break;
+
+	default:
+		return;
+	}
+
+//-----------------------------------------------------------------------------/
+
+//naechster Spieler
+	int iRoundSwitch = FALSE;
+	int i;
+	int nextPlayer;
+
+	object oNextPlayer;
+
+//Sucht nach dem naechsten Spieler der noch einen Zug machen darf
+	for (i = 1; i <= iPlayerCount; i++) {
+		nextPlayer = iActivePlayer + i;
+
+		if (nextPlayer > iPlayerCount) {
+			nextPlayer -= iPlayerCount;
+
+			//Rundenzaehler
+			if (!iRoundSwitch) {
+				iRound++;
+
+				SetLocalInt(oCardStack, "cg_iRound", iRound);
+				iRoundSwitch = TRUE;
+			}
+
+			if (iRound == iLastRound) {
+				ShowResults(oCardStack);
+				return;
+			}
+		}
+
+		oNextPlayer = getPlayer(oCardStack, nextPlayer);
+
+		//hier Bedingung eintragen falls der gleiche Spieler wieder am Zug ist
+		if (oNextPlayer == OBJECT_SELF) {
+			switch (iGame) {
+			case 0:
+				ShowResults(oCardStack);
+				return;
+
+			case 1:
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		if (oNextPlayer != OBJECT_INVALID
+				&& GetLocalInt(oCardStack, "cg_iHold_" + IntToString(nextPlayer)) == FALSE) {
+			SetLocalInt(oCardStack, "cg_iActivePlayer", nextPlayer);
+			sendMessageToAllPlayer(oCardStack, GetName(oNextPlayer) + " ist an der Reihe.");
+
+			//naechsten Spielzug einleiten
+			DelayCommand(1.0f, StartGameConversation(oNextPlayer, iGame));
+			return;
+		}
+	} //for
+
+	ShowResults(oCardStack);
+} //NextPlayer
+
+void ShowResults(object oCardStack)
+{
+	int iPlayerCount = GetLocalInt(oCardStack, "cg_iPlayerCount");
+	int iGame = GetLocalInt(oCardStack, "cg_iGame");
+	int iActivePlayer = GetLocalInt(oCardStack, "cg_iActivePlayer");
+	int iRound = GetLocalInt(oCardStack, "cg_iRound");
+
+	int i;
+	object oPlayer;
+	int player;
+	string sCard;
+	int iPoints;
+	int iWinnerPoints;
+	int iWinner;
+	int iWinnerHighestCard;
+	float fDelay = 3.0;
+
+	sendMessageToAllPlayer(oCardStack, "Das Spiel ist zu Ende.");
+
+	/*******************************************************************************
+	*  	hier die Spielauswertung der einzelnen Spiele eintragen
+	*******************************************************************************/
+	for (player = 1; player <= iPlayerCount; player++) {
+		switch (iGame) {
+		case 0: { //Poker
+			sortCards(oCardStack, player, FALSE);
+			oPlayer = getPlayer(oCardStack, player);
+			//Loesche Referenz auf CardStack
+			DeleteLocalObject(oPlayer, "cg_oCardStack");
+			string sCombination;
+			int iPaar;
+			int iTrio;
+			int iQuad;
+			int iFlush = GetAllColorsEqual(oCardStack, player);
+			int iStraight;
+			int iColorValue, iCardValue;
+			sCard = getCardFromPlayer(oCardStack, 5, player);
+
+			//Sucht nach Straight
+			iCardValue = GetStraight(oCardStack, player);
+
+			if (iCardValue > 0) {
+				iStraight = TRUE;
+				string sLowest = getCardString(getCardFromPlayer(oCardStack, 1, player), TRUE);
+				string sHighest = getCardString(sCard, TRUE);
+
+				if (iFlush)
+					sCombination = sStraightFlush + " ( von " + sLowest + " bis " + sHighest + " )";
+
+				else sCombination = sStraight + " ( von " + sLowest + " bis " + sHighest + " )";
+
+				iColorValue = GetColorOfCard(sCard);
+
+			} else if (iFlush) {
+				sCombination = sFlush;
+				iCardValue = StringToInt(sCard) % 13;
+				iColorValue = GetColorOfCard(sCard);
+
+			} else {
+
+				//Sucht nach Paaren, Trios und Quartetts
+				int i, iStart = 1;
+
+				for (i = iStart; i < 5; i++) {
+					int iEquals = GetEqualCardPictures(oCardStack, player, iStart);
+
+					//Bestimmt den Wert der hoechsten Farbe
+					switch (iEquals) {
+					case 0:
+						iCardValue = StringToInt(sCard) % 13;
+						break;
+
+					case 1:
+						iPaar++;
+						{
+							int iNewCardValue = StringToInt(getCardFromPlayer(oCardStack, iStart,
+															player)) % 13;
+
+							if (sCombination != "") sCombination += " und ";
+
+							if (iNewCardValue <
+									9) sCombination += "ein <c þ >Paar " +
+														   IntToString(iNewCardValue + 2) + "en</c>";
+
+							else {
+								switch (iNewCardValue) {
+								case 9:
+									sCombination += sCard10a;
+									break;
+
+								case 10:
+									sCombination += sCard11a;
+									break;
+
+								case 11:
+									sCombination += sCard12a;
+									break;
+
+								case 12:
+									sCombination += sCard13a;
+									break;
+								}
+							}
+
+							if (iTrio) sCombination = sFullHouse + " ( " + sCombination + " )";
+
+							else if (iNewCardValue > iCardValue) {
+								iCardValue = iNewCardValue;
+								iColorValue = GetColorOfCard(getCardFromPlayer(oCardStack, iStart
+															 + iEquals, player));
+							}
+
+							break;
+						}
+
+					case 2:
+						iTrio = TRUE;
+						iCardValue = StringToInt(getCardFromPlayer(oCardStack, iStart, player)) %
+									 13;
+
+						if (sCombination != "") sCombination += " und ";
+
+						if (iCardValue <
+								9) sCombination += "ein <c þ >Trio " +
+													   IntToString(iCardValue + 2) + "en</c>";
+
+						else {
+							switch (iCardValue) {
+							case 9:
+								sCombination += sCard10b;
+								break;
+
+							case 10:
+								sCombination += sCard11b;
+								break;
+
+							case 11:
+								sCombination += sCard12b;
+								break;
+
+							case 12:
+								sCombination += sCard13b;
+								break;
+							}
+						}
+
+						if (iPaar) sCombination = sFullHouse + " ( " + sCombination + " )";
+
+						break;
+
+					case 3:
+						iQuad = TRUE;
+						iCardValue = StringToInt(getCardFromPlayer(oCardStack, iStart, player)) %
+									 13;
+
+						if (iCardValue <
+								9) sCombination += "ein <c þ >Quartett " +
+													   IntToString(iCardValue + 2) + "en</c>";
+
+						else {
+							switch (iCardValue) {
+							case 9:
+								sCombination += sCard10c;
+								break;
+
+							case 10:
+								sCombination += sCard11c;
+								break;
+
+							case 11:
+								sCombination += sCard12c;
+								break;
+
+							case 12:
+								sCombination += sCard13c;
+								break;
+							}
+						}
+
+						break;
+
+					default:
+						break;
+					}
+
+					//switch
+					if (iEquals > 0) {
+						iStart += iEquals + 1;
+					} //if
+
+					else iStart++;
+				} //for
+			} //else
+
+			//Punktevergabe
+			if (iPaar > 0 && !iTrio) {
+				iPoints = 52 * iPaar + (iCardValue) * 4 + iColorValue;   //52 bis 103 || 104 bis 155
+
+			} else if (!iPaar && iTrio) {
+				iPoints = 156 + (iCardValue);   //156 bis 168
+
+			} else if (iStraight && !iFlush) {
+				iPoints = 169 + (iCardValue - 4) * 4 + iColorValue;   //169 bis 214
+
+			} else if (!iStraight && iFlush) {
+				iPoints = 215 + (iCardValue - 4) * 4 + iColorValue;   //215 bis 250
+
+			} else if (iPaar && iTrio) {
+				iPoints = 251 + (iCardValue);   //251 bis 263
+
+			} else if (iQuad) {
+				iPoints = 264 + (iCardValue);   //264-276
+
+			} else if (iFlush && iStraight) {
+				iPoints = 276 + (iCardValue - 4) * 4 + iColorValue;   //276 bis 311
+
+			} else {
+				//nix
+				iPoints = (iCardValue) * 4 + iColorValue;   //0 - 51
+			}
+
+			if (iPoints > iWinnerPoints) {
+				iWinnerPoints = iPoints;
+				iWinner = player;
+			}
+
+			AssignCommand(oPlayer, DelayCommand(fDelay, SpeakString("*deckt " +
+												sCombination + " auf*")));
+			//SendMessageToPC(oPlayer,"Punkte: "+IntToString(iPoints));
+			fDelay += 5.0;
+		}
+		break;
+
+		case 1: { //BlackJack
+			oPlayer = getPlayer(oCardStack, player);
+			//Loesche Referenz auf CardStack
+			DeleteLocalObject(oPlayer, "cg_oCardStack");
+
+			if (oPlayer != OBJECT_INVALID) {
+				int iCardPoints = 0;
+				int iAllPoints = 0;
+				int iHighestCard = 0;
+				int iCardCount = GetStringLength(GetLocalString(oCardStack, "cg_cards_" +
+												 IntToString(player))) / 2;
+
+				for (i = 1; i <= iCardCount; i++) {
+					sCard = getCardFromPlayer(oCardStack, i, player);
+					iCardPoints = getPointsOfCard(sCard);
+
+					if (iHighestCard < iCardPoints) iHighestCard = iCardPoints;
+
+					iAllPoints += iCardPoints;
+				}
+
+				if ((iAllPoints == iWinnerPoints && iHighestCard > iWinnerHighestCard)
+						|| (iAllPoints < 22 && iWinnerPoints < iAllPoints)
+						|| (iWinnerPoints > 21 && iAllPoints < iWinnerPoints)) {
+					iWinner = player;
+					iWinnerPoints = iAllPoints;
+					iWinnerHighestCard = iHighestCard;
+				}
+
+
+				sendMessageToAllPlayer(oCardStack, GetName(oPlayer) + " deckt " +
+									   IntToString(iAllPoints) + " Punkte auf");
+
+			}
+		}
+		break;
+		}
+
+		//switch
+	} //for player
+
+	object oWinner = getPlayer(oCardStack, iWinner);
+	DelayCommand(fDelay, FloatingTextStringOnCreature(GetName(oWinner) + " hat gewonnen ", oWinner));
+//DelayCommand(fDelay, sendMessageToAllPlayer(oCardStack, GetName(oWinner)+ " hat gewonnen "));
+	int iCashPot = GetLocalInt(oCardStack, "cg_iCashPot");
+	DelayCommand(fDelay, GiveGoldToCreature(oWinner, iCashPot));
+//-----------------------------------------------------------------------------/
+	DelayCommand(fDelay + 1.0, resetGame(oCardStack));
+
+} //ShowResults
+
+void AbortGame(object oCardStack)
+{
+	//entfernt einen Spieler aus dem Spiel
+	int iPlayerCount = GetLocalInt(oCardStack, "cg_iPlayerCount");
+	int iActivePlayer = GetLocalInt(oCardStack, "cg_iActivePlayer");
+
+	object oPlayer = getPlayer(oCardStack, iActivePlayer);
+	string sAbortName = GetName(oPlayer);
+	int i;
+
+	DeleteLocalInt(oPlayer, "cg_iCG");
+//Loesche Referenz auf CardStack
+	DeleteLocalObject(oPlayer, "cg_oCardStack");
+
+//entfernt den Spieler aus der Liste
+	DeleteLocalObject(oCardStack, "cg_oPlayer" + IntToString(iActivePlayer));
+
+	for (i = 1; i <= 5; i++) {
+		SetLocalInt(oCardStack, "cg_iDiscard" + IntToString(i), FALSE);
+	}
+
+	if (iActivePlayer < iPlayerCount) {
+		for (i = iActivePlayer + 1; i <= iPlayerCount; i++) {
+			oPlayer = getPlayer(oCardStack, i);
+			string sCards = GetLocalString(oCardStack, "cg_cards_" + IntToString(i));
+			int iHold = GetLocalInt(oCardStack, "cg_iHold" + IntToString(i));
+			//rueckt die folgenden Spieler in der Liste nach
+			SetLocalObject(oCardStack, "cg_oPlayer" + IntToString(i - 1), oPlayer);
+			SetLocalString(oCardStack, "cg_cards_" + IntToString(i - 1), sCards);
+			SetLocalInt(oCardStack, "cg_iHold" + IntToString(i - 1), iHold);
+			DeleteLocalObject(oCardStack, "cg_oPlayer" + IntToString(i));
+			DeleteLocalString(oCardStack, "cg_cards_" + IntToString(i));
+			DeleteLocalInt(oCardStack, "cg_iHold" + IntToString(i));
+
+		}
+	}
+
+	SetLocalInt(oCardStack, "cg_iActivePlayer", iActivePlayer - 1);
+	iPlayerCount--;
+	SetLocalInt(oCardStack, "cg_iPlayerCount", iPlayerCount);
+
+//Benachrichtigt die anderen Spieler
+	sendMessageToAllPlayer(oCardStack, sAbortName + " hat aufgegeben.");
+
+	NextPlayer(oCardStack);
+} //AbortGame
+
+
+void ChangeCards(object oCardStack)
+{
+
+	int iGame = GetLocalInt(oCardStack, "cg_iGame");
+	int iActivePlayer = GetLocalInt(oCardStack, "cg_iActivePlayer");
+	int iBet = GetLocalInt(oCardStack, "cg_iBet");
+	int iCashPot = GetLocalInt(oCardStack, "cg_iCashPot");
+	string sCards = GetLocalString(oCardStack, "cg_cards_" + IntToString(iActivePlayer));
+	int i, iChangeCount;
+	object oPlayer = getPlayer(oCardStack, iActivePlayer);
+
+	/*******************************************************************************
+	*  	hier das Verhalten zum Tauschen der Karten
+	*  	fuer die verschiedenen Spiele eintragen
+	*******************************************************************************/
+
+	ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectVisualEffect(322), getPlayer(oCardStack,
+						iActivePlayer));
+
+	switch (iGame) {
+
+	case 0: //Poker
+
+		//wenn Karte zum Ablegen markiert ist
+		//dann wird sie durch eine aus dem Stapel ersetzt
+		for (i = 1; i <= 5; i++) {
+			if (GetLocalInt(oCardStack, "cg_iDiscard" + IntToString(i)) == TRUE) {
+				//Karte wird ans Ende des Stapels gelegt
+				drawCard(oCardStack, getCardFromPlayer(oCardStack, i, iActivePlayer));
+				iChangeCount++;
+				sCards = GetStringLeft(sCards, (i - 1) * 2) + getCardsFromDeck(oCardStack, 1) +
+						 GetStringRight(sCards, GetStringLength(sCards) - i * 2);
+				SetLocalInt(oCardStack, "cg_iDiscard" + IntToString(i), FALSE);
+			}
+		}
+
+		TakeGoldFromCreature(iChangeCount * iBet, oPlayer, TRUE);
+		SetLocalInt(oCardStack, "cg_iCashPot", iCashPot + iChangeCount * iBet);
+
+		sendMessageToAllPlayer(oCardStack, GetName(oPlayer) + " tauscht "
+							   + IntToString(iChangeCount) + " Karten.");
+		break;
+
+	case 1: //BlackJack
+		//zieht eine neue Karte aus dem Stapel
+		sCards = sCards + getCardsFromDeck(oCardStack, 1);
+		break;
+	}
+
+	//switch
+//------------------------------------------------------------------------------
+//Spielerkarten speichern
+	SetLocalString(oCardStack, "cg_cards_" + IntToString(iActivePlayer), sCards);
+	ShowCardsOnEventChannel(oCardStack, iActivePlayer);
+	NextPlayer(oCardStack);
+} //ChangeCards
+
+void ShowCards(object oCardStack)
+{
+	//setzt die Tokens fuer die Karten auf der Hand
+
+	int iGame = GetLocalInt(oCardStack, "cg_iGame");
+	int iBet = GetLocalInt(oCardStack, "cg_iBet");
+	int iActivePlayer = GetLocalInt(oCardStack, "cg_iActivePlayer");
+	int iRound = GetLocalInt(oCardStack, "cg_iRound");
+
+	int i;
+	string sCard;
+	string sValue;
+
+//Variablen fuer Poker--//
+	int iDiscard;       //
+	int iDiscardCount = 0; //
+
+//----------------------//
+	/*******************************************************************************
+	*  	hier das Verhalten zum zeigen der Karten fuer
+	*  	die verschiedenen Spiele eintragen
+	*******************************************************************************/
+	switch (iGame) {
+	case 0: //Poker
+		sortCards(oCardStack, iActivePlayer, FALSE);
+
+		for (i = 1; i <= 5; i++) {
+			iDiscard = GetLocalInt(oCardStack, "cg_iDiscard" + IntToString(i));
+			sCard = getCardFromPlayer(oCardStack, i, iActivePlayer);
+
+			if (!iDiscard) {
+				SetCustomToken(9000 + i, getCardString(sCard));
+
+			} else {
+				string sCardName = getCardString(sCard);
+				SetCustomToken(9000 +
+							   i, "<c°°°>" + GetStringRight(sCardName, GetStringLength(sCardName) - 6));
+
+				iDiscardCount++;
+			}
+		}
+
+		sValue = GetBetString(iBet * iDiscardCount);
+
+		switch (iDiscardCount) {
+		case 0:
+			SetCustomToken(9006, "keine Karte");
+			break;
+
+		case 1:
+			SetCustomToken(9006, "1 Karte  fuer " + sValue);
+			break;
+
+		default:
+			SetCustomToken(9006, IntToString(iDiscardCount) + " Karten fuer " + sValue);
+		}
+
+		//switch
+
+		SetCustomToken(9007, IntToString(iRound + 1));
+		break;
+
+	case 1: //Blackjack
+		int iAllPoints;
+		int iCardPoints;
+		string sToken;
+		int iCardCount = GetStringLength(GetLocalString(oCardStack, "cg_cards_" +
+										 IntToString(iActivePlayer))) / 2;
+
+		for (i = 1; i <= iCardCount; i++) {
+			sCard = getCardFromPlayer(oCardStack, i, iActivePlayer);
+			iCardPoints = getPointsOfCard(sCard);
+			iAllPoints += iCardPoints;
+			sToken += getCardString(sCard) + "\n";
+		}
+
+		SetCustomToken(9000, sToken);
+
+		if (iAllPoints <= 21) {
+			SetCustomToken(9001, "Augen: " + IntToString(iAllPoints));
+
+			if (iAllPoints ==
+					21) SetLocalInt(oCardStack, "cg_iHold_" + IntToString(iActivePlayer), TRUE);
+
+		} else {
+			SetCustomToken(9001, "Augen: " + IntToString(iAllPoints) + "  leider zu viel.");
+			//Spieler muss passen
+			SetLocalInt(oCardStack, "cg_iHold_" + IntToString(iActivePlayer), TRUE);
+		}
+
+		SetCustomToken(9002, IntToString(iRound + 1));
+		break;
+	}
+
+	//switch
+//------------------------------------------------------------------------------
+} //ShowCards
+
+void ShowCardsOnEventChannel(object oCardStack, int iActivePlayer)
+{
+	int iGame = GetLocalInt(oCardStack, "cg_iGame");
+	/*******************************************************************************
+	*  	hier das Verhalten zum zeigen der Karten im EventChannel fuer
+	*  	die verschiedenen Spiele eintragen
+	*******************************************************************************/
+	int i;
+	string sCard;
+	object oPlayer = getPlayer(oCardStack, iActivePlayer);
+	SendMessageToPC(oPlayer, "Ihr habt folgenden Karten in der Hand");
+
+	switch (iGame) {
+	case 0: //Poker
+		sortCards(oCardStack, iActivePlayer, FALSE);
+
+		for (i = 1; i <= 5; i++) {
+			sCard = getCardFromPlayer(oCardStack, i, iActivePlayer);
+			SendMessageToPC(oPlayer, getCardString(sCard));
+		}
+
+		break;
+
+	case 1: {
+		int iCardCount = GetStringLength(GetLocalString(oCardStack, "cg_cards_" +
+										 IntToString(iActivePlayer))) / 2;
+
+		for (i = 1; i <= iCardCount; i++) {
+			sCard = getCardFromPlayer(oCardStack, i, iActivePlayer);
+			SendMessageToPC(oPlayer, getCardString(sCard));
+		}
+	}
+	break;
+
+	default:
+		return;
+	}
+
+	//switch
+} //ShowCardsOnEventChannel
+
+
+/*******************************************************************************
+ *                          H E L P E R S
+ */
+
+const string sCard1 = "2";
+const string sCard2 = "3";
+const string sCard3 = "4";
+const string sCard4 = "5";
+const string sCard5 = "6";
+const string sCard6 = "7";
+const string sCard7 = "8";
+const string sCard8 = "9";
+const string sCard9 = "10";
+const string sCard10 = "Barde";
+const string sCard11 = "Nymphe";
+const string sCard12 = "Kleriker";
+const string sCard13 = "Drache";
+
+const string sColor1 = "<c þ >Kupfer";
+const string sColor2 = "<c þ >Silber";
+const string sColor3 = "<c þ >Gold";
+const string sColor4 = "<c þ >Platin";
+
+
+object getPlayer(object oCardStack, int iNumber)
+{
+	//gibt den Nten Spieler zurueck
+	return GetLocalObject(oCardStack, "cg_oPlayer" + IntToString(iNumber));
+}
+
+
+string getCardFromPlayer(object oCardStack, int card, int player)
+{
+	string sCards = GetLocalString(oCardStack, "cg_cards_" + IntToString(player));
+	return GetSubString(sCards, (card - 1) * 2, 2);
+}
+
+string getCardsFromDeck(object oCardStack, int i)
+{
+	string sCardDeck = GetLocalString(oCardStack, "cg_sCardDeck");
+	string sCard = GetStringLeft(sCardDeck, i * 2);
+	sCardDeck = GetStringRight(sCardDeck, GetStringLength(sCardDeck) - i * 2);
+	SetLocalString(oCardStack, "cg_sCardDeck", sCardDeck);
+	return sCard;
+}
+
+
+void drawCard(object oCardStack, string sCard)
+{
+	string sCardDeck = GetLocalString(oCardStack, "cg_sCardDeck") + sCard;
+	SetLocalString(oCardStack, "cg_sCardDeck", sCardDeck);
+}
+
+
+string getCardString(string sCard, int iPictureOnly = FALSE)
+{
+	if (GetStringLeft(sCard, 1) == "0") sCard = GetStringRight(sCard, 1);
+
+	int card = StringToInt(sCard);
+	string sCardName;
+
+	if (!iPictureOnly) {
+		if (card < 13) {
+			sCardName = sColor1 + " ";
+
+		} else if (card < 26) {
+			sCardName = sColor2 + " ";
+
+		} else if (card < 39) {
+			sCardName = sColor3 + " ";
+
+		} else {
+			sCardName = sColor4 + " ";
+		}
+
+	} else sCardName = "<c þ >";
+
+	switch (card % 13) {
+	case 0:
+		sCardName = sCardName + sCard1;
+		break;
+
+	case 1:
+		sCardName = sCardName + sCard2;
+		break;
+
+	case 2:
+		sCardName = sCardName + sCard3;
+		break;
+
+	case 3:
+		sCardName = sCardName + sCard4;
+		break;
+
+	case 4:
+		sCardName = sCardName + sCard5;
+		break;
+
+	case 5:
+		sCardName = sCardName + sCard6;
+		break;
+
+	case 6:
+		sCardName = sCardName + sCard7;
+		break;
+
+	case 7:
+		sCardName = sCardName + sCard8;
+		break;
+
+	case 8:
+		sCardName = sCardName + sCard9;
+		break;
+
+	case 9:
+		sCardName = sCardName + sCard10;
+		break;
+
+	case 10:
+		sCardName = sCardName + sCard11;
+		break;
+
+	case 11:
+		sCardName = sCardName + sCard12;
+		break;
+
+	case 12:
+		sCardName = sCardName + sCard13;
+	}
+
+	return sCardName + "</c>";
+}
+
+int GetColorOfCard(string sCard)
+{
+	if (GetStringLeft(sCard, 1) == "0") sCard = GetStringRight(sCard, 1);
+
+	int card = StringToInt(sCard);
+
+	if (card < 13) return 0;
+
+	else if (card < 26) return 1;
+
+	else if (card < 39) return 2;
+
+	else return 3;
+}
+
+int getPointsOfCard(string sCard)
+{
+	if (GetStringLeft(sCard, 1) == "0") sCard = GetStringRight(sCard, 1);
+
+	int card = StringToInt(sCard);
+
+	if (card % 13 <= 8) return card % 13 + 2;
+
+	else if (card % 13 <= 11) return card % 13 - 7;
+
+	else return 11;
+}
+
+void SwapCard(object oCardStack, int iCard)
+{
+	int iBet = GetLocalInt(oCardStack, "cg_iBet");
+	int iDiscard = GetLocalInt(oCardStack, "cg_iDiscard" + IntToString(iCard));
+	int i, iDiscardCount;
+
+	if (!iDiscard) {
+		for (i = 1; i <= 5; i++) {
+			if (GetLocalInt(oCardStack, "cg_iDiscard" + IntToString(i))) iDiscardCount++;
+		}
+
+		if (GetGold(OBJECT_SELF) >= iBet * (iDiscardCount + 1)) {
+			SetLocalInt(oCardStack, "cg_iDiscard" + IntToString(iCard), TRUE);
+
+		} else SendMessageToPC(OBJECT_SELF, "Ihr habt nicht genug Geld um noch eine Karte zu tauschen");
+
+	} else {
+		SetLocalInt(oCardStack, "cg_iDiscard" + IntToString(iCard), FALSE);
+	}
+}
+
+void resetGame(object oCardStack)
+{
+	int i;
+
+	for (i = 1; i <= 5; i++) {
+		object oPlayer = getPlayer(oCardStack, i);
+
+		if (oPlayer != OBJECT_INVALID) {
+			DeleteLocalInt(oPlayer, "cg_iCG");
+			DeleteLocalObject(oPlayer, "cg_oCardStack");
+
+			//Gold zurueck
+			int iValue = GetGold(oPlayer);
+			GiveMoneyToCreature(oPlayer, iValue);
+			TakeGoldFromCreature(iValue, oPlayer, TRUE);
+		}
+	}
+
+	DestroyObject(oCardStack);
+}
+
+void sendMessageToAllPlayer(object oCardStack, string sMessage)
+{
+	int iPlayerCount = GetLocalInt(oCardStack, "cg_iPlayerCount");
+	int i;
+
+	for (i = 1; i <= iPlayerCount; i++) {
+		object oPlayer = getPlayer(oCardStack, i);
+		SendMessageToPC(oPlayer, sMessage);
+	}
+}
+
+void sortCards(object oCardStack, int iP, int iByColor = TRUE)
+{
+	string sCards = GetLocalString(oCardStack, "cg_cards_" + IntToString(iP));
+	int b = GetStringLength(sCards) / 2;          // f[0..b] muss noch sortiert werden
+
+	while (b > 0) {
+		int t = 1;
+		int j;
+		int iCardA, iCardB;
+
+		for (j = 2; j <= b; j++) {
+			string sCardA = getCardFromPlayer(oCardStack, (j - 1), iP);
+			string sCardB = getCardFromPlayer(oCardStack, j, iP);
+
+			if (!iByColor) {
+				iCardA = StringToInt(sCardA) % 13;
+				iCardB = StringToInt(sCardB) % 13;
+			}
+
+			if (iByColor || iCardA == iCardB) {
+				iCardA = StringToInt(sCardA);
+				iCardB = StringToInt(sCardB);
+			}
+
+			if (iCardA > iCardB) {
+				// Tausch     f[j-1] :=: f[j]
+				sCards = GetStringLeft(sCards, (j - 2) * 2) +
+						 sCardB + sCardA + GetStringRight(sCards, GetStringLength(sCards) - j * 2);
+				SetLocalString(oCardStack, "cg_cards_" + IntToString(iP), sCards);
+				t = j;
+			}
+		}
+
+		b = t - 1;
+	}
+} // sortCards
+
+
+int GetEqualCardPictures(object oCardStack, int iPlayer, int iStart)
+{
+	int i;
+	int iCheckCard = StringToInt(getCardFromPlayer(oCardStack, iStart, iPlayer)) % 13;
+	int iEqualCount = 0;
+
+	for (i = iStart + 1; i <= 5; i++) {
+		if (StringToInt(getCardFromPlayer(oCardStack, i, iPlayer)) % 13 != iCheckCard) {
+			return iEqualCount;
+
+		} else iEqualCount++;
+	}
+
+	return iEqualCount;
+}
+
+int GetAllColorsEqual(object oCardStack, int iPlayer)
+{
+	string sCard = getCardFromPlayer(oCardStack, 1, iPlayer);
+	int iColor = GetColorOfCard(sCard);
+	int i;
+
+	for (i = 2; i <= 5; i++) {
+		sCard = getCardFromPlayer(oCardStack, i, iPlayer);
+
+		if (iColor != GetColorOfCard(sCard)) return FALSE;
+	}
+
+	return TRUE;
+}
+
+int GetStraight(object oCardStack, int iPlayer)
+{
+	int i;
+	string sCard = getCardFromPlayer(oCardStack, 1, iPlayer);
+	int iCheckCard = StringToInt(sCard) % 13;
+
+	for (i = 2; i <= 5; i++) {
+		sCard = getCardFromPlayer(oCardStack, i, iPlayer);
+
+		if ((StringToInt(sCard) % 13) - 1 != iCheckCard) return FALSE;
+
+		iCheckCard = StringToInt(sCard) % 13;
+	}
+
+	return iCheckCard;
+}
+
+
+void StartGameConversation(object oPlayer, int iGame)
+{
+	SetLocalString(oPlayer, "dmfi_univ_conv", "pc_cards" + IntToString(iGame + 1));
+	AssignCommand(oPlayer, ClearAllActions());
+	AssignCommand(oPlayer, ActionStartConversation(oPlayer, "dmfi_universal", TRUE));
+}
+
+void resetCards(object oPC)
+{
+	int i;
+	object oPlayer;
+
+	for (i = 1; i <= 5; i++) {
+		oPlayer = GetLocalObject(oPC, "cg_oPlayer" + IntToString(i));
+
+		if (oPlayer != OBJECT_INVALID) {
+			DeleteLocalInt(oPlayer, "cg_iCG");
+			DeleteLocalObject(oPC, "cg_oPlayer" + IntToString(i));
+		}
+	}
+
+	DeleteLocalInt(oPC, "cg_iCG");
+	DeleteLocalInt(oPC, "cg_iPlayerCount");
+	DeleteLocalInt(oPC, "cg_iGame");
+	DeleteLocalInt(oPC, "cg_iBet");
+}
+
+string GetRequestString()
+{
+	string sRequestString;
+	object oRequester = GetLocalObject(OBJECT_SELF, "cg_oRequester");
+
+	if (oRequester != OBJECT_INVALID) {
+
+		int iBet = GetLocalInt(oRequester, "cg_iBet");
+		int iGame = GetLocalInt(oRequester, "cg_iGame");
+
+		sRequestString = GetName(oRequester) + " hat Euch zu einem Spiel " + GetGameString(iGame) +
+						 " eingeladen. Der Einsatz betraegt " + GetBetString(iBet) + " pro Karte.";
+	}
+
+	return sRequestString;
+}
+
+string GetBetString(int iBet)
+{
+	string sBetString;
+
+	if (iBet < 10) sBetString = IntToString(iBet) + " Kupfermuenze";
+
+	else if (iBet < 100) sBetString = IntToString(iBet / 10) + " Silbermuenze";
+
+	else if (iBet < 1000) sBetString = IntToString(iBet / 100) + " Goldmuenze";
+
+	else sBetString = IntToString(iBet / 1000) + " Platinmuenze";
+
+	if (iBet != 1 && iBet != 10 && iBet != 100 && iBet != 1000) sBetString += "n";
+
+	return sBetString;
+}
+
+string GetGameString(int iGame)
+{
+	string sGameString;
+
+	switch (iGame) {
+	case 0: //Poker
+		sGameString = "Meistergilde";
+		break;
+
+	case 1: //Blackjack
+		sGameString = "Tymoras 21";
+		break;
+
+	default:
+		break;
+	}
+
+	//switch
+
+	return sGameString;
+}
+
+/*void main()
+ * {
+ * } */

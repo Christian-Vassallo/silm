@@ -1,0 +1,307 @@
+/*
+  File: x0_i0_treasure.n
+*/
+extern("_gen")
+extern("inc_2dacache")
+extern("inc_setting")
+extern("inc_audit")
+
+// Create treasure on an NPC.
+// This function will typically be called from within the
+// NPC's OnSpawn handler.
+void GenerateNPCTreasure(object oNPC = OBJECT_SELF);
+
+
+// Generates loot on a player as he hits a stone.
+// Gets called on EACH hit.
+void GenerateGemChainTreasure(object oStone, object oPlayer);
+
+
+void CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn);
+
+void GenerateGemChainTreasure(object oStone, object oPlayer)
+{
+	if (!GetIsPC(oPlayer))
+		return;
+
+	_DEBUG("gemchain", 1, "getfor: " + GetName(oPlayer) + " -> " + GetTag(oStone));
+
+	string sTag = GetTag(oStone);
+	string sAreaTag = GetTag(GetArea(oStone));
+
+	pQ(
+		"select replace, loot from gem_chains where " +
+		pSs(sAreaTag) + " like area and " +
+		pSs(sTag) + " like stone;"
+	);
+
+	string loot;
+	int replace;
+
+	string tocreate = "";
+
+	while (pF()) {
+		replace = pGi(1);
+		loot = pGs(2);
+
+		_DEBUG("gemchain", 1, "result[]: " + loot + " << " + itoa(replace) + " -> '" + tocreate + "'");
+
+		// Skim off replaced loots before this one gets added.
+		while (replace > 0) {
+			int idx = strpos(tocreate, "#");
+
+			if (-1 == idx)
+				break;
+
+			_DEBUG("gemchain", 1, "replace <" + itoa(replace) + ">: " + substr(tocreate, 0, idx));
+			tocreate = substr(tocreate, idx + 1, strlen(tocreate));
+			_DEBUG("gemchain", 1, "isnow: " + tocreate);
+
+			replace--;
+		}
+
+		tocreate = loot + "#" + tocreate;
+	}
+
+	// Skim off the last hash that gets invariably added.
+	tocreate = substr(tocreate, 0, strlen(tocreate) - 1);
+
+
+	if ("" != tocreate) {
+		audit("gemchain", oPlayer, audit_fields("loot", tocreate, "area", sAreaTag, "stone", sTag),
+			  "mining");
+	}
+
+	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(tocreate, oPlayer));
+}
+
+
+void GenerateNPCTreasure(object oNPC = OBJECT_SELF)
+{
+	_DEBUG("lootchain", 1, "getfor: " + GetName(oNPC) + " -> " + GetTag(oNPC) + ":" + GetResRef(oNPC));
+
+	object oPlayer = GetNearestCreature(CREATURE_TYPE_PLAYER_CHAR, PLAYER_CHAR_IS_PC, oNPC);
+
+	// First, clean the inventory.
+	if (gvGetInt("treasure_clean_npcs")) {
+		object o = GetFirstItemInInventory(oNPC);
+
+		while (GetIsObjectValid(o)) {
+			if (!GetPlotFlag(o)) {
+				DestroyObject(o);
+			}
+
+			o = GetNextItemInInventory(oNPC);
+		}
+	}
+
+	// Select all loot chains.
+	pQ(
+		"select replace, loot, uniq, log from loot_aggregator where " +
+		"(racial_type = -1 or racial_type = " + pSi(GetRacialType(oNPC)) + ") and " +
+		pSs(GetResRef(oNPC)) + " like resref and " +
+		pSs(GetTag(oNPC)) + " like tag and " +
+		pSs(GetName(oNPC)) + " like name;"
+	);
+
+	string loot;
+	int replace, uniq, log;
+
+	string tocreate = "";
+
+	while (pF()) {
+		replace = pGi(1);
+		loot = pGs(2);
+		uniq = pGb(3);
+		log  = pGb(4);
+
+		// it is unique. Do not spawn, do not do the replacing, because the player already has one.
+		if (uniq && GetIsObjectValid(GetItemResRefPossessedBy(oPlayer, loot)))
+			continue;
+
+		_DEBUG("lootchain", 1, "result[]: " + loot + " << " + itoa(replace) + " -> '" + tocreate + "'");
+
+		// Skim off replaced loots before this one gets added.
+		while (replace > 0) {
+			int idx = strpos(tocreate, "#");
+
+			if (-1 == idx)
+				break;
+
+			_DEBUG("lootchain", 1, "replace <" + itoa(replace) + ">: " + substr(tocreate, 0, idx));
+			tocreate = substr(tocreate, idx + 1, strlen(tocreate));
+			_DEBUG("lootchain", 1, "isnow: " + tocreate);
+
+			replace--;
+		}
+
+		if (log) {
+			audit("loot", oPlayer, audit_fields("resref", loot), "loot_chains");
+			WriteTimestampedLogEntry("lootchain: Spawning '" + loot + "' for " + GetName(oPlayer));
+		}
+
+		tocreate = loot + "#" + tocreate;
+	}
+
+	// Skim off the last hash that gets invariably added.
+	tocreate = substr(tocreate, 0, strlen(tocreate) - 1);
+
+	_DEBUG("lootchain", 1, "isnow at end: " + tocreate);
+
+	DelayCommand(1.0f, CreateChainedOnObjectByResRefString(tocreate, oNPC));
+}
+
+
+
+
+void CreateStackedItemsOnObject(string sResRef, object oCreateOn, int nCount)
+{
+	if (nCount < 1)
+		return;
+
+	if (gvGetInt("treasure_use_new_create_code")) {
+		object oFirst = CreateItemOnObject(sResRef, oCreateOn, 1);
+
+		if (gvGetInt("treasure_debug")) {
+			SendMessageToAllDMs("treasure> Created first: " + IntToString(GetItemStackSize(oFirst)));
+			SendMessageToAllDMs("treasure> following: " + IntToString(nCount));
+		}
+
+		if (nCount > 1) {
+			int i;
+			int nMaxStack = StringToInt(Get2DACached("baseitems", "ILRStackSize", GetBaseItemType(oFirst)));
+
+			if (nMaxStack > 1) { // item can be stacked!
+				SetItemStackSize(oFirst, GetItemStackSize(oFirst) - 1 + nCount);
+
+			} else {
+				for (i = 1; i < nCount; i++) {
+					oFirst = CreateItemOnObject(sResRef, oCreateOn, 1);
+				}
+			}
+		}
+
+	} else {
+		CreateItemOnObject(sResRef, oCreateOn, nCount);
+	}
+}
+
+
+int GetMinFactorFromChainString(string sR)
+{
+	int f = 1;
+	int iW = FindSubString(sR, ":");
+
+	if (iW != -1) {
+		string sub = GetSubString(sR, iW + 1, 1024);
+		f = StringToInt(sub);
+
+		if (f < 1)
+			f = 1;
+	}
+
+	return f;
+}
+
+int GetMaxFactorFromChainString(string sR)
+{
+	int f = 1;
+	int iW = FindSubString(sR, ".");
+
+	if (iW != -1) {
+		string sub = GetSubString(sR, iW + 1, 1024);
+		f = StringToInt(sub);
+
+		if (f < 1)
+			f = 1;
+	}
+
+	return f;
+}
+
+
+string GetResRefFromChainString(string sR)
+{
+	string r = sR;
+
+	int iW = FindSubString(sR, ":");
+
+	if (iW != -1) {
+		sR = GetSubString(sR, 0, iW);
+	}
+
+	return sR;
+}
+
+void CreateChainedOnObjectByResRefString(string sResRefStr, object oCreateOn)
+{
+	int nCreated = 0;
+	string sResRef = sResRefStr;
+	object oNew;
+	string sDelimiter = "#";
+
+	int iSplit = FindSubString(sResRefStr, sDelimiter);
+	int iW = -1;
+	int nMin, nMax, nActual;
+
+	while (iSplit != -1) {
+		sResRef = GetSubString(sResRefStr, 0, iSplit);
+		sResRefStr = GetSubString(sResRefStr, iSplit + GetStringLength(sDelimiter), 1024);
+
+		nMin = GetMinFactorFromChainString(sResRef);
+		nMax = GetMaxFactorFromChainString(sResRef);
+
+		if (nMax < nMin)
+			nMax = nMin;
+
+		nActual = nMin + Random(nMax - nMin + 1);
+
+		if (gvGetInt("treasure_debug")) {
+			SendMessageToAllDMs("treasure> rrA=" + sResRef);
+		}
+
+		sResRef = GetResRefFromChainString(sResRef);
+
+		if (gvGetInt("treasure_debug")) {
+			SendMessageToAllDMs("treasure> rr=" + sResRef);
+			SendMessageToAllDMs("treasure> nmin=" + IntToString(nMin) + " nmax=" + IntToString(
+									nMax) + " nactual=" + IntToString(
+									nActual));
+		}
+
+		CreateStackedItemsOnObject(sResRef, oCreateOn, nActual);
+
+		nCreated += nActual;
+
+		iSplit = FindSubString(sResRefStr, sDelimiter);
+	}
+
+	sResRef = sResRefStr;
+
+	if (gvGetInt("treasure_debug")) {
+		SendMessageToAllDMs("treasure> rrA=" + sResRef);
+	}
+
+	nMin = GetMinFactorFromChainString(sResRef);
+	nMax = GetMaxFactorFromChainString(sResRef);
+
+	if (nMax < nMin)
+		nMax = nMin;
+
+	nActual = nMin + Random(nMax - nMin + 1);
+
+	sResRef = GetResRefFromChainString(sResRef);
+
+	if (gvGetInt("treasure_debug")) {
+		SendMessageToAllDMs("treasure> rr=" + sResRef);
+		SendMessageToAllDMs("treasure> nmin=" + IntToString(nMin) + " nmax=" + IntToString(
+								nMax) + " nactual=" + IntToString(
+								nActual));
+	}
+
+
+	CreateStackedItemsOnObject(sResRef, oCreateOn, nActual);
+	nCreated += nActual;
+
+	//return nCreated;
+}

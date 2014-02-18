@@ -3,9 +3,10 @@
 
 // These are included automagically for each file because they are core files
 #include "appearance.h"
-#include "inc_nwnx.nh"
-#include "inc_pgsql.nh"
-#include "inc_events.nh"
-#include "inc_statsd.nh"
+#include "core/hook_generic.h"
+#include "core/nwnx/inc_nwnx.nh"
+#include "core/nwnx/inc_pgsql.nh"
+#include "core/inc_events.nh"
+#include "core/inc_statsd.nh"
 
 #endif

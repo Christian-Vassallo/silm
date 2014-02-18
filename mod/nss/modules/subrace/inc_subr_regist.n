@@ -1,0 +1,66 @@
+extern("inc_subr_data")
+
+string csn;
+
+void AddAlias(string sAlias)
+{
+	object oMod = GetModule();
+	int iRT = GetLocalInt(oMod, "SR_RaceType_" + csn);
+
+	SetLocalString(oMod, "SR_Alias_" + IntToString(iRT) + "_" + GetStringLowerCase(sAlias), csn);
+}
+
+void Register_Subrace(string sSubrace, int iRaceType, int iECL = 0, int iRestricted = 0)
+{
+	object oMod = GetModule();
+
+	sSubrace = GetStringLowerCase(sSubrace);
+	csn = sSubrace;
+
+	SetLocalString(oMod, "SR_Name_" + csn, csn);
+	SetLocalInt(oMod, "SR_RaceType_" + csn, iRaceType);
+	SetLocalInt(oMod, "SR_ECL_" + csn, iECL);
+	SetLocalInt(oMod, "SR_Restr_" + csn, iRestricted);
+
+	AddAlias(sSubrace);
+}
+
+void SetFlags(int iFlags)
+{
+	SetLocalInt(GetModule(), "SR_Flags_" + csn, iFlags);
+}
+
+void SetSPA(int iType, string sIdent)
+{
+	object oMod = GetModule();
+
+	SetLocalInt(oMod, "SR_SPAType_" + csn, iType);
+	SetLocalString(oMod, "SR_SPA_" + csn, sIdent);
+}
+
+void SetSRItem(string sIdent, int nRevision)
+{
+	SetLocalString(GetModule(), "SR_Item_" + csn, sIdent);
+	SetLocalInt(GetModule(), "SR_Item_Rev_" + csn, nRevision);
+}
+
+void AddEffect(string sType, int iVersus, int iParam1 = 0, int iParam2 = 0, int iParam3 = 0,
+			   int iLev1 = 0,
+			   int iLev2 = 0,
+			   int iLev3 = 0)
+{
+	object oMod = GetModule();
+	int iNE = GetLocalInt(oMod, "SR_NEffects_" + csn);
+	string sSuff = "SR_Eff_" + csn + "_" + IntToString(iNE);
+
+	SetLocalInt(oMod, "SR_NEffects_" + csn, iNE + 1);
+
+	SetLocalString(oMod, sSuff + "_Type", sType);
+	SetLocalInt(oMod, sSuff + "_Vers", iVersus);
+	SetLocalInt(oMod, sSuff + "_Par1", iParam1);
+	SetLocalInt(oMod, sSuff + "_Par2", iParam2);
+	SetLocalInt(oMod, sSuff + "_Par3", iParam3);
+	SetLocalInt(oMod, sSuff + "_Lev1", iLev1);
+	SetLocalInt(oMod, sSuff + "_Lev2", iLev2);
+	SetLocalInt(oMod, sSuff + "_Lev3", iLev3);
+}

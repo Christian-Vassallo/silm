@@ -1,0 +1,132 @@
+//int VFX_WINGS_DEMONIC =420;
+//int VFX_WINGS_ANGELIC =421;
+//int VFX_WINGS_NEUTRAL =422;
+
+int VFX_WINGS_DEMONIC = VFX_DUR_FLAG_BLUE;
+int VFX_WINGS_ANGELIC = VFX_DUR_FLAG_RED;
+int VFX_WINGS_NEUTRAL = VFX_DUR_FLAG_PURPLE;
+
+effect ParseEffect(string sType, int iPar1, int iPar2, int iPar3)
+{
+	effect eNew;
+
+	if (sType == "-ac")
+		eNew = EffectACDecrease(iPar1, iPar2, iPar3);
+
+	else if (sType == "+ac")
+		eNew = EffectACIncrease(iPar1, iPar2, iPar3);
+
+	else if (sType == "-att")
+		eNew = EffectAttackDecrease(iPar1, iPar2);
+
+	else if (sType == "+att")
+		eNew = EffectAttackIncrease(iPar1, iPar2);
+
+	else if (sType == "-dmg")
+		eNew = EffectDamageDecrease(iPar1, iPar2);
+
+	else if (sType == "+dmg")
+		eNew = EffectDamageIncrease(iPar1, iPar2);
+
+	else if (sType == "-dim")
+		eNew = EffectDamageImmunityDecrease(iPar1, iPar2);
+
+	else if (sType == "+dim")
+		eNew = EffectDamageImmunityIncrease(iPar1, iPar2);
+
+	else if (sType == "dred")
+		eNew = EffectDamageReduction(iPar1, iPar2);
+
+	else if (sType == "immu")
+		eNew = EffectImmunity(iPar1);
+
+	else if (sType == "-sav")
+		eNew = EffectSavingThrowDecrease(iPar1, iPar2, iPar3);
+
+	else if (sType == "+sav")
+		eNew = EffectSavingThrowIncrease(iPar1, iPar2, iPar3);
+
+	else if (sType == "-skl")
+		eNew = EffectSkillDecrease(iPar1, iPar2);
+
+	else if (sType == "+skl")
+		eNew = EffectSkillIncrease(iPar1, iPar2);
+
+	else if (sType == "-spr")
+		eNew = EffectSpellResistanceDecrease(iPar1);
+
+	else if (sType == "+spr")
+		eNew = EffectSpellResistanceIncrease(iPar1);
+
+	else if (sType == "wing") {
+		int iType;
+
+		if (iPar1 < 0) iType = VFX_WINGS_DEMONIC;
+
+		else if (iPar1 > 0) iType = VFX_WINGS_ANGELIC;
+
+		else iType = VFX_WINGS_NEUTRAL;
+
+		eNew = EffectVisualEffect(iType);
+	}
+
+	return eNew;
+}
+
+itemproperty ParseItemProperty(string sType, int iPar1, int iPar2)
+{
+	itemproperty eNew;
+
+	if (sType == "-ac")
+		eNew = ItemPropertyDecreaseAC(iPar2, iPar1);
+
+	else if (sType == "+ac")
+		eNew = ItemPropertyACBonus(iPar1);
+
+	else if (sType == "-att")
+		eNew = ItemPropertyAttackPenalty(iPar1);
+
+	else if (sType == "+att")
+		eNew = ItemPropertyAttackBonus(iPar1);
+
+	else if (sType == "-dmg")
+		eNew = ItemPropertyDamagePenalty(iPar1);
+
+	else if (sType == "+dmg")
+		eNew = ItemPropertyDamageBonus(iPar1, iPar2);
+
+	else if (sType == "-dim")
+		eNew = ItemPropertyDamageVulnerability(iPar1, iPar2);
+
+	else if (sType == "+dim")
+		eNew = ItemPropertyDamageImmunity(iPar1, iPar2);
+
+	else if (sType == "dred")
+		eNew = ItemPropertyDamageReduction(iPar1, iPar2);
+
+	else if (sType == "immu")
+		eNew = ItemPropertyImmunityMisc(iPar1);
+
+	else if (sType == "-sav")
+		eNew = ItemPropertyReducedSavingThrow(iPar1, iPar2);
+
+	else if (sType == "+sav")
+		eNew = ItemPropertyBonusSavingThrow(iPar1, iPar2);
+
+	else if (sType == "-skl")
+		eNew = ItemPropertyDecreaseSkill(iPar1, iPar2);
+
+	else if (sType == "+skl")
+		eNew = ItemPropertySkillBonus(iPar1, iPar2);
+
+	else if (sType == "+spr")
+		eNew = ItemPropertyBonusSpellResistance(iPar1);
+
+	else if (sType == "dvis")
+		eNew = ItemPropertyDarkvision();
+
+	else if (sType == "+enh")
+		eNew = ItemPropertyEnhancementBonus(iPar1);
+
+	return eNew;
+}

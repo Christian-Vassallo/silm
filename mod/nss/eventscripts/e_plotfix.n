@@ -1,0 +1,10 @@
+#define plot(tag) if (!GetPlotFlag(e.actedon) && TestStringAgainstPattern(GetStringLowerCase(tag), GetTag(e.actedon))) { SetPlotFlag(e.actedon, true); return; }
+
+void main()
+{
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "item_acquire") {
+		plot("**_target_**");
+	}
+}

@@ -1,0 +1,31 @@
+extern("inc_nwnx_func")
+extern("inc_nwnx_structs")
+
+void main()
+{
+	struct EventInfo e = GetEventInfo();
+	struct EventArguments ea = GetEventArguments(e.serial);
+
+	if (e.ev == "chat_command" && ea.a0 == "hum") {
+
+		bool humming = GetLocalInt(e.runnable, "humming");
+
+		if (humming) {
+			SetLocalInt(e.runnable, "humming", false);
+			iterate_effects(e.runnable, eff,
+
+							if (GetEffectType(eff) == EFFECT_TYPE_VISUALEFFECT &&
+								GetEffectSubType(eff) == SUBTYPE_SUPERNATURAL &&
+								GetEffectInteger(eff, 0) == 277)
+							RemoveEffect(e.runnable, eff);
+						   );
+
+		} else {
+			ApplyEffectToObject(DURATION_TYPE_PERMANENT, SupernaturalEffect(EffectVisualEffect(277)),
+								e.runnable);
+			SetLocalInt(e.runnable, "humming", true);
+		}
+
+		event_stop();
+	}
+}

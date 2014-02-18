@@ -1,0 +1,231 @@
+/*
+ * Yet another spawn system. This one is designed with simpleness and
+ * resource conservation in mind. It doesn't make any use of OnHeartBeat(),
+ * it just needs a call to TMS_Setup_Spawn(object oSpawnPoint) to initialize
+ * and must have a call to TMS_SpawnedDestroyed() in the OnDeath script.
+ */
+
+extern("inc_misc")
+extern("x0_i0_position")
+
+struct SpawnData {
+	int __pad;
+	int iMinTime;   // Minimum time between Spawns
+	int iMaxTime;   // Maximum time between Spawns
+	string sResRef; // ResRef ob object to spawn
+	int iMinObjs;   // Minimum amount of objects
+	int iMaxObjs;   // Maximum amount of objects
+	int iDistance;  // Distance around spawn point
+	int bWhole;     // Respawn only if whole Cluster has been destroyed
+	int iObjType;   // Object type of spawn to create
+};
+
+struct SpawnData TMS_Read_SpawnData(object oObj, int iEntry)
+{
+	struct SpawnData new;
+	string sEntry = IntToString(iEntry);
+
+	new.iMinTime  = GetLocalInt(oObj, "TMS_SP_MIT_" + sEntry);
+	new.iMaxTime  = GetLocalInt(oObj, "TMS_SP_MXT_" + sEntry);
+	new.sResRef   = GetLocalString(oObj, "TMS_SP_ORR_" + sEntry);
+	new.iMinObjs  = GetLocalInt(oObj, "TMS_SP_MIO_" + sEntry);
+	new.iMaxObjs  = GetLocalInt(oObj, "TMS_SP_MXO_" + sEntry);
+	new.iDistance = GetLocalInt(oObj, "TMS_SP_DST_" + sEntry);
+	new.bWhole    = GetLocalInt(oObj, "TMS_SP_CLU_" + sEntry);
+	new.iObjType  = GetLocalInt(oObj, "TMS_SP_OBT_" + sEntry);
+
+	return new;
+}
+
+string GetRandomResRef(string sBaseRR)
+{
+	object oMod = GetModule();
+
+	int iCount = GetLocalInt(oMod, "GRP_CNT_" + sBaseRR);
+	int iMax, iCurr, i;
+
+	if (!iCount) return sBaseRR;
+
+	iMax = GetLocalInt(oMod, "GRP_" + IntToString(iCount - 1) + "PR_" + sBaseRR);
+	iCurr = Random(iMax);
+
+	for (i = 0; i < iCount; i++)
+		if (iCurr < GetLocalInt(oMod, "GRP_" + IntToString(i) + "PR_" + sBaseRR))
+			return GetLocalString(oMod, "GRP_" + IntToString(i) + "RR_" + sBaseRR);
+
+	/* NOTREACHED */
+	return "<invalid>";
+}
+
+void TMS_Parse_SpawnDataEntry(object oObj, string sEntryLine, int iEntry)
+{
+	string sEntry = IntToString(iEntry);
+	string sKey;
+	string sValue;
+	string sToken;
+	int iValue;
+
+	sToken = StrTok(sEntryLine, ";");
+
+	SetLocalInt(oObj, "TMS_SP_MIT_" + sEntry, 1800);
+	SetLocalInt(oObj, "TMS_SP_MXT_" + sEntry, 2700);
+	/*
+	 * SetLocalInt(oObj,"TMS_SP_MIT_"+sEntry,10);
+	 * SetLocalInt(oObj,"TMS_SP_MXT_"+sEntry,20);
+	 */
+	SetLocalInt(oObj, "TMS_SP_MIO_" + sEntry, 2);
+	SetLocalInt(oObj, "TMS_SP_MXO_" + sEntry, 4);
+	SetLocalInt(oObj, "TMS_SP_DST_" + sEntry, 10);
+	SetLocalInt(oObj, "TMS_SP_OBT_" + sEntry, OBJECT_TYPE_PLACEABLE);
+
+	while (GetStringLength(sToken)) {
+		sKey = GetStringLeft(sToken, 3);
+
+		if (sKey == "CRE") {
+			SetLocalInt(oObj, "TMS_SP_OBT_" + sEntry, OBJECT_TYPE_CREATURE);
+
+		} else if (sKey == "ORR") {
+			SetLocalString(oObj, "TMS_SP_" + sKey + "_" + sEntry,
+						   (sValue = GetSubString(sToken, 3, 99)));
+
+		} else {
+			SetLocalInt(oObj, "TMS_SP_" + sKey + "_" + sEntry,
+						(iValue = StringToInt(GetSubString(sToken, 3, 99))));
+
+			if (sKey == "MIT")
+				SetLocalInt(oObj, "TMS_SP_MXT_" + sEntry, iValue);
+
+			else if (sKey == "MIO")
+				SetLocalInt(oObj, "TMS_SP_MXO_" + sEntry, iValue);
+		}
+
+		sToken = StrTok("", ";");
+	}
+}
+
+location GetValidLocation(location lTarget)
+{
+	object oNew = CreateObject(OBJECT_TYPE_CREATURE, "placing_helper", lTarget);
+	location lResult = GetLocation(oNew);
+	DestroyObject(oNew);
+	return lResult;
+}
+
+void TMS_PlaceObject(object oObj, int iEntry)
+{
+	struct SpawnData entry = TMS_Read_SpawnData(oObj, iEntry);
+	location lNew =   GetRandomLocationAt(GetLocation(oObj), IntToFloat(entry.iDistance));
+	object oNew = CreateObject(
+					  entry.iObjType, GetRandomResRef(entry.sResRef), GetValidLocation(lNew));
+	string sPend = "TMS_SP_Pend_" + IntToString(iEntry);
+	int iPend = GetLocalInt(oObj, sPend) - 1;
+	string sCurr = "TMS_SP_Curr_" + IntToString(iEntry);
+	int iCurr = GetLocalInt(oObj, sCurr) + 1;
+
+	if (iPend < 0) iPend = 0;
+
+	SetLocalObject(oNew, "TMS_SP_Master", oObj);
+	SetLocalInt(oNew, "TMS_SP_Entry", iEntry);
+
+	SetLocalString(oObj, "TMS_SP_Tag_" + IntToString(iEntry), GetTag(oNew));
+	SetLocalInt(oObj, sPend, iPend);
+	SetLocalInt(oObj, sCurr, iCurr);
+}
+
+int TMS_RecountSpawns(object oMaster, int iEntry)
+{
+	string sTag = GetLocalString(oMaster, "TMS_SP_Tag_" + IntToString(iEntry));
+	int iCount = 0;
+	int iNum = 0;
+	object oCurr;
+
+	while (GetIsObjectValid(oCurr = GetObjectByTag(sTag, iNum))) {
+		if (GetLocalObject(oCurr, "TMS_SP_Master") == oMaster
+				&& (GetObjectType(oCurr) != OBJECT_TYPE_CREATURE
+					|| !GetIsDead(oCurr))) iCount++;
+
+		iNum++;
+	}
+
+	return iCount;
+}
+
+void TMS_RefillOneEntry(object oObj, int iEntry, int iImmediate = FALSE)
+{
+	struct SpawnData entry = TMS_Read_SpawnData(oObj, iEntry);
+	string sEntry = IntToString(iEntry);
+	int i;
+
+	int iRespawnTime = entry.iMinTime + Random(entry.iMaxTime - entry.iMinTime + 1);
+	int iTgtAmount = entry.iMinObjs + Random(entry.iMaxObjs - entry.iMinObjs + 1);
+	int iCurAmount = GetLocalInt(oObj, "TMS_SP_Curr_" + sEntry);
+	int iPending   = GetLocalInt(oObj, "TMS_SP_Pend_" + sEntry);
+
+	if (iCurAmount >= iTgtAmount) {
+		int iNewAmount;
+		iNewAmount = TMS_RecountSpawns(oObj, iEntry);
+		iCurAmount = iNewAmount;
+	}
+
+	//No respawn if we wanted whole groups and this one isn't
+	//empty yet
+	if (iCurAmount && entry.bWhole) return;
+
+	if (iImmediate) iRespawnTime /= 4;
+
+	/* Place as many as we deem necessary */
+	for (i = (iCurAmount + iPending); i < iTgtAmount; i++)
+		DelayCommand(IntToFloat(iRespawnTime) + (0.2 * IntToFloat(i - iCurAmount)),
+					 TMS_PlaceObject(oObj, iEntry));
+
+	if (iTgtAmount >= (iCurAmount + iPending))
+		SetLocalInt(oObj, "TMS_SP_Pend_" + sEntry, iTgtAmount - iCurAmount);
+}
+
+void TMS_SpawnedDestroyed(object oSpawn = OBJECT_SELF)
+{
+	object oMaster = GetLocalObject(oSpawn, "TMS_SP_Master");
+
+	if (!GetIsObjectValid(oMaster)) return;
+
+	DeleteLocalObject(oSpawn, "TMS_SP_Master");
+
+	int iEntry = GetLocalInt(oSpawn, "TMS_SP_Entry");
+	string sEntryTag = "TMS_SP_Curr_" + IntToString(iEntry);
+	int iCurrent = GetLocalInt(oMaster, sEntryTag) - 1;
+
+	// Should never happen
+	if (iCurrent < 0) iCurrent = 0;
+
+	SetLocalInt(oMaster, sEntryTag, iCurrent);
+
+	AssignCommand(GetModule(), TMS_RefillOneEntry(oMaster, iEntry));
+}
+
+void TMS_Setup_Spawn(object oObj)
+{
+	string sEntryLine = GetName(oObj);
+	string sEntry = StrTok(sEntryLine, ",");
+	int iEntry = 0;
+
+	while (GetStringLength(sEntry)) {
+		TMS_Parse_SpawnDataEntry(oObj, sEntry, iEntry);
+		TMS_RefillOneEntry(oObj, iEntry, TRUE);
+		iEntry++;
+		sEntryLine = GetSubString(sEntryLine, GetStringLength(sEntry) + 1, 999);
+		sEntry = StrTok(sEntryLine, ",");
+	}
+
+	DeleteLocalString(oObj, "TMS_SP_ORR_" + IntToString(iEntry));
+}
+
+void TMS_Initialize_Spawns()
+{
+	object oObj;
+	int iNum = 0;
+
+	while (GetIsObjectValid(oObj = GetObjectByTag("TMS_SPAWN_POINT", iNum))) {
+		DelayCommand(IntToFloat(iNum) * 0.6, TMS_Setup_Spawn(oObj));
+		iNum++;
+	}
+}

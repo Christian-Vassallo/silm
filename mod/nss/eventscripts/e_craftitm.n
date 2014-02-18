@@ -1,0 +1,14 @@
+extern("x2_inc_craft")
+
+void main()
+{
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "item_spell_cast_at" && (
+				GetBaseItemType(e.actedon) == 102 ||
+				GetBaseItemType(e.actedon) == 103
+			)) {
+		CIGetSpellWasUsedForItemCreation(e.actedon);
+		event_stop();
+	}
+}

@@ -1,0 +1,162 @@
+extern("inc_nwnx_funcext")
+extern("inc_scorco")
+extern("inc_iprp_curses")
+
+#define DIG_TABLE "buried_items"
+#define DIG_RADIUS 1f
+
+#define DIG_INSPECT_TIME 2f
+#define DIG_DIG_TIME 4f
+
+bool surface_allowed(location at);
+
+void _ActionDigAt1(object digger, location at)
+{
+	vector p = GetPositionFromLocation(at);
+
+	pBegin();
+	string cursor = pDeclare(
+						"select id from objects.buried_items where (at).area.tag = " + pE(GetTag(GetAreaFromLocation(at))) +
+						" and ((at).position.x between " + ftoa(p.x - DIG_RADIUS) + " and " + ftoa(p.x + DIG_RADIUS) + ")" +
+						" and ((at).position.y between " + ftoa(p.y - DIG_RADIUS) + " and " + ftoa(p.y + DIG_RADIUS) + ")" +
+						" and ((at).position.z between " + ftoa(p.z - DIG_RADIUS) + " and " + ftoa(p.z + DIG_RADIUS) + ")" +
+						";"
+					);
+
+	int count = 0;
+
+	while (pCursorFetch(cursor)) {
+		count += 1;
+		int id = pGi(1);
+		SendMessageToPC(digger, "Ihr findet:");
+		p_load_to_inventory(DIG_TABLE, "id = " + itoa(id), digger);
+		pQ("delete from objects." + DIG_TABLE + " where id = " + itoa(id));
+	}
+
+	pCursorClose(cursor);
+	pCommit();
+
+	if (count == 0) {
+		pQ("select resref from dig_loot where chance >= random() limit 3;");
+
+		while (pF()) {
+			string resref = pG(1);
+			SendMessageToPC(digger, "Ihr findet:");
+			CreateItemOnObject(resref, digger, 1, "");
+			count += 1;
+		}
+	}
+
+	if (count == 0)
+		SendMessageToPC(digger, "Ihr grabt, und findet nichts.");
+}
+
+void ActionDigAt(location at)
+{
+	object digger = OBJECT_SELF;
+
+	ActionMoveToLocation(at);
+
+	// Step one to successful digging: inspect the ground to be dug
+	if (!GetIsDM(digger)) {
+		ActionPlayAnimation(ANIMATION_LOOPING_GET_LOW, 1f, DIG_INSPECT_TIME);
+		ActionWait(1f);
+	}
+
+	if (!surface_allowed(at)) {
+		ActionDoCommand(SendMessageToPC(digger, "Hier kann nicht gegraben werden."));
+		return;
+
+	} else {
+		ActionDoCommand(SendMessageToPC(digger, ".. .. grabe .. .."));
+	}
+
+	// Step two: do the work
+	if (!GetIsDM(digger))
+		ActionPlayAnimation(ANIMATION_LOOPING_CUSTOM19 /* "smash" */, 1.5f, DIG_DIG_TIME);
+
+	ActionDoCommand(_ActionDigAt1(digger, at));
+}
+
+void _ActionBuryAt1(object digger, object burywhat, location at)
+{
+	p_save_at(DIG_TABLE, burywhat, at,
+			  "buried_by_cid = " + pSi(GetCharacterID(digger)) +
+			  ", buried_by_aid = " + pSi(GetAccountID(digger)));
+
+	SendMessageToPC(digger, "Ihr vergrabt " + GetName(burywhat) + " ..");
+	DestroyObject(burywhat, 0f);
+}
+
+void ActionBuryAt(object burywhat, location at)
+{
+	object digger = OBJECT_SELF;
+
+	ActionMoveToLocation(at);
+
+	// Step one to successful digging: inspect the ground to be dug
+	if (!GetIsDM(digger)) {
+		ActionPlayAnimation(ANIMATION_LOOPING_GET_LOW, 1f, DIG_INSPECT_TIME);
+		ActionWait(1f);
+	}
+
+	if (!surface_allowed(at)) {
+		ActionDoCommand(SendMessageToPC(digger, "Hier kann nichts veregraben werden."));
+		return;
+
+	} else {
+		ActionDoCommand(SendMessageToPC(digger, ".. .. vergrabe " + GetName(burywhat) + " .. .."));
+	}
+
+	// Step two: do the work
+	if (!GetIsDM(digger))
+		ActionPlayAnimation(ANIMATION_LOOPING_CUSTOM19 /* "smash" */, 1.5f, DIG_DIG_TIME);
+
+	ActionDoCommand(_ActionBuryAt1(digger, burywhat, at));
+}
+
+bool surface_allowed(location at)
+{
+	int surface = GetSurface(at);
+
+	return
+		surface == SURFACE_MATERIAL_DIRT ||
+		surface == SURFACE_MATERIAL_GRASS ||
+		surface == SURFACE_MATERIAL_SWAMP ||
+		surface == SURFACE_MATERIAL_MUD ||
+		surface == SURFACE_MATERIAL_LEAVES ||
+		surface == SURFACE_MATERIAL_SNOW ||
+		surface == SURFACE_MATERIAL_SAND;
+}
+
+void main()
+{
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "item_activate" && GetTag(e.runnable) == "tool_shovel") {
+
+		// bury at current location
+		if (is_item(e.actedon) && GetItemPossessor(e.actedon) == e.actor) {
+			location at = GetLocation(e.actor);
+
+			if (e.actedon == e.runnable) {
+				SendMessageToPC(e.actor, "Klaatu barada nikto!");
+				return;
+			}
+
+			if (GetPlotFlag(e.actedon) || IPGetIsCursed(e.actedon)) {
+				SendMessageToPC(e.actor, "Dieses Ding kann nicht vergraben werden.");
+				return;
+			}
+
+			AssignCommand(e.actor, ActionBuryAt(e.actedon, at));
+		}
+
+		else if (!is_valid(e.actedon) && is_valid(GetAreaFromLocation(e.actedat))) {
+			AssignCommand(e.actor, ActionDigAt(e.actedat));
+		}
+
+		else
+			SendMessageToPC(e.actor, "Das geht so nicht.");
+	}
+}

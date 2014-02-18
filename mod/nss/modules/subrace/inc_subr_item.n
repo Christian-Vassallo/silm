@@ -1,0 +1,61 @@
+void ApplySubraceItems(object oPC)
+{
+	object oMod = GetModule();
+	string sSubrace = GetLocalString(oPC, "SR_Subrace");
+	int iSPA = GetLocalInt(oMod, "SR_SPAType_" + sSubrace);
+
+	string sSPAItemDesc;
+	object oSPAItem, oSRItem;
+
+	if (iSPA) {
+		sSPAItemDesc = "SR_SPA_" + IntToString(iSPA);
+		oSPAItem = GetItemPossessedBy(oPC, sSPAItemDesc);
+
+		if (!GetIsObjectValid(oSPAItem)) {
+			oSPAItem = CreateItemOnObject(sSPAItemDesc, oPC);
+		}
+	}
+
+
+	string sSRItemDesc = GetLocalString(oMod, "SR_Item_" + sSubrace);
+	int nRevision = GetLocalInt(GetModule(), "SR_Item_Rev_" + sSubrace);
+
+	if (sSRItemDesc != "") {
+		oSRItem = GetItemPossessedBy(oPC, sSRItemDesc);
+		int nItemRevision = GetLocalInt(oSRItem, "SR_Item_Rev");
+
+		if (GetIsObjectValid(oSRItem) && nRevision > nItemRevision) {
+			DestroyObject(oSRItem);
+			SendMessageToPC(oPC, "Dein(e) Subrassen-Item(s) werde(n) aktualisiert.");
+		}
+
+
+		if (!GetIsObjectValid(oSRItem)) {
+			oSRItem = CreateItemOnObject(sSRItemDesc, oPC);
+			SetLocalInt(oSRItem, "SR_Item_Rev", nRevision);
+		}
+
+		if (GetItemInSlot(INVENTORY_SLOT_CARMOUR, oPC) != oSRItem) {
+			AssignCommand(oPC, ActionEquipItem(oSRItem, INVENTORY_SLOT_CARMOUR));
+		}
+	}
+}
+
+
+
+int ActivateSubraceItem(object oPC, object oItem, location lTarget, object oTarget)
+{
+	object oMod = GetModule();
+	string sSubrace = GetLocalString(oPC, "SR_Subrace");
+	string sSPA = GetLocalString(oMod, "SR_SPA_" + sSubrace);
+
+	if (GetStringLeft(GetTag(oItem), 7) != "SR_SPA_")
+		return FALSE;
+
+	SetLocalLocation(oPC, "SR_IAct_Loc", lTarget);
+	SetLocalObject(oPC, "SR_IAct_Obj", oTarget);
+
+	ExecuteScript("sri_act_" + GetStringLowerCase(sSPA), oPC);
+
+	return TRUE;
+}

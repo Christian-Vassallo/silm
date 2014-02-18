@@ -1,0 +1,443 @@
+//DMFI Universal Wand scripts by hahnsoo
+int DMW_START_CUSTOM_TOKEN = 8000;
+
+//Retrieve targetting information
+object oMySpeaker = GetLastSpeaker();
+object oMyTarget = GetLocalObject(oMySpeaker, "dmfi_univ_target");
+location lMyLoc = GetLocalLocation(oMySpeaker, "dmfi_univ_location");
+
+int dmwand_isnearbydestroyable()
+{
+	object oMyTest = GetFirstObjectInShape(SHAPE_CUBE, 0.6, lMyLoc, FALSE, OBJECT_TYPE_ALL);
+	int nTargetType = GetObjectType(oMyTest);
+	return GetIsObjectValid(oMyTest)
+		   && (!GetIsPC(oMyTest))
+		   && ((nTargetType == OBJECT_TYPE_ITEM)
+			   || (nTargetType == OBJECT_TYPE_PLACEABLE) || (nTargetType == OBJECT_TYPE_CREATURE));
+}
+
+int dmwand_istargetcreateable()
+{
+	if (!GetIsObjectValid(oMyTarget)) {
+		return FALSE;
+	}
+
+	int nTargetType = GetObjectType(oMyTarget);
+	return (nTargetType == OBJECT_TYPE_ITEM)
+		   || (nTargetType == OBJECT_TYPE_PLACEABLE) || (nTargetType == OBJECT_TYPE_CREATURE);
+}
+
+int dmwand_istargetdestroyable()
+{
+	if (!GetIsObjectValid(oMyTarget)) {
+		return FALSE;
+	}
+
+	int nTargetType = GetObjectType(oMyTarget);
+
+	if (!GetIsPC(oMyTarget)) {
+		return (nTargetType == OBJECT_TYPE_ITEM)
+			   || (nTargetType == OBJECT_TYPE_PLACEABLE) || (nTargetType == OBJECT_TYPE_CREATURE);
+	}
+
+	return FALSE;
+}
+
+int dmwand_istargetinvalid()
+{
+	return !GetIsObjectValid(oMyTarget);
+}
+
+int dmwand_istargetinventory()
+{
+	return GetIsObjectValid(oMyTarget) && GetHasInventory(oMyTarget);
+}
+
+int dmwand_istargetnotme()
+{
+	return GetIsObjectValid(oMyTarget) && (oMySpeaker != oMyTarget);
+}
+
+int dmwand_istargetpcornpc()
+{
+	return GetIsObjectValid(oMyTarget) && GetAbilityScore(oMyTarget, ABILITY_CONSTITUTION);
+}
+
+int dmwand_istargetnpc()
+{
+	return dmwand_istargetpcornpc() && (!GetIsPC(oMyTarget));
+}
+
+int dmwand_istargetpc()
+{
+	return GetIsObjectValid(oMyTarget) && GetIsPC(oMyTarget);
+}
+
+int dmwand_istargetpcnme()
+{
+	return GetIsObjectValid(oMyTarget) && GetIsPC(oMyTarget) && (oMySpeaker != oMyTarget);
+}
+
+int dmwand_istargetpcornpcnme()
+{
+	return dmwand_istargetpcornpc() && (oMySpeaker != oMyTarget);
+}
+
+int dmwand_istargetplaceable()
+{
+	if (!GetIsObjectValid(oMyTarget)) {
+		return FALSE;
+	}
+
+	int nTargetType = GetObjectType(oMyTarget);
+	return nTargetType == OBJECT_TYPE_PLACEABLE;
+}
+
+int dmw_conv_Start(int nCurrent, int nChoice, string sParams = "")
+{
+	string sText = "";
+	string sCall = "";
+	string sCallParams = "";
+
+	switch (nCurrent) {
+	case 0:
+		nCurrent = 0;
+		sText =       "Was kann ich für dich tun?";
+		sCall =       "";
+		sCallParams = "";
+		break;
+
+	case 1:
+		nCurrent = 1;
+
+		if (dmwand_istargetpcornpc()) {
+			sText =       "Zeige die Attribute der Kreatur an.";
+			sCall =       "conv_DispAttribs";
+			sCallParams = "";
+			break;
+		}
+
+	case 2:
+		nCurrent = 2;
+
+		if (dmwand_istargetpcornpc()) {
+			sText =       "Ändere die Gesinnung der Kreatur.";
+			sCall =       "conv_ChangeAlign";
+			sCallParams = "";
+			break;
+		}
+
+	case 3:
+		nCurrent = 3;
+
+		if (dmwand_istargetpcornpcnme()) {
+			sText =       "Karte für die Kreatur anzeigen.";
+			sCall =       "func_MapArea";
+			sCallParams = "";
+			break;
+		}
+
+	case 4:
+		nCurrent = 4;
+
+		if (dmwand_istargetinventory()) {
+			sText =       "Arbeite mit dem Inventar dieses Objektes.";
+			sCall =       "conv_Inventory";
+			sCallParams = "";
+			break;
+		}
+
+	case 5:
+		nCurrent = 5;
+
+		if (dmwand_istargetpcornpcnme()) {
+			sText =       "Folge dieser Kreatur.";
+			sCall =       "func_FollowTarget";
+			sCallParams = "";
+			break;
+		}
+
+	case 6:
+		nCurrent = 6;
+
+		if (dmwand_istargetpcornpcnme()) {
+			sText =       "Veranlasse diese Kreatur mir zu folgen.";
+			sCall =       "func_FollowMe";
+			sCallParams = "";
+			break;
+		}
+
+	case 7:
+		nCurrent = 7;
+
+		if (dmwand_istargetpcornpcnme()) {
+			sText =       "Veranlasse diese Kreatur ihrem Script zu folgen.";
+			sCall =       "func_ResumeDefault";
+			sCallParams = "";
+			break;
+		}
+
+	case 8:
+		nCurrent = 8;
+
+		if (dmwand_istargetpcnme()) {
+			sText =       "Pinguin.";
+			sCall =       "func_Toad";
+			sCallParams = "";
+			break;
+		}
+
+	case 9:
+		nCurrent = 9;
+
+		if (dmwand_istargetpcnme()) {
+			sText =       "Pinguin rückgängig.";
+			sCall =       "func_Untoad";
+			sCallParams = "";
+			break;
+		}
+
+	case 10:
+		nCurrent = 10;
+
+		if (dmwand_istargetpcnme()) {
+			sText =       "Boote diesen Spieler.";
+			sCall =       "func_KickPC";
+			sCallParams = "";
+			break;
+		}
+
+	case 11:
+		nCurrent = 11;
+
+		if (dmwand_istargetnpc()) {
+			sText =       "Töte das, hinterlasse eine Leiche.";
+			sCall =       "func_KillAndReplace";
+			sCallParams = "";
+			break;
+		}
+
+	case 12:
+		nCurrent = 12;
+
+		if (dmwand_istargetinvalid()) {
+			sText =       "Alle Spieler auflisten...";
+			sCall =       "conv_ListPlayers";
+			sCallParams = "func_PlayerListConv";
+			break;
+		}
+
+	case 13:
+		nCurrent = 13;
+
+		if (dmwand_istargetinvalid()) {
+			sText =       "Aktuelle Tageszeit voranschreiten.";
+			sCall =       "conv_TimeOfDay";
+			sCallParams = "";
+			break;
+		}
+
+	case 14:
+		nCurrent = 14;
+
+		if (dmwand_istargetinvalid()) {
+			sText =       "Aktuelles Modul neu laden.";
+			sCall =       "func_ReloadModule";
+			sCallParams = "";
+			break;
+		}
+
+	case 15:
+		nCurrent = 15;
+
+		if (dmwand_istargetpcornpc()) {
+			sText =       "Einen Fertigkeitswurf machen.";
+			sCall =       "conv_Roll";
+			sCallParams = "skill__";
+			break;
+		}
+
+	case 16:
+		nCurrent = 16;
+
+		if (dmwand_istargetpcornpc()) {
+			sText =       "Einen Attributswurf machen.";
+			sCall =       "conv_Roll";
+			sCallParams = "ability";
+			break;
+		}
+
+	case 17:
+		nCurrent = 17;
+
+		if (dmwand_istargetdestroyable()) {
+			sText =       "Vernichte dieses Objekt.";
+			sCall =       "func_DestroyTarget";
+			sCallParams = "";
+			break;
+		}
+
+	case 18:
+		nCurrent = 18;
+
+		if ((!dmwand_istargetdestroyable()) && dmwand_isnearbydestroyable()) {
+			sText =       "Vernichte ein Objekt nahe dieses Punktes.";
+			sCall =       "func_DestroyNearbyTarget";
+			sCallParams = "";
+			break;
+		}
+
+	case 19:
+		nCurrent = 19;
+
+		if (dmwand_istargetdestroyable()) {
+			sText =       "Schalte dieses Objekt an.";
+			sCall =       "func_TurnTargetOn";
+			sCallParams = "";
+			break;
+		}
+
+	case 20:
+		nCurrent = 20;
+
+		if (dmwand_istargetdestroyable()) {
+			sText =       "Schalte dieses Objekt aus.";
+			sCall =       "func_TurnTargetOff";
+			sCallParams = "";
+			break;
+		}
+
+	case 21:
+		nCurrent = 21;
+
+		if ((!dmwand_istargetdestroyable()) && dmwand_isnearbydestroyable()) {
+			sText =       "Schalte ein Objekt nahe dieses Punktes an.";
+			sCall =       "func_TurnNearOn";
+			sCallParams = "";
+			break;
+		}
+
+	case 22:
+		nCurrent = 22;
+
+		if ((!dmwand_istargetdestroyable()) && dmwand_isnearbydestroyable()) {
+			sText =       "Schalte ein Objekt nahe dieses Punktes aus.";
+			sCall =       "func_TurnNearOff";
+			sCallParams = "";
+			break;
+		}
+
+	case 23:
+		nCurrent = 23;
+
+		if (dmwand_istargetnpc()) {
+			sText =       "Ändere die Reputation eines Spielers zu der Fraktion dieser Kreatur.";
+			sCall =       "conv_ModRep";
+			sCallParams = "one";
+			break;
+		}
+
+	case 24:
+		nCurrent = 24;
+
+		if (dmwand_istargetnpc()) {
+			sText =       "Ändere die Reputation aller Spieler zu der Fraktion dieser Kreatur.";
+			sCall =       "conv_ModRep";
+			sCallParams = "all";
+			break;
+		}
+
+	case 25:
+		nCurrent = 25;
+
+		if (dmwand_istargetinvalid()) {
+			sText =       "Exportiere alle Charaktere.";
+			sCall =       "func_ExportChars";
+			sCallParams = "";
+			break;
+		}
+
+	case 26:
+		nCurrent = 26;
+
+		if (dmwand_istargetpcnme()) {
+			sText =       "Trete der Gruppe dieses Spielers bei.";
+			sCall =       "func_JoinParty";
+			sCallParams = "";
+			break;
+		}
+
+	case 27:
+		nCurrent = 27;
+
+		if (dmwand_istargetinvalid()) {
+			sText =       "Entferne mich aus der aktuellen Gruppe.";
+			sCall =       "func_LeaveParty";
+			sCallParams = "";
+			break;
+		}
+
+	case 28:
+		nCurrent = 28;
+
+		if (dmwand_istargetpcnme()) {
+			sText =       "Bringe diesen Spieler zu mir.";
+			sCall =       "func_JumpPlayerHere";
+			sCallParams = "";
+			break;
+		}
+
+	case 29:
+		nCurrent = 29;
+
+		if (dmwand_istargetpcnme()) {
+			sText =       "Bringe mich zu diesem Spieler.";
+			sCall =       "func_JumpToPlayer";
+			sCallParams = "";
+			break;
+		}
+
+	case 30:
+		nCurrent = 30;
+
+		if (dmwand_istargetpcnme()) {
+			sText =       "Bringe die Gruppe dieses Spielers zu mir.";
+			sCall =       "func_JumpPartyHere";
+			sCallParams = "";
+			break;
+		}
+
+	case 31:
+		nCurrent = 31;
+
+		if ((!dmwand_istargetdestroyable()) && dmwand_isnearbydestroyable()) {
+			sText =       "Drehe ein Objekt nahe dieses Punktes.";
+			sCall =       "conv_RotateTarget";
+			sCallParams = "";
+			break;
+		}
+
+	case 32:
+		nCurrent = 32;
+
+		if (dmwand_istargetdestroyable()) {
+			sText =       "Drehe dieses Objekt.";
+			sCall =       "conv_RotateTarget";
+			sCallParams = "";
+			break;
+		}
+
+	default:
+		nCurrent = 0;
+		sText =       "";
+		sCall =       "";
+		sCallParams = "";
+		break;
+	}
+
+	SetLocalString(oMySpeaker, "dmw_dialog" + IntToString(nChoice), sText);
+	SetLocalString(oMySpeaker, "dmw_function" + IntToString(nChoice), sCall);
+	SetLocalString(oMySpeaker, "dmw_params" + IntToString(nChoice), sCallParams);
+
+	return nCurrent;
+}

@@ -1,0 +1,40 @@
+void main()
+{
+	struct EventInfo e = GetEventInfo();
+	// struct EventArguments ea = GetEventArguments(e.serial);
+
+	if ("item_freeactivate" == e.ev) {
+		int spell = GetLocalInt(e.runnable, "castwrap_spell");
+
+		if (spell == 0) {
+			SendMessageToPC(e.actor,
+							"No spell defined on item, set lvar int castwrap_spell to a valid spell id.");
+			event_stop_suppress();
+		}
+
+		if (!GetLocalInt(e.runnable, "castwrap_final")) {
+			int icon = spell % 101;
+			object target = CopyItemAndModify(e.runnable, ITEM_APPR_TYPE_SIMPLE_MODEL, 0, icon, false);
+
+			string name = Get2DAString("spells", "Name", spell);
+			name = GetStringByStrRef(atoi(name));
+			SetName(target, name + " (" + itoa(spell) + ")");
+
+			SetLocalInt(target, "castwrap_final", 1);
+			SetLocalInt(target, "castwrap_spell", spell);
+			SetLocalInt(e.runnable, "castwrap_spell", 0);
+			SendMessageToPC(e.actor, "Castwrap final created, template reset.");
+
+		} else {
+
+			if (is_valid(e.actedon))
+				AssignCommand(e.actor, ActionCastSpellAtObject(spell, e.actedon, METAMAGIC_ANY, true));
+
+			else
+				AssignCommand(e.actor, ActionCastSpellAtLocation(spell, e.actedat, METAMAGIC_ANY, true));
+		}
+
+		event_stop_suppress();
+	}
+
+}

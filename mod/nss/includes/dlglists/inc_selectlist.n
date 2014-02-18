@@ -1,0 +1,239 @@
+extern("inc_corpse_def")
+extern("inc_lists")
+
+void SetListObject2(object oHolder, string sListTag, object oValue)
+{
+	int iNum = GetListCount(oHolder, sListTag);
+
+	SetLocalObject(oHolder, sListTag + "_obj2_" + IntToString(iNum - 1), oValue);
+}
+
+object GetListObject2(object oHolder, string sListTag, int iEntry)
+{
+	return GetLocalObject(oHolder, sListTag + "_obj2_" + IntToString(iEntry));
+}
+
+
+object MyCopyItem(object oItem, object oTarget = OBJECT_INVALID)
+{
+	object oInside;
+	object oNew;
+	string sItemRR;
+
+	if (!GetIsObjectValid(oInside = GetFirstItemInInventory(oItem)))
+		return CopyItem(oItem, oTarget, TRUE);
+
+	sItemRR = GetResRef(oItem);
+
+	if (sItemRR == "") sItemRR = GetStringLowerCase(GetTag(oItem));
+
+	oNew = CreateItemOnObject(sItemRR, oTarget);
+
+	//On failure to create the container place the contents directly into the
+	//target's inv.
+	if (!GetIsObjectValid(oNew)) oNew = oTarget;
+
+	while (GetIsObjectValid(oInside)) {
+		//If the item failed to be created in the container (maybe too full)
+		//try it again with the target itself
+		if (!GetIsObjectValid(CopyItem(oInside, oNew)))
+			CopyItem(oInside, oTarget, TRUE);
+
+		oInside = GetNextItemInInventory(oItem);
+	}
+
+	return oNew;
+}
+
+int SpotItem(object oItem, int iSkill)
+{
+	int iWidth, iHeight, iDC, iBaseType;
+
+	iBaseType = GetBaseItemType(oItem);
+
+	if (!(iDC = GetLocalInt(GetModule(), "ITEM_DC_" + IntToString(iBaseType)))) {
+		iWidth = StringToInt(Get2DAString("baseitems", "InvSlotWidth", iBaseType));
+		iHeight = StringToInt(Get2DAString("baseitems", "InvSlotHeight", iBaseType));
+		iDC = 17 - iWidth * iHeight;
+		SetLocalInt(GetModule(), "ITEM_DC_" + IntToString(iBaseType), iDC);
+	}
+
+	//FIXME Skill check
+	return 1;
+
+	return (iSkill + d20()) >= iDC;
+}
+
+void EnumerateItem(object oItem, object oCopy = OBJECT_INVALID)
+{
+	string sName = GetName(oItem);
+	int iStack;
+
+	if ((iStack = GetNumStackedItems(oItem)) > 1) sName += " (" + IntToString(iStack) + ")";
+
+	AddListItem(OBJECT_SELF, "Item", sName);
+	SetListInt(OBJECT_SELF, "Item", 0);
+	SetListObject(OBJECT_SELF, "Item", oItem);
+	SetListObject2(OBJECT_SELF, "Item", oCopy);
+}
+
+void EnumerateGold(int nGold)
+{
+	string sName = IntToString(nGold) + " Goldmuenzen";
+
+	AddListItem(OBJECT_SELF, "Item", sName);
+	SetListInt(OBJECT_SELF, "Item", nGold);
+	SetListObject(OBJECT_SELF, "Item", OBJECT_INVALID);
+
+}
+
+void EnumerateInventory(object oWhich, object oConn, int iSkill = 99)
+{
+	int i, count, nGold;
+	int iIncompleteFlag = 0;
+	object oItem;
+	object oItem2 = OBJECT_INVALID;
+
+	SetLocalObject(OBJECT_SELF, "Item_Source", oWhich);
+
+	for (i = 0; i < NUM_INVENTORY_SLOTS; i++) {
+		if (GetIsObjectValid(oItem = GetItemInSlot(i, oWhich))) {
+			if (GetDroppableFlag(oItem)) {
+				/* Add bonus 5 to skill check because item is equipped */
+				if (SpotItem(oItem, iSkill + 5)) {
+					if (GetIsObjectValid(oConn)) oItem2 = GetItemInSlot(i, oConn);
+
+					EnumerateItem(oItem, oItem2);
+
+				} else
+					iIncompleteFlag |= CRP_LIST_MISSED;
+			}
+		}
+	}
+
+	oItem = GetFirstItemInInventory(oWhich);
+
+	while (GetIsObjectValid(oItem)) {
+		DeleteLocalInt(oItem, "Stashed");
+		oItem = GetNextItemInInventory(oWhich);
+	}
+
+	oItem = GetFirstItemInInventory(oWhich);
+
+	while (GetIsObjectValid(oItem)) {
+		oItem2 = GetFirstItemInInventory(oItem);
+
+		while (GetIsObjectValid(oItem2)) {
+			SetLocalInt(oItem2, "Stashed", 1);
+			oItem2 = GetNextItemInInventory(oItem);
+		}
+
+		oItem = GetNextItemInInventory(oWhich);
+	}
+
+	oItem = GetFirstItemInInventory(oWhich);
+
+	while (GetIsObjectValid(oItem)) {
+		/* Cut off on too many item */
+		if (count > 50) {
+			iIncompleteFlag |= CRP_LIST_TRUNCATED;
+			break;
+		}
+
+		if (!GetLocalInt(oItem, "Stashed") && GetDroppableFlag(oItem)) {
+			if (GetDroppableFlag(oItem)) {
+				if (SpotItem(oItem, iSkill))
+					EnumerateItem(oItem);
+
+				else
+					iIncompleteFlag |= CRP_LIST_MISSED;
+			}
+		}
+
+		oItem = GetNextItemInInventory(oWhich);
+	}
+
+	if (nGold = GetGold(oWhich))
+		EnumerateGold(nGold);
+
+	SetLocalInt(OBJECT_SELF, "Item_IncompleteList", iIncompleteFlag);
+}
+
+int GetItemTagged(int iIndex)
+{
+	return GetListDisplayMode(OBJECT_SELF, "Item", iIndex);
+}
+
+object GetItemObject(int iIndex)
+{
+	return GetListObject(OBJECT_SELF, "Item", iIndex);
+}
+
+object GetItemCopy(int iIndex)
+{
+	return GetListObject2(OBJECT_SELF, "Item", iIndex);
+}
+
+int _GetItemCount()
+{
+	return GetListCount(OBJECT_SELF, "Item");
+}
+
+void TagAll(int iSetTag = FALSE)
+{
+	int iIndex;
+
+	for (iIndex = 0; iIndex < _GetItemCount(); iIndex++)
+		SetListDisplayMode(OBJECT_SELF, "Item", (iSetTag ? 1 : 0), iIndex);
+}
+
+int RobItems(object oTarget)
+{
+	int i, nGold;
+	int result = TRUE;
+	object oItem, oItem2;
+	object oSelf = OBJECT_SELF;
+	object oSource = GetLocalObject(OBJECT_SELF, "Item_Source");
+
+	for (i = 0; i < _GetItemCount(); i++) {
+		if (GetItemTagged(i)) {
+			if (nGold = GetListInt(OBJECT_SELF, "Item", i)) {
+				TakeGoldFromCreature(nGold, oSource, TRUE);
+				GiveGoldToCreature(oTarget, nGold);
+
+			} else {
+				if (GetIsObjectValid(oItem = GetItemCopy(i)))
+					DestroyObject(oItem);
+
+				MyCopyItem((oItem = GetItemObject(i)), oTarget);
+				DestroyObject(oItem);
+//        ActionTakeItem(GetItemObject(i),oSource);
+//        ActionGiveItem(GetItemObject(i),oTarget);
+//        AssignCommand(oSource,ActionGiveItem(GetItemObject(i),oTarget));
+			}
+
+		} else
+			result = FALSE;
+	}
+
+	return (result ? 0 : CRP_LIST_REMAIN) |
+		   GetLocalInt(OBJECT_SELF, "Item_IncompleteList");
+}
+
+void PrepareLoot(object oPC)
+{
+	object oBody = GetLocalObject(OBJECT_SELF, "Body");
+	object oPCC = GetLocalObject(OBJECT_SELF, "PC_CORPSE");
+	int iSkill = GetSkillRank(SKILL_SPOT, oPC);
+	int iN;
+
+	if ((iN = GetSkillRank(SKILL_SEARCH, oPC)) > iSkill) iSkill = iN;
+
+	ClearList(OBJECT_SELF, "Item");
+
+	if (!GetIsObjectValid(oPCC))
+		EnumerateInventory(oBody, OBJECT_INVALID, iSkill);
+
+	ResetConvList(oPC, OBJECT_SELF, "Item", 50000, "cr_dlg_tag");
+
+}

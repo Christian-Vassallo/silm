@@ -68,8 +68,6 @@ clean-stale: path
 
 .PHONY: scripts
 scripts: path
-	-rm nss/git.h
-	$(MAKE) -C nss revupdate
 	$(MAKE) -C nss all
 
 clean:

@@ -1,0 +1,44 @@
+void main()
+{
+	object oPC = GetEnteringObject();
+	object oRod = GetItemInSlot(INVENTORY_SLOT_RIGHTHAND, oPC);
+
+// Dem suchenden Angler die aussichtsreiche Angelstelle schildern
+	/*if(GetTag(oRod) == "FishingRod")
+	 * {
+	 * FloatingTextStringOnCreature("Diese Stelle scheint zum Angeln geeignet zu sein.",oPC,FALSE);
+	 * } */
+// Andeuten das hier sowohl Fisch als auch klares Wasser verfügbar scheint
+	switch (Random(4) + 1) {
+	case 5:
+		FloatingTextStringOnCreature(
+			"Im klaren Wasser könnt ihr einige Fische ausmachen die sich munter tummeln.", oPC, FALSE);
+		break;
+
+	case 4:
+		FloatingTextStringOnCreature(
+			"Die Wasserstelle bietet sauberes Wasser, wo Ihr ab und an einen kleinen Fisch durchschwimmen seht.",
+			oPC, FALSE);
+		break;
+
+	case 3:
+		FloatingTextStringOnCreature("Das Wasser hier scheint besonders rein und erfrischend.", oPC,
+									 FALSE);
+		break;
+
+	case 2:
+		FloatingTextStringOnCreature(
+			"Sacht bewegt sich das Wasser als ein geschuppter Schemen munter schwimmend durchhuscht.",
+			oPC, FALSE);
+		break;
+
+	case 1:
+		FloatingTextStringOnCreature("So reines und klares Wasser läd direkt zum trinken ein.", oPC,
+									 FALSE);
+		break;
+
+	default:
+		break;
+	}
+
+}
