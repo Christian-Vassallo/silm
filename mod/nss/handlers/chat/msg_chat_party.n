@@ -1,7 +1,17 @@
 struct EventArguments handle_party(object oSpeaker, struct EventArguments evarg)
 {
 	string msg = ColorTag(cLightGrey) + evarg.a0;
-	NWNXChatSpeakToChannel(oSpeaker, ChatModeToMsg(evarg.i0), msg);
+
+	if (GetIsDM(oSpeaker)) {
+		object oPC = GetFirstPC();
+
+		while (GetIsObjectValid(oPC)) {
+			NWNXChatSendMessageSingle(MSG_PARTY, oPC, oSpeaker, msg);
+			oPC = GetNextPC();
+		}
+
+	} else
+		NWNXChatSpeakToChannel(oSpeaker, ChatModeToMsg(evarg.i0), msg);
 
 	NWNXChatSuppress();
 
