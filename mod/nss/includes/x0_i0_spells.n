@@ -1704,8 +1704,16 @@ void spellsDispelMagic(object oTarget, int nCasterLevel, effect eVis, effect eIm
 	// ItemPropertyDispelAdjustment
 	int casterLevelAdjust = 0;
 	iterate_equipped(oTarget, nTSlot, oTargetInv,
-					 casterLevelAdjust += GetLocalInt(oTargetInv, "dispelTargetCLAdjust");
-					);
+		iterate_iprp(oTargetInv, iprp,
+			if (GetItemPropertyType(iprp) == ITEM_PROPERTY_DISPELSAVEDC_INCREASE)
+				casterLevelAdjust += GetItemPropertyCostTableValue(iprp);
+
+			if (GetItemPropertyType(iprp) == ITEM_PROPERTY_DISPELSAVEDC_DECREASE)
+				casterLevelAdjust -= GetItemPropertyCostTableValue(iprp);
+
+			// casterLevelAdjust += GetLocalInt(oTargetInv, "dispelTargetCLAdjust");
+		);
+	);
 
 	if (casterLevelAdjust != 0) {
 		nCasterLevel += casterLevelAdjust;
