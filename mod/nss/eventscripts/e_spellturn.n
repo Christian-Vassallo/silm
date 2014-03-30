@@ -16,36 +16,64 @@
 extern("inc_scorco")
 extern("inc_inventory")
 
-int CheckItem(object item, int spell)
+int CheckItem(object item, int spellId)
 {
 	int v = 0;
 
+	/* Undocumented feature - reflect even when unequipped. */
 	if (!GetLocalInt(item, "spellturn_act_unequipped")
 			&& INVENTORY_SLOT_INVALID == GetItemInventorySlot(item))
 		return 0;
 
+	/* Undocumented feature, turn ALL spells. */
 	if (v = GetLocalInt(item, "spellturn_all"))
 		return v;
 
-	if (v = GetLocalInt(item, "spellturn_spell_" + itoa(spell)))
+	string spellIdStr = itoa(spellId);
+	string spellSchoolStr = Get2DAString("spells", "School", spellId);
+
+	iterate_iprp(item, prop,
+		int propType = GetItemPropertyType(prop);
+		int propSubType = GetItemPropertySubType(prop);
+		int propCostValue = GetItemPropertyCostTableValue(prop);
+
+		if (propType == ITEM_PROPERTY_SPELLTURN_ABSORB &&
+				Get2DAString("iprp_spellcost", "SpellIndex", propCostValue) == spellIdStr)
+			return 1;
+
+		if (propType == ITEM_PROPERTY_SPELLTURN_REFLECT &&
+				Get2DAString("iprp_spellcost", "SpellIndex", propCostValue) == spellIdStr)
+			return 2;
+
+		if (propType == ITEM_PROPERTY_SPELLTURN_ABSORB_SCHOOL &&
+				Get2DAString("iprp_spellshl", "Letter", propSubType) == spellSchoolStr)
+			return 1;
+
+		if (propType == ITEM_PROPERTY_SPELLTURN_REFLECT_SCHOOL &&
+				Get2DAString("iprp_spellshl", "Letter", propSubType) == spellSchoolStr)
+			return 2;
+	);
+
+
+	if (v = GetLocalInt(item, "spellturn_spell_" + itoa(spellId)))
 		return v;
 
 	if (v = GetLocalInt(item, "spellturn_verbal")
-			&& -1 != strpos(Get2DAString("spells", "VS", spell), "v"))
+			&& -1 != strpos(Get2DAString("spells", "VS", spellId), "v"))
 		return v;
 
 	if (v = GetLocalInt(item, "spellturn_somatic")
-			&& -1 != strpos(Get2DAString("spells", "VS", spell), "s"))
+			&& -1 != strpos(Get2DAString("spells", "VS", spellId), "s"))
 		return v;
 
 	if (v = GetLocalInt(item, "spellturn_hostile")
-			&& Get2DAString("spells", "HostileSetting", spell) == "1")
+			&& Get2DAString("spells", "HostileSetting", spellId) == "1")
 		return v;
 
-	if (v = GetLocalInt(item, "spellturn_category_" + Get2DAString("spells", "Category", spell)))
+	if (v = GetLocalInt(item, "spellturn_category_" + Get2DAString("spells", "Category", spellId)))
 		return v;
 
-	if (v = GetLocalInt(item, "spellturn_school_" + Get2DAString("spells", "School", spell)))
+	if (v = GetLocalInt(item, "spellturn_school_" + Get2DAString("spells", "School", spellId)))
 		return v;
 
 	return 0;
@@ -89,16 +117,25 @@ void main()
 	if (target == caster)
 		return;
 
-	int spid = GetSpellId();
+	int spellId = GetSpellId();
 
-	int ret = CheckInventory(target, spid);
+	int ret = CheckInventory(target, spellId);
 
 	switch (ret) {
 	case 2: // turn back
 		if (is_valid(caster)) {
-			AssignCommand(target, ActionCastSpellAtObject(spid, caster, GetMetaMagicFeat(), true,
-						  GetCasterLevel(caster), PROJECTILE_PATH_TYPE_DEFAULT, true
-														 ));
+			ExecuteSpellScript(
+				// We set the caster to the reflector so that faction-dependant spells work and
+				// the kill gets credited properly.
+				/*caster*/ target,
+				/*castItem*/ GetSpellCastItem(),
+				/*spellId*/ spellId,
+				/*CL*/ GetCasterLevel(caster),
+				GetMetaMagicFeat(),
+				GetSpellSaveDC(),
+				/*spellTargetObject*/ caster,
+				/*spellTargetLocation*/ GetSpellTargetLocation()
+			);
 		}
 
 	case 1: // and/or absorb
