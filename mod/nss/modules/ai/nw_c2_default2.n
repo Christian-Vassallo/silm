@@ -22,6 +22,8 @@ void main()
 	// - i0: GetLastPerceptionSeen()
 	// - i1: GetLastPerceptionHeard()
 	// - stop
+
+	/* XXX: disabled creature_percieve because of perf. bottleneck
 	struct EventArguments ea;
 	ea.i0 = bSeen;
 	ea.i1 = bHeard;
@@ -33,6 +35,7 @@ void main()
 
 	if (ret & EVENT_RESULT_STOP)
 		return;
+	*/
 
 	// * if not runnning normal or better Ai then exit for performance reasons
 	if (GetAILevel() == AI_LEVEL_VERY_LOW) return;

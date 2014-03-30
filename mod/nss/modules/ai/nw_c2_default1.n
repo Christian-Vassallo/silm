@@ -29,12 +29,15 @@ void main()
 	// Event: creature_hb
 	// Creature heartbeat. Runs on any non-player creature.
 	// - stop
-	int ret = RunEventScriptsFor(GetEventSerial(), "creature_hb", OBJECT_SELF, OBJECT_INVALID,
+
+	/* XXX: disabled creature_percieve because of perf. bottleneck
+	/*int ret = RunEventScriptsFor(GetEventSerial(), "creature_hb", OBJECT_SELF, OBJECT_INVALID,
 								 OBJECT_INVALID,
 								 GetLocation(OBJECT_INVALID));
 
 	if (ret & EVENT_RESULT_STOP)
 		return;
+	*/
 
 	// * if not runnning normal or better Ai then exit for performance reasons
 	if (GetAILevel() == AI_LEVEL_VERY_LOW) return;
