@@ -49,7 +49,7 @@ void handle_directional(object oSpeaker, struct EventArguments evarg)
 			 * 300ms seems about right-ish.
 			 */
 			if (oListener != oSpeaker && oProxy != oSpeaker)
-				DelayCommand(0.3, __NWNXChatSendMessageSingle(targetMode, oTargetPC, oSpeaker, indvMsg));
+				DelayCommand(0.3, __NWNXChatSendMessageSingle(targetMode, oTargetPC, oProxy, indvMsg));
 			else
 				NWNXChatSendMessageSingle(targetMode, oTargetPC, oSpeaker, indvMsg);
 		}
