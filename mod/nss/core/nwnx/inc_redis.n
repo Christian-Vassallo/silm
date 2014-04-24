@@ -1,0 +1,102 @@
+extern("inc_nwnx_redis")
+
+#define CONFIG_NAMESPACE "cfg:"
+
+/* How many seconds to cache a config value, in order to not hit redis too many times per second. */
+#define CONFIG_CACHE_TIME 3
+
+/**
+ * Gets a simple integer value from config, defaulting to 0 if it does not exist.
+ */
+int cfg_int(string key);
+
+/**
+ * Gets a simple float value from config, defaulting to 0 if it does not exist.
+ */
+float cfg_float(string key);
+
+/**
+ * Gets a simple boolean value from config, defaulting to 0 if it does not exist.
+ *
+ * Values detected for false are: "off", "no", "false", "0", "nil", ""
+ *
+ * Everything else evals to true.
+ */
+bool cfg_bool(string key);
+
+string cfg_key(string key);
+
+/**
+ * Gets a simple string value from config, defaulting to "" if it does not exist.
+ */
+string cfg(string key);
+/**
+ * Gets a simple string value from config, defaulting to "" if it does not exist.
+ */
+string cfg_string(string key);
+
+
+
+string cfg_key(string key)
+{
+	return CONFIG_NAMESPACE + key;
+}
+
+string _cfg_get(string key)
+{
+	key = cfg_key(key);
+
+	// A very simple, hacky timestamp that will overflow every hour.
+	int ts = GetTimeMinute() * 60 + GetTimeSecond();
+
+	int lastHit = GetLocalInt(GetModule(), "__cfg_" + key + "_ts");
+
+	// ts has wrapped around.
+	if (ts < lastHit)
+		lastHit = 0;
+
+	// Enough time has passed to hit the DB again.
+	if (ts > (lastHit + CONFIG_CACHE_TIME))
+		lastHit = 0;
+
+	if (0 == lastHit) {
+		string value = GET(key);
+		SetLocalString(GetModule(), "__cfg_" + key, value);
+		SetLocalInt(GetModule(), "__cfg_" + key + "_ts", ts);
+
+		return value;
+	}
+
+	return GetLocalString(GetModule(), "__cfg_" + key);
+}
+
+int cfg_int(string key)
+{
+	return atoi(_cfg_get(key));
+}
+
+float cfg_float(string key)
+{
+	return atof(_cfg_get(key));
+}
+
+bool cfg_bool(string key)
+{
+	string ret = strlwr(_cfg_get(key));
+
+	if (ret == "" || ret == "0" || ret == "false" || ret == "f" || ret == "no" ||
+			ret == "off" || ret == "nil")
+		return false;
+
+	return true;
+}
+
+string cfg(string key)
+{
+	return cfg_string(key);
+}
+
+string cfg_string(string key)
+{
+	return _cfg_get(key);
+}
