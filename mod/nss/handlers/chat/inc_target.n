@@ -1,6 +1,7 @@
 /* Unified targeting device */
 extern("inc_getopt")
 extern("_gen")
+extern("inc_areaspec")
 
 const int
 TARGET_MAX = 11,
@@ -48,11 +49,27 @@ void ShowTargetFor(int nSlot, object oTarget, object oPC = OBJECT_SELF)
 
 void ShowTargetLocationFor(int nSlot, location lTarget, object oPC = OBJECT_SELF)
 {
-	SendMessageToPC(oPC, ColorTag(cTeal) + "L[" + IntToString(nSlot) + "]:" + ColorTag(cGreen) + " " +
-					LocationToStringPrintable(lTarget));
-	SendMessageToPC(oPC, ColorTag(cTeal) + "L[" + IntToString(nSlot) + "]:" + ColorTag(
-						cLightGrey) + " d: " + FloatToString(
-						GetDistanceBetweenLocations(GetLocation(oPC), lTarget), 0, 2));
+	SendMessageToPC(oPC,
+					ColorTag(cTeal) + "L[" + IntToString(nSlot) + "]:" +
+					ColorTag(cGreen) + " " + LocationToStringPrintable(lTarget)
+				   );
+
+	SendMessageToPC(oPC,
+					ColorTag(cTeal) + "L[" + IntToString(nSlot) + "]:" +
+					ColorTag(cLightGrey) + " d: " +
+					FloatToString(GetDistanceBetweenLocations(GetLocation(oPC), lTarget), 0, 2)
+				   );
+
+	struct Tile tile = area_get_tile(lTarget);
+
+	string tileSpec = "ts: " + tile.tileset + ", lpos: " + itoa(tile.index) +
+					  ", id: " + itoa(tile.id) +
+					  ", facing: " + itoa(tile.orientation);
+
+	SendMessageToPC(oPC,
+					ColorTag(cTeal) + "L[" + IntToString(nSlot) + "]:" +
+					ColorTag(cLightGrey) + " " + tileSpec
+				   );
 }
 
 int SanitiseSlot(int n, object oPC = OBJECT_SELF)
