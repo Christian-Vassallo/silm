@@ -44,9 +44,9 @@ float read_distance_for_channel(int mode);
 
 float read_get_skill_adjustment(int mode, object listener);
 
-#define READ_DISTANCE_TALK_LOUD 60f
-#define READ_DISTANCE_TALK 20f
-#define READ_DISTANCE_WHISPER 3f
+#define READ_DISTANCE_TALK_LOUD           cfg_float("perception:read_distance_talk_loud")
+#define READ_DISTANCE_TALK                cfg_float("perception:read_distance_talk")
+#define READ_DISTANCE_WHISPER             cfg_float("perception:read_distance_whisper")
 
 /* Experimental: Listen skill affects reading range:
  * For each skill score, we give additional % of the total range for the given channel.
@@ -58,11 +58,11 @@ float read_get_skill_adjustment(int mode, object listener);
  * If HEAR_SKILL_ADJUSTMENT_NEGATIVE:
  * - A listen distance of 20, and a skill of -5 will yield a total listen distance of 15.4
  */
-#define READ_SKILL_ADJUSTMENT_PER 2f
+#define READ_SKILL_ADJUSTMENT_PER         cfg_float("perception:read_skill_adjust_per")
 /* Should negative Listen mods have negative effect on range? */
-#define READ_SKILL_ADJUSTMENT_NEGATIVE false
+#define READ_SKILL_ADJUSTMENT_NEGATIVE    cfg_bool("perception:read_skill_adjust_negative")
 /* A total cap in percent on what additional listen skill gives. */
-#define READ_SKILL_ADJUSTMENT_CAP 20f
+#define READ_SKILL_ADJUSTMENT_CAP         cfg_float("perception:read_skill_adjust_cap")
 
 
 float reads_f(int mode, object speaker, object listener)
