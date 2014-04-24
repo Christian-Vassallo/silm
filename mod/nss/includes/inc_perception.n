@@ -38,15 +38,31 @@ bool hears(int mode, object speaker, object listener);
 
 /**
  * Returns the maximum reading distance for the given mode mask, not
- * taking skill adjustments or effects into account.
+ * taking skill adjustments into account.
+ *
+ * This does, however, take area effects into account, which would affect
+ * all listeners equally (like noisy stuff).
+ *
+ * Currently this is only READ_DISTANCE_ADJUST_INDOOR_FACTOR.
  */
-float read_distance_for_channel(int mode);
+float read_distance_for_channel(int mode, object area = OBJECT_INVALID);
 
+/**
+ * Returns a float describing adjustment to reading distance, depending on
+ * the listener skill values or other effects he may be subjected to.
+ */
 float read_get_skill_adjustment(int mode, object listener);
 
 #define READ_DISTANCE_TALK_LOUD           cfg_float("perception:read_distance_talk_loud")
 #define READ_DISTANCE_TALK                cfg_float("perception:read_distance_talk")
 #define READ_DISTANCE_WHISPER             cfg_float("perception:read_distance_whisper")
+
+/* Indoors allow more talk distance, assuming them to reflect audio a bit more than open outdoors.
+ *
+ * This means, for a factor of 1.5, that TALK would be heard for 20 * 1.5 = 30, and whisper for
+ * 3 * 1.5 = 4.5.
+ */
+#define READ_DISTANCE_ADJUST_INDOOR_FACTOR cfg_float("perception:read_distance_adjust_indoor_factor")
 
 /* Experimental: Listen skill affects reading range:
  * For each skill score, we give additional % of the total range for the given channel.
@@ -81,7 +97,7 @@ float reads_f(int mode, object speaker, object listener)
 		return 0f;
 
 	float dist = GetDistanceBetween(listener, speaker);
-	float maxDistance = read_distance_for_channel(mode);
+	float maxDistance = read_distance_for_channel(mode, GetArea(listener));
 
 	maxDistance += read_get_skill_adjustment(mode, listener);
 
@@ -103,7 +119,7 @@ float hears_f(int mode, object speaker, object listener)
 		return 0f;
 
 	float dist = GetDistanceBetween(listener, speaker);
-	float maxDistance = read_distance_for_channel(mode);
+	float maxDistance = read_distance_for_channel(mode, GetArea(listener));
 
 	maxDistance += read_get_skill_adjustment(mode, listener);
 
@@ -121,7 +137,8 @@ float read_get_skill_adjustment(int mode, object listener)
 	if (!READ_SKILL_ADJUSTMENT_NEGATIVE && skill <= 0)
 		return 0f;
 
-	float percentOfChannel = (read_distance_for_channel(mode) / 100f) * READ_SKILL_ADJUSTMENT_PER;
+	float percentOfChannel = (read_distance_for_channel(mode, GetArea(listener)) / 100f) *
+							 READ_SKILL_ADJUSTMENT_PER;
 
 	float ret = skill * percentOfChannel;
 
@@ -131,18 +148,23 @@ float read_get_skill_adjustment(int mode, object listener)
 	return ret;
 }
 
-float read_distance_for_channel(int mode)
+float read_distance_for_channel(int mode, object area = OBJECT_INVALID)
 {
+	float ret = 0f;
+
 	if (mode & CHATMODE_WHISPER)
-		return READ_DISTANCE_WHISPER;
+		ret = READ_DISTANCE_WHISPER;
 
-	if (mode & CHATMODE_TALK && mode & CHATMODE_LOUD)
-		return READ_DISTANCE_TALK_LOUD;
+	else if (mode & CHATMODE_TALK && mode & CHATMODE_LOUD)
+		ret = READ_DISTANCE_TALK_LOUD;
 
-	if (mode & CHATMODE_TALK)
-		return READ_DISTANCE_TALK;
+	else if (mode & CHATMODE_TALK)
+		ret = READ_DISTANCE_TALK;
 
-	return 0f;
+	if (GetIsObjectValid(area) && GetIsAreaInterior(area))
+		ret *= READ_DISTANCE_ADJUST_INDOOR_FACTOR;
+
+	return ret;
 }
 
 bool reads(int mode, object speaker, object listener)
