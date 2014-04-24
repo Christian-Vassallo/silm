@@ -55,14 +55,8 @@ void CheckXP(object oPC, string sGMsOnline)
 	 */
 	int diff = nCurrentXP - nLastCheckedXP - nXPByScript;
 
-	_DEBUG("checkxp for " + itoa(GetCharacterID(oPC)) +
-		   " -> current = " + itoa(nCurrentXP) + " - last = " + itoa(nLastCheckedXP) +
-		   " - scripts = " + itoa(nXPByScript) + " = " + itoa(diff), 2, "xp"
-		  );
-
 	if (0 == diff)
 		return;
-
 
 	AddGMXP(oPC, sGMsOnline, diff);
 }
