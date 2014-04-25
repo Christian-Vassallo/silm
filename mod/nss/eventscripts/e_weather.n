@@ -13,6 +13,29 @@ void UpdateForPlayer(object oPlayer)
 	SetEngineWeatherFromWeather(oArea, w);
 }
 
+void WeatherEffects(object oPlayer)
+{
+	if (GetSubRace(oPlayer) == "Luftgenasi")
+		return;
+
+	object oArea = GetArea(oPlayer);
+
+	if (!GetIsObjectValid(oArea) || GetIsAreaInterior(oArea))
+		return;
+
+	struct Weather w = GetWeatherFor(oArea, GetCalendarYear(), GetCalendarMonth(), GetCalendarDay(),
+									 GetTimeHour(), GetTimeMinute());
+
+	/* Cold-breath effect appears when:
+	 * - it's under 0 degrees and it's not raining (either clear or snow)
+	 */
+	if (w.temp_min <= -10f && w.temp_max <= 5f &&
+			(w.prec == P_CLEAR || w.prec == P_SNOW || w.prec == P_HSNOW))
+		DelayCommand(itof(Random(3)),
+			ApplyEffectToObject(DURATION_TYPE_TEMPORARY, EffectVisualEffect(1220),
+				oPlayer, 64f)
+		);
+}
 
 void main()
 {
@@ -28,6 +51,9 @@ void main()
 			iterate_players(oPC, UpdateForPlayer(oPC));
 			SetLocalInt(GetModule(), "e_weather_hb", GetTimeHour());
 		}
+
+		// script to run every round for players
+		iterate_players(oPC, WeatherEffects(oPC));
 	}
 
 }
