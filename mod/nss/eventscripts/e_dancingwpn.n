@@ -1,0 +1,159 @@
+extern("x2_inc_itemprop")
+extern("x0_i0_match")
+
+void weapon_stop_dance(object pc, object item);
+void weapon_dance(object pc, object item);
+void _weapon_setup_proxy(object pc, object item);
+
+void _weapon_setup_proxy(object pc, object item)
+{
+	object proxy = GetAssociate(ASSOCIATE_TYPE_SUMMONED, pc);
+
+	if (!is_valid(proxy)) {
+		SendMessageToPC(pc, "FAIL: Cannot create creature template to hold weapon.");
+		return;
+	}
+
+	AssignCommand(pc, ActionUnequipItem(item));
+
+	SetLocalObject(item, "dancing_proxy", proxy);
+
+	SetImmortal(proxy, true);
+	SetCurrentHitPoints(proxy, 1);
+	SetMaxHitPoints(proxy, 1);
+
+	SetName(proxy, GetName(item));
+	SetDescription(proxy, GetDescription(item));
+
+	AddKnownFeat(proxy, FEAT_WEAPON_PROFICIENCY_MARTIAL);
+	AddKnownFeat(proxy, FEAT_WEAPON_PROFICIENCY_EXOTIC);
+	AddKnownFeat(proxy, FEAT_WEAPON_PROFICIENCY_SIMPLE);
+
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+						SupernaturalEffect(EffectDamageReduction(127, DAMAGE_POWER_PLUS_TWENTY)), proxy);
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+						SupernaturalEffect(EffectConcealment(100)), proxy);
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+						SupernaturalEffect(EffectMovementSpeedIncrease(50)), proxy);
+
+	int immunity;
+
+	for (immunity = 1; immunity < 33; immunity++)
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+							SupernaturalEffect(EffectImmunity(immunity)), proxy);
+
+	ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+						SupernaturalEffect(EffectSpellImmunity(SPELL_ALL_SPELLS)), proxy);
+
+	// Blade sees invisible too if caster sees it.
+	if (GetHasEffect(EFFECT_TYPE_SEEINVISIBLE, pc))
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+							SupernaturalEffect(EffectSeeInvisible()), proxy);
+
+	if (GetHasEffect(EFFECT_TYPE_SEEINVISIBLE, pc))
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+							SupernaturalEffect(EffectSeeInvisible()), proxy);
+
+	if (GetHitDice(pc) > 11)
+		ApplyEffectToObject(DURATION_TYPE_PERMANENT,
+							SupernaturalEffect(EffectModifyAttacks(2)), proxy);
+
+	object inew = CopyObject(item, GetLocation(proxy), proxy);
+	SetDroppableFlag(inew, false);
+
+	int newAB = GetHitDice(pc) / 2;
+	int maxEnh = 0;
+	iterate_iprp(inew, p,
+
+				 if (GetItemPropertyType(p) == ITEM_PROPERTY_ENHANCEMENT_BONUS ||
+	GetItemPropertyType(p) == ITEM_PROPERTY_ATTACK_BONUS) {
+	int v = GetItemPropertyCostTableValue(p);
+		maxEnh = v > maxEnh ? v : maxEnh;
+	}
+				);
+	newAB += maxEnh;
+
+	AddItemProperty(DURATION_TYPE_PERMANENT,
+					ItemPropertyAttackBonus(newAB), inew);
+
+	AssignCommand(proxy, ActionEquipItem(inew, INVENTORY_SLOT_RIGHTHAND));
+}
+
+
+void weapon_dance(object pc, object item)
+{
+	if (!GetLocalInt(item, "dancing")) return;
+
+	SendMessageToPC(pc, "Dancing mode: activated.");
+
+	ApplyEffectAtLocation(DURATION_TYPE_TEMPORARY,
+						  EffectSummonCreature("x2_s_faerie001"), GetLocation(pc), 999999f);
+
+	DelayCommand(1f, _weapon_setup_proxy(pc, item));
+
+	//object proxy = CreateObject(OBJECT_TYPE_CREATURE, "x2_s_faerie001",
+	//  GetLocation(pc));
+	//SetLocalObject(item, "dancing_proxy", proxy);
+	// AddHenchman(pc, proxy);
+	// object proxy = CopyObject(pc, GetLocation(pc));
+	// SetPlotFlag(proxy, true);
+	// AssignCommand(proxy, SetIsDestroyable(true, false, false));
+	// SetCreatureAppearanceType(proxy, 298);
+	// SetPortrait(proxy, "po_HelmHorror_");
+	// ApplyEffectToObject(DURATION_TYPE_PERMANENT, EffectEthereal(), proxy);
+	/*SetCreatureEventHandler(proxy, CREATURE_EVENT_ATTACKED, "nw_ch_ac5");
+	SetCreatureEventHandler(proxy, CREATURE_EVENT_DAMAGED, "nw_ch_ac5");
+	SetCreatureEventHandler(proxy, CREATURE_EVENT_DEATH, "nw_ch_ac7");
+	SetCreatureEventHandler(proxy, CREATURE_EVENT_CONVERSATION, "nw_ch_ac4");
+	SetCreatureEventHandler(proxy, CREATURE_EVENT_DISTURBED, "nw_ch_ac8");
+	SetCreatureEventHandler(proxy, CREATURE_EVENT_ENDCOMBAT, "nw_ch_ac3");
+	SetCreatureEventHandler(proxy, CREATURE_EVENT_HEARTBEAT, "nw_ch_ac1");
+	SetCreatureEventHandler(proxy, CREATURE_EVENT_BLOCKED, "nw_ch_ace");
+	SetCreatureEventHandler(proxy, CREATURE_EVENT_PERCEPTION, "nw_ch_ac2");
+	SetCreatureEventHandler(proxy, CREATURE_EVENT_RESTED, "nw_ch_aca");
+	SetCreatureEventHandler(proxy, CREATURE_EVENT_SPAWN, "nw_ch_aca");
+	SetCreatureEventHandler(proxy, CREATURE_EVENT_SPELLCAST, "nw_ch_summon_9");
+	SetCreatureEventHandler(proxy, CREATURE_EVENT_USERDEF, "nw_ch_acb");*/
+}
+
+void weapon_stop_dance(object pc, object item)
+{
+	object proxy = GetLocalObject(item, "dancing_proxy");
+
+	if (!is_valid(proxy)) return;
+
+	object proxy2 = GetAssociate(ASSOCIATE_TYPE_SUMMONED, pc);
+
+	// SetPlotFlag(proxy, false);
+	// AssignCommand(proxy, SetIsDestroyable(true, true, true));
+	DestroyObject(proxy, 1f);
+	//SetLocalObject(item, "dancing_proxy", OBJECT_INVALID);
+
+	SendMessageToPC(pc, "Dancing mode: deactivated.");
+}
+
+void main()
+{
+	struct EventInfo e = GetEventInfo();
+
+	if (e.ev == "item_activate")  {
+		if (!GetLocalInt(e.runnable, "dancing")) return;
+
+		AssignCommand(e.actor, weapon_dance(e.actor, e.runnable));
+	}
+
+	if (e.ev == "item_equip") {
+		if (!GetLocalInt(e.runnable, "dancing")) return;
+
+		weapon_stop_dance(e.actor, e.runnable);
+	}
+
+	if (e.ev == "item_unacquire") {
+		if (!GetLocalInt(e.actedon, "dancing")) return;
+
+		weapon_stop_dance(e.actor, e.actedon);
+	}
+
+
+
+}
