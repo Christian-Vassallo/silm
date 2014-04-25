@@ -1,0 +1,78 @@
+extern("inc_cdb")
+extern("inc_time")
+
+void main()
+{
+	struct EventInfo e = GetEventInfo();
+
+	si("event." + e.ev);
+
+	// Count online players to player.count
+	if (e.ev == "module_hb") {
+		int players = 0; int dms = 0;
+
+		iterate_players(p, if (GetIsDM(p)) dms += 1;
+						else players += 1);
+
+		sg("player.count.dm", dms);
+		sg("player.count.player", players);
+		sg("player.count.all", dms + players);
+
+		/*__nth(6,
+		    iterate_players(p,
+		        object area = GetArea(p);
+		        if (!GetLocalInt(area, "_statsd_area_hb")) {
+		            SetLocalInt(area, "_statsd_area_hb", 1);
+		            // count players, monsters, etc
+		            int players = 0; int creatures = 0;;
+		            object obj = GetFirstObjectInArea(area);
+		            while (is_valid(obj)) {
+		                if (is_creature(obj)) creatures++;
+		                if (GetIsPC(obj)) players++;
+		                obj = GetNextObjectInArea(area);;
+		            }
+
+		            //sg("area." + resref + ".creature.count.all", creatures);
+		            //sg("area." + resref + ".player.count.all", players);
+		        }
+		    );
+		);*/
+
+		iterate_players(p, DeleteLocalInt(GetArea(p), "_statsd_area_hb"));
+		return;
+	}
+
+	if (e.ev == "area_leave") {
+		object area = e.runnable;
+		object player = e.actor;
+		SetLocalString(player, "e_profiler_area_leave",
+					   GetTimeMS());
+		return;
+	}
+
+	if (e.ev == "area_enter") {
+		object area = e.runnable;
+		object player = e.actor;
+		string resref = GetResRef(area);
+
+		string time = GetLocalString(player, "e_profiler_area_leave");
+		DeleteLocalString(player, "e_profiler_area_leave");
+
+		if (time != "") {
+			string now = GetTimeMS();
+
+			string key = "area." + resref + ".loadtime";
+			ruby_eval("$statsd.timing '" + STATSD_PREFIX + key + "', " +
+					  now + " - " + time + ";");
+
+			string aid = itoa(GetAccountID(player));
+			key = "area." + resref + ".account." + aid + ".loadtime";
+			ruby_eval("$statsd.timing '" + STATSD_PREFIX + key + "', " +
+					  now + " - " + time + ";");
+
+			// stt("area." + resref + ".loadtime", now - time);
+		}
+
+		return;
+	}
+}
