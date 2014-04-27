@@ -286,7 +286,7 @@ object GetNextWalkWayPoint(object oCreature = OBJECT_SELF)
 			// still walk day waypoints if no night
 			// waypoints are available!
 
-			if (GetLocalInt(oCreature, "WN_NUM") > 0) {
+			if (cfg_bool("ai:wp_use_night_for_day") && GetLocalInt(oCreature, "WN_NUM") > 0) {
 				// Change the prefix if necessary
 				sPrefix = "WN_";
 			}
@@ -357,7 +357,7 @@ int GetNearestWalkWayPoint(object oCreature = OBJECT_SELF)
 	} else {
 		nNumPoints = GetLocalInt(oCreature, "WN_NUM");
 
-		if (nNumPoints < 1 && gvGetInt("wp_use_night_for_day")) {
+		if (nNumPoints < 1 && cfg_bool("ai:wp_use_night_for_day")) {
 			nNumPoints = GetLocalInt(oCreature, "WP_NUM");
 			sPrefix = "WP_";
 		}
@@ -505,7 +505,7 @@ int GetIsPostOrWalking(object oWalker = OBJECT_SELF)
 			return TRUE;
 		}
 
-	} else if (GetLocalInt(oWalker, "WN_NUM") > 0 || (gvGetInt("wp_use_night_for_day")
+	} else if (GetLocalInt(oWalker, "WN_NUM") > 0 || (cfg_bool("ai:wp_use_night_for_day")
 			   && GetLocalInt(oWalker, "WP_NUM") > 0)) {
 		return TRUE;
 	}
