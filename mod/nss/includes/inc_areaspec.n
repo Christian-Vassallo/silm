@@ -1,0 +1,75 @@
+struct Tile {
+	// The resref of the tileset, for example "ttd01"
+	string tileset;
+
+	// The area object this tile belongs to
+	object area;
+
+	// The position this tile is at (not neccessarily at any particular place except within tile boundaries).
+	vector pos;
+
+	// The index into Tile_List
+	int index;
+
+	// The Tile_ID as referenced into the .set file
+	int id;
+
+	// Tile_Height (as in, tile-based elevation).
+	int height;
+
+	// The tile orientation.
+	int orientation;
+
+	// True if this tile has a water layer.
+	bool has_water;
+
+	// The offset from z=0f at which the water is.
+	float water_offset;
+
+	// True if this tile has a road and/or travelled path.
+	bool has_road;
+};
+
+struct Tile area_get_tile(location loc);
+
+
+struct Tile area_get_tile(location loc)
+{
+	object area = GetAreaFromLocation(loc);
+	string tileset = GetTilesetResRef(area);
+	string resref = GetResRef(area);
+
+	vector tv = GetPositionFromLocation(loc);
+	int tileIdx = GetAreaSize(AREA_WIDTH, area) * ftoi(tv.y / 10f) + ftoi(tv.x / 10f);
+	string tileIndex = itoa(tileIdx);
+
+	struct Tile ret;
+
+	string tileId = LINDEX("cache:area:" + resref + ":tile_ids", tileIndex);
+
+	if (tileId == "")
+		return ret;
+
+	ret.area = area;
+	ret.tileset = tileset;
+
+	ret.index = tileIdx;
+	ret.pos = tv;
+
+	ret.id = atoi(tileId);
+
+	ret.height = atoi(LINDEX("cache:area:" + resref + ":tile_heights", tileIndex));
+	ret.orientation = atoi(LINDEX("cache:area:" + resref + ":tile_orientations", tileIndex));
+	ret.has_water = "1" == SISMEMBER(cfg_key("tileset:" + tileset + ":water"), tileId);
+
+	float tileWaterLevelOffset = cfg_float("tileset:" + tileset + ":" + tileId + ":water_offset");
+	float waterLevelOffset = cfg_float("tileset:" + tileset + ":water_offset");
+
+	ret.water_offset = 0f + tileWaterLevelOffset + waterLevelOffset;
+
+	ret.has_road = "1" == SISMEMBER(cfg_key("tileset:" + tileset + ":road"), tileId);
+
+	return ret;
+}
+
+
