@@ -8,12 +8,12 @@ extern("inc_nwnx_redis")
 /**
  * Gets a simple integer value from config, defaulting to 0 if it does not exist.
  */
-int cfg_int(string key);
+int cfg_int(string key, int defaultWhenMissing = 0);
 
 /**
  * Gets a simple float value from config, defaulting to 0 if it does not exist.
  */
-float cfg_float(string key);
+float cfg_float(string key, float defaultWhenMissing = 0f);
 
 /**
  * Gets a simple boolean value from config, defaulting to 0 if it does not exist.
@@ -22,18 +22,21 @@ float cfg_float(string key);
  *
  * Everything else evals to true.
  */
-bool cfg_bool(string key);
+bool cfg_bool(string key, bool defaultWhenMissing = false);
 
+/**
+ * Gets a simple string value from config, defaulting to "" if it does not exist.
+ */
+string cfg(string key, string defaultWhenMissing = "");
+/**
+ * Gets a simple string value from config, defaulting to "" if it does not exist.
+ */
+string cfg_string(string key, string defaultWhenMissing = "");
+
+/**
+ * Returns the key name for the given cfg setting, to be used with  other redis commands.
+ */
 string cfg_key(string key);
-
-/**
- * Gets a simple string value from config, defaulting to "" if it does not exist.
- */
-string cfg(string key);
-/**
- * Gets a simple string value from config, defaulting to "" if it does not exist.
- */
-string cfg_string(string key);
 
 
 
@@ -70,19 +73,30 @@ string _cfg_get(string key)
 	return GetLocalString(GetModule(), "__cfg_" + key);
 }
 
-int cfg_int(string key)
+int cfg_int(string key, int defaultWhenMissing = 0)
 {
-	return atoi(_cfg_get(key));
+	string r = _cfg_get(key);
+	if (redisLastReplyType == REDIS_REPLY_NIL)
+		return defaultWhenMissing;
+
+	return atoi(r);
 }
 
-float cfg_float(string key)
+float cfg_float(string key, float defaultWhenMissing = 0f)
 {
-	return atof(_cfg_get(key));
+	string r = _cfg_get(key);
+	if (redisLastReplyType == REDIS_REPLY_NIL)
+		return defaultWhenMissing;
+
+	return atof(r);
 }
 
-bool cfg_bool(string key)
+bool cfg_bool(string key, bool defaultWhenMissing = false)
 {
 	string ret = strlwr(_cfg_get(key));
+
+	if (redisLastReplyType == REDIS_REPLY_NIL)
+		return defaultWhenMissing;
 
 	if (ret == "" || ret == "0" || ret == "false" || ret == "f" || ret == "no" ||
 			ret == "off" || ret == "nil")
@@ -91,12 +105,16 @@ bool cfg_bool(string key)
 	return true;
 }
 
-string cfg(string key)
+string cfg(string key, string defaultWhenMissing = "")
 {
-	return cfg_string(key);
+	return cfg_string(key, defaultWhenMissing);
 }
 
-string cfg_string(string key)
+string cfg_string(string key, string defaultWhenMissing = "")
 {
-	return _cfg_get(key);
+	string r = _cfg_get(key);
+	if (redisLastReplyType == REDIS_REPLY_NIL)
+		return defaultWhenMissing;
+
+	return r;
 }
