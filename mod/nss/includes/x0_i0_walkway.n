@@ -24,7 +24,6 @@
 //::                             the waypoint
 
 extern("x0_i0_spawncond")
-extern("inc_setting")
 
 /**********************************************************************
  * CONSTANTS
@@ -287,7 +286,7 @@ object GetNextWalkWayPoint(object oCreature = OBJECT_SELF)
 			// still walk day waypoints if no night
 			// waypoints are available!
 
-			if (gvGetInt("wp_use_night_for_day") && GetLocalInt(oCreature, "WN_NUM") > 0) {
+			if (GetLocalInt(oCreature, "WN_NUM") > 0) {
 				// Change the prefix if necessary
 				sPrefix = "WN_";
 			}
