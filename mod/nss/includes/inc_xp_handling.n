@@ -6,7 +6,6 @@ extern("_gen")
 extern("inc_decay")
 extern("inc_cdb")
 extern("inc_persist")
-extern("inc_setting")
 extern("inc_xplock")
 
 // Gives oPC nValue EP
@@ -209,8 +208,8 @@ int GetKillXP(object oDead, object oChar)
 	if (nCRDead < 1f) return 0;
 
 	float nCRChar = IntToFloat(GetHitDice(oChar));
-	float nXPScale = gvGetFloat("combat_xp_scale");
-	float nMaxCRDiff = IntToFloat(gvGetInt("combat_xp_max_cr_difference"));
+	float nXPScale = cfg_float("xp:combat:scale");
+	float nMaxCRDiff = IntToFloat(cfg_int("xp:combat:max_cr_difference"));
 	float nDiff;
 	int nXP;
 	float nBaseXP = 30f;
@@ -310,9 +309,9 @@ void AddCombatXP(object oPC, int nValue, int bNoWarn = FALSE)
 	if (r.error)
 		return;
 
-	float nECLAdj = gvGetFloat("combat_xp_ecl_adjustment");
-	int iMonthCap = gvGetInt("combat_xp_limit_month");
-	int iDayCap = gvGetInt("combat_xp_limit_day");
+	float nECLAdj = cfg_float("xp:combat:ecl_adjustment");
+	int iMonthCap = cfg_int("xp:combat:limit_month");
+	int iDayCap = cfg_int("xp:combat:limit_day");
 
 	int iDay = r.day;
 	int iMonth = r.month;
@@ -322,7 +321,7 @@ void AddCombatXP(object oPC, int nValue, int bNoWarn = FALSE)
 
 	float nECL = IntToFloat(SR_GetECL(oPC));
 
-	if (iCombXP >= gvGetInt("combat_xp_max")) {
+	if (iCombXP >= cfg_int("xp:combat:max")) {
 		if (!bNoWarn)
 			SendMessageToPC(oPC, "Durch Kaempfen koennt Ihr nun wirklich nichts mehrlernen.");
 
