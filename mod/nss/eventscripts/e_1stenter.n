@@ -1,7 +1,5 @@
 extern("inc_events")
 extern("inc_currency")
-extern("inc_persist")
-
 
 void main()
 {
@@ -10,23 +8,25 @@ void main()
 	if (e.ev != "player_login")
 		return;
 
-	int iValue, iGoldSum;
+	object player = e.runnable;
 
-	if (!GetXP(OBJECT_SELF) && !GetIsDM(OBJECT_SELF)) {
-		object oItem = GetFirstItemInInventory(OBJECT_SELF);
-
-		SetXP(OBJECT_SELF, 28000);
-
+	if (!GetXP(player) && !GetIsDM(player)) {
+		/* Remove all items. */
+		object oItem = GetFirstItemInInventory(player);
 		while (GetIsObjectValid(oItem)) {
-			iGoldSum += GetGoldPieceValue(oItem);
 			DestroyObject(oItem);
-			oItem = GetNextItemInInventory(OBJECT_SELF);
+			oItem = GetNextItemInInventory(player);
 		}
 
-		//Convert the starting money and pay a compensation for the
-		//items destroyed.
-		iValue = GetGold(OBJECT_SELF);
-		TakeGoldFromCreature(iValue, OBJECT_SELF, TRUE);
-		GiveMoneyToCreature(OBJECT_SELF, iValue * 100 + iGoldSum);
+		/* Remove all inventory gold */
+		TakeGoldFromCreature(GetGold(player), player, TRUE);
+
+		/* Give starting XP. */
+		SetXP(e.runnable, cfg_int("xp:starting_value"));
+
+		/* Give starting gold. */
+		int money = cfg_int("gold:starting_value");
+		if (money > 0)
+			GiveMoneyToCreature(player, money);
 	}
 }
