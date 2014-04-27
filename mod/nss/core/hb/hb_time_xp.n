@@ -25,18 +25,18 @@ void main()
 				(
 					nPlayerCount == 1 ||
 					(nPlayerCount > 1 &&
-					 GetPlayerIdleTime(oPC) <= gvGetInt("time_xp_interval"))
+					 GetPlayerIdleTime(oPC) <= cfg_int("xp:time:interval"))
 				) &&
 				// and if the defined interval has passed
-				(nTS - gvGetInt("time_xp_interval") > nLastForPlayer)
+				(nTS - cfg_int("xp:time:interval") > nLastForPlayer)
 			) {
 
 				SetLocalInt(oPC, "last_time_xp_given", nTS);
 
-				int nGiven = GiveTimeXP(oPC, gvGetInt("time_xp_amount"));
+				int nGiven = GiveTimeXP(oPC, cfg_int("xp:time:amount_per_interval"));
 
-				if (-2 == nGiven && gvGetInt("time_xp_fills_combat_xp")) {
-					AddCombatXP(oPC, gvGetInt("time_xp_amount"), TRUE);
+				if (-2 == nGiven && cfg_bool("xp:time:fills_combat_xp")) {
+					AddCombatXP(oPC, cfg_int("xp:time:amount_per_interval"), TRUE);
 					SetLocalInt(oPC, "last_time_xp_given", nTS);
 				}
 			}

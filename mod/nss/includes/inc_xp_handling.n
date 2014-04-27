@@ -277,10 +277,10 @@ int GiveTimeXP(object oPC, int nAmount)
 	int iXPForDay = GetCategoryXPForDay(oPC, "time", iYear, iMonth, iDay);
 
 
-	if (iXPForMonth > gvGetInt("time_xp_limit_month"))
+	if (iXPForMonth > cfg_int("xp:time:limit_month"))
 		return -2;
 
-	if (iXPForDay > gvGetInt("time_xp_limit_day"))
+	if (iXPForDay > cfg_int("xp:time:limit_day"))
 		return -1;
 
 	if (nAmount > 0) {
