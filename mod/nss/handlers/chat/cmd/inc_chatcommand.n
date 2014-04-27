@@ -3342,11 +3342,6 @@ int CommandRestore(object oPC, int iMode)
 		DelayCommand(getsleep(), ApplyEffectToObject(DURATION_TYPE_INSTANT, EffectHeal(2000), oTarget));
 	}
 
-	if (getopt_opt("r")) {
-		SetLocalInt(oTarget, "Resting_Counter_val", 0);
-		SetLocalDecay(oTarget, "Resting_Food", 241, 60);
-	}
-
 	ToPC("Done.");
 	return OK;
 }

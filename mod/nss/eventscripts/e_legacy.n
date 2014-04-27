@@ -20,10 +20,6 @@ void main()
 	if (GetIsObjectValid(oItem = GetItemPossessedBy(e.runnable, "dmfi_pc_emote")))
 		DestroyObject(oItem);
 
-	// Don't let them start out on the verge of starving to death
-	if (GetLocalDecay(e.runnable, "Resting_Food") < 60)
-		SetLocalDecay(e.runnable, "Resting_Food", 241, 60);
-
 	//Recover from a crash during trade where money is still
 	//numerical
 	if ((iValue = GetGold(e.runnable))) {

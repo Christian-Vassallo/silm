@@ -898,9 +898,8 @@ void RegisterAllCommands()
 	// -s: remove normal, extraordinary, and supernatural effects
 	// -l: heal fully
 	// -r: allow resting
-	RegisterCommand("restore", "s e? l r");
+	RegisterCommand("restore", "s e? l");
 	RHs("[-e? ID] [-l] -[r] >> Restores a creature to working condition", 1);
-	RHs("-r >> Allow immediate resting", 1);
 	RHs("-l >> Heal fully", 1);
 	RHs("-e [ID] >> Remove all effects, or effects of type ID", 1);
 	RHs("-s >> Removes all effects, including supernatural effects.", 1);

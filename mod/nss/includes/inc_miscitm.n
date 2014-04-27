@@ -116,7 +116,6 @@ int ActivateMiscItem(object oPC, object oItem, location lTarget, object oTarget)
 	if (sTag == "food_curse04") {
 		DestroyObject(oItem);
 		FloatingTextStringOnCreature("Das war lecker.", oPC, FALSE);
-		SetLocalDecay(oPC, "Resting_Food", 0, 60);
 		return 1;
 	}
 
@@ -128,29 +127,6 @@ int ActivateMiscItem(object oPC, object oItem, location lTarget, object oTarget)
 // Essen verspeisen
 //----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	if (GetStringLeft(sTag, 5) == "food_") {
-		int iDuration = 60;
-		int iStomach = GetLocalDecay(oPC, "Resting_Food");
-
-		if (GetStringLength(sTag) > 12)
-			iDuration = StringToInt(GetStringRight(sTag, 3));
-
-		//Last adjustments: Prolong duration up to 150% as given
-		iDuration += iDuration / 2;
-
-		//FloatingTextStringOnCreature("Hunger: " + IntToString(iStomach) + " / Nahrung: "+ IntToString(iDuration),oPC);
-		//Last adjustments: Stomach can hold 13.5 hours of food
-		//(11.5 hours without disturbance)
-		//A whole cake yields 12 hours of food.
-		if (iStomach + iDuration > 1510) {
-			FloatingTextStringOnCreature(
-				"Das ist viel zu mächtig! Vielleicht etwas leichteres ?", oPC, FALSE);
-			return 1;
-		}
-
-		DestroyObject(oItem);
-		SetLocalDecay(oPC, "Resting_Food", iDuration + iStomach, 60);
-
-
 		// Gekochte Speisen
 		if (GetSubString(sTag, 5, 3) == "cok") {
 			FloatingTextStringOnCreature("Das war lecker.", oPC, FALSE);

@@ -1,12 +1,9 @@
 extern("inc_corpse")
-extern("inc_decay")
 extern("inc_horse")
 
 void _next()
 {
 	int iHP = GetCurrentHitPoints();
-
-	SetLocalDecay(OBJECT_SELF, "Resting_Food", 600, 60);
 
 	/* Bring the creature to exactly 1 hit point */
 	if (iHP > 1)
