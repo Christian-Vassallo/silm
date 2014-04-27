@@ -10,9 +10,6 @@
 //:: Created On: 27.02.2005
 //:://////////////////////////////////////////////
 
-extern("inc_setting")
-// extern("inc_nwnx")
-
 // regenerates nHitPoints of oPC in several Minutes
 void UseBandage(object oPC, int nHitPoints);
 
@@ -246,7 +243,7 @@ void AddBandage(object oPC, object oTarget, object oItem)
 			if (GetResRef(oTarget) == "healerkit") {
 				int nBandage = GetBandageValue(oTarget);
 
-				if (nBandage < gvGetInt("healerkit_max_bandages")) {
+				if (nBandage < cfg_int("item:healerkit:max_bandages")) {
 					FloatingTextStringOnCreature("Die Bandage wurde der Heiltasche hinzugefuegt.", oPC, FALSE);
 					SetHealerKitValues(oTarget, GetBandageValue(oTarget) + 1, GetMedicineValue(oTarget));
 					DestroyObject(oItem);
@@ -277,7 +274,7 @@ void AddMedicine(object oPC, object oTarget, object oItem)
 			if (GetResRef(oTarget) == "healerkit") {
 				int nBandage = GetMedicineValue(oTarget);
 
-				if (nBandage < gvGetInt("healerkit_max_medicines")) {
+				if (nBandage < cfg_int("item:healerkit:max_medicines")) {
 					SetHealerKitValues(oTarget, GetBandageValue(oTarget), GetMedicineValue(oTarget) + 1);
 					DestroyObject(oItem);
 
@@ -344,8 +341,8 @@ int GetBandageValue(object oHealerKit)
 
 		old = StringToInt(GetSubString(name, nIndex + 2, 2));
 
-		if (old > gvGetInt("healerkit_max_bandages"))
-			return gvGetInt("healerkit_max_bandages");
+		if (old > cfg_int("item:healerkit:max_bandages"))
+			return cfg_int("item:healerkit:max_bandages");
 	}
 
 	return old;
@@ -364,8 +361,8 @@ int GetMedicineValue(object oHealerKit)
 		int length = GetStringLength(GetName(oHealerKit));
 		int old = StringToInt(GetSubString(GetName(oHealerKit), length - 3, length - 2));
 
-		if (old > gvGetInt("healerkit_max_medicines"))
-			return gvGetInt("healerkit_max_medicines");
+		if (old > cfg_int("item:healerkit:max_medicines"))
+			return cfg_int("item:healerkit:max_medicines");
 	}
 
 	return old;
