@@ -86,7 +86,7 @@ void main()
 	if (GetLocalInt(OBJECT_SELF, "sit_nearest"))
 		return;
 
-	if (gvGetInt("persist_critters") && !GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF)) {
+	if (cfg_bool("persist:creatures") && !GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF)) {
 		// Only save every two minutes at most
 		if (lv_i(OBJECT_SELF, "p_hb_cycle") >= 20)
 			slv_i(OBJECT_SELF, "p_hb_cycle", 0);

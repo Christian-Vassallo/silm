@@ -60,7 +60,7 @@ void main()
 		}
 	}
 
-	if (gvGetInt("persist_critters") && !lv_i(oArea, "critters_loaded")) {
+	if (cfg_bool("persist:creatures") && !lv_i(oArea, "critters_loaded")) {
 		p_load_to_location_metadata_in_chunks_for_area("critters", oArea);
 		slv_i(oArea, "critters_loaded", 1);
 	}

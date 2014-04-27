@@ -6,14 +6,14 @@ void main()
 	struct EventInfo e = GetEventInfo();
 
 	if ("area_enter" == e.ev) {
-		if (gvGetInt("persist_dropped_items") && !lv_i(e.runnable, "dropped_items_loaded")) {
+		if (cfg_bool("persist:dropped_items") && !lv_i(e.runnable, "dropped_items_loaded")) {
 			p_load_to_location_metadata_in_chunks_for_area("dropped_items", e.runnable);
 			slv_i(e.runnable, "dropped_items_loaded", 1);
 		}
 	}
 
 	if ("item_acquire" == e.ev) {
-		if (gvGetInt("persist_dropped_items") && p_id(e.runnable)) {
+		if (cfg_bool("persist:dropped_items") && p_id(e.runnable)) {
 			p_delete("dropped_items", e.runnable);
 		}
 	}
@@ -23,7 +23,7 @@ void main()
 		if (!is_valid(GetArea(e.actedon)))
 			return;
 
-		if (gvGetInt("persist_dropped_items") && GetIsObjectValid(e.actedon)) {
+		if (cfg_bool("persist:dropped_items") && GetIsObjectValid(e.actedon)) {
 			if (p_canpersist(e.actedon) && GetIsObjectValid(GetAreaFromLocation(GetLocation(e.actedon)))) {
 				p_save("dropped_items", e.actedon,
 					   "dropped_by_cid = " + pSi(GetCharacterID(e.actor)) + ", dropped_by_aid = " + pSi(

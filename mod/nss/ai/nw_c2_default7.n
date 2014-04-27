@@ -42,7 +42,7 @@ void main()
 	object oKiller = GetLastKiller();
 	object oKilled =  OBJECT_SELF;
 
-	if (gvGetInt("persist_critters") && !GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF) > 0) {
+	if (cfg_bool("persist:creatures") && !GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF) > 0) {
 		p_delete("critters", OBJECT_SELF);
 	}
 

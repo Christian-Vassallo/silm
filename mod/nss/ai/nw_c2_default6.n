@@ -28,7 +28,7 @@ void main()
 	if (ret & EVENT_RESULT_STOP)
 		return;
 
-	if (gvGetInt("persist_critters") && !GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF)) {
+	if (cfg_bool("persist:creatures") && !GetIsPC(OBJECT_SELF) && p_id(OBJECT_SELF)) {
 		p_save("critters", OBJECT_SELF);
 	}
 
