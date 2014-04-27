@@ -32,7 +32,7 @@ extern("inc_events")
 
 void main()
 {
-
+	/* XXX: disabled for performance reasons
 	// Event: creature_spawn
 	int ret = RunEventScriptsFor(GetEventSerial(), "creature_spawn", OBJECT_SELF, OBJECT_SELF,
 								 OBJECT_INVALID,
@@ -40,6 +40,7 @@ void main()
 
 	if (ret & EVENT_RESULT_STOP)
 		return;
+	*/
 
 	ExecuteScript("corpse_spawn", OBJECT_SELF);
 	string sTag = GetStringLowerCase(GetTag(OBJECT_SELF));
