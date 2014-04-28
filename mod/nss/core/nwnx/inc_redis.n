@@ -76,7 +76,7 @@ string _cfg_get(string key)
 int cfg_int(string key, int defaultWhenMissing = 0)
 {
 	string r = _cfg_get(key);
-	if (redisLastReplyType == REDIS_REPLY_NIL)
+	if (__redisLastReplyType == REDIS_REPLY_NIL)
 		return defaultWhenMissing;
 
 	return atoi(r);
@@ -85,7 +85,7 @@ int cfg_int(string key, int defaultWhenMissing = 0)
 float cfg_float(string key, float defaultWhenMissing = 0f)
 {
 	string r = _cfg_get(key);
-	if (redisLastReplyType == REDIS_REPLY_NIL)
+	if (__redisLastReplyType == REDIS_REPLY_NIL)
 		return defaultWhenMissing;
 
 	return atof(r);
@@ -95,7 +95,7 @@ bool cfg_bool(string key, bool defaultWhenMissing = false)
 {
 	string ret = strlwr(_cfg_get(key));
 
-	if (redisLastReplyType == REDIS_REPLY_NIL)
+	if (__redisLastReplyType == REDIS_REPLY_NIL)
 		return defaultWhenMissing;
 
 	if (ret == "" || ret == "0" || ret == "false" || ret == "f" || ret == "no" ||
@@ -113,7 +113,7 @@ string cfg(string key, string defaultWhenMissing = "")
 string cfg_string(string key, string defaultWhenMissing = "")
 {
 	string r = _cfg_get(key);
-	if (redisLastReplyType == REDIS_REPLY_NIL)
+	if (__redisLastReplyType == REDIS_REPLY_NIL)
 		return defaultWhenMissing;
 
 	return r;
