@@ -1,0 +1,16 @@
+extern("inc_rune")
+
+void main()
+{
+	struct EventInfo e = GetEventInfo();
+	struct EventArguments ea = GetEventArguments(e.serial);
+
+	if (e.ev == "chat_command" && ea.a0 == "rune") {
+		SetMenuLevel(e.runnable, TTT, 0, 0);
+
+		mkdlg(e.runnable);
+		ActionStartConversation(e.runnable, "list_select", true, true);
+
+		event_stop();
+	}
+}

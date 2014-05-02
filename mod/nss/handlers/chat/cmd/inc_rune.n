@@ -1,0 +1,141 @@
+extern("inc_summon")
+extern("inc_lists")
+extern("inc_colors")
+
+const int SUMMON_TYPE_MONSTER       = 1;
+const int SUMMON_TYPE_NATURE        = 2;
+
+#define SUMMON_TYPE_MONSTER_PREFIX  "Summon Monster: "
+#define SUMMON_TYPE_NATURE_PREFIX   "Nature's Ally: "
+
+const string TTT = "runeselect";
+
+object create_rune(int type, int sl, object player, string ref)
+{
+	int magicType = DetermineClassStructure(player);
+	string tagPrefix = "NONE";
+	string name = "";
+
+	switch (type) {
+		case 1:
+			tagPrefix = "CWIZ";
+			name += SUMMON_TYPE_MONSTER_PREFIX;
+			break;
+
+		case 2:
+			tagPrefix = "CDRU";
+			name += SUMMON_TYPE_NATURE_PREFIX;
+			break;
+
+		default:
+			return OBJECT_INVALID;
+	}
+
+	string tag = tagPrefix + "_" + itoa(sl) + "_" + ref;
+
+	string rname = HGET("cache:ref:" + ref + ".utc:root", "name");
+
+	if (rname == "")
+		name += tag;
+	else
+		name += rname;
+
+	name += " (" + itoa(sl) + ")";
+
+	object rune = CreateItemOnObject("sum_card", player, 1, tag);
+	SetName(rune, name);
+
+	return rune;
+}
+
+void mkdlg(object pc)
+{
+	ClearList(pc, TTT);
+
+	int nMenuLevel0 = GetMenuLevel(pc, TTT, 0);
+	int nSelected   = GetListSelection(pc);
+
+	/* Spell levels for monster/nature allies */
+	if (nMenuLevel0 == 0) {
+		int i;
+
+		int cls = DetermineClassStructure(pc);
+
+
+		if (cls & 1) {
+			int maxSpellLevel = 0;
+
+			for (i = 1; i <= 9; i++)
+				if (GetIsDM(pc) ||
+						GetHasSpell(GetSpellForLevel(i), pc) ||
+						GetKnowsSpell(GetSpellForLevel(i), pc, CLASS_TYPE_WIZARD) ||
+						GetKnowsSpell(GetSpellForLevel(i), pc, CLASS_TYPE_SORCERER) ||
+						GetKnowsSpell(GetSpellForLevel(i), pc, CLASS_TYPE_BARD))
+					maxSpellLevel = i;
+
+			for (i = 1; i <= maxSpellLevel; i++) {
+				string count = SCARD(cfg_key("spell:summon:monster:" + itoa(i)));
+
+				AddListItem(pc, TTT, SUMMON_TYPE_MONSTER_PREFIX + itoa(i) +
+							C(" (" + count + " refs)", cLightGrey));
+
+				SetListString(pc, TTT, "monster");
+				SetListInt(pc, TTT, i);
+			}
+		}
+
+		if (cls & 4) {
+			int maxSpellLevel = 0;
+
+			for (i = 1; i <= 9; i++)
+				if (GetIsDM(pc) ||
+						GetHasSpell(GetSpellForLevel(i), pc) ||
+						GetKnowsSpell(GetSpellForLevel(i), pc, CLASS_TYPE_DRUID) ||
+						GetKnowsSpell(GetSpellForLevel(i), pc, CLASS_TYPE_RANGER))
+					maxSpellLevel = i;
+
+			for (i = 1; i <= maxSpellLevel; i++) {
+				string count = SCARD(cfg_key("spell:summon:nature:" + itoa(i)));
+
+				AddListItem(pc, TTT, SUMMON_TYPE_NATURE_PREFIX + itoa(i) +
+							C(" (" + count + " refs)", cLightGrey));
+
+				SetListString(pc, TTT, "nature");
+				SetListInt(pc, TTT, i);
+			}
+		}
+
+		AddListItem(pc, TTT, "Alle Runen aus dem Inventar entfernen");
+		SetListString(pc, TTT, "delete_all");
+		SetListDisplayMode(pc, TTT, DISPLAYMODE_RED);
+
+		string sText = "";
+
+		ResetConvList(pc, pc, TTT, 50000, "cmd_rune_cb", sText, "", "", "",
+					  "Zurueck zur Liste");
+
+	} else {
+		string type = GetListString(pc, TTT, nSelected);
+		int sl = GetListInt(pc, TTT, nSelected);
+
+		SMEMBERS(cfg_key("spell:summon:" + type + ":" + itoa(sl)));
+
+		while (redisArrayFetch()) {
+			string ref = redisArrayGet();
+			string name = HGET("cache:ref:" + ref + ".utc:root", "name");
+
+			if (name == "") name = "(name not in cache)";
+
+			AddListItem(pc, TTT, name + " " + C(ref, cLightGrey));
+			SetListInt(pc, TTT, sl);
+			SetListString(pc, TTT, type + " " + ref);
+		}
+
+		string txt = "Runen fuer: " + type + "/" + itoa(sl);
+
+		ResetConvList(pc, pc, TTT, 50000, "cmd_rune_cb", txt, "", "", "cmd_rune_b2m0",
+					  "Zurueck");
+	}
+
+}
+

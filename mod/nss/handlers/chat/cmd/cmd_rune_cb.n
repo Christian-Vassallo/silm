@@ -1,0 +1,47 @@
+extern("inc_rune")
+
+void main()
+{
+	object oPC = GetLocalObject(OBJECT_SELF, "ConvList_PC");
+	object oMerc = OBJECT_SELF;
+
+	int nMenuLevel0 = GetMenuLevel(oPC, TTT, 0);
+	int nMenuLevel1 = GetMenuLevel(oPC, TTT, 1);
+	int nSelected   = GetListSelection(oPC);
+
+	string type = GetListString(oPC, TTT, nSelected);
+	int sl = GetListInt(oPC, TTT, nSelected);
+
+	if (type == "delete_all") {
+		object item = GetFirstItemInInventory(oPC);
+
+		while (GetIsObjectValid(item)) {
+			if (GetResRef(item) == "sum_card")
+				DestroyObject(item, 0f);
+
+			item = GetNextItemInInventory(oPC);
+		}
+
+		ActionStartConversation(oPC, "", true, true);
+
+	} else {
+		if (nMenuLevel0 == 0) {
+			SetMenuLevel(oPC, TTT, 0, 1);
+			mkdlg(oPC);
+		}
+
+		if (nMenuLevel0 == 1) {
+			SetMenuLevel(oPC, TTT, 0, 1);
+			int idx = FindSubString(type, " ");
+			string ref = GetSubString(type, idx + 1, 16);
+			type = GetSubString(type, 0, idx);
+
+			SetListString(oPC, TTT, type);
+			SetListInt(oPC, TTT, sl);
+
+			create_rune(type == "monster" ? SUMMON_TYPE_MONSTER : SUMMON_TYPE_NATURE, sl, oPC, ref);
+
+			ActionStartConversation(oPC, "", true, true);
+		}
+	}
+}
