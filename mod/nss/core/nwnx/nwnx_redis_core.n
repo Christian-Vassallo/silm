@@ -95,6 +95,7 @@ const int
 int    __redisLastReplyType      = 0;   // The last REDIS_REPLY_
 string __redisLastErrorStr       = "";  // The last error string if any.
 string __redisLastReply          = "";  // The raw reply data, or the array contents with sizes.
+string __redisLastReplyArray     = "";  // The last reply data for arrays (so that you can loop).
 int    __redisLastReplyArraySize = 0;   // The last array size
 int    __redisGetArrayOffset     = 0;   // The last-fetched offset into array results.
 int    __redisGetArrayOffsetStr  = 0;   // The last-fetched string index into array result str.
@@ -133,7 +134,7 @@ string parseRedisReply(string ret) {
 		__redisGetArrayOffset = 0;
 		__redisGetArrayOffsetStr = 0;
 		__redisLastReplyArraySize = StringToInt(array_size);
-		__redisLastReply = GetSubString(result, pos_array_contents + 1, result_len);
+		__redisLastReplyArray = GetSubString(result, pos_array_contents + 1, result_len);
 
 		result = array_size;
 	}
@@ -162,14 +163,14 @@ string redisCommandRaw(string command) {
 
 
 int redisArrayFetch() {
-	int pos_end_of_sz = FindSubString(__redisLastReply, " ", __redisGetArrayOffsetStr);
+	int pos_end_of_sz = FindSubString(__redisLastReplyArray, " ", __redisGetArrayOffsetStr);
 	int start_of_content = pos_end_of_sz + 1;
-	string szstr = GetSubString(__redisLastReply, __redisGetArrayOffsetStr,
+	string szstr = GetSubString(__redisLastReplyArray, __redisGetArrayOffsetStr,
 		pos_end_of_sz - __redisGetArrayOffsetStr);
 	int sz = StringToInt(szstr);
 	int end_of_content = start_of_content + sz;
 
-	__redisArrayLastFetch = GetSubString(__redisLastReply, start_of_content, sz);
+	__redisArrayLastFetch = GetSubString(__redisLastReplyArray, start_of_content, sz);
 	__redisGetArrayOffsetStr = end_of_content + 1; // __redisGetArrayOffsetStr + " "
 
 	__redisGetArrayOffset += 1;
