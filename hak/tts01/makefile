@@ -3,7 +3,7 @@
 
 TARGET=silm_tts01.hak
 
-VALIDEXT=*.dds *.mdl *.tga *.set
+VALIDEXT=*.dds *.mdl *.tga *.set *.wok
 
 include ../Makefile.hak
 
