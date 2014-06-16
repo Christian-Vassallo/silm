@@ -5,11 +5,8 @@ clean-backup::
 
 clean:: clean-backup
 	-rm *.hak
-	
+
 $(TARGET): $(resources)
 	PERLLIB=../../build/lib ../../build/erfpack.pl \
-		-H -o $@ $(VALIDEXT)
-
-publish: $(TARGET)
-	rsync -Pzva --chmod=go+r $(TARGET) silbermarken@miyeritar:rsync/nwn/hak/ &&\
-		ssh silbermarken@miyeritar 'cd ~/rsync/nwn && make'
+		-H -o $@ $(VALIDEXT) && \
+		ruby -e 'File.open(ARGV.shift,"r+b"){|f| f.seek(32); f.write("\x00" * 8) }' $@
