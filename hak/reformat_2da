@@ -4,6 +4,11 @@
 ARGV.each {|f|
   log "Working on #{f} .."
   t = TwoDA::Table.parse(IO.read(f))
+  t.rows.map do |row|
+	row.map! do |cell|
+      cell.gsub(/^(\d+)$/) {|y| x = $1.to_i; (x > 0xfffff0 ? "$(" + (x - 0xffffff - 1).to_s + ")" : $1) }
+	end
+  end
   File.open(f, "w") {|n| n.puts t.to_2da }
   log "done."
 }
